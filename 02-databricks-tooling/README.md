@@ -58,13 +58,13 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    API[REST API 2.0] --> Jobs[/api/2.1/jobs]
-    API --> Clusters[/api/2.0/clusters]
-    API --> DBFS[/api/2.0/dbfs]
-    API --> Workspace[/api/2.0/workspace]
+    API[REST API 2.0] --> Jobs["api/2.1/jobs"]
+    API --> Clusters["api/2.0/clusters"]
+    API --> DBFS["api/2.0/dbfs"]
+    API --> Workspace["api/2.0/workspace"]
 
     Jobs --> Create[create]
-    Jobs --> Run[run-now]
+    Jobs --> Run["run-now"]
     Jobs --> List[list]
 ```
 
