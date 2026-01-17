@@ -501,6 +501,52 @@ print(f"Duplicate rate: {duplicate_rate:.2f}%")
 5. **`row_number()`** guarantees exactly one record per key (use for dedup)
 6. **Bronze accepts duplicates**, Silver deduplicates
 7. **foreachBatch + MERGE** is the idempotent streaming pattern
+8. **Identity Columns** (Delta 3.3) auto-generate unique IDs, useful as natural dedup keys
+9. **Row Tracking** enables validation of dedup by tracking row lineage across operations
+
+## Identity Columns for Deduplication
+
+Delta 3.3 introduces Identity Columns that auto-generate unique IDs:
+
+```sql
+-- Create table with identity column for natural dedup key
+CREATE TABLE orders (
+    order_id BIGINT GENERATED ALWAYS AS IDENTITY,
+    customer_id INT,
+    order_date DATE,
+    amount DOUBLE
+) USING DELTA;
+
+-- Inserts automatically get unique order_id
+INSERT INTO orders (customer_id, order_date, amount)
+VALUES (100, '2024-01-15', 99.99);
+```
+
+Identity columns provide:
+
+- **Guaranteed uniqueness** - system-generated, no application logic needed
+- **Natural dedup key** - use as MERGE condition
+- **Surrogate key pattern** - no business key collisions
+
+## Row Tracking for Dedup Validation
+
+Row Tracking (Delta 3.2+) helps validate deduplication by tracking row lineage:
+
+```sql
+-- Enable row tracking
+ALTER TABLE orders
+SET TBLPROPERTIES ('delta.enableRowTracking' = 'true');
+
+-- Query includes hidden _metadata columns for lineage
+SELECT *, _metadata.row_id, _metadata.row_commit_version
+FROM orders;
+```
+
+Use Row Tracking to:
+
+- Verify dedup removed correct records
+- Audit which rows survived deduplication
+- Track row history across MERGE operations
 
 ## Best Practices
 
@@ -511,6 +557,8 @@ print(f"Duplicate rate: {duplicate_rate:.2f}%")
 - Monitor duplicate rates as a data quality metric
 - Choose dedup keys carefully - prefer natural business keys
 - Consider `dropDuplicatesWithinWatermark` for large-scale streaming
+- Use Identity Columns for auto-generated surrogate keys
+- Enable Row Tracking to audit deduplication results
 
 ## Related Topics
 

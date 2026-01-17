@@ -559,6 +559,134 @@ def emit_alerts(key, events, state: GroupState):
     return iter(alerts)
 ```
 
+## State Store Management
+
+Understanding state management is critical for production streaming applications.
+
+### State Store Backends
+
+```python
+# Default: HDFS-based state store
+spark.conf.get("spark.sql.streaming.stateStore.providerClass")
+# org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider
+
+# RocksDB state store (better for large state)
+spark.conf.set(
+    "spark.sql.streaming.stateStore.providerClass",
+    "org.apache.spark.sql.execution.streaming.state.RocksDBStateStoreProvider"
+)
+```
+
+| Backend | Best For | Memory Usage |
+|---------|----------|--------------|
+| HDFS (default) | Small to medium state | State in memory |
+| RocksDB | Large state (GB+) | Spills to disk |
+
+### When to Use RocksDB
+
+- State size exceeds executor memory
+- High-cardinality groupBy keys
+- Long watermark delays
+- Complex aggregations with many groups
+
+```python
+# RocksDB configuration
+spark.conf.set("spark.sql.streaming.stateStore.rocksdb.compactOnCommit", "true")
+spark.conf.set("spark.sql.streaming.stateStore.rocksdb.changelogCheckpointing.enabled", "true")
+```
+
+### State Monitoring
+
+```python
+# Monitor state via query progress
+progress = query.lastProgress
+
+# State metrics are in stateOperators
+if progress and "stateOperators" in progress:
+    for op in progress["stateOperators"]:
+        print(f"Operator: {op.get('operatorName')}")
+        print(f"  numRowsTotal: {op.get('numRowsTotal')}")  # Total rows in state
+        print(f"  numRowsUpdated: {op.get('numRowsUpdated')}")  # Rows updated this batch
+        print(f"  memoryUsedBytes: {op.get('memoryUsedBytes')}")  # Memory usage
+        print(f"  numRowsDroppedByWatermark: {op.get('numRowsDroppedByWatermark')}")
+```
+
+### Key State Metrics
+
+| Metric | Meaning | Alert If |
+|--------|---------|----------|
+| `numRowsTotal` | Total state size | Growing unboundedly |
+| `memoryUsedBytes` | Memory for state | Approaching heap limit |
+| `numRowsDroppedByWatermark` | Late events dropped | Too high (adjust watermark) |
+| `customMetrics.rocksdbMemUsage` | RocksDB memory | Exceeds configured limits |
+
+### State Timeout Configuration
+
+```python
+from pyspark.sql.streaming import GroupStateTimeout
+
+# Processing time timeout - based on clock time
+result = df.groupByKey(...).mapGroupsWithState(
+    func,
+    outputMode="update",
+    timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
+)
+
+# Event time timeout - based on watermark
+result = df.withWatermark("timestamp", "1 hour") \
+    .groupByKey(...).mapGroupsWithState(
+        func,
+        outputMode="update",
+        timeoutConf=GroupStateTimeout.EventTimeTimeout
+    )
+
+# No timeout - state never expires (dangerous!)
+result = df.groupByKey(...).mapGroupsWithState(
+    func,
+    outputMode="update",
+    timeoutConf=GroupStateTimeout.NoTimeout  # State grows forever!
+)
+```
+
+| Timeout Type | Behavior | Use Case |
+|--------------|----------|----------|
+| `ProcessingTimeTimeout` | Expires after wall clock time | Sessions with idle timeout |
+| `EventTimeTimeout` | Expires when watermark passes | Event-time based expiry |
+| `NoTimeout` | Never expires | Small, bounded state only |
+
+### State Cleanup Strategies
+
+```python
+# 1. Use watermarks for automatic cleanup
+df.withWatermark("event_time", "1 hour") \
+    .groupBy(window("event_time", "10 minutes")) \
+    .count()  # State cleaned after watermark passes window
+
+# 2. Set timeout in mapGroupsWithState
+def update_with_timeout(key, events, state):
+    if state.hasTimedOut:
+        state.remove()  # Clean up expired state
+        return None
+    # ... process events
+    state.setTimeoutDuration("30 minutes")  # Reset timeout
+```
+
+### Debugging State Issues
+
+```python
+# Check checkpoint directory for state size
+dbutils.fs.ls("/checkpoint/state/0/")
+
+# View state schema
+spark.read.format("delta").load("/checkpoint/state/0/").printSchema()
+
+# Monitor state growth over time
+progress_history = query.recentProgress
+for p in progress_history:
+    if p and "stateOperators" in p:
+        print(f"Batch {p['batchId']}: {p['stateOperators'][0].get('numRowsTotal')} rows")
+```
+
 ## Query Management
 
 ### Starting Queries
@@ -658,6 +786,9 @@ query = df.writeStream \
 5. **Checkpoints**: Required for exactly-once semantics and failure recovery
 6. **ignoreChanges**: Use when source has updates/deletes you want to skip
 7. **foreachBatch**: Enables batch operations (like MERGE) in streaming
+8. **RocksDB state store**: Use for large state that exceeds memory
+9. **State timeouts**: `ProcessingTimeTimeout` vs `EventTimeTimeout` vs `NoTimeout`
+10. **Monitor `numRowsTotal`** in stateOperators to detect unbounded state growth
 
 ## Best Practices
 

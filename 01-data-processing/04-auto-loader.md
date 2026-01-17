@@ -355,6 +355,8 @@ df = spark.readStream \
 
 ## Auto Loader with Unity Catalog
 
+Unity Catalog integration affects how Auto Loader handles credentials, locations, and schema storage.
+
 ### Ingesting to Managed Tables
 
 ```python
@@ -381,6 +383,90 @@ df = spark.readStream \
     .option("cloudFiles.format", "parquet") \
     .option("cloudFiles.schemaLocation", "/Volumes/catalog/schema/volume/schema") \
     .load("/Volumes/catalog/schema/volume/data/")
+```
+
+### External Locations
+
+Writing to external locations requires appropriate Unity Catalog permissions.
+
+```python
+# Reading from external location (requires READ FILES permission)
+df = spark.readStream \
+    .format("cloudFiles") \
+    .option("cloudFiles.format", "json") \
+    .option("cloudFiles.schemaLocation", "abfss://container@storage/schema/") \
+    .load("abfss://container@storage/landing/orders/")
+
+# Writing to external location (requires WRITE FILES permission)
+query = df.writeStream \
+    .format("delta") \
+    .option("checkpointLocation", "abfss://container@storage/checkpoint/") \
+    .start("abfss://container@storage/bronze/orders/")
+```
+
+### UC Permissions for Auto Loader
+
+| Operation | Required Permission |
+|-----------|---------------------|
+| Read from external location | `READ FILES` on external location |
+| Write to external location | `WRITE FILES` on external location |
+| Write to managed table | `USE SCHEMA`, `CREATE TABLE` |
+| Schema location (external) | `WRITE FILES` on external location |
+| Schema location (volume) | `WRITE VOLUME` |
+
+### Cross-Catalog Patterns
+
+```python
+# Read from one catalog, write to another
+source_df = spark.readStream \
+    .format("cloudFiles") \
+    .option("cloudFiles.format", "json") \
+    .option("cloudFiles.schemaLocation", "/Volumes/source_catalog/schema/vol/schema") \
+    .load("/Volumes/source_catalog/schema/vol/data/")
+
+# Write to different catalog (requires permissions on both)
+query = source_df.writeStream \
+    .format("delta") \
+    .option("checkpointLocation", "/Volumes/target_catalog/schema/vol/checkpoint/") \
+    .toTable("target_catalog.target_schema.target_table")
+```
+
+### Schema Evolution with UC
+
+When using Unity Catalog, schema evolution respects table-level settings:
+
+```python
+# UC tables may have schema enforcement
+df = spark.readStream \
+    .format("cloudFiles") \
+    .option("cloudFiles.format", "json") \
+    .option("cloudFiles.schemaLocation", "/schema") \
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns") \
+    .load("/source/")
+
+# mergeSchema allows Auto Loader to add columns to UC table
+query = df.writeStream \
+    .format("delta") \
+    .option("checkpointLocation", "/checkpoint") \
+    .option("mergeSchema", "true") \  # Required for schema evolution
+    .toTable("catalog.schema.table")
+```
+
+### Credential Management
+
+Auto Loader uses Unity Catalog credentials automatically:
+
+- **Managed tables**: No explicit credentials needed
+- **External locations**: UC external location credentials used
+- **Volumes**: Volume storage credentials used
+
+```python
+# No credential configuration needed - UC handles it
+df = spark.readStream \
+    .format("cloudFiles") \
+    .option("cloudFiles.format", "json") \
+    .option("cloudFiles.schemaLocation", "/Volumes/catalog/schema/vol/schema") \
+    .load("/Volumes/catalog/schema/vol/data/")  # UC credentials automatic
 ```
 
 ## Common Patterns
@@ -540,6 +626,9 @@ print(query.status)
 5. **includeExistingFiles** controls whether existing files are processed
 6. **maxFilesPerTrigger** controls processing rate
 7. Auto Loader automatically handles **exactly-once** processing with checkpoints
+8. **Unity Catalog** - Use Volumes for schema location and data paths
+9. **UC permissions** - `READ FILES` / `WRITE FILES` required for external locations
+10. **mergeSchema** option required when Auto Loader adds columns to UC tables
 
 ## Best Practices
 

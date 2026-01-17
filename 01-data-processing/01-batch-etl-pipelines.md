@@ -573,6 +573,140 @@ df.withColumn("discounted", calculate_discount(col("amount"), col("rate")))
 
 **Best Practice**: Always prefer built-in Spark functions over UDFs when possible.
 
+## Performance Optimization
+
+### Photon Engine
+
+Photon is Databricks' native vectorized query engine written in C++ for faster SQL and DataFrame operations.
+
+```python
+# Photon is enabled at cluster level, not via code
+# Check if Photon is active
+spark.conf.get("spark.databricks.photon.enabled")
+```
+
+| Workload | Photon Benefit |
+|----------|----------------|
+| Joins | High - vectorized hash joins |
+| Aggregations | High - SIMD operations |
+| Filters | High - predicate pushdown |
+| Scans | High - optimized Parquet/Delta reads |
+| Python UDFs | None - not accelerated |
+| Complex nested types | Limited |
+
+**Photon Limitations**:
+
+- Python/Scala UDFs not accelerated (runs in fallback mode)
+- Some window functions not fully supported
+- Certain complex data types may fall back to Spark
+
+**When to use Photon**:
+
+- SQL-heavy workloads with joins and aggregations
+- Large scan operations on Delta/Parquet
+- Filter-heavy queries
+
+### Dynamic Partition Pruning (DPP)
+
+DPP optimizes joins by pushing partition filters from one side of the join to the other.
+
+```sql
+-- DPP applies automatically in queries like this:
+SELECT f.*
+FROM fact_sales f
+JOIN dim_date d ON f.date_key = d.date_key
+WHERE d.year = 2024;
+-- Spark pushes year=2024 filter to fact_sales scan
+```
+
+```python
+# Check DPP configuration
+spark.conf.get("spark.sql.optimizer.dynamicPartitionPruning.enabled")  # true by default
+
+# Disable if causing issues (rare)
+spark.conf.set("spark.sql.optimizer.dynamicPartitionPruning.enabled", "false")
+```
+
+| Condition | DPP Applied? |
+|-----------|--------------|
+| Join on partition column | Yes |
+| Broadcast join | Yes (most effective) |
+| Sort-merge join | Yes (with subquery) |
+| Filter on dimension table | Triggers DPP |
+
+### Adaptive Query Execution (AQE)
+
+AQE optimizes queries at runtime based on actual data statistics.
+
+```python
+# AQE is enabled by default in Databricks
+spark.conf.get("spark.sql.adaptive.enabled")  # true
+
+# Key AQE features
+spark.conf.get("spark.sql.adaptive.coalescePartitions.enabled")  # Reduce partitions
+spark.conf.get("spark.sql.adaptive.skewJoin.enabled")  # Handle skew
+spark.conf.get("spark.sql.adaptive.localShuffleReader.enabled")  # Optimize shuffles
+```
+
+| AQE Feature | Behavior |
+|-------------|----------|
+| Coalesce partitions | Reduces small partitions after shuffle |
+| Skew join handling | Splits skewed partitions automatically |
+| Join strategy switch | Changes join type based on actual sizes |
+| Local shuffle reader | Avoids shuffle when possible |
+
+```python
+# Configure shuffle partitions (AQE adjusts automatically)
+spark.conf.set("spark.sql.shuffle.partitions", "auto")  # Let AQE decide
+
+# Or set initial value that AQE can reduce
+spark.conf.set("spark.sql.shuffle.partitions", "200")
+```
+
+### Broadcast Join Optimization
+
+```python
+from pyspark.sql.functions import broadcast
+
+# Force broadcast for small tables
+result = large_df.join(broadcast(small_df), "key")
+
+# Check/set broadcast threshold (default 10MB)
+spark.conf.get("spark.sql.autoBroadcastJoinThreshold")  # 10485760 (10MB)
+
+# Increase for larger dimension tables
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "50MB")
+
+# Disable auto broadcast (force sort-merge)
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
+```
+
+```sql
+-- SQL broadcast hint
+SELECT /*+ BROADCAST(dim_product) */ *
+FROM fact_sales f
+JOIN dim_product p ON f.product_id = p.product_id;
+```
+
+### Partition Pruning Best Practices
+
+```python
+# Good: Filter on partition column - triggers partition pruning
+df = spark.read.format("delta").load("/path/to/table")
+filtered = df.filter(col("date") == "2024-01-15")  # Only reads one partition
+
+# Bad: Filter after load without pushdown
+df = spark.read.format("delta").load("/path/to/table")
+filtered = df.filter(col("date").cast("string") == "2024-01-15")  # May scan all partitions
+```
+
+| Pattern | Partition Pruning? |
+|---------|-------------------|
+| `col("date") == "2024-01-15"` | Yes |
+| `col("date") >= "2024-01-01"` | Yes |
+| `col("date").cast("string") == "2024-01-15"` | No (function on column) |
+| `year(col("date")) == 2024` | No (function on column) |
+
 ## Error Handling
 
 ### Try-Catch Pattern
@@ -616,6 +750,9 @@ assert expected_columns.issubset(actual_columns), "Missing required columns"
 5. **Corrupt record handling** - PERMISSIVE, DROPMALFORMED, FAILFAST
 6. **Pandas UDFs** are faster than regular Python UDFs
 7. **Partition pruning** - filter on partition columns for performance
+8. **Photon** accelerates joins/aggregations but not UDFs
+9. **AQE** handles skew and optimizes joins at runtime
+10. **DPP** pushes filters from dimension to fact tables automatically
 
 ## Best Practices
 

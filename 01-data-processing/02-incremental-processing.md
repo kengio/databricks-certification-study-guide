@@ -254,6 +254,15 @@ df = spark.readStream \
 | `ignoreDeletes` | Skips delete operations |
 | `ignoreChanges` | Skips update and delete operations |
 
+### Deletion Vectors Impact
+
+Tables with Deletion Vectors enabled mark rows as deleted without rewriting files. This affects incremental reads:
+
+- Streaming reads handle DVs transparently
+- `ignoreDeletes` works normally with DV-enabled tables
+- DVs improve UPDATE/DELETE/MERGE performance on source tables
+- Periodic VACUUM cleans up DV files, which may trigger file rewrites
+
 ### Rate Limiting
 
 ```python
@@ -497,6 +506,8 @@ if lag_check.count() > 0:
 5. **MERGE** is inherently idempotent - same input = same output
 6. **startingVersion/startingTimestamp** control where streaming starts
 7. **Rate limiting** (maxFilesPerTrigger) prevents OOM on large backlogs
+8. **Predictive Optimization** can auto-schedule OPTIMIZE/VACUUM, reducing manual maintenance
+9. **Deletion Vectors** improve incremental read performance by marking deletes without rewriting files
 
 ## Best Practices
 
