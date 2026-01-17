@@ -11,6 +11,7 @@ This repository contains study notes and materials for the Databricks Data Engin
 Notes are organized by exam topic areas. When adding content, follow these conventions:
 
 - Use Markdown files for documentation and study notes
+- Always run markdownlint to check for issues with every MD file
 - Include code examples in appropriate language blocks (SQL, Python, Scala)
 - Reference official Databricks documentation where applicable
 
