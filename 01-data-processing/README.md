@@ -19,7 +19,7 @@ flowchart TD
 
 | File | Topic | Priority |
 |------|-------|----------|
-| [01-batch-etl-pipelines.md](01-batch-etl-pipelines) | ETL design patterns, DataFrame transformations | High |
+| [01-batch-etl-pipelines.md](01-batch-etl-pipelines.md) | ETL design patterns, DataFrame transformations | High |
 | [02-incremental-processing.md](02-incremental-processing.md) | Incremental loads, checkpoint management | High |
 | [03-structured-streaming.md](03-structured-streaming.md) | Streaming fundamentals, triggers, output modes | High |
 | [04-auto-loader.md](04-auto-loader.md) | Schema inference, evolution, file notification | High |
