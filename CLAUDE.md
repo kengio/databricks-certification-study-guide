@@ -12,8 +12,13 @@ Notes are organized by exam topic areas. When adding content, follow these conve
 
 - Use Markdown files for documentation and study notes
 - Always run markdownlint to check for issues with every MD file
+- Include a sample image of the Databricks platform UI if needed (to make it clearer)
+- Include a step-by-step setup guide for the configuration if needed
 - Include code examples in appropriate language blocks (SQL, Python, Scala)
+- Add a use cases section for each topic to suggest the proper solution for each technique or technology
+- Add common issues or errors that frequently occur or are found in exam questions
 - Reference official Databricks documentation where applicable
+- All information should be obtained from the latest updated sources of 2025 or 2026
 
 ## Key Exam Topics
 
