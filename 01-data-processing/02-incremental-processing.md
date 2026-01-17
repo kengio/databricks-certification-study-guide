@@ -497,6 +497,42 @@ if lag_check.count() > 0:
     pass
 ```
 
+## Use Cases
+
+Understanding when to apply specific incremental patterns is crucial for the exam.
+
+| Scenario | Recommended Strategy | Why? |
+|----------|----------------------|------|
+| **Standard Database Source** | High-Water Mark | Simple, effective for append-only or updated-at timestamped data. |
+| **Delta Lake Source** | Delta Source / CDF | Built-in efficiency, handles deletes/updates if configured. |
+| **Cloud Files Ingestion** | Auto Loader | Handles schema evolution and new file discovery automatically. |
+| **Scheduled Batch Job** | `availableNow=True` | Incremental processing with batch scheduling efficiency. |
+| **Complex Transformations** | Checkpoints + Streaming | Ensures exactly-once processing even during complex logic failures. |
+
+## Common Issues & Errors
+
+### 1. AnalysisException: Checkpoint path does not exist or invalid
+**Scenario:** Restarting a query with a new location but pointing to old checkpoint.
+
+**Fix:** Ensure checkpoint path is unique per query. Delete checkpoint if logic changes fundamentally (not recommended for production recovery).
+
+**Exam Context:** Questions about why a stream failed to start after code changes.
+
+### 2. Stream-Static Join Result Empty
+**Scenario:** Joining a stream with a static table, but updates to the static table aren't reflected.
+
+**Fix:** Restart the streaming query to reload the static table cache.
+
+### 3. Delta Source: "Detected deleted data"
+**Scenario:** Source Delta table had a DELETE/UPDATE operation.
+
+**Fix:** Use `.option("ignoreChanges", "true")` or `.option("ignoreDeletes", "true")` if strict consistency isn't required, or use Delta CDF for exact propagation.
+
+### 4. Lag Growing Indefinitely
+**Scenario:** Processing rate is slower than input rate.
+
+**Fix:** Scale up cluster (add cores), optimize code, or check backpressure configurations.
+
 ## Exam Tips
 
 1. **High-water mark** requires a reliable timestamp/sequence column in source

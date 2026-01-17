@@ -733,6 +733,37 @@ OPTIMIZE table_name;  -- Applies clustering
 DESCRIBE DETAIL table_name;
 ```
 
+## Use Cases
+
+| Scenario | Recommended Operation | Why? |
+|----------|-----------------------|------|
+| **GDPR Compliance (Right to be Forgotten)** | `DELETE` + `VACUUM` | Removes PII from current table and history (physical deletion). |
+| **Daily Full Refresh** | `overwrite` or `replaceWhere` | Efficiently replaces data without deleting table schema/history. |
+| **Slow Filter Queries** | `OPTIMIZE` + `ZORDER` | Co-locates data to enable efficient data skipping. |
+| **Handling Late Arriving Data** | `MERGE` | Updates existing records or inserts new ones based on keys. |
+
+## Common Issues & Errors
+
+### 1. "Multiple matches" in MERGE
+**Scenario:** Source table has duplicate keys matching a single target row.
+
+**Fix:** Deduplicate the source data before running MERGE.
+
+### 2. Time Travel Fails ("File not found")
+**Scenario:** Trying to query an old version after VACUUM has run.
+
+**Fix:** Increase retention duration if longer history is needed, but accept higher storage costs.
+
+### 3. ZORDER Effectiveness Low
+**Scenario:** Z-ordering on too many columns (e.g., > 5) or low-cardinality columns.
+
+**Fix:** Limit ZORDER to 1-4 high-cardinality columns frequently used in WHERE clauses.
+
+### 4. VACUUM 0 Hours Data Loss
+**Scenario:** User disabled safety check and ran `VACUUM RETAIN 0 HOURS`.
+
+**Fix:** **Irreversible**. Recover from deep clone or backup if available. Never do this in production.
+
 ## Exam Tips
 
 1. **VACUUM default is 168 hours (7 days)** - This is frequently tested

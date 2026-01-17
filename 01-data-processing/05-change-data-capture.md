@@ -780,6 +780,37 @@ CREATE TABLE cdc_monitoring.metrics (
 ) USING DELTA;
 ```
 
+## Use Cases
+
+| Scenario | Recommended Pattern | Why? |
+|----------|---------------------|------|
+| **Audit Compliance** | SCD Type 2 | Keeps full history of changes for regulatory reporting. |
+| **Delete Propagation** | CDF Stream + MERGE | Standard streams ignore deletes; CDF captures `delete` events explicitly. |
+| **Multi-Hop Propagation** | CDF at each layer | Ensures bronze-to-silver-to-gold sync maintains consistency efficiently. |
+| **Debugging Data Issues** | Row Tracking + CDF | Allows pinpointing exactly when and how a row became corrupt. |
+
+## Common Issues & Errors
+
+### 1. Missing History/Empty CDF
+**Scenario:** Enabled CDF *after* data was written.
+
+**Fix:** CDF only tracks changes *after* the property is set. Cannot backfill history for prior operations.
+
+### 2. Performance: "Small File Problem" in CDF
+**Scenario:** Frequent small updates cause fragmentation in `_change_data` folder.
+
+**Fix:** Run `OPTIMIZE` regularly on the table (it optimizes CDF files too).
+
+### 3. Duplicate Downstream Records
+**Scenario:** Reprocessing a batch that isn't idempotent.
+
+**Fix:** Deduplicate using `(id, _commit_version)` or ensure idempotent MERGE logic.
+
+### 4. Updates Not Reflecting in Target
+**Scenario:** Filtering stream for `_change_type = 'update_preimage'`.
+
+**Fix:** Use `update_postimage` to get the *new* values. Preimage is only for "before" state analysis.
+
 ## Exam Tips
 
 1. **CDF must be enabled** before changes are tracked - not retroactive

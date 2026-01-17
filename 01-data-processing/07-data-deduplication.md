@@ -492,6 +492,37 @@ duplicate_rate = duplicate_records / total_records * 100
 print(f"Duplicate rate: {duplicate_rate:.2f}%")
 ```
 
+## Use Cases
+
+| Scenario | Recommended Strategy | Why? |
+|----------|----------------------|------|
+| **Ingestion from Queue** | `dropDuplicates` (Stream) | Removes duplicates caused by at-least-once delivery guarantees. |
+| **Re-running Failed Job** | `MERGE` (Idempotent) | Ensures reprocessed data doesn't create duplicates in target. |
+| **Silver Layer Cleanup** | `row_number()` Window | Deterministically picks the "best" record (e.g., latest timestamp). |
+| **High Volume Stream** | `dropDuplicatesWithinWatermark` | Efficiently dedups recent data without unlimited state growth. |
+
+## Common Issues & Errors
+
+### 1. State Store OOM (Streaming)
+**Scenario:** Using `dropDuplicates` on a stream without a watermark.
+
+**Fix:** Add `.withWatermark()` before deduplication or use `dropDuplicatesWithinWatermark` if acceptable.
+
+### 2. Random Record Retention
+**Scenario:** Using `dropDuplicates()` without specifying order.
+
+**Fix:** Use `row_number().over(Window.orderBy(...))` to explicitly select which record to keep.
+
+### 3. MERGE Failure on Source Duplicates
+**Scenario:** Running MERGE when source dataset contains duplicate keys.
+
+**Fix:** Add a deduplication step to the source DataFrame *before* the MERGE operation.
+
+### 4. Dedup Not Working Across Partitions
+**Scenario:** Using `dropDuplicates` after specific shuffle operations that might not preserve global uniqueness context (rare, but conceptual).
+
+**Fix:** Ensure proper shuffling or standard `dropDuplicates` (which triggers a shuffle) is used globally.
+
 ## Exam Tips
 
 1. **Streaming dedup requires watermarks** for state cleanup

@@ -741,6 +741,84 @@ actual_columns = set(df.columns)
 assert expected_columns.issubset(actual_columns), "Missing required columns"
 ```
 
+## Use Cases
+
+Understanding when to apply specific techniques is crucial for the exam and real-world engineering.
+
+### Ingestion & Reading
+
+| Scenario | Recommended Technique | Why? |
+|----------|----------------------|------|
+| **Daily Batch Processing** | Standard `spark.read` with Schema | Explicit schemas prevent drift and ensure data quality. |
+| **Corrupt Data Handling** | `PERMISSIVE` mode + `_corrupt_record` column | Allows pipeline to continue processing valid data while capturing bad records for later analysis. |
+| **Small Reference Data** | Cache or Broadcast | faster access during lookups. |
+
+### Transformations & Performance
+
+| Scenario | Recommended Technique | Why? |
+|----------|----------------------|------|
+| **Complex Math/Logic** | Built-in Spark Functions | Significantly faster than UDFs due to Catalyst optimization. |
+| **Custom Complex Logic** | Pandas UDF (Vectorized) | Better performance than standard Python UDFs for row-by-row operations. |
+| **Joins with Small Tables (<10MB)** | Broadcast Join | Avoids shuffling large tables across the network. |
+| **Joins with Large/Skewed Data** | AQE (Adaptive Query Execution) | Automatically handles skew and optimizes join strategies at runtime. |
+| **Filtering Large Datasets** | Partition Pruning (Filter on Partition Key) | Skips scanning irrelevant files/partitions. |
+
+### Aggregation & De-duplication
+
+| Scenario | Recommended Technique | Why? |
+|----------|----------------------|------|
+| **Latest Record per Key** | Window `row_number()` | Flexible way to pick the "latest" based on any ordering column. |
+| **Running Totals** | Window `sum()` with `rowsBetween` | Efficiently calculates cumulative sums without self-joins. |
+| **Pivot Reports** | `groupBy().pivot()` | Transforms unique column values into columns for reporting. |
+
+### Writing & Loading
+
+| Scenario | Recommended Technique | Why? |
+|----------|----------------------|------|
+| **Full Table Refresh** | `overwrite` mode | Completely replaces target table. |
+| **Daily Incremental Load** | `append` mode | Adds new records to the end of the table. |
+| **Reprocessing Specific Dates** | Dynamic Partition Overwrite | Safely overwrites only the partitions being touched by the current job, preserving others. |
+
+## Common Issues & Errors
+
+### 1. AnalysisException: Path does not exist
+**Scenario:** Reading from a path that hasn't been created yet.
+
+**Fix:** Use `dbutils.fs.ls()` to verify path or use `try-catch` block.
+
+**Exam Context:** Trick questions often omit the check for file existence before reading.
+
+### 2. OutOfMemoryError: Java heap space during specific transformation
+**Scenario:** Calling `.collect()` on a large DataFrame or broadcasting a table larger than the driver's memory.
+
+**Fix:** Remove `.collect()` (use `.take()` or `.show()` instead) or increase broadcast threshold/disable broadcast.
+
+**Exam Context:** Identifying the specific line causing OOM (usually an action that brings data to the driver).
+
+### 3. Skew Join (Slow Stages/Stragglers)
+**Scenario:** One task takes significantly longer than others during a join (e.g., specific keys have millions of records while others have few).
+
+**Fix:** Enable checking `spark.sql.adaptive.skewJoin.enabled` (default true) or use "salting" technique (manually add a random key).
+
+**Exam Context:** Identifying "straggler tasks" as a symptom of data skew.
+
+### 4. NullPointerException in UDFs
+**Scenario:** Python UDF fails on null input because it assumes a value exists.
+
+**Fix:** Explicitly handle `None` in Python code or use `df.na.fill()` before calling the UDF.
+
+### 5. Cartesian Product (Cross Join)
+**Scenario:** Accidental cross join when join conditions are missing or incorrect.
+
+**Fix:** Ensure join keys are specified correctly. If intentional, set `spark.sql.crossJoin.enabled` to true.
+
+**Exam Context:** Queries that run forever or produce massive output unexpectedly.
+
+### 6. Small File Problem
+**Scenario:** Writing too many small files (e.g., using `partitionBy` on a high-cardinality column like `timestamp`).
+
+**Fix:** choosing a lower cardinality partition column (like `date`) or using `OPTIMIZE` / Auto Optimize.
+
 ## Exam Tips
 
 1. **Know all join types** - especially left_anti and left_semi
