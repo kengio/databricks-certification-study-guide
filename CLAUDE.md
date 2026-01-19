@@ -47,8 +47,8 @@ databricks-certification-study-guide/
 
 ### Diagrams
 
-- **Always use Mermaid syntax** for diagrams (GitHub renders mermaid natively)
-- Never use ASCII/text-based diagrams - convert to mermaid
+- **Always use Mermaid syntax** for logical flow/architecture diagrams
+- Use ASCII/text-based tree diagrams for directory structures and file hierarchies
 - Common diagram types:
   - `flowchart TB` or `flowchart LR` for architecture diagrams
   - `sequenceDiagram` for process flows
