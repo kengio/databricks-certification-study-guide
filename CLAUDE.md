@@ -45,6 +45,20 @@ databricks-certification-study-guide/
 - Ensure headings have blank lines before and after them (MD022 rule)
 - Use appropriate code blocks (SQL, Python, Scala)
 
+### Link Verification
+
+- **Always link directly to files, not folders** (e.g., `path/to/README.md` not `path/to/`)
+- When adding or modifying links, confirm the target file exists
+- Standard entry points for each section:
+  - `certifications/data-engineer-associate/README.md`
+  - `certifications/data-engineer-professional/README.md`
+  - `certifications/data-analyst-associate/README.md`
+  - `certifications/ml-associate/README.md`
+  - `certifications/ml-professional/README.md`
+  - `certifications/genai-engineer-associate/README.md`
+  - `_shared/fundamentals/README.md`
+  - `learning-paths/README.md`
+
 ### Content Requirements
 
 - Include sample images of Databricks platform UI when helpful

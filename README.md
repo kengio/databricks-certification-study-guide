@@ -8,27 +8,27 @@ A comprehensive study guide for all Databricks certifications.
 
 | Certification | Level | Status |
 |--------------|-------|--------|
-| [Data Engineer Associate](certifications/data-engineer-associate/) | Associate | 📝 Placeholder |
-| [Data Engineer Professional](certifications/data-engineer-professional/) | Professional | ✅ In Progress |
+| [Data Engineer Associate](certifications/data-engineer-associate/README.md) | Associate | 📝 Placeholder |
+| [Data Engineer Professional](certifications/data-engineer-professional/README.md) | Professional | ✅ In Progress |
 
 ### Data Analytics
 
 | Certification | Level | Status |
 |--------------|-------|--------|
-| [Data Analyst Associate](certifications/data-analyst-associate/) | Associate | 📝 Placeholder |
+| [Data Analyst Associate](certifications/data-analyst-associate/README.md) | Associate | 📝 Placeholder |
 
 ### Machine Learning
 
 | Certification | Level | Status |
 |--------------|-------|--------|
-| [ML Associate](certifications/ml-associate/) | Associate | 📝 Placeholder |
-| [ML Professional](certifications/ml-professional/) | Professional | 📝 Placeholder |
+| [ML Associate](certifications/ml-associate/README.md) | Associate | 📝 Placeholder |
+| [ML Professional](certifications/ml-professional/README.md) | Professional | 📝 Placeholder |
 
 ### Generative AI
 
 | Certification | Level | Status |
 |--------------|-------|--------|
-| [GenAI Engineer Associate](certifications/genai-engineer-associate/) | Associate | 📝 Placeholder |
+| [GenAI Engineer Associate](certifications/genai-engineer-associate/README.md) | Associate | 📝 Placeholder |
 
 ## Certification Paths
 
@@ -40,16 +40,16 @@ graph LR
     MLA --> GAIA[GenAI Associate]
 ```
 
-See [Learning Paths](learning-paths/) for detailed progression guides.
+See [Learning Paths](learning-paths/README.md) for detailed progression guides.
 
 ## Shared Resources
 
 | Resource | Description |
 |----------|-------------|
-| [Fundamentals](_shared/fundamentals/) | Core concepts used across certifications |
-| [Cheat Sheets](_shared/cheat-sheets/) | Quick reference guides |
-| [Appendix](_shared/appendix/) | Glossary, comparisons, error reference |
-| [Code Examples](_shared/code-examples/) | Python and SQL examples |
+| [Fundamentals](_shared/fundamentals/README.md) | Core concepts used across certifications |
+| [Cheat Sheets](_shared/cheat-sheets/delta-lake-commands.md) | Quick reference guides |
+| [Appendix](_shared/appendix/glossary.md) | Glossary, comparisons, error reference |
+| Code Examples | Python and SQL examples (coming soon) |
 
 ## Quick Start
 
