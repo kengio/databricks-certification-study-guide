@@ -45,6 +45,31 @@ databricks-certification-study-guide/
 - Ensure headings have blank lines before and after them (MD022 rule)
 - Use appropriate code blocks (SQL, Python, Scala)
 
+### Diagrams
+
+- **Always use Mermaid syntax** for diagrams (GitHub renders mermaid natively)
+- Never use ASCII/text-based diagrams - convert to mermaid
+- Common diagram types:
+  - `flowchart TB` or `flowchart LR` for architecture diagrams
+  - `sequenceDiagram` for process flows
+  - `graph` for relationships
+- Example:
+
+```markdown
+\`\`\`mermaid
+flowchart TB
+    subgraph ControlPlane["Control Plane"]
+        WebUI[Web UI]
+        API[REST APIs]
+    end
+    subgraph DataPlane["Data Plane"]
+        Cluster[Clusters]
+        Storage[(Storage)]
+    end
+    ControlPlane --> DataPlane
+\`\`\`
+```
+
 ### Link Verification
 
 - **Always link directly to files, not folders** (e.g., `path/to/README.md` not `path/to/`)

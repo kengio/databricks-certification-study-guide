@@ -4,40 +4,28 @@ Databricks uses a split architecture model that separates the management layer (
 
 ## Overview
 
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         CONTROL PLANE                                        │
-│                    (Databricks Cloud Account)                                │
-│                                                                              │
-│   ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐   │
-│   │  Web UI   │ │  REST     │ │  Cluster  │ │   Job     │ │  Unity    │   │
-│   │           │ │  APIs     │ │  Manager  │ │ Scheduler │ │  Catalog  │   │
-│   └───────────┘ └───────────┘ └───────────┘ └───────────┘ └───────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    │ HTTPS (TLS 1.2+)
-                                    │ Secure Cluster Connectivity
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           DATA PLANE                                         │
-│                    (Customer Cloud Account)                                  │
-│                                                                              │
-│   ┌───────────────────────────────────────────────────────────────────┐    │
-│   │                    VPC / VNet / VPC                                │    │
-│   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐               │    │
-│   │  │  Clusters   │  │    SQL      │  │   Model     │               │    │
-│   │  │  (Driver +  │  │  Warehouses │  │  Serving    │               │    │
-│   │  │   Workers)  │  │             │  │  Endpoints  │               │    │
-│   │  └─────────────┘  └─────────────┘  └─────────────┘               │    │
-│   └───────────────────────────────────────────────────────────────────┘    │
-│                                                                              │
-│   ┌───────────────────────────────────────────────────────────────────┐    │
-│   │              Cloud Storage (S3 / ADLS / GCS)                      │    │
-│   │              Your data stays in YOUR cloud account                │    │
-│   └───────────────────────────────────────────────────────────────────┘    │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph ControlPlane["CONTROL PLANE (Databricks Cloud Account)"]
+        WebUI[Web UI]
+        API[REST APIs]
+        CM[Cluster Manager]
+        JS[Job Scheduler]
+        UC[Unity Catalog]
+    end
+
+    subgraph DataPlane["DATA PLANE (Customer Cloud Account)"]
+        subgraph VPC["VPC / VNet"]
+            Clusters[Clusters<br/>Driver + Workers]
+            SQLWh[SQL Warehouses]
+            Model[Model Serving<br/>Endpoints]
+        end
+        Storage[(Cloud Storage<br/>S3 / ADLS / GCS<br/>Your data stays here)]
+    end
+
+    ControlPlane -->|"HTTPS (TLS 1.2+)<br/>Secure Cluster Connectivity"| DataPlane
+    Clusters --> Storage
+    SQLWh --> Storage
 ```
 
 ## Control Plane
@@ -83,20 +71,25 @@ The data plane is where your compute resources run and your data is processed. I
 
 In the classic deployment, compute resources run in your cloud account.
 
-```text
-Your Cloud Account (AWS/Azure/GCP)
-├── VPC/VNet (created by Databricks or customer)
-│   ├── Subnets (public/private)
-│   ├── Security Groups / NSGs
-│   └── NAT Gateway (for outbound)
-├── Compute Resources
-│   ├── All-Purpose Clusters
-│   ├── Job Clusters
-│   ├── SQL Warehouses (Classic/Pro)
-│   └── Instance Pools
-└── Storage
-    ├── DBFS root storage
-    └── Customer data lakes
+```mermaid
+flowchart TB
+    subgraph YourAccount["Your Cloud Account (AWS/Azure/GCP)"]
+        subgraph VPC["VPC/VNet"]
+            Subnets[Subnets<br/>public/private]
+            SG[Security Groups / NSGs]
+            NAT[NAT Gateway]
+        end
+        subgraph Compute["Compute Resources"]
+            APC[All-Purpose Clusters]
+            JC[Job Clusters]
+            SQLWh[SQL Warehouses]
+            IP[Instance Pools]
+        end
+        subgraph Storage["Storage"]
+            DBFS[(DBFS root)]
+            DataLake[(Customer data lakes)]
+        end
+    end
 ```
 
 **Benefits:**
@@ -110,15 +103,20 @@ Your Cloud Account (AWS/Azure/GCP)
 
 In serverless deployment, Databricks manages the compute infrastructure.
 
-```text
-Databricks Cloud Account
-├── Serverless SQL Warehouses
-├── Serverless Compute (notebooks/jobs)
-├── Model Serving Endpoints
-└── Vector Search (preview)
+```mermaid
+flowchart TB
+    subgraph DatabricksAccount["Databricks Cloud Account"]
+        SSQL[Serverless SQL Warehouses]
+        SC[Serverless Compute]
+        MS[Model Serving Endpoints]
+        VS[Vector Search]
+    end
 
-Your Cloud Account
-└── Cloud Storage (data still in your account)
+    subgraph YourAccount["Your Cloud Account"]
+        Storage[(Cloud Storage<br/>data still in your account)]
+    end
+
+    DatabricksAccount --> Storage
 ```
 
 **Benefits:**
@@ -144,25 +142,30 @@ Your Cloud Account
 
 ### Communication Flow
 
-```text
-┌────────────────────┐                    ┌────────────────────┐
-│   Control Plane    │                    │    Data Plane      │
-├────────────────────┤                    ├────────────────────┤
-│                    │ ──── HTTPS ────▶   │                    │
-│  1. User submits   │     (Port 443)     │  2. Cluster starts │
-│     job via UI     │                    │                    │
-│                    │ ◀─── Status ────   │  3. Runs code      │
-│  4. Shows results  │      Updates       │                    │
-│                    │                    │  (Data stays here) │
-└────────────────────┘                    └────────────────────┘
+```mermaid
+sequenceDiagram
+    participant User
+    participant CP as Control Plane
+    participant DP as Data Plane
+    participant S as Storage
+
+    User->>CP: 1. Submit job via UI
+    CP->>DP: 2. HTTPS (Port 443)
+    DP->>DP: 3. Cluster starts
+    DP->>S: 4. Process data
+    S-->>DP: Data response
+    DP-->>CP: 5. Status updates
+    CP-->>User: 6. Show results
+    Note over S: Data never leaves<br/>your account
 ```
 
 ### Secure Cluster Connectivity (SCC)
 
 With SCC enabled, clusters have no public IP addresses. All communication initiates from the data plane to the control plane.
 
-```text
-Control Plane ◀──── Outbound only ──── Data Plane (No public IPs)
+```mermaid
+flowchart LR
+    DP["Data Plane<br/>(No public IPs)"] -->|Outbound only| CP["Control Plane"]
 ```
 
 **Benefits:**
@@ -175,62 +178,70 @@ Control Plane ◀──── Outbound only ──── Data Plane (No public I
 
 Your actual data never passes through the control plane:
 
-```text
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   Source    │ ──▶  │   Cluster   │ ──▶  │   Target    │
-│   (S3/ADLS) │      │ (Data Plane)│      │   (S3/ADLS) │
-└─────────────┘      └─────────────┘      └─────────────┘
-                           │
-                     Data never goes
-                     to Control Plane
+```mermaid
+flowchart LR
+    Source[(Source<br/>S3/ADLS)] --> Cluster[Cluster<br/>Data Plane]
+    Cluster --> Target[(Target<br/>S3/ADLS)]
+    Cluster -.-x|Data never goes to| CP[Control Plane]
 ```
 
 ## Cloud Provider Deployments
 
 ### AWS
 
-```text
-AWS Account
-├── VPC (Databricks-managed or customer-managed)
-│   ├── Private Subnets (clusters)
-│   ├── Public Subnets (NAT gateway)
-│   └── Security Groups
-├── S3 Buckets
-│   ├── DBFS root (workspace storage)
-│   └── Unity Catalog managed storage
-├── IAM Roles
-│   └── Cross-account role for Databricks
-└── Optional: PrivateLink endpoints
+```mermaid
+flowchart TB
+    subgraph AWS["AWS Account"]
+        subgraph VPC["VPC"]
+            PrivSub[Private Subnets<br/>clusters]
+            PubSub[Public Subnets<br/>NAT gateway]
+            SG[Security Groups]
+        end
+        subgraph S3["S3 Buckets"]
+            DBFS[(DBFS root)]
+            UCStorage[(Unity Catalog storage)]
+        end
+        IAM[IAM Roles<br/>Cross-account role]
+        PL[PrivateLink endpoints]
+    end
 ```
 
 ### Azure
 
-```text
-Azure Subscription
-├── Resource Group
-├── VNet (Databricks-managed or injected)
-│   ├── Private Subnet (clusters)
-│   ├── Public Subnet (control plane connectivity)
-│   └── NSGs
-├── Storage Accounts
-│   ├── DBFS root (Azure Blob)
-│   └── Unity Catalog (ADLS Gen2)
-├── Service Principal or Managed Identity
-└── Optional: Private Link
+```mermaid
+flowchart TB
+    subgraph Azure["Azure Subscription"]
+        RG[Resource Group]
+        subgraph VNet["VNet"]
+            PrivSub[Private Subnet<br/>clusters]
+            PubSub[Public Subnet<br/>control plane connectivity]
+            NSG[NSGs]
+        end
+        subgraph Storage["Storage Accounts"]
+            DBFS[(DBFS root<br/>Azure Blob)]
+            UC[(Unity Catalog<br/>ADLS Gen2)]
+        end
+        SP[Service Principal /<br/>Managed Identity]
+        PL[Private Link]
+    end
 ```
 
 ### GCP
 
-```text
-GCP Project
-├── VPC (Databricks-managed or customer-managed)
-│   ├── Subnets
-│   └── Firewall rules
-├── GCS Buckets
-│   ├── DBFS root
-│   └── Unity Catalog managed storage
-├── Service Account
-└── Optional: Private Google Access
+```mermaid
+flowchart TB
+    subgraph GCP["GCP Project"]
+        subgraph VPC["VPC"]
+            Subnets[Subnets]
+            FW[Firewall rules]
+        end
+        subgraph GCS["GCS Buckets"]
+            DBFS[(DBFS root)]
+            UC[(Unity Catalog storage)]
+        end
+        SA[Service Account]
+        PGA[Private Google Access]
+    end
 ```
 
 ### Cloud Comparison
@@ -247,24 +258,15 @@ GCP Project
 
 ### Network Connectivity Options
 
-```text
-┌──────────────────────────────────────────────────────────────────┐
-│                     Connectivity Options                          │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│  1. Default (Public)          2. Private Link                    │
-│  ┌───────────┐                ┌───────────┐                      │
-│  │ Control   │◀── Internet ──▶│ Control   │◀── Private ─┐       │
-│  │ Plane     │                │ Plane     │    Endpoint  │       │
-│  └───────────┘                └───────────┘              │       │
-│       │                                                   │       │
-│       ▼                                                   │       │
-│  ┌───────────┐                ┌───────────┐              │       │
-│  │ Data      │                │ Data      │◀─────────────┘       │
-│  │ Plane     │                │ Plane     │                      │
-│  └───────────┘                └───────────┘                      │
-│                                                                   │
-└──────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Option1["1. Default (Public)"]
+        CP1[Control Plane] <-->|Internet| DP1[Data Plane]
+    end
+
+    subgraph Option2["2. Private Link"]
+        CP2[Control Plane] <-->|Private Endpoint| DP2[Data Plane]
+    end
 ```
 
 ### Private Link / Private Endpoints
@@ -280,24 +282,26 @@ Connect to Databricks without traversing the public internet.
 
 Restrict which IP addresses can access the workspace.
 
-```text
-Allow List:
-├── 10.0.0.0/8      (Corporate network)
-├── 192.168.1.0/24  (VPN range)
-└── 203.0.113.50    (Specific IP)
-```
+| CIDR | Description |
+|------|-------------|
+| `10.0.0.0/8` | Corporate network |
+| `192.168.1.0/24` | VPN range |
+| `203.0.113.50/32` | Specific IP |
 
 ### VPC/VNet Peering
 
 Connect your data plane to other resources in your cloud.
 
-```text
-┌─────────────────┐          ┌─────────────────┐
-│  Databricks     │          │  Your Other     │
-│  VPC/VNet       │◀─ Peer ─▶│  VPC/VNet       │
-│  (Data Plane)   │          │  (Databases,    │
-│                 │          │   Services)     │
-└─────────────────┘          └─────────────────┘
+```mermaid
+flowchart LR
+    subgraph DB["Databricks VPC/VNet"]
+        DP[Data Plane]
+    end
+    subgraph Your["Your Other VPC/VNet"]
+        DB2[(Databases)]
+        Svc[Services]
+    end
+    DB <-->|Peering| Your
 ```
 
 ## Security Implications

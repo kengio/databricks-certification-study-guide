@@ -4,46 +4,37 @@ The Medallion Architecture (also called Multi-Hop Architecture) is a data design
 
 ## Overview
 
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         Data Sources                                         │
-│   (APIs, Databases, Files, Streaming, IoT, Third-party)                     │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              BRONZE LAYER                                    │
-│   • Raw data as-is from source                                              │
-│   • Append-only, immutable                                                  │
-│   • Schema-on-read                                                          │
-│   • Full history preserved                                                  │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                         (Cleansing, Validation)
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              SILVER LAYER                                    │
-│   • Cleaned and validated data                                              │
-│   • Standardized schemas                                                    │
-│   • Deduplicated records                                                    │
-│   • Enterprise-conforming data                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                      (Aggregation, Business Logic)
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                               GOLD LAYER                                     │
-│   • Business-level aggregates                                               │
-│   • Feature tables for ML                                                   │
-│   • Reporting tables                                                        │
-│   • Optimized for consumption                                               │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            Consumers                                         │
-│        (BI Tools, ML Models, Analysts, Applications)                        │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    Sources[Data Sources<br/>APIs, Databases, Files,<br/>Streaming, IoT, Third-party]
+
+    subgraph Bronze["BRONZE LAYER"]
+        B1[Raw data as-is from source]
+        B2[Append-only, immutable]
+        B3[Schema-on-read]
+        B4[Full history preserved]
+    end
+
+    subgraph Silver["SILVER LAYER"]
+        S1[Cleaned and validated data]
+        S2[Standardized schemas]
+        S3[Deduplicated records]
+        S4[Enterprise-conforming data]
+    end
+
+    subgraph Gold["GOLD LAYER"]
+        G1[Business-level aggregates]
+        G2[Feature tables for ML]
+        G3[Reporting tables]
+        G4[Optimized for consumption]
+    end
+
+    Consumers[Consumers<br/>BI Tools, ML Models,<br/>Analysts, Applications]
+
+    Sources --> Bronze
+    Bronze -->|Cleansing, Validation| Silver
+    Silver -->|Aggregation, Business Logic| Gold
+    Gold --> Consumers
 ```
 
 ## Layer Details
@@ -245,20 +236,25 @@ gold.<domain>_<aggregate>     → gold.sales_daily_summary
 
 ## Unity Catalog Structure
 
-```text
-catalog: main
-├── bronze
-│   ├── raw_orders
-│   ├── raw_customers
-│   └── raw_products
-├── silver
-│   ├── orders
-│   ├── customers
-│   └── products
-└── gold
-    ├── customer_360
-    ├── daily_sales
-    └── product_performance
+```mermaid
+flowchart TB
+    subgraph Main["catalog: main"]
+        subgraph bronze["bronze"]
+            ro[raw_orders]
+            rc[raw_customers]
+            rp[raw_products]
+        end
+        subgraph silver["silver"]
+            o[orders]
+            c[customers]
+            p[products]
+        end
+        subgraph gold["gold"]
+            c360[customer_360]
+            ds[daily_sales]
+            pp[product_performance]
+        end
+    end
 ```
 
 ## Best Practices

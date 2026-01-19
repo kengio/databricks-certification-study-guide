@@ -161,23 +161,23 @@ ORDER BY total_spent DESC;
 
 ### Join Types
 
-```text
-┌──────────────┐     ┌──────────────┐
-│   Table A    │     │   Table B    │
-│  (orders)    │     │ (customers)  │
-└──────────────┘     └──────────────┘
-       │                    │
-       └────────┬───────────┘
-                │
-    ┌───────────┴───────────┐
-    │      Join Types       │
-    ├───────────────────────┤
-    │ INNER  - Match both   │
-    │ LEFT   - All from A   │
-    │ RIGHT  - All from B   │
-    │ FULL   - All from both│
-    │ CROSS  - Cartesian    │
-    └───────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Tables[" "]
+        A[Table A<br/>orders]
+        B[Table B<br/>customers]
+    end
+
+    subgraph JoinTypes["Join Types"]
+        INNER["INNER - Match both"]
+        LEFT["LEFT - All from A"]
+        RIGHT["RIGHT - All from B"]
+        FULL["FULL - All from both"]
+        CROSS["CROSS - Cartesian"]
+    end
+
+    A --> JoinTypes
+    B --> JoinTypes
 ```
 
 ### Join Examples

@@ -4,21 +4,25 @@ A Databricks Workspace is the environment where you interact with Databricks ser
 
 ## Workspace Components
 
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         DATABRICKS WORKSPACE                                 │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │  Notebooks  │  │   Repos     │  │   Jobs      │  │  Workflows  │        │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘        │
-│                                                                              │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │  Clusters   │  │ SQL         │  │   MLflow    │  │  Catalog    │        │
-│  │             │  │ Warehouses  │  │             │  │  Explorer   │        │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘        │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Workspace["DATABRICKS WORKSPACE"]
+        direction TB
+        subgraph Row1[" "]
+            direction LR
+            Notebooks[Notebooks]
+            Repos[Repos]
+            Jobs[Jobs]
+            Workflows[Workflows]
+        end
+        subgraph Row2[" "]
+            direction LR
+            Clusters[Clusters]
+            SQLWh[SQL Warehouses]
+            MLflow[MLflow]
+            Catalog[Catalog Explorer]
+        end
+    end
 ```
 
 ## Navigation Overview
@@ -121,17 +125,14 @@ dbutils.notebook.exit("Success")
 
 ### Cluster Configuration
 
-```text
-Cluster Settings:
-├── Runtime Version: 14.3 LTS (Spark 3.5.0, Scala 2.12)
-├── Node Type: i3.xlarge
-├── Driver: Same as worker
-├── Workers: Min 2, Max 8 (autoscaling)
-├── Auto-termination: 120 minutes
-└── Spark Config:
-    spark.databricks.delta.preview.enabled true
-    spark.sql.shuffle.partitions 200
-```
+| Setting | Example Value |
+|---------|---------------|
+| Runtime Version | 14.3 LTS (Spark 3.5.0, Scala 2.12) |
+| Node Type | i3.xlarge |
+| Driver | Same as worker |
+| Workers | Min 2, Max 8 (autoscaling) |
+| Auto-termination | 120 minutes |
+| Spark Config | `spark.sql.shuffle.partitions 200` |
 
 ### Access Modes
 
@@ -205,28 +206,21 @@ Serverless or classic compute optimized for SQL workloads.
 
 ### Task Types
 
-```text
-Workflow Job:
-├── Task 1: Ingest (Notebook)
-│   └── depends on: none
-├── Task 2: Transform (Notebook)
-│   └── depends on: Task 1
-├── Task 3: Quality Check (SQL)
-│   └── depends on: Task 2
-└── Task 4: Aggregate (Notebook)
-    └── depends on: Task 3
+```mermaid
+flowchart LR
+    T1[Task 1: Ingest<br/>Notebook] --> T2[Task 2: Transform<br/>Notebook]
+    T2 --> T3[Task 3: Quality Check<br/>SQL]
+    T3 --> T4[Task 4: Aggregate<br/>Notebook]
 ```
 
 ### Job Scheduling
 
-```text
-Schedule Options:
-├── Manual (on-demand)
-├── Scheduled (cron)
-│   └── Example: 0 0 * * * (daily at midnight)
-├── Continuous
-└── File arrival trigger
-```
+| Schedule Type | Description |
+|---------------|-------------|
+| Manual | On-demand execution |
+| Scheduled (cron) | e.g., `0 0 * * *` (daily at midnight) |
+| Continuous | Runs indefinitely |
+| File arrival | Triggered by new files |
 
 ### Job Parameters
 
@@ -277,23 +271,31 @@ Browse and manage data assets:
 
 ### Folder Structure Best Practices
 
-```text
-Workspace/
-├── Shared/
-│   ├── Libraries/
-│   └── Common/
-├── Users/
-│   └── user@company.com/
-│       ├── Development/
-│       └── Exploration/
-├── Projects/
-│   ├── project-a/
-│   │   ├── notebooks/
-│   │   ├── config/
-│   │   └── tests/
-│   └── project-b/
-└── Production/
-    └── jobs/
+```mermaid
+flowchart TB
+    subgraph WS["Workspace/"]
+        subgraph Shared["Shared/"]
+            Lib[Libraries/]
+            Common[Common/]
+        end
+        subgraph Users["Users/"]
+            subgraph User1["user@company.com/"]
+                Dev[Development/]
+                Exp[Exploration/]
+            end
+        end
+        subgraph Projects["Projects/"]
+            subgraph PA["project-a/"]
+                NB[notebooks/]
+                Cfg[config/]
+                Tests[tests/]
+            end
+            PB[project-b/]
+        end
+        subgraph Prod["Production/"]
+            ProdJobs[jobs/]
+        end
+    end
 ```
 
 ### Permissions

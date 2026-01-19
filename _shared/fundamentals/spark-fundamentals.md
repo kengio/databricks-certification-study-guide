@@ -6,30 +6,36 @@ Apache Spark is a unified analytics engine for large-scale data processing. Data
 
 ### Cluster Components
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                      Driver Program                      │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │              SparkContext/SparkSession           │   │
-│  └─────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│                    Cluster Manager                       │
-│              (Databricks, YARN, Kubernetes)             │
-└─────────────────────────────────────────────────────────┘
-                           │
-        ┌──────────────────┼──────────────────┐
-        ▼                  ▼                  ▼
-┌───────────────┐  ┌───────────────┐  ┌───────────────┐
-│   Executor 1  │  │   Executor 2  │  │   Executor N  │
-│  ┌─────────┐  │  │  ┌─────────┐  │  │  ┌─────────┐  │
-│  │  Task   │  │  │  │  Task   │  │  │  │  Task   │  │
-│  │  Task   │  │  │  │  Task   │  │  │  │  Task   │  │
-│  │  Cache  │  │  │  │  Cache  │  │  │  │  Cache  │  │
-│  └─────────┘  │  │  └─────────┘  │  │  └─────────┘  │
-└───────────────┘  └───────────────┘  └───────────────┘
+```mermaid
+flowchart TB
+    subgraph Driver["Driver Program"]
+        SC[SparkContext/SparkSession]
+    end
+
+    CM[Cluster Manager<br/>Databricks / YARN / Kubernetes]
+
+    subgraph Exec1["Executor 1"]
+        T1a[Task]
+        T1b[Task]
+        C1[(Cache)]
+    end
+
+    subgraph Exec2["Executor 2"]
+        T2a[Task]
+        T2b[Task]
+        C2[(Cache)]
+    end
+
+    subgraph ExecN["Executor N"]
+        TNa[Task]
+        TNb[Task]
+        CN[(Cache)]
+    end
+
+    Driver --> CM
+    CM --> Exec1
+    CM --> Exec2
+    CM --> ExecN
 ```
 
 ### Key Components

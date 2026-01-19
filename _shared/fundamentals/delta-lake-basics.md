@@ -29,14 +29,17 @@ Delta Lake is a storage format that sits on top of cloud object storage (S3, ADL
 
 Delta Lake maintains a transaction log (`_delta_log/`) that records all changes to the table:
 
-```text
-my_table/
-├── _delta_log/
-│   ├── 00000000000000000000.json
-│   ├── 00000000000000000001.json
-│   └── 00000000000000000002.json
-├── part-00000-xxx.parquet
-└── part-00001-xxx.parquet
+```mermaid
+flowchart TB
+    subgraph Table["my_table/"]
+        subgraph Log["_delta_log/"]
+            J0["00000000000000000000.json"]
+            J1["00000000000000000001.json"]
+            J2["00000000000000000002.json"]
+        end
+        P0["part-00000-xxx.parquet"]
+        P1["part-00001-xxx.parquet"]
+    end
 ```
 
 Each JSON file contains:

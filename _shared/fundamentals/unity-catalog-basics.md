@@ -16,32 +16,22 @@ Unity Catalog provides:
 
 Unity Catalog uses a three-level namespace: **Catalog → Schema → Object**
 
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                          METASTORE                                   │
-│  (Top-level container, typically one per region)                    │
-└─────────────────────────────────────────────────────────────────────┘
-                                 │
-          ┌──────────────────────┼──────────────────────┐
-          ▼                      ▼                      ▼
-┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
-│    CATALOG       │  │    CATALOG       │  │    CATALOG       │
-│    (prod)        │  │    (dev)         │  │    (sandbox)     │
-└──────────────────┘  └──────────────────┘  └──────────────────┘
-          │
-          ├──────────────────────┐
-          ▼                      ▼
-┌──────────────────┐  ┌──────────────────┐
-│    SCHEMA        │  │    SCHEMA        │
-│    (bronze)      │  │    (silver)      │
-└──────────────────┘  └──────────────────┘
-          │
-          ├──────────────────────┬──────────────────────┐
-          ▼                      ▼                      ▼
-┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
-│     TABLE        │  │     VIEW         │  │    FUNCTION      │
-│   (orders)       │  │ (orders_summary) │  │  (parse_json)    │
-└──────────────────┘  └──────────────────┘  └──────────────────┘
+```mermaid
+flowchart TB
+    subgraph Metastore["METASTORE (one per region)"]
+        subgraph Prod["CATALOG: prod"]
+            subgraph Bronze["SCHEMA: bronze"]
+                T1[TABLE: orders]
+                V1[VIEW: orders_summary]
+                F1[FUNCTION: parse_json]
+            end
+            subgraph Silver["SCHEMA: silver"]
+                T2[TABLE: customers]
+            end
+        end
+        Cat2["CATALOG: dev"]
+        Cat3["CATALOG: sandbox"]
+    end
 ```
 
 ### Naming Convention
@@ -290,22 +280,26 @@ SET TAGS ('pii' = 'true', 'owner' = 'data-team');
 
 ### Environment Isolation
 
-```text
-Catalogs:
-├── prod          # Production data
-├── staging       # Pre-production testing
-├── dev           # Development
-└── sandbox       # Exploration
+```mermaid
+flowchart LR
+    subgraph Envs["Environment Pattern"]
+        prod[prod]
+        staging[staging]
+        dev[dev]
+        sandbox[sandbox]
+    end
 ```
 
 ### Data Mesh
 
-```text
-Catalogs (by domain):
-├── sales         # Sales domain owns
-├── marketing     # Marketing domain owns
-├── finance       # Finance domain owns
-└── shared        # Cross-domain datasets
+```mermaid
+flowchart LR
+    subgraph Domains["Domain Pattern"]
+        sales[sales]
+        marketing[marketing]
+        finance[finance]
+        shared[shared]
+    end
 ```
 
 ## Use Cases
