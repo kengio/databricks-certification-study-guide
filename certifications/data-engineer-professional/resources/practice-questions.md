@@ -8,9 +8,9 @@
 
 **Question**: Which configuration ensures new columns are automatically added to the target table schema?
 
-A) `cloudFiles.schemaEvolutionMode = "addNewColumns"`
-B) `cloudFiles.schemaEvolutionMode = "rescue"`
-C) `cloudFiles.inferColumnTypes = "true"`
+A) `cloudFiles.schemaEvolutionMode = "addNewColumns"`  
+B) `cloudFiles.schemaEvolutionMode = "rescue"`  
+C) `cloudFiles.inferColumnTypes = "true"`  
 D) `cloudFiles.mergeSchema = "true"`
 
 <details>
@@ -30,9 +30,9 @@ D) `cloudFiles.mergeSchema = "true"`
 
 **Question**: Which trigger configuration should be used?
 
-A) `trigger(processingTime='1 hour')`
-B) `trigger(once=True)`
-C) `trigger(availableNow=True)`
+A) `trigger(processingTime='1 hour')`  
+B) `trigger(once=True)`  
+C) `trigger(availableNow=True)`  
 D) `trigger(continuous='1 hour')`
 
 <details>
@@ -52,9 +52,9 @@ D) `trigger(continuous='1 hour')`
 
 **Question**: Which MERGE clause handles records that exist in the source but not in the target?
 
-A) `WHEN MATCHED THEN UPDATE`
-B) `WHEN NOT MATCHED THEN INSERT`
-C) `WHEN MATCHED THEN INSERT`
+A) `WHEN MATCHED THEN UPDATE`  
+B) `WHEN NOT MATCHED THEN INSERT`  
+C) `WHEN MATCHED THEN INSERT`  
 D) `WHEN NOT MATCHED THEN UPDATE`
 
 <details>
@@ -76,9 +76,9 @@ D) `WHEN NOT MATCHED THEN UPDATE`
 
 **Question**: What happens to tables created in that schema after the grant?
 
-A) User automatically has SELECT on new tables
-B) User must be granted SELECT on each new table
-C) User has no access to new tables
+A) User automatically has SELECT on new tables  
+B) User must be granted SELECT on each new table  
+C) User has no access to new tables  
 D) User has MODIFY access to new tables
 
 <details>
@@ -98,9 +98,9 @@ D) User has MODIFY access to new tables
 
 **Question**: What type of table should they create?
 
-A) Managed table
-B) External table
-C) View
+A) Managed table  
+B) External table  
+C) View  
 D) Delta table
 
 <details>
@@ -122,9 +122,9 @@ D) Delta table
 
 **Question**: Which expectation syntax achieves this?
 
-A) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL)`
-B) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW`
-C) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE`
+A) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL)`  
+B) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW`  
+C) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE`  
 D) `CONSTRAINT valid_id REQUIRE (customer_id IS NOT NULL)`
 
 <details>
@@ -144,9 +144,9 @@ D) `CONSTRAINT valid_id REQUIRE (customer_id IS NOT NULL)`
 
 **Question**: Which table type is most appropriate?
 
-A) Streaming table
-B) Materialized view
-C) Live table
+A) Streaming table  
+B) Materialized view  
+C) Live table  
 D) External table
 
 <details>
@@ -168,9 +168,9 @@ D) External table
 
 **Question**: Which command best optimizes query performance?
 
-A) `OPTIMIZE table_name`
-B) `OPTIMIZE table_name ZORDER BY (region)`
-C) `OPTIMIZE table_name ZORDER BY (region, date)`
+A) `OPTIMIZE table_name`  
+B) `OPTIMIZE table_name ZORDER BY (region)`  
+C) `OPTIMIZE table_name ZORDER BY (region, date)`  
 D) `VACUUM table_name`
 
 <details>
@@ -190,9 +190,9 @@ D) `VACUUM table_name`
 
 **Question**: What is the default value of `spark.sql.shuffle.partitions` and how should it be adjusted?
 
-A) 100; increase for large data
-B) 200; decrease for small data
-C) 200; increase for large data
+A) 100; increase for large data  
+B) 200; decrease for small data  
+C) 200; increase for large data  
 D) 500; keep default for all data
 
 <details>
@@ -214,9 +214,9 @@ D) 500; keep default for all data
 
 **Question**: How should environments be configured in Databricks Asset Bundles?
 
-A) Create separate bundle files for each environment
-B) Use targets in databricks.yml with environment-specific settings
-C) Use Git branches for each environment
+A) Create separate bundle files for each environment  
+B) Use targets in databricks.yml with environment-specific settings  
+C) Use Git branches for each environment  
 D) Manually modify settings before each deployment
 
 <details>
@@ -238,9 +238,9 @@ D) Manually modify settings before each deployment
 
 **Question**: Which system table provides this information?
 
-A) `system.access.audit`
-B) `system.billing.usage`
-C) `system.compute.clusters`
+A) `system.access.audit`  
+B) `system.billing.usage`  
+C) `system.compute.clusters`  
 D) `system.query.history`
 
 <details>
@@ -260,9 +260,9 @@ D) `system.query.history`
 
 **Question**: What does this indicate?
 
-A) Too few partitions
-B) Network congestion or slow shuffle fetch
-C) Out of memory errors
+A) Too few partitions  
+B) Network congestion or slow shuffle fetch  
+C) Out of memory errors  
 D) Insufficient disk space
 
 <details>

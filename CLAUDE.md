@@ -52,6 +52,12 @@ databricks-certification-study-guide/
   > Answer content...
   </details>
   ```
+- **Practice Question Choices**: Format as separate lines without bullets. End each line with **two spaces** to force a hard line break:
+  ```markdown
+  A) Option one  
+  B) Option two  
+  C) Option three  
+  ```
 
 ### Diagrams
 
