@@ -1,0 +1,311 @@
+# Spark Fundamentals
+
+Apache Spark is a unified analytics engine for large-scale data processing. Databricks provides a fully managed Spark environment.
+
+## Spark Architecture
+
+### Cluster Components
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│                      Driver Program                      │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │              SparkContext/SparkSession           │   │
+│  └─────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│                    Cluster Manager                       │
+│              (Databricks, YARN, Kubernetes)             │
+└─────────────────────────────────────────────────────────┘
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│   Executor 1  │  │   Executor 2  │  │   Executor N  │
+│  ┌─────────┐  │  │  ┌─────────┐  │  │  ┌─────────┐  │
+│  │  Task   │  │  │  │  Task   │  │  │  │  Task   │  │
+│  │  Task   │  │  │  │  Task   │  │  │  │  Task   │  │
+│  │  Cache  │  │  │  │  Cache  │  │  │  │  Cache  │  │
+│  └─────────┘  │  │  └─────────┘  │  │  └─────────┘  │
+└───────────────┘  └───────────────┘  └───────────────┘
+```
+
+### Key Components
+
+| Component | Description |
+|-----------|-------------|
+| **Driver** | Runs the main program, creates SparkContext, coordinates executors |
+| **Executor** | Worker process that runs tasks and stores data |
+| **Task** | Unit of work sent to executor |
+| **Cluster Manager** | Allocates resources across applications |
+
+## SparkSession
+
+The entry point for Spark functionality:
+
+```python
+from pyspark.sql import SparkSession
+
+# In Databricks, SparkSession is pre-configured as 'spark'
+spark = SparkSession.builder \
+    .appName("MyApp") \
+    .getOrCreate()
+
+# Access SparkContext
+sc = spark.sparkContext
+```
+
+## DataFrames
+
+### Creating DataFrames
+
+```python
+# From a list
+data = [(1, "Alice", 30), (2, "Bob", 25)]
+df = spark.createDataFrame(data, ["id", "name", "age"])
+
+# From a file
+df = spark.read.csv("/path/to/file.csv", header=True, inferSchema=True)
+df = spark.read.json("/path/to/file.json")
+df = spark.read.parquet("/path/to/file.parquet")
+
+# From a Delta table
+df = spark.read.format("delta").load("/path/to/delta")
+df = spark.table("my_catalog.my_schema.my_table")
+```
+
+### Basic Operations
+
+```python
+# Show data
+df.show()
+df.display()  # Databricks-specific
+
+# Schema
+df.printSchema()
+df.schema
+
+# Column selection
+df.select("name", "age")
+df.select(df.name, df.age + 1)
+
+# Filtering
+df.filter(df.age > 25)
+df.where("age > 25")
+
+# Adding columns
+df.withColumn("age_plus_10", df.age + 10)
+
+# Renaming columns
+df.withColumnRenamed("name", "full_name")
+
+# Dropping columns
+df.drop("age")
+
+# Distinct values
+df.distinct()
+df.dropDuplicates(["name"])
+```
+
+### Aggregations
+
+```python
+from pyspark.sql.functions import count, sum, avg, max, min
+
+# Group by
+df.groupBy("department").count()
+df.groupBy("department").agg(
+    count("*").alias("total"),
+    avg("salary").alias("avg_salary"),
+    max("salary").alias("max_salary")
+)
+
+# Window functions
+from pyspark.sql.window import Window
+from pyspark.sql.functions import row_number, rank
+
+window = Window.partitionBy("department").orderBy("salary")
+df.withColumn("rank", rank().over(window))
+```
+
+### Joins
+
+```python
+# Inner join (default)
+df1.join(df2, df1.id == df2.id)
+
+# Left join
+df1.join(df2, df1.id == df2.id, "left")
+
+# Join types: inner, left, right, outer, left_semi, left_anti, cross
+df1.join(df2, "id", "left_outer")
+
+# Multiple conditions
+df1.join(df2, (df1.id == df2.id) & (df1.date == df2.date))
+```
+
+## Transformations vs Actions
+
+### Transformations (Lazy)
+
+Transformations create a new DataFrame but don't execute until an action is called:
+
+| Transformation | Description |
+|----------------|-------------|
+| `select()` | Select columns |
+| `filter()` | Filter rows |
+| `groupBy()` | Group by columns |
+| `join()` | Join DataFrames |
+| `withColumn()` | Add/modify column |
+| `orderBy()` | Sort data |
+| `distinct()` | Remove duplicates |
+
+### Actions (Eager)
+
+Actions trigger computation and return results:
+
+| Action | Description |
+|--------|-------------|
+| `show()` | Display rows |
+| `count()` | Count rows |
+| `collect()` | Return all rows to driver |
+| `take(n)` | Return first n rows |
+| `write` | Save data |
+| `first()` | Return first row |
+
+## Spark SQL
+
+```python
+# Register DataFrame as temp view
+df.createOrReplaceTempView("my_view")
+
+# Run SQL queries
+result = spark.sql("""
+    SELECT department, COUNT(*) as count
+    FROM my_view
+    GROUP BY department
+    ORDER BY count DESC
+""")
+
+# Global temp views (accessible across sessions)
+df.createOrReplaceGlobalTempView("global_view")
+spark.sql("SELECT * FROM global_temp.global_view")
+```
+
+## Caching and Persistence
+
+```python
+# Cache in memory
+df.cache()
+
+# Persist with storage level
+from pyspark import StorageLevel
+df.persist(StorageLevel.MEMORY_AND_DISK)
+
+# Unpersist
+df.unpersist()
+```
+
+| Storage Level | Description |
+|---------------|-------------|
+| `MEMORY_ONLY` | Store in memory (default for cache) |
+| `MEMORY_AND_DISK` | Spill to disk if doesn't fit in memory |
+| `DISK_ONLY` | Store only on disk |
+| `MEMORY_ONLY_SER` | Serialized in memory (more compact) |
+
+## Partitioning
+
+### Understanding Partitions
+
+```python
+# Check number of partitions
+df.rdd.getNumPartitions()
+
+# Repartition (shuffle)
+df.repartition(10)
+df.repartition("column_name")
+
+# Coalesce (no shuffle, only decrease)
+df.coalesce(5)
+```
+
+### Partition Pruning
+
+```python
+# Write with partitioning
+df.write.partitionBy("year", "month").parquet("/path/to/output")
+
+# Read with partition filter (only reads relevant partitions)
+spark.read.parquet("/path/to/output").filter("year = 2025")
+```
+
+## Broadcast Variables
+
+For small lookup data that needs to be shared across executors:
+
+```python
+# Broadcast a small DataFrame
+small_df = spark.read.table("lookup_table")
+broadcast_df = spark.broadcast(small_df)
+
+# Use in join (Spark auto-broadcasts small tables)
+large_df.join(broadcast(small_df), "key")
+```
+
+## UDFs (User-Defined Functions)
+
+```python
+from pyspark.sql.functions import udf
+from pyspark.sql.types import StringType
+
+# Define UDF
+@udf(returnType=StringType())
+def upper_case(s):
+    return s.upper() if s else None
+
+# Use UDF
+df.withColumn("name_upper", upper_case(df.name))
+
+# Pandas UDF (vectorized, faster)
+from pyspark.sql.functions import pandas_udf
+import pandas as pd
+
+@pandas_udf(StringType())
+def pandas_upper(s: pd.Series) -> pd.Series:
+    return s.str.upper()
+
+df.withColumn("name_upper", pandas_upper(df.name))
+```
+
+## Use Cases
+
+| Use Case | Relevant Spark Features |
+|----------|------------------------|
+| ETL Pipelines | DataFrames, SQL, Delta Lake integration |
+| Data Analysis | SQL, aggregations, window functions |
+| Machine Learning | MLlib, feature engineering |
+| Real-time Processing | Structured Streaming |
+| Graph Processing | GraphFrames |
+
+## Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| `OutOfMemoryError` on driver | Collecting too much data | Use `take()` instead of `collect()`, increase driver memory |
+| Slow joins | Data skew | Use broadcast for small tables, salting for skewed keys |
+| Too many small files | Many partitions | Use `coalesce()` before writing |
+| `AnalysisException` | Column not found | Check column names with `printSchema()` |
+
+## Related Topics
+
+- [Delta Lake Basics](delta-lake-basics.md)
+- [Databricks Workspace](databricks-workspace.md)
+- [SQL Essentials](sql-essentials.md)
+
+## Official Documentation
+
+- [Apache Spark Documentation](https://spark.apache.org/docs/latest/)
+- [Databricks Spark Guide](https://docs.databricks.com/spark/index.html)
+- [PySpark API Reference](https://spark.apache.org/docs/latest/api/python/)

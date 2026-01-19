@@ -21,6 +21,7 @@
 | Term | Definition |
 |------|------------|
 | **Catalog** | Top-level container in Unity Catalog hierarchy |
+| **Control Plane** | Databricks-managed layer handling web UI, APIs, and orchestration |
 | **CDC** | Change Data Capture - tracking and processing data changes |
 | **CDF** | Change Data Feed - Delta Lake feature to track row-level changes |
 | **Checkpoint** | Persistent state for streaming jobs to enable recovery |
@@ -32,6 +33,7 @@
 | Term | Definition |
 |------|------------|
 | **DAB** | Databricks Asset Bundles - CI/CD deployment tool |
+| **Data Plane** | Compute layer where clusters run and data is processed (in customer or Databricks cloud) |
 | **DBFS** | Databricks File System - distributed file system abstraction |
 | **Delta Lake** | Open-source storage layer providing ACID transactions |
 | **Delta Sharing** | Open protocol for secure data sharing |
@@ -105,6 +107,7 @@
 | **Partition** | Logical division of data for parallel processing |
 | **Partition Pruning** | Query optimization skipping irrelevant partitions |
 | **Photon** | Databricks vectorized query engine |
+| **Private Link** | Cloud service for private network connectivity to Databricks (AWS/Azure) |
 
 ## R
 
@@ -117,6 +120,7 @@
 | Term | Definition |
 |------|------------|
 | **SCD** | Slowly Changing Dimension - data modeling pattern |
+| **SCC** | Secure Cluster Connectivity - clusters with no public IP addresses |
 | **Schema** | Structure definition for data (also: database in UC) |
 | **Schema Evolution** | Automatic handling of schema changes over time |
 | **Schema Inference** | Automatic detection of data structure |

@@ -11,6 +11,7 @@ This directory contains foundational concepts used across multiple Databricks ce
 | [Medallion Architecture](medallion-architecture.md) | DE Associate, DE Professional |
 | [Unity Catalog Basics](unity-catalog-basics.md) | All certifications |
 | [Databricks Workspace](databricks-workspace.md) | All certifications |
+| [Platform Architecture](platform-architecture.md) | All certifications |
 | [SQL Essentials](sql-essentials.md) | Data Analyst Associate |
 
 ## How to Use
