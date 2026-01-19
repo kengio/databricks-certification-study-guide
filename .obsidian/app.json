@@ -2,7 +2,7 @@
   "useMarkdownLinks": true,
   "newLinkFormat": "relative",
   "attachmentFolderPath": "images",
-  "showLineNumber": true,
+  "showLineNumber": false,
   "tabSize": 4,
   "useTab": false
 }

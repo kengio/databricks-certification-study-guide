@@ -14,17 +14,17 @@
 
 ## Delta Lake vs Parquet
 
-| Feature | Delta Lake | Parquet |
-|---------|------------|---------|
-| **ACID Transactions** | Yes | No |
-| **Time Travel** | Yes | No |
-| **Schema Enforcement** | Yes | No |
-| **MERGE/UPDATE/DELETE** | Yes | Requires rewrite |
-| **Change Data Feed** | Yes | No |
-| **Audit History** | Yes | No |
-| **Streaming Support** | Full | Limited |
-| **File Compaction** | OPTIMIZE command | Manual |
-| **Overhead** | Transaction log | None |
+| Feature                 | Delta Lake       | Parquet          |
+| ----------------------- | ---------------- | ---------------- |
+| **ACID Transactions**   | Yes              | No               |
+| **Time Travel**         | Yes              | No               |
+| **Schema Enforcement**  | Yes              | No               |
+| **MERGE/UPDATE/DELETE** | Yes              | Requires rewrite |
+| **Change Data Feed**    | Yes              | No               |
+| **Audit History**       | Yes              | No               |
+| **Streaming Support**   | Full             | Limited          |
+| **File Compaction**     | OPTIMIZE command | Manual           |
+| **Overhead**            | Transaction log  | None             |
 
 ## Managed vs External Tables
 

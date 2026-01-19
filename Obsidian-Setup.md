@@ -30,7 +30,12 @@ Since Obsidian plugins must be installed manually (or via sync), here are the re
 *Quality of Life.*
 - **Why**: Markdown tables are notoriously difficult to edit by hand. This plugin auto-formats them as you type.
 
-### 4. Paste URL into selection
+### 4. Better CodeBlock
+*Essential for studying code.*
+- **Why**: Adds line numbers, title bars, and copy buttons to code blocks.
+- **Search for**: "Better CodeBlock" or "Codeblock Customizer" in Community Plugins.
+
+### 5. Paste URL into selection
 *Quality of Life.*
 - **Why**: Allows you to highlight text and paste a URL to automatically create a `[text](url)` link.
 
