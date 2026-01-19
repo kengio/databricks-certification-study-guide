@@ -305,11 +305,11 @@ Circular dependency detected in pipeline
 
 ## Common Solutions Summary
 
-| Error Type | First Step |
-|------------|------------|
-| Permission | Check SHOW GRANTS |
-| Schema | Enable mergeSchema |
-| Memory | Increase partitions |
-| Checkpoint | Delete and restart |
-| Concurrency | Add retry logic |
+| Error Type  | First Step             |
+| ----------- | ---------------------- |
+| Permission  | Check SHOW GRANTS      |
+| Schema      | Enable mergeSchema     |
+| Memory      | Increase partitions    |
+| Checkpoint  | Delete and restart     |
+| Concurrency | Add retry logic        |
 | Time Travel | Check DESCRIBE HISTORY |

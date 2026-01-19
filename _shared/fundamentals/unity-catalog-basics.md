@@ -64,11 +64,11 @@ The top-level container for all data assets. Typically one per cloud region.
 
 A grouping of schemas (databases). Common patterns:
 
-| Pattern | Example Catalogs |
-|---------|------------------|
-| Environment | `prod`, `dev`, `staging` |
-| Domain | `sales`, `marketing`, `finance` |
-| Team | `data_engineering`, `data_science` |
+| Pattern     | Example Catalogs                     |
+| ----------- | ------------------------------------ |
+| Environment | `prod`, `dev`, `staging`             |
+| Domain      | `sales`, `marketing`, `finance`      |
+| Team        | `data_engineering`, `data_science`   |
 
 ```sql
 -- Create a catalog
@@ -159,23 +159,23 @@ SELECT prod.common.mask_email(email) FROM prod.silver.customers;
 
 ### Principals
 
-| Principal Type | Description |
-|----------------|-------------|
-| User | Individual user account |
-| Group | Collection of users |
-| Service Principal | Application identity |
+| Principal Type    | Description             |
+| ----------------- | ----------------------- |
+| User              | Individual user account |
+| Group             | Collection of users     |
+| Service Principal | Application identity    |
 
 ### Privileges
 
-| Privilege | Description |
-|-----------|-------------|
-| `USE CATALOG` | Access catalog |
-| `USE SCHEMA` | Access schema |
-| `SELECT` | Read table/view data |
-| `MODIFY` | Insert, update, delete data |
-| `CREATE TABLE` | Create tables in schema |
-| `CREATE SCHEMA` | Create schemas in catalog |
-| `ALL PRIVILEGES` | All available privileges |
+| Privilege        | Description                 |
+| ---------------- | --------------------------- |
+| `USE CATALOG`    | Access catalog              |
+| `USE SCHEMA`     | Access schema               |
+| `SELECT`         | Read table/view data        |
+| `MODIFY`         | Insert, update, delete data |
+| `CREATE TABLE`   | Create tables in schema     |
+| `CREATE SCHEMA`  | Create schemas in catalog   |
+| `ALL PRIVILEGES` | All available privileges    |
 
 ### Granting Permissions
 
@@ -312,22 +312,22 @@ flowchart LR
 
 ## Use Cases
 
-| Use Case | How Unity Catalog Helps |
-|----------|------------------------|
-| Compliance (GDPR, CCPA) | Audit logs, access control, data lineage |
-| Data Discovery | Search, tags, comments, lineage visualization |
-| Multi-team Collaboration | Fine-grained permissions, catalog isolation |
-| Data Quality | Lineage tracking, centralized metadata |
-| ML Governance | Track models, features, and training data |
+| Use Case                 | How Unity Catalog Helps                       |
+| ------------------------ | --------------------------------------------- |
+| Compliance (GDPR, CCPA)  | Audit logs, access control, data lineage      |
+| Data Discovery           | Search, tags, comments, lineage visualization |
+| Multi-team Collaboration | Fine-grained permissions, catalog isolation   |
+| Data Quality             | Lineage tracking, centralized metadata        |
+| ML Governance            | Track models, features, and training data     |
 
 ## Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| `PERMISSION_DENIED` | Missing grants | Grant required privilege to user/group |
-| `CATALOG_NOT_FOUND` | Catalog doesn't exist or no access | Check catalog exists, grant USE CATALOG |
-| `TABLE_NOT_FOUND` | Wrong namespace or no access | Use full three-level name, check grants |
-| External table read fails | Missing external location access | Grant READ FILES on external location |
+| Issue                       | Cause                              | Solution                                |
+| --------------------------- | ---------------------------------- | --------------------------------------- |
+| `PERMISSION_DENIED`         | Missing grants                     | Grant required privilege to user/group  |
+| `CATALOG_NOT_FOUND`         | Catalog doesn't exist or no access | Check catalog exists, grant USE CATALOG |
+| `TABLE_NOT_FOUND`           | Wrong namespace or no access       | Use full three-level name, check grants |
+| External table read fails   | Missing external location access   | Grant READ FILES on external location   |
 
 ## Migration from Hive Metastore
 

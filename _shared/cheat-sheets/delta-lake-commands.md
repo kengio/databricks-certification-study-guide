@@ -193,18 +193,18 @@ spark.read.format("delta") \
 
 ## Key Properties
 
-| Property | Description |
-|----------|-------------|
-| `delta.enableChangeDataFeed` | Enable CDF |
-| `delta.autoOptimize.optimizeWrite` | Auto-optimize writes |
-| `delta.autoOptimize.autoCompact` | Auto-compact files |
-| `delta.logRetentionDuration` | Transaction log retention |
-| `delta.deletedFileRetentionDuration` | Deleted file retention |
+| Property                             | Description               |
+| ------------------------------------ | ------------------------- |
+| `delta.enableChangeDataFeed`         | Enable CDF                |
+| `delta.autoOptimize.optimizeWrite`   | Auto-optimize writes      |
+| `delta.autoOptimize.autoCompact`     | Auto-compact files        |
+| `delta.logRetentionDuration`         | Transaction log retention |
+| `delta.deletedFileRetentionDuration` | Deleted file retention    |
 
 ## Key Numbers
 
-| Setting | Default |
-|---------|---------|
-| VACUUM retention | 168 hours (7 days) |
-| Target file size | 1 GB |
-| Transaction log retention | 30 days |
+| Setting                   | Default            |
+| ------------------------- | ------------------ |
+| VACUUM retention          | 168 hours (7 days) |
+| Target file size          | 1 GB               |
+| Transaction log retention | 30 days            |

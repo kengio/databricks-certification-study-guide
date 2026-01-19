@@ -2,16 +2,16 @@
 
 ## Exam Overview
 
-| Detail | Information |
-|--------|-------------|
+| Detail            | Information                                  |
+| ----------------- | -------------------------------------------- |
 | **Certification** | Databricks Certified Data Engineer Associate |
-| **Questions** | ~45 multiple-choice |
-| **Duration** | 90 minutes |
-| **Passing Score** | 70% |
-| **Languages** | Python and SQL |
-| **Experience** | 6+ months with Databricks |
-| **Recertification** | Every 2 years |
-| **Cost** | $200 USD |
+| **Questions**     | ~45 multiple-choice                          |
+| **Duration**      | 90 minutes                                   |
+| **Passing Score** | 70%                                          |
+| **Languages**     | Python and SQL                               |
+| **Experience**    | 6+ months with Databricks                    |
+| **Recertification**| Every 2 years                                |
+| **Cost**          | $200 USD                                     |
 
 ## Exam Domain Weights
 
@@ -26,13 +26,13 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section | Weight | Topics |
-|---------|--------|--------|
-| 01-Lakehouse Platform | 24% | Architecture, components, workspace |
-| 02-ETL with Spark | 29% | SQL, DataFrames, transformations |
-| 03-Delta Lake | 22% | ACID, time travel, optimization |
-| 04-Workflows | 16% | Jobs, scheduling, orchestration |
-| 05-Data Governance | 9% | Unity Catalog basics, access control |
+| Section               | Weight | Topics                               |
+| --------------------- | ------ | ------------------------------------ |
+| 01-Lakehouse Platform | 24%    | Architecture, components, workspace  |
+| 02-ETL with Spark     | 29%    | SQL, DataFrames, transformations     |
+| 03-Delta Lake         | 22%    | ACID, time travel, optimization      |
+| 04-Workflows          | 16%    | Jobs, scheduling, orchestration      |
+| 05-Data Governance    | 9%     | Unity Catalog basics, access control |
 
 ## Prerequisites
 

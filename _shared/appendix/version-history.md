@@ -4,49 +4,49 @@
 
 ### Delta Lake 3.x (2024+)
 
-| Version | Key Features |
-|---------|-------------|
+| Version | Key Features                                       |
+| ------- | -------------------------------------------------- |
 | **3.2** | Liquid Clustering GA, Deletion Vectors improvements |
 | **3.1** | UniForm GA (Iceberg/Hudi compatibility), Variant type |
-| **3.0** | Default column mapping, Coordinated commits |
+| **3.0** | Default column mapping, Coordinated commits        |
 
 ### Delta Lake 2.x (2022-2023)
 
-| Version | Key Features |
-|---------|-------------|
+| Version | Key Features                                |
+| ------- | ------------------------------------------- |
 | **2.4** | Liquid Clustering preview, Deletion vectors |
-| **2.3** | Type widening, Domain metadata |
-| **2.2** | Column mapping mode changes |
-| **2.1** | Change Data Feed improvements |
-| **2.0** | Python API parity, DROP COLUMN support |
+| **2.3** | Type widening, Domain metadata              |
+| **2.2** | Column mapping mode changes                 |
+| **2.1** | Change Data Feed improvements               |
+| **2.0** | Python API parity, DROP COLUMN support      |
 
 ### Delta Lake 1.x (2020-2022)
 
-| Version | Key Features |
-|---------|-------------|
-| **1.2** | Change Data Feed (CDF) |
+| Version | Key Features                          |
+| ------- | ------------------------------------- |
+| **1.2** | Change Data Feed (CDF)                |
 | **1.1** | Generated columns, MERGE improvements |
-| **1.0** | GA release, Z-ordering |
+| **1.0** | GA release, Z-ordering                |
 
 ## Databricks Runtime Versions
 
 ### Current LTS Versions (Recommended)
 
-| Version | Release | Delta Lake | Spark | Support Until |
-|---------|---------|------------|-------|---------------|
-| **15.4 LTS** | 2024 | 3.2 | 3.5 | ~2026 |
-| **14.3 LTS** | 2024 | 3.1 | 3.5 | ~2025 |
-| **13.3 LTS** | 2023 | 2.4 | 3.4 | ~2025 |
+| Version      | Release | Delta Lake | Spark | Support Until |
+| ------------ | ------- | ---------- | ----- | ------------- |
+| **15.4 LTS** | 2024    | 3.2        | 3.5   | ~2026         |
+| **14.3 LTS** | 2024    | 3.1        | 3.5   | ~2025         |
+| **13.3 LTS** | 2023    | 2.4        | 3.4   | ~2025         |
 
 ### Feature Availability by Runtime
 
-| Feature | Min Runtime |
-|---------|-------------|
-| Liquid Clustering | 13.3+ |
-| Deletion Vectors | 12.1+ |
-| Predictive Optimization | 12.0+ |
-| Photon | 9.1+ (fully GA 10.4+) |
-| Unity Catalog | 11.3+ |
+| Feature                 | Min Runtime           |
+| ----------------------- | --------------------- |
+| Liquid Clustering       | 13.3+                 |
+| Deletion Vectors        | 12.1+                 |
+| Predictive Optimization | 12.0+                 |
+| Photon                  | 9.1+ (fully GA 10.4+) |
+| Unity Catalog           | 11.3+                 |
 
 ## Unity Catalog Evolution
 
@@ -94,37 +94,37 @@
 
 ## Auto Loader Evolution
 
-| Year | Feature |
-|------|---------|
+| Year     | Feature                                    |
+| -------- | ------------------------------------------ |
 | **2024** | Schema evolution improvements, rescue data |
-| **2023** | File notification mode GA (all clouds) |
-| **2022** | Inferred schema persistence |
-| **2021** | Auto Loader GA |
+| **2023** | File notification mode GA (all clouds)     |
+| **2022** | Inferred schema persistence                |
+| **2021** | Auto Loader GA                             |
 
 ## Databricks Asset Bundles (DAB)
 
-| Version | Features |
-|---------|----------|
-| **2024** | DAB GA, Enhanced templates |
+| Version  | Features                     |
+| -------- | ---------------------------- |
+| **2024** | DAB GA, Enhanced templates   |
 | **2023** | DAB preview, Basic templates |
 
 ## Key Configuration Changes
 
 ### Deprecated Settings
 
-| Old Setting | Replacement | Since |
-|-------------|-------------|-------|
+| Old Setting                                    | Replacement    | Since    |
+| ---------------------------------------------- | -------------- | -------- |
 | `spark.databricks.delta.merge.enabledTriggers` | Always enabled | DBR 12.0 |
-| `delta.autoOptimize.optimizeWrite` | On by default | DBR 11.0 |
-| Hive metastore tables | Unity Catalog | DBR 11.3 |
+| `delta.autoOptimize.optimizeWrite`             | On by default  | DBR 11.0 |
+| Hive metastore tables                          | Unity Catalog  | DBR 11.3 |
 
 ### Default Changes
 
-| Setting | Old Default | New Default | Since |
-|---------|-------------|-------------|-------|
-| AQE | false | true | Spark 3.2 |
-| Column mapping | none | name | Delta 3.0 |
-| CDF | false | configurable | Delta 2.0 |
+| Setting        | Old Default | New Default  | Since     |
+| -------------- | ----------- | ------------ | --------- |
+| AQE            | false       | true         | Spark 3.2 |
+| Column mapping | none        | name         | Delta 3.0 |
+| CDF            | false       | configurable | Delta 2.0 |
 
 ## Exam Relevance Notes
 

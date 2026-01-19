@@ -2,16 +2,16 @@
 
 ## Exam Overview
 
-| Detail | Information |
-|--------|-------------|
+| Detail            | Information                                 |
+| ----------------- | ------------------------------------------- |
 | **Certification** | Databricks Certified Data Analyst Associate |
-| **Questions** | ~45 multiple-choice |
-| **Duration** | 90 minutes |
-| **Passing Score** | 70% |
-| **Languages** | SQL |
-| **Experience** | 6+ months with Databricks SQL |
-| **Recertification** | Every 2 years |
-| **Cost** | $200 USD |
+| **Questions**     | ~45 multiple-choice                         |
+| **Duration**      | 90 minutes                                  |
+| **Passing Score** | 70%                                         |
+| **Languages**     | SQL                                         |
+| **Experience**    | 6+ months with Databricks SQL               |
+| **Recertification**| Every 2 years                               |
+| **Cost**          | $200 USD                                    |
 
 ## Exam Domain Weights
 
@@ -26,13 +26,13 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section | Weight | Topics |
-|---------|--------|--------|
-| 01-Databricks SQL | 22% | SQL Warehouses, query editor, history |
-| 02-Data Management | 20% | Tables, schemas, Unity Catalog |
-| 03-SQL Queries | 29% | Joins, aggregations, window functions |
-| 04-Dashboards | 18% | Visualizations, dashboards, alerts |
-| 05-Analytics Applications | 11% | Parameters, scheduling, sharing |
+| Section                   | Weight | Topics                                |
+| ------------------------- | ------ | ------------------------------------- |
+| 01-Databricks SQL         | 22%    | SQL Warehouses, query editor, history |
+| 02-Data Management        | 20%    | Tables, schemas, Unity Catalog        |
+| 03-SQL Queries            | 29%    | Joins, aggregations, window functions |
+| 04-Dashboards             | 18%    | Visualizations, dashboards, alerts    |
+| 05-Analytics Applications | 11%    | Parameters, scheduling, sharing       |
 
 ## Prerequisites
 

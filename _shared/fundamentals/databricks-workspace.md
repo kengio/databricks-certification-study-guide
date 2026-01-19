@@ -31,14 +31,14 @@ flowchart TB
 
 ## Navigation Overview
 
-| Section | Purpose |
-|---------|---------|
-| **Workspace** | Browse and manage notebooks, folders, and files |
-| **Repos** | Git integration for version control |
-| **Data** | Access to catalogs, schemas, tables (Unity Catalog) |
-| **Compute** | Manage clusters and SQL warehouses |
-| **Workflows** | Create and monitor jobs and pipelines |
-| **Machine Learning** | Experiments, models, feature store |
+| Section          | Purpose                                             |
+| ---------------- | --------------------------------------------------- |
+| **Workspace**    | Browse and manage notebooks, folders, and files     |
+| **Repos**        | Git integration for version control                 |
+| **Data**         | Access to catalogs, schemas, tables (Unity Catalog) |
+| **Compute**      | Manage clusters and SQL warehouses                  |
+| **Workflows**    | Create and monitor jobs and pipelines               |
+| **Machine Learning** | Experiments, models, feature store              |
 
 ## Notebooks
 
@@ -48,13 +48,13 @@ Interactive documents that combine code, visualizations, and text. Support multi
 
 ### Supported Languages
 
-| Language | Magic Command | Use Case |
-|----------|---------------|----------|
-| Python | `%python` (default) | Data engineering, ML, general |
-| SQL | `%sql` | Queries, analytics |
-| Scala | `%scala` | Performance-critical code |
-| R | `%r` | Statistical analysis |
-| Markdown | `%md` | Documentation |
+| Language | Magic Command       | Use Case                      |
+| -------- | ------------------- | ----------------------------- |
+| Python   | `%python` (default) | Data engineering, ML, general |
+| SQL      | `%sql`              | Queries, analytics            |
+| Scala    | `%scala`            | Performance-critical code     |
+| R        | `%r`                | Statistical analysis          |
+| Markdown | `%md`               | Documentation                 |
 
 ### Creating Notebooks
 
@@ -110,11 +110,11 @@ dbutils.notebook.exit("Success")
 
 ### Cluster Types
 
-| Type | Description | Use Case |
-|------|-------------|----------|
-| **All-Purpose** | Interactive, shared compute | Development, exploration |
-| **Job** | Created per job run | Production workloads |
-| **SQL Warehouse** | Optimized for SQL queries | BI, SQL analytics |
+| Type             | Description                 | Use Case                 |
+| ---------------- | --------------------------- | ------------------------ |
+| **All-Purpose**  | Interactive, shared compute | Development, exploration |
+| **Job**          | Created per job run         | Production workloads     |
+| **SQL Warehouse** | Optimized for SQL queries  | BI, SQL analytics        |
 
 ### Creating a Cluster
 
@@ -129,22 +129,22 @@ dbutils.notebook.exit("Success")
 
 ### Cluster Configuration
 
-| Setting | Example Value |
-|---------|---------------|
-| Runtime Version | 14.3 LTS (Spark 3.5.0, Scala 2.12) |
-| Node Type | i3.xlarge |
-| Driver | Same as worker |
-| Workers | Min 2, Max 8 (autoscaling) |
-| Auto-termination | 120 minutes |
-| Spark Config | `spark.sql.shuffle.partitions 200` |
+| Setting             | Example Value                       |
+| ------------------- | ----------------------------------- |
+| Runtime Version     | 14.3 LTS (Spark 3.5.0, Scala 2.12)  |
+| Node Type           | i3.xlarge                           |
+| Driver              | Same as worker                      |
+| Workers             | Min 2, Max 8 (autoscaling)          |
+| Auto-termination    | 120 minutes                         |
+| Spark Config        | `spark.sql.shuffle.partitions 200`  |
 
 ### Access Modes
 
-| Mode | Description |
-|------|-------------|
-| **Single User** | Dedicated to one user, full access |
-| **Shared** | Multiple users, Unity Catalog isolation |
-| **No Isolation Shared** | Multiple users, no isolation (legacy) |
+| Mode                    | Description                             |
+| ----------------------- | --------------------------------------- |
+| **Single User**         | Dedicated to one user, full access      |
+| **Shared**              | Multiple users, Unity Catalog isolation |
+| **No Isolation Shared** | Multiple users, no isolation (legacy)   |
 
 ## SQL Warehouses
 
@@ -162,12 +162,12 @@ Serverless or classic compute optimized for SQL workloads.
 
 ### Warehouse Sizing
 
-| Size | Best For |
-|------|----------|
+| Size     | Best For                   |
+| -------- | -------------------------- |
 | 2X-Small | Light queries, development |
-| Small | Small dashboards |
-| Medium | Production dashboards |
-| Large+ | Heavy concurrent queries |
+| Small    | Small dashboards           |
+| Medium   | Production dashboards      |
+| Large+   | Heavy concurrent queries   |
 
 ## Repos (Git Integration)
 
@@ -180,12 +180,12 @@ Serverless or classic compute optimized for SQL workloads.
 
 ### Git Operations
 
-| Operation | How to |
-|-----------|--------|
-| Pull | Click "Pull" button or use Git dialog |
-| Commit | Click "Commit & Push" |
-| Branch | Create/switch via branch dropdown |
-| Merge | Use Git dialog or PR in Git provider |
+| Operation | How to                                |
+| --------- | ------------------------------------- |
+| Pull      | Click "Pull" button or use Git dialog |
+| Commit    | Click "Commit & Push"                 |
+| Branch    | Create/switch via branch dropdown     |
+| Merge     | Use Git dialog or PR in Git provider  |
 
 ### Supported Providers
 
@@ -223,12 +223,12 @@ flowchart LR
 
 ### Job Scheduling
 
-| Schedule Type | Description |
-|---------------|-------------|
-| Manual | On-demand execution |
+| Schedule Type    | Description                           |
+| ---------------- | ------------------------------------- |
+| Manual           | On-demand execution                   |
 | Scheduled (cron) | e.g., `0 0 * * *` (daily at midnight) |
-| Continuous | Runs indefinitely |
-| File arrival | Triggered by new files |
+| Continuous       | Runs indefinitely                     |
+| File arrival     | Triggered by new files                |
 
 ### Job Parameters
 
@@ -312,11 +312,11 @@ flowchart TB
 
 ### Permissions
 
-| Level | Permissions |
-|-------|-------------|
+| Level     | Permissions                             |
+| --------- | --------------------------------------- |
 | Workspace | Can Manage, Can Edit, Can Run, Can Read |
-| Folder | Can Manage, Can Edit, Can Run, Can Read |
-| Notebook | Can Manage, Can Edit, Can Run, Can Read |
+| Folder    | Can Manage, Can Edit, Can Run, Can Read |
+| Notebook  | Can Manage, Can Edit, Can Run, Can Read |
 
 ## Secrets Management
 
@@ -342,21 +342,21 @@ print(password)  # Shows [REDACTED]
 
 ## Use Cases
 
-| Use Case | Workspace Components |
-|----------|---------------------|
-| Data Engineering | Notebooks, Jobs, DLT, Clusters |
-| Data Analysis | SQL Warehouses, Notebooks, Dashboards |
-| Machine Learning | MLflow, Experiments, Model Registry |
-| BI/Reporting | SQL Warehouses, Dashboards |
+| Use Case           | Workspace Components                  |
+| ------------------ | ------------------------------------- |
+| Data Engineering   | Notebooks, Jobs, DLT, Clusters        |
+| Data Analysis      | SQL Warehouses, Notebooks, Dashboards |
+| Machine Learning   | MLflow, Experiments, Model Registry   |
+| BI/Reporting       | SQL Warehouses, Dashboards            |
 
 ## Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Cluster won't start | Resource limits, permissions | Check quotas, verify IAM roles |
-| Notebook won't attach | Cluster terminated/starting | Wait for cluster, check auto-termination |
-| Can't access table | Missing permissions | Request access via Unity Catalog |
-| Job fails | Resource issues, code errors | Check logs, increase cluster size |
+| Issue                 | Cause                        | Solution                                 |
+| --------------------- | ---------------------------- | ---------------------------------------- |
+| Cluster won't start   | Resource limits, permissions | Check quotas, verify IAM roles           |
+| Notebook won't attach | Cluster terminated/starting  | Wait for cluster, check auto-termination |
+| Can't access table    | Missing permissions          | Request access via Unity Catalog         |
+| Job fails             | Resource issues, code errors | Check logs, increase cluster size        |
 
 ## Related Topics
 

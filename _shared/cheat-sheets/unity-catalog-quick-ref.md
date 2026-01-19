@@ -87,17 +87,17 @@ LOCATION 'abfss://container@storage/path';
 
 ### Privilege Types
 
-| Privilege | Applies To | Description |
-|-----------|------------|-------------|
-| `USE CATALOG` | Catalog | Access the catalog |
-| `USE SCHEMA` | Schema | Access the schema |
-| `SELECT` | Table, View | Read data |
-| `MODIFY` | Table | Write data (INSERT, UPDATE, DELETE) |
-| `CREATE TABLE` | Schema | Create tables in schema |
-| `CREATE VIEW` | Schema | Create views in schema |
-| `CREATE FUNCTION` | Schema | Create functions in schema |
-| `CREATE VOLUME` | Schema | Create volumes in schema |
-| `ALL PRIVILEGES` | Any | Full access |
+| Privilege         | Applies To  | Description                         |
+| ----------------- | ----------- | ----------------------------------- |
+| `USE CATALOG`     | Catalog     | Access the catalog                  |
+| `USE SCHEMA`      | Schema      | Access the schema                   |
+| `SELECT`          | Table, View | Read data                           |
+| `MODIFY`          | Table       | Write data (INSERT, UPDATE, DELETE) |
+| `CREATE TABLE`    | Schema      | Create tables in schema             |
+| `CREATE VIEW`     | Schema      | Create views in schema              |
+| `CREATE FUNCTION` | Schema      | Create functions in schema          |
+| `CREATE VOLUME`   | Schema      | Create volumes in schema            |
+| `ALL PRIVILEGES`  | Any         | Full access                         |
 
 ### Grant Syntax
 
@@ -210,16 +210,16 @@ GRANT SELECT ON SHARE share_name TO RECIPIENT recipient_name;
 
 ## Key Functions
 
-| Function | Description |
-|----------|-------------|
-| `current_user()` | Current user's email |
+| Function                           | Description            |
+| ---------------------------------- | ---------------------- |
+| `current_user()`                   | Current user's email   |
 | `is_account_group_member('group')` | Check group membership |
-| `is_member('group')` | Alias for group check |
+| `is_member('group')`               | Alias for group check  |
 
 ## Managed vs External
 
-| Aspect | Managed | External |
-|--------|---------|----------|
-| Data location | Controlled by UC | User-specified |
-| DROP TABLE | Deletes data | Keeps data |
-| Best for | New tables | Existing data |
+| Aspect        | Managed          | External        |
+| ------------- | ---------------- | --------------- |
+| Data location | Controlled by UC | User-specified  |
+| DROP TABLE    | Deletes data     | Keeps data      |
+| Best for      | New tables       | Existing data   |

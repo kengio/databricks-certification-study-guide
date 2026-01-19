@@ -2,16 +2,16 @@
 
 ## Exam Overview
 
-| Detail | Information |
-|--------|-------------|
+| Detail            | Information                                        |
+| ----------------- | -------------------------------------------------- |
 | **Certification** | Databricks Certified Machine Learning Professional |
-| **Questions** | ~60 multiple-choice |
-| **Duration** | 120 minutes |
-| **Passing Score** | 70% |
-| **Languages** | Python |
-| **Experience** | 1+ years with Databricks ML |
-| **Recertification** | Every 2 years |
-| **Cost** | $200 USD |
+| **Questions**     | ~60 multiple-choice                                |
+| **Duration**      | 120 minutes                                        |
+| **Passing Score** | 70%                                                |
+| **Languages**     | Python                                             |
+| **Experience**    | 1+ years with Databricks ML                        |
+| **Recertification**| Every 2 years                                      |
+| **Cost**          | $200 USD                                           |
 
 ## Exam Domain Weights
 
@@ -25,12 +25,12 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section | Weight | Topics |
-|---------|--------|--------|
-| Experimentation | 30% | Feature engineering, AutoML, hyperparameter tuning |
-| Model Lifecycle | 30% | MLflow, model registry, versioning |
-| Model Deployment | 25% | Model serving, batch inference, real-time |
-| Monitoring | 15% | Drift detection, performance monitoring |
+| Section          | Weight | Topics                                             |
+| ---------------- | ------ | -------------------------------------------------- |
+| Experimentation  | 30%    | Feature engineering, AutoML, hyperparameter tuning |
+| Model Lifecycle  | 30%    | MLflow, model registry, versioning                 |
+| Model Deployment | 25%    | Model serving, batch inference, real-time          |
+| Monitoring       | 15%    | Drift detection, performance monitoring            |
 
 ## Prerequisites
 

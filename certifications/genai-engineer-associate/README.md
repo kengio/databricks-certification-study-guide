@@ -2,16 +2,16 @@
 
 ## Exam Overview
 
-| Detail | Information |
-|--------|-------------|
+| Detail            | Information                                           |
+| ----------------- | ----------------------------------------------------- |
 | **Certification** | Databricks Certified Generative AI Engineer Associate |
-| **Questions** | ~45 multiple-choice |
-| **Duration** | 90 minutes |
-| **Passing Score** | 70% |
-| **Languages** | Python |
-| **Experience** | 6+ months with GenAI on Databricks |
-| **Recertification** | Every 2 years |
-| **Cost** | $200 USD |
+| **Questions**     | ~45 multiple-choice                                   |
+| **Duration**      | 90 minutes                                            |
+| **Passing Score** | 70%                                                   |
+| **Languages**     | Python                                                |
+| **Experience**    | 6+ months with GenAI on Databricks                    |
+| **Recertification**| Every 2 years                                         |
+| **Cost**          | $200 USD                                              |
 
 ## Exam Domain Weights
 
@@ -25,12 +25,12 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section | Weight | Topics |
-|---------|--------|--------|
-| 01-LLM Fundamentals | - | Foundation models, tokenization, embeddings |
-| 02-RAG Patterns | 30% | Retrieval-augmented generation design |
-| 03-Vector Search | 40% | Vector databases, similarity search |
-| Build & Deploy | 30% | Chains, agents, model serving |
+| Section            | Weight | Topics                                      |
+| ------------------ | ------ | ------------------------------------------- |
+| 01-LLM Fundamentals| -      | Foundation models, tokenization, embeddings |
+| 02-RAG Patterns    | 30%    | Retrieval-augmented generation design       |
+| 03-Vector Search   | 40%    | Vector databases, similarity search         |
+| Build & Deploy     | 30%    | Chains, agents, model serving               |
 
 ## Key Technologies
 

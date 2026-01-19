@@ -2,16 +2,16 @@
 
 ## Exam Overview
 
-| Detail | Information |
-|--------|-------------|
+| Detail            | Information                                     |
+| ----------------- | ----------------------------------------------- |
 | **Certification** | Databricks Certified Machine Learning Associate |
-| **Questions** | ~45 multiple-choice |
-| **Duration** | 90 minutes |
-| **Passing Score** | 70% |
-| **Languages** | Python |
-| **Experience** | 6+ months with Databricks ML |
-| **Recertification** | Every 2 years |
-| **Cost** | $200 USD |
+| **Questions**     | ~45 multiple-choice                             |
+| **Duration**      | 90 minutes                                      |
+| **Passing Score** | 70%                                             |
+| **Languages**     | Python                                          |
+| **Experience**    | 6+ months with Databricks ML                    |
+| **Recertification**| Every 2 years                                   |
+| **Cost**          | $200 USD                                        |
 
 ## Exam Domain Weights
 
@@ -25,12 +25,12 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section | Weight | Topics |
-|---------|--------|--------|
-| 01-Databricks ML | 29% | Clusters, notebooks, repos, AutoML |
-| 02-ML Workflows | 29% | Experimentation, MLflow tracking |
-| 03-Feature Engineering | 33% | Spark ML, feature pipelines |
-| 04-MLflow | 9% | Model registry, deployment basics |
+| Section               | Weight | Topics                                 |
+| --------------------- | ------ | -------------------------------------- |
+| 01-Databricks ML      | 29%    | Clusters, notebooks, repos, AutoML     |
+| 02-ML Workflows       | 29%    | Experimentation, MLflow tracking       |
+| 03-Feature Engineering| 33%    | Spark ML, feature pipelines            |
+| 04-MLflow             | 9%     | Model registry, deployment basics      |
 
 ## Prerequisites
 

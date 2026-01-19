@@ -40,12 +40,12 @@ flowchart TB
 
 ### Key Components
 
-| Component | Description |
-|-----------|-------------|
-| **Driver** | Runs the main program, creates SparkContext, coordinates executors |
-| **Executor** | Worker process that runs tasks and stores data |
-| **Task** | Unit of work sent to executor |
-| **Cluster Manager** | Allocates resources across applications |
+| Component           | Description                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| **Driver**          | Runs the main program, creates SparkContext, coordinates executors |
+| **Executor**        | Worker process that runs tasks and stores data                     |
+| **Task**            | Unit of work sent to executor                                      |
+| **Cluster Manager** | Allocates resources across applications                            |
 
 ## SparkSession
 
@@ -158,28 +158,28 @@ df1.join(df2, (df1.id == df2.id) & (df1.date == df2.date))
 
 Transformations create a new DataFrame but don't execute until an action is called:
 
-| Transformation | Description |
-|----------------|-------------|
-| `select()` | Select columns |
-| `filter()` | Filter rows |
-| `groupBy()` | Group by columns |
-| `join()` | Join DataFrames |
+| Transformation | Description       |
+| -------------- | ----------------- |
+| `select()`     | Select columns    |
+| `filter()`     | Filter rows       |
+| `groupBy()`    | Group by columns  |
+| `join()`       | Join DataFrames   |
 | `withColumn()` | Add/modify column |
-| `orderBy()` | Sort data |
-| `distinct()` | Remove duplicates |
+| `orderBy()`    | Sort data         |
+| `distinct()`   | Remove duplicates |
 
 ### Actions (Eager)
 
 Actions trigger computation and return results:
 
-| Action | Description |
-|--------|-------------|
-| `show()` | Display rows |
-| `count()` | Count rows |
+| Action      | Description               |
+| ----------- | ------------------------- |
+| `show()`    | Display rows              |
+| `count()`   | Count rows                |
 | `collect()` | Return all rows to driver |
-| `take(n)` | Return first n rows |
-| `write` | Save data |
-| `first()` | Return first row |
+| `take(n)`   | Return first n rows       |
+| `write`     | Save data                 |
+| `first()`   | Return first row          |
 
 ## Spark SQL
 
@@ -214,12 +214,12 @@ df.persist(StorageLevel.MEMORY_AND_DISK)
 df.unpersist()
 ```
 
-| Storage Level | Description |
-|---------------|-------------|
-| `MEMORY_ONLY` | Store in memory (default for cache) |
-| `MEMORY_AND_DISK` | Spill to disk if doesn't fit in memory |
-| `DISK_ONLY` | Store only on disk |
-| `MEMORY_ONLY_SER` | Serialized in memory (more compact) |
+| Storage Level       | Description                            |
+| ------------------- | -------------------------------------- |
+| `MEMORY_ONLY`       | Store in memory (default for cache)    |
+| `MEMORY_AND_DISK`   | Spill to disk if doesn't fit in memory |
+| `DISK_ONLY`         | Store only on disk                     |
+| `MEMORY_ONLY_SER`   | Serialized in memory (more compact)    |
 
 ## Partitioning
 
@@ -287,22 +287,22 @@ df.withColumn("name_upper", pandas_upper(df.name))
 
 ## Use Cases
 
-| Use Case | Relevant Spark Features |
-|----------|------------------------|
-| ETL Pipelines | DataFrames, SQL, Delta Lake integration |
-| Data Analysis | SQL, aggregations, window functions |
-| Machine Learning | MLlib, feature engineering |
-| Real-time Processing | Structured Streaming |
-| Graph Processing | GraphFrames |
+| Use Case             | Relevant Spark Features                 |
+| -------------------- | --------------------------------------- |
+| ETL Pipelines        | DataFrames, SQL, Delta Lake integration |
+| Data Analysis        | SQL, aggregations, window functions     |
+| Machine Learning     | MLlib, feature engineering              |
+| Real-time Processing | Structured Streaming                    |
+| Graph Processing     | GraphFrames                             |
 
 ## Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| `OutOfMemoryError` on driver | Collecting too much data | Use `take()` instead of `collect()`, increase driver memory |
-| Slow joins | Data skew | Use broadcast for small tables, salting for skewed keys |
-| Too many small files | Many partitions | Use `coalesce()` before writing |
-| `AnalysisException` | Column not found | Check column names with `printSchema()` |
+| Issue                          | Cause                    | Solution                                                    |
+| ------------------------------ | ------------------------ | ----------------------------------------------------------- |
+| `OutOfMemoryError` on driver   | Collecting too much data | Use `take()` instead of `collect()`, increase driver memory |
+| Slow joins                     | Data skew                | Use broadcast for small tables, salting for skewed keys     |
+| Too many small files           | Many partitions          | Use `coalesce()` before writing                             |
+| `AnalysisException`            | Column not found         | Check column names with `printSchema()`                     |
 
 ## Related Topics
 

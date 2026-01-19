@@ -14,14 +14,14 @@ Delta Lake is a storage format that sits on top of cloud object storage (S3, ADL
 
 ## Delta Lake vs Parquet
 
-| Feature | Parquet | Delta Lake |
-|---------|---------|------------|
-| ACID Transactions | No | Yes |
-| Time Travel | No | Yes |
-| Schema Enforcement | No | Yes |
-| MERGE/UPDATE/DELETE | No | Yes |
-| Concurrent Writes | No | Yes |
-| Data Versioning | No | Yes |
+| Feature             | Parquet | Delta Lake |
+| ------------------- | ------- | ---------- |
+| ACID Transactions   | No      | Yes        |
+| Time Travel         | No      | Yes        |
+| Schema Enforcement  | No      | Yes        |
+| MERGE/UPDATE/DELETE | No      | Yes        |
+| Concurrent Writes   | No      | Yes        |
+| Data Versioning     | No      | Yes        |
 
 ## Core Concepts
 
@@ -206,22 +206,22 @@ ALTER TABLE my_table ALTER COLUMN id TYPE BIGINT;
 
 ## Use Cases
 
-| Use Case | How Delta Lake Helps |
-|----------|---------------------|
-| Data Lakes | ACID transactions prevent data corruption |
-| ETL Pipelines | MERGE enables efficient upserts |
-| Regulatory Compliance | Time travel for audit trails |
-| ML Feature Stores | Schema enforcement ensures data quality |
-| Real-time Analytics | Concurrent reads/writes without conflicts |
+| Use Case              | How Delta Lake Helps                      |
+| --------------------- | ----------------------------------------- |
+| Data Lakes            | ACID transactions prevent data corruption |
+| ETL Pipelines         | MERGE enables efficient upserts           |
+| Regulatory Compliance | Time travel for audit trails              |
+| ML Feature Stores     | Schema enforcement ensures data quality   |
+| Real-time Analytics   | Concurrent reads/writes without conflicts |
 
 ## Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| `AnalysisException: A schema mismatch detected` | Schema doesn't match | Use `mergeSchema` option or fix source data |
-| `ConcurrentModificationException` | Conflicting concurrent writes | Implement retry logic or use isolation levels |
-| Slow queries on large tables | Too many small files | Run OPTIMIZE to compact files |
-| Storage growth | Old versions retained | Run VACUUM to clean up old files |
+| Issue                                         | Cause                         | Solution                                      |
+| --------------------------------------------- | ----------------------------- | --------------------------------------------- |
+| `AnalysisException: A schema mismatch...`     | Schema doesn't match          | Use `mergeSchema` option or fix source data   |
+| `ConcurrentModificationException`             | Conflicting concurrent writes | Implement retry logic or use isolation levels |
+| Slow queries on large tables                  | Too many small files          | Run OPTIMIZE to compact files                 |
+| Storage growth                                | Old versions retained         | Run VACUUM to clean up old files              |
 
 ## Related Topics
 

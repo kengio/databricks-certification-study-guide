@@ -43,25 +43,25 @@ The control plane is the management layer hosted and managed by Databricks in th
 
 ### Control Plane Components
 
-| Component | Description |
-|-----------|-------------|
-| **Web Application** | Browser-based UI for notebooks, jobs, clusters |
-| **REST APIs** | Programmatic access to all Databricks features |
-| **Cluster Manager** | Provisions and terminates compute resources |
-| **Job Scheduler** | Manages workflow execution and scheduling |
-| **Unity Catalog** | Metadata store for data governance (account-level) |
-| **Identity Management** | SSO, SCIM provisioning, authentication |
-| **Audit Logging** | Tracks user activities and API calls |
+| Component               | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| **Web Application**     | Browser-based UI for notebooks, jobs, clusters    |
+| **REST APIs**           | Programmatic access to all Databricks features    |
+| **Cluster Manager**     | Provisions and terminates compute resources       |
+| **Job Scheduler**       | Manages workflow execution and scheduling         |
+| **Unity Catalog**       | Metadata store for data governance (account-level)|
+| **Identity Management** | SSO, SCIM provisioning, authentication            |
+| **Audit Logging**       | Tracks user activities and API calls              |
 
 ### What the Control Plane Stores
 
-| Stored | Not Stored |
-|--------|------------|
-| Notebook code | Customer data |
-| Job definitions | Query results |
-| Cluster configurations | Processed data |
-| User permissions | Cloud credentials (encrypted) |
-| Workspace metadata | Raw data files |
+| Stored                 | Not Stored                    |
+| ---------------------- | ----------------------------- |
+| Notebook code          | Customer data                 |
+| Job definitions        | Query results                 |
+| Cluster configurations | Processed data                |
+| User permissions       | Cloud credentials (encrypted) |
+| Workspace metadata     | Raw data files                |
 
 ## Data Plane
 
@@ -128,15 +128,15 @@ flowchart TB
 
 ### Classic vs Serverless Comparison
 
-| Aspect | Classic | Serverless |
-|--------|---------|------------|
-| Compute Location | Your cloud account | Databricks cloud |
-| Startup Time | Minutes | Seconds |
-| Network Control | Full control | Managed |
-| Data Processing | Your VPC/VNet | Databricks VPC |
-| Data Storage | Your account | Your account |
-| Scaling | Manual/Autoscale | Automatic |
-| Management | You manage | Databricks manages |
+| Aspect           | Classic             | Serverless         |
+| ---------------- | ------------------- | ------------------ |
+| Compute Location | Your cloud account  | Databricks cloud   |
+| Startup Time     | Minutes             | Seconds            |
+| Network Control  | Full control        | Managed            |
+| Data Processing  | Your VPC/VNet       | Databricks VPC     |
+| Data Storage     | Your account        | Your account       |
+| Scaling          | Manual/Autoscale    | Automatic          |
+| Management       | You manage          | Databricks manages |
 
 ## Control Plane and Data Plane Interaction
 
@@ -246,13 +246,13 @@ flowchart TB
 
 ### Cloud Comparison
 
-| Feature | AWS | Azure | GCP |
-|---------|-----|-------|-----|
-| Network | VPC | VNet | VPC |
-| Private Connectivity | PrivateLink | Private Link | Private Google Access |
-| Storage | S3 | ADLS Gen2 / Blob | GCS |
-| Identity | IAM Roles | Service Principal / Managed Identity | Service Account |
-| Encryption | KMS | Key Vault | Cloud KMS |
+| Feature              | AWS         | Azure                                | GCP                   |
+| -------------------- | ----------- | ------------------------------------ | --------------------- |
+| Network              | VPC         | VNet                                 | VPC                   |
+| Private Connectivity | PrivateLink | Private Link                         | Private Google Access |
+| Storage              | S3          | ADLS Gen2 / Blob                     | GCS                   |
+| Identity             | IAM Roles   | Service Principal / Managed Identity | Service Account       |
+| Encryption           | KMS         | Key Vault                            | Cloud KMS             |
 
 ## Network Architecture
 
@@ -273,20 +273,20 @@ flowchart TB
 
 Connect to Databricks without traversing the public internet.
 
-| Type | Purpose |
-|------|---------|
-| **Front-end Private Link** | Web UI and REST API access |
-| **Back-end Private Link** | Control plane to data plane communication |
+| Type                       | Purpose                                   |
+| -------------------------- | ----------------------------------------- |
+| **Front-end Private Link** | Web UI and REST API access                |
+| **Back-end Private Link**  | Control plane to data plane communication |
 
 ### IP Access Lists
 
 Restrict which IP addresses can access the workspace.
 
-| CIDR | Description |
-|------|-------------|
-| `10.0.0.0/8` | Corporate network |
-| `192.168.1.0/24` | VPN range |
-| `203.0.113.50/32` | Specific IP |
+| CIDR              | Description       |
+| ----------------- | ----------------- |
+| `10.0.0.0/8`      | Corporate network |
+| `192.168.1.0/24`  | VPN range         |
+| `203.0.113.50/32` | Specific IP       |
 
 ### VPC/VNet Peering
 
@@ -308,21 +308,21 @@ flowchart LR
 
 ### Encryption
 
-| Layer | Method |
-|-------|--------|
-| **In Transit** | TLS 1.2+ for all communication |
-| **At Rest (Control Plane)** | Databricks-managed encryption |
-| **At Rest (Data Plane)** | Cloud provider encryption (S3/ADLS/GCS) |
-| **Customer-Managed Keys** | Optional: Use your own KMS keys |
+| Layer                        | Method                                  |
+| ---------------------------- | --------------------------------------- |
+| **In Transit**               | TLS 1.2+ for all communication          |
+| **At Rest (Control Plane)**  | Databricks-managed encryption           |
+| **At Rest (Data Plane)**     | Cloud provider encryption (S3/ADLS/GCS) |
+| **Customer-Managed Keys**    | Optional: Use your own KMS keys         |
 
 ### Data Residency
 
-| Component | Location |
-|-----------|----------|
-| Notebook code | Control plane (Databricks region) |
-| Job definitions | Control plane |
-| Actual data | Your cloud account (your chosen region) |
-| Query results | Data plane (your account) |
+| Component       | Location                                |
+| --------------- | --------------------------------------- |
+| Notebook code   | Control plane (Databricks region)       |
+| Job definitions | Control plane                           |
+| Actual data     | Your cloud account (your chosen region) |
+| Query results   | Data plane (your account)               |
 
 ### Network Security Best Practices
 
@@ -334,25 +334,25 @@ flowchart LR
 
 ## Use Cases
 
-| Use Case | Architecture Consideration |
-|----------|---------------------------|
-| **Regulated Industries** | Private Link, customer-managed keys, audit logging |
-| **Data Sovereignty** | Deploy data plane in required region, verify control plane location |
-| **Low Latency** | Co-locate data plane with data sources |
-| **Cost Optimization** | Serverless for variable workloads |
-| **Security-First** | Customer-managed VPC, SCC, Private Link |
-| **Rapid Development** | Serverless for fast iteration |
+| Use Case                 | Architecture Consideration                                         |
+| ------------------------ | ------------------------------------------------------------------ |
+| **Regulated Industries** | Private Link, customer-managed keys, audit logging                 |
+| **Data Sovereignty**     | Deploy data plane in required region, verify control plane location|
+| **Low Latency**          | Co-locate data plane with data sources                             |
+| **Cost Optimization**    | Serverless for variable workloads                                  |
+| **Security-First**       | Customer-managed VPC, SCC, Private Link                            |
+| **Rapid Development**    | Serverless for fast iteration                                      |
 
 ## Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Cluster fails to start | Subnet exhaustion | Use larger CIDR ranges |
-| Cannot reach external service | Missing NAT gateway or firewall rules | Configure egress routes |
-| Slow cluster startup | Network configuration issues | Check VPC/VNet peering, DNS |
-| API timeout | IP access list blocking | Add your IP to allow list |
-| Cannot access Unity Catalog | Network isolation | Configure Private Link for UC |
-| Cross-region latency | Data plane far from storage | Co-locate in same region |
+| Issue                         | Cause                                 | Solution                        |
+| ----------------------------- | ------------------------------------- | ------------------------------- |
+| Cluster fails to start        | Subnet exhaustion                     | Use larger CIDR ranges          |
+| Cannot reach external service | Missing NAT gateway or firewall rules | Configure egress routes         |
+| Slow cluster startup          | Network configuration issues          | Check VPC/VNet peering, DNS     |
+| API timeout                   | IP access list blocking               | Add your IP to allow list       |
+| Cannot access Unity Catalog   | Network isolation                     | Configure Private Link for UC   |
+| Cross-region latency          | Data plane far from storage           | Co-locate in same region        |
 
 ## Related Topics
 

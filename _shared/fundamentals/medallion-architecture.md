@@ -207,14 +207,14 @@ GROUP BY order_date;
 
 ## Layer Comparison
 
-| Aspect | Bronze | Silver | Gold |
-|--------|--------|--------|------|
-| **Data Quality** | Raw, as-is | Cleansed, validated | Aggregated, business-ready |
-| **Schema** | Schema-on-read | Schema-on-write | Denormalized |
-| **Updates** | Append-only | MERGE/Upsert | Rebuild/Incremental |
-| **Consumers** | Data engineers | Analysts, data scientists | Business users, BI tools |
-| **Retention** | Long-term archive | Medium-term | Query-optimized |
-| **Performance** | Not optimized | Optimized for joins | Optimized for queries |
+| Aspect           | Bronze            | Silver                    | Gold                       |
+| ---------------- | ----------------- | ------------------------- | -------------------------- |
+| **Data Quality** | Raw, as-is        | Cleansed, validated       | Aggregated, business-ready |
+| **Schema**       | Schema-on-read    | Schema-on-write           | Denormalized               |
+| **Updates**      | Append-only       | MERGE/Upsert              | Rebuild/Incremental        |
+| **Consumers**    | Data engineers    | Analysts, data scientists | Business users, BI tools   |
+| **Retention**    | Long-term archive | Medium-term               | Query-optimized            |
+| **Performance**  | Not optimized     | Optimized for joins       | Optimized for queries      |
 
 ## Naming Conventions
 
@@ -282,23 +282,23 @@ flowchart TB
 
 ## Use Cases
 
-| Layer | Use Case | Example |
-|-------|----------|---------|
-| Bronze | Audit/Compliance | Retain all raw data for 7 years |
-| Bronze | Replay/Reprocessing | Re-run pipeline after bug fix |
-| Silver | Ad-hoc Analysis | Analysts query clean data |
-| Silver | ML Training | Data scientists prepare features |
-| Gold | Executive Dashboard | Real-time KPI reporting |
-| Gold | ML Serving | Low-latency feature lookup |
+| Layer  | Use Case            | Example                          |
+| ------ | ------------------- | -------------------------------- |
+| Bronze | Audit/Compliance    | Retain all raw data for 7 years  |
+| Bronze | Replay/Reprocessing | Re-run pipeline after bug fix    |
+| Silver | Ad-hoc Analysis     | Analysts query clean data        |
+| Silver | ML Training         | Data scientists prepare features |
+| Gold   | Executive Dashboard | Real-time KPI reporting          |
+| Gold   | ML Serving          | Low-latency feature lookup       |
 
 ## Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Bronze growing too large | No retention policy | Implement VACUUM, archive old data |
-| Silver duplicates | Missing deduplication | Add MERGE or dropDuplicates logic |
-| Gold stale data | Batch refresh only | Implement incremental refresh or streaming |
-| Schema drift | Source changes | Use Auto Loader schema evolution, add validation |
+| Issue                    | Cause               | Solution                                         |
+| ------------------------ | ------------------- | ------------------------------------------------ |
+| Bronze growing too large | No retention policy | Implement VACUUM, archive old data               |
+| Silver duplicates        | Missing deduplication| Add MERGE or dropDuplicates logic               |
+| Gold stale data          | Batch refresh only  | Implement incremental refresh or streaming       |
+| Schema drift             | Source changes      | Use Auto Loader schema evolution, add validation |
 
 ## Related Topics
 

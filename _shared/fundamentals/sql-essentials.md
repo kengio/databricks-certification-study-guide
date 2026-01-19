@@ -544,22 +544,22 @@ WHERE status = 'active';
 
 ## Use Cases
 
-| SQL Feature | Use Case |
-|-------------|----------|
-| CTEs | Breaking complex queries into readable parts |
+| SQL Feature      | Use Case                                     |
+| ---------------- | -------------------------------------------- |
+| CTEs             | Breaking complex queries into readable parts |
 | Window Functions | Rankings, running totals, period comparisons |
-| Joins | Combining data from multiple tables |
-| Aggregations | Summary statistics, metrics |
-| Date Functions | Time-based analysis |
+| Joins            | Combining data from multiple tables          |
+| Aggregations     | Summary statistics, metrics                  |
+| Date Functions   | Time-based analysis                          |
 
 ## Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| `Column not found` | Typo or wrong table | Check column names with DESCRIBE |
-| Slow query | Full table scan | Add filters, check query plan |
-| Wrong results from JOIN | Duplicate keys | Verify join keys, add DISTINCT |
-| NULL in aggregation | NULLs excluded | Use COALESCE or filter NULLs |
+| Issue                   | Cause           | Solution                       |
+| ----------------------- | --------------- | ------------------------------ |
+| `Column not found`      | Typo or wrong table | Check column names with DESCRIBE |
+| Slow query              | Full table scan | Add filters, check query plan  |
+| Wrong results from JOIN | Duplicate keys  | Verify join keys, add DISTINCT |
+| NULL in aggregation     | NULLs excluded  | Use COALESCE or filter NULLs   |
 
 ## Related Topics
 
