@@ -43,8 +43,8 @@ pie title Exam Topic Distribution
 
 Review these shared fundamentals:
 
-- [Databricks Workspace](../../_shared/fundamentals/databricks-workspace.md)
-- [Unity Catalog Basics](../../_shared/fundamentals/unity-catalog-basics.md)
+- [Databricks Workspace](../../shared/fundamentals/databricks-workspace.md)
+- [Unity Catalog Basics](../../shared/fundamentals/unity-catalog-basics.md)
 
 ## Study Progress Tracker
 

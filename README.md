@@ -46,9 +46,9 @@ See [Learning Paths](learning-paths/README.md) for detailed progression guides.
 
 | Resource                                                     | Description                            |
 | ------------------------------------------------------------ | -------------------------------------- |
-| [Fundamentals](_shared/fundamentals/README.md)               | Core concepts used across certifications |
-| [Cheat Sheets](_shared/cheat-sheets/delta-lake-commands.md)  | Quick reference guides                 |
-| [Appendix](_shared/appendix/glossary.md)                     | Glossary, comparisons, error reference |
+| [Fundamentals](shared/fundamentals/README.md)               | Core concepts used across certifications |
+| [Cheat Sheets](shared/cheat-sheets/delta-lake-commands.md)  | Quick reference guides                 |
+| [Appendix](shared/appendix/glossary.md)                     | Glossary, comparisons, error reference |
 | Code Examples | Python and SQL examples (coming soon) |
 
 ## Quick Start
@@ -70,7 +70,7 @@ databricks-certification-study-guide/
 │   ├── ml-associate/
 │   ├── ml-professional/
 │   └── genai-engineer-associate/
-├── _shared/                  # Content shared across certifications
+├── shared/                  # Content shared across certifications
 │   ├── fundamentals/
 │   ├── cheat-sheets/
 │   ├── appendix/

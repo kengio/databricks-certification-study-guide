@@ -36,8 +36,8 @@ pie title Exam Topic Distribution
 
 Review these shared fundamentals:
 
-- [Spark Fundamentals](../../_shared/fundamentals/spark-fundamentals.md)
-- [Databricks Workspace](../../_shared/fundamentals/databricks-workspace.md)
+- [Spark Fundamentals](../../shared/fundamentals/spark-fundamentals.md)
+- [Databricks Workspace](../../shared/fundamentals/databricks-workspace.md)
 
 ## Study Progress Tracker
 

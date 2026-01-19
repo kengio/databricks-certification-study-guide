@@ -38,9 +38,9 @@ pie title Exam Topic Distribution
 
 Review these shared fundamentals:
 
-- [Delta Lake Basics](../../_shared/fundamentals/delta-lake-basics.md)
-- [Spark Fundamentals](../../_shared/fundamentals/spark-fundamentals.md)
-- [Databricks Workspace](../../_shared/fundamentals/databricks-workspace.md)
+- [Delta Lake Basics](../../shared/fundamentals/delta-lake-basics.md)
+- [Spark Fundamentals](../../shared/fundamentals/spark-fundamentals.md)
+- [Databricks Workspace](../../shared/fundamentals/databricks-workspace.md)
 
 ## Study Progress Tracker
 

@@ -22,7 +22,7 @@ databricks-certification-study-guide/
 │   ├── ml-associate/
 │   ├── ml-professional/
 │   └── genai-engineer-associate/
-├── _shared/                  # Content shared across certifications
+├── shared/                  # Content shared across certifications
 │   ├── fundamentals/         # Core concepts (Delta Lake, Spark, etc.)
 │   ├── cheat-sheets/         # Quick reference guides
 │   ├── appendix/             # Glossary, comparisons, errors
@@ -35,7 +35,7 @@ databricks-certification-study-guide/
 
 ### When Adding Content
 
-1. **Check `_shared/` first** - If content applies to multiple certifications, add it there
+1. **Check `shared/` first** - If content applies to multiple certifications, add it there
 2. **Certification-specific content** goes in `certifications/<cert-name>/`
 3. **Reference shared content** rather than duplicating it
 
@@ -97,7 +97,7 @@ flowchart TB
   - `certifications/ml-associate/README.md`
   - `certifications/ml-professional/README.md`
   - `certifications/genai-engineer-associate/README.md`
-  - `_shared/fundamentals/README.md`
+  - `shared/fundamentals/README.md`
   - `learning-paths/README.md`
 
 ### Content Requirements

@@ -36,7 +36,7 @@ pie title Exam Topic Distribution
 
 - Complete [ML Associate](../ml-associate/README.md) certification first
 - Review shared fundamentals:
-  - [Spark Fundamentals](../../_shared/fundamentals/spark-fundamentals.md)
+  - [Spark Fundamentals](../../shared/fundamentals/spark-fundamentals.md)
 
 ## Study Progress Tracker
 

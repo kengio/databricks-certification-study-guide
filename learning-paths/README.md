@@ -43,4 +43,4 @@ graph TD
 
 ## Shared Knowledge
 
-Many certifications share common concepts. Review the [shared fundamentals](../_shared/fundamentals/README.md) before starting any certification path.
+Many certifications share common concepts. Review the [shared fundamentals](../shared/fundamentals/README.md) before starting any certification path.

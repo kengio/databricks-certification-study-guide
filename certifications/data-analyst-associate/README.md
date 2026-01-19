@@ -38,9 +38,9 @@ pie title Exam Topic Distribution
 
 Review these shared fundamentals:
 
-- [SQL Essentials](../../_shared/fundamentals/sql-essentials.md)
-- [Delta Lake Basics](../../_shared/fundamentals/delta-lake-basics.md)
-- [Unity Catalog Basics](../../_shared/fundamentals/unity-catalog-basics.md)
+- [SQL Essentials](../../shared/fundamentals/sql-essentials.md)
+- [Delta Lake Basics](../../shared/fundamentals/delta-lake-basics.md)
+- [Unity Catalog Basics](../../shared/fundamentals/unity-catalog-basics.md)
 
 ## Study Progress Tracker
 

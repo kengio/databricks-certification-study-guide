@@ -57,10 +57,10 @@ pie title Exam Topic Distribution
 
 Before starting this certification, review:
 
-- [Delta Lake Basics](../../_shared/fundamentals/delta-lake-basics.md)
-- [Spark Fundamentals](../../_shared/fundamentals/spark-fundamentals.md)
-- [Medallion Architecture](../../_shared/fundamentals/medallion-architecture.md)
-- [Unity Catalog Basics](../../_shared/fundamentals/unity-catalog-basics.md)
+- [Delta Lake Basics](../../shared/fundamentals/delta-lake-basics.md)
+- [Spark Fundamentals](../../shared/fundamentals/spark-fundamentals.md)
+- [Medallion Architecture](../../shared/fundamentals/medallion-architecture.md)
+- [Unity Catalog Basics](../../shared/fundamentals/unity-catalog-basics.md)
 
 ## Study Progress Tracker
 
