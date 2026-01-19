@@ -44,6 +44,14 @@ databricks-certification-study-guide/
 - Always run markdownlint to check for issues with every MD file
 - Ensure headings have blank lines before and after them (MD022 rule)
 - Use appropriate code blocks (SQL, Python, Scala)
+- **Use HTML `<details>` tags** for answers/spoilers (Required for GitHub compatibility). Use blockquotes inside for better visibility:
+  ```html
+  <details>
+  <summary>Answer</summary>
+
+  > Answer content...
+  </details>
+  ```
 
 ### Diagrams
 

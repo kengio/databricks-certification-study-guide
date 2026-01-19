@@ -16,9 +16,9 @@ D) `cloudFiles.mergeSchema = "true"`
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: A**
-
-`schemaEvolutionMode = "addNewColumns"` automatically adds new columns to the schema. Option B rescues unexpected data to a separate column. Option C enables type inference but not schema evolution. Option D is not a valid Auto Loader option (that's for Delta writes).
+> **Correct Answer: A**
+>
+> `schemaEvolutionMode = "addNewColumns"` automatically adds new columns to the schema. Option B rescues unexpected data to a separate column. Option C enables type inference but not schema evolution. Option D is not a valid Auto Loader option (that's for Delta writes).
 
 </details>
 
@@ -38,9 +38,9 @@ D) `trigger(continuous='1 hour')`
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: C**
-
-`availableNow=True` processes all available data and stops, making it ideal for scheduled batch-like streaming. `processingTime` runs continuously. `once=True` is deprecated and only processes one batch. `continuous` is for low-latency and doesn't stop.
+> **Correct Answer: C**
+>
+> `availableNow=True` processes all available data and stops, making it ideal for scheduled batch-like streaming. `processingTime` runs continuously. `once=True` is deprecated and only processes one batch. `continuous` is for low-latency and doesn't stop.
 
 </details>
 
@@ -60,9 +60,9 @@ D) `WHEN NOT MATCHED THEN UPDATE`
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-`WHEN NOT MATCHED THEN INSERT` handles source records that don't have a matching key in the target. `WHEN MATCHED` handles existing records. Options C and D use invalid clause combinations.
+> **Correct Answer: B**
+>
+> `WHEN NOT MATCHED THEN INSERT` handles source records that don't have a matching key in the target. `WHEN MATCHED` handles existing records. Options C and D use invalid clause combinations.
 
 </details>
 
@@ -84,9 +84,9 @@ D) User has MODIFY access to new tables
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: A**
-
-Permissions in Unity Catalog inherit downward. A SELECT grant on a schema applies to all current and future tables in that schema. This is a key difference from workspace-level access control.
+> **Correct Answer: A**
+>
+> Permissions in Unity Catalog inherit downward. A SELECT grant on a schema applies to all current and future tables in that schema. This is a key difference from workspace-level access control.
 
 </details>
 
@@ -106,9 +106,9 @@ D) Delta table
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-External tables point to data at a user-specified location. Managed tables store data in Unity Catalog-managed storage. A view doesn't store data. "Delta table" is a format, not a table type.
+> **Correct Answer: B**
+>
+> External tables point to data at a user-specified location. Managed tables store data in Unity Catalog-managed storage. A view doesn't store data. "Delta table" is a format, not a table type.
 
 </details>
 
@@ -130,9 +130,9 @@ D) `CONSTRAINT valid_id REQUIRE (customer_id IS NOT NULL)`
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-`ON VIOLATION DROP ROW` removes invalid records without failing. Option A only logs warnings. Option C fails the pipeline. Option D is not valid DLT syntax.
+> **Correct Answer: B**
+>
+> `ON VIOLATION DROP ROW` removes invalid records without failing. Option A only logs warnings. Option C fails the pipeline. Option D is not valid DLT syntax.
 
 </details>
 
@@ -152,9 +152,9 @@ D) External table
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-Materialized views are appropriate for aggregations as they fully recompute results. Streaming tables are for append-only incremental processing. "Live table" is the old terminology. External tables are not a DLT concept.
+> **Correct Answer: B**
+>
+> Materialized views are appropriate for aggregations as they fully recompute results. Streaming tables are for append-only incremental processing. "Live table" is the old terminology. External tables are not a DLT concept.
 
 </details>
 
@@ -176,9 +176,9 @@ D) `VACUUM table_name`
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: C**
-
-ZORDER on both frequently filtered columns provides the best query performance. Option A compacts files but doesn't optimize data layout. Option B only optimizes for one column. VACUUM removes old files but doesn't improve query performance.
+> **Correct Answer: C**
+>
+> ZORDER on both frequently filtered columns provides the best query performance. Option A compacts files but doesn't optimize data layout. Option B only optimizes for one column. VACUUM removes old files but doesn't improve query performance.
 
 </details>
 
@@ -198,9 +198,9 @@ D) 500; keep default for all data
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-Default is 200. For 10GB (relatively small), reducing partitions can improve performance by reducing overhead. Each partition has scheduling overhead, so too many partitions for small data is inefficient.
+> **Correct Answer: B**
+>
+> Default is 200. For 10GB (relatively small), reducing partitions can improve performance by reducing overhead. Each partition has scheduling overhead, so too many partitions for small data is inefficient.
 
 </details>
 
@@ -222,9 +222,9 @@ D) Manually modify settings before each deployment
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-DAB uses targets to define environment-specific configurations in a single databricks.yml. This is the recommended approach for multi-environment deployments. Separate files or manual changes lead to drift and errors.
+> **Correct Answer: B**
+>
+> DAB uses targets to define environment-specific configurations in a single databricks.yml. This is the recommended approach for multi-environment deployments. Separate files or manual changes lead to drift and errors.
 
 </details>
 
@@ -246,9 +246,9 @@ D) `system.query.history`
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-`system.billing.usage` contains cost and usage data. `audit` tracks access events. `clusters` contains cluster metadata. `query.history` tracks SQL queries, not costs.
+> **Correct Answer: B**
+>
+> `system.billing.usage` contains cost and usage data. `audit` tracks access events. `clusters` contains cluster metadata. `query.history` tracks SQL queries, not costs.
 
 </details>
 
@@ -268,9 +268,9 @@ D) Insufficient disk space
 <details>
 <summary>Answer</summary>
 
-**Correct Answer: B**
-
-Shuffle Read Blocked Time indicates tasks waiting for shuffle data from other executors, typically due to network issues or executors being slow to serve shuffle blocks. Solutions include increasing shuffle retry settings or investigating network.
+> **Correct Answer: B**
+>
+> Shuffle Read Blocked Time indicates tasks waiting for shuffle data from other executors, typically due to network issues or executors being slow to serve shuffle blocks. Solutions include increasing shuffle retry settings or investigating network.
 
 </details>
 
