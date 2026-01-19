@@ -1,5 +1,8 @@
 {
   "useMarkdownLinks": true,
   "newLinkFormat": "relative",
-  "attachmentFolderPath": "images"
+  "attachmentFolderPath": "images",
+  "showLineNumber": true,
+  "tabSize": 4,
+  "useTab": false
 }
