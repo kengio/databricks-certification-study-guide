@@ -34,10 +34,9 @@ flowchart TB
     end
 ```
 
-<p align="center">
-  <img src="../../images/databricks-ui/catalog-explorer/namespace-hierarchy.png" alt="Unity Catalog Explorer showing namespace hierarchy" />
-</p>
-<p align="center"><em>Catalog Explorer showing the three-level namespace structure</em></p>
+![Unity Catalog Explorer showing namespace hierarchy](../../images/databricks-ui/catalog-explorer/namespace-hierarchy.png)
+
+*Catalog Explorer showing the three-level namespace structure*
 
 ### Naming Convention
 
@@ -255,10 +254,9 @@ View lineage in the Databricks UI:
 2. Click the "Lineage" tab
 3. See upstream (sources) and downstream (consumers)
 
-<p align="center">
-  <img src="../../images/databricks-ui/catalog-explorer/lineage-graph.png" alt="Unity Catalog lineage visualization" />
-</p>
-<p align="center"><em>Lineage graph showing upstream and downstream dependencies</em></p>
+![Unity Catalog lineage visualization](../../images/databricks-ui/catalog-explorer/lineage-graph.png)
+
+*Lineage graph showing upstream and downstream dependencies*
 
 ## Data Discovery
 

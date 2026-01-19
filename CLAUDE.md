@@ -76,14 +76,15 @@ flowchart TB
 - Store images in `images/databricks-ui/` organized by feature area
 - Use descriptive alt text and captions
 - Keep images under 800px width for readability
-- Use centered HTML format for images with captions on separate line:
+- Use standard markdown image syntax for cross-platform compatibility (GitHub + Obsidian):
 
 ```markdown
-<p align="center">
-  <img src="../../images/databricks-ui/feature/image-name.png" alt="Alt text describing the image" />
-</p>
-<p align="center"><em>Caption explaining what the screenshot shows</em></p>
+![Alt text describing the image](../../images/databricks-ui/feature/image-name.png)
+
+*Caption explaining what the screenshot shows*
 ```
+
+- **Note:** Avoid HTML image tags (`<img>`) - use markdown syntax for Obsidian compatibility
 
 ### Link Verification
 
