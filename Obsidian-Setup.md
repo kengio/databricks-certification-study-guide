@@ -7,6 +7,7 @@ The `.obsidian/app.json` has been pre-configured with:
 - **Strict Line Numbers**: Enabled for easier code referencing.
 - **Tab Size**: Set to 4 spaces, standard for Python and Data Engineering code.
 - **Use Spaces**: Hard tabs are disabled to ensure consistent rendering across GitHub and different editors.
+- **Inline Title**: Disabled to remove redundant filename display at the top of notes.
 
 ## Recommended Plugins
 Since Obsidian plugins must be installed manually (or via sync), here are the recommended community plugins to install:

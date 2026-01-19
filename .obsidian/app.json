@@ -4,5 +4,6 @@
   "attachmentFolderPath": "images",
   "showLineNumber": false,
   "tabSize": 4,
-  "useTab": false
+  "useTab": false,
+  "showInlineTitle": false
 }
