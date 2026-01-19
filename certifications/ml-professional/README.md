@@ -34,7 +34,7 @@ pie title Exam Topic Distribution
 
 ## Prerequisites
 
-- Complete [ML Associate](../ml-associate/) certification first
+- Complete [ML Associate](../ml-associate/README.md) certification first
 - Review shared fundamentals:
   - [Spark Fundamentals](../../_shared/fundamentals/spark-fundamentals.md)
 

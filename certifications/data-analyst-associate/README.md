@@ -28,11 +28,11 @@ pie title Exam Topic Distribution
 
 | Section | Weight | Topics |
 |---------|--------|--------|
-| [01-Databricks SQL](01-databricks-sql/) | 22% | SQL Warehouses, query editor, history |
-| [02-Data Management](02-data-management/) | 20% | Tables, schemas, Unity Catalog |
-| [03-SQL Queries](03-sql-queries/) | 29% | Joins, aggregations, window functions |
-| [04-Dashboards](04-dashboards/) | 18% | Visualizations, dashboards, alerts |
-| [05-Analytics Applications](05-analytics-applications/) | 11% | Parameters, scheduling, sharing |
+| 01-Databricks SQL | 22% | SQL Warehouses, query editor, history |
+| 02-Data Management | 20% | Tables, schemas, Unity Catalog |
+| 03-SQL Queries | 29% | Joins, aggregations, window functions |
+| 04-Dashboards | 18% | Visualizations, dashboards, alerts |
+| 05-Analytics Applications | 11% | Parameters, scheduling, sharing |
 
 ## Prerequisites
 

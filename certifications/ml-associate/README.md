@@ -27,10 +27,10 @@ pie title Exam Topic Distribution
 
 | Section | Weight | Topics |
 |---------|--------|--------|
-| [01-Databricks ML](01-databricks-ml/) | 29% | Clusters, notebooks, repos, AutoML |
-| [02-ML Workflows](02-ml-workflows/) | 29% | Experimentation, MLflow tracking |
-| [03-Feature Engineering](03-feature-engineering/) | 33% | Spark ML, feature pipelines |
-| [04-MLflow](04-mlflow/) | 9% | Model registry, deployment basics |
+| 01-Databricks ML | 29% | Clusters, notebooks, repos, AutoML |
+| 02-ML Workflows | 29% | Experimentation, MLflow tracking |
+| 03-Feature Engineering | 33% | Spark ML, feature pipelines |
+| 04-MLflow | 9% | Model registry, deployment basics |
 
 ## Prerequisites
 
@@ -54,4 +54,4 @@ Review these shared fundamentals:
 
 ## Recommended Path
 
-Complete this certification before attempting [ML Professional](../ml-professional/).
+Complete this certification before attempting [ML Professional](../ml-professional/README.md).

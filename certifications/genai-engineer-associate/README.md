@@ -27,9 +27,9 @@ pie title Exam Topic Distribution
 
 | Section | Weight | Topics |
 |---------|--------|--------|
-| [01-LLM Fundamentals](01-llm-fundamentals/) | - | Foundation models, tokenization, embeddings |
-| [02-RAG Patterns](02-rag-patterns/) | 30% | Retrieval-augmented generation design |
-| [03-Vector Search](03-vector-search/) | 40% | Vector databases, similarity search |
+| 01-LLM Fundamentals | - | Foundation models, tokenization, embeddings |
+| 02-RAG Patterns | 30% | Retrieval-augmented generation design |
+| 03-Vector Search | 40% | Vector databases, similarity search |
 | Build & Deploy | 30% | Chains, agents, model serving |
 
 ## Key Technologies

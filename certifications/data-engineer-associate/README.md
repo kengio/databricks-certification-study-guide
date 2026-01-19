@@ -28,11 +28,11 @@ pie title Exam Topic Distribution
 
 | Section | Weight | Topics |
 |---------|--------|--------|
-| [01-Lakehouse Platform](01-lakehouse-platform/) | 24% | Architecture, components, workspace |
-| [02-ETL with Spark](02-etl-with-spark/) | 29% | SQL, DataFrames, transformations |
-| [03-Delta Lake](03-delta-lake/) | 22% | ACID, time travel, optimization |
-| [04-Workflows](04-workflows/) | 16% | Jobs, scheduling, orchestration |
-| [05-Data Governance](05-data-governance/) | 9% | Unity Catalog basics, access control |
+| 01-Lakehouse Platform | 24% | Architecture, components, workspace |
+| 02-ETL with Spark | 29% | SQL, DataFrames, transformations |
+| 03-Delta Lake | 22% | ACID, time travel, optimization |
+| 04-Workflows | 16% | Jobs, scheduling, orchestration |
+| 05-Data Governance | 9% | Unity Catalog basics, access control |
 
 ## Prerequisites
 
@@ -57,4 +57,4 @@ Review these shared fundamentals:
 
 ## Recommended Path
 
-Complete this certification before attempting [Data Engineer Professional](../data-engineer-professional/).
+Complete this certification before attempting [Data Engineer Professional](../data-engineer-professional/README.md).
