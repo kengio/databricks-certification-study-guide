@@ -629,21 +629,25 @@ print(query.status)
 ## Common Issues & Errors
 
 ### 1. OutOfMemoryError (Driver)
+
 **Scenario:** Default `maxFilesPerTrigger` lists too many files for driver memory.
 
 **Fix:** Reduce `cloudFiles.maxFilesPerTrigger` (e.g., to 1000) or `maxBytesPerTrigger`.
 
 ### 2. Schema Inference Sampling Miss
+
 **Scenario:** Auto Loader inferred a column as Integer, but later a float value appeared, causing failure.
 
 **Fix:** Use `cloudFiles.schemaHints` to enforce `"col double"` or increase sampling size/files.
 
 ### 3. File Notification Setup Failure
+
 **Scenario:** Missing cloud permissions to create Queues/Topics.
 
 **Fix:** Ensure Service Principal/Role has permission to create resources, or have admin pre-provision them.
 
 ### 4. "Path does not exist" on Schema Location
+
 **Scenario:** Logic changed but schema location still points to old schema state.
 
 **Fix:** If schema logic changed fundamentally, delete the schema location directory to reset inference (caution: resets evolution history).

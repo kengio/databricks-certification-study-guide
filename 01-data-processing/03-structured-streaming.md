@@ -789,6 +789,7 @@ query = df.writeStream \
 ## Common Issues & Errors
 
 ### 1. AnalysisException: Append output mode not supported
+
 **Scenario:** Trying to use `append` mode with aggregations without watermarking.
 
 **Fix:** Add watermark or switch to `complete` or `update` mode.
@@ -796,16 +797,19 @@ query = df.writeStream \
 **Exam Context:** Identifying incompatible source/sink/transformation combinations.
 
 ### 2. Massive State Store Growth (OOM)
+
 **Scenario:** Running a stream-stream join or deduplication without watermarks.
 
 **Fix:** Define watermarks on both sides of join or on the dedup stream to allow state cleanup.
 
 ### 3. Checkpoint Incompatibility
+
 **Scenario:** Changing stateful operations (like grouping keys) and trying to resume from old checkpoint.
 
 **Fix:** New query structure requires a new checkpoint location.
 
 ### 4. Output Mode "Update" Not Supported by Sink
+
 **Scenario:** Using `update` mode with a file sink (Parquet/ORC).
 
 **Fix:** File sinks only support `append` mode. Use Delta sink for `delete`/`update` capabilities (via MERGE in `foreachBatch`).

@@ -745,21 +745,25 @@ DESCRIBE DETAIL table_name;
 ## Common Issues & Errors
 
 ### 1. "Multiple matches" in MERGE
+
 **Scenario:** Source table has duplicate keys matching a single target row.
 
 **Fix:** Deduplicate the source data before running MERGE.
 
 ### 2. Time Travel Fails ("File not found")
+
 **Scenario:** Trying to query an old version after VACUUM has run.
 
 **Fix:** Increase retention duration if longer history is needed, but accept higher storage costs.
 
 ### 3. ZORDER Effectiveness Low
+
 **Scenario:** Z-ordering on too many columns (e.g., > 5) or low-cardinality columns.
 
 **Fix:** Limit ZORDER to 1-4 high-cardinality columns frequently used in WHERE clauses.
 
 ### 4. VACUUM 0 Hours Data Loss
+
 **Scenario:** User disabled safety check and ran `VACUUM RETAIN 0 HOURS`.
 
 **Fix:** **Irreversible**. Recover from deep clone or backup if available. Never do this in production.

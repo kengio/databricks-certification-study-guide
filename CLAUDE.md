@@ -12,6 +12,7 @@ Notes are organized by exam topic areas. When adding content, follow these conve
 
 - Use Markdown files for documentation and study notes
 - Always run markdownlint to check for issues with every MD file
+- Ensure headings have blank lines before and after them (MD022 rule)
 - Include a sample image of the Databricks platform UI if needed (to make it clearer)
 - Include a step-by-step setup guide for the configuration if needed
 - Include code examples in appropriate language blocks (SQL, Python, Scala)

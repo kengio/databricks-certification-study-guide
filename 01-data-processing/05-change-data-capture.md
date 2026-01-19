@@ -792,21 +792,25 @@ CREATE TABLE cdc_monitoring.metrics (
 ## Common Issues & Errors
 
 ### 1. Missing History/Empty CDF
+
 **Scenario:** Enabled CDF *after* data was written.
 
 **Fix:** CDF only tracks changes *after* the property is set. Cannot backfill history for prior operations.
 
 ### 2. Performance: "Small File Problem" in CDF
+
 **Scenario:** Frequent small updates cause fragmentation in `_change_data` folder.
 
 **Fix:** Run `OPTIMIZE` regularly on the table (it optimizes CDF files too).
 
 ### 3. Duplicate Downstream Records
+
 **Scenario:** Reprocessing a batch that isn't idempotent.
 
 **Fix:** Deduplicate using `(id, _commit_version)` or ensure idempotent MERGE logic.
 
 ### 4. Updates Not Reflecting in Target
+
 **Scenario:** Filtering stream for `_change_type = 'update_preimage'`.
 
 **Fix:** Use `update_postimage` to get the *new* values. Preimage is only for "before" state analysis.
