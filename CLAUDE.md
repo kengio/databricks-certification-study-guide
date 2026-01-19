@@ -70,6 +70,21 @@ flowchart TB
 \`\`\`
 ```
 
+### Images
+
+- **Supplement mermaid diagrams with screenshots** when showing Databricks UI elements
+- Store images in `images/databricks-ui/` organized by feature area
+- Use descriptive alt text and captions
+- Keep images under 800px width for readability
+- Use centered HTML format for images with captions on separate line:
+
+```markdown
+<p align="center">
+  <img src="../../images/databricks-ui/feature/image-name.png" alt="Alt text describing the image" />
+</p>
+<p align="center"><em>Caption explaining what the screenshot shows</em></p>
+```
+
 ### Link Verification
 
 - **Always link directly to files, not folders** (e.g., `path/to/README.md` not `path/to/`)

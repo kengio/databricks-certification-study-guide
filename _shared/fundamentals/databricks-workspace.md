@@ -25,6 +25,11 @@ flowchart TB
     end
 ```
 
+<p align="center">
+  <img src="../../images/databricks-ui/workspace/navigation-sidebar.png" alt="Databricks workspace navigation sidebar" />
+</p>
+<p align="center"><em>The Databricks workspace sidebar provides access to all major features</em></p>
+
 ## Navigation Overview
 
 | Section | Purpose |
@@ -213,6 +218,11 @@ flowchart LR
     T3 --> T4[Task 4: Aggregate<br/>Notebook]
 ```
 
+<p align="center">
+  <img src="../../images/databricks-ui/workspace/job-task-dag.png" alt="Databricks job workflow task visualization" />
+</p>
+<p align="center"><em>Task dependencies visualized in the Databricks Workflows UI</em></p>
+
 ### Job Scheduling
 
 | Schedule Type | Description |
@@ -297,6 +307,11 @@ flowchart TB
         end
     end
 ```
+
+<p align="center">
+  <img src="../../images/databricks-ui/workspace/folder-structure.png" alt="Databricks workspace folder organization" />
+</p>
+<p align="center"><em>Example folder organization in a Databricks workspace</em></p>
 
 ### Permissions
 
