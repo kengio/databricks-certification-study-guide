@@ -130,9 +130,9 @@ D) `spark.readStream.option("skipChangeCommits", "true").table("source")`
 <details>
 <summary>Answer</summary>
 
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
-> `readChangeData = true` (with CDF enabled on the table) reads the change data feed which includes inserts, updates, and deletes. Option A ignores updates/deletes. Options C and D are not valid options.
+> `readChangeFeed = true` (with CDF enabled on the table) reads the change data feed which includes inserts, updates, and deletes. Option A ignores updates/deletes. Option B uses the wrong option name (`readChangeData` is not valid; the correct name is `readChangeFeed`). Option D is not a valid option.
 
 </details>
 

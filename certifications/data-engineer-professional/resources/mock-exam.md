@@ -317,7 +317,7 @@ D) Use multiple MERGE statements with different conditions
 
 > **Correct Answer: B**
 >
-> Using `ROW_NUMBER()` partitioned by key and ordered by timestamp DESC in a subquery, then filtering for row_number = 1, deduplicates source data correctly within the MERGE. Option A works but requires a separate step. Option C affects write performance, not deduplication. Option D is unnecessarily complex.
+> Using `ROW_NUMBER()` partitioned by key and ordered by timestamp DESC in a subquery, then filtering for row_number = 1, deduplicates source data correctly within the MERGE while ensuring the latest record is kept. Option A (`dropDuplicates()`) is non-deterministic and doesn't guarantee keeping the record with the latest timestamp. Option C affects write performance, not deduplication. Option D is unnecessarily complex.
 
 </details>
 
@@ -473,7 +473,7 @@ D) Use `%run` to execute a SQL notebook and capture results
 
 > **Correct Answer: B**
 >
-> `spark.sql("SELECT ...")` returns a DataFrame that can be assigned to a variable for further processing. Option A's `_sqldf` is not a standard feature. Option C has invalid syntax. Option D doesn't capture SQL results.
+> `spark.sql("SELECT ...")` returns a DataFrame that can be assigned to a variable for further processing in Python. This is the recommended programmatic approach. Option A's `_sqldf` does exist in Databricks notebooks (it captures the last %sql result) but is implicit and less reliable for production code. Option C has invalid syntax. Option D doesn't capture SQL results.
 
 </details>
 
@@ -759,9 +759,9 @@ D) Table must be recreated to add a column at a specific position
 <details>
 <summary>Answer</summary>
 
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
-> Delta Lake's ALTER TABLE ADD COLUMN appends the column to the end of the schema. Column position cannot be specified in the ADD COLUMN statement. To reorder columns, you would need to use column mapping or recreate the table. Options A and B have invalid syntax.
+> Delta Lake supports column positioning with `FIRST` or `AFTER` clauses in ADD COLUMN statements. The syntax `ALTER TABLE ADD COLUMN column_name TYPE AFTER existing_column` correctly positions the new column. Option B uses incorrect syntax (COLUMNS instead of COLUMN with positioning). Option C is incorrect because position CAN be specified. Option D is unnecessary since ADD COLUMN with AFTER is supported.
 
 </details>
 
@@ -1452,7 +1452,7 @@ D) Set `spark.executor.memoryOverhead` to 0 for maximum heap space
 | 9 | B | 30 | D | 51 | A |
 | 10 | B | 31 | B | 52 | B |
 | 11 | B | 32 | B | 53 | B |
-| 12 | C | 33 | C | 54 | B |
+| 12 | C | 33 | A | 54 | B |
 | 13 | B | 34 | B | 55 | B |
 | 14 | C | 35 | D | 56 | A |
 | 15 | A | 36 | B | 57 | B |
