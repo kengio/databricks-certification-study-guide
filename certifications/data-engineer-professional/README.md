@@ -46,12 +46,20 @@ pie title Exam Topic Distribution
 | [07-Lakeflow Pipelines](07-lakeflow-pipelines/README.md)             | Delta Live Tables, declarative pipelines, data quality|
 | [08-Performance Optimization](08-performance-optimization/README.md) | File sizing, indexing, Spark tuning                   |
 
+### Practice Exams
+
+| Resource                                                | Description                              |
+| ------------------------------------------------------- | ---------------------------------------- |
+| [Mock Exam](resources/mock-exam.md)                     | 63-question full-length practice exam    |
+| [Practice Questions](resources/practice-questions.md)   | 45 section-specific practice questions   |
+
 ### Quick Reference
 
 | Resource                                            | Purpose                                       |
 | --------------------------------------------------- | --------------------------------------------- |
-| [Cheat Sheets](cheat-sheets/streaming-quick-ref.md) | Certification-specific quick reference        |
-| [Resources](resources/exam-tips.md)                 | Exam tips, practice questions, official links |
+| [Cheat Sheets](cheat-sheets/)                       | Quick reference cards for key topics          |
+| [Exam Tips](resources/exam-tips.md)                 | Exam strategies and common traps              |
+| [Official Links](resources/official-links.md)       | Databricks documentation references           |
 
 ## Prerequisites
 

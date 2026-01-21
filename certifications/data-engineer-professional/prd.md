@@ -8,7 +8,7 @@ Complete study guide for the Databricks Data Engineer Professional certification
 
 | Section | Exam Weight | Status | Files |
 |---------|-------------|--------|-------|
-| 01-Data Processing | 30% | ✅ Complete | 6 |
+| 01-Data Processing | 30% | ✅ Complete | 7 |
 | 02-Databricks Tooling | 20% | ✅ Complete | 5 |
 | 03-Data Modeling | 15% | ✅ Complete | 5 |
 | 04-Security & Governance | 10% | ✅ Complete | 4 |
@@ -17,7 +17,7 @@ Complete study guide for the Databricks Data Engineer Professional certification
 | 07-Lakeflow Pipelines | 5% | ✅ Complete | 4 |
 | 08-Performance Optimization | 5% | ✅ Complete | 4 |
 
-**Total content files: 36** (6 pre-existing + 30 created)
+**Total content files: 37** (7 pre-existing + 30 created)
 
 ## Content Format Standard
 
@@ -36,16 +36,17 @@ Each content file follows this structure:
 
 ## Completed Files by Section
 
-### Section 01: Data Processing (30%) - Pre-existing
+### Section 01: Data Processing (30%)
 
 | File | Topic |
 |------|-------|
 | `01-batch-etl-pipelines.md` | Batch processing patterns |
-| `02-streaming-pipelines.md` | Structured Streaming |
-| `03-incremental-processing.md` | Change Data Feed, incremental loads |
-| `04-data-transformations.md` | DataFrame operations |
-| `05-data-quality.md` | Validation and quality checks |
+| `02-incremental-processing.md` | Change Data Feed, incremental loads |
+| `03-structured-streaming.md` | Structured Streaming |
+| `04-auto-loader.md` | Auto Loader ingestion |
+| `05-change-data-capture.md` | CDC patterns |
 | `06-delta-lake-operations.md` | Delta Lake fundamentals |
+| `07-data-deduplication.md` | Deduplication strategies |
 
 ### Section 02: Databricks Tooling (20%)
 
@@ -144,19 +145,26 @@ certifications/data-engineer-professional/
     └── [4 content files]
 ```
 
-## Future Enhancements
+## Enhancements Status
 
-Potential additions to enhance the study guide:
+| Enhancement | Status | Location |
+|-------------|--------|----------|
+| Practice Questions | ✅ Complete | `resources/practice-questions.md` (45 questions) |
+| Mock Exam | ✅ Complete | `resources/mock-exam.md` (63 questions) |
+| Cheat Sheets | ✅ Complete | `cheat-sheets/` (5 quick reference cards) |
+| Exam Tips | ✅ Complete | `resources/exam-tips.md` |
+| Official Links | ✅ Complete | `resources/official-links.md` |
 
-1. **Practice Questions** - Add exam-style questions for each section
-2. **Hands-on Labs** - Create practical exercises with sample data
-3. **Cheat Sheets** - Quick reference cards for each topic
-4. **Mock Exam** - Full-length practice exam with answers
-5. **Study Schedule** - Recommended timeline for exam preparation
+### Future Additions (Optional)
+
+1. **Hands-on Labs** - Practical exercises with sample data
+2. **Study Schedule** - Recommended timeline for exam preparation
 
 ## Verification Checklist
 
-- [x] All 30 new content files created
+### Content Files
+
+- [x] All 37 content files created (7 in Section 01 + 30 new)
 - [x] Each file follows established format (600-900 lines)
 - [x] Mermaid diagrams included in all files
 - [x] Code examples in Python and SQL
@@ -165,3 +173,10 @@ Potential additions to enhance the study guide:
 - [x] Exam tips included (10 per file)
 - [x] Cross-references to related topics
 - [x] Official documentation links provided
+
+### Practice Materials
+
+- [x] Practice questions cover all 8 sections (45 questions)
+- [x] Mock exam with answer key (63 questions)
+- [x] Cheat sheets for high-weight topics (5 cards)
+- [x] Exam tips and strategies documented
