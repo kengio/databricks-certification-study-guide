@@ -33,11 +33,13 @@ A comprehensive study guide for all Databricks certifications.
 ## Certification Paths
 
 ```mermaid
-graph LR
-    DEA[DE Associate] --> DEP[DE Professional]
+graph TD
+    DEA[Data Engineer Associate] --> DEP[Data Engineer Professional]
+    DAA[Data Analyst Associate] --> DEA
     MLA[ML Associate] --> MLP[ML Professional]
     DEA --> MLA
-    MLA --> GAIA[GenAI Associate]
+    GAIA[GenAI Engineer Associate]
+    MLA --> GAIA
 ```
 
 See [Learning Paths](learning-paths/README.md) for detailed progression guides.
