@@ -57,7 +57,7 @@ pie title Exam Topic Distribution
 
 | Resource                                            | Purpose                                       |
 | --------------------------------------------------- | --------------------------------------------- |
-| [Cheat Sheets](cheat-sheets/)                       | Quick reference cards for key topics          |
+| [Cheat Sheets](cheat-sheets/README.md)              | Quick reference cards for key topics          |
 | [Exam Tips](resources/exam-tips.md)                 | Exam strategies and common traps              |
 | [Official Links](resources/official-links.md)       | Databricks documentation references           |
 
