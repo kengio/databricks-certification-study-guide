@@ -10,16 +10,18 @@ flowchart LR
     PO --> ZO[Z-Order Indexing]
     PO --> ST[Spark Tuning]
     PO --> CO[Cost Optimization]
+    PO --> SO[Streaming Optimization]
 ```
 
 ## Section Contents
 
 | File | Topic | Priority |
-|------|-------|----------|
+| ---- | ----- | -------- |
 | [01-file-sizing.md](01-file-sizing.md) | Target file sizes, compaction strategies | High |
 | [02-zorder-indexing.md](02-zorder-indexing.md) | Z-order, data skipping, clustering | High |
 | [03-spark-tuning.md](03-spark-tuning.md) | Configurations, AQE, shuffle optimization | High |
 | [04-cost-optimization.md](04-cost-optimization.md) | Spot instances, autoscaling, job clusters | Medium |
+| [05-streaming-optimization.md](05-streaming-optimization.md) | Triggers, watermarks, state management | High |
 
 ## File Size Optimization
 
