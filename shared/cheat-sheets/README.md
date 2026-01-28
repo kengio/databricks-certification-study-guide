@@ -7,6 +7,7 @@ Quick reference guides for common Databricks operations and configurations.
 | Cheat Sheet | Description |
 | ----------- | ----------- |
 | [Delta Lake Commands](delta-lake-commands.md) | OPTIMIZE, VACUUM, MERGE, and table operations |
+| [DESCRIBE and SHOW Commands](describe-show-commands.md) | Metadata inspection with example outputs |
 | [Spark Configurations](spark-configurations.md) | Key Spark settings for tuning and optimization |
 | [Performance Optimization](performance-optimization.md) | File sizing, indexing decisions, and cost optimization |
 | [SQL Functions](sql-functions.md) | Common SQL functions and syntax |
