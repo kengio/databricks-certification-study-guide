@@ -339,7 +339,7 @@ For comprehensive CDC patterns including APPLY CHANGES, SCD types, and multi-hop
 ## Related Topics
 
 - [Open Table Formats](open-table-formats.md) - UniForm, Iceberg, Hudi comparison
-- [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-data-processing/01-delta-lake-operations.md) - OPTIMIZE, VACUUM, Z-ordering
+- [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-data-processing/06-delta-lake-operations.md) - OPTIMIZE, VACUUM, Z-ordering
 - [Medallion Architecture](medallion-architecture.md) - Bronze/Silver/Gold pattern
 - [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture.md) - CDC patterns
 

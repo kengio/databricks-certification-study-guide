@@ -102,6 +102,7 @@ flowchart TB
 
 ### Link Verification
 
+- **Always check for broken links** after editing or adding files - scan all markdown files to verify internal links still work
 - **Always link directly to files, not folders** (e.g., `path/to/README.md` not `path/to/`)
 - When adding or modifying links, confirm the target file exists
 - Standard entry points for each section:
