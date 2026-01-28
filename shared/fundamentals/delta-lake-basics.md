@@ -201,6 +201,60 @@ ALTER TABLE my_table ADD COLUMN email STRING;
 ALTER TABLE my_table ALTER COLUMN id TYPE BIGINT;
 ```
 
+## Liquid Clustering
+
+Liquid Clustering is Delta Lake's modern approach to data organization that automatically optimizes data layout for query performance.
+
+### Why Liquid Clustering?
+
+- **Replaces partitioning + Z-ORDER** - Single approach for data organization
+- **Automatic maintenance** - No manual OPTIMIZE ZORDER needed
+- **Incremental** - Only clusters new data, not full rewrites
+- **Flexible** - Change clustering columns without rewriting data
+
+### Basic Syntax
+
+```sql
+-- Create table with liquid clustering
+CREATE TABLE orders (
+    order_id BIGINT,
+    customer_id BIGINT,
+    order_date DATE,
+    amount DECIMAL(10,2)
+) USING DELTA
+CLUSTER BY (customer_id, order_date);
+
+-- Add clustering to existing table
+ALTER TABLE orders CLUSTER BY (customer_id, order_date);
+
+-- Change clustering columns
+ALTER TABLE orders CLUSTER BY (customer_id);
+
+-- Remove clustering
+ALTER TABLE orders CLUSTER BY NONE;
+```
+
+### Liquid Clustering vs Partitioning vs Z-ORDER
+
+| Feature | Partitioning | Z-ORDER | Liquid Clustering |
+| ------- | ------------ | ------- | ----------------- |
+| Best for | Low cardinality | High cardinality | Any cardinality |
+| Maintenance | Automatic | Manual OPTIMIZE | Automatic |
+| Column changes | Requires rewrite | Requires rewrite | ALTER supported |
+| Max columns | 1-2 | 3-4 | 2-4 |
+| Databricks version | All | All | 13.3+ |
+
+### When to Use
+
+| Scenario | Recommendation |
+| -------- | -------------- |
+| New tables | Use Liquid Clustering |
+| Existing partitioned tables | Evaluate migration |
+| Streaming workloads | Liquid Clustering preferred |
+| Stable query patterns | Z-ORDER still works |
+
+For advanced Liquid Clustering topics including migration patterns, see [Z-ORDER Indexing and Data Skipping](../../certifications/data-engineer-professional/08-performance-optimization/02-zorder-indexing.md).
+
 ## Use Cases
 
 | Use Case              | How Delta Lake Helps                      |
