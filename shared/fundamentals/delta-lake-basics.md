@@ -255,6 +255,68 @@ ALTER TABLE orders CLUSTER BY NONE;
 
 For advanced Liquid Clustering topics including migration patterns, see [Z-ORDER Indexing and Data Skipping](../../certifications/data-engineer-professional/08-performance-optimization/02-zorder-indexing.md).
 
+## Change Data Feed (CDF)
+
+Change Data Feed tracks row-level changes (inserts, updates, deletes) made to a Delta table, enabling efficient CDC pipelines.
+
+### Enabling CDF
+
+```sql
+-- Enable on new table
+CREATE TABLE orders (
+    order_id INT,
+    customer_id INT,
+    amount DOUBLE
+) USING DELTA
+TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
+
+-- Enable on existing table
+ALTER TABLE orders
+SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
+```
+
+### CDF Metadata Columns
+
+When reading change data, these columns are automatically added:
+
+| Column | Description |
+| ------ | ----------- |
+| `_change_type` | `insert`, `update_preimage`, `update_postimage`, `delete` |
+| `_commit_version` | Delta version of the change |
+| `_commit_timestamp` | When the change was committed |
+
+### Reading Change Data
+
+```sql
+-- SQL: Read changes between versions
+SELECT * FROM table_changes('orders', 1, 10);
+
+-- SQL: Read changes between timestamps
+SELECT * FROM table_changes('orders', '2025-01-01', '2025-01-31');
+```
+
+```python
+# Python: Read changes by version range
+changes_df = spark.read.format("delta") \
+    .option("readChangeFeed", "true") \
+    .option("startingVersion", 1) \
+    .option("endingVersion", 10) \
+    .table("orders")
+
+# Filter by change type
+inserts = changes_df.filter(col("_change_type") == "insert")
+updates = changes_df.filter(col("_change_type") == "update_postimage")
+deletes = changes_df.filter(col("_change_type") == "delete")
+```
+
+### Key Points
+
+- CDF must be enabled **before** changes are tracked (not retroactive)
+- Use `update_postimage` for the new values (not `preimage`)
+- CDF works with both batch and streaming reads
+
+For comprehensive CDC patterns including APPLY CHANGES, SCD types, and multi-hop propagation, see [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture.md).
+
 ## Use Cases
 
 | Use Case              | How Delta Lake Helps                      |
@@ -279,7 +341,7 @@ For advanced Liquid Clustering topics including migration patterns, see [Z-ORDER
 - [Open Table Formats](open-table-formats.md) - UniForm, Iceberg, Hudi comparison
 - [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-data-processing/01-delta-lake-operations.md) - OPTIMIZE, VACUUM, Z-ordering
 - [Medallion Architecture](medallion-architecture.md) - Bronze/Silver/Gold pattern
-- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/06-change-data-capture.md) - CDC patterns
+- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture.md) - CDC patterns
 
 ## Official Documentation
 
