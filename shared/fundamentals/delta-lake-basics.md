@@ -273,6 +273,9 @@ TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
 -- Enable on existing table
 ALTER TABLE orders
 SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
+
+-- Enable CDF by default for all new tables in the session
+SET spark.databricks.delta.properties.defaults.enableChangeDataFeed = true;
 ```
 
 ### CDF Metadata Columns

@@ -180,16 +180,21 @@ ALTER TABLE table_name SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
 -- Read changes
 SELECT * FROM table_changes('table_name', 1, 5);
 SELECT * FROM table_changes('table_name', '2024-01-01', '2024-01-31');
+
+-- Read changes from specific version to latest
+SELECT * FROM table_changes('table_name', 5);
 ```
 
 ```python
 # Python CDF read
 spark.read.format("delta") \
-  .option("readChangeData", "true") \
+  .option("readChangeFeed", "true") \
   .option("startingVersion", 1) \
   .option("endingVersion", 5) \
   .table("table_name")
 ```
+
+> **Exam tip:** CDF only tracks changes made **after** it's enabled — it is NOT retroactive.
 
 ## Key Properties
 
