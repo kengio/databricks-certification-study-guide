@@ -222,6 +222,7 @@ ALTER TABLE my_table ALTER COLUMN id TYPE BIGINT;
 
 ## Related Topics
 
+- [Open Table Formats](open-table-formats.md) - UniForm, Iceberg, Hudi comparison
 - [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-data-processing/01-delta-lake-operations.md) - OPTIMIZE, VACUUM, Z-ordering
 - [Medallion Architecture](medallion-architecture.md) - Bronze/Silver/Gold pattern
 - [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/06-change-data-capture.md) - CDC patterns

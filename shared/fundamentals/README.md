@@ -7,6 +7,7 @@ This directory contains foundational concepts used across multiple Databricks ce
 | Topic | Used By |
 |-------|---------|
 | [Delta Lake Basics](delta-lake-basics.md) | DE Associate, DE Professional, Data Analyst |
+| [Open Table Formats](open-table-formats.md) | DE Associate, DE Professional |
 | [Spark Fundamentals](spark-fundamentals.md) | DE Associate, DE Professional, ML Associate, ML Professional |
 | [Medallion Architecture](medallion-architecture.md) | DE Associate, DE Professional |
 | [Unity Catalog Basics](unity-catalog-basics.md) | All certifications |
