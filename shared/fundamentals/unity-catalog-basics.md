@@ -339,6 +339,86 @@ AS SELECT * FROM hive_metastore.default.customers;
 -- Or use SYNC to keep in sync during migration
 ```
 
+## Practice Questions
+
+### Question 1: Three-Level Namespace
+
+**Question**: What is the correct three-level namespace for referencing a table in Unity Catalog?
+
+A) `workspace.schema.table`
+B) `catalog.schema.table`
+C) `database.schema.table`
+D) `metastore.catalog.table`
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Unity Catalog uses a three-level namespace: `catalog.schema.table`. The catalog is the top-level container, schemas (databases) organize objects within a catalog, and tables/views/functions are the securable objects within a schema.
+
+</details>
+
+---
+
+### Question 2: Managed vs External Tables
+
+**Question**: What happens when you DROP a managed table in Unity Catalog?
+
+A) Only the metadata is deleted; data files remain
+B) Both metadata and underlying data files are deleted
+C) The table is archived but can be restored
+D) The data is moved to a recycle bin for 30 days
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> When a managed table is dropped, Unity Catalog deletes both the metadata and the underlying data files. For external tables, only the metadata is removed; data files remain at the external location. This is a key distinction for the exam.
+
+</details>
+
+---
+
+### Question 3: Granting Access
+
+**Question**: A data analyst needs to read data from tables in the `prod.sales` schema. What is the minimum set of grants required?
+
+A) `GRANT SELECT ON SCHEMA prod.sales TO analyst`
+B) `GRANT USE CATALOG ON CATALOG prod TO analyst` and `GRANT USE SCHEMA ON SCHEMA prod.sales TO analyst` and `GRANT SELECT ON SCHEMA prod.sales TO analyst`
+C) `GRANT ALL PRIVILEGES ON CATALOG prod TO analyst`
+D) `GRANT READ ON SCHEMA prod.sales TO analyst`
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Unity Catalog requires explicit grants at each level. To read tables, a user needs: `USE CATALOG` on the catalog, `USE SCHEMA` on the schema, and `SELECT` on the schema or individual tables. Without `USE CATALOG` and `USE SCHEMA`, the user cannot navigate to the tables even with `SELECT` granted.
+
+</details>
+
+---
+
+### Question 4: Data Lineage
+
+**Question**: What does Unity Catalog's data lineage feature track?
+
+A) Only table-level dependencies
+B) Column-level data flow across tables, notebooks, and jobs
+C) Only SQL query history
+D) Storage-level file access patterns
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Unity Catalog automatically captures column-level lineage, tracking how data flows from source columns to target columns across tables, notebooks, workflows, and dashboards. This is captured automatically without requiring manual configuration.
+
+</details>
+
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md)

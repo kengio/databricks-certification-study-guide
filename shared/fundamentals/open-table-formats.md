@@ -334,6 +334,66 @@ flowchart TD
 5. **Delta Lake is default** on Databricks, others accessible via UniForm
 6. **Partition evolution** is native in Iceberg, achieved via Liquid Clustering in Delta
 
+## Practice Questions
+
+### Question 1: UniForm
+
+**Question**: What does Delta Lake UniForm enable?
+
+A) Converting Delta tables permanently to Iceberg format
+B) Reading Delta tables as Iceberg or Hudi without data duplication
+C) Merging multiple table formats into a single unified format
+D) Automatically migrating Hudi tables to Delta Lake
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> UniForm generates Iceberg and Hudi metadata alongside the Delta Lake transaction log, allowing external tools (like Snowflake, Trino, Presto) to read Delta tables using Iceberg or Hudi protocols. No data is duplicated; only metadata is generated.
+
+</details>
+
+---
+
+### Question 2: Iceberg Partitioning
+
+**Question**: How does Apache Iceberg handle partition evolution differently from traditional Hive-style partitioning?
+
+A) Iceberg does not support partitioning
+B) Iceberg uses hidden partitioning, so queries do not need to specify partition columns in filters
+C) Iceberg requires a full table rewrite to change partition columns
+D) Iceberg only supports date-based partitions
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Iceberg uses hidden partitioning where the engine automatically applies partition pruning based on source columns. Users write queries using the original columns (e.g., `WHERE event_date = '2025-01-15'`), and Iceberg handles partition mapping internally. Partition columns can also be evolved without rewriting data.
+
+</details>
+
+---
+
+### Question 3: Hudi Table Types
+
+**Question**: Which Hudi table type is optimized for write-heavy workloads with streaming upserts?
+
+A) Copy on Write (CoW)
+B) Merge on Read (MoR)
+C) Append Only
+D) Write Optimized
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Merge on Read (MoR) writes data to log files first and compacts later, making writes fast and efficient for streaming CDC workloads. Copy on Write (CoW) rewrites entire files on each update, making it better for read-heavy workloads but slower for writes.
+
+</details>
+
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md) - Core Delta Lake concepts

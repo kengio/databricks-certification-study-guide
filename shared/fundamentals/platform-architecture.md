@@ -354,6 +354,66 @@ flowchart LR
 | Cannot access Unity Catalog   | Network isolation                     | Configure Private Link for UC   |
 | Cross-region latency          | Data plane far from storage           | Co-locate in same region        |
 
+## Practice Questions
+
+### Question 1: Control Plane vs Data Plane
+
+**Question**: Which component runs in the Databricks-managed control plane?
+
+A) Customer data storage (S3, ADLS, GCS)
+B) Spark clusters processing data
+C) Web UI, REST APIs, and notebook management
+D) Delta Lake transaction logs
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: C**
+>
+> The control plane is managed by Databricks and hosts the web application, REST APIs, notebook management, and job scheduling. The data plane (clusters, storage) runs in the customer's cloud account, keeping data under customer control.
+
+</details>
+
+---
+
+### Question 2: Serverless Compute
+
+**Question**: What is the key benefit of serverless compute in Databricks?
+
+A) It eliminates the need for Unity Catalog
+B) Clusters are managed by Databricks, reducing infrastructure overhead and startup time
+C) It provides unlimited compute resources at no cost
+D) It only works with SQL workloads
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Serverless compute runs clusters in the Databricks-managed data plane, eliminating the need for customers to manage cloud infrastructure. This reduces cluster startup time and operational overhead. Serverless is available for SQL warehouses, notebooks, and jobs.
+
+</details>
+
+---
+
+### Question 3: Network Security
+
+**Question**: Which feature ensures that cluster nodes communicate only through private IP addresses and do not require public IP addresses?
+
+A) Unity Catalog
+B) IP Access Lists
+C) Secure Cluster Connectivity (SCC / No Public IP)
+D) Customer-Managed Keys
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: C**
+>
+> Secure Cluster Connectivity (also called No Public IP) ensures cluster nodes only have private IP addresses. Communication with the control plane happens through a secure tunnel initiated from the data plane, eliminating the need for public IPs and reducing the attack surface.
+
+</details>
+
 ## Related Topics
 
 - [Databricks Workspace](databricks-workspace.md) - UI and workspace features

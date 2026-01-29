@@ -113,6 +113,8 @@ flowchart TB
   - `certifications/ml-professional/README.md`
   - `certifications/genai-engineer-associate/README.md`
   - `shared/fundamentals/README.md`
+  - `shared/cheat-sheets/README.md`
+  - `shared/appendix/README.md`
   - `learning-paths/README.md`
 
 ### Content Requirements

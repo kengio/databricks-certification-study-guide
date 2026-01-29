@@ -49,9 +49,9 @@ See [Learning Paths](learning-paths/README.md) for detailed progression guides.
 | Resource                                                     | Description                            |
 | ------------------------------------------------------------ | -------------------------------------- |
 | [Fundamentals](shared/fundamentals/README.md)               | Core concepts used across certifications |
-| [Cheat Sheets](shared/cheat-sheets/delta-lake-commands.md)  | Quick reference guides                 |
-| [Appendix](shared/appendix/glossary.md)                     | Glossary, comparisons, error reference |
-| Code Examples | Python and SQL examples (coming soon) |
+| [Cheat Sheets](shared/cheat-sheets/README.md)               | Quick reference guides                 |
+| [Appendix](shared/appendix/README.md)                       | Glossary, comparisons, error reference |
+| [Code Examples](shared/code-examples/README.md)             | Python and SQL examples                |
 
 ## Quick Start
 

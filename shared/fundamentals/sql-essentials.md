@@ -561,6 +561,86 @@ WHERE status = 'active';
 | Wrong results from JOIN | Duplicate keys  | Verify join keys, add DISTINCT |
 | NULL in aggregation     | NULLs excluded  | Use COALESCE or filter NULLs   |
 
+## Practice Questions
+
+### Question 1: Window Functions
+
+**Question**: Which window function assigns a unique sequential number to rows within a partition, with no gaps even for ties?
+
+A) `RANK()`
+B) `DENSE_RANK()`
+C) `ROW_NUMBER()`
+D) `NTILE()`
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: C**
+>
+> `ROW_NUMBER()` assigns a unique sequential integer to each row within a partition, with no gaps or duplicates. `RANK()` can produce gaps (e.g., 1, 2, 2, 4), `DENSE_RANK()` has no gaps but allows ties (e.g., 1, 2, 2, 3), and `NTILE()` divides rows into buckets.
+
+</details>
+
+---
+
+### Question 2: CTEs
+
+**Question**: What is the scope of a Common Table Expression (CTE) defined with the `WITH` clause?
+
+A) The entire session until the connection is closed
+B) Only the single SQL statement that immediately follows it
+C) All queries in the current notebook cell
+D) The CTE persists until explicitly dropped
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> A CTE defined with `WITH` is scoped to the single SELECT, INSERT, UPDATE, or DELETE statement that immediately follows it. It does not persist beyond that statement and cannot be referenced by subsequent queries.
+
+</details>
+
+---
+
+### Question 3: MERGE Statement
+
+**Question**: Which clause in a MERGE statement handles records that exist in the target table but not in the source?
+
+A) `WHEN MATCHED THEN UPDATE`
+B) `WHEN NOT MATCHED THEN INSERT`
+C) `WHEN NOT MATCHED BY SOURCE THEN DELETE`
+D) `WHEN NOT MATCHED BY TARGET THEN INSERT`
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: C**
+>
+> `WHEN NOT MATCHED BY SOURCE` matches rows in the target that have no corresponding row in the source. This is commonly used to DELETE or UPDATE records that are no longer present in the source data. `WHEN NOT MATCHED` (or `WHEN NOT MATCHED BY TARGET`) handles rows in the source not in the target.
+
+</details>
+
+---
+
+### Question 4: COALESCE Function
+
+**Question**: What does `SELECT COALESCE(NULL, NULL, 'default', 'other')` return?
+
+A) `NULL`
+B) `'default'`
+C) `'other'`
+D) An error
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> `COALESCE` returns the first non-NULL argument from its list. It evaluates arguments left to right: `NULL`, `NULL`, `'default'` (first non-NULL, returned). The `'other'` value is never evaluated.
+
+</details>
+
 ## Related Topics
 
 - [Spark Fundamentals](spark-fundamentals.md)

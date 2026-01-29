@@ -304,6 +304,86 @@ df.withColumn("name_upper", pandas_upper(df.name))
 | Too many small files           | Many partitions          | Use `coalesce()` before writing                             |
 | `AnalysisException`            | Column not found         | Check column names with `printSchema()`                     |
 
+## Practice Questions
+
+### Question 1: Lazy Evaluation
+
+**Question**: What happens when you call `df.filter(col("age") > 30)` in PySpark?
+
+A) The data is immediately filtered and returned
+B) A new DataFrame is created with the filter applied, but no computation occurs
+C) The filter is applied and the result is cached in memory
+D) The query is sent to the driver for execution
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Spark uses lazy evaluation. Transformations like `filter`, `select`, and `groupBy` create a new DataFrame that records the operation but do not trigger computation. Computation only occurs when an action (like `collect`, `count`, or `show`) is called.
+
+</details>
+
+---
+
+### Question 2: Broadcast Joins
+
+**Question**: When should you use a broadcast join in Spark?
+
+A) When both tables are very large
+B) When one table is small enough to fit in executor memory
+C) When performing a cross join
+D) When the join key has high cardinality
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> Broadcast joins send a copy of the small table to all executors, avoiding shuffle. This is effective when one table is small (default threshold: 10 MB). Broadcasting large tables causes `OutOfMemoryError`. Spark can auto-broadcast tables under the threshold set by `spark.sql.autoBroadcastJoinThreshold`.
+
+</details>
+
+---
+
+### Question 3: Actions vs Transformations
+
+**Question**: Which of the following is a Spark action (not a transformation)?
+
+A) `select()`
+B) `groupBy()`
+C) `count()`
+D) `withColumn()`
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: C**
+>
+> `count()` is an action that triggers computation and returns a result to the driver. `select()`, `groupBy()`, and `withColumn()` are transformations that build up a logical plan but do not trigger execution.
+
+</details>
+
+---
+
+### Question 4: Repartitioning
+
+**Question**: A DataFrame has 1,000 partitions but needs to be written as 10 files. Which approach is most efficient?
+
+A) `df.repartition(10)`
+B) `df.coalesce(10)`
+C) `df.write.option("maxFilesPerPartition", 10)`
+D) `df.repartition(10).coalesce(1)`
+
+<details>
+<summary>Answer</summary>
+
+> **Correct Answer: B**
+>
+> `coalesce(10)` reduces partitions without a full shuffle, making it more efficient than `repartition` for decreasing partition count. `repartition` performs a full shuffle, which is unnecessary when only reducing partitions. Option D would create a single file, not 10.
+
+</details>
+
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md)
