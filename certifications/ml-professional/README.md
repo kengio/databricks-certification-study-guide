@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - certification
+  - machine-learning
+aliases:
+  - ML Professional
+---
+
 # Databricks Machine Learning Professional
 
 ## Exam Overview

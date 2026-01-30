@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - sql
+  - fundamentals
+aliases:
+  - SQL Essentials
+---
+
 # SQL Essentials
 
 This guide covers essential SQL concepts for working with Databricks SQL and Spark SQL. These fundamentals are particularly important for the Data Analyst Associate certification.

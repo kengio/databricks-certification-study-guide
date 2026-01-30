@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - certification
+  - machine-learning
+aliases:
+  - ML Associate
+---
+
 # Databricks Machine Learning Associate
 
 ## Exam Overview

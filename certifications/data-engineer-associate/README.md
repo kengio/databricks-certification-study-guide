@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - certification
+  - data-engineer
+aliases:
+  - DE Associate
+---
+
 # Databricks Data Engineer Associate
 
 ## Exam Overview

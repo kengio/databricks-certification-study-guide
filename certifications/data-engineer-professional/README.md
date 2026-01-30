@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - certification
+  - data-engineer
+aliases:
+  - DE Professional
+---
+
 # Databricks Data Engineer Professional
 
 ## Exam Overview
@@ -50,8 +59,8 @@ pie title Exam Topic Distribution
 
 | Resource                                                | Description                              |
 | ------------------------------------------------------- | ---------------------------------------- |
-| [Mock Exam](resources/mock-exam.md)                     | 63-question full-length practice exam    |
-| [Practice Questions](resources/practice-questions.md)   | 45 section-specific practice questions   |
+| [Mock Exam](resources/mock-exam/README.md)                     | 63-question full-length practice exam    |
+| [Practice Questions](resources/practice-questions/README.md)   | 45 section-specific practice questions   |
 
 ### Quick Reference
 

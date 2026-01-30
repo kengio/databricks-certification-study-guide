@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - medallion
+  - fundamentals
+aliases:
+  - Medallion Architecture
+---
+
 # Medallion Architecture
 
 The Medallion Architecture (also called Multi-Hop Architecture) is a data design pattern used to organize data in a lakehouse. It progressively refines data quality through three layers: Bronze, Silver, and Gold.
@@ -6,7 +15,7 @@ The Medallion Architecture (also called Multi-Hop Architecture) is a data design
 
 ```mermaid
 flowchart TB
-    Sources[Data Sources<br/>APIs, Databases, Files,<br/>Streaming, IoT, Third-party]
+    Sources["Data Sources (APIs, Databases, Files, Streaming)"]
 
     subgraph Bronze["BRONZE LAYER"]
         B1[Raw data as-is from source]
@@ -29,7 +38,7 @@ flowchart TB
         G4[Optimized for consumption]
     end
 
-    Consumers[Consumers<br/>BI Tools, ML Models,<br/>Analysts, Applications]
+    Consumers["Consumers (BI Tools, ML Models, Applications)"]
 
     Sources --> Bronze
     Bronze -->|Cleansing, Validation| Silver

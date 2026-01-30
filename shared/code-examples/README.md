@@ -1,3 +1,11 @@
+---
+tags:
+  - databricks
+  - code-examples
+aliases:
+  - Code Examples
+---
+
 # Code Examples
 
 Practical, runnable code examples for Databricks exam preparation and development reference.

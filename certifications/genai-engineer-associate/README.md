@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - certification
+  - genai
+aliases:
+  - GenAI Engineer
+---
+
 # Databricks Generative AI Engineer Associate
 
 ## Exam Overview

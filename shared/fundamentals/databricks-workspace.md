@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - workspace
+  - fundamentals
+aliases:
+  - Workspace
+---
+
 # Databricks Workspace
 
 A Databricks Workspace is the environment where you interact with Databricks services. It provides a unified interface for data engineering, data science, and analytics workflows.

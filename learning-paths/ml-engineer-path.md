@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - learning-path
+  - machine-learning
+aliases:
+  - ML Learning Path
+---
+
 # ML Engineer Learning Path
 
 A recommended progression from ML Associate through ML Professional, with an optional GenAI Engineer branch.

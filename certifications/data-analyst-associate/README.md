@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - certification
+  - data-analyst
+aliases:
+  - DA Associate
+---
+
 # Databricks Data Analyst Associate
 
 ## Exam Overview

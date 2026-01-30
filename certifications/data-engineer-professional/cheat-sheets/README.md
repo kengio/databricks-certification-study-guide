@@ -14,7 +14,7 @@ Quick reference cards for key exam topics.
 
 ## Shared Cheat Sheets
 
-See also the [shared cheat sheets](../../../shared/cheat-sheets/) for content applicable across certifications:
+See also the [shared cheat sheets](../../../shared/cheat-sheets/README.md) for content applicable across certifications:
 
 - [Delta Lake Commands](../../../shared/cheat-sheets/delta-lake-commands.md)
 - [Spark Configurations](../../../shared/cheat-sheets/spark-configurations.md)

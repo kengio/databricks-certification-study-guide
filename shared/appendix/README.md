@@ -1,3 +1,11 @@
+---
+tags:
+  - databricks
+  - reference
+aliases:
+  - Appendix
+---
+
 # Appendix
 
 Reference materials for exam preparation and troubleshooting.

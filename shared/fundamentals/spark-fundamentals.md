@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - spark
+  - fundamentals
+aliases:
+  - Spark
+---
+
 # Spark Fundamentals
 
 Apache Spark is a unified analytics engine for large-scale data processing. Databricks provides a fully managed Spark environment.

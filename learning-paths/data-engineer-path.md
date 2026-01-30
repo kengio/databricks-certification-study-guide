@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - learning-path
+  - data-engineer
+aliases:
+  - DE Learning Path
+---
+
 # Data Engineer Learning Path
 
 A recommended progression from Data Engineer Associate to Data Engineer Professional.
@@ -70,8 +79,8 @@ See the full study guide: [Data Engineer Professional](../certifications/data-en
 
 ### Additional Resources
 
-- [Practice Questions](../certifications/data-engineer-professional/resources/practice-questions.md)
-- [Mock Exam](../certifications/data-engineer-professional/resources/mock-exam.md)
+- [Practice Questions](../certifications/data-engineer-professional/resources/practice-questions/README.md)
+- [Mock Exam](../certifications/data-engineer-professional/resources/mock-exam/README.md)
 - [Exam Tips](../certifications/data-engineer-professional/resources/exam-tips.md)
 - [Official Links](../certifications/data-engineer-professional/resources/official-links.md)
 

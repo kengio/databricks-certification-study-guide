@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - architecture
+  - fundamentals
+aliases:
+  - Platform Architecture
+---
+
 # Databricks Platform Architecture
 
 Databricks uses a split architecture model that separates the management layer (control plane) from the compute and storage layer (data plane). Understanding this architecture is essential for security, networking, and compliance decisions.
@@ -16,14 +25,14 @@ flowchart TB
 
     subgraph DataPlane["DATA PLANE (Customer Cloud Account)"]
         subgraph VPC["VPC / VNet"]
-            Clusters[Clusters<br/>Driver + Workers]
+            Clusters["Clusters (Driver + Workers)"]
             SQLWh[SQL Warehouses]
-            Model[Model Serving<br/>Endpoints]
+            Model[Model Serving Endpoints]
         end
-        Storage[(Cloud Storage<br/>S3 / ADLS / GCS<br/>Your data stays here)]
+        Storage[("Cloud Storage - S3 / ADLS / GCS")]
     end
 
-    ControlPlane -->|"HTTPS (TLS 1.2+)<br/>Secure Cluster Connectivity"| DataPlane
+    ControlPlane -->|"HTTPS (TLS 1.2+)"| DataPlane
     Clusters --> Storage
     SQLWh --> Storage
 ```

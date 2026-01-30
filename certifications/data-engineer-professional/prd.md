@@ -149,8 +149,8 @@ certifications/data-engineer-professional/
 
 | Enhancement | Status | Location |
 |-------------|--------|----------|
-| Practice Questions | ✅ Complete | `resources/practice-questions.md` (45 questions) |
-| Mock Exam | ✅ Complete | `resources/mock-exam.md` (63 questions) |
+| Practice Questions | ✅ Complete | `resources/practice-questions/` (45 questions) |
+| Mock Exam | ✅ Complete | `resources/mock-exam/` (63 questions) |
 | Cheat Sheets | ✅ Complete | `cheat-sheets/` (5 quick reference cards) |
 | Exam Tips | ✅ Complete | `resources/exam-tips.md` |
 | Official Links | ✅ Complete | `resources/official-links.md` |

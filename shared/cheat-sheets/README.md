@@ -1,3 +1,11 @@
+---
+tags:
+  - databricks
+  - cheat-sheet
+aliases:
+  - Cheat Sheets
+---
+
 # Cheat Sheets
 
 Quick reference guides for common Databricks operations and configurations.

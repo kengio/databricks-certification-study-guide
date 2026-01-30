@@ -1,3 +1,12 @@
+---
+tags:
+  - databricks
+  - unity-catalog
+  - fundamentals
+aliases:
+  - Unity Catalog
+---
+
 # Unity Catalog Basics
 
 Unity Catalog is Databricks' unified governance solution for data and AI assets. It provides centralized access control, auditing, lineage, and data discovery across all workspaces.

@@ -1,3 +1,13 @@
+---
+tags:
+  - databricks
+  - iceberg
+  - hudi
+  - fundamentals
+aliases:
+  - Open Table Formats
+---
+
 # Open Table Formats
 
 Open table formats bring ACID transactions, schema evolution, and time travel to data lakes. Understanding these formats is essential for modern data engineering.
