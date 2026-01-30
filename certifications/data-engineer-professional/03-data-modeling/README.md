@@ -1,3 +1,13 @@
+---
+title: Data Modeling
+type: category
+tags:
+  - data-engineering
+  - modeling
+  - overview
+status: published
+---
+
 # Data Modeling (15% of Exam)
 
 Data modeling in Databricks centers around Delta Lake and the medallion architecture pattern.
@@ -16,7 +26,7 @@ flowchart LR
 ## Section Contents
 
 | File | Topic | Priority |
-|------|-------|----------|
+| :--- | :--- | :--- |
 | [01-medallion-architecture.md](01-medallion-architecture.md) | Bronze/Silver/Gold layers, data quality tiers | High |
 | [02-delta-lake-fundamentals.md](02-delta-lake-fundamentals.md) | ACID transactions, table formats, cloning | High |
 | [03-schema-management.md](03-schema-management.md) | Schema enforcement, evolution, constraints | High |
@@ -51,7 +61,7 @@ flowchart LR
 ### Layer Characteristics
 
 | Layer | Data Quality | Schema | Updates | Use Case |
-|-------|-------------|--------|---------|----------|
+| :--- | :--- | :--- | :--- | :--- |
 | Bronze | Raw | Flexible | Append-only | Data lake, audit |
 | Silver | Cleansed | Enforced | Merge/Upsert | Single source of truth |
 | Gold | Curated | Strict | Aggregated | BI, ML features |
@@ -59,7 +69,7 @@ flowchart LR
 ## Delta Lake Features
 
 | Feature | Description |
-|---------|-------------|
+| :--- | :--- |
 | ACID Transactions | Serializable isolation level |
 | Time Travel | Query previous versions |
 | Schema Enforcement | Reject bad data on write |
@@ -69,7 +79,7 @@ flowchart LR
 ## SCD Pattern Comparison
 
 | Type | Description | History | Implementation |
-|------|-------------|---------|----------------|
+| :--- | :--- | :--- | :--- |
 | Type 1 | Overwrite | No | Simple UPDATE |
 | Type 2 | Add row | Yes | INSERT with effective dates |
 | Type 3 | Add column | Limited | UPDATE with previous value column |

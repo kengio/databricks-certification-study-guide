@@ -1,3 +1,13 @@
+---
+title: Unity Catalog
+type: topic
+tags:
+  - data-engineering
+  - unity-catalog
+  - governance
+status: published
+---
+
 # Unity Catalog
 
 Unity Catalog is Databricks' unified governance solution for data and AI assets. It provides centralized access control, auditing, lineage, and data discovery across workspaces.
@@ -62,7 +72,7 @@ dev.analytics.daily_metrics
 ```
 
 | Level | Purpose | Examples |
-|-------|---------|----------|
+| :--- | :--- | :--- |
 | Catalog | Top-level container, often by environment or domain | `prod`, `dev`, `staging`, `sales`, `marketing` |
 | Schema | Logical grouping (like database) | `raw`, `bronze`, `silver`, `gold`, `default` |
 | Object | Tables, views, volumes, functions, models | `customers`, `orders`, `daily_revenue` |
@@ -74,7 +84,7 @@ The metastore is the top-level container for all Unity Catalog objects.
 ### Metastore Characteristics
 
 | Aspect | Description |
-|--------|-------------|
+| :--- | :--- |
 | Scope | One per region per account |
 | Storage | Managed storage location in cloud |
 | Attachment | Attached to one or more workspaces |
@@ -135,7 +145,7 @@ DROP CATALOG IF EXISTS temp_catalog CASCADE;
 ### Catalog Best Practices
 
 | Pattern | Example | Use Case |
-|---------|---------|----------|
+| :--- | :--- | :--- |
 | By environment | `prod`, `dev`, `staging` | Environment isolation |
 | By domain | `sales`, `marketing`, `finance` | Business domain separation |
 | By team | `data_engineering`, `data_science` | Team ownership |
@@ -257,7 +267,7 @@ COMMENT ON TABLE prod.sales.orders IS 'Sales orders fact table';
 ### Managed vs External Tables
 
 | Aspect | Managed Table | External Table |
-|--------|---------------|----------------|
+| :--- | :--- | :--- |
 | Storage location | Unity Catalog managed | User-specified location |
 | Data lifecycle | Managed by UC | User managed |
 | DROP behavior | Deletes data | Keeps data |
@@ -321,7 +331,7 @@ Volumes provide governed access to non-tabular data (files).
 ### Volume Types
 
 | Type | Storage | Use Case |
-|------|---------|----------|
+| :--- | :--- | :--- |
 | Managed | UC managed location | Generated files, outputs |
 | External | User cloud storage | Landing zones, existing files |
 
@@ -420,7 +430,7 @@ flowchart TD
 ### Common Privileges
 
 | Privilege | Object | Description |
-|-----------|--------|-------------|
+| :--- | :--- | :--- |
 | `USE CATALOG` | Catalog | Navigate to catalog |
 | `USE SCHEMA` | Schema | Navigate to schema |
 | `SELECT` | Table/View | Read data |
@@ -504,7 +514,7 @@ ALTER CATALOG prod SET OWNER TO `platform-team`;
 ### Owner Privileges
 
 | Owner Can | Description |
-|-----------|-------------|
+| :--- | :--- |
 | Grant/revoke permissions | Control who can access |
 | Drop object | Delete the object |
 | Alter object | Modify properties |
@@ -594,7 +604,7 @@ Unity Catalog automatically tracks data lineage.
 ### Comparison
 
 | Aspect | Hive Metastore | Unity Catalog |
-|--------|----------------|---------------|
+| :--- | :--- | :--- |
 | Scope | Workspace-level | Account-level |
 | Governance | Limited | Comprehensive |
 | Lineage | None | Automatic |

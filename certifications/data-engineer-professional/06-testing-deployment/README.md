@@ -1,3 +1,14 @@
+---
+title: Testing & Deployment
+type: category
+tags:
+  - data-engineering
+  - testing
+  - deployment
+  - cicd
+status: published
+---
+
 # Testing & Deployment (10% of Exam)
 
 Production-grade data engineering requires robust testing and deployment practices using Databricks Asset Bundles and CI/CD.
@@ -15,7 +26,7 @@ flowchart LR
 ## Section Contents
 
 | File | Topic | Priority |
-|------|-------|----------|
+| :--- | :--- | :--- |
 | [01-asset-bundles.md](01-asset-bundles.md) | DAB structure, configuration, deployment | High |
 | [02-cicd-integration.md](02-cicd-integration.md) | GitHub Actions, Azure DevOps, workflow patterns | High |
 | [03-git-folders.md](03-git-folders.md) | Git integration, notebook versioning | Medium |
@@ -96,7 +107,7 @@ sequenceDiagram
 ## Testing Strategies
 
 | Level | Scope | Tools |
-|-------|-------|-------|
+| :--- | :--- | :--- |
 | Unit | Individual functions | pytest, nutter |
 | Integration | End-to-end pipelines | Databricks workflows |
 | Data Quality | Data validation | Great Expectations, DLT expectations |

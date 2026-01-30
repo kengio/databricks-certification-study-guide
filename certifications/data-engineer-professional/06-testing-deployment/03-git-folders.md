@@ -1,3 +1,14 @@
+---
+title: Git Folders
+type: topic
+tags:
+  - data-engineering
+  - git
+  - version-control
+  - collaboration
+status: published
+---
+
 # Git Folders
 
 Git Folders (formerly Repos) provide native Git integration within Databricks workspaces, enabling version control for notebooks and project files directly from the Databricks UI.
@@ -27,7 +38,7 @@ flowchart TB
 ## Git Folders vs Legacy Repos
 
 | Feature | Git Folders | Legacy Repos |
-|---------|-------------|--------------|
+| :--- | :--- | :--- |
 | Location | /Workspace/Users or /Workspace/Shared | /Repos/ path |
 | File support | All file types | Limited file types |
 | Arbitrary folders | Yes | No |
@@ -134,7 +145,7 @@ Conflict Resolution:
 ### Supported File Types
 
 | File Type | Extension | Notes |
-|-----------|-----------|-------|
+| :--- | :--- | :--- |
 | Python Notebook | .py | With # Databricks notebook source header |
 | SQL Notebook | .sql | With -- Databricks notebook source header |
 | Scala Notebook | .scala | With // Databricks notebook source header |
@@ -430,7 +441,7 @@ Databricks follows Git provider rules
 ## Comparison: Git Folders vs Asset Bundles
 
 | Aspect | Git Folders | Asset Bundles |
-|--------|-------------|---------------|
+| :--- | :--- | :--- |
 | Purpose | Version control UI | Deployment automation |
 | Workflow | Interactive development | CI/CD deployment |
 | Configuration | Git provider settings | databricks.yml |

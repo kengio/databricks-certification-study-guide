@@ -1,3 +1,13 @@
+---
+title: Databricks Tooling
+type: category
+tags:
+  - data-engineering
+  - tooling
+  - overview
+status: published
+---
+
 # Databricks Tooling (20% of Exam)
 
 Understanding the Databricks platform tools and interfaces is essential for production data engineering.
@@ -16,7 +26,7 @@ flowchart LR
 ## Section Contents
 
 | File | Topic | Priority |
-|------|-------|----------|
+| :--- | :--- | :--- |
 | [01-workspace-and-notebooks.md](01-workspace-and-notebooks.md) | Notebook features, widgets, magic commands | High |
 | [02-databricks-cli.md](02-databricks-cli.md) | CLI commands, authentication, workspace management | Medium |
 | [03-rest-api.md](03-rest-api.md) | Jobs API 2.0, Clusters API, common operations | High |
@@ -28,7 +38,7 @@ flowchart LR
 ### Compute Types Comparison
 
 | Type | Use Case | Cost | Startup |
-|------|----------|------|---------|
+| :--- | :--- | :--- | :--- |
 | All-Purpose Clusters | Interactive development | Higher | Minutes |
 | Job Clusters | Production jobs | Lower | Minutes |
 | Serverless Compute | SQL analytics | Pay-per-query | Seconds |
@@ -37,7 +47,7 @@ flowchart LR
 ### Notebook Magic Commands
 
 | Command | Purpose |
-|---------|---------|
+| :--- | :--- |
 | `%python` | Switch to Python |
 | `%sql` | Switch to SQL |
 | `%scala` | Switch to Scala |
@@ -48,7 +58,7 @@ flowchart LR
 ### Widget Types
 
 | Widget | Usage |
-|--------|-------|
+| :--- | :--- |
 | `text` | Free-form text input |
 | `dropdown` | Single selection from list |
 | `combobox` | Editable dropdown |

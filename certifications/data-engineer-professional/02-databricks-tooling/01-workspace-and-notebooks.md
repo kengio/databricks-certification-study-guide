@@ -1,3 +1,13 @@
+---
+title: Workspace and Notebooks
+type: topic
+tags:
+  - data-engineering
+  - workspace
+  - notebooks
+status: published
+---
+
 # Workspace and Notebooks
 
 Databricks notebooks are the primary interface for interactive data engineering. Understanding notebook features, magic commands, widgets, and dbutils is essential for building production pipelines.
@@ -42,7 +52,7 @@ flowchart TB
 ### Workspace vs DBFS Paths
 
 | Path Type | Format | Access | Use Case |
-|-----------|--------|--------|----------|
+| :--- | :--- | :--- | :--- |
 | Workspace | `/Workspace/Users/...` | Notebooks, files | Code, configs |
 | DBFS | `dbfs:/...` or `/dbfs/...` | Data files | Data storage |
 | Unity Catalog Volumes | `/Volumes/catalog/schema/volume/` | Governed data | Managed files |
@@ -66,7 +76,7 @@ df = spark.read.format("parquet").load("/Volumes/main/default/raw_data/")
 Notebooks have a default language set at creation:
 
 | Language | Extension | Use Case |
-|----------|-----------|----------|
+| :--- | :--- | :--- |
 | Python | `.py` | General purpose, ML, ETL |
 | SQL | `.sql` | Data analysis, queries |
 | Scala | `.scala` | Performance-critical code |
@@ -96,7 +106,7 @@ val df = spark.read.table("my_table")
 ### Complete Magic Commands Reference
 
 | Command | Purpose | Example |
-|---------|---------|---------|
+| :--- | :--- | :--- |
 | `%python` | Run Python code | `%python print("Hello")` |
 | `%sql` | Run SQL queries | `%sql SELECT * FROM table` |
 | `%scala` | Run Scala code | `%scala val x = 1` |
@@ -131,7 +141,7 @@ print(ENVIRONMENT)  # "production"
 **%run Characteristics:**
 
 | Feature | Behavior |
-|---------|----------|
+| :--- | :--- |
 | Variable scope | Runs in same context - variables are shared |
 | Relative paths | Relative to current notebook location |
 | Parameters | Use widgets for parameterization (no direct args) |
@@ -162,7 +172,7 @@ print(ENVIRONMENT)  # "production"
 ```
 
 | Operation | Command | Description |
-|-----------|---------|-------------|
+| :--- | :--- | :--- |
 | List files | `%fs ls /path/` | List directory contents |
 | View file | `%fs head /path/file` | Show first 64KB of file |
 | Copy | `%fs cp /src /dest` | Copy file or directory |

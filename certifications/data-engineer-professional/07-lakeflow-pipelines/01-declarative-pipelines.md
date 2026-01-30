@@ -34,7 +34,7 @@ flowchart TB
 ### Comparison
 
 | Type | Keyword | Processing | State | Use Case |
-|------|---------|------------|-------|----------|
+| :--- | :--- | :--- | :--- | :--- |
 | Streaming Table | `STREAMING TABLE` | Incremental | Maintains checkpoint | Append-only, CDC sources |
 | Materialized View | `MATERIALIZED VIEW` | Full recompute | No checkpoint | Aggregations, complex joins |
 | View | `VIEW` | On-demand | No storage | Intermediate transformations |
@@ -567,7 +567,7 @@ AS SELECT * FROM cloud_files(
 ### Schema Evolution Modes
 
 | Mode | Behavior |
-|------|----------|
+| :--- | :--- |
 | `addNewColumns` | Add new columns, fail on type changes |
 | `rescue` | Put unexpected columns in _rescued_data |
 | `failOnNewColumns` | Fail pipeline on new columns |

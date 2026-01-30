@@ -1,6 +1,6 @@
 # Practice Questions - Section 06: Testing & Deployment (10%)
 
-[Back to Overview](README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow Pipelines](07-lakeflow-pipelines.md)
+[Back to Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow Pipelines](07-lakeflow-pipelines.md)
 
 ---
 
@@ -114,4 +114,4 @@ D) Create the workspace manually
 
 ---
 
-[Back to Overview](README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow Pipelines](07-lakeflow-pipelines.md)
+[Back to Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow Pipelines](07-lakeflow-pipelines.md)

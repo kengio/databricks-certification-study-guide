@@ -3,6 +3,7 @@ tags:
   - databricks
   - certification
   - machine-learning
+type: certification
 aliases:
   - ML Associate
 ---
@@ -11,16 +12,16 @@ aliases:
 
 ## Exam Overview
 
-| Detail            | Information                                     |
-| ----------------- | ----------------------------------------------- |
-| **Certification** | Databricks Certified Machine Learning Associate |
-| **Questions**     | ~45 multiple-choice                             |
-| **Duration**      | 90 minutes                                      |
-| **Passing Score** | 70%                                             |
-| **Languages**     | Python                                          |
-| **Experience**    | 6+ months with Databricks ML                    |
+| Detail             | Information                                     |
+| ------------------ | ----------------------------------------------- |
+| **Certification**  | Databricks Certified Machine Learning Associate |
+| **Questions**      | ~45 multiple-choice                             |
+| **Duration**       | 90 minutes                                      |
+| **Passing Score**  | 70%                                             |
+| **Languages**      | Python                                          |
+| **Experience**     | 6+ months with Databricks ML                    |
 | **Recertification**| Every 2 years                                   |
-| **Cost**          | $200 USD                                        |
+| **Cost**           | $200 USD                                        |
 
 ## Exam Domain Weights
 

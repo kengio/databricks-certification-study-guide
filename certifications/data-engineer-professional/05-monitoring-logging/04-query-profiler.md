@@ -1,3 +1,14 @@
+---
+title: Query Profiler
+type: topic
+tags:
+  - data-engineering
+  - optimization
+  - profiling
+  - query-plan
+status: published
+---
+
 # Query Profiler
 
 The Query Profiler helps analyze query execution plans and identify performance bottlenecks. Understanding how to interpret query plans and optimize queries is essential for building efficient data pipelines.
@@ -24,7 +35,7 @@ flowchart TB
 ### Understanding Query Plans
 
 | Plan Type | Description | When to Use |
-|-----------|-------------|-------------|
+| :--- | :--- | :--- |
 | Parsed Logical | Initial parse of SQL | Verify SQL syntax |
 | Analyzed Logical | With resolved references | Check table/column resolution |
 | Optimized Logical | After optimization rules | Understand optimizer decisions |
@@ -84,7 +95,7 @@ df.explain(mode="cost")
 ### Key Operators
 
 | Operator | Symbol | Description | Performance Impact |
-|----------|--------|-------------|-------------------|
+| :--- | :--- | :--- | :--- |
 | FileScan | `FileScan parquet` | Read from storage | Base I/O cost |
 | Filter | `Filter` | Apply predicates | Low |
 | Project | `Project` | Select columns | Low |
@@ -130,7 +141,7 @@ flowchart TD
 ### Signs of Poor Performance
 
 | Sign in Plan | Meaning | Solution |
-|--------------|---------|----------|
+| :--- | :--- | :--- |
 | Multiple Exchange nodes | Many shuffles | Reduce shuffles, repartition |
 | Large shuffle partition count | Data spread thin | Adjust shuffle partitions |
 | SortMergeJoin on small table | Missed broadcast | Force broadcast hint |
@@ -221,7 +232,7 @@ Shows:
 ### Metrics Available
 
 | Metric | Description |
-|--------|-------------|
+| :--- | :--- |
 | Duration | Total execution time |
 | Rows Scanned | Input rows read |
 | Rows Produced | Output rows |
@@ -281,7 +292,7 @@ WHERE amount > 100;
 ### What AQE Optimizes
 
 | Optimization | Description |
-|--------------|-------------|
+| :--- | :--- |
 | Coalesce Partitions | Reduce small partitions after shuffle |
 | Skew Join | Split skewed partitions |
 | Switch Join Strategy | Change join type based on runtime stats |

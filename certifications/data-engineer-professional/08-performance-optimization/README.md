@@ -16,7 +16,7 @@ flowchart LR
 ## Section Contents
 
 | File | Topic | Priority |
-| ---- | ----- | -------- |
+| :--- | :--- | :--- |
 | [01-file-sizing.md](01-file-sizing.md) | Target file sizes, compaction strategies | High |
 | [02-zorder-indexing.md](02-zorder-indexing.md) | Z-order, data skipping, clustering | High |
 | [03-spark-tuning.md](03-spark-tuning.md) | Configurations, AQE, shuffle optimization | High |
@@ -44,7 +44,7 @@ flowchart TD
 ### Optimal File Sizes
 
 | Scenario | Target Size | Configuration |
-|----------|-------------|---------------|
+| :--- | :--- | :--- |
 | General | 1 GB | Default |
 | Streaming | 128 MB | `spark.databricks.delta.optimizeWrite.fileSize` |
 | Small tables | 32-128 MB | Manual tuning |
@@ -52,7 +52,7 @@ flowchart TD
 ## Z-Order vs Liquid Clustering
 
 | Feature | Z-Order | Liquid Clustering |
-|---------|---------|-------------------|
+| :--- | :--- | :--- |
 | Maintenance | Manual OPTIMIZE | Automatic |
 | Column limit | ~4 columns | More flexible |
 | Incremental | No | Yes |
@@ -63,7 +63,7 @@ flowchart TD
 ### Key Configurations
 
 | Configuration | Purpose | Default |
-|--------------|---------|---------|
+| :--- | :--- | :--- |
 | `spark.sql.shuffle.partitions` | Shuffle parallelism | 200 |
 | `spark.sql.adaptive.enabled` | Adaptive Query Execution | true |
 | `spark.sql.adaptive.coalescePartitions.enabled` | Auto-coalesce | true |
@@ -82,7 +82,7 @@ flowchart LR
 ## Cost Optimization Strategies
 
 | Strategy | Savings | Trade-off |
-|----------|---------|-----------|
+| :--- | :--- | :--- |
 | Spot Instances | Up to 90% | Interruption risk |
 | Job Clusters | 40-60% vs interactive | Startup time |
 | Autoscaling | Variable | May not scale fast enough |
@@ -115,7 +115,7 @@ flowchart TD
 ## Key Numbers to Remember
 
 | Metric | Value |
-|--------|-------|
+| :--- | :--- |
 | Target file size | 1 GB |
 | VACUUM default retention | 168 hours (7 days) |
 | Max Z-ORDER columns | ~4 (practical) |

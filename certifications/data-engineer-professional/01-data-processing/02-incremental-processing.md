@@ -1,3 +1,13 @@
+---
+title: Incremental Processing
+type: topic
+tags:
+  - data-engineering
+  - incremental
+  - performance
+status: published
+---
+
 # Incremental Processing
 
 Incremental processing is essential for efficient data pipelines. Understanding when and how to process only new or changed data can significantly impact performance and cost.
@@ -22,7 +32,7 @@ flowchart TD
 ## Full Load vs Incremental Load
 
 | Aspect | Full Load | Incremental Load |
-|--------|-----------|------------------|
+| :--- | :--- | :--- |
 | Data processed | All data every time | Only new/changed data |
 | Processing time | Grows with data size | Relatively constant |
 | Cost | Higher | Lower |
@@ -32,7 +42,7 @@ flowchart TD
 ### When to Use Each
 
 | Scenario | Recommendation |
-|----------|----------------|
+| :--- | :--- |
 | Initial data load | Full load |
 | Small reference tables | Full load |
 | Large fact tables | Incremental load |
@@ -62,7 +72,7 @@ flowchart TD
 ### Strategy Comparison
 
 | Strategy | Best For | Pros | Cons |
-|----------|----------|------|------|
+| :--- | :--- | :--- | :--- |
 | Auto Loader | File ingestion | Automatic tracking, scalable | Files only |
 | High-Water Mark | Append-only tables | Simple, widely applicable | Misses updates/deletes |
 | Change Data Feed | Delta tables | Captures all changes | Delta only |
@@ -168,7 +178,7 @@ query = df.writeStream \
 ### Checkpoint Structure
 
 | Directory | Purpose |
-|-----------|---------|
+| :--- | :--- |
 | `commits/` | Completed micro-batches |
 | `offsets/` | Source positions (Kafka offsets, file paths) |
 | `sources/` | Source-specific metadata |

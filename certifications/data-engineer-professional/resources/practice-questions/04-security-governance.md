@@ -1,6 +1,6 @@
 # Practice Questions - Section 04: Security & Governance (10%)
 
-[Back to Overview](README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
+[Back to Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
 
 ---
 
@@ -114,4 +114,4 @@ D) Materialized view
 
 ---
 
-[Back to Overview](README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
+[Back to Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)

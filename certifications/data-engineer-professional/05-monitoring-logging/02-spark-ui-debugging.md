@@ -1,3 +1,14 @@
+---
+title: Spark UI Debugging
+type: topic
+tags:
+  - data-engineering
+  - spark
+  - debugging
+  - ui
+status: published
+---
+
 # Spark UI Debugging
 
 The Spark UI provides detailed visibility into job execution, enabling identification of performance bottlenecks, data skew, and resource issues. Understanding how to navigate and interpret the Spark UI is essential for debugging production pipelines.
@@ -40,7 +51,7 @@ flowchart TD
 ```
 
 | Level | Created By | Characteristics |
-|-------|------------|-----------------|
+| :--- | :--- | :--- |
 | Job | Each action (save, collect, count) | Contains multiple stages |
 | Stage | Shuffle boundaries | Contains multiple tasks |
 | Task | Partitions | Smallest unit of work |
@@ -48,7 +59,7 @@ flowchart TD
 ### What Triggers Shuffles
 
 | Operation | Causes Shuffle |
-|-----------|---------------|
+| :--- | :--- |
 | `groupBy`, `reduceByKey` | Yes |
 | `join` (most types) | Yes |
 | `repartition` | Yes |
@@ -65,7 +76,7 @@ flowchart TD
 The Jobs tab shows all jobs in the application:
 
 | Column | Description |
-|--------|-------------|
+| :--- | :--- |
 | Job Id | Unique identifier |
 | Description | Action that triggered job |
 | Submitted | Start timestamp |
@@ -90,7 +101,7 @@ Signs of Problems:
 Each stage shows:
 
 | Metric | Description | What to Look For |
-|--------|-------------|------------------|
+| :--- | :--- | :--- |
 | Duration | Wall clock time | Compare to expected |
 | Input | Data read | Size vs expected |
 | Output | Data written | Compare to input |
@@ -141,7 +152,7 @@ Key Metrics:
 Individual task view reveals:
 
 | Column | Description | Issues Indicated |
-|--------|-------------|------------------|
+| :--- | :--- | :--- |
 | Duration | Task execution time | Variance indicates skew |
 | GC Time | Garbage collection | High = memory pressure |
 | Input Size | Data read by task | Uneven = skewed partitions |
@@ -170,7 +181,7 @@ Task 4: ████████████████████████
 ### Executor Metrics
 
 | Metric | Description | Healthy Range |
-|--------|-------------|---------------|
+| :--- | :--- | :--- |
 | RDD Blocks | Cached data blocks | Based on caching strategy |
 | Storage Memory | Memory for caching | < 60% typically |
 | Disk Used | Spilled data on disk | Should be minimal |
@@ -223,7 +234,7 @@ The SQL tab shows:
 ### Plan Components
 
 | Component | Symbol | Description |
-|-----------|--------|-------------|
+| :--- | :--- | :--- |
 | Scan | `Scan parquet` | Read from storage |
 | Filter | `Filter` | Apply predicates |
 | Project | `Project` | Select columns |
@@ -409,7 +420,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "400")
 ### Healthy vs Unhealthy Indicators
 
 | Metric | Healthy | Concerning | Critical |
-|--------|---------|------------|----------|
+| :--- | :--- | :--- | :--- |
 | GC Time | <5% | 10-20% | >20% |
 | Spill (Disk) | 0 | >0 | Large |
 | Task Duration CV | <0.5 | 0.5-1.0 | >1.0 |

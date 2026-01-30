@@ -3,6 +3,7 @@ tags:
   - databricks
   - certification
   - data-engineer
+type: certification
 aliases:
   - DE Professional
 ---
@@ -11,16 +12,16 @@ aliases:
 
 ## Exam Overview
 
-| Detail            | Information                                     |
-| ----------------- | ----------------------------------------------- |
-| **Certification** | Databricks Certified Data Engineer Professional |
-| **Questions**     | ~60 multiple-choice                             |
-| **Duration**      | 120 minutes (2 hours)                           |
-| **Passing Score** | 70%                                             |
-| **Languages**     | Python and SQL                                  |
-| **Experience**    | 1+ years hands-on with Databricks               |
+| Detail             | Information                                     |
+| ------------------ | ----------------------------------------------- |
+| **Certification**  | Databricks Certified Data Engineer Professional |
+| **Questions**      | ~60 multiple-choice                             |
+| **Duration**       | 120 minutes (2 hours)                           |
+| **Passing Score**  | 70%                                             |
+| **Languages**      | Python and SQL                                  |
+| **Experience**     | 1+ years hands-on with Databricks               |
 | **Recertification**| Every 2 years                                   |
-| **Cost**          | $200 USD                                        |
+| **Cost**           | $200 USD                                        |
 
 ## Exam Domain Weights
 

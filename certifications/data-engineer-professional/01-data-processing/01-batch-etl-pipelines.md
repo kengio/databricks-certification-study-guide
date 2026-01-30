@@ -1,3 +1,13 @@
+---
+title: Batch ETL Pipelines
+type: topic
+tags:
+  - data-engineering
+  - batch
+  - etl
+status: published
+---
+
 # Batch ETL Pipelines
 
 Batch ETL is foundational to data engineering. Understanding DataFrame transformations, read/write operations, and join strategies is essential for the exam.
@@ -27,7 +37,7 @@ flowchart LR
 ## ETL vs ELT
 
 | Aspect | ETL | ELT |
-|--------|-----|-----|
+| :--- | :--- | :--- |
 | Transform location | Before loading | After loading |
 | Best for | Structured data, compliance | Raw data, data lakes |
 | Databricks approach | Use ELT with medallion architecture | |
@@ -82,7 +92,7 @@ df = spark.table("catalog.schema.table_name")
 ### Read Options by Format
 
 | Format | Key Options |
-|--------|-------------|
+| :--- | :--- |
 | CSV | `header`, `inferSchema`, `delimiter`, `multiLine`, `quote`, `escape` |
 | JSON | `multiLine`, `primitivesAsString`, `allowComments` |
 | Parquet | `mergeSchema` |
@@ -126,7 +136,7 @@ df = spark.read.format("csv") \
 ```
 
 | Mode | Behavior |
-|------|----------|
+| :--- | :--- |
 | `PERMISSIVE` | Set corrupt fields to null, store in `_corrupt_record` |
 | `DROPMALFORMED` | Skip corrupt records |
 | `FAILFAST` | Throw exception on first corrupt record |

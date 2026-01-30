@@ -37,7 +37,7 @@ flowchart TB
 ### Small Files Impact
 
 | Issue | Description | Impact |
-|-------|-------------|--------|
+| :--- | :--- | :--- |
 | Metadata overhead | Each file has metadata to track | Slow table operations |
 | Read amplification | Many small reads instead of few large | High I/O cost |
 | Task overhead | Spark creates task per file | Excessive parallelism |
@@ -47,7 +47,7 @@ flowchart TB
 ### Optimal File Sizes
 
 | Scenario | Target Size | Reasoning |
-|----------|-------------|-----------|
+| :--- | :--- | :--- |
 | General workloads | 1 GB | Balances read efficiency and parallelism |
 | Streaming writes | 128 MB | Faster micro-batch commits |
 | Small tables | 32-128 MB | Avoid over-consolidation |
@@ -178,7 +178,7 @@ SET TBLPROPERTIES (
 ### Configuration Options
 
 | Property | Default | Description |
-|----------|---------|-------------|
+| :--- | :--- | :--- |
 | `delta.autoOptimize.optimizeWrite` | false | Bin-pack during writes |
 | `delta.autoOptimize.autoCompact` | false | Auto-compact after writes |
 | `delta.autoOptimize.minFileSize` | 128 MB | Files smaller than this are candidates |

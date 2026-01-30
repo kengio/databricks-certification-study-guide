@@ -1,3 +1,13 @@
+---
+title: Data Sharing
+type: topic
+tags:
+  - data-engineering
+  - delta-sharing
+  - collaboration
+status: published
+---
+
 # Data Sharing
 
 Delta Sharing is an open protocol for secure data sharing across organizations and platforms. It enables sharing data without copying, while maintaining governance and audit capabilities.
@@ -28,7 +38,7 @@ flowchart LR
 ### Components
 
 | Component | Description |
-|-----------|-------------|
+| :--- | :--- |
 | Share | Named collection of tables/schemas to share |
 | Recipient | Entity authorized to access shares |
 | Provider | Organization sharing data |
@@ -436,7 +446,7 @@ USING SHARE aws_account.cross_cloud_data;
 ### Share Access Security
 
 | Aspect | Implementation |
-|--------|----------------|
+| :--- | :--- |
 | Authentication | Bearer token (auto-rotated) |
 | Authorization | GRANT/REVOKE at share level |
 | Network | HTTPS only |

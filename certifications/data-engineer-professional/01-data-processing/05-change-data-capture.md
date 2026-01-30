@@ -1,3 +1,13 @@
+---
+title: Change Data Capture (CDC)
+type: topic
+tags:
+  - data-engineering
+  - cdc
+  - delta-lake
+status: published
+---
+
 # Change Data Capture (CDC)
 
 Change Data Capture tracks data changes (inserts, updates, deletes) for downstream propagation. Understanding Delta CDF and the APPLY CHANGES API is essential for the exam.
@@ -30,14 +40,14 @@ flowchart LR
 CDC captures row-level changes (INSERT, UPDATE, DELETE) instead of full data snapshots.
 
 | Approach | Data Captured | Volume | Use Case |
-|----------|---------------|--------|----------|
+| :--- | :--- | :--- | :--- |
 | Full Load | All rows | High | Initial loads, small tables |
 | CDC | Changed rows only | Low | Incremental updates |
 
 ### CDC Operation Types
 
 | Operation | Description | CDF _change_type |
-|-----------|-------------|------------------|
+| :--- | :--- | :--- |
 | INSERT | New row added | `insert` |
 | UPDATE | Existing row modified | `update_preimage`, `update_postimage` |
 | DELETE | Row removed | `delete` |
@@ -76,7 +86,7 @@ spark.sql("""
 When reading change data, these columns are added:
 
 | Column | Type | Description |
-|--------|------|-------------|
+| :--- | :--- | :--- |
 | `_change_type` | STRING | `insert`, `update_preimage`, `update_postimage`, `delete` |
 | `_commit_version` | LONG | Delta version of the change |
 | `_commit_timestamp` | TIMESTAMP | When the change was committed |

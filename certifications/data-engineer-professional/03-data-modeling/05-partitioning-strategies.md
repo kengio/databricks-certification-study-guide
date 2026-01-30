@@ -1,3 +1,13 @@
+---
+title: Partitioning Strategies
+type: topic
+tags:
+  - data-engineering
+  - partitioning
+  - performance
+status: published
+---
+
 # Partitioning Strategies
 
 Effective partitioning is critical for query performance and data management in Delta Lake. Understanding when to partition, how to choose partition columns, and modern alternatives like liquid clustering is essential.
@@ -124,7 +134,7 @@ SELECT * FROM orders WHERE order_date + INTERVAL 1 DAY = '2024-01-16';
 ### Pruning Patterns Summary
 
 | Filter Pattern | Pruning? | Example |
-|----------------|----------|---------|
+| :--- | :--- | :--- |
 | Equality `=` | Yes | `date = '2024-01-15'` |
 | Comparison `<, >, <=, >=` | Yes | `date >= '2024-01-01'` |
 | BETWEEN | Yes | `date BETWEEN '2024-01-01' AND '2024-01-31'` |
@@ -138,7 +148,7 @@ SELECT * FROM orders WHERE order_date + INTERVAL 1 DAY = '2024-01-16';
 ### Selection Criteria
 
 | Criterion | Good Partition Column | Bad Partition Column |
-|-----------|----------------------|----------------------|
+| :--- | :--- | :--- |
 | Cardinality | Low to medium (100-10000) | Very high (millions) |
 | Query patterns | Frequently filtered | Rarely filtered |
 | Data distribution | Even across values | Highly skewed |

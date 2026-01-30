@@ -1,3 +1,13 @@
+---
+title: Data Deduplication
+type: topic
+tags:
+  - data-engineering
+  - processing
+  - data-quality
+status: published
+---
+
 # Data Deduplication
 
 Deduplication ensures data quality by removing duplicate records. Understanding batch and streaming deduplication patterns is important for the exam.
@@ -24,7 +34,7 @@ flowchart TD
 ## Why Duplicates Occur
 
 | Source | Cause | Example |
-|--------|-------|---------|
+| :--- | :--- | :--- |
 | Producer retries | At-least-once delivery | Kafka producer retry |
 | Multiple sources | Same data from different paths | Multi-region replication |
 | Pipeline reruns | Failure recovery reprocessing | Job restart after crash |
@@ -48,7 +58,7 @@ flowchart TD
 ```
 
 | Strategy | When | Pros | Cons |
-|----------|------|------|------|
+| :--- | :--- | :--- | :--- |
 | At-source | Before ingestion | Cleanest approach | Not always possible |
 | During load | ETL pipeline | Prevents duplicates entering | Processing overhead |
 | Post-load | Scheduled cleanup | Simple implementation | Duplicates exist temporarily |
@@ -133,7 +143,7 @@ df.withColumn("row_num", row_number().over(window)) \
 ```
 
 | Function | Ties Handling | Values for [100, 100, 90] |
-|----------|---------------|---------------------------|
+| :--- | :--- | :--- |
 | `row_number()` | Arbitrary | 1, 2, 3 |
 | `rank()` | Same rank, skip | 1, 1, 3 |
 | `dense_rank()` | Same rank, no skip | 1, 1, 2 |

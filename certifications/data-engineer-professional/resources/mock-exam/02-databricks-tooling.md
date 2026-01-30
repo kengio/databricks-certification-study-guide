@@ -1,6 +1,6 @@
 # Mock Exam - Section 2: Databricks Tooling (Questions 19-30)
 
-[Back to Exam Overview](README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
+[Back to Exam Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
 
 ---
 
@@ -268,4 +268,4 @@ D) `databricks api post /api/2.0/sql/statements -d '{"statement": "SELECT * FROM
 
 ---
 
-[Back to Exam Overview](README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
+[Back to Exam Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)

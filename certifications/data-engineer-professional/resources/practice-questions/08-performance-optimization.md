@@ -1,6 +1,6 @@
 # Practice Questions - Section 08: Performance Optimization (5%)
 
-[Back to Overview](README.md) | [Previous: Lakeflow Pipelines](07-lakeflow-pipelines.md)
+[Back to Overview](./README.md) | [Previous: Lakeflow Pipelines](07-lakeflow-pipelines.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) Disable auto-scaling
 
 ---
 
-[Back to Overview](README.md) | [Previous: Lakeflow Pipelines](07-lakeflow-pipelines.md)
+[Back to Overview](./README.md) | [Previous: Lakeflow Pipelines](07-lakeflow-pipelines.md)

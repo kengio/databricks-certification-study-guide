@@ -29,7 +29,7 @@ flowchart TB
 ### Trigger Types
 
 | Trigger | Use Case | Latency | Throughput |
-| ------- | -------- | ------- | ---------- |
+| :--- | :--- | :--- | :--- |
 | `processingTime("10 seconds")` | Near real-time | Low | Medium |
 | `processingTime("1 minute")` | Balanced | Medium | High |
 | `availableNow()` | Catch-up processing | N/A | Maximum |
@@ -75,7 +75,7 @@ query = (df.writeStream
 ### Trigger Interval Trade-offs
 
 | Short Intervals (< 30s) | Long Intervals (> 5 min) |
-| ----------------------- | ------------------------ |
+| :--- | :--- |
 | Lower latency | Higher latency |
 | More overhead | Less overhead |
 | More small files | Larger batches |
@@ -102,7 +102,7 @@ df_with_watermark = (df
 ### Watermark Strategy
 
 | Late Data Tolerance | Watermark Setting | State Size |
-| ------------------- | ----------------- | ---------- |
+| :--- | :--- | :--- |
 | None | "0 seconds" | Minimal |
 | Low (dashboards) | "5 minutes" | Small |
 | Medium (reports) | "1 hour" | Medium |
@@ -135,7 +135,7 @@ spark.conf.set(
 ### Stateful Operation Best Practices
 
 | Operation | Memory Impact | Recommendation |
-| --------- | ------------- | -------------- |
+| :--- | :--- | :--- |
 | `groupBy` with window | High | Always use watermark |
 | `dropDuplicates` | High | Set watermark, limit columns |
 | Stream-stream join | Very High | Use watermarks on both sides |
@@ -156,7 +156,7 @@ query = (df.writeStream
 ### Checkpoint Best Practices
 
 | Practice | Reason |
-| -------- | ------ |
+| :--- | :--- |
 | Use cloud storage (S3/ADLS/GCS) | Durability and recovery |
 | Unique path per query | Avoid conflicts |
 | Don't delete manually | Breaks exactly-once |
@@ -180,7 +180,7 @@ dbutils.fs.rm(checkpoint_path, recurse=True)
 ### Target File Sizes
 
 | Scenario | Target Size | Configuration |
-| -------- | ----------- | ------------- |
+| :--- | :--- | :--- |
 | Streaming writes | 128 MB | `optimizeWrite.fileSize` |
 | High-frequency triggers | 64-128 MB | Smaller for faster commits |
 | Low-frequency triggers | 256 MB - 1 GB | Larger for efficiency |
@@ -252,7 +252,7 @@ df = (spark.readStream
 ### Kafka Tuning Parameters
 
 | Parameter | Default | Description |
-| --------- | ------- | ----------- |
+| :--- | :--- | :--- |
 | `maxOffsetsPerTrigger` | None | Max records per micro-batch |
 | `minPartitions` | None | Min Kafka partitions to read |
 | `kafka.fetch.max.bytes` | 1 MB | Max data per fetch request |
@@ -277,7 +277,7 @@ df = (spark.readStream
 ### Auto Loader Parameters
 
 | Parameter | Description | When to Use |
-| --------- | ----------- | ----------- |
+| :--- | :--- | :--- |
 | `maxFilesPerTrigger` | Files per micro-batch | Limit processing rate |
 | `maxBytesPerTrigger` | Bytes per micro-batch | Control memory usage |
 | `useNotifications` | Event-based discovery | Large directories (>10K files) |
@@ -313,7 +313,7 @@ for q in spark.streams.active:
 ### Backpressure Indicators
 
 | Metric | Healthy | Backpressure |
-| ------ | ------- | ------------ |
+| :--- | :--- | :--- |
 | Batch duration | < Trigger interval | > Trigger interval |
 | Input rate | Stable | Growing backlog |
 | Processing rate | >= Input rate | < Input rate |
@@ -339,7 +339,7 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 ### Streaming Metrics Dashboard
 
 | Metric | Description | Alert Threshold |
-| ------ | ----------- | --------------- |
+| :--- | :--- | :--- |
 | `numInputRows` | Rows in batch | Unusual spikes |
 | `inputRowsPerSecond` | Ingestion rate | Sudden drops |
 | `processedRowsPerSecond` | Processing rate | < Input rate |
@@ -366,7 +366,7 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 ## Common Issues and Solutions
 
 | Issue | Symptom | Solution |
-| ----- | ------- | -------- |
+| :--- | :--- | :--- |
 | Unbounded state | OOM, slow batches | Add watermark |
 | Small files | Many tiny files | Enable auto-compact |
 | High latency | Batches take too long | Reduce trigger interval scope |
@@ -376,7 +376,7 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 ## Key Numbers to Remember
 
 | Metric | Recommended Value |
-| ------ | ----------------- |
+| :--- | :--- |
 | Streaming file size | 128 MB |
 | Typical watermark | 5-30 minutes |
 | Max state store size | Monitor, no fixed limit |

@@ -1,3 +1,13 @@
+---
+title: REST API
+type: topic
+tags:
+  - data-engineering
+  - api
+  - automation
+status: published
+---
+
 # Databricks REST API
 
 The Databricks REST API provides programmatic access to workspace resources for automation, integration, and custom tooling.
@@ -36,7 +46,7 @@ https://adb-1234567890.12.azuredatabricks.net/api/2.0/clusters/list
 ### API Versions
 
 | Version | Endpoints | Status |
-|---------|-----------|--------|
+| :--- | :--- | :--- |
 | 2.0 | Clusters, DBFS, Workspace, Secrets | Stable |
 | 2.1 | Jobs (enhanced) | Current |
 | 2.2 | SQL Statements | Current |

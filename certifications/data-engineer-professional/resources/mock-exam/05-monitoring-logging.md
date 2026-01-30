@@ -1,6 +1,6 @@
 # Mock Exam - Section 5: Monitoring & Logging (Questions 46-51)
 
-[Back to Exam Overview](README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
+[Back to Exam Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) Network latency to cloud storage
 
 ---
 
-[Back to Exam Overview](README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
+[Back to Exam Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)

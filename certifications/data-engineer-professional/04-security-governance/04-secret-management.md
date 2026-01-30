@@ -1,3 +1,13 @@
+---
+title: Secret Management
+type: topic
+tags:
+  - data-engineering
+  - security
+  - secrets
+status: published
+---
+
 # Secret Management
 
 Secure credential management is essential for production data pipelines. Databricks provides secret scopes to store and access sensitive information like passwords, API keys, and connection strings without exposing them in code.
@@ -21,7 +31,7 @@ flowchart TB
 ## Secret Scope Types
 
 | Type | Backend | Management | Best For |
-|------|---------|------------|----------|
+| :--- | :--- | :--- | :--- |
 | Databricks-backed | Databricks internal storage | Databricks CLI/API | Quick setup, simple use cases |
 | Azure Key Vault-backed | Azure Key Vault | Azure portal + Databricks | Enterprise Azure, centralized secrets |
 | AWS Secrets Manager | AWS Secrets Manager | AWS console + Databricks | Enterprise AWS, centralized secrets |
@@ -83,7 +93,7 @@ databricks secrets delete-acl --scope my-scope --principal user@company.com
 ```
 
 | Permission | Capabilities |
-|------------|--------------|
+| :--- | :--- |
 | READ | Get secret values |
 | WRITE | Create/update secrets + READ |
 | MANAGE | Full control including ACLs |
@@ -364,7 +374,7 @@ def rotate_database_password(scope, key, new_password):
 ### Secrets vs Unity Catalog Credentials
 
 | Aspect | Secrets | UC Storage Credentials |
-|--------|---------|----------------------|
+| :--- | :--- | :--- |
 | Scope | Workspace-level | Account-level (Unity Catalog) |
 | Use case | Application credentials | Cloud storage access |
 | Management | dbutils.secrets | Unity Catalog SQL |

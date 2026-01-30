@@ -1,3 +1,14 @@
+---
+title: Unit Testing
+type: topic
+tags:
+  - data-engineering
+  - testing
+  - unit-test
+  - pytest
+status: published
+---
+
 # Unit Testing
 
 Robust testing practices are essential for reliable data pipelines. This guide covers unit testing strategies, frameworks, and patterns specific to Databricks and Spark applications.
@@ -26,7 +37,7 @@ flowchart TB
 ## Testing Pyramid for Data Engineering
 
 | Level | Scope | Speed | Tools | Example |
-|-------|-------|-------|-------|---------|
+| :--- | :--- | :--- | :--- | :--- |
 | Unit | Functions, transformations | Fast | pytest, unittest | Test a cleaning function |
 | Integration | Notebook workflows | Medium | Nutter, Databricks jobs | Test bronze-to-silver flow |
 | End-to-End | Full pipelines | Slow | Databricks workflows | Test complete ETL |

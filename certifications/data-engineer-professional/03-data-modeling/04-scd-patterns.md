@@ -1,3 +1,13 @@
+---
+title: SCD Patterns
+type: topic
+tags:
+  - data-engineering
+  - scd
+  - modeling
+status: published
+---
+
 # Slowly Changing Dimension (SCD) Patterns
 
 Slowly Changing Dimensions (SCDs) are data warehousing techniques for managing dimension data that changes over time. Understanding SCD patterns is essential for building accurate historical analytics.
@@ -20,7 +30,7 @@ flowchart TB
 ## SCD Type Comparison
 
 | Type | History Preserved | Storage | Complexity | Use Case |
-|------|-------------------|---------|------------|----------|
+| :--- | :--- | :--- | :--- | :--- |
 | Type 1 | None | Low | Simple | Corrections, non-critical changes |
 | Type 2 | Full | High | Medium | Complete audit trail |
 | Type 3 | Limited (1 previous) | Medium | Low | Track only previous value |

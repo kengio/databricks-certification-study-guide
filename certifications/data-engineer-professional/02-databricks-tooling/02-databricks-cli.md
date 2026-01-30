@@ -1,3 +1,13 @@
+---
+title: Databricks CLI
+type: topic
+tags:
+  - data-engineering
+  - cli
+  - automation
+status: published
+---
+
 # Databricks CLI
 
 The Databricks CLI provides command-line access to Databricks workspaces for automation, CI/CD pipelines, and administrative tasks.
@@ -53,7 +63,7 @@ databricks --help
 ### CLI Versions
 
 | Version | Status | Features |
-|---------|--------|----------|
+| :--- | :--- | :--- |
 | CLI v0.x | Legacy | Basic commands, PAT only |
 | CLI v2.x | Current | OAuth, Bundles, enhanced commands |
 
@@ -134,7 +144,7 @@ export DATABRICKS_CLIENT_SECRET=your-client-secret
 ### Authentication Precedence
 
 | Priority | Method | Source |
-|----------|--------|--------|
+| :--- | :--- | :--- |
 | 1 | Environment variables | `DATABRICKS_HOST`, `DATABRICKS_TOKEN` |
 | 2 | Profile flag | `--profile production` |
 | 3 | Config profile env | `DATABRICKS_CONFIG_PROFILE` |
@@ -184,7 +194,7 @@ databricks workspace import-dir ./local/project/ /Users/user/project/ --overwrit
 ### Workspace Export Formats
 
 | Format | Flag | Extension | Use Case |
-|--------|------|-----------|----------|
+| :--- | :--- | :--- | :--- |
 | SOURCE | `--format SOURCE` | `.py`, `.sql`, `.scala` | Version control |
 | HTML | `--format HTML` | `.html` | Sharing |
 | JUPYTER | `--format JUPYTER` | `.ipynb` | Jupyter |

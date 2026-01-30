@@ -1,3 +1,12 @@
+---
+title: Obsidian Setup Guide
+type: guide
+tags:
+  - obsidian
+  - setup
+  - configuration
+---
+
 # Obsidian Setup Guide
 
 To ensure the best experience when working with this study guide in Obsidian, we recommend the following configuration and plugins.

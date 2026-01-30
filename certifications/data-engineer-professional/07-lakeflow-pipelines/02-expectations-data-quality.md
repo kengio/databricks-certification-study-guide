@@ -44,7 +44,7 @@ flowchart TB
 ### Comparison Table
 
 | Type | SQL Syntax | Python Decorator | Invalid Row Behavior | Pipeline Behavior |
-|------|------------|------------------|---------------------|-------------------|
+| :--- | :--- | :--- | :--- | :--- |
 | Expect (Warn) | `EXPECT (condition)` | `@dlt.expect()` | Kept, logged | Continues |
 | Expect or Drop | `EXPECT ... ON VIOLATION DROP ROW` | `@dlt.expect_or_drop()` | Dropped, logged | Continues |
 | Expect or Fail | `EXPECT ... ON VIOLATION FAIL UPDATE` | `@dlt.expect_or_fail()` | N/A | Fails immediately |
@@ -564,7 +564,7 @@ CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 ## Comparison with Other Quality Tools
 
 | Feature | DLT Expectations | Great Expectations | dbt Tests |
-|---------|------------------|-------------------|-----------|
+| :--- | :--- | :--- | :--- |
 | Integration | Native | External | External |
 | Execution | Streaming/Batch | Batch | Batch |
 | Actions | Warn/Drop/Fail | Report | Fail |

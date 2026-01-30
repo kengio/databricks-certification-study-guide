@@ -1,6 +1,6 @@
 # Mock Exam - Section 1: Data Processing (Questions 1-18)
 
-[Back to Exam Overview](README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
+[Back to Exam Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
 
 ---
 
@@ -400,4 +400,4 @@ D) Use `foreachPartition()` instead for transactional guarantees
 
 ---
 
-[Back to Exam Overview](README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
+[Back to Exam Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)

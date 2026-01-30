@@ -1,6 +1,6 @@
 # Practice Questions - Section 02: Databricks Tooling (20%)
 
-[Back to Overview](README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
+[Back to Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) Workspace files
 
 ---
 
-[Back to Overview](README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
+[Back to Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)

@@ -1,3 +1,13 @@
+---
+title: Databricks Certification Study Guide
+type: overview
+status: stable
+tags:
+  - databricks
+  - certification
+  - study-guide
+---
+
 # Databricks Certification Study Guide
 
 A comprehensive study guide for all Databricks certifications.

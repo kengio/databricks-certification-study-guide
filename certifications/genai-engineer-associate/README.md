@@ -3,6 +3,7 @@ tags:
   - databricks
   - certification
   - genai
+type: certification
 aliases:
   - GenAI Engineer
 ---
@@ -11,16 +12,16 @@ aliases:
 
 ## Exam Overview
 
-| Detail            | Information                                           |
-| ----------------- | ----------------------------------------------------- |
-| **Certification** | Databricks Certified Generative AI Engineer Associate |
-| **Questions**     | ~45 multiple-choice                                   |
-| **Duration**      | 90 minutes                                            |
-| **Passing Score** | 70%                                                   |
-| **Languages**     | Python                                                |
-| **Experience**    | 6+ months with GenAI on Databricks                    |
+| Detail             | Information                                           |
+| ------------------ | ----------------------------------------------------- |
+| **Certification**  | Databricks Certified Generative AI Engineer Associate |
+| **Questions**      | ~45 multiple-choice                                   |
+| **Duration**       | 90 minutes                                            |
+| **Passing Score**  | 70%                                                   |
+| **Languages**      | Python                                                |
+| **Experience**     | 6+ months with GenAI on Databricks                    |
 | **Recertification**| Every 2 years                                         |
-| **Cost**          | $200 USD                                              |
+| **Cost**           | $200 USD                                              |
 
 ## Exam Domain Weights
 

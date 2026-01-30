@@ -15,7 +15,7 @@ flowchart LR
 ## Section Contents
 
 | File | Topic | Priority |
-|------|-------|----------|
+| :--- | :--- | :--- |
 | [01-declarative-pipelines.md](01-declarative-pipelines.md) | DLT syntax, materialized views, streaming tables | High |
 | [02-expectations-data-quality.md](02-expectations-data-quality.md) | expect, expect_or_drop, expect_or_fail | High |
 | [03-apply-changes-api.md](03-apply-changes-api.md) | CDC with APPLY CHANGES, SCD handling | High |
@@ -59,7 +59,7 @@ flowchart TD
 ## Table Types
 
 | Type | Keyword | Processing | Use Case |
-|------|---------|------------|----------|
+| :--- | :--- | :--- | :--- |
 | Streaming Table | `STREAMING TABLE` | Incremental | Append-only sources |
 | Materialized View | `MATERIALIZED VIEW` | Full refresh | Aggregations, joins |
 | View | `VIEW` | On-demand | Intermediate transforms |
@@ -67,7 +67,7 @@ flowchart TD
 ## Expectations (Data Quality)
 
 | Expectation | Behavior on Violation |
-|-------------|----------------------|
+| :--- | :--- |
 | `EXPECT` | Log warning, keep row |
 | `EXPECT ... ON VIOLATION DROP ROW` | Drop invalid rows |
 | `EXPECT ... ON VIOLATION FAIL UPDATE` | Fail pipeline |
@@ -106,7 +106,7 @@ sequenceDiagram
 ### CDC Operation Types
 
 | Operation | Handling |
-|-----------|----------|
+| :--- | :--- |
 | INSERT | Add new row |
 | UPDATE | Modify existing |
 | DELETE | Remove or soft-delete |

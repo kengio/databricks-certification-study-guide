@@ -1,3 +1,14 @@
+---
+title: Security & Governance
+type: category
+tags:
+  - data-engineering
+  - security
+  - governance
+  - unity-catalog
+status: published
+---
+
 # Security & Governance (10% of Exam)
 
 Unity Catalog is the foundation for data governance in Databricks, providing centralized access control and audit capabilities.
@@ -15,7 +26,7 @@ flowchart TD
 ## Section Contents
 
 | File | Topic | Priority |
-|------|-------|----------|
+| :--- | :--- | :--- |
 | [01-unity-catalog.md](01-unity-catalog.md) | Metastore, catalog hierarchy, permission inheritance | High |
 | [02-access-control.md](02-access-control.md) | Table ACLs, row/column security, dynamic views | High |
 | [03-data-sharing.md](03-data-sharing.md) | Delta Sharing, external data sharing | Medium |
@@ -41,7 +52,7 @@ catalog.schema.table
 ```
 
 | Level | Description | Example |
-|-------|-------------|---------|
+| :--- | :--- | :--- |
 | Catalog | Top-level container | `prod`, `dev`, `staging` |
 | Schema | Database equivalent | `sales`, `marketing` |
 | Table/View | Data objects | `orders`, `customers` |
@@ -51,7 +62,7 @@ catalog.schema.table
 ### Privilege Types
 
 | Privilege | Applies To | Description |
-|-----------|------------|-------------|
+| :--- | :--- | :--- |
 | `USE CATALOG` | Catalog | Access catalog |
 | `USE SCHEMA` | Schema | Access schema |
 | `SELECT` | Table/View | Read data |
@@ -90,7 +101,7 @@ sequenceDiagram
 ### Secret Scope Types
 
 | Type | Backend | Use Case |
-|------|---------|----------|
+| :--- | :--- | :--- |
 | Databricks-backed | Databricks | Simple, quick setup |
 | Azure Key Vault | Azure | Enterprise, centralized |
 | AWS Secrets Manager | AWS | Enterprise, centralized |

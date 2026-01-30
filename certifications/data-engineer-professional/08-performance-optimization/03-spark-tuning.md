@@ -28,7 +28,7 @@ flowchart TB
 ### Shuffle Configuration
 
 | Configuration | Default | Description |
-|--------------|---------|-------------|
+| :--- | :--- | :--- |
 | `spark.sql.shuffle.partitions` | 200 | Number of partitions for shuffles |
 | `spark.sql.adaptive.enabled` | true | Enable AQE |
 | `spark.sql.adaptive.coalescePartitions.enabled` | true | Auto-coalesce shuffle partitions |
@@ -37,7 +37,7 @@ flowchart TB
 ### Memory Configuration
 
 | Configuration | Default | Description |
-|--------------|---------|-------------|
+| :--- | :--- | :--- |
 | `spark.executor.memory` | Varies | Executor heap memory |
 | `spark.executor.memoryOverhead` | 10% | Off-heap memory |
 | `spark.memory.fraction` | 0.6 | Fraction of heap for execution/storage |
@@ -46,7 +46,7 @@ flowchart TB
 ### Join Configuration
 
 | Configuration | Default | Description |
-|--------------|---------|-------------|
+| :--- | :--- | :--- |
 | `spark.sql.autoBroadcastJoinThreshold` | 10MB | Threshold for broadcast join |
 | `spark.sql.adaptive.autoBroadcastJoinThreshold` | Same | AQE broadcast threshold |
 | `spark.sql.broadcastTimeout` | 300s | Broadcast timeout |
@@ -76,7 +76,7 @@ flowchart LR
 ### AQE Features
 
 | Feature | Description | Benefit |
-|---------|-------------|---------|
+| :--- | :--- | :--- |
 | Coalesce Partitions | Combine small shuffle partitions | Reduce overhead |
 | Skew Join | Split skewed partitions | Avoid stragglers |
 | Local Shuffle Reader | Skip shuffle for small data | Reduce I/O |
@@ -197,7 +197,7 @@ df.select("customer_id", "amount") \
 ### Join Types Performance
 
 | Join Type | Performance | When Used |
-|-----------|-------------|-----------|
+| :--- | :--- | :--- |
 | Broadcast Hash | Best | Small table < threshold |
 | Sort Merge | Good | Large tables, sorted |
 | Shuffle Hash | Medium | Unsorted, medium tables |
@@ -339,7 +339,7 @@ df = df.repartition(100, "join_key")
 ### Coalesce vs Repartition
 
 | Operation | Shuffle | Use Case |
-|-----------|---------|----------|
+| :--- | :--- | :--- |
 | coalesce(n) | No | Reduce partitions |
 | repartition(n) | Yes | Increase or rebalance |
 | repartition(n, col) | Yes | Partition by column |
@@ -385,7 +385,7 @@ Photon is Databricks' native vectorized query engine:
 ### Photon Benefits
 
 | Operation | Improvement |
-|-----------|-------------|
+| :--- | :--- |
 | Aggregations | 2-8x faster |
 | Joins | 2-5x faster |
 | Filters | 2-4x faster |

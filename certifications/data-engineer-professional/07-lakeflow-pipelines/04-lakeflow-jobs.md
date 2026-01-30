@@ -59,7 +59,7 @@ flowchart LR
 ### Task Types
 
 | Task Type | Use Case | Configuration |
-|-----------|----------|---------------|
+| :--- | :--- | :--- |
 | Notebook | Run notebook code | Notebook path, parameters |
 | DLT Pipeline | Run DLT pipeline | Pipeline ID |
 | Python Script | Run Python file | Script path, arguments |
@@ -463,7 +463,7 @@ schedule:
 ### Common Cron Expressions
 
 | Expression | Description |
-|------------|-------------|
+| :--- | :--- |
 | `0 0 6 * * ?` | Daily at 6:00 AM |
 | `0 0 * * * ?` | Every hour |
 | `0 */15 * * * ?` | Every 15 minutes |
@@ -495,7 +495,7 @@ trigger:
 ### Job Clusters vs All-Purpose
 
 | Aspect | Job Cluster | All-Purpose Cluster |
-|--------|-------------|---------------------|
+| :--- | :--- | :--- |
 | Lifecycle | Created/destroyed per job | Always running |
 | Cost | Pay per job | Pay for uptime |
 | Startup | Cold start delay | Immediate |

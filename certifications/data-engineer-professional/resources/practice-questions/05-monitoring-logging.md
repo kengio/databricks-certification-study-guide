@@ -1,6 +1,6 @@
 # Practice Questions - Section 05: Monitoring & Logging (10%)
 
-[Back to Overview](README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
+[Back to Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
 
 ---
 
@@ -114,4 +114,4 @@ D) Corrupt data file
 
 ---
 
-[Back to Overview](README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
+[Back to Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)

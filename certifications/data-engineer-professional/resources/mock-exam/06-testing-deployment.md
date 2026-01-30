@@ -1,6 +1,6 @@
 # Mock Exam - Section 6: Testing & Deployment (Questions 52-57)
 
-[Back to Exam Overview](README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)
+[Back to Exam Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) Update the resource name in databricks.yml to avoid conflict
 
 ---
 
-[Back to Exam Overview](README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)
+[Back to Exam Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)

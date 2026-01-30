@@ -1,3 +1,14 @@
+---
+title: Asset Bundles
+type: topic
+tags:
+  - data-engineering
+  - dab
+  - deployment
+  - bundles
+status: published
+---
+
 # Databricks Asset Bundles (DAB)
 
 Databricks Asset Bundles provide a standardized way to package, validate, and deploy Databricks resources as code. Understanding DAB is essential for implementing production-grade CI/CD workflows.
@@ -250,7 +261,7 @@ variables:
 ### Built-in Variables
 
 | Variable | Description | Example |
-|----------|-------------|---------|
+| :--- | :--- | :--- |
 | `${bundle.name}` | Bundle name | my-etl-project |
 | `${bundle.target}` | Current target | dev, prod |
 | `${workspace.current_user.userName}` | Current user | user@company.com |

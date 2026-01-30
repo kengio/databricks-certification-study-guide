@@ -1,3 +1,13 @@
+---
+title: DBFS and Mounts
+type: topic
+tags:
+  - data-engineering
+  - storage
+  - dbfs
+status: published
+---
+
 # DBFS and Cloud Storage
 
 Understanding Databricks File System (DBFS) and cloud storage integration is essential for managing data in Databricks pipelines.
@@ -42,7 +52,7 @@ flowchart LR
 ### DBFS Path Formats
 
 | Format | Context | Example |
-|--------|---------|---------|
+| :--- | :--- | :--- |
 | `dbfs:/` | Spark APIs | `dbfs:/data/input.csv` |
 | `/dbfs/` | Local file APIs | `/dbfs/data/input.csv` |
 | `file:/` | Local driver filesystem | `file:/tmp/local.csv` |
@@ -78,7 +88,7 @@ flowchart TB
 ```
 
 | Path | Purpose | Notes |
-|------|---------|-------|
+| :--- | :--- | :--- |
 | `/user/hive/warehouse/` | Hive metastore tables | Legacy location |
 | `/FileStore/` | Uploaded files, images | Accessible via URL |
 | `/FileStore/tables/` | Uploaded data files | For small files |
@@ -138,7 +148,7 @@ displayHTML('<img src="/files/images/image.png">')
 ```
 
 | FileStore Path | URL Path |
-|----------------|----------|
+| :--- | :--- |
 | `dbfs:/FileStore/images/logo.png` | `/files/images/logo.png` |
 | `dbfs:/FileStore/tables/data.csv` | `/files/tables/data.csv` |
 
@@ -241,7 +251,7 @@ dbutils.fs.refreshMounts()
 ### Mount Best Practices
 
 | Do | Don't |
-|----|----|
+| :--- | :--- |
 | Use secrets for credentials | Hardcode credentials |
 | Use instance profiles/managed identity | Use access keys in code |
 | Document mount points | Create ad-hoc mounts |
@@ -266,7 +276,7 @@ flowchart TB
 ```
 
 | Type | Storage | Governance | Use Case |
-|------|---------|------------|----------|
+| :--- | :--- | :--- | :--- |
 | Managed | Databricks-managed | Full | Generated data, outputs |
 | External | Your cloud storage | Full | Existing data, landing zones |
 
@@ -321,7 +331,7 @@ DROP VOLUME main.default.my_volume;
 ### Volume vs Mount Comparison
 
 | Feature | Mounts | Unity Catalog Volumes |
-|---------|--------|----------------------|
+| :--- | :--- | :--- |
 | Governance | No | Yes (UC permissions) |
 | Audit logging | Limited | Full |
 | Access control | Workspace-level | Fine-grained |
@@ -387,7 +397,7 @@ spark.conf.set("google.cloud.auth.service.account.json.keyfile", "/path/to/keyfi
 ### Protocol Comparison
 
 | Protocol | Cloud | Format | Use Case |
-|----------|-------|--------|----------|
+| :--- | :--- | :--- | :--- |
 | `s3://` | AWS | Legacy S3 | Older compatibility |
 | `s3a://` | AWS | Optimized S3 | Recommended for AWS |
 | `wasb://` | Azure Blob | Legacy | Blob storage |
@@ -429,7 +439,7 @@ flowchart TD
 ### Recommended Access Pattern by Use Case
 
 | Use Case | Recommended Approach |
-|----------|---------------------|
+| :--- | :--- |
 | New workloads | Unity Catalog Volumes |
 | Legacy pipelines | Existing mounts |
 | External data | External Volumes |

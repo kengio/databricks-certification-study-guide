@@ -62,7 +62,7 @@ SET TBLPROPERTIES (
 ### Statistics Limitations
 
 | Column Type | Statistics Collected |
-|-------------|---------------------|
+| :--- | :--- |
 | Numeric | MIN, MAX, NULL count |
 | String | MIN, MAX, NULL count |
 | Date/Timestamp | MIN, MAX, NULL count |
@@ -147,7 +147,7 @@ ZORDER BY (
 ### Comparison
 
 | Aspect | Partitioning | Z-ORDER |
-|--------|--------------|---------|
+| :--- | :--- | :--- |
 | File organization | Separate directories | Within files |
 | Cardinality | Low (< 1000) | High (millions) |
 | Filter types | Equality, range | Equality, range |
@@ -219,7 +219,7 @@ CLUSTER BY (customer_id, order_date);
 ### Liquid vs Z-ORDER
 
 | Feature | Z-ORDER | Liquid Clustering |
-|---------|---------|-------------------|
+| :--- | :--- | :--- |
 | Maintenance | Manual OPTIMIZE | Automatic |
 | Clustering | Full rewrite | Incremental |
 | Column changes | Requires full rewrite | ALTER supported |
@@ -301,7 +301,7 @@ SELECT * FROM orders WHERE order_id = 'abc-123-def';
 ### Bloom Filter vs Z-ORDER
 
 | Aspect | Bloom Filter | Z-ORDER |
-|--------|--------------|---------|
+| :--- | :--- | :--- |
 | Filter type | Equality only | Equality and range |
 | Space overhead | Some | None |
 | Maintenance | Automatic | Manual |

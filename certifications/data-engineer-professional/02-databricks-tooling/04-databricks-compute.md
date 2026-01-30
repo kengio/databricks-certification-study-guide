@@ -1,3 +1,13 @@
+---
+title: Databricks Compute
+type: topic
+tags:
+  - data-engineering
+  - compute
+  - clusters
+status: published
+---
+
 # Databricks Compute
 
 Understanding Databricks compute options is essential for building cost-effective, performant data pipelines. Choose the right compute type based on workload characteristics.
@@ -23,7 +33,7 @@ flowchart TB
 ## Compute Types Comparison
 
 | Type | Use Case | Cost | Startup Time | Best For |
-|------|----------|------|--------------|----------|
+| :--- | :--- | :--- | :--- | :--- |
 | All-Purpose Clusters | Interactive development | Higher | 5-10 minutes | Notebooks, exploration |
 | Job Clusters | Production jobs | Lower | 5-10 minutes | Scheduled workloads |
 | Serverless Compute | Quick development | Pay-per-use | Seconds | Ad-hoc queries |
@@ -46,7 +56,7 @@ flowchart LR
 ```
 
 | Feature | Behavior |
-|---------|----------|
+| :--- | :--- |
 | Persistence | Stays running until manually terminated or auto-terminated |
 | Users | Multiple users can attach notebooks |
 | Languages | Supports Python, SQL, Scala, R |
@@ -102,7 +112,7 @@ w.clusters.edit(
 ```
 
 | Setting | Behavior |
-|---------|----------|
+| :--- | :--- |
 | `autotermination_minutes=0` | Never auto-terminate |
 | `autotermination_minutes=60` | Terminate after 60 mins idle |
 | Default | 120 minutes |
@@ -122,7 +132,7 @@ flowchart LR
 ```
 
 | Feature | Behavior |
-|---------|----------|
+| :--- | :--- |
 | Lifecycle | Created when job starts, terminated when job ends |
 | Isolation | Dedicated to single job run |
 | Cost model | Pay only during job execution |
@@ -181,7 +191,7 @@ task_with_existing_cluster = Task(
 ```
 
 | Approach | Pros | Cons |
-|----------|------|------|
+| :--- | :--- | :--- |
 | Job Cluster | Isolated, cost-effective, consistent | Startup overhead |
 | Existing Cluster | Faster start, shared resources | Resource contention, higher cost |
 
@@ -260,7 +270,7 @@ job = w.jobs.create(
 ### Pool Best Practices
 
 | Setting | Recommendation | Reason |
-|---------|----------------|--------|
+| :--- | :--- | :--- |
 | `min_idle_instances` | 1-2 | Balance cost vs startup time |
 | `max_capacity` | Based on peak usage | Prevent over-provisioning |
 | `idle_instance_autotermination_minutes` | 15-30 | Reduce idle costs |
@@ -280,7 +290,7 @@ flowchart LR
 ```
 
 | Feature | Behavior |
-|---------|----------|
+| :--- | :--- |
 | Startup time | Seconds (not minutes) |
 | Languages | Python, SQL |
 | Scaling | Automatic |
@@ -297,7 +307,7 @@ flowchart LR
 ### Serverless Limitations
 
 | Supported | Not Supported |
-|-----------|---------------|
+| :--- | :--- |
 | Python | Scala |
 | SQL | R |
 | Spark DataFrames | Low-level RDD operations |
@@ -324,7 +334,7 @@ flowchart TB
 ```
 
 | Type | Features | Best For |
-|------|----------|----------|
+| :--- | :--- | :--- |
 | Classic | Standard SQL, Photon | Cost-sensitive workloads |
 | Pro | + Query federation, enhanced security | Enterprise features |
 | Serverless | Instant start, auto-scale, no management | Ad-hoc queries, variable load |
@@ -354,7 +364,7 @@ print(f"Warehouse ID: {warehouse.id}")
 ### Warehouse Sizing
 
 | Size | Cluster DBU/hour | Use Case |
-|------|------------------|----------|
+| :--- | :--- | :--- |
 | 2X-Small | 2 | Light queries |
 | X-Small | 4 | Development |
 | Small | 8 | Small team |
@@ -389,7 +399,7 @@ Photon is Databricks' native vectorized query engine for accelerated SQL and Dat
 ### Photon Benefits
 
 | Workload | Speedup | Notes |
-|----------|---------|-------|
+| :--- | :--- | :--- |
 | Aggregations | 2-8x | SIMD vectorization |
 | Joins | 2-5x | Optimized hash joins |
 | Scans | 2-4x | Columnar processing |
@@ -417,7 +427,7 @@ warehouse = w.warehouses.create(
 ### Photon Limitations
 
 | Accelerated | Not Accelerated |
-|-------------|-----------------|
+| :--- | :--- |
 | SQL queries | Python UDFs |
 | DataFrame operations | Scala UDFs |
 | Delta Lake operations | Complex nested types |
@@ -459,7 +469,7 @@ Cluster policies enforce configuration standards and cost controls.
 ### Policy Types
 
 | Type | Behavior | Example |
-|------|----------|---------|
+| :--- | :--- | :--- |
 | `fixed` | Cannot be changed | Specific Spark version |
 | `allowlist` | Must be from list | Approved instance types |
 | `blocklist` | Cannot be from list | Expensive instances |
@@ -527,7 +537,7 @@ flowchart TD
 ```
 
 | Metric | Scale Up Trigger | Scale Down Trigger |
-|--------|------------------|-------------------|
+| :--- | :--- | :--- |
 | Pending tasks | High queue | Empty queue |
 | Executor memory | >90% used | <30% used |
 | Shuffle | Spilling to disk | Under-utilized |
@@ -587,7 +597,7 @@ cluster = w.clusters.create(
 ### Spot Availability Options
 
 | Option | Behavior | Risk |
-|--------|----------|------|
+| :--- | :--- | :--- |
 | `SPOT` | All spot instances | Higher interruption risk |
 | `SPOT_WITH_FALLBACK` | Spot preferred, on-demand fallback | Lower risk, higher potential cost |
 | `ON_DEMAND` | All on-demand | No interruption, highest cost |
@@ -597,7 +607,7 @@ cluster = w.clusters.create(
 ### Permission Levels
 
 | Permission | Capabilities |
-|------------|--------------|
+| :--- | :--- |
 | No Permission | Cannot see cluster |
 | Can Attach To | Attach notebooks |
 | Can Restart | Attach + restart cluster |
@@ -629,7 +639,7 @@ w.permissions.set(
 ### Development Workflow
 
 | Stage | Compute Type | Rationale |
-|-------|--------------|-----------|
+| :--- | :--- | :--- |
 | Exploration | Serverless or small all-purpose | Quick iteration |
 | Development | All-purpose cluster | Persistent environment |
 | Testing | Job cluster | Isolated, reproducible |

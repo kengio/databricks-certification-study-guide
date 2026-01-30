@@ -1,6 +1,6 @@
 # Mock Exam - Sections 7 & 8: Lakeflow Pipelines & Performance (Questions 58-63)
 
-[Back to Exam Overview](README.md) | [Previous: Testing & Deployment](06-testing-deployment.md)
+[Back to Exam Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md)
 
 ---
 
@@ -140,4 +140,4 @@ D) Set `spark.executor.memoryOverhead` to 0 for maximum heap space
 
 ---
 
-[Back to Exam Overview](README.md) | [Previous: Testing & Deployment](06-testing-deployment.md)
+[Back to Exam Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md)

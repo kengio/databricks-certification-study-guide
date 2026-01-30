@@ -1,3 +1,13 @@
+---
+title: Structured Streaming
+type: topic
+tags:
+  - data-engineering
+  - streaming
+  - spark
+status: published
+---
+
 # Structured Streaming
 
 Structured Streaming is heavily tested on the exam. Focus on triggers, output modes, watermarking, and the differences between streaming patterns.
@@ -32,7 +42,7 @@ flowchart LR
 ### Micro-Batch vs Continuous
 
 | Aspect | Micro-Batch | Continuous |
-|--------|-------------|------------|
+| :--- | :--- | :--- |
 | Latency | ~100ms minimum | ~1ms |
 | Processing | Batch-at-a-time | Record-at-a-time |
 | Guarantees | Exactly-once | At-least-once |
@@ -90,7 +100,7 @@ df = spark.readStream \
 ```
 
 | Option | Behavior |
-|--------|----------|
+| :--- | :--- |
 | `startingVersion` | Start reading from specific version |
 | `startingTimestamp` | Start reading from specific timestamp |
 | `ignoreDeletes` | Skip delete operations |
@@ -117,7 +127,7 @@ parsed = df.select(
 ```
 
 | Option | Values |
-|--------|--------|
+| :--- | :--- |
 | `startingOffsets` | `earliest`, `latest`, or JSON offsets |
 | `subscribe` | Topic names (comma-separated) |
 | `subscribePattern` | Regex pattern for topics |

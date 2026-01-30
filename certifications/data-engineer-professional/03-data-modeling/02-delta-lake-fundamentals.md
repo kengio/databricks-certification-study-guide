@@ -1,3 +1,13 @@
+---
+title: Delta Lake Fundamentals
+type: topic
+tags:
+  - data-engineering
+  - delta-lake
+  - storage
+status: published
+---
+
 # Delta Lake Fundamentals
 
 Delta Lake is an open-source storage layer that brings ACID transactions, scalable metadata handling, and data versioning to data lakes.
@@ -58,7 +68,7 @@ flowchart LR
 ```
 
 | Component | Purpose |
-|-----------|---------|
+| :--- | :--- |
 | JSON log files | Individual transaction records |
 | Checkpoint files | Aggregated state snapshots (every 10 versions) |
 | Parquet data files | Actual data storage |
@@ -136,7 +146,7 @@ Delta Lake provides full ACID transaction support.
 ### ACID Properties
 
 | Property | Description | Delta Implementation |
-|----------|-------------|---------------------|
+| :--- | :--- | :--- |
 | Atomicity | All or nothing | Transaction log ensures complete writes |
 | Consistency | Valid state transitions | Schema enforcement, constraints |
 | Isolation | Concurrent transactions don't interfere | Optimistic concurrency control |

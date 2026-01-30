@@ -1,3 +1,13 @@
+---
+title: Access Control
+type: topic
+tags:
+  - data-engineering
+  - security
+  - permissions
+status: published
+---
+
 # Access Control
 
 Access control in Databricks encompasses table-level permissions, row-level security, column-level security, and data masking. Understanding these patterns is essential for implementing secure data platforms.
@@ -22,7 +32,7 @@ flowchart TB
 ### Privilege Types
 
 | Privilege | Description | Applies To |
-|-----------|-------------|------------|
+| :--- | :--- | :--- |
 | SELECT | Read data | Tables, Views |
 | MODIFY | Insert, Update, Delete | Tables |
 | CREATE TABLE | Create tables | Schemas |
@@ -310,7 +320,7 @@ ALTER TABLE prod.gold.customers ALTER COLUMN ssn DROP MASK;
 ### Benefits of Declarative Filters
 
 | Aspect | Views | Row/Column Filters |
-|--------|-------|-------------------|
+| :--- | :--- | :--- |
 | Applied at | Query time | Table level |
 | Bypassing | Users query underlying table | Cannot bypass |
 | Maintenance | Multiple views needed | Single definition |
@@ -447,7 +457,7 @@ GRANT SELECT ON SCHEMA prod.gold TO `sp-bi-dashboard`;
 ### Service Principal Best Practices
 
 | Practice | Description |
-|----------|-------------|
+| :--- | :--- |
 | Separate principals | Different SP for different purposes |
 | Minimal privileges | Only grant what's needed |
 | Regular rotation | Rotate secrets periodically |

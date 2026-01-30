@@ -1,3 +1,13 @@
+---
+title: System Tables
+type: topic
+tags:
+  - data-engineering
+  - system-tables
+  - monitoring
+status: published
+---
+
 # System Tables
 
 System tables provide observability into your Databricks account including audit logs, billing usage, compute metrics, and query history. They're essential for monitoring, cost management, and compliance.
@@ -28,7 +38,7 @@ flowchart TB
 ## System Table Categories
 
 | Schema | Tables | Purpose |
-|--------|--------|---------|
+| :--- | :--- | :--- |
 | `system.access` | audit | Security and compliance audit trail |
 | `system.billing` | usage, list_prices | Cost tracking and analysis |
 | `system.compute` | clusters, warehouse_events | Compute resource metrics |
@@ -57,7 +67,7 @@ Tracks all security-relevant activities across your account.
 ### Audit Log Schema
 
 | Column | Type | Description |
-|--------|------|-------------|
+| :--- | :--- | :--- |
 | event_time | TIMESTAMP | When event occurred |
 | event_date | DATE | Date partition |
 | workspace_id | STRING | Workspace identifier |
@@ -126,7 +136,7 @@ ORDER BY event_time DESC;
 ### Service Names and Action Types
 
 | Service | Common Actions |
-|---------|---------------|
+| :--- | :--- |
 | `unityCatalog` | getTable, createTable, updatePermissions |
 | `clusters` | create, delete, edit, start, permanentDelete |
 | `jobs` | create, delete, runNow, cancel |
@@ -154,7 +164,7 @@ Tracks resource consumption and costs.
 ### Billing Table Schema
 
 | Column | Type | Description |
-|--------|------|-------------|
+| :--- | :--- | :--- |
 | account_id | STRING | Account identifier |
 | workspace_id | STRING | Workspace identifier |
 | usage_date | DATE | Usage date |
@@ -228,7 +238,7 @@ LIMIT 20;
 ### SKU Names
 
 | SKU Pattern | Description |
-|-------------|-------------|
+| :--- | :--- |
 | `STANDARD_ALL_PURPOSE_COMPUTE` | All-purpose clusters |
 | `STANDARD_JOBS_COMPUTE` | Job clusters |
 | `STANDARD_SQL_COMPUTE` | SQL warehouses |
@@ -309,7 +319,7 @@ Tracks SQL query execution details.
 ### Query History Schema
 
 | Column | Type | Description |
-|--------|------|-------------|
+| :--- | :--- | :--- |
 | statement_id | STRING | Unique query ID |
 | executed_by | STRING | User who ran query |
 | start_time | TIMESTAMP | Query start |

@@ -1,6 +1,6 @@
 # Mock Exam - Section 4: Security & Governance (Questions 40-45)
 
-[Back to Exam Overview](README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
+[Back to Exam Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) Implement filtering in the application layer only
 
 ---
 
-[Back to Exam Overview](README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
+[Back to Exam Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)

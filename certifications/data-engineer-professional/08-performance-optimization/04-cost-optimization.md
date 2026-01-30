@@ -48,7 +48,7 @@ Pricing tiers (example):
 ### Cloud Infrastructure Costs
 
 | Component | Cost Driver |
-|-----------|-------------|
+| :--- | :--- |
 | VM instances | Instance type, duration |
 | Storage | Amount stored, tier |
 | Data transfer | Egress between regions |
@@ -59,7 +59,7 @@ Pricing tiers (example):
 ### All-Purpose vs Job Clusters
 
 | Aspect | All-Purpose | Job Cluster |
-|--------|-------------|-------------|
+| :--- | :--- | :--- |
 | Use case | Development, exploration | Production jobs |
 | Lifecycle | Always available | Created per job |
 | DBU rate | Higher | Lower (60% less) |
@@ -139,7 +139,7 @@ job_clusters:
 ### Spot Instance Strategies
 
 | Strategy | Driver | Workers | Use Case |
-|----------|--------|---------|----------|
+| :--- | :--- | :--- | :--- |
 | Full Spot | Spot | Spot | Development, non-critical |
 | Spot Workers | On-Demand | Spot | Production with reliability |
 | Fallback | On-Demand | Spot with fallback | Critical jobs |
@@ -266,7 +266,7 @@ Example:
 ### Serverless Options
 
 | Service | Use Case | Billing |
-|---------|----------|---------|
+| :--- | :--- | :--- |
 | Serverless SQL | Analytics queries | Per query DBU |
 | Serverless Compute | Notebooks, jobs | Per execution DBU |
 | Serverless DLT | Pipeline execution | Per pipeline DBU |
@@ -302,7 +302,7 @@ tasks:
 ### Warehouse Sizing
 
 | Size | Use Case | Cost |
-|------|----------|------|
+| :--- | :--- | :--- |
 | 2X-Small | Development, light queries | Lowest |
 | Small | Standard reporting | Low |
 | Medium | Complex analytics | Medium |
@@ -321,7 +321,7 @@ Cost optimization settings:
 ### Serverless vs Classic SQL
 
 | Aspect | Serverless | Classic |
-|--------|------------|---------|
+| :--- | :--- | :--- |
 | Startup | Instant | Minutes |
 | Scaling | Automatic | Configured |
 | Cost model | Per query | Per hour |
@@ -396,7 +396,7 @@ Right-sizing process:
 ### Memory-Optimized vs Compute-Optimized
 
 | Workload | Instance Type | Example |
-|----------|---------------|---------|
+| :--- | :--- | :--- |
 | Shuffle-heavy | Memory-optimized | Large joins, aggregations |
 | CPU-heavy | Compute-optimized | ML training, compression |
 | Balanced | General purpose | Standard ETL |

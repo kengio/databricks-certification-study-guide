@@ -1,3 +1,13 @@
+---
+title: Delta Lake Operations
+type: topic
+tags:
+  - data-engineering
+  - delta-lake
+  - optimization
+status: published
+---
+
 # Delta Lake Operations
 
 Delta Lake operations are fundamental to the exam. Master MERGE, OPTIMIZE, VACUUM, and time travel as they appear in multiple question scenarios.
@@ -62,7 +72,7 @@ flowchart TD
 ```
 
 | Clause | Purpose | When Triggered |
-|--------|---------|----------------|
+| :--- | :--- | :--- |
 | `WHEN MATCHED` | Update or delete existing rows | Source row matches target row |
 | `WHEN NOT MATCHED` | Insert new rows | Source row has no match in target |
 | `WHEN NOT MATCHED BY SOURCE` | Handle orphan rows | Target row has no match in source |

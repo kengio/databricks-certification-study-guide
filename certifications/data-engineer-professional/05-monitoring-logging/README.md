@@ -1,3 +1,14 @@
+---
+title: Monitoring & Logging
+type: category
+tags:
+  - data-engineering
+  - monitoring
+  - logging
+  - observability
+status: published
+---
+
 # Monitoring & Logging (10% of Exam)
 
 Effective monitoring and debugging are critical for maintaining production data pipelines.

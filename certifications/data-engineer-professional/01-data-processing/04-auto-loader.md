@@ -1,3 +1,13 @@
+---
+title: Auto Loader
+type: topic
+tags:
+  - data-engineering
+  - ingestion
+  - autoloader
+status: published
+---
+
 # Auto Loader
 
 Auto Loader is Databricks' recommended solution for incrementally ingesting files from cloud storage. Understanding its modes and schema handling is critical for the exam.
@@ -25,7 +35,7 @@ flowchart LR
 ## Why Auto Loader?
 
 | Challenge | Auto Loader Solution |
-|-----------|---------------------|
+| :--- | :--- |
 | Tracking processed files | Automatic checkpointing |
 | Handling new file arrivals | Event-driven or polling |
 | Schema changes | Schema inference and evolution |
@@ -52,7 +62,7 @@ query = df.writeStream \
 ### Supported File Formats
 
 | Format | cloudFiles.format |
-|--------|-------------------|
+| :--- | :--- |
 | JSON | `json` |
 | CSV | `csv` |
 | Parquet | `parquet` |
@@ -90,7 +100,7 @@ df = spark.readStream \
 ```
 
 | Aspect | Directory Listing |
-|--------|-------------------|
+| :--- | :--- |
 | How it works | Periodically lists directory contents |
 | Setup | No additional cloud setup |
 | Scalability | Slower with millions of files |
@@ -110,7 +120,7 @@ df = spark.readStream \
 ```
 
 | Aspect | File Notification |
-|--------|-------------------|
+| :--- | :--- |
 | How it works | Cloud events (SNS/SQS, Event Grid, Pub/Sub) |
 | Setup | Requires cloud infrastructure setup |
 | Scalability | Highly scalable, constant time |
@@ -120,7 +130,7 @@ df = spark.readStream \
 ### Cloud Provider Setup
 
 | Cloud | Service | Setup |
-|-------|---------|-------|
+| :--- | :--- | :--- |
 | AWS | S3 + SNS + SQS | Auto Loader creates queue |
 | Azure | ADLS + Event Grid + Queue | Auto Loader creates resources |
 | GCP | GCS + Pub/Sub | Auto Loader creates subscription |
@@ -128,7 +138,7 @@ df = spark.readStream \
 ### Mode Comparison
 
 | Factor | Directory Listing | File Notification |
-|--------|-------------------|-------------------|
+| :--- | :--- | :--- |
 | Setup complexity | None | Medium |
 | Latency | Higher | Lower |
 | Cost at scale | Higher (listing) | Lower |
@@ -169,7 +179,7 @@ df = spark.readStream \
 ```
 
 | Option | Default | Description |
-|--------|---------|-------------|
+| :--- | :--- | :--- |
 | `inferColumnTypes` | true | Infer actual types vs all strings |
 | `schemaHints` | none | Override types for specific columns |
 

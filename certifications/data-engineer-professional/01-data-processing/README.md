@@ -1,3 +1,13 @@
+---
+title: Data Processing
+type: category
+tags:
+  - data-engineering
+  - processing
+  - overview
+status: published
+---
+
 # Data Processing (30% of Exam)
 
 This is the **highest-weighted** section of the exam. Master these topics thoroughly.
@@ -18,7 +28,7 @@ flowchart TD
 ## Section Contents
 
 | File | Topic | Priority |
-|------|-------|----------|
+| :--- | :--- | :--- |
 | [01-batch-etl-pipelines.md](01-batch-etl-pipelines.md) | ETL design patterns, DataFrame transformations | High |
 | [02-incremental-processing.md](02-incremental-processing.md) | Incremental loads, checkpoint management | High |
 | [03-structured-streaming.md](03-structured-streaming.md) | Streaming fundamentals, triggers, output modes | High |
@@ -32,7 +42,7 @@ flowchart TD
 ### Batch vs Streaming Processing
 
 | Aspect | Batch | Streaming |
-|--------|-------|-----------|
+| :--- | :--- | :--- |
 | Latency | Minutes to hours | Seconds to minutes |
 | Data Volume | Large, bounded | Continuous, unbounded |
 | Processing | Complete dataset | Incremental micro-batches |
@@ -41,7 +51,7 @@ flowchart TD
 ### Delta Lake Operations Comparison
 
 | Operation | Purpose | When to Use |
-|-----------|---------|-------------|
+| :--- | :--- | :--- |
 | `MERGE` | Upsert data | CDC, SCD patterns |
 | `OPTIMIZE` | Compact small files | After many small writes |
 | `VACUUM` | Remove old files | Free up storage |
@@ -50,7 +60,7 @@ flowchart TD
 ### Streaming Triggers
 
 | Trigger | Behavior |
-|---------|----------|
+| :--- | :--- |
 | `processingTime` | Fixed interval batches |
 | `availableNow` | Process all available, then stop |
 | `once` | Single batch, then stop |

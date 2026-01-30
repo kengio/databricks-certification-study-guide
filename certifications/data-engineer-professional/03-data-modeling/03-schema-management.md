@@ -1,3 +1,13 @@
+---
+title: Schema Management
+type: topic
+tags:
+  - data-engineering
+  - schema
+  - evolution
+status: published
+---
+
 # Schema Management
 
 Schema management in Delta Lake encompasses schema enforcement, schema evolution, and schema changes. Understanding these concepts is critical for building robust data pipelines.
@@ -31,7 +41,7 @@ flowchart LR
 ### Enforcement Rules
 
 | Scenario | Result |
-|----------|--------|
+| :--- | :--- |
 | Extra columns in data | Rejected (unless evolution enabled) |
 | Missing columns in data | Filled with NULL (if nullable) |
 | Wrong data types | Rejected |
@@ -103,7 +113,7 @@ SELECT * FROM new_data_with_extra_columns;
 ### Schema Evolution Operations
 
 | Operation | `mergeSchema` | `overwriteSchema` |
-|-----------|---------------|-------------------|
+| :--- | :--- | :--- |
 | Add new column | ✓ | ✓ |
 | Widen data type (e.g., INT→LONG) | ✓ | ✓ |
 | Change column type | ✗ | ✓ |
@@ -174,7 +184,7 @@ df.writeStream \
 ### Schema Evolution Modes for Auto Loader
 
 | Mode | Behavior |
-|------|----------|
+| :--- | :--- |
 | `addNewColumns` | Add new columns, fail on other changes |
 | `failOnNewColumns` | Fail on any schema change |
 | `rescue` | Add new columns, put unexpected data in `_rescued_data` |

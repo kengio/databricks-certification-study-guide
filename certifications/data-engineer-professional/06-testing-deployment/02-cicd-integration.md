@@ -1,3 +1,14 @@
+---
+title: CI/CD Integration
+type: topic
+tags:
+  - data-engineering
+  - cicd
+  - devops
+  - automation
+status: published
+---
+
 # CI/CD Integration
 
 Continuous Integration and Continuous Deployment (CI/CD) practices are essential for maintaining quality and reliability in data engineering projects. This guide covers integration patterns with popular CI/CD platforms.

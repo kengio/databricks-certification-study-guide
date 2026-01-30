@@ -33,7 +33,7 @@ flowchart TB
 ### Change Data Capture Basics
 
 | Concept | Description |
-|---------|-------------|
+| :--- | :--- |
 | Change Event | A record representing an INSERT, UPDATE, or DELETE |
 | Sequence Key | Column(s) that order changes (timestamp, LSN, etc.) |
 | Primary Key | Column(s) that identify unique records |

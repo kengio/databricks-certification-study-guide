@@ -1,6 +1,6 @@
 # Practice Questions - Section 07: Lakeflow Pipelines (5%)
 
-[Back to Overview](README.md) | [Previous: Testing & Deployment](06-testing-deployment.md) | [Next: Performance Optimization](08-performance-optimization.md)
+[Back to Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md) | [Next: Performance Optimization](08-performance-optimization.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) Drop and recreate the pipeline
 
 ---
 
-[Back to Overview](README.md) | [Previous: Testing & Deployment](06-testing-deployment.md) | [Next: Performance Optimization](08-performance-optimization.md)
+[Back to Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md) | [Next: Performance Optimization](08-performance-optimization.md)

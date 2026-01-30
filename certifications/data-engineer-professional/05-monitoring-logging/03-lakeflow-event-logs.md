@@ -1,3 +1,14 @@
+---
+title: Lakeflow Event Logs
+type: topic
+tags:
+  - data-engineering
+  - lakeflow
+  - event-logs
+  - dlt
+status: published
+---
+
 # Lakeflow/DLT Event Logs
 
 Delta Live Tables (DLT) / Lakeflow pipelines generate detailed event logs that provide observability into pipeline execution, data quality, and maintenance operations. Understanding these logs is essential for monitoring and debugging production pipelines.
@@ -38,7 +49,7 @@ ORDER BY timestamp DESC;
 ### Event Log Schema
 
 | Column | Type | Description |
-|--------|------|-------------|
+| :--- | :--- | :--- |
 | id | STRING | Unique event ID |
 | timestamp | TIMESTAMP | Event timestamp |
 | origin | STRUCT | Pipeline and cluster info |
@@ -86,7 +97,7 @@ ORDER BY timestamp DESC;
 ### Metrics in flow_progress
 
 | Metric | Description |
-|--------|-------------|
+| :--- | :--- |
 | `num_output_rows` | Rows written to target |
 | `num_upserted_rows` | Rows upserted (APPLY CHANGES) |
 | `num_deleted_rows` | Rows deleted |

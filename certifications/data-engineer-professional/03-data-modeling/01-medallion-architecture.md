@@ -1,3 +1,13 @@
+---
+title: Medallion Architecture
+type: topic
+tags:
+  - data-engineering
+  - architecture
+  - medallion
+status: published
+---
+
 # Medallion Architecture
 
 The medallion architecture (also known as multi-hop architecture) is a data design pattern for organizing data in a lakehouse. It progressively improves data quality across Bronze, Silver, and Gold layers.
@@ -25,7 +35,7 @@ flowchart LR
 ### Comparison Table
 
 | Aspect | Bronze | Silver | Gold |
-|--------|--------|--------|------|
+| :--- | :--- | :--- | :--- |
 | Data Quality | Raw, as-is | Cleansed, validated | Curated, business-ready |
 | Schema | Flexible (schema-on-read) | Enforced | Strict, documented |
 | Update Pattern | Append-only | Merge/Upsert | Aggregated |
@@ -141,7 +151,7 @@ df.withColumn("_ingested_at", current_timestamp()) \
 ### Bronze Layer Best Practices
 
 | Practice | Rationale |
-|----------|-----------|
+| :--- | :--- |
 | Append-only writes | Preserves complete history for replay |
 | Schema-on-read | Handle source schema changes gracefully |
 | Add ingestion metadata | Enable debugging and lineage tracking |

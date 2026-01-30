@@ -1,6 +1,6 @@
 # Practice Questions - Section 01: Data Processing (30%)
 
-[Back to Overview](README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
+[Back to Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) `spark.readStream.option("skipChangeCommits", "true").table("source")`
 
 ---
 
-[Back to Overview](README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
+[Back to Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)

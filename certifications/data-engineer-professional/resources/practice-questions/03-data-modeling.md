@@ -1,6 +1,6 @@
 # Practice Questions - Section 03: Data Modeling (15%)
 
-[Back to Overview](README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
+[Back to Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
 
 ---
 
@@ -136,4 +136,4 @@ D) Don't partition, use Z-ORDER on `customer_id`
 
 ---
 
-[Back to Overview](README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
+[Back to Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)

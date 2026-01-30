@@ -3,6 +3,7 @@ tags:
   - databricks
   - certification
   - data-engineer
+type: certification
 aliases:
   - DE Associate
 ---
@@ -11,16 +12,16 @@ aliases:
 
 ## Exam Overview
 
-| Detail            | Information                                  |
-| ----------------- | -------------------------------------------- |
-| **Certification** | Databricks Certified Data Engineer Associate |
-| **Questions**     | ~45 multiple-choice                          |
-| **Duration**      | 90 minutes                                   |
-| **Passing Score** | 70%                                          |
-| **Languages**     | Python and SQL                               |
-| **Experience**    | 6+ months with Databricks                    |
+| Detail             | Information                                  |
+| ------------------ | -------------------------------------------- |
+| **Certification**  | Databricks Certified Data Engineer Associate |
+| **Questions**      | ~45 multiple-choice                          |
+| **Duration**       | 90 minutes                                   |
+| **Passing Score**  | 70%                                          |
+| **Languages**      | Python and SQL                               |
+| **Experience**     | 6+ months with Databricks                    |
 | **Recertification**| Every 2 years                                |
-| **Cost**          | $200 USD                                     |
+| **Cost**           | $200 USD                                     |
 
 ## Exam Domain Weights
 
