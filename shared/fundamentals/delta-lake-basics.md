@@ -359,14 +359,10 @@ B) In the `_delta_log/` directory alongside the data files
 C) In the Hive metastore
 D) In a cloud-managed catalog service
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Delta Lake stores its transaction log in the `_delta_log/` directory within the table's root directory. Each transaction creates a new JSON file in this directory, recording add/remove file actions, metadata changes, and transaction information.
-
-</details>
 
 ---
 
@@ -379,14 +375,10 @@ B) `.option("mergeSchema", "true")`
 C) `.option("schemaEvolution", "true")`
 D) `.option("autoMerge", "true")`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > The `mergeSchema` option allows new columns from the source data to be automatically added to the target table's schema during an append operation. `overwriteSchema` replaces the entire schema (used with overwrite mode). Options C and D are not valid Delta Lake options.
-
-</details>
 
 ---
 
@@ -399,14 +391,10 @@ B) `UNDO DELETE FROM my_table VERSION 5`
 C) `RESTORE TABLE my_table TO VERSION AS OF 5`
 D) `ALTER TABLE my_table REVERT TO VERSION 5`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `RESTORE TABLE my_table TO VERSION AS OF 5` restores a Delta table to a previous version. You can also restore by timestamp using `RESTORE TABLE my_table TO TIMESTAMP AS OF '2025-01-15'`. The other options are not valid Delta Lake syntax.
-
-</details>
 
 ---
 
@@ -419,14 +407,10 @@ B) `_commit_timestamp`
 C) `_change_type`
 D) `_operation_type`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > The `_change_type` column indicates the type of change: `insert`, `update_preimage`, `update_postimage`, or `delete`. `_commit_version` shows the Delta version number, and `_commit_timestamp` shows when the change was committed. `_operation_type` is not a valid CDF column.
-
-</details>
 
 ---
 
@@ -439,14 +423,10 @@ B) It requires no manual OPTIMIZE commands and allows changing clustering column
 C) It provides faster writes than an unpartitioned table
 D) It eliminates the need for VACUUM
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Liquid Clustering automatically optimizes data layout incrementally without manual OPTIMIZE ZORDER commands. You can change clustering columns with `ALTER TABLE ... CLUSTER BY` without rewriting existing data. It does not eliminate VACUUM, and while it supports any cardinality, the max column count is similar to Z-ORDER.
-
-</details>
 
 ## Related Topics
 

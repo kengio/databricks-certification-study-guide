@@ -355,14 +355,10 @@ B) Reading Delta tables as Iceberg or Hudi without data duplication
 C) Merging multiple table formats into a single unified format
 D) Automatically migrating Hudi tables to Delta Lake
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > UniForm generates Iceberg and Hudi metadata alongside the Delta Lake transaction log, allowing external tools (like Snowflake, Trino, Presto) to read Delta tables using Iceberg or Hudi protocols. No data is duplicated; only metadata is generated.
-
-</details>
 
 ---
 
@@ -375,14 +371,10 @@ B) Iceberg uses hidden partitioning, so queries do not need to specify partition
 C) Iceberg requires a full table rewrite to change partition columns
 D) Iceberg only supports date-based partitions
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Iceberg uses hidden partitioning where the engine automatically applies partition pruning based on source columns. Users write queries using the original columns (e.g., `WHERE event_date = '2025-01-15'`), and Iceberg handles partition mapping internally. Partition columns can also be evolved without rewriting data.
-
-</details>
 
 ---
 
@@ -395,14 +387,10 @@ B) Merge on Read (MoR)
 C) Append Only
 D) Write Optimized
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Merge on Read (MoR) writes data to log files first and compacts later, making writes fast and efficient for streaming CDC workloads. Copy on Write (CoW) rewrites entire files on each update, making it better for read-heavy workloads but slower for writes.
-
-</details>
 
 ## Related Topics
 

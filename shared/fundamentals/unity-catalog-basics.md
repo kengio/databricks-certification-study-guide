@@ -359,14 +359,10 @@ B) `catalog.schema.table`
 C) `database.schema.table`
 D) `metastore.catalog.table`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Unity Catalog uses a three-level namespace: `catalog.schema.table`. The catalog is the top-level container, schemas (databases) organize objects within a catalog, and tables/views/functions are the securable objects within a schema.
-
-</details>
 
 ---
 
@@ -379,14 +375,10 @@ B) Both metadata and underlying data files are deleted
 C) The table is archived but can be restored
 D) The data is moved to a recycle bin for 30 days
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > When a managed table is dropped, Unity Catalog deletes both the metadata and the underlying data files. For external tables, only the metadata is removed; data files remain at the external location. This is a key distinction for the exam.
-
-</details>
 
 ---
 
@@ -399,14 +391,10 @@ B) `GRANT USE CATALOG ON CATALOG prod TO analyst` and `GRANT USE SCHEMA ON SCHEM
 C) `GRANT ALL PRIVILEGES ON CATALOG prod TO analyst`
 D) `GRANT READ ON SCHEMA prod.sales TO analyst`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Unity Catalog requires explicit grants at each level. To read tables, a user needs: `USE CATALOG` on the catalog, `USE SCHEMA` on the schema, and `SELECT` on the schema or individual tables. Without `USE CATALOG` and `USE SCHEMA`, the user cannot navigate to the tables even with `SELECT` granted.
-
-</details>
 
 ---
 
@@ -419,14 +407,10 @@ B) Column-level data flow across tables, notebooks, and jobs
 C) Only SQL query history
 D) Storage-level file access patterns
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Unity Catalog automatically captures column-level lineage, tracking how data flows from source columns to target columns across tables, notebooks, workflows, and dashboards. This is captured automatically without requiring manual configuration.
-
-</details>
 
 ## Related Topics
 

@@ -15,14 +15,10 @@ B) Silver layer
 C) Gold layer
 D) Landing zone
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > The Silver layer is for cleaned, conformed data including type casting, null handling, deduplication, and standardization. Bronze stores raw data as-is. Gold is for business-level aggregations. Landing zone is temporary staging.
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) `SELECT * FROM orders TIMESTAMP AS OF '2024-01-12'`
 C) `ROLLBACK TABLE orders TO 3 DAYS AGO`
 D) Both A and B can be used to access historical data
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: D**
 >
 > Both version-based (`VERSION AS OF`) and timestamp-based (`TIMESTAMP AS OF`) time travel work. RESTORE actually reverts the table, while SELECT reads historical data. Default retention is 7 days, so 3-day-old data is available.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) `.option("overwriteSchema", "true")`
 C) `.option("schemaEvolution", "true")`
 D) Schema evolution is automatic in Delta
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > `mergeSchema = true` allows adding new columns during writes. `overwriteSchema` replaces the entire schema (dangerous). Option C is not a valid option. Schema evolution must be explicitly enabled.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) `start_date`, `end_date`, `is_current`
 C) `created_at`, `updated_at`
 D) `previous_value`, `current_value`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > SCD Type 2 tracks history using `start_date` (when version became active), `end_date` (when superseded, NULL for current), and often `is_current` flag. This allows point-in-time queries and current state queries.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) `ALTER TABLE table CLUSTER BY (customer_id, order_date)`
 C) `CREATE TABLE table PARTITIONED BY (customer_id, order_date)`
 D) Both A and B provide automatic maintenance
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Liquid Clustering (`CLUSTER BY`) provides automatic, incremental clustering without manual OPTIMIZE commands. Z-ORDER requires scheduled OPTIMIZE runs. Partitioning is for low-cardinality columns and doesn't cluster data within partitions.
-
-</details>
 
 ---
 
@@ -125,14 +105,10 @@ B) Partition by `status`
 C) Partition by both `customer_id` and `status`
 D) Don't partition, use Z-ORDER on `customer_id`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: D**
 >
 > Partitioning works best for low-cardinality columns with ~1000 or fewer values. `customer_id` has too many values (would create 1M partitions). `status` has too few values (only 5 partitions, may not help much). Z-ORDER or liquid clustering on high-cardinality columns is better.
-
-</details>
 
 ---
 

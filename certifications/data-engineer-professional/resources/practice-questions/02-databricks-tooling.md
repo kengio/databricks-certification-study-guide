@@ -15,14 +15,10 @@ B) `dbutils.widgets.dropdown("date", str(date.today() - timedelta(days=1)), [])`
 C) `dbutils.widgets.create("date", default=str(date.today() - timedelta(days=1)))`
 D) `dbutils.widgets.parameter("date", str(date.today() - timedelta(days=1)))`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > `dbutils.widgets.text(name, defaultValue)` creates a text input widget with a default value. Option B requires a list of choices. Options C and D are not valid methods.
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) `%run` executes the notebook asynchronously
 C) Variables from the called notebook are available in the calling notebook's scope
 D) `%run` can only be used with notebooks in the same folder
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `%run` executes the notebook in the current notebook's context, making all variables and functions available. It runs synchronously and can reference notebooks using relative or absolute paths.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, and `DATABRICKS_CLIENT_SECRET`
 C) `DATABRICKS_URL` and `DATABRICKS_API_KEY`
 D) `DATABRICKS_WORKSPACE` and `DATABRICKS_PAT`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Service principal authentication requires the workspace host URL, client ID (application ID), and client secret. Option A is for PAT token authentication. Options C and D use invalid variable names.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) `GET /api/2.1/jobs/trigger`
 C) `POST /api/2.0/jobs/start`
 D) `PUT /api/2.1/jobs/execute`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > `POST /api/2.1/jobs/run-now` triggers a job run with optional parameter overrides. This is the current Jobs API version. The other endpoints don't exist.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) Job cluster created for each run
 C) All-purpose cluster with auto-termination
 D) Serverless cluster
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Job clusters are created for the job run and terminated after completion. They have lower DBU rates (~60% less than all-purpose) and only incur costs during execution. All-purpose clusters cost more and may have idle time even with auto-termination.
-
-</details>
 
 ---
 
@@ -125,14 +105,10 @@ B) Mounted cloud storage
 C) Unity Catalog Volume
 D) Workspace files
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > Unity Catalog Volumes provide governed file storage with access controls, auditing, and lineage. DBFS and mounts are legacy approaches without UC governance. Workspace files are for notebooks and small files, not data.
-
-</details>
 
 ---
 

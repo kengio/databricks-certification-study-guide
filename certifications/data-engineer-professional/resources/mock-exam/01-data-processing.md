@@ -15,14 +15,10 @@ B) `cloudFiles.schemaEvolutionMode = addNewColumns`
 C) `cloudFiles.schemaLocation` with `mergeSchema = true`
 D) `cloudFiles.format = json` with `rescuedDataColumn`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `cloudFiles.schemaEvolutionMode = addNewColumns` is the Auto Loader configuration that automatically detects and adds new columns to the target schema. Option A only controls type inference, not schema evolution. Option C uses `schemaLocation` for storing schema but `mergeSchema` is a Delta write option, not Auto Loader. Option D captures unparseable data but doesn't handle schema evolution.
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) `trigger(processingTime="1 second")`
 C) `trigger(processingTime="1 minute")`
 D) `trigger(once=True)`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > A 1-minute processing time trigger allows sufficient data to accumulate for larger file writes while maintaining reasonable latency. Option A processes all available data at once (batch-like). Option B writes too frequently, creating small files. Option D is for one-time batch processing, not continuous streaming.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) Use `MERGE INTO` with `WHEN MATCHED AND target.is_current = true THEN UPDATE`
 C) Use `INSERT OVERWRITE` to replace all records for the customer
 D) Use `DELETE` followed by `INSERT` to replace the customer record
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > SCD Type 2 requires closing the current record (setting end_date and is_current=false) and inserting a new record. The MERGE statement with a condition on `is_current = true` ensures only the active record is updated. Options A and D implement SCD Type 1 (overwrite). Option C would lose history.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) Set `cloudFiles.inferColumnTypes = true` and `badRecordsPath`
 C) Set `cloudFiles.schemaHints` with all expected columns
 D) Set `cloudFiles.format = json` with `mode = PERMISSIVE`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > `cloudFiles.schemaLocation` persists the inferred schema to a directory so it's reused across restarts. `schemaEvolutionMode = rescue` captures data that doesn't match the schema into a `_rescued_data` column instead of failing. Option B's `badRecordsPath` is for batch reads. Option C provides hints but doesn't persist schema or rescue data. Option D uses invalid configuration syntax.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) `outputMode("complete")` with `foreachBatch()` and manual deduplication
 C) `outputMode("append")` with checkpointing and idempotent Delta writes
 D) `outputMode("update")` with watermarking
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > Exactly-once semantics require checkpointing (for tracking progress) combined with idempotent writes (Delta Lake's transaction log ensures writes are atomic and can be retried safely). Option A lacks idempotency mention. Option B requires manual handling. Option D is for stateful aggregations.
-
-</details>
 
 ---
 
@@ -125,14 +105,10 @@ B) `spark.readStream.format("delta").option("readChangeFeed", "true").table("bro
 C) `spark.read.format("delta").option("startingVersion", last_version).table("bronze")`
 D) `spark.readStream.format("delta").option("ignoreChanges", "true").table("bronze")`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Using `readStream` with `readChangeFeed = true` creates a streaming source that automatically tracks progress and reads only new changes. Option A is batch read (would need version parameters). Option C reads snapshots, not change records. Option D ignores changes rather than reading them.
-
-</details>
 
 ---
 
@@ -147,14 +123,10 @@ B) Add a Z-ORDER on `customer_id`
 C) Partition the table by `customer_id`
 D) Enable `spark.databricks.delta.merge.enableLowShuffle`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Z-ORDER on `customer_id` co-locates data with similar customer_id values, enabling file pruning during MERGE and dramatically reducing files scanned. Option A adds parallelism but doesn't reduce data scanned. Option C is impractical for high-cardinality columns. Option D is not a valid configuration.
-
-</details>
 
 ---
 
@@ -169,14 +141,10 @@ B) This is expected behavior; events beyond the watermark are intentionally drop
 C) Set `spark.sql.streaming.stateStore.providerClass` to handle late data
 D) Use `outputMode("complete")` to include all data
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Watermarking intentionally drops data arriving after the threshold to bound state store size. Events 15 minutes late with a 10-minute watermark will be dropped by design. Option A could work but increases state size. Options C and D don't address late data handling. The engineer should evaluate if 10 minutes is the right threshold for their use case.
-
-</details>
 
 ---
 
@@ -191,14 +159,10 @@ B) Create separate streaming queries for each topic with independent checkpoints
 C) Use `foreachBatch()` to route records to different tables based on topic
 D) Use `readStream.format("kafka").option("subscribe", "topic1,topic2")` with schema registry
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Separate streaming queries with independent checkpoints provide isolation for different schemas and independent failure handling. Option A requires a common schema. Option C complicates checkpoint management. Option D subscribes to multiple topics but doesn't handle different schemas well.
-
-</details>
 
 ---
 
@@ -213,14 +177,10 @@ B) Run `VACUUM` with an appropriate retention period
 C) Run `FSCK REPAIR TABLE` to fix storage
 D) Recreate the table using `CREATE TABLE AS SELECT`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > DELETE in Delta Lake marks records as removed but doesn't physically delete files (to support time travel). VACUUM removes files older than the retention period that are no longer referenced. Option A compacts but doesn't remove old files. Option C checks table integrity. Option D is inefficient.
-
-</details>
 
 ---
 
@@ -235,14 +195,10 @@ B) Add `withWatermark("timestamp", "2 hours")` before the aggregation
 C) Use `outputMode("append")` without watermarking
 D) Set `spark.sql.streaming.stateStore.maintenanceInterval` to "1 hour"
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Watermarking allows Spark to handle late data within the threshold (2 hours) while cleaning up state for windows that can no longer receive updates. Option A recomputes but doesn't bound state. Option C would drop late data immediately. Option D controls maintenance frequency, not late data handling.
-
-</details>
 
 ---
 
@@ -257,14 +213,10 @@ B) Auto Loader's `cloudFiles.maxFilesPerTrigger` is set too low
 C) The source files are being written to a different path than configured
 D) The stream is waiting for the trigger interval
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > A stream showing ACTIVE with 0 rows processed while files are arriving typically indicates the configured source path doesn't match where files are being written. Option A would cause errors, not zero processing. Option B would limit throughput but not stop it entirely. Option D wouldn't show persistent zero processing.
-
-</details>
 
 ---
 
@@ -279,14 +231,10 @@ B) Deduplicate within the MERGE using `ROW_NUMBER()` in a subquery
 C) Set `spark.databricks.delta.merge.repartitionBeforeWrite.enabled = true`
 D) Use multiple MERGE statements with different conditions
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Using `ROW_NUMBER()` partitioned by key and ordered by timestamp DESC in a subquery, then filtering for row_number = 1, deduplicates source data correctly within the MERGE while ensuring the latest record is kept. Option A (`dropDuplicates()`) is non-deterministic and doesn't guarantee keeping the record with the latest timestamp. Option C affects write performance, not deduplication. Option D is unnecessarily complex.
-
-</details>
 
 ---
 
@@ -301,14 +249,10 @@ B) Set `badRecordsPath` to a storage location
 C) Use `cloudFiles.rescuedDataColumn` to capture unparseable data
 D) Wrap the read in a try-catch block
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `rescuedDataColumn` creates a column containing data that couldn't be parsed according to the schema, allowing analysis of bad records. Option A ignores corrupt files entirely. Option B is for batch operations. Option D doesn't work with streaming transformations.
-
-</details>
 
 ---
 
@@ -323,14 +267,10 @@ B) Read with `option("versionAsOf", last_processed_version)` and compare with cu
 C) Use `CHANGES` table-valued function in SQL
 D) Read the `_delta_log` directly to find changed files
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > Reading CDF with `startingVersion` returns all changes (inserts, updates, deletes) since that version, including `_change_type` column. Option B reads snapshots, not changes. Option C is not valid syntax. Option D is fragile and not recommended.
-
-</details>
 
 ---
 
@@ -345,14 +285,10 @@ B) Delta uses snapshot isolation; readers see consistent snapshots regardless of
 C) Delta queues read requests until writes complete
 D) Configure `delta.isolationLevel = serializable` to ensure consistency
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Delta Lake provides snapshot isolation by default. Readers see a consistent snapshot based on the transaction log at query start time, regardless of concurrent writes. Option A is incorrect; Delta doesn't use table locks. Option C is incorrect; reads aren't queued. Option D is not a valid setting.
-
-</details>
 
 ---
 
@@ -367,14 +303,10 @@ B) `WHEN MATCHED THEN UPDATE SET * WHERE source.timestamp > target.timestamp`
 C) `WHEN MATCHED THEN UPDATE SET target.* = source.* IF source.timestamp > target.timestamp`
 D) `WHEN MATCHED THEN UPDATE SET * HAVING source.timestamp > target.timestamp`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > The condition in `WHEN MATCHED AND condition` filters which matched rows receive the update. Rows not meeting the condition are skipped. Option B has invalid syntax (WHERE after UPDATE SET). Options C and D use invalid syntax.
-
-</details>
 
 ---
 
@@ -389,14 +321,10 @@ B) Use Delta Lake's multi-table transactions with `spark.databricks.delta.multiT
 C) This cannot be achieved directly; implement idempotent writes with manual rollback logic
 D) Use `foreachPartition()` instead for transactional guarantees
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > Delta Lake doesn't support multi-table transactions. The recommended approach is to make each write idempotent (using merge keys or batch IDs) so failed batches can be safely reprocessed. Options A and B describe non-existent features. Option D doesn't provide multi-table atomicity.
-
-</details>
 
 ---
 

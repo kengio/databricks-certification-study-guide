@@ -15,14 +15,10 @@ B) `OPTIMIZE table_name ZORDER BY (region)`
 C) `OPTIMIZE table_name ZORDER BY (region, date)`
 D) `VACUUM table_name`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > ZORDER on both frequently filtered columns provides the best data skipping. Option A compacts files but doesn't optimize data layout. Option B only optimizes for one column. VACUUM removes old files but doesn't improve layout.
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) 200; decrease for small data
 C) 200; increase for large data
 D) 500; keep default for all data
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Default is 200. For 10GB (relatively small), reducing partitions can improve performance by reducing overhead. Rule of thumb: target ~128MB per partition. 10GB / 128MB = 80 partitions.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) Use a broadcast hint on the large table
 C) Use a broadcast hint on the small table
 D) Partition both tables by the join key
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > Broadcasting the small table avoids shuffling the large table. The small table is sent to all executors for a local join. Default broadcast threshold is 10MB, so a hint may be needed for 50MB: `/*+ BROADCAST(small_table) */`.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) Skew join optimization
 C) Dynamic broadcast join
 D) Local shuffle reader
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > AQE's skew join optimization automatically detects and splits skewed partitions to distribute work more evenly. Coalesce combines small partitions. Dynamic broadcast switches join strategies. Local shuffle reader reduces I/O.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) `delta.autoOptimize.optimizeWrite = true`
 C) `spark.databricks.delta.vacuum.enabled = true`
 D) `delta.checkpoint.writeStatsAsJson = false`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `optimizeWrite` bins data during writes to create better-sized files. This is especially helpful for streaming which naturally creates small files. Option A would create single-file outputs (bad for parallelism). Vacuum removes old files but doesn't compact.
-
-</details>
 
 ---
 
@@ -125,14 +105,10 @@ B) Increase cluster size to finish faster
 C) Run during business hours
 D) Disable auto-scaling
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > Job clusters have ~60% lower DBU rates than all-purpose clusters. They're created for the job and terminated after, eliminating idle time costs. Larger clusters may cost more overall. Auto-scaling typically helps with costs.
-
-</details>
 
 ---
 

@@ -44,19 +44,21 @@ databricks-certification-study-guide/
 - Always run markdownlint to check for issues with every MD file
 - Ensure headings have blank lines before and after them (MD022 rule)
 - Use appropriate code blocks (SQL, Python, Scala)
-- **Use HTML `<details>` tags** for answers/spoilers (Required for GitHub compatibility). Use blockquotes inside for better visibility:
-  ```html
-  <details>
-  <summary>Answer</summary>
+- **Use Obsidian foldable callouts** for answers/spoilers (collapsed by default in Obsidian). Use the `[!success]-` callout type:
 
-  > Answer content...
-  </details>
-  ```
-- **Practice Question Choices**: Format as separate lines without bullets. End each line with **two spaces** to force a hard line break:
   ```markdown
-  A) Option one  
-  B) Option two  
-  C) Option three  
+  > [!success]- Answer
+  > **Correct Answer: X**
+  >
+  > Explanation text here.
+  ```
+
+- **Practice Question Choices**: Format as separate lines without bullets. End each line with **two spaces** to force a hard line break:
+
+  ```markdown
+  A) Option one
+  B) Option two
+  C) Option three
   ```
 
 ### Diagrams

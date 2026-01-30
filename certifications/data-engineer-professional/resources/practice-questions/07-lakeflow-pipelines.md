@@ -15,14 +15,10 @@ B) Materialized view
 C) Live table
 D) Temporary view
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Materialized views are appropriate for aggregations as they fully recompute results. Streaming tables are for append-only incremental processing and don't support aggregations well. "Live table" is deprecated terminology.
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW`
 C) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE`
 D) `@dlt.expect_all("valid_id", "customer_id IS NOT NULL")`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `ON VIOLATION DROP ROW` removes invalid records without failing the pipeline. Option A only logs warnings but keeps invalid rows. Option C fails the entire pipeline. Option D has incorrect syntax.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) `STORED AS SCD TYPE 2`
 C) `STORED AS SNAPSHOT`
 D) `STORED AS CURRENT`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > SCD Type 1 maintains only the current state by overwriting on updates. SCD Type 2 maintains full history with start/end dates. Options C and D are not valid APPLY CHANGES syntax.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) `SELECT * FROM LIVE.source_table`
 C) `SELECT * FROM delta.source_table`
 D) `SELECT * FROM dlt.source_table`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > In DLT SQL, tables within the pipeline are referenced using the `LIVE.` prefix. This tells DLT that the table is defined within the same pipeline and creates the proper dependency.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) `continuous: true`
 C) `development: false`
 D) `streaming: true`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `continuous: true` keeps the pipeline running continuously, processing data as it arrives. Triggered mode (default) processes data in batches when manually started or scheduled. `development` affects cluster size, not processing mode.
-
-</details>
 
 ---
 
@@ -125,14 +105,10 @@ B) Use `databricks pipelines start --full-refresh`
 C) Set `reset: true` in pipeline configuration
 D) Drop and recreate the pipeline
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `--full-refresh` flag clears checkpoints and reprocesses all data from the beginning. This preserves pipeline configuration while resetting state. Manually deleting tables or recreating pipelines is error-prone.
-
-</details>
 
 ---
 

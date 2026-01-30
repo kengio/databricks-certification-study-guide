@@ -581,14 +581,10 @@ B) `DENSE_RANK()`
 C) `ROW_NUMBER()`
 D) `NTILE()`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `ROW_NUMBER()` assigns a unique sequential integer to each row within a partition, with no gaps or duplicates. `RANK()` can produce gaps (e.g., 1, 2, 2, 4), `DENSE_RANK()` has no gaps but allows ties (e.g., 1, 2, 2, 3), and `NTILE()` divides rows into buckets.
-
-</details>
 
 ---
 
@@ -601,14 +597,10 @@ B) Only the single SQL statement that immediately follows it
 C) All queries in the current notebook cell
 D) The CTE persists until explicitly dropped
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > A CTE defined with `WITH` is scoped to the single SELECT, INSERT, UPDATE, or DELETE statement that immediately follows it. It does not persist beyond that statement and cannot be referenced by subsequent queries.
-
-</details>
 
 ---
 
@@ -621,14 +613,10 @@ B) `WHEN NOT MATCHED THEN INSERT`
 C) `WHEN NOT MATCHED BY SOURCE THEN DELETE`
 D) `WHEN NOT MATCHED BY TARGET THEN INSERT`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `WHEN NOT MATCHED BY SOURCE` matches rows in the target that have no corresponding row in the source. This is commonly used to DELETE or UPDATE records that are no longer present in the source data. `WHEN NOT MATCHED` (or `WHEN NOT MATCHED BY TARGET`) handles rows in the source not in the target.
-
-</details>
 
 ---
 
@@ -641,14 +629,10 @@ B) `'default'`
 C) `'other'`
 D) An error
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `COALESCE` returns the first non-NULL argument from its list. It evaluates arguments left to right: `NULL`, `NULL`, `'default'` (first non-NULL, returned). The `'other'` value is never evaluated.
-
-</details>
 
 ## Related Topics
 

@@ -15,14 +15,10 @@ B) Grant USE SCHEMA and SELECT on SCHEMA to give access to all current and futur
 C) Grant SELECT on the catalog to give access to all schemas and tables
 D) Create a view for each table and grant SELECT on views only
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Granting SELECT at the schema level provides access to all current and future tables in that schema. USE SCHEMA is required to access objects within the schema. Option A requires ongoing maintenance. Option C is too broad. Option D is unnecessarily complex.
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) Use dynamic views with `is_account_group_member()` to filter columns
 C) Use column masks to hide salary for non-HR users
 D) Implement application-level security in the BI tool
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > Column masks in Unity Catalog apply functions to column values based on the querying user's permissions, showing the real value to authorized users and masked/null values to others. Option A creates data duplication. Option B requires view maintenance. Option D doesn't protect data at the source.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) Use Delta Sharing to share data via open protocol
 C) Export data daily to a shared cloud storage location
 D) Create a Databricks workspace for the partner with access to the dataset
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Delta Sharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) `spark.conf.get("azure.keyvault.db-password")`
 C) `dbutils.credentials.get("keyvault-scope", "db-password")`
 D) `%keyvault get db-password`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > When Azure Key Vault is configured as a secret scope backend, secrets are accessed through `dbutils.secrets.get()` using the scope name and key name. The Key Vault integration is transparent to the code. Options B, C, and D use invalid syntax.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) Same SELECT permission; Unity Catalog permissions are centralized
 C) Read-only permissions with a warning about cross-workspace access
 D) Permissions depend on workspace-level settings
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Unity Catalog provides centralized governance across all workspaces attached to the same metastore. Permissions granted on objects apply regardless of which workspace is used to access them. This is a key benefit of Unity Catalog over legacy Hive metastore.
-
-</details>
 
 ---
 
@@ -125,14 +105,10 @@ B) Create dynamic views with `WHERE doctor_id = current_user()`
 C) Use column masks to hide rows from unauthorized users
 D) Implement filtering in the application layer only
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > Unity Catalog row filters apply a function that determines which rows each user can access based on their identity. The filter function can join with assignment tables to implement complex rules. Option B works but requires view maintenance. Option C is for column security, not row security. Option D doesn't protect data at the source.
-
-</details>
 
 ---
 

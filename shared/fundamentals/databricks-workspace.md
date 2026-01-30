@@ -378,14 +378,10 @@ B) Job cluster
 C) SQL warehouse
 D) Single-node cluster
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Job clusters are created specifically for a job run and terminated when the job completes. They are more cost-effective for production workloads. All-purpose clusters are designed for interactive development. SQL warehouses are for SQL analytics queries and dashboards.
-
-</details>
 
 ---
 
@@ -398,14 +394,10 @@ B) Use the `%sql` magic command at the top of the cell
 C) Convert the entire notebook to SQL
 D) Use `spark.sql()` only; magic commands are not supported
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Databricks notebooks support magic commands (`%sql`, `%python`, `%scala`, `%r`, `%md`) that allow switching languages within individual cells. While `spark.sql()` also works for running SQL from Python, the `%sql` magic command provides native SQL support with formatted result display.
-
-</details>
 
 ---
 
@@ -418,14 +410,10 @@ B) SQL warehouses are serverless; clusters are not
 C) SQL warehouses are optimized for SQL analytics and BI; clusters for development and ETL
 D) SQL warehouses do not support Delta Lake
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > SQL warehouses (formerly SQL endpoints) are optimized specifically for SQL analytics workloads, BI tool connectivity, and dashboards. All-purpose clusters support multiple languages and are designed for interactive development and ETL. Both can be serverless, and both support Delta Lake.
-
-</details>
 
 ## Related Topics
 

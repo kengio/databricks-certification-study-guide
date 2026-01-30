@@ -15,14 +15,10 @@ B) `system.billing.usage`
 C) `system.compute.clusters`
 D) `system.query.history`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `system.billing.usage` contains cost and usage data including DBUs consumed. `audit` tracks access events. `clusters` contains cluster metadata. `query.history` tracks SQL queries, not costs.
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) Network congestion or slow shuffle fetch
 C) Out of memory errors
 D) Insufficient disk space
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Shuffle Read Blocked Time indicates tasks waiting for shuffle data from other executors, typically due to network issues or executors being slow to serve shuffle blocks. Solutions include increasing shuffle retry settings or investigating network.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) Check the Spark UI
 C) Query the pipeline's event log
 D) Review the cluster logs
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > The DLT event log contains expectation metrics including passed/failed record counts. Query it using `event_log(TABLE(pipeline))` or access via the system tables. The event log provides detailed pipeline observability.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) `DataFilters` showing filter conditions
 C) `PushedFilters` showing filter conditions
 D) All of the above indicate different types of filtering
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: D**
 >
 > `PartitionFilters` shows partition pruning (best). `DataFilters` shows filters applied after scan. `PushedFilters` shows filters pushed to the file format. Ideally, filters should appear in PartitionFilters for best performance.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) Data skew in partition keys
 C) Network timeout
 D) Corrupt data file
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > One task taking much longer than others typically indicates data skew - one partition has significantly more data. Solutions include salting keys, using AQE skew handling, or repartitioning data more evenly.
-
-</details>
 
 ---
 

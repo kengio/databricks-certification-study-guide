@@ -15,14 +15,10 @@ B) `cloudFiles.schemaEvolutionMode = "rescue"`
 C) `cloudFiles.inferColumnTypes = "true"`
 D) `cloudFiles.mergeSchema = "true"`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > `schemaEvolutionMode = "addNewColumns"` automatically adds new columns to the schema. Option B rescues unexpected data to a separate column. Option C enables type inference but not schema evolution. Option D is not a valid Auto Loader option (that's for Delta writes).
-
-</details>
 
 ---
 
@@ -37,14 +33,10 @@ B) `trigger(once=True)`
 C) `trigger(availableNow=True)`
 D) `trigger(continuous='1 hour')`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `availableNow=True` processes all available data and stops, making it ideal for scheduled batch-like streaming. `processingTime` runs continuously. `once=True` is deprecated and only processes one batch. `continuous` is for low-latency and doesn't stop.
-
-</details>
 
 ---
 
@@ -59,14 +51,10 @@ B) `WHEN NOT MATCHED THEN INSERT`
 C) `WHEN MATCHED THEN INSERT`
 D) `WHEN NOT MATCHED BY SOURCE THEN DELETE`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `WHEN NOT MATCHED THEN INSERT` handles source records that don't have a matching key in the target. `WHEN MATCHED` handles existing records. Option C is invalid syntax. Option D handles records in target not in source.
-
-</details>
 
 ---
 
@@ -81,14 +69,10 @@ B) `ALTER TABLE orders SET TBLPROPERTIES ('delta.enableChangeDataFeed' = true)`
 C) `ALTER TABLE orders ENABLE CHANGE TRACKING`
 D) `CREATE TABLE orders WITH (CDC = ENABLED)`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `delta.enableChangeDataFeed = true` enables Change Data Feed (CDF) on a Delta table. This allows reading changes using `table_changes()` function or `readChangeData` option. The other options use incorrect syntax.
-
-</details>
 
 ---
 
@@ -103,14 +87,10 @@ B) `withWatermark("event_time", "30 minutes")`
 C) `withWatermark("event_time", "40 minutes")`
 D) `withWatermark("processing_time", "30 minutes")`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > The watermark should match the maximum expected lateness (30 minutes). This tells Spark to wait 30 minutes before finalizing windows. Using event_time (not processing_time) is required for event-time processing.
-
-</details>
 
 ---
 
@@ -125,14 +105,10 @@ B) `spark.readStream.option("readChangeData", "true").table("source")`
 C) `spark.readStream.option("readChangeFeed", "true").table("source")`
 D) `spark.readStream.option("skipChangeCommits", "true").table("source")`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `readChangeFeed = true` (with CDF enabled on the table) reads the change data feed which includes inserts, updates, and deletes. Option A ignores updates/deletes. Option B uses the wrong option name (`readChangeData` is not valid; the correct name is `readChangeFeed`). Option D is not a valid option.
-
-</details>
 
 ---
 

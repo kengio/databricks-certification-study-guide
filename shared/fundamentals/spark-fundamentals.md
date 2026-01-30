@@ -324,14 +324,10 @@ B) A new DataFrame is created with the filter applied, but no computation occurs
 C) The filter is applied and the result is cached in memory
 D) The query is sent to the driver for execution
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Spark uses lazy evaluation. Transformations like `filter`, `select`, and `groupBy` create a new DataFrame that records the operation but do not trigger computation. Computation only occurs when an action (like `collect`, `count`, or `show`) is called.
-
-</details>
 
 ---
 
@@ -344,14 +340,10 @@ B) When one table is small enough to fit in executor memory
 C) When performing a cross join
 D) When the join key has high cardinality
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Broadcast joins send a copy of the small table to all executors, avoiding shuffle. This is effective when one table is small (default threshold: 10 MB). Broadcasting large tables causes `OutOfMemoryError`. Spark can auto-broadcast tables under the threshold set by `spark.sql.autoBroadcastJoinThreshold`.
-
-</details>
 
 ---
 
@@ -364,14 +356,10 @@ B) `groupBy()`
 C) `count()`
 D) `withColumn()`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `count()` is an action that triggers computation and returns a result to the driver. `select()`, `groupBy()`, and `withColumn()` are transformations that build up a logical plan but do not trigger execution.
-
-</details>
 
 ---
 
@@ -384,14 +372,10 @@ B) `df.coalesce(10)`
 C) `df.write.option("maxFilesPerPartition", 10)`
 D) `df.repartition(10).coalesce(1)`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > `coalesce(10)` reduces partitions without a full shuffle, making it more efficient than `repartition` for decreasing partition count. `repartition` performs a full shuffle, which is unnecessary when only reducing partitions. Option D would create a single file, not 10.
-
-</details>
 
 ## Related Topics
 

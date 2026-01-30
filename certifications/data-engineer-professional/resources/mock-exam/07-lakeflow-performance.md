@@ -17,14 +17,10 @@ B) The pipeline is configured for triggered execution, not continuous
 C) There's a data type mismatch between the tables
 D) The materialized view requires a manual REFRESH command
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options A and D are incorrect; DLT handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
-
-</details>
 
 ---
 
@@ -39,14 +35,10 @@ B) Records are processed by sequence column; out-of-order records are dropped
 C) Records are processed by sequence column; out-of-order records update if sequence is higher
 D) The pipeline fails on out-of-order detection
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > APPLY CHANGES uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.
-
-</details>
 
 ---
 
@@ -61,14 +53,10 @@ B) Query the pipeline event log for expectation metrics
 C) Run `DESCRIBE HISTORY` on the target table
 D) Dropped rows are not tracked; add manual logging
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > DLT stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option D is incorrect; DLT tracks this automatically.
-
-</details>
 
 ---
 
@@ -85,14 +73,10 @@ B) Run `VACUUM` to remove small files
 C) Enable auto-compaction for future writes and run `OPTIMIZE` for existing files
 D) Repartition the table with `spark.sql.shuffle.partitions = 2000`
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > `OPTIMIZE` compacts existing small files into larger ones (target ~1GB). Enabling auto-compaction (`spark.databricks.delta.autoCompact.enabled`) prevents small files in future writes. Option B removes old files, not compaction. Option D affects partitions in processing, not file sizes.
-
-</details>
 
 ---
 
@@ -107,14 +91,10 @@ B) Enable broadcast join by setting `spark.sql.autoBroadcastJoinThreshold = 100M
 C) Z-ORDER the fact table by the join key
 D) Partition both tables by the join key
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > A 50MB dimension table is a good candidate for broadcast join (eliminates shuffle of the large fact table). Increasing the threshold from 10MB default to 100MB enables automatic broadcast. Option A doesn't reduce shuffle. Option C helps filters, not joins. Option D requires data redistribution.
-
-</details>
 
 ---
 
@@ -129,14 +109,10 @@ B) Decrease `spark.memory.fraction` to leave more room for user objects
 C) Enable `spark.sql.adaptive.enabled` for dynamic partition coalescing
 D) Set `spark.executor.memoryOverhead` to 0 for maximum heap space
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: A**
 >
 > OOM during shuffle typically means individual partitions are too large. Increasing shuffle partitions creates smaller partitions that fit in memory. Option B reduces available memory. Option C helps with small partitions, not OOM. Option D can cause off-heap OOM errors.
-
-</details>
 
 ---
 

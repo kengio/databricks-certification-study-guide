@@ -320,14 +320,10 @@ B) Silver
 C) Bronze
 D) Platinum
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > The Bronze layer (also called the raw layer) stores data in its original format with minimal transformation. It serves as the landing zone for all ingested data, preserving the raw records for audit purposes and reprocessing.
-
-</details>
 
 ---
 
@@ -340,14 +336,10 @@ B) Data cleansing, deduplication, and schema enforcement
 C) Machine learning feature engineering
 D) Data encryption and masking
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > The Silver layer (validated/conformed layer) applies data quality transformations including cleansing, deduplication, schema enforcement, and standardization. It produces a "single source of truth" that multiple Gold layer tables can reference.
-
-</details>
 
 ---
 
@@ -360,14 +352,10 @@ B) Silver - for clean, validated data
 C) Gold - for business-level aggregations
 D) Any layer works equally well
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: C**
 >
 > The Gold layer contains business-level aggregations and metrics optimized for specific use cases like dashboards and reporting. A pre-aggregated daily revenue table in the Gold layer provides the best query performance and ensures consistent business logic.
-
-</details>
 
 ---
 
@@ -380,14 +368,10 @@ B) Source -> Bronze -> Silver -> Gold
 C) Source -> Silver -> Bronze -> Gold
 D) Source -> Bronze -> Gold -> Silver
 
-<details>
-<summary>Answer</summary>
-
+> [!success]- Answer
 > **Correct Answer: B**
 >
 > Data flows from source systems into Bronze (raw), then is cleansed and transformed into Silver (validated), and finally aggregated into Gold (business-ready). Each layer progressively increases data quality and decreases data volume.
-
-</details>
 
 ## Related Topics
 
