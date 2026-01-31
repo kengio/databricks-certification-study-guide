@@ -21,6 +21,7 @@ flowchart TD
     SG --> AC[Access Control]
     SG --> DS[Data Sharing]
     SG --> SM[Secret Management]
+    SG --> AG[Advanced Governance]
 ```
 
 ## Section Contents
@@ -31,6 +32,7 @@ flowchart TD
 | [02-access-control.md](02-access-control.md) | Table ACLs, row/column security, dynamic views | High |
 | [03-data-sharing.md](03-data-sharing.md) | Delta Sharing, external data sharing | Medium |
 | [04-secret-management.md](04-secret-management.md) | Secret scopes, accessing secrets in code | Medium |
+| [05-advanced-governance.md](05-advanced-governance.md) | Lineage, audit logging, compliance, network security | High |
 
 ## Unity Catalog Hierarchy
 

@@ -11,14 +11,14 @@
 **Question**: Which `databricks.yml` structure correctly defines these environments?
 
 A) Create separate `databricks-dev.yml`, `databricks-staging.yml`, `databricks-prod.yml` files
-B) Use `targets:` section with `dev:`, `staging:`, and `prod:` subsections
-C) Use `environments:` section with runtime variable substitution
+B) Use `environments:` section with runtime variable substitution
+C) Use `targets:` section with `dev:`, `staging:`, and `prod:` subsections
 D) Create separate bundles for each environment in different directories
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
-> DAB uses a `targets:` section to define environment-specific configurations. Each target can override bundle settings like workspace host, cluster configs, and variables. Option A doesn't support DAB's inheritance model. Option C uses invalid syntax. Option D duplicates code.
+> DAB uses a `targets:` section to define environment-specific configurations. Each target can override bundle settings like workspace host, cluster configs, and variables. Option A doesn't support DAB's inheritance model. Option B uses invalid syntax. Option D duplicates code.
 
 ---
 
@@ -29,14 +29,14 @@ D) Create separate bundles for each environment in different directories
 **Question**: Which testing approach is most appropriate?
 
 A) Deploy code to a Databricks cluster and run tests remotely
-B) Use local Spark session in pytest with mocked data
+B) Skip unit tests and rely on integration tests only
 C) Use Nutter framework with Databricks Connect
-D) Skip unit tests and rely on integration tests only
+D) Use local Spark session in pytest with mocked data
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> Local Spark sessions in pytest allow fast unit tests without cluster costs or dependencies. Mock DataFrames test transformation logic efficiently. Option A is slow and costly for unit tests. Option C still requires cluster resources. Option D misses the value of unit testing.
+> Local Spark sessions in pytest allow fast unit tests without cluster costs or dependencies. Mock DataFrames test transformation logic efficiently. Option A is slow and costly for unit tests. Option C still requires cluster resources. Option B misses the value of unit testing.
 
 ---
 
@@ -46,15 +46,15 @@ D) Skip unit tests and rely on integration tests only
 
 **Question**: What is the recommended workflow for making changes?
 
-A) Disable branch protection temporarily to push changes
-B) Create a feature branch, commit changes, and create a pull request
+A) Create a feature branch, commit changes, and create a pull request
+B) Disable branch protection temporarily to push changes
 C) Use `%git` magic commands to force push to main
 D) Make changes in a separate notebook outside Git folders
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
-> The standard Git workflow with branch protection: create a feature branch, make changes, push, create PR for review, then merge to main after approval. This ensures code review and testing. Options A and C bypass protections. Option D loses version control benefits.
+> The standard Git workflow with branch protection: create a feature branch, make changes, push, create PR for review, then merge to main after approval. This ensures code review and testing. Options B and C bypass protections. Option D loses version control benefits.
 
 ---
 
@@ -101,14 +101,14 @@ D) Use Nutter's built-in empty table generator
 **Question**: What is the correct approach to resolve this and complete the deployment?
 
 A) Manually delete the resource and redeploy
-B) Run `databricks bundle deploy --force` to overwrite
+B) Update the resource name in databricks.yml to avoid conflict
 C) Run `databricks bundle destroy` then `databricks bundle deploy`
-D) Update the resource name in databricks.yml to avoid conflict
+D) Run `databricks bundle deploy --force` to overwrite
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> The `--force` flag allows DAB to take ownership of and update existing resources that match the bundle definition. This handles partial deployments gracefully. Option A risks missing dependent resources. Option C destroys everything unnecessarily. Option D changes the deployment, not fixing it.
+> The `--force` flag allows DAB to take ownership of and update existing resources that match the bundle definition. This handles partial deployments gracefully. Option A risks missing dependent resources. Option C destroys everything unnecessarily. Option B changes the deployment, not fixing it.
 
 ---
 

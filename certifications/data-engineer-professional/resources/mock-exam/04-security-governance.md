@@ -11,14 +11,14 @@
 **Question**: Which Unity Catalog permission model correctly implements this requirement?
 
 A) Grant SELECT on each table individually as they're created
-B) Grant USE SCHEMA and SELECT on SCHEMA to give access to all current and future tables
+B) Create a view for each table and grant SELECT on views only
 C) Grant SELECT on the catalog to give access to all schemas and tables
-D) Create a view for each table and grant SELECT on views only
+D) Grant USE SCHEMA and SELECT on SCHEMA to give access to all current and future tables
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> Granting SELECT at the schema level provides access to all current and future tables in that schema. USE SCHEMA is required to access objects within the schema. Option A requires ongoing maintenance. Option C is too broad. Option D is unnecessarily complex.
+> Granting SELECT at the schema level provides access to all current and future tables in that schema. USE SCHEMA is required to access objects within the schema. Option A requires ongoing maintenance. Option C is too broad. Option B is unnecessarily complex.
 
 ---
 

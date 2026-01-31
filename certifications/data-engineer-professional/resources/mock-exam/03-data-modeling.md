@@ -11,12 +11,12 @@
 **Question**: Which layer should handle flattening the nested JSON structure into a relational format?
 
 A) Bronze layer - ingest and flatten immediately
-B) Silver layer - transform raw data into cleaned, conformed structures
-C) Gold layer - create denormalized tables for analytics
+B) Gold layer - create denormalized tables for analytics
+C) Silver layer - transform raw data into cleaned, conformed structures
 D) A separate staging layer before bronze
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > The silver layer is responsible for data cleansing and conforming, including flattening nested structures. Bronze should preserve raw data as-is for auditability. Gold focuses on business aggregations. Option D adds unnecessary complexity.
 
@@ -101,14 +101,14 @@ D) Convert to Liquid Clustering on `customer_id, product_id`
 **Question**: Which Delta Lake feature and configuration supports this requirement?
 
 A) Enable Change Data Feed to track all changes
-B) Time travel with default retention (30 days log retention)
-C) Create a separate history table with trigger-based logging
+B) Create a separate history table with trigger-based logging
+C) Time travel with default retention (30 days log retention)
 D) Use Delta Lake versioning with `delta.logRetentionDuration = 30 days`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
-> Delta Lake's time travel allows querying historical versions using `VERSION AS OF` or `TIMESTAMP AS OF`. The default 30-day log retention supports this requirement. Option A tracks changes but doesn't provide point-in-time queries. Option C is unnecessary given Delta's built-in capabilities. Option D describes the feature partially but misses that it's the default behavior.
+> Delta Lake's time travel allows querying historical versions using `VERSION AS OF` or `TIMESTAMP AS OF`. The default 30-day log retention supports this requirement. Option A tracks changes but doesn't provide point-in-time queries. Option B is unnecessary given Delta's built-in capabilities. Option D describes the feature partially but misses that it's the default behavior.
 
 ---
 
@@ -137,14 +137,14 @@ D) Delta automatically renames conflicting columns with suffixes
 **Question**: How do changes to the production table affect the cloned table?
 
 A) Changes automatically propagate to the clone
-B) The clone is completely independent; changes don't propagate
+B) Changes propagate until the clone is modified, then it becomes independent
 C) Only schema changes propagate; data changes don't
-D) Changes propagate until the clone is modified, then it becomes independent
+D) The clone is completely independent; changes don't propagate
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> Deep clone creates a completely independent copy with its own data files. After cloning, both tables evolve independently. No changes propagate between them. Option A describes linked tables, not clones. Options C and D describe behaviors that don't exist.
+> Deep clone creates a completely independent copy with its own data files. After cloning, both tables evolve independently. No changes propagate between them. Option A describes linked tables, not clones. Options B and C describe behaviors that don't exist.
 
 ---
 

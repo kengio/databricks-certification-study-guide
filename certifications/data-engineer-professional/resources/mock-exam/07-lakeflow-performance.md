@@ -12,15 +12,15 @@
 
 **Question**: What is the most likely cause?
 
-A) Materialized views don't automatically refresh from streaming tables
-B) The pipeline is configured for triggered execution, not continuous
+A) The pipeline is configured for triggered execution, not continuous
+B) Materialized views don't automatically refresh from streaming tables
 C) There's a data type mismatch between the tables
 D) The materialized view requires a manual REFRESH command
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
-> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options A and D are incorrect; DLT handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
+> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; DLT handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
 
 ---
 
@@ -49,14 +49,14 @@ D) The pipeline fails on out-of-order detection
 **Question**: How can the dropped row count be retrieved?
 
 A) Check the `dropped_records` column in the target table
-B) Query the pipeline event log for expectation metrics
+B) Dropped rows are not tracked; add manual logging
 C) Run `DESCRIBE HISTORY` on the target table
-D) Dropped rows are not tracked; add manual logging
+D) Query the pipeline event log for expectation metrics
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> DLT stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option D is incorrect; DLT tracks this automatically.
+> DLT stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; DLT tracks this automatically.
 
 ---
 

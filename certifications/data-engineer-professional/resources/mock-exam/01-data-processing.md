@@ -11,14 +11,14 @@
 **Question**: Which Auto Loader configuration will automatically detect and add new columns to the target Delta table?
 
 A) `cloudFiles.inferColumnTypes = true`
-B) `cloudFiles.schemaEvolutionMode = addNewColumns`
+B) `cloudFiles.format = json` with `rescuedDataColumn`
 C) `cloudFiles.schemaLocation` with `mergeSchema = true`
-D) `cloudFiles.format = json` with `rescuedDataColumn`
+D) `cloudFiles.schemaEvolutionMode = addNewColumns`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> `cloudFiles.schemaEvolutionMode = addNewColumns` is the Auto Loader configuration that automatically detects and adds new columns to the target schema. Option A only controls type inference, not schema evolution. Option C uses `schemaLocation` for storing schema but `mergeSchema` is a Delta write option, not Auto Loader. Option D captures unparseable data but doesn't handle schema evolution.
+> `cloudFiles.schemaEvolutionMode = addNewColumns` is the Auto Loader configuration that automatically detects and adds new columns to the target schema. Option A only controls type inference, not schema evolution. Option C uses `schemaLocation` for storing schema but `mergeSchema` is a Delta write option, not Auto Loader. Option B captures unparseable data but doesn't handle schema evolution.
 
 ---
 
@@ -46,15 +46,15 @@ D) `trigger(once=True)`
 
 **Question**: Which approach correctly implements this SCD Type 2 pattern using Delta Lake?
 
-A) Use `MERGE INTO` with `WHEN MATCHED THEN UPDATE` to update the existing record
-B) Use `MERGE INTO` with `WHEN MATCHED AND target.is_current = true THEN UPDATE` to close the old record, then `INSERT` the new record
+A) Use `MERGE INTO` with `WHEN MATCHED AND target.is_current = true THEN UPDATE` to close the old record, then `INSERT` the new record
+B) Use `MERGE INTO` with `WHEN MATCHED THEN UPDATE` to update the existing record
 C) Use `INSERT OVERWRITE` to replace all records for the customer
 D) Use `DELETE` followed by `INSERT` to replace the customer record
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
-> SCD Type 2 requires closing the current record (setting end_date and is_current=false) and inserting a new record. The MERGE statement with a condition on `is_current = true` ensures only the active record is updated. Options A and D implement SCD Type 1 (overwrite). Option C would lose history.
+> SCD Type 2 requires closing the current record (setting end_date and is_current=false) and inserting a new record. The MERGE statement with a condition on `is_current = true` ensures only the active record is updated. Options B and D implement SCD Type 1 (overwrite). Option C would lose history.
 
 ---
 
@@ -101,14 +101,14 @@ D) `outputMode("update")` with watermarking
 **Question**: Which code correctly reads incremental changes from the CDF-enabled table?
 
 A) `spark.read.format("delta").option("readChangeFeed", "true").table("bronze")`
-B) `spark.readStream.format("delta").option("readChangeFeed", "true").table("bronze")`
+B) `spark.readStream.format("delta").option("ignoreChanges", "true").table("bronze")`
 C) `spark.read.format("delta").option("startingVersion", last_version).table("bronze")`
-D) `spark.readStream.format("delta").option("ignoreChanges", "true").table("bronze")`
+D) `spark.readStream.format("delta").option("readChangeFeed", "true").table("bronze")`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> Using `readStream` with `readChangeFeed = true` creates a streaming source that automatically tracks progress and reads only new changes. Option A is batch read (would need version parameters). Option C reads snapshots, not change records. Option D ignores changes rather than reading them.
+> Using `readStream` with `readChangeFeed = true` creates a streaming source that automatically tracks progress and reads only new changes. Option A is batch read (would need version parameters). Option C reads snapshots, not change records. Option B ignores changes rather than reading them.
 
 ---
 
@@ -155,14 +155,14 @@ D) Use `outputMode("complete")` to include all data
 **Question**: Which approach correctly handles multiple topics with independent schemas?
 
 A) Read all topics in one stream and use `filter()` to split by topic before writing
-B) Create separate streaming queries for each topic with independent checkpoints
-C) Use `foreachBatch()` to route records to different tables based on topic
+B) Use `foreachBatch()` to route records to different tables based on topic
+C) Create separate streaming queries for each topic with independent checkpoints
 D) Use `readStream.format("kafka").option("subscribe", "topic1,topic2")` with schema registry
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
-> Separate streaming queries with independent checkpoints provide isolation for different schemas and independent failure handling. Option A requires a common schema. Option C complicates checkpoint management. Option D subscribes to multiple topics but doesn't handle different schemas well.
+> Separate streaming queries with independent checkpoints provide isolation for different schemas and independent failure handling. Option A requires a common schema. Option B complicates checkpoint management. Option D subscribes to multiple topics but doesn't handle different schemas well.
 
 ---
 
@@ -173,14 +173,14 @@ D) Use `readStream.format("kafka").option("subscribe", "topic1,topic2")` with sc
 **Question**: What must be done to reclaim storage space after DELETE operations?
 
 A) Run `OPTIMIZE` to compact files
-B) Run `VACUUM` with an appropriate retention period
+B) Recreate the table using `CREATE TABLE AS SELECT`
 C) Run `FSCK REPAIR TABLE` to fix storage
-D) Recreate the table using `CREATE TABLE AS SELECT`
+D) Run `VACUUM` with an appropriate retention period
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> DELETE in Delta Lake marks records as removed but doesn't physically delete files (to support time travel). VACUUM removes files older than the retention period that are no longer referenced. Option A compacts but doesn't remove old files. Option C checks table integrity. Option D is inefficient.
+> DELETE in Delta Lake marks records as removed but doesn't physically delete files (to support time travel). VACUUM removes files older than the retention period that are no longer referenced. Option A compacts but doesn't remove old files. Option C checks table integrity. Option B is inefficient.
 
 ---
 
@@ -227,14 +227,14 @@ D) The stream is waiting for the trigger interval
 **Question**: Which approach correctly handles this deduplication requirement?
 
 A) Use `dropDuplicates()` on the source DataFrame before MERGE
-B) Deduplicate within the MERGE using `ROW_NUMBER()` in a subquery
+B) Use multiple MERGE statements with different conditions
 C) Set `spark.databricks.delta.merge.repartitionBeforeWrite.enabled = true`
-D) Use multiple MERGE statements with different conditions
+D) Deduplicate within the MERGE using `ROW_NUMBER()` in a subquery
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> Using `ROW_NUMBER()` partitioned by key and ordered by timestamp DESC in a subquery, then filtering for row_number = 1, deduplicates source data correctly within the MERGE while ensuring the latest record is kept. Option A (`dropDuplicates()`) is non-deterministic and doesn't guarantee keeping the record with the latest timestamp. Option C affects write performance, not deduplication. Option D is unnecessarily complex.
+> Using `ROW_NUMBER()` partitioned by key and ordered by timestamp DESC in a subquery, then filtering for row_number = 1, deduplicates source data correctly within the MERGE while ensuring the latest record is kept. Option A (`dropDuplicates()`) is non-deterministic and doesn't guarantee keeping the record with the latest timestamp. Option C affects write performance, not deduplication. Option B is unnecessarily complex.
 
 ---
 

@@ -29,14 +29,14 @@ D) Hard-code values and create separate notebooks for each environment
 **Question**: Which approach correctly captures SQL results in a Python variable?
 
 A) Use `%sql` and reference the `_sqldf` variable
-B) Use `spark.sql()` and assign to a variable
-C) Use `%sql` with `INTO :variable_name` syntax
+B) Use `%sql` with `INTO :variable_name` syntax
+C) Use `spark.sql()` and assign to a variable
 D) Use `%run` to execute a SQL notebook and capture results
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
-> `spark.sql("SELECT ...")` returns a DataFrame that can be assigned to a variable for further processing in Python. This is the recommended programmatic approach. Option A's `_sqldf` does exist in Databricks notebooks (it captures the last %sql result) but is implicit and less reliable for production code. Option C has invalid syntax. Option D doesn't capture SQL results.
+> `spark.sql("SELECT ...")` returns a DataFrame that can be assigned to a variable for further processing in Python. This is the recommended programmatic approach. Option A's `_sqldf` does exist in Databricks notebooks (it captures the last %sql result) but is implicit and less reliable for production code. Option B has invalid syntax. Option D doesn't capture SQL results.
 
 ---
 
@@ -47,14 +47,14 @@ D) Use `%run` to execute a SQL notebook and capture results
 **Question**: Which approach correctly implements secure credential management?
 
 A) Store the token in a notebook cell and delete it after running
-B) Use `dbutils.secrets.get(scope="api_scope", key="api_token")`
-C) Store the token in a Delta table with restricted access
-D) Use environment variables on the cluster
+B) Store the token in a Delta table with restricted access
+C) Use environment variables on the cluster
+D) Use `dbutils.secrets.get(scope="api_scope", key="api_token")`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> Databricks Secrets provides secure credential storage with access control. Secrets are encrypted at rest and redacted in logs. Option A exposes secrets in notebook history. Option C is not designed for secrets. Option D requires cluster admin access and isn't as secure.
+> Databricks Secrets provides secure credential storage with access control. Secrets are encrypted at rest and redacted in logs. Option A exposes secrets in notebook history. Option B is not designed for secrets. Option C requires cluster admin access and isn't as secure.
 
 ---
 
@@ -119,14 +119,14 @@ D) Rate limiting is preventing the second API call
 **Question**: Which recommendation optimizes for cost while maintaining reliability?
 
 A) Use all-purpose clusters with auto-termination to save costs
-B) Use job clusters which are automatically created and terminated per job run
-C) Use a shared all-purpose cluster across all jobs to maximize utilization
-D) Use serverless compute for all jobs regardless of workload characteristics
+B) Use a shared all-purpose cluster across all jobs to maximize utilization
+C) Use serverless compute for all jobs regardless of workload characteristics
+D) Use job clusters which are automatically created and terminated per job run
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> Job clusters are created for each job run and terminated afterward, providing cost savings (lower DBU rates) and isolation between runs. Option A still has higher DBU rates. Option C risks resource contention and failures affecting multiple jobs. Option D may not be cost-effective for predictable scheduled workloads.
+> Job clusters are created for each job run and terminated afterward, providing cost savings (lower DBU rates) and isolation between runs. Option A still has higher DBU rates. Option B risks resource contention and failures affecting multiple jobs. Option C may not be cost-effective for predictable scheduled workloads.
 
 ---
 
@@ -154,15 +154,15 @@ D) `os.listdir("/dbfs/Volumes/catalog/schema/volume")`
 
 **Question**: How should the job task be configured to pass the parameter?
 
-A) Set cluster environment variable `ENV=prod`
-B) In the notebook task configuration, set `base_parameters: {"env": "prod"}`
+A) In the notebook task configuration, set `base_parameters: {"env": "prod"}`
+B) Set cluster environment variable `ENV=prod`
 C) Use `spark.conf.set("env", "prod")` in the job configuration
 D) Create a separate notebook for production without widgets
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
-> The notebook task's `base_parameters` map directly to widget values, overriding defaults when the notebook runs as a job. Option A doesn't connect to widgets. Option C sets Spark config, not widget values. Option D is unmaintainable.
+> The notebook task's `base_parameters` map directly to widget values, overriding defaults when the notebook runs as a job. Option B doesn't connect to widgets. Option C sets Spark config, not widget values. Option D is unmaintainable.
 
 ---
 
@@ -173,14 +173,14 @@ D) Create a separate notebook for production without widgets
 **Question**: Which API endpoint and request body correctly submits this job run?
 
 A) POST `/api/2.1/jobs/create` with `notebook_params` in the request
-B) POST `/api/2.1/jobs/run-now` with `notebook_params` in the request
+B) PUT `/api/2.1/jobs/update` with `notebook_params` in the settings
 C) POST `/api/2.1/jobs/runs/submit` with `notebook_params` in the task configuration
-D) PUT `/api/2.1/jobs/update` with `notebook_params` in the settings
+D) POST `/api/2.1/jobs/run-now` with `notebook_params` in the request
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> `run-now` triggers an existing job with parameter overrides via `notebook_params`. Option A creates a job definition but doesn't run it. Option C submits a one-time run (requires full job spec). Option D updates job definition, doesn't run it.
+> `run-now` triggers an existing job with parameter overrides via `notebook_params`. Option A creates a job definition but doesn't run it. Option C submits a one-time run (requires full job spec). Option B updates job definition, doesn't run it.
 
 ---
 

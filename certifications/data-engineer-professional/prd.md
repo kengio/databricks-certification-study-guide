@@ -8,16 +8,16 @@ Complete study guide for the Databricks Data Engineer Professional certification
 
 | Section | Exam Weight | Status | Files |
 |---------|-------------|--------|-------|
-| 01-Data Processing | 30% | ✅ Complete | 7 |
+| 01-Data Processing | 30% | ✅ Complete | 8 |
 | 02-Databricks Tooling | 20% | ✅ Complete | 5 |
 | 03-Data Modeling | 15% | ✅ Complete | 5 |
-| 04-Security & Governance | 10% | ✅ Complete | 4 |
+| 04-Security & Governance | 10% | ✅ Complete | 5 |
 | 05-Monitoring & Logging | 10% | ✅ Complete | 4 |
-| 06-Testing & Deployment | 10% | ✅ Complete | 4 |
+| 06-Testing & Deployment | 10% | ✅ Complete | 5 |
 | 07-Lakeflow Pipelines | 5% | ✅ Complete | 4 |
-| 08-Performance Optimization | 5% | ✅ Complete | 4 |
+| 08-Performance Optimization | 5% | ✅ Complete | 5 |
 
-**Total content files: 37** (7 pre-existing + 30 created)
+**Total content files: 41** (7 pre-existing + 34 created)
 
 ## Content Format Standard
 
@@ -47,6 +47,7 @@ Each content file follows this structure:
 | `05-change-data-capture.md` | CDC patterns |
 | `06-delta-lake-operations.md` | Delta Lake fundamentals |
 | `07-data-deduplication.md` | Deduplication strategies |
+| `08-advanced-streaming.md` | Stream-stream joins, stateful ops, back-pressure |
 
 ### Section 02: Databricks Tooling (20%)
 
@@ -76,6 +77,7 @@ Each content file follows this structure:
 | `02-access-control.md` | Access control | Row/column security, dynamic views |
 | `03-data-sharing.md` | Delta Sharing | External sharing, recipients, marketplace |
 | `04-secret-management.md` | Secrets | Scopes, dbutils.secrets, Key Vault integration |
+| `05-advanced-governance.md` | Advanced governance | Lineage, audit logging, compliance, network security |
 
 ### Section 05: Monitoring & Logging (10%)
 
@@ -94,6 +96,7 @@ Each content file follows this structure:
 | `02-cicd-integration.md` | CI/CD | GitHub Actions, Azure DevOps, GitLab |
 | `03-git-folders.md` | Git integration | Git folders, branching, PR workflows |
 | `04-unit-testing.md` | Testing | pytest, Nutter framework, mocking |
+| `05-advanced-cicd.md` | Advanced CI/CD | OIDC, deployment strategies, GitOps patterns |
 
 ### Section 07: Lakeflow Pipelines (5%)
 
@@ -112,6 +115,7 @@ Each content file follows this structure:
 | `02-zorder-indexing.md` | Data skipping | Z-ORDER, liquid clustering, bloom filters |
 | `03-spark-tuning.md` | Spark configs | AQE, shuffle, joins, memory tuning |
 | `04-cost-optimization.md` | Cost management | Spot instances, autoscaling, serverless |
+| `05-query-plan-analysis.md` | Query analysis | EXPLAIN plans, Photon, memory diagnostics, Spark UI |
 
 ## Directory Structure
 
@@ -121,7 +125,7 @@ certifications/data-engineer-professional/
 ├── prd.md (this file)
 ├── 01-data-processing/
 │   ├── README.md
-│   └── [6 content files]
+│   └── [8 content files]
 ├── 02-databricks-tooling/
 │   ├── README.md
 │   └── [5 content files]
@@ -130,27 +134,28 @@ certifications/data-engineer-professional/
 │   └── [5 content files]
 ├── 04-security-governance/
 │   ├── README.md
-│   └── [4 content files]
+│   └── [5 content files]
 ├── 05-monitoring-logging/
 │   ├── README.md
 │   └── [4 content files]
 ├── 06-testing-deployment/
 │   ├── README.md
-│   └── [4 content files]
+│   └── [5 content files]
 ├── 07-lakeflow-pipelines/
 │   ├── README.md
 │   └── [4 content files]
 └── 08-performance-optimization/
     ├── README.md
-    └── [4 content files]
+    └── [5 content files]
 ```
 
 ## Enhancements Status
 
 | Enhancement | Status | Location |
 |-------------|--------|----------|
-| Practice Questions | ✅ Complete | `resources/practice-questions/` (45 questions) |
-| Mock Exam | ✅ Complete | `resources/mock-exam/` (63 questions) |
+| Practice Questions | ✅ Complete | `resources/practice-questions/` (73 questions) |
+| Mock Exam 1 | ✅ Complete | `resources/mock-exam/` (63 questions) |
+| Mock Exam 2 | ✅ Complete | `resources/mock-exam-2/` (60 questions) |
 | Cheat Sheets | ✅ Complete | `cheat-sheets/` (5 quick reference cards) |
 | Exam Tips | ✅ Complete | `resources/exam-tips.md` |
 | Official Links | ✅ Complete | `resources/official-links.md` |
@@ -164,7 +169,7 @@ certifications/data-engineer-professional/
 
 ### Content Files
 
-- [x] All 37 content files created (7 in Section 01 + 30 new)
+- [x] All 41 content files created (7 in Section 01 + 34 new)
 - [x] Each file follows established format (600-900 lines)
 - [x] Mermaid diagrams included in all files
 - [x] Code examples in Python and SQL
@@ -176,7 +181,8 @@ certifications/data-engineer-professional/
 
 ### Practice Materials
 
-- [x] Practice questions cover all 8 sections (45 questions)
-- [x] Mock exam with answer key (63 questions)
+- [x] Practice questions cover all 8 sections (73 questions)
+- [x] Mock Exam 1 with answer key (63 questions)
+- [x] Mock Exam 2 with answer key (60 questions)
 - [x] Cheat sheets for high-weight topics (5 cards)
 - [x] Exam tips and strategies documented

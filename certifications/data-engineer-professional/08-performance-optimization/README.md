@@ -10,7 +10,7 @@ flowchart LR
     PO --> ZO[Z-Order Indexing]
     PO --> ST[Spark Tuning]
     PO --> CO[Cost Optimization]
-    PO --> SO[Streaming Optimization]
+    PO --> QP[Query Plan Analysis & Photon]
 ```
 
 ## Section Contents
@@ -21,7 +21,7 @@ flowchart LR
 | [02-zorder-indexing.md](02-zorder-indexing.md) | Z-order, data skipping, clustering | High |
 | [03-spark-tuning.md](03-spark-tuning.md) | Configurations, AQE, shuffle optimization | High |
 | [04-cost-optimization.md](04-cost-optimization.md) | Spot instances, autoscaling, job clusters | Medium |
-| [05-streaming-optimization.md](05-streaming-optimization.md) | Triggers, watermarks, state management | High |
+| [05-query-plan-analysis.md](05-query-plan-analysis.md) | EXPLAIN plans, Photon, memory diagnostics, Spark UI | High |
 
 ## File Size Optimization
 

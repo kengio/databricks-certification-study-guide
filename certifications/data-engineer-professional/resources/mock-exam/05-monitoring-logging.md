@@ -11,14 +11,14 @@
 **Question**: Which system table provides this billing information?
 
 A) `system.compute.clusters`
-B) `system.billing.usage`
-C) `system.access.audit`
+B) `system.access.audit`
+C) `system.billing.usage`
 D) `system.workflow.jobs`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
-> The `system.billing.usage` table contains detailed DBU consumption data by workspace, cluster, and SKU. It's the primary source for cost analysis. Option A has cluster metadata. Option C has security audit logs. Option D has job definitions, not cost data.
+> The `system.billing.usage` table contains detailed DBU consumption data by workspace, cluster, and SKU. It's the primary source for cost analysis. Option A has cluster metadata. Option B has security audit logs. Option D has job definitions, not cost data.
 
 ---
 
@@ -47,14 +47,14 @@ D) Network bottleneck; check cluster networking
 **Question**: Which approach retrieves the expectation violation details?
 
 A) Check the cluster driver logs
-B) Query the pipeline's event log table for expectation metrics
+B) Review the pipeline settings in the UI
 C) Use `dbutils.pipelines.getLatestUpdate()` API
-D) Review the pipeline settings in the UI
+D) Query the pipeline's event log table for expectation metrics
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> DLT stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option D shows configuration, not runtime details.
+> DLT stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.
 
 ---
 
@@ -65,14 +65,14 @@ D) Review the pipeline settings in the UI
 **Question**: Which tool reveals whether partition pruning is occurring?
 
 A) Run `ANALYZE TABLE` to update statistics
-B) Run `EXPLAIN` and check for `PartitionFilters` in the plan
-C) Check the Query History for execution time breakdown
+B) Check the Query History for execution time breakdown
+C) Run `EXPLAIN` and check for `PartitionFilters` in the plan
 D) Review the table's `DESCRIBE DETAIL` output
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
-> `EXPLAIN` shows the query execution plan including `PartitionFilters` (pruned partitions) and `PushedFilters` (filters pushed to scan). Empty `PartitionFilters` indicates no pruning occurred. Option A updates statistics but doesn't show the plan. Options C and D don't show execution details.
+> `EXPLAIN` shows the query execution plan including `PartitionFilters` (pruned partitions) and `PushedFilters` (filters pushed to scan). Empty `PartitionFilters` indicates no pruning occurred. Option A updates statistics but doesn't show the plan. Options B and D don't show execution details.
 
 ---
 
