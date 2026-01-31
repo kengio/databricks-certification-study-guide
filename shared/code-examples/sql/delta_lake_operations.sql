@@ -182,5 +182,5 @@ SHOW TBLPROPERTIES my_catalog.my_schema.products;
 -- Show create statement
 SHOW CREATE TABLE my_catalog.my_schema.products;
 
--- Show table partitions
-SHOW PARTITIONS my_catalog.my_schema.orders;
+-- Show file-level details (size, numFiles, clustering info)
+DESCRIBE DETAIL my_catalog.my_schema.orders;

@@ -61,7 +61,7 @@ df.write.format("delta").saveAsTable("dev.bronze.customers")
 # Create storage credential (admin operation)
 spark.sql("""
     CREATE STORAGE CREDENTIAL IF NOT EXISTS my_s3_credential
-    WITH (AWS_IAM_ROLE = 'arn:aws:iam::123456789:role/unity-catalog-role')
+    WITH (AWS_IAM_ROLE = 'arn:aws:iam::123456789012:role/unity-catalog-role')
     COMMENT 'S3 access for external data'
 """)
 
@@ -149,8 +149,8 @@ spark.sql("""
     SELECT *
     FROM dev.bronze.customers
     WHERE
-        is_account_group_member('us-analysts') AND region = 'US'
-        OR is_account_group_member('eu-analysts') AND region = 'EU'
+        (is_account_group_member('us-analysts') AND region = 'US')
+        OR (is_account_group_member('eu-analysts') AND region = 'EU')
         OR is_account_group_member('admin')
 """)
 

@@ -6,17 +6,21 @@
 # ============================================================
 
 # Generate test stream
-stream_df = spark.readStream \
-    .format("rate") \
-    .option("rowsPerSecond", 10) \
+stream_df = (
+    spark.readStream
+    .format("rate")
+    .option("rowsPerSecond", 10)
     .load()
+)
 
 # Write to Delta table
-query = stream_df.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/tmp/checkpoints/rate_stream") \
+query = (
+    stream_df.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/tmp/checkpoints/rate_stream")
     .toTable("my_catalog.my_schema.rate_events")
+)
 
 # Stop the stream
 query.stop()
@@ -27,20 +31,24 @@ query.stop()
 # ============================================================
 
 # Read new JSON files as they arrive
-auto_loader_df = spark.readStream \
-    .format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/tmp/schema/events") \
-    .option("cloudFiles.inferColumnTypes", "true") \
+auto_loader_df = (
+    spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/tmp/schema/events")
+    .option("cloudFiles.inferColumnTypes", "true")
     .load("/path/to/landing/events/")
+)
 
 # Write to Bronze table
-query = auto_loader_df.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/tmp/checkpoints/events_bronze") \
-    .option("mergeSchema", "true") \
+query = (
+    auto_loader_df.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/tmp/checkpoints/events_bronze")
+    .option("mergeSchema", "true")
     .toTable("my_catalog.bronze.events")
+)
 
 query.stop()
 
@@ -55,47 +63,53 @@ query.stop()
 # - "failOnNewColumns" : Fail on new columns (default)
 # - "none"          : Ignore new columns
 
-auto_loader_evolve = spark.readStream \
-    .format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/tmp/schema/events_v2") \
-    .option("cloudFiles.schemaEvolutionMode", "addNewColumns") \
+auto_loader_evolve = (
+    spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/tmp/schema/events_v2")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/path/to/landing/events/")
+)
 
 
 # ============================================================
 # 4. TRIGGER MODES
 # ============================================================
 
-from pyspark.sql.streaming import DataStreamWriter
-
 stream_source = spark.readStream.format("delta").table("my_catalog.bronze.events")
 
 # Continuous processing (default) - process as data arrives
-query_continuous = stream_source.writeStream \
-    .format("delta") \
-    .trigger(processingTime="10 seconds") \
-    .option("checkpointLocation", "/tmp/checkpoints/continuous") \
+query_continuous = (
+    stream_source.writeStream
+    .format("delta")
+    .trigger(processingTime="10 seconds")
+    .option("checkpointLocation", "/tmp/checkpoints/continuous")
     .toTable("my_catalog.silver.events_continuous")
+)
 
 # Available Now - process all available data then stop (replaces trigger once)
-query_available = stream_source.writeStream \
-    .format("delta") \
-    .trigger(availableNow=True) \
-    .option("checkpointLocation", "/tmp/checkpoints/available") \
+query_available = (
+    stream_source.writeStream
+    .format("delta")
+    .trigger(availableNow=True)
+    .option("checkpointLocation", "/tmp/checkpoints/available")
     .toTable("my_catalog.silver.events_batch")
+)
 
 # Once (deprecated) - process one micro-batch then stop
-query_once = stream_source.writeStream \
-    .format("delta") \
-    .trigger(once=True) \
-    .option("checkpointLocation", "/tmp/checkpoints/once") \
+query_once = (
+    stream_source.writeStream
+    .format("delta")
+    .trigger(once=True)
+    .option("checkpointLocation", "/tmp/checkpoints/once")
     .toTable("my_catalog.silver.events_once")
+)
 
 # Stop streams
-query_continuous.stop()
-query_available.awaitTermination()
-query_once.awaitTermination()
+query_continuous.stop()              # stop() sends signal to halt continuous stream
+query_available.awaitTermination()   # awaitTermination() blocks until availableNow finishes
+query_once.awaitTermination()        # awaitTermination() blocks until trigger-once finishes
 
 
 # ============================================================
@@ -108,18 +122,22 @@ from pyspark.sql.functions import window, col, count
 events = spark.readStream.format("delta").table("my_catalog.bronze.events")
 
 # Define watermark: allow up to 10 minutes of late data
-windowed_counts = events \
-    .withWatermark("event_time", "10 minutes") \
+windowed_counts = (
+    events
+    .withWatermark("event_time", "10 minutes")
     .groupBy(
         window("event_time", "5 minutes"),
         col("event_type")
     ).agg(count("*").alias("event_count"))
+)
 
-query = windowed_counts.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/tmp/checkpoints/watermark") \
+query = (
+    windowed_counts.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/tmp/checkpoints/watermark")
     .toTable("my_catalog.gold.event_counts")
+)
 
 query.stop()
 
@@ -142,13 +160,15 @@ def upsert_to_silver(batch_df, batch_id):
     ).execute()
 
 # Use foreachBatch for custom write logic
-query = spark.readStream \
-    .format("delta") \
-    .table("my_catalog.bronze.events") \
-    .writeStream \
-    .foreachBatch(upsert_to_silver) \
-    .option("checkpointLocation", "/tmp/checkpoints/foreach") \
+query = (
+    spark.readStream
+    .format("delta")
+    .table("my_catalog.bronze.events")
+    .writeStream
+    .foreachBatch(upsert_to_silver)
+    .option("checkpointLocation", "/tmp/checkpoints/foreach")
     .start()
+)
 
 query.stop()
 
@@ -158,22 +178,26 @@ query.stop()
 # ============================================================
 
 # Stream changes from a CDF-enabled source table
-cdf_stream = spark.readStream \
-    .format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingVersion", 0) \
+cdf_stream = (
+    spark.readStream
+    .format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", 0)
     .table("my_catalog.bronze.orders")
+)
 
 # Process only inserts and updates
 filtered = cdf_stream.filter(
     col("_change_type").isin("insert", "update_postimage")
 )
 
-query = filtered.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/tmp/checkpoints/cdf_stream") \
+query = (
+    filtered.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/tmp/checkpoints/cdf_stream")
     .toTable("my_catalog.silver.orders")
+)
 
 query.stop()
 

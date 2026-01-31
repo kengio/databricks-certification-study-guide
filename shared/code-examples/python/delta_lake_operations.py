@@ -5,8 +5,8 @@
 # 1. CREATE A DELTA TABLE
 # ============================================================
 
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType
-from pyspark.sql.functions import col, current_timestamp, lit
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.functions import col
 
 # Create schema
 schema = StructType([
@@ -64,10 +64,12 @@ extended_data = [(6, "Frank", "Sales", 70000, None)]
 extended_df = spark.createDataFrame(extended_data, extended_schema)
 
 # Append with schema evolution
-extended_df.write.format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
+(
+    extended_df.write.format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
     .saveAsTable("my_catalog.my_schema.employees")
+)
 
 
 # ============================================================
@@ -100,14 +102,18 @@ target.alias("t").merge(
 # ============================================================
 
 # Read a specific version
-df_v0 = spark.read.format("delta") \
-    .option("versionAsOf", 0) \
+df_v0 = (
+    spark.read.format("delta")
+    .option("versionAsOf", 0)
     .table("my_catalog.my_schema.employees")
+)
 
 # Read by timestamp
-df_ts = spark.read.format("delta") \
-    .option("timestampAsOf", "2025-01-15 10:00:00") \
+df_ts = (
+    spark.read.format("delta")
+    .option("timestampAsOf", "2025-01-15 10:00:00")
     .table("my_catalog.my_schema.employees")
+)
 
 # View table history
 history = DeltaTable.forName(spark, "my_catalog.my_schema.employees").history()
@@ -142,10 +148,12 @@ spark.sql("""
 """)
 
 # Read change data by version
-changes = spark.read.format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingVersion", 1) \
+changes = (
+    spark.read.format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", 1)
     .table("my_catalog.my_schema.employees")
+)
 
 changes.select("id", "name", "salary", "_change_type", "_commit_version").show()
 
