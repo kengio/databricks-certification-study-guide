@@ -4,7 +4,7 @@
 
 ---
 
-### Question 31
+## Question 31
 
 **Scenario**: A logistics company ingests GPS telemetry data from delivery trucks into a Bronze table. The data arrives as raw JSON with minimal structure issues. The analytics team needs a Gold table that provides real-time aggregated metrics such as average speed per route and delivery time percentiles. The Silver layer would only perform minor formatting (e.g., timestamp parsing) with no significant cleansing or joins required.
 
@@ -22,7 +22,7 @@ D) Create a Silver table but only materialize it as a view to reduce storage cos
 
 ---
 
-### Question 32
+## Question 32
 
 **Scenario**: A data engineer is implementing SCD Type 2 on a `dim_customer` table using Delta Lake's MERGE statement. The table tracks historical changes with `effective_start_date`, `effective_end_date`, and `is_current` flag columns. When a matching customer record has changed attributes, the engineer needs to expire the old row and insert the new row.
 
@@ -40,7 +40,7 @@ D) Use MERGE with `WHEN MATCHED THEN UPDATE SET is_current = false` and include 
 
 ---
 
-### Question 33
+## Question 33
 
 **Scenario**: A data engineering team has a production Delta table with a column named `txn_amt` that business users find confusing. They want to rename it to `transaction_amount`. They also need to drop an obsolete column called `legacy_flag`. The table has 500 million rows and they cannot afford to rewrite the entire table.
 
@@ -58,7 +58,7 @@ D) Enable Delta column mapping by setting `delta.columnMapping.mode = 'name'` an
 
 ---
 
-### Question 34
+## Question 34
 
 **Scenario**: A financial services company is building a lakehouse for regulatory reporting. They have complex queries that join customer, account, transaction, and product data. Reports require filtering by customer segment, product type, and time period. Query performance is critical because reports are generated on tight regulatory deadlines, and the data team includes SQL analysts accustomed to relational modeling.
 
@@ -76,7 +76,7 @@ D) A Data Vault 2.0 model with hubs, links, and satellites for maximum flexibili
 
 ---
 
-### Question 35
+## Question 35
 
 **Scenario**: A data engineer needs to create a copy of a 2 TB production Delta table for a development environment. The dev team will run experimental transformations that may alter or delete data, but they primarily need to read the table for testing queries. Storage costs are a concern, and the copy needs to be created quickly during a short maintenance window.
 
@@ -94,7 +94,7 @@ D) Use SHALLOW CLONE and then immediately run OPTIMIZE on the clone to consolida
 
 ---
 
-### Question 36
+## Question 36
 
 **Scenario**: A data engineer is designing a Delta table to store IoT sensor readings. The table will hold 10 billion rows and receive 50 million new rows daily. Queries almost always filter by `device_region` (5 distinct values) and `reading_date`. Occasional queries filter by `sensor_id` (500,000 distinct values). The team is using Hive-style partitioning.
 
@@ -112,7 +112,7 @@ D) Partition by `reading_date` only, since it is the most granular time-based co
 
 ---
 
-### Question 37
+## Question 37
 
 **Scenario**: A data platform team is migrating an existing Hive-style partitioned Delta table (`PARTITIONED BY (year, month, day)`) to a more modern layout strategy. The table suffers from partition skew (some days have 100x more data than others), requires frequent partition management, and analysts occasionally need to query by non-partition columns like `customer_segment` and `product_category`.
 
@@ -130,7 +130,7 @@ D) Liquid Clustering automatically creates materialized views for the most frequ
 
 ---
 
-### Question 38
+## Question 38
 
 **Scenario**: A new data engineer joins a team that uses the medallion architecture. They are asked to document the data quality expectations at each layer. The pipeline ingests raw e-commerce event data and produces analytics-ready tables for business intelligence.
 
@@ -148,7 +148,7 @@ D) Bronze and Silver perform identical cleansing operations for redundancy; Gold
 
 ---
 
-### Question 39
+## Question 39
 
 **Scenario**: A data engineer adds both a `NOT NULL` constraint and a `CHECK` constraint (`CHECK (quantity > 0)`) to a Delta table. During a pipeline run, a batch of 10,000 records is written where 5 records have null quantities and 3 records have `quantity = -1`.
 

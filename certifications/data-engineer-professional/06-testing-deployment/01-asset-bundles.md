@@ -264,7 +264,7 @@ variables:
 | :--- | :--- | :--- |
 | `${bundle.name}` | Bundle name | my-etl-project |
 | `${bundle.target}` | Current target | dev, prod |
-| `${workspace.current_user.userName}` | Current user | user@company.com |
+| `${workspace.current_user.userName}` | Current user | `user@company.com` |
 | `${workspace.root_path}` | Workspace root | /Workspace/Shared/... |
 | `${resources.jobs.<name>.id}` | Job ID after deploy | 123456789 |
 

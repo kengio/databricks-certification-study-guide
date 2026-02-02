@@ -4,7 +4,7 @@
 
 ---
 
-### Question 46
+## Question 46
 
 **Scenario**: A production Spark job processing customer transaction data is intermittently failing with `java.lang.OutOfMemoryError: Java heap space` on executor nodes. The data engineer opens the Spark UI to investigate and notices that the job has multiple `.cache()` calls on large DataFrames that persist across several stages. The Storage tab shows several cached RDDs consuming the majority of available executor memory.
 
@@ -22,7 +22,7 @@ D) The driver node is running out of memory from collecting results; increase dr
 
 ---
 
-### Question 47
+## Question 47
 
 **Scenario**: A Delta Live Tables (DLT) pipeline ingests clickstream events from Kafka and materializes several streaming tables. The pipeline has been running for several hours but the gold-layer aggregation table is lagging significantly behind the bronze ingestion layer. The data engineer needs to quantify the exact backlog at each stage to identify which flow is the bottleneck.
 
@@ -40,7 +40,7 @@ D) Examine the Spark UI Streaming tab for each cluster to view micro-batch proce
 
 ---
 
-### Question 48
+## Question 48
 
 **Scenario**: A finance team reports that the monthly Databricks bill has increased by 40% compared to the previous month, but no new jobs or clusters were added. The platform administrator needs to identify which specific workloads or SKUs are responsible for the cost increase and compare usage patterns between the two months.
 
@@ -58,7 +58,7 @@ D) Check each job's run history in the Workflows UI and manually calculate DBU u
 
 ---
 
-### Question 49
+## Question 49
 
 **Scenario**: A long-running Spark batch job on an autoscaling cluster frequently triggers autoscale-up events, but the added executors are quickly lost with `ExecutorLostFailure` errors. The Ganglia metrics dashboard for the cluster shows that executor memory utilization spikes above 95% shortly before each executor loss, while CPU utilization remains around 40%.
 
@@ -76,7 +76,7 @@ D) The YARN resource manager is preempting executors for higher-priority jobs; c
 
 ---
 
-### Question 50
+## Question 50
 
 **Scenario**: A data engineering team runs hundreds of Structured Streaming jobs across multiple workspaces. They need a centralized alerting system that triggers PagerDuty notifications when any streaming query's processing rate drops below a threshold or when a query falls behind by more than 10 minutes of event-time lag.
 
@@ -94,7 +94,7 @@ D) Configure Ganglia metric thresholds on each cluster to trigger email alerts w
 
 ---
 
-### Question 51
+## Question 51
 
 **Scenario**: A Databricks SQL query that joins a 500-million-row fact table with three dimension tables is taking over 15 minutes to execute. The data analyst has verified that all tables have up-to-date statistics and the warehouse is properly sized. They open the Query Profile in the Databricks SQL UI to investigate.
 

@@ -4,7 +4,7 @@
 
 ---
 
-### Question 1
+## Question 1
 
 **Scenario**: A data engineering team ingests millions of small JSON files per day from a cloud storage landing zone. The files are uploaded by thousands of IoT devices. Using Auto Loader with directory listing mode, the pipeline takes over 40 minutes just to discover new files before any processing begins.
 
@@ -22,7 +22,7 @@ D) Set `cloudFiles.schemaLocation` to a faster storage tier for schema caching
 
 ---
 
-### Question 2
+## Question 2
 
 **Scenario**: A streaming pipeline uses Auto Loader to ingest Parquet files with a defined schema stored at a checkpoint location. After a deployment, the upstream system adds two new required columns to the Parquet files. The pipeline is restarted and immediately fails with an `AnalysisException` indicating the new columns are missing from the existing schema.
 
@@ -40,7 +40,7 @@ D) Auto Loader restarts from the beginning of the source directory, re-reading a
 
 ---
 
-### Question 3
+## Question 3
 
 **Scenario**: A retail company needs to implement SCD Type 2 on a `dim_customer` table. When a customer updates their address, the current record must be closed (set `end_date` and `is_current = false`) and a new record must be inserted with `is_current = true`. The source data arrives as a staging table with only the latest state per customer.
 
@@ -58,7 +58,7 @@ D) A single MERGE with `WHEN MATCHED AND target.is_current = true AND target.add
 
 ---
 
-### Question 4
+## Question 4
 
 **Scenario**: A data engineer needs to join two streaming DataFrames: `orders` (with `order_time`) and `shipments` (with `ship_time`). The business rule states that a shipment must occur within 7 days of the order to be considered valid. Both streams have watermarks defined.
 
@@ -76,7 +76,7 @@ D) `orders.order_id == shipments.order_id AND shipments.ship_time - orders.order
 
 ---
 
-### Question 5
+## Question 5
 
 **Scenario**: A data engineer uses `foreachBatch()` to write streaming micro-batches to both a Delta table and an external PostgreSQL database. If the pipeline fails mid-batch and restarts, some records may be written to PostgreSQL twice.
 
@@ -94,7 +94,7 @@ D) Write to PostgreSQL first and Delta second so that the checkpoint only advanc
 
 ---
 
-### Question 6
+## Question 6
 
 **Scenario**: A data engineer reads the Change Data Feed from a Delta table and needs to process the different types of row-level changes separately. The engineer writes a filter condition to isolate updated records but is unsure of the exact column values.
 
@@ -112,7 +112,7 @@ D) `create`, `update_before`, `update_after`, `drop`
 
 ---
 
-### Question 7
+## Question 7
 
 **Scenario**: A data engineering team manages hundreds of Delta tables across multiple schemas. They spend significant time manually running `OPTIMIZE` and `VACUUM` operations and tuning Z-ORDER columns. The team wants to automate these maintenance tasks.
 
@@ -130,7 +130,7 @@ D) It automates `OPTIMIZE`, `VACUUM`, and `ZORDERING` by analyzing query pattern
 
 ---
 
-### Question 8
+## Question 8
 
 **Scenario**: An IoT streaming pipeline receives sensor readings that occasionally include duplicates due to at-least-once delivery. The pipeline uses a 2-hour watermark on `event_time`. A data engineer uses `dropDuplicates("sensor_id", "reading_id")` to remove duplicates but notices that state size grows unboundedly over days of continuous operation.
 
@@ -148,7 +148,7 @@ D) Increase executor memory to accommodate the growing state
 
 ---
 
-### Question 9
+## Question 9
 
 **Scenario**: A data engineer configures Auto Loader with `cloudFiles.schemaEvolutionMode = "rescue"` to ingest CSV files. After several weeks, the team notices a `_rescued_data` column in the target table contains non-null JSON strings for some rows.
 
@@ -166,7 +166,7 @@ D) A binary-encoded copy of the entire source file that contained the mismatched
 
 ---
 
-### Question 10
+## Question 10
 
 **Scenario**: A data analyst needs to query a Delta table as it existed at a specific point in time for a compliance audit. The analyst knows the exact timestamp of the end-of-day snapshot they need, but does not know which Delta version corresponds to that timestamp. Another analyst needs to reproduce a specific report that was generated from a known Delta version.
 
@@ -184,7 +184,7 @@ D) `TIMESTAMP AS OF` is ideal when querying by a business point-in-time (e.g., e
 
 ---
 
-### Question 11
+## Question 11
 
 **Scenario**: A data engineer implements a custom stateful streaming operation using `flatMapGroupsWithState()` to track user sessions. Sessions should expire if no event is received within 30 minutes. The engineer needs to choose between `ProcessingTimeTimeout` and `EventTimeTimeout`.
 
@@ -202,7 +202,7 @@ D) There is no functional difference; they are aliases for the same timeout mech
 
 ---
 
-### Question 12
+## Question 12
 
 **Scenario**: A data engineer is tasked with running `VACUUM` on a large Delta table to reclaim storage. The engineer considers setting the retention period to 0 hours to remove all historical files immediately.
 
@@ -220,7 +220,7 @@ D) It triggers a full table rewrite that doubles the storage usage temporarily
 
 ---
 
-### Question 13
+## Question 13
 
 **Scenario**: A data engineer builds a streaming pipeline that computes a running count of events per product category using `groupBy("category").count()`. The engineer tries to use `outputMode("append")` but the query fails at runtime.
 
@@ -238,7 +238,7 @@ D) Both `outputMode("append")` and `outputMode("update")` work equally well for 
 
 ---
 
-### Question 14
+## Question 14
 
 **Scenario**: A data engineer configures Auto Loader to read JSON files using `format("cloudFiles")` and sets both `cloudFiles.format` and the top-level `.format()` in the DataStreamReader chain. The engineer is confused about which setting takes precedence.
 
@@ -256,7 +256,7 @@ D) `.format("cloudFiles")` is required to activate Auto Loader as the stream sou
 
 ---
 
-### Question 15
+## Question 15
 
 **Scenario**: A multi-hop (Bronze/Silver/Gold) architecture ingests raw event data into Bronze, then applies transformations and quality checks into Silver. Some records arrive with missing required fields, malformed timestamps, or unexpected data types. The team wants to avoid data loss while maintaining data quality in downstream layers.
 
@@ -274,7 +274,7 @@ D) Malformed data should be silently dropped at every layer to maintain clean ta
 
 ---
 
-### Question 16
+## Question 16
 
 **Scenario**: A data engineer adds a `CHECK` constraint to an existing Delta table with 500 million rows: `ALTER TABLE orders ADD CONSTRAINT positive_amount CHECK (amount > 0)`. The table currently contains 200 rows where `amount` is 0 or negative.
 
@@ -292,7 +292,7 @@ D) The constraint is added and the 200 violating rows are quarantined to a separ
 
 ---
 
-### Question 17
+## Question 17
 
 **Scenario**: A data engineer is designing a streaming pipeline that reads from Kafka and writes to a Delta table. The team needs to understand the exactly-once guarantees provided by Structured Streaming with Delta Lake as the sink.
 
@@ -310,7 +310,7 @@ D) Exactly-once only if `foreachBatch()` is used with manual deduplication logic
 
 ---
 
-### Question 18
+## Question 18
 
 **Scenario**: A daily batch pipeline uses `MERGE` to upsert fact records from a staging table into a target fact table. The fact table joins to a `dim_product` dimension table. Occasionally, new products appear in the fact staging data before they have been added to the dimension table, causing foreign key mismatches.
 

@@ -212,6 +212,7 @@ Unhealthy Executor:
 ### Query Execution Plans
 
 The SQL tab shows:
+
 - Executed SQL queries and DataFrame operations
 - Query plans (logical and physical)
 - Per-operator metrics
@@ -249,11 +250,13 @@ The SQL tab shows:
 ### 1. Data Skew
 
 **Symptoms:**
+
 - One task much longer than others
 - Straggler tasks in stage
 - Uneven input sizes across tasks
 
 **In Spark UI:**
+
 ```text
 Stage 5 Task Summary:
 Min Duration: 2s
@@ -286,11 +289,13 @@ df_salted = df.withColumn(
 ### 2. Shuffle Spill
 
 **Symptoms:**
+
 - Spill (Disk) > 0 in stage details
 - Slow shuffle operations
 - High GC time
 
 **In Spark UI:**
+
 ```text
 Shuffle Spill (Memory): 10 GB
 Shuffle Spill (Disk): 5 GB  ← Problem!
@@ -312,11 +317,13 @@ spark.conf.set("spark.sql.shuffle.partitions", "400")
 ### 3. Small File Problem
 
 **Symptoms:**
+
 - Many small tasks
 - High task overhead
 - Slow stage startup
 
 **In Spark UI:**
+
 ```text
 Stage 1: 10000 tasks  ← Too many small tasks
 Input: 1 GB
@@ -339,11 +346,13 @@ spark.sql("OPTIMIZE my_table")
 ### 4. Broadcast Join Failure
 
 **Symptoms:**
+
 - Sort-merge join when broadcast expected
 - Large shuffle read/write
 - Long join stages
 
 **In Spark UI:**
+
 ```text
 Expected: BroadcastHashJoin
 Actual: SortMergeJoin
@@ -365,11 +374,13 @@ spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "100MB")
 ### 5. Excessive GC
 
 **Symptoms:**
+
 - High GC Time in executors
 - Task duration variance
 - Executor failures
 
 **In Spark UI:**
+
 ```text
 Executor 1 GC Time: 45% of total  ← Too high!
 ```
@@ -393,6 +404,7 @@ spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
 ### 6. OOM (Out of Memory)
 
 **Symptoms:**
+
 - Executor lost errors
 - Container killed by YARN/Kubernetes
 - Task failures with OOM

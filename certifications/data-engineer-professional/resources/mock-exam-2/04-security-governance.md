@@ -4,7 +4,7 @@
 
 ---
 
-### Question 40
+## Question 40
 
 **Scenario**: Your organization recently purchased a second Databricks workspace for a newly acquired subsidiary. The platform team attaches this new workspace to the existing Unity Catalog metastore that the parent company already uses. Before the attachment, the subsidiary's workspace relied on a legacy Hive metastore with several hundred tables.
 
@@ -22,7 +22,7 @@ D) The legacy Hive metastore tables are copied into Unity Catalog as external ta
 
 ---
 
-### Question 41
+## Question 41
 
 **Scenario**: A financial services company stores transaction data in a single `transactions` table containing records from all regional offices. Compliance requires that analysts in each regional group (e.g., `region_us`, `region_eu`, `region_apac`) can only query rows that belong to their own region. The security team wants this enforced at the data layer, not in the BI tool.
 
@@ -40,7 +40,7 @@ D) Use a cluster-level Spark configuration to set `spark.sql.region.filter` to t
 
 ---
 
-### Question 42
+## Question 42
 
 **Scenario**: A pharmaceutical company wants to share de-identified clinical trial results with three external research institutions. Two of the institutions use Databricks, but the third institution uses only Apache Spark on their own Hadoop cluster. The data must be shared securely without giving any institution direct access to the company's workspace.
 
@@ -58,7 +58,7 @@ D) They download an activation link that provisions a bearer token, which the op
 
 ---
 
-### Question 43
+## Question 43
 
 **Scenario**: The security operations team has detected suspicious behavior -- a service principal that normally runs nightly ETL pipelines has been issuing `GRANT` statements during business hours. The team needs to query the audit logs to identify all privilege escalation events performed by this service principal in the last 7 days.
 
@@ -76,7 +76,7 @@ D) `SELECT * FROM system.billing.usage WHERE identity.email = 'etl-service-princ
 
 ---
 
-### Question 44
+## Question 44
 
 **Scenario**: A data engineering team currently uses a senior engineer's personal access token (PAT) embedded in an Airflow DAG to trigger Databricks jobs in production. The engineer is planning to leave the company in two weeks, and management is concerned about continuity and security.
 
@@ -94,7 +94,7 @@ D) Disable token-based authentication entirely and switch to interactive SSO log
 
 ---
 
-### Question 45
+## Question 45
 
 **Scenario**: A government agency stores classified datasets in a Databricks workspace deployed in an isolated VNet with no public internet access. Despite these network controls, a recent internal review discovered that a user with `SELECT` access on a sensitive table was able to copy data to an external cloud storage account by running `COPY INTO 'abfss://external-container@external-account.dfs.core.windows.net/'` from a notebook.
 

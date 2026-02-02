@@ -476,6 +476,7 @@ databricks secrets put --scope my-scope --key missing-key
 **Scenario:** Can't access Key Vault-backed scope.
 
 **Fix:** Verify:
+
 1. Key Vault exists and DNS name is correct
 2. Service principal has Key Vault access
 3. Network connectivity (private endpoints if applicable)
@@ -485,6 +486,7 @@ databricks secrets put --scope my-scope --key missing-key
 **Scenario:** Secret leaked in logs or output.
 
 **Fix:**
+
 1. Immediately rotate the secret
 2. Review code for transformation of secret values
 3. Ensure no `print(secret[0:n])` patterns

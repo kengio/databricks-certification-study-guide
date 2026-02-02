@@ -4,7 +4,7 @@
 
 ---
 
-### Question 52
+## Question 52
 
 **Scenario**: A data engineering team maintains a `databricks.yml` bundle configuration. The root-level resources section defines a job with `max_concurrent_runs: 1` and a cluster with `num_workers: 2`. The `targets.production` section redefines the same job with `max_concurrent_runs: 4` but does not specify `num_workers`.
 
@@ -22,7 +22,7 @@ D) `max_concurrent_runs: 4`, `num_workers: 2` -- the target overrides only the s
 
 ---
 
-### Question 53
+## Question 53
 
 **Scenario**: A platform team configures OIDC-based authentication between GitHub Actions and Databricks using a service principal. During a workflow run, GitHub Actions requests an OIDC token from GitHub's cloud provider and sends it to the Databricks token endpoint.
 
@@ -40,7 +40,7 @@ D) Databricks converts the GitHub OIDC token into a workspace-level API key that
 
 ---
 
-### Question 54
+## Question 54
 
 **Scenario**: A team is deploying a new version of a production DLT pipeline that processes 500 million records per day. They need to validate the new pipeline version with real production data before fully switching over, while ensuring zero downtime and the ability to instantly revert if issues are detected.
 
@@ -58,7 +58,7 @@ D) Feature flag deployment: wrap all new transformation logic in feature flags a
 
 ---
 
-### Question 55
+## Question 55
 
 **Scenario**: A CI/CD pipeline runs automated tests against a DLT pipeline that uses expectations such as `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After the test pipeline run completes, the team needs to programmatically verify that no more than 0.1% of rows were dropped by expectations before promoting the code to production.
 
@@ -76,7 +76,7 @@ D) Configure a DLT alert that sends an email notification if the drop rate excee
 
 ---
 
-### Question 56
+## Question 56
 
 **Scenario**: A data engineering team deploys a production job using Databricks Asset Bundles. The job should be runnable by members of the `data-ops` group but not editable by them. Only the deploying service principal should have full management permissions.
 
@@ -94,7 +94,7 @@ D) Add a `permissions` block granting `CAN_VIEW` and `CAN_MANAGE_RUN` to `group_
 
 ---
 
-### Question 57
+## Question 57
 
 **Scenario**: A team deployed a new version of their DAB-managed production pipeline 30 minutes ago. Monitoring alerts now indicate that the new version is producing incorrect aggregation results due to a logic error in a transformation. The team needs to revert to the previous working version as quickly as possible.
 

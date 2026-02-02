@@ -621,7 +621,7 @@ TRACK HISTORY ON (salary, department, title)
 
 1. **APPLY CHANGES syntax** - KEYS, SEQUENCE BY, STORED AS SCD TYPE
 2. **SCD Type 1** - Overwrites, latest value only
-3. **SCD Type 2** - Full history with __START_AT, __END_AT
+3. **SCD Type 2** - Full history with `__START_AT`, `__END_AT`
 4. **APPLY AS DELETE** - Specifies delete condition
 5. **Sequence key** - Orders events, handles late arrivals
 6. **TRACK HISTORY ON** - Controls which columns trigger new version
