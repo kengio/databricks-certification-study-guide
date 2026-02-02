@@ -6,5 +6,6 @@
   "tabSize": 4,
   "useTab": false,
   "showInlineTitle": false,
-  "promptDelete": false
+  "promptDelete": false,
+  "defaultViewMode": "preview"
 }

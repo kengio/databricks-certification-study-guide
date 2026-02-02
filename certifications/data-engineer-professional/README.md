@@ -40,14 +40,14 @@ pie title Exam Topic Distribution
 
 ### Core Topics (By Exam Weight)
 
-| Section                                                      | Weight | Topics                                              |
-| ------------------------------------------------------------ | ------ | --------------------------------------------------- |
-| [01-Data Processing](01-data-processing/README.md)           | 30%    | ETL pipelines, streaming, CDC, Delta Lake operations|
-| [02-Databricks Tooling](02-databricks-tooling/README.md)     | 20%    | Workspace, CLI, REST API, compute                   |
-| [03-Data Modeling](03-data-modeling/README.md)               | 15%    | Medallion architecture, schema management, SCD      |
-| [04-Security & Governance](04-security-governance/README.md) | 10%    | Unity Catalog, access control, data sharing         |
-| [05-Monitoring & Logging](05-monitoring-logging/README.md)   | 10%    | System tables, Spark UI, observability              |
-| [06-Testing & Deployment](06-testing-deployment/README.md)   | 10%    | Asset Bundles, CI/CD, Git integration               |
+| Section                                                      | Weight | Topics                                               |
+| ------------------------------------------------------------ | ------ | ---------------------------------------------------- |
+| [01-Data Processing](01-data-processing/README.md)           | 30%    | ETL pipelines, streaming, CDC, Delta Lake operations |
+| [02-Databricks Tooling](02-databricks-tooling/README.md)     | 20%    | Workspace, CLI, REST API, compute                    |
+| [03-Data Modeling](03-data-modeling/README.md)               | 15%    | Medallion architecture, schema management, SCD       |
+| [04-Security & Governance](04-security-governance/README.md) | 10%    | Unity Catalog, access control, data sharing          |
+| [05-Monitoring & Logging](05-monitoring-logging/README.md)   | 10%    | System tables, Spark UI, observability               |
+| [06-Testing & Deployment](06-testing-deployment/README.md)   | 10%    | Asset Bundles, CI/CD, Git integration                |
 
 ### Additional Topics
 
