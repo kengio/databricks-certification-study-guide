@@ -154,11 +154,11 @@ SET TBLPROPERTIES (
 spark.conf.set("spark.databricks.delta.optimizeWrite.enabled", "true")
 
 # Per-write option
-df.write \
-    .format("delta") \
-    .option("optimizeWrite", "true") \
-    .mode("append") \
-    .saveAsTable("catalog.schema.table")
+(df.write
+    .format("delta")
+    .option("optimizeWrite", "true")
+    .mode("append")
+    .saveAsTable("catalog.schema.table"))
 ```
 
 ### Auto Compaction
@@ -215,12 +215,12 @@ Without optimization:
 
 ```python
 # Enable for streaming writes
-stream_df.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoint/path") \
-    .option("optimizeWrite", "true") \
-    .trigger(processingTime="10 seconds") \
-    .table("catalog.schema.streaming_table")
+(stream_df.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoint/path")
+    .option("optimizeWrite", "true")
+    .trigger(processingTime="10 seconds")
+    .table("catalog.schema.streaming_table"))
 ```
 
 ### Auto Compaction for Streaming
@@ -245,9 +245,9 @@ def optimize_after_batch(batch_df, batch_id):
     if batch_id % 100 == 0:  # Every 100 batches
         spark.sql("OPTIMIZE catalog.schema.streaming_table")
 
-stream_df.writeStream \
-    .foreachBatch(optimize_after_batch) \
-    .start()
+(stream_df.writeStream
+    .foreachBatch(optimize_after_batch)
+    .start())
 ```
 
 ## Partitioning Impact on File Size

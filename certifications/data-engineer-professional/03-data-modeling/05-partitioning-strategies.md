@@ -83,18 +83,18 @@ PARTITIONED BY (event_date, region);
 
 ```python
 # DataFrame API: Write with partitioning
-df.write \
-    .format("delta") \
-    .partitionBy("order_date") \
-    .mode("overwrite") \
-    .saveAsTable("main.default.orders")
+(df.write
+    .format("delta")
+    .partitionBy("order_date")
+    .mode("overwrite")
+    .saveAsTable("main.default.orders"))
 
 # Multiple partition columns
-df.write \
-    .format("delta") \
-    .partitionBy("event_date", "region") \
-    .mode("overwrite") \
-    .saveAsTable("main.default.events")
+(df.write
+    .format("delta")
+    .partitionBy("event_date", "region")
+    .mode("overwrite")
+    .saveAsTable("main.default.events"))
 ```
 
 ## Partition Pruning
@@ -228,14 +228,14 @@ PARTITIONED BY (order_year, order_month);
 # Add partition column before writing
 from pyspark.sql.functions import year, month, to_date
 
-df_with_partition = df \
-    .withColumn("order_date", to_date("order_timestamp")) \
-    .withColumn("order_year", year("order_timestamp"))
+df_with_partition = (df
+    .withColumn("order_date", to_date("order_timestamp"))
+    .withColumn("order_year", year("order_timestamp")))
 
-df_with_partition.write \
-    .format("delta") \
-    .partitionBy("order_year", "order_month") \
-    .saveAsTable("main.default.orders")
+(df_with_partition.write
+    .format("delta")
+    .partitionBy("order_year", "order_month")
+    .saveAsTable("main.default.orders"))
 ```
 
 ## Dynamic Partition Overwrite
@@ -247,18 +247,18 @@ Overwrite only partitions present in the DataFrame.
 spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
 
 # Only overwrites partitions in the DataFrame
-df.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .partitionBy("order_date") \
-    .saveAsTable("main.default.orders")
+(df.write
+    .format("delta")
+    .mode("overwrite")
+    .partitionBy("order_date")
+    .saveAsTable("main.default.orders"))
 
 # Using replaceWhere for explicit partition overwrite
-df.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .option("replaceWhere", "order_date >= '2024-01-01' AND order_date < '2024-02-01'") \
-    .saveAsTable("main.default.orders")
+(df.write
+    .format("delta")
+    .mode("overwrite")
+    .option("replaceWhere", "order_date >= '2024-01-01' AND order_date < '2024-02-01'")
+    .saveAsTable("main.default.orders"))
 ```
 
 ```sql
@@ -472,11 +472,11 @@ OPTIMIZE main.default.orders;
 
 ```python
 # Control file size with repartition
-df.repartition(10) \
-    .write \
-    .format("delta") \
-    .mode("append") \
-    .saveAsTable("main.default.orders")
+(df.repartition(10)
+    .write
+    .format("delta")
+    .mode("append")
+    .saveAsTable("main.default.orders"))
 
 # Target file size
 spark.conf.set("spark.databricks.delta.optimizeWrite.fileSize", "128mb")

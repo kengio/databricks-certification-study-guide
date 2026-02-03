@@ -1213,10 +1213,10 @@ from pyspark.sql.functions import window, count
 
 @pytest.fixture(scope="module")
 def spark():
-    return SparkSession.builder \
-        .master("local[*]") \
-        .config("spark.sql.shuffle.partitions", "1") \
-        .getOrCreate()
+    return (SparkSession.builder
+        .master("local[*]")
+        .config("spark.sql.shuffle.partitions", "1")
+        .getOrCreate())
 
 @pytest.fixture
 def stream_paths(tmp_path):
@@ -1335,11 +1335,11 @@ def mock_dbutils():
     dbutils.fs.cp = MagicMock(return_value=True)
 
     # Notebook context
-    dbutils.notebook.entry_point.getDbutils.return_value \
-        .notebook.return_value \
-        .getContext.return_value \
-        .tags.return_value \
-        .get.return_value = "interactive"
+    (dbutils.notebook.entry_point.getDbutils.return_value
+        .notebook.return_value
+        .getContext.return_value
+        .tags.return_value
+        .get).return_value = "interactive"
 
     # Notebook run
     dbutils.notebook.run.return_value = '{"status": "success"}'
@@ -1436,13 +1436,13 @@ from databricks.connect import DatabricksSession
 @pytest.fixture(scope="session")
 def db_spark():
     """Create a Databricks Connect SparkSession."""
-    spark = DatabricksSession.builder \
+    spark = (DatabricksSession.builder
         .remote(
             host="https://adb-1234567890.1.azuredatabricks.net",
             token="dapi...",
             cluster_id="0123-456789-abcdef"
-        ) \
-        .getOrCreate()
+        )
+        .getOrCreate())
     yield spark
     spark.stop()
 

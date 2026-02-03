@@ -54,21 +54,21 @@ Databricks uses **micro-batch processing** by default, providing exactly-once se
 
 ```python
 # Read stream from Delta
-stream_df = spark.readStream \
-    .format("delta") \
-    .load("/path/to/source")
+stream_df = (spark.readStream
+    .format("delta")
+    .load("/path/to/source"))
 
 # Apply transformations
-transformed = stream_df \
-    .filter(col("status") == "active") \
-    .select("id", "name", "amount")
+transformed = (stream_df
+    .filter(col("status") == "active")
+    .select("id", "name", "amount"))
 
 # Write stream to Delta
-query = transformed.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .start("/path/to/target")
+query = (transformed.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .start("/path/to/target"))
 ```
 
 ## Streaming Sources
@@ -81,22 +81,23 @@ df = spark.readStream.format("delta").load("/path/to/table")
 df = spark.readStream.table("catalog.schema.table_name")
 
 # Start from specific version
-df = spark.readStream \
-    .format("delta") \
-    .option("startingVersion", 10) \
-    .load("/path/to/table")
+df = (spark.readStream
+    .format("delta")
+    .option("startingVersion", 10)
+    .load("/path/to/table"))
 
 # Start from timestamp
-df = spark.readStream \
-    .format("delta") \
-    .option("startingTimestamp", "2024-01-01") \
-    .load("/path/to/table")
+df = (spark.readStream
+    .format("delta")
+    .option("startingTimestamp", "2024-01-01")
+    .load("/path/to/table"))
 
 # Handle schema changes
-df = spark.readStream \
-    .format("delta") \
-    .option("ignoreChanges", "true") \  # Skip updates/deletes
-    .load("/path/to/table")
+# Skip updates/deletes
+df = (spark.readStream
+    .format("delta")
+    .option("ignoreChanges", "true")
+    .load("/path/to/table"))
 ```
 
 | Option | Behavior |
@@ -111,12 +112,12 @@ df = spark.readStream \
 ### Kafka Source
 
 ```python
-df = spark.readStream \
-    .format("kafka") \
-    .option("kafka.bootstrap.servers", "broker1:9092,broker2:9092") \
-    .option("subscribe", "topic1,topic2") \
-    .option("startingOffsets", "latest") \
-    .load()
+df = (spark.readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "broker1:9092,broker2:9092")
+    .option("subscribe", "topic1,topic2")
+    .option("startingOffsets", "latest")
+    .load())
 
 # Kafka schema: key, value, topic, partition, offset, timestamp
 # Value is binary - parse as needed
@@ -135,11 +136,11 @@ parsed = df.select(
 ### Auto Loader (cloudFiles)
 
 ```python
-df = spark.readStream \
-    .format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/path/to/schema") \
-    .load("/path/to/files")
+df = (spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/path/to/schema")
+    .load("/path/to/files"))
 ```
 
 See [Auto Loader](04-auto-loader.md) for detailed coverage.
@@ -148,10 +149,10 @@ See [Auto Loader](04-auto-loader.md) for detailed coverage.
 
 ```python
 # Generate test data
-df = spark.readStream \
-    .format("rate") \
-    .option("rowsPerSecond", 100) \
-    .load()
+df = (spark.readStream
+    .format("rate")
+    .option("rowsPerSecond", 100)
+    .load())
 # Schema: timestamp, value (Long)
 ```
 
@@ -160,40 +161,40 @@ df = spark.readStream \
 ### Delta Sink
 
 ```python
-query = df.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .start("/path/to/table")
+query = (df.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .start("/path/to/table"))
 
 # Write to table
-query = df.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .toTable("catalog.schema.table_name")
+query = (df.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .toTable("catalog.schema.table_name"))
 ```
 
 ### Kafka Sink
 
 ```python
-query = df.selectExpr("CAST(id AS STRING) AS key", "to_json(struct(*)) AS value") \
-    .writeStream \
-    .format("kafka") \
-    .option("kafka.bootstrap.servers", "broker:9092") \
-    .option("topic", "output_topic") \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .start()
+query = (df.selectExpr("CAST(id AS STRING) AS key", "to_json(struct(*)) AS value")
+    .writeStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "broker:9092")
+    .option("topic", "output_topic")
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .start())
 ```
 
 ### Console Sink (Debugging)
 
 ```python
-query = df.writeStream \
-    .format("console") \
-    .outputMode("append") \
-    .option("truncate", False) \
-    .start()
+query = (df.writeStream
+    .format("console")
+    .outputMode("append")
+    .option("truncate", False)
+    .start())
 ```
 
 ### foreachBatch Sink
@@ -201,15 +202,15 @@ query = df.writeStream \
 ```python
 def process_batch(batch_df, batch_id):
     # Custom processing for each micro-batch
-    batch_df.write \
-        .format("delta") \
-        .mode("append") \
-        .save("/path/to/table")
+    (batch_df.write
+        .format("delta")
+        .mode("append")
+        .save("/path/to/table"))
 
-query = df.writeStream \
-    .foreachBatch(process_batch) \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .start()
+query = (df.writeStream
+    .foreachBatch(process_batch)
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .start())
 ```
 
 ## Trigger Types (Exam Critical)
@@ -243,14 +244,14 @@ flowchart TD
 
 ```python
 # DEPRECATED: once=True - processes ONE batch only
-query = df.writeStream \
-    .trigger(once=True) \
-    .start()
+query = (df.writeStream
+    .trigger(once=True)
+    .start())
 
 # RECOMMENDED: availableNow=True - processes ALL available data
-query = df.writeStream \
-    .trigger(availableNow=True) \
-    .start()
+query = (df.writeStream
+    .trigger(availableNow=True)
+    .start())
 ```
 
 | Aspect | once=True | availableNow=True |
@@ -266,19 +267,19 @@ query = df.writeStream \
 from pyspark.sql.streaming import Trigger
 
 # Processing time trigger
-query = df.writeStream \
-    .trigger(processingTime="10 seconds") \
-    .start()
+query = (df.writeStream
+    .trigger(processingTime="10 seconds")
+    .start())
 
 # Available now trigger (batch-style streaming)
-query = df.writeStream \
-    .trigger(availableNow=True) \
-    .start()
+query = (df.writeStream
+    .trigger(availableNow=True)
+    .start())
 
 # Continuous trigger (experimental)
-query = df.writeStream \
-    .trigger(continuous="1 second") \
-    .start()
+query = (df.writeStream
+    .trigger(continuous="1 second")
+    .start())
 ```
 
 ## Output Modes (Exam Critical)
@@ -343,16 +344,16 @@ sequenceDiagram
 from pyspark.sql.functions import window
 
 # Define watermark
-df_with_watermark = df \
-    .withWatermark("event_time", "10 minutes")
+df_with_watermark = (df
+    .withWatermark("event_time", "10 minutes"))
 
 # Windowed aggregation with watermark
-result = df_with_watermark \
+result = (df_with_watermark
     .groupBy(
         window("event_time", "5 minutes"),
         "device_id"
-    ) \
-    .agg(avg("temperature").alias("avg_temp"))
+    )
+    .agg(avg("temperature").alias("avg_temp")))
 ```
 
 ### Watermark Behavior
@@ -390,12 +391,12 @@ Non-overlapping, fixed-size windows.
 from pyspark.sql.functions import window
 
 # 5-minute tumbling windows
-df.withWatermark("event_time", "10 minutes") \
+(df.withWatermark("event_time", "10 minutes")
     .groupBy(
         window("event_time", "5 minutes"),
         "device_id"
-    ) \
-    .agg(count("*").alias("event_count"))
+    )
+    .agg(count("*").alias("event_count")))
 ```
 
 ```mermaid
@@ -415,12 +416,12 @@ Overlapping windows with a slide interval.
 
 ```python
 # 10-minute windows, sliding every 5 minutes
-df.withWatermark("event_time", "10 minutes") \
+(df.withWatermark("event_time", "10 minutes")
     .groupBy(
         window("event_time", "10 minutes", "5 minutes"),
         "device_id"
-    ) \
-    .agg(avg("value").alias("avg_value"))
+    )
+    .agg(avg("value").alias("avg_value")))
 ```
 
 ```mermaid
@@ -442,12 +443,12 @@ Dynamic windows based on activity gaps.
 from pyspark.sql.functions import session_window
 
 # Session windows with 5-minute gap
-df.withWatermark("event_time", "10 minutes") \
+(df.withWatermark("event_time", "10 minutes")
     .groupBy(
         session_window("event_time", "5 minutes"),
         "user_id"
-    ) \
-    .agg(count("*").alias("events_in_session"))
+    )
+    .agg(count("*").alias("events_in_session")))
 ```
 
 | Window Type | Size | Overlap | Use Case |
@@ -462,11 +463,11 @@ df.withWatermark("event_time", "10 minutes") \
 
 ```python
 # Both streams need watermarks
-impressions = impressions_df \
-    .withWatermark("impression_time", "2 hours")
+impressions = (impressions_df
+    .withWatermark("impression_time", "2 hours"))
 
-clicks = clicks_df \
-    .withWatermark("click_time", "3 hours")
+clicks = (clicks_df
+    .withWatermark("click_time", "3 hours"))
 
 # Join with time range condition
 joined = impressions.join(
@@ -546,13 +547,13 @@ def update_session(key, events, state: GroupState):
 
     return (key, new_count)
 
-result = df \
-    .groupByKey(lambda x: x.user_id) \
+result = (df
+    .groupByKey(lambda x: x.user_id)
     .mapGroupsWithState(
         update_session,
         outputMode="update",
         timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
-    )
+    ))
 ```
 
 ### flatMapGroupsWithState
@@ -643,12 +644,12 @@ result = df.groupByKey(...).mapGroupsWithState(
 )
 
 # Event time timeout - based on watermark
-result = df.withWatermark("timestamp", "1 hour") \
+result = (df.withWatermark("timestamp", "1 hour")
     .groupByKey(...).mapGroupsWithState(
         func,
         outputMode="update",
         timeoutConf=GroupStateTimeout.EventTimeTimeout
-    )
+    ))
 
 # No timeout - state never expires (dangerous!)
 result = df.groupByKey(...).mapGroupsWithState(
@@ -668,9 +669,9 @@ result = df.groupByKey(...).mapGroupsWithState(
 
 ```python
 # 1. Use watermarks for automatic cleanup
-df.withWatermark("event_time", "1 hour") \
-    .groupBy(window("event_time", "10 minutes")) \
-    .count()  # State cleaned after watermark passes window
+(df.withWatermark("event_time", "1 hour")
+    .groupBy(window("event_time", "10 minutes"))
+    .count())  # State cleaned after watermark passes window
 
 # 2. Set timeout in mapGroupsWithState
 def update_with_timeout(key, events, state):
@@ -703,22 +704,22 @@ for p in progress_history:
 
 ```python
 # Start with path
-query = df.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoint") \
-    .start("/output/path")
+query = (df.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoint")
+    .start("/output/path"))
 
 # Start with table
-query = df.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoint") \
-    .toTable("catalog.schema.table")
+query = (df.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoint")
+    .toTable("catalog.schema.table"))
 
 # Named query
-query = df.writeStream \
-    .queryName("my_streaming_query") \
-    .format("delta") \
-    .start("/output/path")
+query = (df.writeStream
+    .queryName("my_streaming_query")
+    .format("delta")
+    .start("/output/path"))
 ```
 
 ### Monitoring Queries
@@ -765,9 +766,9 @@ for q in spark.streams.active:
 Checkpoints store query progress for fault tolerance.
 
 ```python
-query = df.writeStream \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .start()
+query = (df.writeStream
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .start())
 ```
 
 ### Checkpoint Contents

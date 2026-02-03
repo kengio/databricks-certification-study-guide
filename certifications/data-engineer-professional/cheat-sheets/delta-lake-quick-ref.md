@@ -195,10 +195,10 @@ ALTER TABLE my_table ALTER COLUMN col_name TYPE BIGINT;
 
 ```python
 # Auto merge schema on write
-df.write.format("delta") \
-    .option("mergeSchema", "true") \
-    .mode("append") \
-    .saveAsTable("my_table")
+(df.write.format("delta")
+    .option("mergeSchema", "true")
+    .mode("append")
+    .saveAsTable("my_table"))
 ```
 
 ## Cloning

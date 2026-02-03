@@ -81,20 +81,20 @@ from delta.tables import DeltaTable
 
 delta_table = DeltaTable.forName(spark, "dim_customer")
 
-delta_table.alias("target") \
+(delta_table.alias("target")
     .merge(
         staging_df.alias("source"),
         "target.customer_id = source.customer_id"
-    ) \
+    )
     .whenMatchedUpdate(set={
         "name": "source.name",
         "email": "source.email",
         "city": "source.city",
         "tier": "source.tier",
         "updated_at": "current_timestamp()"
-    }) \
-    .whenNotMatchedInsertAll() \
-    .execute()
+    })
+    .whenNotMatchedInsertAll()
+    .execute())
 ```
 
 ### Type 1 - Before and After
@@ -522,9 +522,9 @@ import dlt
 # Source data
 @dlt.view
 def customers_cdc():
-    return spark.readStream.format("cloudFiles") \
-        .option("cloudFiles.format", "json") \
-        .load("/landing/customers_cdc/")
+    return (spark.readStream.format("cloudFiles")
+        .option("cloudFiles.format", "json")
+        .load("/landing/customers_cdc/"))
 
 # SCD Type 2 with APPLY CHANGES
 dlt.create_streaming_table("dim_customer_scd2")

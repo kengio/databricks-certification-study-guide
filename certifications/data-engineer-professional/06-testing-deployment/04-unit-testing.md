@@ -108,10 +108,10 @@ class TestCleaning:
     @pytest.fixture(scope="class")
     def spark(self):
         """Create SparkSession for tests."""
-        return SparkSession.builder \
-            .master("local[*]") \
-            .appName("unit-tests") \
-            .getOrCreate()
+        return (SparkSession.builder
+            .master("local[*]")
+            .appName("unit-tests")
+            .getOrCreate())
 
     def test_remove_nulls_removes_null_rows(self, spark):
         """Test that null rows are removed."""
@@ -179,10 +179,10 @@ class TestAggregations:
 
     @pytest.fixture(scope="class")
     def spark(self):
-        return SparkSession.builder \
-            .master("local[*]") \
-            .appName("unit-tests") \
-            .getOrCreate()
+        return (SparkSession.builder
+            .master("local[*]")
+            .appName("unit-tests")
+            .getOrCreate())
 
     def test_calculate_totals_sums_by_category(self, spark):
         """Test aggregation calculates correct totals."""
@@ -255,12 +255,12 @@ from pyspark.sql import SparkSession
 @pytest.fixture(scope="session")
 def spark():
     """Shared SparkSession for all tests."""
-    spark = SparkSession.builder \
-        .master("local[*]") \
-        .appName("test") \
-        .config("spark.sql.shuffle.partitions", "1") \
-        .config("spark.default.parallelism", "1") \
-        .getOrCreate()
+    spark = (SparkSession.builder
+        .master("local[*]")
+        .appName("test")
+        .config("spark.sql.shuffle.partitions", "1")
+        .config("spark.default.parallelism", "1")
+        .getOrCreate())
     yield spark
     spark.stop()
 
@@ -486,11 +486,11 @@ class TestDeltaOperations:
 
     @pytest.fixture
     def spark(self):
-        return SparkSession.builder \
-            .master("local[*]") \
-            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
-            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
-            .getOrCreate()
+        return (SparkSession.builder
+            .master("local[*]")
+            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+            .getOrCreate())
 
     def test_merge_upserts_correctly(self, spark, delta_path):
         """Test MERGE operation updates and inserts."""
@@ -505,11 +505,11 @@ class TestDeltaOperations:
 
         # Act - Perform merge
         delta_table = DeltaTable.forPath(spark, delta_path)
-        delta_table.alias("target") \
-            .merge(source_df.alias("source"), "target.id = source.id") \
-            .whenMatchedUpdateAll() \
-            .whenNotMatchedInsertAll() \
-            .execute()
+        (delta_table.alias("target")
+            .merge(source_df.alias("source"), "target.id = source.id")
+            .whenMatchedUpdateAll()
+            .whenNotMatchedInsertAll()
+            .execute())
 
         # Assert
         result = spark.read.format("delta").load(delta_path)
@@ -533,9 +533,9 @@ class TestStreaming:
 
     @pytest.fixture
     def spark(self):
-        return SparkSession.builder \
-            .master("local[*]") \
-            .getOrCreate()
+        return (SparkSession.builder
+            .master("local[*]")
+            .getOrCreate())
 
     def test_streaming_aggregation(self, spark, tmp_path):
         """Test streaming aggregation logic."""
@@ -554,17 +554,17 @@ class TestStreaming:
         df.write.format("json").save(input_path)
 
         # Act - Run streaming query in batch mode for testing
-        stream_df = spark.readStream.format("json") \
-            .schema(df.schema) \
-            .load(input_path)
+        stream_df = (spark.readStream.format("json")
+            .schema(df.schema)
+            .load(input_path))
 
         agg_df = stream_df.groupBy("user_id").count()
 
-        query = agg_df.writeStream \
-            .format("delta") \
-            .outputMode("complete") \
-            .option("checkpointLocation", checkpoint_path) \
-            .start(output_path)
+        query = (agg_df.writeStream
+            .format("delta")
+            .outputMode("complete")
+            .option("checkpointLocation", checkpoint_path)
+            .start(output_path))
 
         query.processAllAvailable()
         query.stop()
@@ -585,10 +585,10 @@ from pyspark.sql import SparkSession
 @pytest.fixture(scope="session")
 def spark():
     """Session-scoped SparkSession."""
-    spark = SparkSession.builder \
-        .master("local[*]") \
-        .appName("test") \
-        .getOrCreate()
+    spark = (SparkSession.builder
+        .master("local[*]")
+        .appName("test")
+        .getOrCreate())
     yield spark
     spark.stop()
 
@@ -814,12 +814,12 @@ def clean_table(spark):
 **Fix:** Optimize Spark configuration:
 
 ```python
-spark = SparkSession.builder \
-    .master("local[*]") \
-    .config("spark.sql.shuffle.partitions", "1") \
-    .config("spark.default.parallelism", "1") \
-    .config("spark.executor.memory", "1g") \
-    .getOrCreate()
+spark = (SparkSession.builder
+    .master("local[*]")
+    .config("spark.sql.shuffle.partitions", "1")
+    .config("spark.default.parallelism", "1")
+    .config("spark.executor.memory", "1g")
+    .getOrCreate())
 ```
 
 ### 4. Delta Lake Not Available
@@ -829,10 +829,10 @@ spark = SparkSession.builder \
 **Fix:** Include Delta dependencies:
 
 ```python
-spark = SparkSession.builder \
-    .config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0") \
-    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
-    .getOrCreate()
+spark = (SparkSession.builder
+    .config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0")
+    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+    .getOrCreate())
 ```
 
 ## Exam Tips

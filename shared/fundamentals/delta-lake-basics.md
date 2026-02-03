@@ -196,10 +196,10 @@ Allow schema changes during writes:
 
 ```python
 # Add new columns automatically
-df.write.format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .save("/path/to/table")
+(df.write.format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
+    .save("/path/to/table"))
 ```
 
 ```sql
@@ -309,11 +309,11 @@ SELECT * FROM table_changes('orders', '2025-01-01', '2025-01-31');
 
 ```python
 # Python: Read changes by version range
-changes_df = spark.read.format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingVersion", 1) \
-    .option("endingVersion", 10) \
-    .table("orders")
+changes_df = (spark.read.format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", 1)
+    .option("endingVersion", 10)
+    .table("orders"))
 
 # Filter by change type
 inserts = changes_df.filter(col("_change_type") == "insert")

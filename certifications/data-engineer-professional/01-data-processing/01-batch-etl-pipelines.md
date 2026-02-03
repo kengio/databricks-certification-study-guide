@@ -73,16 +73,16 @@ flowchart LR
 df = spark.read.format("parquet").load("/path/to/files")
 
 # Read CSV with options
-df = spark.read.format("csv") \
-    .option("header", "true") \
-    .option("inferSchema", "true") \
-    .option("multiLine", "true") \
-    .load("/path/to/files/*.csv")
+df = (spark.read.format("csv")
+    .option("header", "true")
+    .option("inferSchema", "true")
+    .option("multiLine", "true")
+    .load("/path/to/files/*.csv"))
 
 # Read JSON
-df = spark.read.format("json") \
-    .option("multiLine", "true") \
-    .load("/path/to/files")
+df = (spark.read.format("json")
+    .option("multiLine", "true")
+    .load("/path/to/files"))
 
 # Read Delta
 df = spark.read.format("delta").load("/path/to/delta")
@@ -110,29 +110,30 @@ schema = StructType([
     StructField("created_at", TimestampType(), nullable=True)
 ])
 
-df = spark.read.format("json") \
-    .schema(schema) \
-    .load("/path/to/files")
+df = (spark.read.format("json")
+    .schema(schema)
+    .load("/path/to/files"))
 ```
 
 ### Handling Corrupt Records
 
 ```python
 # Mode options for corrupt records
-df = spark.read.format("json") \
-    .option("mode", "PERMISSIVE") \  # Default: nulls for corrupt fields
-    .option("columnNameOfCorruptRecord", "_corrupt_record") \
-    .load("/path/to/files")
+df = (spark.read.format("json")
+    # Default: nulls for corrupt fields
+    .option("mode", "PERMISSIVE")
+    .option("columnNameOfCorruptRecord", "_corrupt_record")
+    .load("/path/to/files"))
 
 # DROPMALFORMED: Skip corrupt records
-df = spark.read.format("csv") \
-    .option("mode", "DROPMALFORMED") \
-    .load("/path/to/files")
+df = (spark.read.format("csv")
+    .option("mode", "DROPMALFORMED")
+    .load("/path/to/files"))
 
 # FAILFAST: Fail immediately on corrupt record
-df = spark.read.format("csv") \
-    .option("mode", "FAILFAST") \
-    .load("/path/to/files")
+df = (spark.read.format("csv")
+    .option("mode", "FAILFAST")
+    .load("/path/to/files"))
 ```
 
 | Mode | Behavior |
@@ -384,9 +385,9 @@ from pyspark.sql.functions import row_number, rank, dense_rank, lead, lag, sum
 window = Window.partitionBy("customer_id").orderBy("order_date")
 
 # Window with frame
-window_frame = Window.partitionBy("customer_id") \
-    .orderBy("order_date") \
-    .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+window_frame = (Window.partitionBy("customer_id")
+    .orderBy("order_date")
+    .rowsBetween(Window.unboundedPreceding, Window.currentRow))
 ```
 
 ### Ranking Functions
@@ -425,9 +426,9 @@ df.withColumn("prev_amount", lag("amount", 1, 0).over(window))
 
 ```python
 # Cumulative sum
-window_running = Window.partitionBy("customer_id") \
-    .orderBy("order_date") \
-    .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+window_running = (Window.partitionBy("customer_id")
+    .orderBy("order_date")
+    .rowsBetween(Window.unboundedPreceding, Window.currentRow))
 
 df.withColumn("running_total", sum("amount").over(window_running))
 ```
@@ -438,9 +439,9 @@ df.withColumn("running_total", sum("amount").over(window_running))
 # Keep latest record per customer
 window = Window.partitionBy("customer_id").orderBy(col("updated_at").desc())
 
-df.withColumn("rn", row_number().over(window)) \
-    .filter(col("rn") == 1) \
-    .drop("rn")
+(df.withColumn("rn", row_number().over(window))
+    .filter(col("rn") == 1)
+    .drop("rn"))
 ```
 
 ## Writing Data
@@ -485,16 +486,16 @@ df.write.insertInto("catalog.schema.table_name")
 
 ```python
 # Write with partitioning
-df.write.format("delta") \
-    .partitionBy("year", "month") \
-    .mode("overwrite") \
-    .save("/path/to/table")
+(df.write.format("delta")
+    .partitionBy("year", "month")
+    .mode("overwrite")
+    .save("/path/to/table"))
 
 # Overwrite specific partitions
-df.write.format("delta") \
-    .mode("overwrite") \
-    .option("replaceWhere", "year = 2024 AND month = 1") \
-    .save("/path/to/table")
+(df.write.format("delta")
+    .mode("overwrite")
+    .option("replaceWhere", "year = 2024 AND month = 1")
+    .save("/path/to/table"))
 ```
 
 ### Dynamic Partition Overwrite
@@ -503,10 +504,10 @@ df.write.format("delta") \
 # Only overwrite partitions that have data in the DataFrame
 spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
 
-df.write.format("delta") \
-    .mode("overwrite") \
-    .partitionBy("date") \
-    .save("/path/to/table")
+(df.write.format("delta")
+    .mode("overwrite")
+    .partitionBy("date")
+    .save("/path/to/table"))
 ```
 
 ## SQL Batch Operations

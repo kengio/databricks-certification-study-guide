@@ -71,12 +71,12 @@ The Bronze layer stores raw data exactly as received from source systems.
 # Example: Ingest raw data to Bronze
 raw_df = spark.read.json("/mnt/landing/orders/")
 
-bronze_df = raw_df.withColumn("_ingestion_timestamp", current_timestamp()) \
-                  .withColumn("_source_file", input_file_name())
+bronze_df = (raw_df.withColumn("_ingestion_timestamp", current_timestamp())
+                  .withColumn("_source_file", input_file_name()))
 
-bronze_df.write.format("delta") \
-    .mode("append") \
-    .save("/mnt/bronze/orders")
+(bronze_df.write.format("delta")
+    .mode("append")
+    .save("/mnt/bronze/orders"))
 ```
 
 ```sql
@@ -116,11 +116,11 @@ The Silver layer contains cleansed, validated, and deduplicated data.
 # Example: Transform Bronze to Silver
 bronze_df = spark.read.format("delta").load("/mnt/bronze/orders")
 
-silver_df = bronze_df \
-    .dropDuplicates(["order_id"]) \
-    .withColumn("order_date", to_date("order_date_str", "yyyy-MM-dd")) \
-    .withColumn("amount", col("amount").cast("decimal(10,2)")) \
-    .filter(col("order_id").isNotNull()) \
+silver_df = (bronze_df
+    .dropDuplicates(["order_id"])
+    .withColumn("order_date", to_date("order_date_str", "yyyy-MM-dd"))
+    .withColumn("amount", col("amount").cast("decimal(10,2)"))
+    .filter(col("order_id").isNotNull())
     .select(
         "order_id",
         "customer_id",
@@ -128,12 +128,12 @@ silver_df = bronze_df \
         "amount",
         "status",
         "_ingestion_timestamp"
-    )
+    ))
 
-silver_df.write.format("delta") \
-    .mode("overwrite") \
-    .option("mergeSchema", "true") \
-    .save("/mnt/silver/orders")
+(silver_df.write.format("delta")
+    .mode("overwrite")
+    .option("mergeSchema", "true")
+    .save("/mnt/silver/orders"))
 ```
 
 ```sql
@@ -178,15 +178,15 @@ The Gold layer contains business-ready, aggregated data optimized for consumptio
 silver_orders = spark.read.format("delta").load("/mnt/silver/orders")
 silver_customers = spark.read.format("delta").load("/mnt/silver/customers")
 
-gold_customer_metrics = silver_orders \
-    .groupBy("customer_id") \
+gold_customer_metrics = (silver_orders
+    .groupBy("customer_id")
     .agg(
         count("order_id").alias("total_orders"),
         sum("amount").alias("total_spend"),
         avg("amount").alias("avg_order_value"),
         max("order_date").alias("last_order_date")
-    ) \
-    .join(silver_customers, "customer_id") \
+    )
+    .join(silver_customers, "customer_id")
     .select(
         "customer_id",
         "customer_name",
@@ -194,11 +194,11 @@ gold_customer_metrics = silver_orders \
         "total_spend",
         "avg_order_value",
         "last_order_date"
-    )
+    ))
 
-gold_customer_metrics.write.format("delta") \
-    .mode("overwrite") \
-    .save("/mnt/gold/customer_metrics")
+(gold_customer_metrics.write.format("delta")
+    .mode("overwrite")
+    .save("/mnt/gold/customer_metrics"))
 ```
 
 ```sql

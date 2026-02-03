@@ -424,10 +424,10 @@ event_log_df = spark.sql("""
 """)
 
 # Write to external sink
-event_log_df.write \
-    .format("json") \
-    .mode("append") \
-    .save("/Volumes/monitoring/dlt_events/")
+(event_log_df.write
+    .format("json")
+    .mode("append")
+    .save("/Volumes/monitoring/dlt_events/"))
 
 # Or stream to Kafka/Event Hub for real-time monitoring
 ```

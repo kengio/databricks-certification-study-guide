@@ -90,18 +90,18 @@ from pyspark.sql.functions import row_number, col
 # Keep the LATEST record per key
 window = Window.partitionBy("order_id").orderBy(col("updated_at").desc())
 
-df_latest = df \
-    .withColumn("rn", row_number().over(window)) \
-    .filter(col("rn") == 1) \
-    .drop("rn")
+df_latest = (df
+    .withColumn("rn", row_number().over(window))
+    .filter(col("rn") == 1)
+    .drop("rn"))
 
 # Keep the FIRST record per key
 window = Window.partitionBy("order_id").orderBy(col("created_at").asc())
 
-df_first = df \
-    .withColumn("rn", row_number().over(window)) \
-    .filter(col("rn") == 1) \
-    .drop("rn")
+df_first = (df
+    .withColumn("rn", row_number().over(window))
+    .filter(col("rn") == 1)
+    .drop("rn"))
 ```
 
 ### SQL Deduplication
@@ -137,9 +137,9 @@ from pyspark.sql.functions import rank, row_number, dense_rank
 
 window = Window.partitionBy("customer_id").orderBy(col("amount").desc())
 
-df.withColumn("row_num", row_number().over(window)) \
-    .withColumn("rank", rank().over(window)) \
-    .withColumn("dense_rank", dense_rank().over(window))
+(df.withColumn("row_num", row_number().over(window))
+    .withColumn("rank", rank().over(window))
+    .withColumn("dense_rank", dense_rank().over(window)))
 ```
 
 | Function | Ties Handling | Values for [100, 100, 90] |
@@ -211,10 +211,10 @@ stream_df = spark.readStream.format("delta").load("/source")
 
 deduped_stream = stream_df.dropDuplicates(["id"])
 
-query = deduped_stream.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoint") \
-    .start("/target")
+query = (deduped_stream.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoint")
+    .start("/target"))
 ```
 
 ### Watermark Requirement (Exam Important)
@@ -227,14 +227,14 @@ from pyspark.sql.functions import col
 # Streaming dedup WITH watermark - required for production
 stream_df = spark.readStream.format("delta").load("/source")
 
-deduped_stream = stream_df \
-    .withWatermark("event_time", "10 minutes") \
-    .dropDuplicates(["id", "event_time"])
+deduped_stream = (stream_df
+    .withWatermark("event_time", "10 minutes")
+    .dropDuplicates(["id", "event_time"]))
 
-query = deduped_stream.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoint") \
-    .start("/target")
+query = (deduped_stream.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoint")
+    .start("/target"))
 ```
 
 **Why watermarks are required:**
@@ -249,9 +249,9 @@ More efficient streaming dedup that only checks within watermark window:
 
 ```python
 # Only deduplicate within the watermark window
-deduped_stream = stream_df \
-    .withWatermark("event_time", "10 minutes") \
-    .dropDuplicatesWithinWatermark(["id"])
+deduped_stream = (stream_df
+    .withWatermark("event_time", "10 minutes")
+    .dropDuplicatesWithinWatermark(["id"]))
 ```
 
 | Method | State Size | Duplicate Detection |
@@ -265,9 +265,9 @@ deduped_stream = stream_df \
 from pyspark.sql.functions import window
 
 # Deduplicate within time windows
-deduped = stream_df \
-    .withWatermark("event_time", "1 hour") \
-    .dropDuplicates(["id", window("event_time", "1 hour")])
+deduped = (stream_df
+    .withWatermark("event_time", "1 hour")
+    .dropDuplicates(["id", window("event_time", "1 hour")]))
 ```
 
 ## Idempotent Writes (Exam Critical)
@@ -319,10 +319,10 @@ def process_batch_idempotent(batch_df, batch_id):
     ).execute()
 
 # Apply to streaming
-query = stream_df.writeStream \
-    .foreachBatch(process_batch_idempotent) \
-    .option("checkpointLocation", "/checkpoint") \
-    .start()
+query = (stream_df.writeStream
+    .foreachBatch(process_batch_idempotent)
+    .option("checkpointLocation", "/checkpoint")
+    .start())
 ```
 
 ### Transaction ID Pattern
@@ -373,9 +373,9 @@ Accept duplicates, add lineage:
 
 ```python
 # Bronze: Append all data, track source
-bronze_df = raw_df \
-    .withColumn("_ingestion_time", current_timestamp()) \
-    .withColumn("_source_file", input_file_name())
+bronze_df = (raw_df
+    .withColumn("_ingestion_time", current_timestamp())
+    .withColumn("_source_file", input_file_name()))
 
 bronze_df.write.format("delta").mode("append").save("/bronze/orders")
 ```
@@ -391,10 +391,10 @@ bronze_df = spark.read.format("delta").load("/bronze/orders")
 # Deduplicate - keep latest per order_id
 window = Window.partitionBy("order_id").orderBy(col("_ingestion_time").desc())
 
-silver_df = bronze_df \
-    .withColumn("rn", row_number().over(window)) \
-    .filter(col("rn") == 1) \
-    .drop("rn", "_source_file")
+silver_df = (bronze_df
+    .withColumn("rn", row_number().over(window))
+    .filter(col("rn") == 1)
+    .drop("rn", "_source_file"))
 
 # MERGE to Silver
 target = DeltaTable.forPath(spark, "/silver/orders")
@@ -438,15 +438,15 @@ df.dropDuplicates()  # Slower, hashes all columns
 
 ```python
 # Efficient: Dedup within partitions
-df.repartition("date") \
-    .dropDuplicates(["order_id"])
+(df.repartition("date")
+    .dropDuplicates(["order_id"]))
 
 # Better for skewed data: Salt the key
 from pyspark.sql.functions import concat, lit, floor, rand
 
-df.withColumn("salt", floor(rand() * 10)) \
-    .repartition("salt") \
-    .dropDuplicates(["order_id"])
+(df.withColumn("salt", floor(rand() * 10))
+    .repartition("salt")
+    .dropDuplicates(["order_id"]))
 ```
 
 ### Memory for Streaming State
@@ -465,9 +465,9 @@ spark.conf.set("spark.sql.streaming.stateStore.stateSchemaCheck", "true")
 
 ```python
 # Find duplicate counts
-duplicate_counts = df.groupBy("order_id") \
-    .count() \
-    .filter(col("count") > 1)
+duplicate_counts = (df.groupBy("order_id")
+    .count()
+    .filter(col("count") > 1))
 
 total_duplicates = duplicate_counts.agg(
     sum(col("count") - 1)

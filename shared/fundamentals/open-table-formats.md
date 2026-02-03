@@ -171,23 +171,23 @@ Process only changed records:
 
 ```python
 # Read only records changed since last commit
-df = spark.read.format("hudi") \
-    .option("hoodie.datasource.query.type", "incremental") \
-    .option("hoodie.datasource.read.begin.instanttime", "20250101000000") \
-    .load("/path/to/hudi_table")
+df = (spark.read.format("hudi")
+    .option("hoodie.datasource.query.type", "incremental")
+    .option("hoodie.datasource.read.begin.instanttime", "20250101000000")
+    .load("/path/to/hudi_table"))
 ```
 
 **Record Keys and Precombine**
 
 ```python
 # Write with record key for upserts
-df.write.format("hudi") \
-    .option("hoodie.table.name", "orders") \
-    .option("hoodie.datasource.write.recordkey.field", "order_id") \
-    .option("hoodie.datasource.write.precombine.field", "updated_at") \
-    .option("hoodie.datasource.write.operation", "upsert") \
-    .mode("append") \
-    .save("/path/to/hudi_table")
+(df.write.format("hudi")
+    .option("hoodie.table.name", "orders")
+    .option("hoodie.datasource.write.recordkey.field", "order_id")
+    .option("hoodie.datasource.write.precombine.field", "updated_at")
+    .option("hoodie.datasource.write.operation", "upsert")
+    .mode("append")
+    .save("/path/to/hudi_table"))
 ```
 
 ### Reading Hudi on Databricks

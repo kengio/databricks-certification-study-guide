@@ -23,12 +23,12 @@ databricks-certification-study-guide/
 │   ├── ml-professional/
 │   └── genai-engineer-associate/
 ├── shared/                  # Content shared across certifications
-│   ├── fundamentals/         # Core concepts (Delta Lake, Spark, etc.)
-│   ├── cheat-sheets/         # Quick reference guides
-│   ├── appendix/             # Glossary, comparisons, errors
-│   └── code-examples/        # Python and SQL examples
-├── learning-paths/           # Certification progression guides
-└── images/                   # Shared images and diagrams
+│   ├── fundamentals/        # Core concepts (Delta Lake, Spark, etc.)
+│   ├── cheat-sheets/        # Quick reference guides
+│   ├── appendix/            # Glossary, comparisons, errors
+│   └── code-examples/       # Python and SQL examples
+├── learning-paths/          # Certification progression guides
+└── images/                  # Shared images and diagrams
 ```
 
 ## Content Guidelines
@@ -44,6 +44,20 @@ databricks-certification-study-guide/
 - Always run markdownlint to check for issues with every MD file
 - Ensure headings have blank lines before and after them (MD022 rule)
 - Use appropriate code blocks (SQL, Python, Scala)
+- **Use parenthesized expressions** for multi-line Python method chains instead of backslash `\` continuations:
+
+  ```python
+  # Preferred: parenthesized expression
+  df = (spark.read.format("delta")
+      .option("key", "value")
+      .load("/path"))
+
+  # Avoid: backslash continuation
+  df = spark.read.format("delta") \
+      .option("key", "value") \
+      .load("/path")
+  ```
+
 - **Use Obsidian foldable callouts** for answers/spoilers (collapsed by default in Obsidian). Use the `[!success]-` callout type:
 
   ```markdown

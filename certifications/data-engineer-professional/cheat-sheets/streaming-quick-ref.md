@@ -7,35 +7,35 @@
 df = spark.readStream.format("delta").table("source_table")
 
 # Read from Auto Loader
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema/path") \
-    .load("/data/path")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema/path")
+    .load("/data/path"))
 
 # Read from Kafka
-df = spark.readStream.format("kafka") \
-    .option("kafka.bootstrap.servers", "host:port") \
-    .option("subscribe", "topic") \
-    .load()
+df = (spark.readStream.format("kafka")
+    .option("kafka.bootstrap.servers", "host:port")
+    .option("subscribe", "topic")
+    .load())
 ```
 
 ## Basic Streaming Write
 
 ```python
 # Write to Delta
-df.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .option("checkpointLocation", "/checkpoint/path") \
-    .toTable("target_table")
+(df.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/checkpoint/path")
+    .toTable("target_table"))
 
 # Write to Delta with trigger
-df.writeStream \
-    .format("delta") \
-    .outputMode("append") \
-    .trigger(availableNow=True) \
-    .option("checkpointLocation", "/checkpoint/path") \
-    .toTable("target_table")
+(df.writeStream
+    .format("delta")
+    .outputMode("append")
+    .trigger(availableNow=True)
+    .option("checkpointLocation", "/checkpoint/path")
+    .toTable("target_table"))
 ```
 
 ## Trigger Types
@@ -71,9 +71,9 @@ df.writeStream \
 
 ```python
 # Define watermark for late data
-df.withWatermark("event_time", "10 minutes") \
-    .groupBy(window("event_time", "5 minutes")) \
-    .count()
+(df.withWatermark("event_time", "10 minutes")
+    .groupBy(window("event_time", "5 minutes"))
+    .count())
 ```
 
 | Watermark | Meaning |
@@ -106,12 +106,12 @@ df.groupBy(session_window("timestamp", "10 minutes"))
 | `cloudFiles.useNotifications` | Use file notifications (vs directory listing) |
 
 ```python
-spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("cloudFiles.schemaEvolutionMode", "addNewColumns") \
-    .option("cloudFiles.inferColumnTypes", "true") \
-    .load("/data/path")
+(spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+    .option("cloudFiles.inferColumnTypes", "true")
+    .load("/data/path"))
 ```
 
 ## Stream-Stream Joins
@@ -148,10 +148,10 @@ def process_batch(batch_df, batch_id):
     # Custom processing per micro-batch
     batch_df.write.format("delta").mode("append").save("/path")
 
-df.writeStream \
-    .foreachBatch(process_batch) \
-    .option("checkpointLocation", "/checkpoint") \
-    .start()
+(df.writeStream
+    .foreachBatch(process_batch)
+    .option("checkpointLocation", "/checkpoint")
+    .start())
 ```
 
 ## Monitoring

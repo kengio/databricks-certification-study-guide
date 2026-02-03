@@ -235,13 +235,13 @@ password = dbutils.secrets.get("db-scope", "password")
 # JDBC connection
 jdbc_url = f"jdbc:postgresql://{host}:{port}/{database}"
 
-df = spark.read \
-    .format("jdbc") \
-    .option("url", jdbc_url) \
-    .option("dbtable", "public.customers") \
-    .option("user", username) \
-    .option("password", password) \
-    .load()
+df = (spark.read
+    .format("jdbc")
+    .option("url", jdbc_url)
+    .option("dbtable", "public.customers")
+    .option("user", username)
+    .option("password", password)
+    .load())
 ```
 
 ### API Authentication

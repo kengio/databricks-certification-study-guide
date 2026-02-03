@@ -93,17 +93,17 @@ from pyspark.sql.functions import current_timestamp, input_file_name, lit
 raw_df = spark.read.format("json").load("/Volumes/raw/landing/customers/")
 
 # Add ingestion metadata (standard Bronze practice)
-bronze_df = raw_df \
-    .withColumn("_ingested_at", current_timestamp()) \
-    .withColumn("_source_file", input_file_name()) \
-    .withColumn("_source_system", lit("crm_api"))
+bronze_df = (raw_df
+    .withColumn("_ingested_at", current_timestamp())
+    .withColumn("_source_file", input_file_name())
+    .withColumn("_source_system", lit("crm_api")))
 
 # Write to Bronze layer (append-only)
-bronze_df.write \
-    .format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .saveAsTable("bronze.customers_raw")
+(bronze_df.write
+    .format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
+    .saveAsTable("bronze.customers_raw"))
 ```
 
 ```sql
@@ -129,23 +129,23 @@ PARTITIONED BY (_ingested_at::date);
 
 ```python
 # Auto Loader for incremental Bronze ingestion
-df = spark.readStream \
-    .format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/checkpoints/customers/_schema") \
-    .option("cloudFiles.inferColumnTypes", "true") \
-    .option("cloudFiles.schemaEvolutionMode", "addNewColumns") \
-    .load("/Volumes/raw/landing/customers/")
+df = (spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/checkpoints/customers/_schema")
+    .option("cloudFiles.inferColumnTypes", "true")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+    .load("/Volumes/raw/landing/customers/"))
 
 # Add metadata and write to Bronze
-df.withColumn("_ingested_at", current_timestamp()) \
-  .withColumn("_source_file", input_file_name()) \
-  .writeStream \
-  .format("delta") \
-  .option("checkpointLocation", "/checkpoints/customers/_checkpoint") \
-  .option("mergeSchema", "true") \
-  .trigger(availableNow=True) \
-  .toTable("bronze.customers_raw")
+(df.withColumn("_ingested_at", current_timestamp())
+  .withColumn("_source_file", input_file_name())
+  .writeStream
+  .format("delta")
+  .option("checkpointLocation", "/checkpoints/customers/_checkpoint")
+  .option("mergeSchema", "true")
+  .trigger(availableNow=True)
+  .toTable("bronze.customers_raw"))
 ```
 
 ### Bronze Layer Best Practices
@@ -191,14 +191,14 @@ from pyspark.sql.functions import col, when, regexp_replace, lower, trim
 bronze_df = spark.read.table("bronze.customers_raw")
 
 # Clean and transform to Silver
-silver_df = bronze_df \
-    .dropDuplicates(["customer_id"]) \
-    .withColumn("customer_id", col("customer_id").cast("int")) \
-    .withColumn("email", lower(trim(col("email")))) \
-    .withColumn("name", trim(col("name"))) \
+silver_df = (bronze_df
+    .dropDuplicates(["customer_id"])
+    .withColumn("customer_id", col("customer_id").cast("int"))
+    .withColumn("email", lower(trim(col("email"))))
+    .withColumn("name", trim(col("name")))
     .withColumn("is_valid_email",
-        col("email").rlike("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) \
-    .filter(col("customer_id").isNotNull()) \
+        col("email").rlike("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"))
+    .filter(col("customer_id").isNotNull())
     .select(
         "customer_id",
         "name",
@@ -206,7 +206,7 @@ silver_df = bronze_df \
         "is_valid_email",
         "_source_system",
         "_ingested_at"
-    )
+    ))
 
 # Write to Silver with MERGE for idempotency
 silver_df.createOrReplaceTempView("bronze_updates")
@@ -249,23 +249,23 @@ from delta.tables import DeltaTable
 # Incremental Silver update with MERGE
 def update_silver_customers(bronze_df):
     # Clean and prepare data
-    updates_df = bronze_df \
-        .dropDuplicates(["customer_id"]) \
-        .withColumn("customer_id", col("customer_id").cast("int")) \
-        .filter(col("customer_id").isNotNull())
+    updates_df = (bronze_df
+        .dropDuplicates(["customer_id"])
+        .withColumn("customer_id", col("customer_id").cast("int"))
+        .filter(col("customer_id").isNotNull()))
 
     # Get Silver table
     silver_table = DeltaTable.forName(spark, "silver.customers")
 
     # MERGE updates
-    silver_table.alias("target") \
+    (silver_table.alias("target")
         .merge(
             updates_df.alias("source"),
             "target.customer_id = source.customer_id"
-        ) \
-        .whenMatchedUpdateAll() \
-        .whenNotMatchedInsertAll() \
-        .execute()
+        )
+        .whenMatchedUpdateAll()
+        .whenNotMatchedInsertAll()
+        .execute())
 ```
 
 ### Silver Layer Best Practices
@@ -315,20 +315,20 @@ customers = spark.read.table("silver.customers")
 orders = spark.read.table("silver.orders")
 
 # Create Gold aggregate table
-customer_metrics = customers.join(orders, "customer_id") \
-    .groupBy("customer_id", "name", "email") \
+customer_metrics = (customers.join(orders, "customer_id")
+    .groupBy("customer_id", "name", "email")
     .agg(
         count("order_id").alias("total_orders"),
         sum("order_amount").alias("lifetime_value"),
         avg("order_amount").alias("avg_order_value"),
         max("order_date").alias("last_order_date")
-    )
+    ))
 
 # Write to Gold layer
-customer_metrics.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .saveAsTable("gold.customer_metrics")
+(customer_metrics.write
+    .format("delta")
+    .mode("overwrite")
+    .saveAsTable("gold.customer_metrics"))
 ```
 
 ```sql
@@ -580,10 +580,10 @@ invalid_df.write.mode("append").saveAsTable("silver.customers_quarantine")
 ```python
 # Add lineage tracking columns
 def add_lineage(df, source_table, transform_name):
-    return df \
-        .withColumn("_source_table", lit(source_table)) \
-        .withColumn("_transform_name", lit(transform_name)) \
-        .withColumn("_transform_timestamp", current_timestamp())
+    return (df
+        .withColumn("_source_table", lit(source_table))
+        .withColumn("_transform_name", lit(transform_name))
+        .withColumn("_transform_timestamp", current_timestamp()))
 
 # Bronze to Silver
 bronze_df = spark.read.table("bronze.customers_raw")

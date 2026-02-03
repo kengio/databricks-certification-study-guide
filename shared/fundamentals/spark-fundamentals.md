@@ -64,9 +64,9 @@ The entry point for Spark functionality:
 from pyspark.sql import SparkSession
 
 # In Databricks, SparkSession is pre-configured as 'spark'
-spark = SparkSession.builder \
-    .appName("MyApp") \
-    .getOrCreate()
+spark = (SparkSession.builder
+    .appName("MyApp")
+    .getOrCreate())
 
 # Access SparkContext
 sc = spark.sparkContext

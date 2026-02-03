@@ -156,13 +156,13 @@ flowchart LR
 
 ```python
 # Bad: Multiple shuffles
-df.groupBy("a").agg(sum("b")) \
-  .join(other_df, "a") \
-  .groupBy("a").agg(count("*"))
+(df.groupBy("a").agg(sum("b"))
+  .join(other_df, "a")
+  .groupBy("a").agg(count("*")))
 
 # Better: Combine operations
-df.join(other_df, "a") \
-  .groupBy("a").agg(sum("b"), count("*"))
+(df.join(other_df, "a")
+  .groupBy("a").agg(sum("b"), count("*")))
 ```
 
 ### Shuffle Partition Tuning
@@ -184,12 +184,12 @@ spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
 
 ```python
 # Filter before shuffle
-df.filter(col("date") >= "2024-01-01") \
-  .groupBy("customer_id").agg(sum("amount"))
+(df.filter(col("date") >= "2024-01-01")
+  .groupBy("customer_id").agg(sum("amount")))
 
 # Select only needed columns before shuffle
-df.select("customer_id", "amount") \
-  .groupBy("customer_id").agg(sum("amount"))
+(df.select("customer_id", "amount")
+  .groupBy("customer_id").agg(sum("amount")))
 ```
 
 ## Join Optimization
@@ -428,8 +428,8 @@ WHERE event_type LIKE '%purchase%';
 
 ```python
 # Filters pushed to scan
-df = spark.read.parquet("data/") \
-    .filter(col("date") == "2024-01-15")  # Pushed to file scan
+df = (spark.read.parquet("data/")
+    .filter(col("date") == "2024-01-15"))  # Pushed to file scan
 
 # Check query plan
 df.explain()
@@ -440,8 +440,8 @@ df.explain()
 
 ```python
 # Only read needed columns
-df = spark.read.parquet("data/") \
-    .select("id", "name", "amount")  # Only 3 columns read
+df = (spark.read.parquet("data/")
+    .select("id", "name", "amount"))  # Only 3 columns read
 
 # Avoid SELECT *
 # Bad: df.select("*")

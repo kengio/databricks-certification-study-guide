@@ -110,10 +110,10 @@ checkpointLocation must be specified
 **Solution**:
 
 ```python
-df.writeStream \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .format("delta") \
-    .start()
+(df.writeStream
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .format("delta")
+    .start())
 ```
 
 ### Watermark Required for State
@@ -125,9 +125,9 @@ Streaming aggregation requires watermark for state cleanup
 **Solution**:
 
 ```python
-df.withWatermark("event_time", "10 minutes") \
-    .groupBy(window("event_time", "5 minutes")) \
-    .count()
+(df.withWatermark("event_time", "10 minutes")
+    .groupBy(window("event_time", "5 minutes"))
+    .count())
 ```
 
 ## Auto Loader Errors
@@ -141,10 +141,10 @@ df.withWatermark("event_time", "10 minutes") \
 **Solution**:
 
 ```python
-spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/path/to/schema") \
-    .load("/data/path")
+(spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/path/to/schema")
+    .load("/data/path"))
 ```
 
 ### Schema Evolution Rescue
@@ -157,11 +157,11 @@ Found new columns that cannot be added to schema
 
 ```python
 # Use rescue column for unexpected data
-spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaEvolutionMode", "rescue") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .load("/data")
+(spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaEvolutionMode", "rescue")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .load("/data"))
 ```
 
 ## Unity Catalog Errors

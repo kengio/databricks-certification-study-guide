@@ -187,11 +187,11 @@ SELECT * FROM table_changes('table_name', 5);
 
 ```python
 # Python CDF read
-spark.read.format("delta") \
-  .option("readChangeFeed", "true") \
-  .option("startingVersion", 1) \
-  .option("endingVersion", 5) \
-  .table("table_name")
+(spark.read.format("delta")
+  .option("readChangeFeed", "true")
+  .option("startingVersion", 1)
+  .option("endingVersion", 5)
+  .table("table_name"))
 ```
 
 > **Exam tip:** CDF only tracks changes made **after** it's enabled — it is NOT retroactive.

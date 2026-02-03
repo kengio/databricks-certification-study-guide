@@ -108,34 +108,34 @@ SELECT * FROM table_changes('catalog.schema.orders', 5);
 
 ```python
 # Read changes by version range
-changes_df = spark.read.format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingVersion", 1) \
-    .option("endingVersion", 10) \
-    .table("catalog.schema.orders")
+changes_df = (spark.read.format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", 1)
+    .option("endingVersion", 10)
+    .table("catalog.schema.orders"))
 
 # Read changes by timestamp range
-changes_df = spark.read.format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingTimestamp", "2024-01-01") \
-    .option("endingTimestamp", "2024-01-31") \
-    .table("catalog.schema.orders")
+changes_df = (spark.read.format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingTimestamp", "2024-01-01")
+    .option("endingTimestamp", "2024-01-31")
+    .table("catalog.schema.orders"))
 ```
 
 ### Reading Change Data - Python (Streaming)
 
 ```python
 # Stream changes
-changes_stream = spark.readStream.format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingVersion", 1) \
-    .table("catalog.schema.orders")
+changes_stream = (spark.readStream.format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", 1)
+    .table("catalog.schema.orders"))
 
 # Process the stream
-query = changes_stream.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoint") \
-    .start("/target/path")
+query = (changes_stream.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoint")
+    .start("/target/path"))
 ```
 
 ### CDF Change Types
@@ -164,10 +164,10 @@ sequenceDiagram
 ```python
 from pyspark.sql.functions import col
 
-changes_df = spark.read.format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingVersion", 1) \
-    .table("orders")
+changes_df = (spark.read.format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", 1)
+    .table("orders"))
 
 # Get only inserts
 inserts = changes_df.filter(col("_change_type") == "insert")
@@ -188,10 +188,10 @@ latest_changes = changes_df.filter(
 
 ```python
 # Read changes from source
-source_changes = spark.read.format("delta") \
-    .option("readChangeFeed", "true") \
-    .option("startingVersion", last_processed_version) \
-    .table("bronze.orders")
+source_changes = (spark.read.format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", last_processed_version)
+    .table("bronze.orders"))
 
 # Filter to actionable changes
 actionable = source_changes.filter(
@@ -454,10 +454,10 @@ def process_cdc_idempotent(changes_df, target_table):
     from pyspark.sql.functions import row_number
 
     window = Window.partitionBy("id").orderBy(col("_commit_version").desc())
-    latest_changes = changes_df \
-        .withColumn("rn", row_number().over(window)) \
-        .filter(col("rn") == 1) \
-        .drop("rn")
+    latest_changes = (changes_df
+        .withColumn("rn", row_number().over(window))
+        .filter(col("rn") == 1)
+        .drop("rn"))
 
     # MERGE ensures idempotency
     target = DeltaTable.forName(spark, target_table)
@@ -480,10 +480,10 @@ def process_cdc_idempotent(changes_df, target_table):
 # Use sequence column to handle out-of-order
 window = Window.partitionBy("order_id").orderBy(col("event_timestamp").desc())
 
-ordered_changes = changes_df \
-    .withColumn("rn", row_number().over(window)) \
-    .filter(col("rn") == 1) \
-    .drop("rn")
+ordered_changes = (changes_df
+    .withColumn("rn", row_number().over(window))
+    .filter(col("rn") == 1)
+    .drop("rn"))
 ```
 
 ### Deduplication Before Apply
@@ -522,9 +522,9 @@ spark.sql("""
 """)
 
 # Stream Bronze CDC to Silver
-bronze_cdf = spark.readStream.format("delta") \
-    .option("readChangeFeed", "true") \
-    .table("bronze.orders")
+bronze_cdf = (spark.readStream.format("delta")
+    .option("readChangeFeed", "true")
+    .table("bronze.orders"))
 
 def apply_to_silver(batch_df, batch_id):
     # Process and apply changes
@@ -535,10 +535,10 @@ def apply_to_silver(batch_df, batch_id):
     target = DeltaTable.forName(spark, "silver.orders")
     # ... MERGE logic ...
 
-query = bronze_cdf.writeStream \
-    .foreachBatch(apply_to_silver) \
-    .option("checkpointLocation", "/checkpoint/bronze_to_silver") \
-    .start()
+query = (bronze_cdf.writeStream
+    .foreachBatch(apply_to_silver)
+    .option("checkpointLocation", "/checkpoint/bronze_to_silver")
+    .start())
 ```
 
 ## Row Tracking
@@ -626,15 +626,15 @@ bronze_table = spark.sql("""
 """)
 
 # Silver: Stream from Bronze CDF
-bronze_changes = spark.readStream.format("delta") \
-    .option("readChangeFeed", "true") \
-    .table("bronze.orders")
+bronze_changes = (spark.readStream.format("delta")
+    .option("readChangeFeed", "true")
+    .table("bronze.orders"))
 
 def bronze_to_silver(batch_df, batch_id):
     # Apply transformations
-    cleaned = batch_df.filter(col("_change_type") != "update_preimage") \
-        .transform(apply_data_quality_rules) \
-        .transform(standardize_columns)
+    cleaned = (batch_df.filter(col("_change_type") != "update_preimage")
+        .transform(apply_data_quality_rules)
+        .transform(standardize_columns))
 
     # MERGE to Silver (also CDF enabled)
     silver_table = DeltaTable.forName(spark, "silver.orders")
@@ -647,29 +647,29 @@ def bronze_to_silver(batch_df, batch_id):
     ).whenNotMatchedInsertAll(
     ).execute()
 
-query = bronze_changes.writeStream \
-    .foreachBatch(bronze_to_silver) \
-    .option("checkpointLocation", "/checkpoint/bronze_to_silver") \
-    .start()
+query = (bronze_changes.writeStream
+    .foreachBatch(bronze_to_silver)
+    .option("checkpointLocation", "/checkpoint/bronze_to_silver")
+    .start())
 
 # Gold: Stream from Silver CDF
-silver_changes = spark.readStream.format("delta") \
-    .option("readChangeFeed", "true") \
-    .table("silver.orders")
+silver_changes = (spark.readStream.format("delta")
+    .option("readChangeFeed", "true")
+    .table("silver.orders"))
 
 # Aggregate to Gold
-gold_query = silver_changes \
-    .filter(col("_change_type").isin("insert", "update_postimage")) \
-    .groupBy(to_date("order_date").alias("date")) \
+gold_query = (silver_changes
+    .filter(col("_change_type").isin("insert", "update_postimage"))
+    .groupBy(to_date("order_date").alias("date"))
     .agg(
         sum("amount").alias("daily_total"),
         count("*").alias("order_count")
-    ) \
-    .writeStream \
-    .format("delta") \
-    .outputMode("complete") \
-    .option("checkpointLocation", "/checkpoint/silver_to_gold") \
-    .toTable("gold.daily_summary")
+    )
+    .writeStream
+    .format("delta")
+    .outputMode("complete")
+    .option("checkpointLocation", "/checkpoint/silver_to_gold")
+    .toTable("gold.daily_summary"))
 ```
 
 ### CDC Amplification
@@ -697,11 +697,11 @@ Integrating with external CDC tools like Debezium.
 
 ```python
 # Debezium CDC format from Kafka
-debezium_df = spark.readStream \
-    .format("kafka") \
-    .option("kafka.bootstrap.servers", "broker:9092") \
-    .option("subscribe", "dbserver1.inventory.orders") \
-    .load()
+debezium_df = (spark.readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "broker:9092")
+    .option("subscribe", "dbserver1.inventory.orders")
+    .load())
 
 # Parse Debezium envelope
 from pyspark.sql.functions import from_json, col
@@ -714,9 +714,9 @@ debezium_schema = StructType([
     StructField("source", source_schema)
 ])
 
-parsed = debezium_df \
-    .select(from_json(col("value").cast("string"), debezium_schema).alias("data")) \
-    .select("data.*")
+parsed = (debezium_df
+    .select(from_json(col("value").cast("string"), debezium_schema).alias("data"))
+    .select("data.*"))
 
 # Map Debezium ops to Delta operations
 def debezium_to_delta(df):

@@ -4,16 +4,16 @@
 
 ```python
 # Basic Auto Loader read
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/path/to/schema") \
-    .load("/path/to/source")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/path/to/schema")
+    .load("/path/to/source"))
 
 # Write to Delta table
-df.writeStream \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .trigger(availableNow=True) \
-    .toTable("catalog.schema.target_table")
+(df.writeStream
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .trigger(availableNow=True)
+    .toTable("catalog.schema.target_table"))
 ```
 
 ## Essential Options
@@ -27,12 +27,12 @@ df.writeStream \
 
 ```python
 # With schema hints and type inference
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("cloudFiles.inferColumnTypes", "true") \
-    .option("cloudFiles.schemaHints", "id INT, timestamp TIMESTAMP") \
-    .load("/data/source")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("cloudFiles.inferColumnTypes", "true")
+    .option("cloudFiles.schemaHints", "id INT, timestamp TIMESTAMP")
+    .load("/data/source"))
 ```
 
 ## Schema Evolution Modes
@@ -46,22 +46,22 @@ df = spark.readStream.format("cloudFiles") \
 
 ```python
 # Schema evolution with addNewColumns
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("cloudFiles.schemaEvolutionMode", "addNewColumns") \
-    .load("/data/source")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+    .load("/data/source"))
 ```
 
 ### Rescued Data Column
 
 ```python
 # Always include rescued data column
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("cloudFiles.schemaEvolutionMode", "rescue") \
-    .load("/data/source")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("cloudFiles.schemaEvolutionMode", "rescue")
+    .load("/data/source"))
 
 # _rescued_data column contains:
 # - Unparseable records
@@ -78,11 +78,11 @@ df = spark.readStream.format("cloudFiles") \
 
 ```python
 # File notification mode (scalable for large directories)
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("cloudFiles.useNotifications", "true") \
-    .load("/data/source")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("cloudFiles.useNotifications", "true")
+    .load("/data/source"))
 ```
 
 | Aspect | Directory Listing | File Notification |
@@ -98,31 +98,31 @@ df = spark.readStream.format("cloudFiles") \
 ### JSON
 
 ```python
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("multiLine", "true") \
-    .load("/data/json/")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("multiLine", "true")
+    .load("/data/json/"))
 ```
 
 ### CSV
 
 ```python
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "csv") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("header", "true") \
-    .option("sep", ",") \
-    .option("inferSchema", "false") \
-    .load("/data/csv/")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "csv")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("header", "true")
+    .option("sep", ",")
+    .option("inferSchema", "false")
+    .load("/data/csv/"))
 ```
 
 ### Parquet
 
 ```python
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "parquet") \
-    .load("/data/parquet/")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "parquet")
+    .load("/data/parquet/"))
 # No schema location needed - schema embedded in files
 ```
 
@@ -145,34 +145,34 @@ df = spark.readStream.format("cloudFiles") \
 
 ```python
 # Only process JSON files
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .option("pathGlobFilter", "*.json") \
-    .load("/data/source")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .option("pathGlobFilter", "*.json")
+    .load("/data/source"))
 
 # Recursive file lookup
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "parquet") \
-    .option("recursiveFileLookup", "true") \
-    .load("/data/source")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "parquet")
+    .option("recursiveFileLookup", "true")
+    .load("/data/source"))
 ```
 
 ## Metadata Columns
 
 ```python
 # Access file metadata
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/schema") \
-    .load("/data/source") \
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/schema")
+    .load("/data/source")
     .select(
         "*",
         "_metadata.file_path",
         "_metadata.file_name",
         "_metadata.file_size",
         "_metadata.file_modification_time"
-    )
+    ))
 ```
 
 | Metadata Column | Description |
@@ -186,26 +186,26 @@ df = spark.readStream.format("cloudFiles") \
 
 ```python
 # Production Auto Loader pipeline
-df = spark.readStream.format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/mnt/checkpoints/schema") \
-    .option("cloudFiles.inferColumnTypes", "true") \
-    .option("cloudFiles.schemaEvolutionMode", "addNewColumns") \
-    .option("cloudFiles.useNotifications", "true") \
-    .option("maxFilesPerTrigger", "1000") \
-    .load("/mnt/landing/events/")
+df = (spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/mnt/checkpoints/schema")
+    .option("cloudFiles.inferColumnTypes", "true")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+    .option("cloudFiles.useNotifications", "true")
+    .option("maxFilesPerTrigger", "1000")
+    .load("/mnt/landing/events/"))
 
 # Add metadata and write
-df.select(
+(df.select(
     "*",
     "_metadata.file_path".alias("source_file"),
     current_timestamp().alias("ingestion_time")
-).writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/mnt/checkpoints/events") \
-    .option("mergeSchema", "true") \
-    .trigger(availableNow=True) \
-    .toTable("bronze.events")
+).writeStream
+    .format("delta")
+    .option("checkpointLocation", "/mnt/checkpoints/events")
+    .option("mergeSchema", "true")
+    .trigger(availableNow=True)
+    .toTable("bronze.events"))
 ```
 
 ## Common Exam Tips

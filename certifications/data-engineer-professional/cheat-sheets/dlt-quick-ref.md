@@ -29,8 +29,8 @@ def raw_events():
 # Materialized view
 @dlt.table
 def aggregated_sales():
-    return spark.read.table("live.sales") \
-        .groupBy("region").agg(sum("amount").alias("total"))
+    return (spark.read.table("live.sales")
+        .groupBy("region").agg(sum("amount").alias("total")))
 ```
 
 ## DLT Decorator Options

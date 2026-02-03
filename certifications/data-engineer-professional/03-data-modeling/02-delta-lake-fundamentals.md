@@ -125,18 +125,18 @@ TBLPROPERTIES (
 df.write.format("delta").saveAsTable("main.default.customers")
 
 # Create with options
-df.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .option("overwriteSchema", "true") \
-    .partitionBy("order_date") \
-    .saveAsTable("main.default.orders")
+(df.write
+    .format("delta")
+    .mode("overwrite")
+    .option("overwriteSchema", "true")
+    .partitionBy("order_date")
+    .saveAsTable("main.default.orders"))
 
 # Save to path (external table)
-df.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .save("/Volumes/main/default/data/customers")
+(df.write
+    .format("delta")
+    .mode("overwrite")
+    .save("/Volumes/main/default/data/customers"))
 ```
 
 ## ACID Transactions
@@ -205,14 +205,14 @@ SELECT * FROM main.default.customers@20240115100000;
 
 ```python
 # Read specific version
-df = spark.read.format("delta") \
-    .option("versionAsOf", 5) \
-    .load("/path/to/table")
+df = (spark.read.format("delta")
+    .option("versionAsOf", 5)
+    .load("/path/to/table"))
 
 # Read specific timestamp
-df = spark.read.format("delta") \
-    .option("timestampAsOf", "2024-01-15 10:00:00") \
-    .load("/path/to/table")
+df = (spark.read.format("delta")
+    .option("timestampAsOf", "2024-01-15 10:00:00")
+    .load("/path/to/table"))
 ```
 
 ### View Table History
@@ -282,8 +282,8 @@ SHALLOW CLONE main.default.customers VERSION AS OF 10;
 from delta.tables import DeltaTable
 
 # Shallow clone
-DeltaTable.forName(spark, "main.default.customers") \
-    .clone("/path/to/clone", isShallow=True)
+(DeltaTable.forName(spark, "main.default.customers")
+    .clone("/path/to/clone", isShallow=True))
 ```
 
 ### Deep Clone
@@ -303,8 +303,8 @@ LOCATION 's3://archive-bucket/customers/';
 
 ```python
 # Deep clone
-DeltaTable.forName(spark, "main.default.customers") \
-    .clone("/path/to/clone", isShallow=False)
+(DeltaTable.forName(spark, "main.default.customers")
+    .clone("/path/to/clone", isShallow=False))
 ```
 
 ### Clone Comparison
@@ -440,24 +440,24 @@ from delta.tables import DeltaTable
 
 delta_table = DeltaTable.forName(spark, "main.default.customers")
 
-delta_table.alias("target") \
+(delta_table.alias("target")
     .merge(
         source_df.alias("source"),
         "target.customer_id = source.customer_id"
-    ) \
-    .whenMatchedDelete(condition="source.is_deleted = true") \
+    )
+    .whenMatchedDelete(condition="source.is_deleted = true")
     .whenMatchedUpdate(set={
         "name": "source.name",
         "email": "source.email",
         "updated_at": "current_timestamp()"
-    }) \
+    })
     .whenNotMatchedInsert(values={
         "customer_id": "source.customer_id",
         "name": "source.name",
         "email": "source.email",
         "created_at": "current_timestamp()"
-    }) \
-    .execute()
+    })
+    .execute())
 ```
 
 ## Table Maintenance

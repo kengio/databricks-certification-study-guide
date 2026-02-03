@@ -123,10 +123,10 @@ new_records = spark.sql(f"""
 """)
 
 # Process and write
-new_records.write \
-    .format("delta") \
-    .mode("append") \
-    .save("/path/to/target")
+(new_records.write
+    .format("delta")
+    .mode("append")
+    .save("/path/to/target"))
 
 # Update watermark
 new_max = new_records.agg(max("updated_at")).collect()[0][0]
@@ -170,9 +170,9 @@ Checkpoints track streaming progress for exactly-once processing.
 ### Checkpoint Location
 
 ```python
-query = df.writeStream \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .start()
+query = (df.writeStream
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .start())
 ```
 
 ### Checkpoint Structure
@@ -194,9 +194,9 @@ When a streaming query restarts:
 
 ```python
 # Streaming query automatically recovers from checkpoint
-query = df.writeStream \
-    .option("checkpointLocation", "/path/to/checkpoint") \
-    .start()
+query = (df.writeStream
+    .option("checkpointLocation", "/path/to/checkpoint")
+    .start())
 
 # After failure, restart the same query
 # It will resume from last checkpoint
@@ -223,21 +223,21 @@ dbutils.fs.rm("/path/to/checkpoint", recurse=True)
 
 ```python
 # Basic streaming read
-df = spark.readStream \
-    .format("delta") \
-    .load("/path/to/delta/table")
+df = (spark.readStream
+    .format("delta")
+    .load("/path/to/delta/table"))
 
 # Start from specific version
-df = spark.readStream \
-    .format("delta") \
-    .option("startingVersion", 10) \
-    .load("/path/to/delta/table")
+df = (spark.readStream
+    .format("delta")
+    .option("startingVersion", 10)
+    .load("/path/to/delta/table"))
 
 # Start from timestamp
-df = spark.readStream \
-    .format("delta") \
-    .option("startingTimestamp", "2024-01-01") \
-    .load("/path/to/delta/table")
+df = (spark.readStream
+    .format("delta")
+    .option("startingTimestamp", "2024-01-01")
+    .load("/path/to/delta/table"))
 ```
 
 ### Handling Updates and Deletes
@@ -246,16 +246,16 @@ By default, streaming from Delta fails if source has updates or deletes.
 
 ```python
 # Skip deletes
-df = spark.readStream \
-    .format("delta") \
-    .option("ignoreDeletes", "true") \
-    .load("/path/to/table")
+df = (spark.readStream
+    .format("delta")
+    .option("ignoreDeletes", "true")
+    .load("/path/to/table"))
 
 # Skip updates and deletes
-df = spark.readStream \
-    .format("delta") \
-    .option("ignoreChanges", "true") \
-    .load("/path/to/table")
+df = (spark.readStream
+    .format("delta")
+    .option("ignoreChanges", "true")
+    .load("/path/to/table"))
 ```
 
 | Option | Behavior |
@@ -277,16 +277,16 @@ Tables with Deletion Vectors enabled mark rows as deleted without rewriting file
 
 ```python
 # Limit files per trigger
-df = spark.readStream \
-    .format("delta") \
-    .option("maxFilesPerTrigger", 100) \
-    .load("/path/to/table")
+df = (spark.readStream
+    .format("delta")
+    .option("maxFilesPerTrigger", 100)
+    .load("/path/to/table"))
 
 # Limit bytes per trigger
-df = spark.readStream \
-    .format("delta") \
-    .option("maxBytesPerTrigger", "10g") \
-    .load("/path/to/table")
+df = (spark.readStream
+    .format("delta")
+    .option("maxBytesPerTrigger", "10g")
+    .load("/path/to/table"))
 ```
 
 ## MERGE for Incremental Updates
@@ -359,13 +359,13 @@ def process_incremental(table_name, source_query, target_path):
 last_version = get_last_processed_version("orders")
 
 # Get current version
-current_version = DeltaTable.forPath(spark, source_path).history(1) \
-    .select("version").collect()[0][0]
+current_version = (DeltaTable.forPath(spark, source_path).history(1)
+    .select("version").collect()[0][0])
 
 # Read changes between versions
-changes = spark.read.format("delta") \
-    .option("versionAsOf", current_version) \
-    .load(source_path)
+changes = (spark.read.format("delta")
+    .option("versionAsOf", current_version)
+    .load(source_path))
 
 # Filter to only new versions (time travel comparison)
 # ... process changes ...
@@ -384,11 +384,11 @@ Ideal for scheduled incremental jobs that need streaming semantics (checkpoints,
 
 ```python
 # Process all available data, then stop
-query = df.writeStream \
-    .format("delta") \
-    .trigger(availableNow=True) \
-    .option("checkpointLocation", "/checkpoint") \
-    .start("/output")
+query = (df.writeStream
+    .format("delta")
+    .trigger(availableNow=True)
+    .option("checkpointLocation", "/checkpoint")
+    .start("/output"))
 
 # Wait for completion
 query.awaitTermination()
@@ -409,20 +409,20 @@ query.awaitTermination()
 # Run daily via Databricks Workflows
 def daily_incremental_job():
     # Read stream from source
-    source = spark.readStream \
-        .format("delta") \
-        .option("maxFilesPerTrigger", 1000) \
-        .load("/source/path")
+    source = (spark.readStream
+        .format("delta")
+        .option("maxFilesPerTrigger", 1000)
+        .load("/source/path"))
 
     # Transform
     transformed = source.transform(apply_transformations)
 
     # Write with availableNow
-    query = transformed.writeStream \
-        .format("delta") \
-        .trigger(availableNow=True) \
-        .option("checkpointLocation", "/checkpoint") \
-        .start("/target/path")
+    query = (transformed.writeStream
+        .format("delta")
+        .trigger(availableNow=True)
+        .option("checkpointLocation", "/checkpoint")
+        .start("/target/path"))
 
     query.awaitTermination()
 ```
@@ -446,10 +446,10 @@ def idempotent_incremental(batch_df, batch_id):
     ).execute()
 
 # Use with foreachBatch
-query = source_stream.writeStream \
-    .foreachBatch(idempotent_incremental) \
-    .option("checkpointLocation", "/checkpoint") \
-    .start()
+query = (source_stream.writeStream
+    .foreachBatch(idempotent_incremental)
+    .option("checkpointLocation", "/checkpoint")
+    .start())
 ```
 
 ### Deduplication Before Write

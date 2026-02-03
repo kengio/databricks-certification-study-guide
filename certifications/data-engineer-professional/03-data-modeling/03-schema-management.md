@@ -91,11 +91,11 @@ Schema evolution allows automatic schema changes when writing data.
 
 ```python
 # Option 1: Per-write option
-df.write \
-    .format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .saveAsTable("main.default.customers")
+(df.write
+    .format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
+    .saveAsTable("main.default.customers"))
 
 # Option 2: Spark configuration (session-wide)
 spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
@@ -131,11 +131,11 @@ df_new_column = spark.createDataFrame([
     (4, "Alice", "alice@example.com", "555-9876")
 ], ["customer_id", "name", "email", "phone"])
 
-df_new_column.write \
-    .format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .saveAsTable("main.default.customers")
+(df_new_column.write
+    .format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
+    .saveAsTable("main.default.customers"))
 
 # Table now has: customer_id, name, email, phone
 # Existing rows have NULL for phone
@@ -151,11 +151,11 @@ df_new_schema = spark.createDataFrame([
     ("C001", "John Doe", "Premium")
 ], ["customer_code", "full_name", "tier"])
 
-df_new_schema.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .option("overwriteSchema", "true") \
-    .saveAsTable("main.default.customers")
+(df_new_schema.write
+    .format("delta")
+    .mode("overwrite")
+    .option("overwriteSchema", "true")
+    .saveAsTable("main.default.customers"))
 
 # Table now has completely different schema
 # All previous data is replaced
@@ -165,20 +165,20 @@ df_new_schema.write \
 
 ```python
 # Auto Loader with schema evolution
-df = spark.readStream \
-    .format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/checkpoints/_schema") \
-    .option("cloudFiles.inferColumnTypes", "true") \
-    .option("cloudFiles.schemaEvolutionMode", "addNewColumns") \
-    .load("/landing/data/")
+df = (spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/checkpoints/_schema")
+    .option("cloudFiles.inferColumnTypes", "true")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+    .load("/landing/data/"))
 
 # Write with mergeSchema
-df.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoints/_checkpoint") \
-    .option("mergeSchema", "true") \
-    .toTable("bronze.events")
+(df.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoints/_checkpoint")
+    .option("mergeSchema", "true")
+    .toTable("bronze.events"))
 ```
 
 ### Schema Evolution Modes for Auto Loader
@@ -408,43 +408,43 @@ def compare_schemas(source_df, target_table):
 
 ```python
 # Streaming with schema enforcement
-df = spark.readStream \
-    .schema(expected_schema) \  # Enforce schema on read
-    .format("json") \
-    .load("/landing/data/")
+df = (spark.readStream
+    .schema(expected_schema)  # Enforce schema on read
+    .format("json")
+    .load("/landing/data/"))
 
 # Write without mergeSchema - strict enforcement
-df.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoints/") \
-    .toTable("bronze.events")
+(df.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoints/")
+    .toTable("bronze.events"))
 ```
 
 ### Handling Schema Changes in Streaming
 
 ```python
 # Option 1: Use rescue column for unexpected data
-df = spark.readStream \
-    .format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/checkpoints/_schema") \
-    .option("cloudFiles.schemaEvolutionMode", "rescue") \
-    .load("/landing/data/")
+df = (spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/checkpoints/_schema")
+    .option("cloudFiles.schemaEvolutionMode", "rescue")
+    .load("/landing/data/"))
 
 # Unexpected fields go to _rescued_data column
-df.writeStream \
-    .format("delta") \
-    .option("checkpointLocation", "/checkpoints/_cp") \
-    .option("mergeSchema", "true") \
-    .toTable("bronze.events")
+(df.writeStream
+    .format("delta")
+    .option("checkpointLocation", "/checkpoints/_cp")
+    .option("mergeSchema", "true")
+    .toTable("bronze.events"))
 
 # Option 2: Fail on schema changes and alert
-df = spark.readStream \
-    .format("cloudFiles") \
-    .option("cloudFiles.format", "json") \
-    .option("cloudFiles.schemaLocation", "/checkpoints/_schema") \
-    .option("cloudFiles.schemaEvolutionMode", "failOnNewColumns") \
-    .load("/landing/data/")
+df = (spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/checkpoints/_schema")
+    .option("cloudFiles.schemaEvolutionMode", "failOnNewColumns")
+    .load("/landing/data/"))
 ```
 
 ## Schema Drift Handling
@@ -557,11 +557,11 @@ def handle_upstream_changes(source_path, target_table):
             spark.sql(f"ALTER TABLE {target_table} ADD COLUMN {col_name} {col_type}")
 
     # Write with mergeSchema for safety
-    new_df.write \
-        .format("delta") \
-        .mode("append") \
-        .option("mergeSchema", "true") \
-        .saveAsTable(target_table)
+    (new_df.write
+        .format("delta")
+        .mode("append")
+        .option("mergeSchema", "true")
+        .saveAsTable(target_table))
 ```
 
 ### Migration to New Schema

@@ -367,14 +367,14 @@ SELECT * FROM table_name@'2024-01-15';
 
 ```python
 # By version
-df = spark.read.format("delta") \
-    .option("versionAsOf", 5) \
-    .load("/path/to/table")
+df = (spark.read.format("delta")
+    .option("versionAsOf", 5)
+    .load("/path/to/table"))
 
 # By timestamp
-df = spark.read.format("delta") \
-    .option("timestampAsOf", "2024-01-15") \
-    .load("/path/to/table")
+df = (spark.read.format("delta")
+    .option("timestampAsOf", "2024-01-15")
+    .load("/path/to/table"))
 ```
 
 ### DESCRIBE HISTORY
