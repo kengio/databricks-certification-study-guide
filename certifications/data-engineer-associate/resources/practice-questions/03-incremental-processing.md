@@ -1,6 +1,6 @@
 # Domain 3: Incremental Data Processing
 
-[Back to Practice Questions](README.md) | [Prev: ELT with Spark SQL and Python](02-elt-spark-sql-python.md) | [Next: Production Pipelines](04-production-pipelines.md)
+[Back to Practice Questions](./README.md) | [Prev: ELT with Spark SQL and Python](02-elt-spark-sql-python.md) | [Next: Production Pipelines](04-production-pipelines.md)
 
 ---
 
@@ -297,4 +297,4 @@ df.writeStream.format("delta").start("output")
 
 ---
 
-[Back to Practice Questions](README.md) | [Prev: ELT with Spark SQL and Python](02-elt-spark-sql-python.md) | [Next: Production Pipelines](04-production-pipelines.md)
+[Back to Practice Questions](./README.md) | [Prev: ELT with Spark SQL and Python](02-elt-spark-sql-python.md) | [Next: Production Pipelines](04-production-pipelines.md)

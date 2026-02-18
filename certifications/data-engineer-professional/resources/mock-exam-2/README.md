@@ -96,4 +96,4 @@ After completing the exam, calculate your score per section:
 
 ---
 
-[Back to Resources](../README.md) | [Mock Exam 1](../mock-exam/README.md)
+[Back to DE Professional](../../README.md) | [Mock Exam 1](../mock-exam/README.md)

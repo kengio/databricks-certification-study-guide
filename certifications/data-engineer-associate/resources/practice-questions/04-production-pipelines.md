@@ -1,6 +1,6 @@
 # Domain 4: Production Pipelines
 
-[Back to Practice Questions](README.md) | [Prev: Incremental Processing](03-incremental-processing.md) | [Next: Data Governance](05-data-governance.md)
+[Back to Practice Questions](./README.md) | [Prev: Incremental Processing](03-incremental-processing.md) | [Next: Data Governance](05-data-governance.md)
 
 ---
 
@@ -169,4 +169,4 @@
 
 ---
 
-[Back to Practice Questions](README.md) | [Prev: Incremental Processing](03-incremental-processing.md) | [Next: Data Governance](05-data-governance.md)
+[Back to Practice Questions](./README.md) | [Prev: Incremental Processing](03-incremental-processing.md) | [Next: Data Governance](05-data-governance.md)

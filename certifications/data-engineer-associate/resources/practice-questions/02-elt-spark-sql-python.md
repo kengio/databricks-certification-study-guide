@@ -1,6 +1,6 @@
 # Domain 2: ELT with Spark SQL and Python
 
-[Back to Practice Questions](README.md) | [Prev: Lakehouse Platform](01-lakehouse-platform.md) | [Next: Incremental Processing](03-incremental-processing.md)
+[Back to Practice Questions](./README.md) | [Prev: Lakehouse Platform](01-lakehouse-platform.md) | [Next: Incremental Processing](03-incremental-processing.md)
 
 ---
 
@@ -336,4 +336,4 @@ SELECT name, count(*) FROM people GROUP BY 2
 
 ---
 
-[Back to Practice Questions](README.md) | [Prev: Lakehouse Platform](01-lakehouse-platform.md) | [Next: Incremental Processing](03-incremental-processing.md)
+[Back to Practice Questions](./README.md) | [Prev: Lakehouse Platform](01-lakehouse-platform.md) | [Next: Incremental Processing](03-incremental-processing.md)

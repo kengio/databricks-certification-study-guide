@@ -120,6 +120,16 @@ flowchart TB
 
 - **Always check for broken links** after editing or adding files - scan all markdown files to verify internal links still work
 - **Always link directly to files, not folders** (e.g., `path/to/README.md` not `path/to/`)
+- **Always use `./README.md` (with `./` prefix), never bare `README.md`** — Obsidian uses shortest-path link resolution, so a bare `README.md` can silently resolve to the root `README.md` instead of the local one. Always write `./README.md` to make the path unambiguous:
+
+  ```markdown
+  <!-- Correct: unambiguous, always resolves to local README -->
+  [Back to Practice Questions](./README.md)
+
+  <!-- Wrong: Obsidian may resolve to root README.md -->
+  [Back to Practice Questions](README.md)
+  ```
+
 - When adding or modifying links, confirm the target file exists
 - Standard entry points for each section:
   - `certifications/data-engineer-associate/README.md`

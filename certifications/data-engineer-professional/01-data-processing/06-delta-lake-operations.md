@@ -805,7 +805,7 @@ DESCRIBE DETAIL table_name;
 
 - [Change Data Capture](05-change-data-capture.md) - MERGE generates CDF records
 - [Data Deduplication](07-data-deduplication.md) - MERGE for dedup patterns
-- [Delta Lake Commands Cheat Sheet](../cheat-sheets/delta-lake-commands.md)
+- [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md)
 
 ## Official Documentation
 

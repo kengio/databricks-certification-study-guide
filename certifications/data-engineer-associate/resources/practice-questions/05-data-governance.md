@@ -1,6 +1,6 @@
 # Domain 5: Data Governance
 
-[Back to Practice Questions](README.md) | [Prev: Production Pipelines](04-production-pipelines.md)
+[Back to Practice Questions](./README.md) | [Prev: Production Pipelines](04-production-pipelines.md)
 
 ---
 
@@ -114,4 +114,4 @@
 
 ---
 
-[Back to Practice Questions](README.md) | [Prev: Production Pipelines](04-production-pipelines.md)
+[Back to Practice Questions](./README.md) | [Prev: Production Pipelines](04-production-pipelines.md)
