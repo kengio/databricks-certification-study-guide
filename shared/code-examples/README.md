@@ -9,30 +9,25 @@ aliases:
 # Code Examples
 
 Practical, runnable code examples for Databricks exam preparation and development reference.
+All examples are stored as Markdown files with fenced code blocks for readability in Obsidian.
 
 ## Python Examples
 
-> [!note] Coming Soon
-> Example files are planned. Topics to be covered:
-
-- `python/delta_lake_operations.py` — Create, read, write, merge, time travel, VACUUM
-- `python/streaming_examples.py` — Structured Streaming, Auto Loader, triggers, watermarks
-- `python/unity_catalog_setup.py` — Catalog/schema/table creation, grants, external locations
+- [python/delta_lake_operations.md](python/delta_lake_operations.md) — Create, read, write, merge, time travel, VACUUM
+- [python/streaming_examples.md](python/streaming_examples.md) — Structured Streaming, Auto Loader, triggers, watermarks
+- [python/unity_catalog_setup.md](python/unity_catalog_setup.md) — Catalog/schema/table creation, grants, external locations
 
 ## SQL Examples
 
-> [!note] Coming Soon
-> Example files are planned. Topics to be covered:
-
-- `sql/delta_lake_operations.sql` — DDL, DML, OPTIMIZE, VACUUM, MERGE, CDF
-- `sql/window_functions.sql` — ROW_NUMBER, RANK, LAG/LEAD, running aggregates
-- `sql/cte_patterns.sql` — Common Table Expressions, PIVOT, UNPIVOT
+- [sql/delta_lake_operations.md](sql/delta_lake_operations.md) — DDL, DML, OPTIMIZE, VACUUM, MERGE, CDF
+- [sql/window_functions.md](sql/window_functions.md) — ROW_NUMBER, RANK, LAG/LEAD, running aggregates
+- [sql/cte_patterns.md](sql/cte_patterns.md) — Common Table Expressions, PIVOT, UNPIVOT
 
 ## How to Use
 
-1. Open the examples in a Databricks notebook
-2. Adjust table names and paths for your environment
-3. Run cells sequentially -- each example builds on previous context
+1. Open an example file in Obsidian to browse with syntax highlighting
+2. Copy snippets into a Databricks notebook and adjust table names and paths
+3. Run cells sequentially — each example builds on previous context
 
 ## Notes
 

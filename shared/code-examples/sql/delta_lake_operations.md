@@ -1,10 +1,19 @@
--- Delta Lake Operations - SQL Examples
--- Run these examples in a Databricks SQL editor or notebook
+---
+tags:
+  - databricks
+  - code-examples
+  - delta-lake
+  - sql
+---
 
--- ============================================================
--- 1. CREATE DELTA TABLES
--- ============================================================
+# Delta Lake Operations — SQL
 
+SQL examples for Delta Lake operations. Run in a Databricks SQL editor or notebook; replace
+`my_catalog.my_schema` with your actual catalog and schema names.
+
+## Create Delta Tables
+
+```sql
 -- Managed table
 CREATE TABLE IF NOT EXISTS my_catalog.my_schema.products (
     product_id BIGINT,
@@ -16,7 +25,7 @@ CREATE TABLE IF NOT EXISTS my_catalog.my_schema.products (
 USING DELTA
 COMMENT 'Product catalog';
 
--- Create table with liquid clustering
+-- Table with liquid clustering
 CREATE TABLE IF NOT EXISTS my_catalog.my_schema.orders (
     order_id BIGINT,
     customer_id BIGINT,
@@ -32,12 +41,11 @@ CLUSTER BY (customer_id, order_date);
 CREATE TABLE my_catalog.my_schema.high_value_orders AS
 SELECT * FROM my_catalog.my_schema.orders
 WHERE total > 1000;
+```
 
+## Insert Data
 
--- ============================================================
--- 2. INSERT DATA
--- ============================================================
-
+```sql
 -- Insert values
 INSERT INTO my_catalog.my_schema.products
 VALUES
@@ -52,12 +60,11 @@ SELECT * FROM my_catalog.staging.new_orders;
 -- Overwrite entire table
 INSERT OVERWRITE my_catalog.my_schema.products
 SELECT * FROM my_catalog.staging.products_full;
+```
 
+## Update and Delete
 
--- ============================================================
--- 3. UPDATE AND DELETE
--- ============================================================
-
+```sql
 -- Update records
 UPDATE my_catalog.my_schema.products
 SET price = 34.99, updated_at = current_timestamp()
@@ -66,12 +73,11 @@ WHERE product_id = 1;
 -- Delete records
 DELETE FROM my_catalog.my_schema.products
 WHERE category = 'Discontinued';
+```
 
+## Merge (Upsert)
 
--- ============================================================
--- 4. MERGE (UPSERT)
--- ============================================================
-
+```sql
 MERGE INTO my_catalog.my_schema.products AS target
 USING my_catalog.staging.product_updates AS source
 ON target.product_id = source.product_id
@@ -85,12 +91,11 @@ WHEN NOT MATCHED THEN
     VALUES (source.product_id, source.name, source.category, source.price, current_timestamp())
 WHEN NOT MATCHED BY SOURCE THEN
     DELETE;
+```
 
+## Time Travel
 
--- ============================================================
--- 5. TIME TRAVEL
--- ============================================================
-
+```sql
 -- Query by version
 SELECT * FROM my_catalog.my_schema.products VERSION AS OF 3;
 
@@ -102,12 +107,11 @@ DESCRIBE HISTORY my_catalog.my_schema.products;
 
 -- Restore to previous version
 RESTORE TABLE my_catalog.my_schema.products TO VERSION AS OF 3;
+```
 
+## Optimize and Vacuum
 
--- ============================================================
--- 6. OPTIMIZE AND VACUUM
--- ============================================================
-
+```sql
 -- Compact small files into larger ones (target: ~1 GB)
 OPTIMIZE my_catalog.my_schema.orders;
 
@@ -123,12 +127,11 @@ VACUUM my_catalog.my_schema.orders RETAIN 168 HOURS;
 
 -- Check file metrics after OPTIMIZE
 DESCRIBE DETAIL my_catalog.my_schema.orders;
+```
 
+## Change Data Feed (CDF)
 
--- ============================================================
--- 7. CHANGE DATA FEED (CDF)
--- ============================================================
-
+```sql
 -- Enable CDF on a table
 ALTER TABLE my_catalog.my_schema.orders
 SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
@@ -143,12 +146,11 @@ SELECT * FROM table_changes('my_catalog.my_schema.orders', '2025-01-01', '2025-0
 SELECT order_id, customer_id, total, _change_type, _commit_version
 FROM table_changes('my_catalog.my_schema.orders', 5)
 WHERE _change_type IN ('insert', 'update_postimage');
+```
 
+## Schema Management
 
--- ============================================================
--- 8. SCHEMA MANAGEMENT
--- ============================================================
-
+```sql
 -- Add a column
 ALTER TABLE my_catalog.my_schema.products
 ADD COLUMN description STRING AFTER name;
@@ -167,12 +169,11 @@ SET TBLPROPERTIES (
     'delta.autoOptimize.optimizeWrite' = 'true',
     'delta.autoOptimize.autoCompact' = 'true'
 );
+```
 
+## Table Metadata
 
--- ============================================================
--- 9. TABLE METADATA
--- ============================================================
-
+```sql
 -- Show table details
 DESCRIBE EXTENDED my_catalog.my_schema.products;
 
@@ -184,3 +185,4 @@ SHOW CREATE TABLE my_catalog.my_schema.products;
 
 -- Show file-level details (size, numFiles, clustering info)
 DESCRIBE DETAIL my_catalog.my_schema.orders;
+```

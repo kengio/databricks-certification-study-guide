@@ -1,30 +1,38 @@
--- CTE Patterns, PIVOT, and UNPIVOT - SQL Examples
--- Run these examples in a Databricks SQL editor or notebook
+---
+tags:
+  - databricks
+  - code-examples
+  - sql
+  - cte
+  - pivot
+---
 
--- ============================================================
--- SAMPLE DATA SETUP
--- ============================================================
+# CTE Patterns, PIVOT, and UNPIVOT — SQL
 
+SQL examples for Common Table Expressions, PIVOT, and UNPIVOT. Run in a Databricks SQL editor
+or notebook. The sample data setup block creates a temporary view used by all subsequent examples.
+
+## Sample Data Setup
+
+```sql
 CREATE OR REPLACE TEMP VIEW orders AS
 SELECT * FROM VALUES
-    (1, 101, '2025-01-15', 'Electronics', 299.99),
-    (2, 102, '2025-01-16', 'Clothing',    89.50),
-    (3, 101, '2025-01-17', 'Electronics', 149.99),
-    (4, 103, '2025-02-01', 'Clothing',    125.00),
-    (5, 102, '2025-02-05', 'Electronics', 599.99),
-    (6, 101, '2025-02-10', 'Home',        45.00),
-    (7, 103, '2025-03-01', 'Electronics', 199.99),
-    (8, 104, '2025-03-15', 'Home',        320.00),
-    (9, 101, '2025-03-20', 'Clothing',    75.00),
-    (10, 102, '2025-03-25', 'Home',       210.00)
+    (1,  101, '2025-01-15', 'Electronics', 299.99),
+    (2,  102, '2025-01-16', 'Clothing',     89.50),
+    (3,  101, '2025-01-17', 'Electronics', 149.99),
+    (4,  103, '2025-02-01', 'Clothing',    125.00),
+    (5,  102, '2025-02-05', 'Electronics', 599.99),
+    (6,  101, '2025-02-10', 'Home',         45.00),
+    (7,  103, '2025-03-01', 'Electronics', 199.99),
+    (8,  104, '2025-03-15', 'Home',        320.00),
+    (9,  101, '2025-03-20', 'Clothing',     75.00),
+    (10, 102, '2025-03-25', 'Home',        210.00)
 AS t(order_id, customer_id, order_date, category, amount);
+```
 
+## Basic CTE
 
--- ============================================================
--- 1. BASIC CTE
--- ============================================================
-
--- Simple CTE for readability
+```sql
 WITH monthly_totals AS (
     SELECT
         DATE_TRUNC('month', order_date) AS month,
@@ -40,12 +48,11 @@ SELECT
     total_revenue / order_count AS avg_order_value
 FROM monthly_totals
 ORDER BY month;
+```
 
+## Multiple CTEs (Chained)
 
--- ============================================================
--- 2. MULTIPLE CTEs (Chained)
--- ============================================================
-
+```sql
 WITH customer_orders AS (
     -- Step 1: Aggregate per customer
     SELECT
@@ -72,7 +79,7 @@ customer_segments AS (
         END AS segment
     FROM customer_orders
 )
--- Step 3: Use the classified data
+-- Step 3: Summarise by segment
 SELECT
     segment,
     COUNT(*) AS customer_count,
@@ -81,12 +88,11 @@ SELECT
 FROM customer_segments
 GROUP BY segment
 ORDER BY avg_spending DESC;
+```
 
+## CTE with Window Functions
 
--- ============================================================
--- 3. CTE WITH WINDOW FUNCTIONS
--- ============================================================
-
+```sql
 WITH ranked_orders AS (
     SELECT
         customer_id,
@@ -110,12 +116,11 @@ SELECT
     DATEDIFF(order_date, prev_order_date) AS days_between_orders
 FROM ranked_orders
 ORDER BY customer_id, order_sequence;
+```
 
+## PIVOT — Rows to Columns
 
--- ============================================================
--- 4. PIVOT - Rows to Columns
--- ============================================================
-
+```sql
 -- Revenue by category as columns
 SELECT *
 FROM (
@@ -131,7 +136,7 @@ PIVOT (
 )
 ORDER BY month;
 
--- Customer spending by category
+-- Customer spending by category with multiple aggregations
 SELECT *
 FROM (
     SELECT customer_id, category, amount
@@ -143,13 +148,12 @@ PIVOT (
     FOR category IN ('Electronics', 'Clothing', 'Home')
 )
 ORDER BY customer_id;
+```
 
+## UNPIVOT — Columns to Rows
 
--- ============================================================
--- 5. UNPIVOT - Columns to Rows
--- ============================================================
-
--- First create a pivoted view
+```sql
+-- Create a pivoted view first
 CREATE OR REPLACE TEMP VIEW quarterly_metrics AS
 SELECT
     'Revenue' AS metric,
@@ -164,12 +168,11 @@ FROM quarterly_metrics
 UNPIVOT (
     value FOR quarter IN (Q1, Q2, Q3, Q4)
 );
+```
 
+## CTE for Data Quality Checks
 
--- ============================================================
--- 6. CTE FOR DATA QUALITY CHECKS
--- ============================================================
-
+```sql
 WITH validation AS (
     SELECT
         order_id,
@@ -188,12 +191,11 @@ SELECT
     ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS percentage
 FROM validation
 GROUP BY validation_status;
+```
 
+## CTE for Deduplication
 
--- ============================================================
--- 7. CTE FOR DEDUPLICATION
--- ============================================================
-
+```sql
 WITH ranked AS (
     SELECT
         *,
@@ -207,12 +209,11 @@ WITH ranked AS (
 SELECT order_id, customer_id, order_date, category, amount
 FROM ranked
 WHERE rn = 1;
+```
 
+## CTE with Aggregation Patterns
 
--- ============================================================
--- 8. CTE WITH AGGREGATION PATTERNS
--- ============================================================
-
+```sql
 -- Year-over-year comparison pattern
 WITH current_period AS (
     SELECT
@@ -241,3 +242,4 @@ SELECT
 FROM current_period c
 LEFT JOIN previous_period p ON c.category = p.category
 ORDER BY growth_pct DESC;
+```

@@ -1,10 +1,19 @@
--- Window Functions - SQL Examples
--- Run these examples in a Databricks SQL editor or notebook
+---
+tags:
+  - databricks
+  - code-examples
+  - sql
+  - window-functions
+---
 
--- ============================================================
--- SAMPLE DATA SETUP
--- ============================================================
+# Window Functions — SQL
 
+SQL examples for window functions. Run in a Databricks SQL editor or notebook. The sample data
+setup block creates a temporary view used by all subsequent examples.
+
+## Sample Data Setup
+
+```sql
 CREATE OR REPLACE TEMP VIEW sales AS
 SELECT * FROM VALUES
     (1, 'Alice',   'Engineering', 95000,  '2023-01-15'),
@@ -16,12 +25,11 @@ SELECT * FROM VALUES
     (7, 'Grace',   'Sales',       82000,  '2023-07-01'),
     (8, 'Henry',   'Engineering', 105000, '2021-04-10')
 AS t(id, name, department, salary, hire_date);
+```
 
+## ROW_NUMBER — Unique Sequential Numbering
 
--- ============================================================
--- 1. ROW_NUMBER - Unique sequential numbering
--- ============================================================
-
+```sql
 -- Rank employees within each department by salary (highest first)
 SELECT
     name,
@@ -43,28 +51,26 @@ SELECT * FROM (
     FROM sales
 )
 WHERE rn = 1;
+```
 
+## RANK and DENSE_RANK — Handle Ties Differently
 
--- ============================================================
--- 2. RANK and DENSE_RANK - Handle ties differently
--- ============================================================
+`RANK` skips numbers after ties (1, 2, 2, 4); `DENSE_RANK` does not (1, 2, 2, 3).
 
--- RANK: Skips numbers after ties (1, 2, 2, 4)
--- DENSE_RANK: No gaps after ties (1, 2, 2, 3)
+```sql
 SELECT
     name,
     department,
     salary,
-    RANK() OVER (ORDER BY salary DESC) AS rank,
+    RANK()       OVER (ORDER BY salary DESC) AS rank,
     DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rank,
     ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num
 FROM sales;
+```
 
+## LAG and LEAD — Access Previous/Next Rows
 
--- ============================================================
--- 3. LAG and LEAD - Access previous/next rows
--- ============================================================
-
+```sql
 -- Compare each employee's salary to the previous hire's salary
 SELECT
     name,
@@ -84,12 +90,11 @@ SELECT
         ORDER BY hire_date
     ) AS next_hire
 FROM sales;
+```
 
+## Running Aggregates
 
--- ============================================================
--- 4. RUNNING AGGREGATES
--- ============================================================
-
+```sql
 -- Running total of salaries by hire date
 SELECT
     name,
@@ -122,24 +127,22 @@ SELECT
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
     ) AS employee_count
 FROM sales;
+```
 
+## NTILE — Divide Rows into Buckets
 
--- ============================================================
--- 5. NTILE - Divide rows into buckets
--- ============================================================
-
+```sql
 -- Split employees into salary quartiles
 SELECT
     name,
     salary,
     NTILE(4) OVER (ORDER BY salary) AS salary_quartile
 FROM sales;
+```
 
+## FIRST_VALUE and LAST_VALUE
 
--- ============================================================
--- 6. FIRST_VALUE and LAST_VALUE
--- ============================================================
-
+```sql
 -- Get highest and lowest salary in each department
 SELECT
     name,
@@ -152,25 +155,23 @@ SELECT
         PARTITION BY department ORDER BY salary ASC
     ) AS min_salary
 FROM sales;
+```
 
+## PERCENT_RANK and CUME_DIST
 
--- ============================================================
--- 7. PERCENT_RANK and CUME_DIST
--- ============================================================
-
--- Percentile rank (0 to 1)
+```sql
+-- Percentile rank (0 to 1 range)
 SELECT
     name,
     salary,
     PERCENT_RANK() OVER (ORDER BY salary) AS pct_rank,
-    CUME_DIST() OVER (ORDER BY salary) AS cume_dist
+    CUME_DIST()    OVER (ORDER BY salary) AS cume_dist
 FROM sales;
+```
 
+## Window Frame Specifications
 
--- ============================================================
--- 8. WINDOW FRAME SPECIFICATIONS
--- ============================================================
-
+```sql
 -- Moving average (3-row window)
 SELECT
     name,
@@ -191,3 +192,4 @@ SELECT
         RANGE BETWEEN 10000 PRECEDING AND 10000 FOLLOWING
     ) AS similar_salary_count
 FROM sales;
+```

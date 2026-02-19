@@ -39,6 +39,15 @@ databricks-certification-study-guide/
 2. **Certification-specific content** goes in `certifications/<cert-name>/`
 3. **Reference shared content** rather than duplicating it
 
+### Code Examples
+
+- **Always create code examples as `.md` files**, never as `.py` or `.sql` files
+- Store them in `shared/code-examples/python/` or `shared/code-examples/sql/`
+- Wrap each snippet in a fenced code block with the appropriate language tag (` ```python `, ` ```sql `)
+- Group related snippets under `##` section headings within the same `.md` file
+- Add YAML frontmatter with relevant `tags` (e.g., `delta-lake`, `python`, `sql`)
+- This keeps examples readable, navigable, and syntax-highlighted inside Obsidian
+
 ### File Size Guidelines
 
 - **Target size per file: 300–600 lines** — keeps files scannable in Obsidian without excessive scrolling

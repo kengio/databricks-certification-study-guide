@@ -1,10 +1,20 @@
-# Structured Streaming & Auto Loader - Python Examples
-# Run these examples in a Databricks notebook
+---
+tags:
+  - databricks
+  - code-examples
+  - structured-streaming
+  - auto-loader
+  - python
+---
 
-# ============================================================
-# 1. BASIC STRUCTURED STREAMING (Rate Source for Testing)
-# ============================================================
+# Structured Streaming & Auto Loader — Python
 
+PySpark examples for Structured Streaming and Auto Loader. Run in a Databricks notebook;
+replace catalog and schema names with your actual values.
+
+## Basic Structured Streaming (Rate Source)
+
+```python
 # Generate test stream
 stream_df = (
     spark.readStream
@@ -22,15 +32,12 @@ query = (
     .toTable("my_catalog.my_schema.rate_events")
 )
 
-# Stop the stream
 query.stop()
+```
 
+## Auto Loader (cloudFiles)
 
-# ============================================================
-# 2. AUTO LOADER (cloudFiles)
-# ============================================================
-
-# Read new JSON files as they arrive
+```python
 auto_loader_df = (
     spark.readStream
     .format("cloudFiles")
@@ -40,7 +47,6 @@ auto_loader_df = (
     .load("/path/to/landing/events/")
 )
 
-# Write to Bronze table
 query = (
     auto_loader_df.writeStream
     .format("delta")
@@ -51,18 +57,18 @@ query = (
 )
 
 query.stop()
+```
 
+## Auto Loader with Schema Evolution
 
-# ============================================================
-# 3. AUTO LOADER WITH SCHEMA EVOLUTION
-# ============================================================
+Schema evolution modes:
 
-# Schema evolution modes:
-# - "addNewColumns" : Add new columns to schema
-# - "rescue"        : Send unexpected data to _rescued_data column
-# - "failOnNewColumns" : Fail on new columns (default)
-# - "none"          : Ignore new columns
+- `addNewColumns` — add new columns to schema
+- `rescue` — send unexpected data to `_rescued_data` column
+- `failOnNewColumns` — fail on new columns (default)
+- `none` — ignore new columns
 
+```python
 auto_loader_evolve = (
     spark.readStream
     .format("cloudFiles")
@@ -71,15 +77,14 @@ auto_loader_evolve = (
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/path/to/landing/events/")
 )
+```
 
+## Trigger Modes
 
-# ============================================================
-# 4. TRIGGER MODES
-# ============================================================
-
+```python
 stream_source = spark.readStream.format("delta").table("my_catalog.bronze.events")
 
-# Continuous processing (default) - process as data arrives
+# Continuous processing — process as data arrives
 query_continuous = (
     stream_source.writeStream
     .format("delta")
@@ -88,7 +93,7 @@ query_continuous = (
     .toTable("my_catalog.silver.events_continuous")
 )
 
-# Available Now - process all available data then stop (replaces trigger once)
+# Available Now — process all available data then stop (replaces trigger once)
 query_available = (
     stream_source.writeStream
     .format("delta")
@@ -97,7 +102,7 @@ query_available = (
     .toTable("my_catalog.silver.events_batch")
 )
 
-# Once (deprecated) - process one micro-batch then stop
+# Once (deprecated) — process one micro-batch then stop
 query_once = (
     stream_source.writeStream
     .format("delta")
@@ -106,22 +111,20 @@ query_once = (
     .toTable("my_catalog.silver.events_once")
 )
 
-# Stop streams
+# Stop / await completion
 query_continuous.stop()              # stop() sends signal to halt continuous stream
 query_available.awaitTermination()   # awaitTermination() blocks until availableNow finishes
 query_once.awaitTermination()        # awaitTermination() blocks until trigger-once finishes
+```
 
+## Watermarking (Late Data Handling)
 
-# ============================================================
-# 5. WATERMARKING (Late Data Handling)
-# ============================================================
-
+```python
 from pyspark.sql.functions import window, col, count
 
-# Assume events have an event_time column
 events = spark.readStream.format("delta").table("my_catalog.bronze.events")
 
-# Define watermark: allow up to 10 minutes of late data
+# Allow up to 10 minutes of late data
 windowed_counts = (
     events
     .withWatermark("event_time", "10 minutes")
@@ -140,12 +143,11 @@ query = (
 )
 
 query.stop()
+```
 
+## Streaming with foreachBatch (Custom Logic)
 
-# ============================================================
-# 6. STREAMING WITH FOREACHBATCH (Custom Logic)
-# ============================================================
-
+```python
 from delta.tables import DeltaTable
 
 def upsert_to_silver(batch_df, batch_id):
@@ -159,7 +161,6 @@ def upsert_to_silver(batch_df, batch_id):
     ).whenNotMatchedInsertAll(
     ).execute()
 
-# Use foreachBatch for custom write logic
 query = (
     spark.readStream
     .format("delta")
@@ -171,13 +172,11 @@ query = (
 )
 
 query.stop()
+```
 
+## Streaming from Change Data Feed
 
-# ============================================================
-# 7. STREAMING FROM CHANGE DATA FEED
-# ============================================================
-
-# Stream changes from a CDF-enabled source table
+```python
 cdf_stream = (
     spark.readStream
     .format("delta")
@@ -200,17 +199,17 @@ query = (
 )
 
 query.stop()
+```
 
+## Monitoring Streams
 
-# ============================================================
-# 8. MONITORING STREAMS
-# ============================================================
-
-# Check active streams
+```python
+# Check all active streams
 for stream in spark.streams.active:
     print(f"Stream: {stream.name}, ID: {stream.id}, Status: {stream.status}")
 
-# Get stream progress
-# query.lastProgress     # Latest micro-batch stats
-# query.recentProgress   # Recent micro-batch stats
-# query.status           # Current status
+# Per-query metrics
+# query.lastProgress     — latest micro-batch stats
+# query.recentProgress   — recent micro-batch stats
+# query.status           — current status
+```
