@@ -14,6 +14,8 @@ A business analyst reports that a query that used to run in 30 seconds now takes
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Open the Spark UI and check for data skew (one task 10x slower than others), verify the join strategy with `EXPLAIN` (sort-merge on 2B rows needs more than the default 200 shuffle partitions), inspect Delta file health with `DESCRIBE DETAIL` and run `OPTIMIZE` if average file size is tiny, then increase `spark.sql.shuffle.partitions` to size partitions around 100–200MB each.
+>
 > ### Key Points to Cover
 >
 > - Start with Spark UI: check stages, tasks, time distribution
@@ -82,6 +84,8 @@ Explain what Adaptive Query Execution (AQE) is, what specific problems it solves
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: AQE re-plans query stages at runtime using actual shuffle statistics rather than compile-time estimates; its three optimizations are dynamic partition coalescing (merges tiny post-shuffle partitions), skew join optimization (splits partitions 5x above median), and dynamic broadcast conversion (converts sort-merge to broadcast if one side is small after filtering) — but it cannot optimize scan-heavy queries or fix fundamental data skew.
+>
 > ### Key Points to Cover
 >
 > - AQE re-plans the query at runtime using actual shuffle data statistics
@@ -133,6 +137,8 @@ Explain what Adaptive Query Execution (AQE) is, what specific problems it solves
 A Spark join between two tables takes 2 hours. When you look at the Spark UI, 999 tasks finish in 30 seconds each, but one task is still running after 2 hours. What is happening, and what are your options to fix it?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Data skew — one join key value (e.g., "guest" customer ID) has millions of rows, landing all on one executor while the other 999 sit idle; fix it by first enabling AQE's skew join optimization (automatic if the partition is 5x above median), or by salting the hot key with a random prefix to distribute it across N partitions, or by handling the outlier key separately and unioning the results.
 >
 > ### Key Points to Cover
 >
@@ -202,6 +208,8 @@ You're joining a 500GB fact table with a 100MB dimension table. Explain the diff
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: A broadcast hash join sends the small table to every executor (no shuffle of the large side) while a sort-merge join shuffles both sides — the 100MB dimension exceeds Spark's default 10MB broadcast threshold, so Spark will choose sort-merge by default; force broadcast with `broadcast(dimension_df)` hint if the dimension fits comfortably in executor memory.
+>
 > ### Key Points to Cover
 >
 > - Broadcast hash join: small table sent to all executors, no shuffle; O(1) network for small table
@@ -260,6 +268,8 @@ You're joining a 500GB fact table with a 100MB dimension table. Explain the diff
 You have an existing production Delta table with 5TB of data, partitioned by `event_year`/`event_month`. Users query by `user_id`, `product_category`, and `event_date`. Response times are 3–5 minutes. How do you decide between Z-ORDER and Liquid Clustering to improve this?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: For this existing partitioned table, run `OPTIMIZE ZORDER BY (user_id, product_category)` within each partition now — it's safe and immediately improves data skipping; if you're on DBR 13.3+, also apply `ALTER TABLE ... CLUSTER BY (user_id, product_category)` to migrate to Liquid Clustering, which auto-maintains going forward and eliminates the need for a manual `OPTIMIZE ZORDER` schedule.
 >
 > ### Key Points to Cover
 >

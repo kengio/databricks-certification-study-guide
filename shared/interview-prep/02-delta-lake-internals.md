@@ -14,6 +14,8 @@ Explain how Delta Lake achieves ACID transactions on top of cloud object storage
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Delta Lake uses a `_delta_log/` directory as a write-ahead log — every write atomically appends a new JSON commit file listing add/remove file actions; concurrent writers use optimistic concurrency control (both proceed, first to write the next version wins, the other detects a conflict and retries), and checkpoint Parquet files are written every 10 commits to speed up log replay.
+>
 > ### Key Points to Cover
 >
 > - `_delta_log/` directory stores ordered JSON transaction files
@@ -59,6 +61,8 @@ Explain how Delta Lake achieves ACID transactions on top of cloud object storage
 You have a Silver table that's written by two jobs simultaneously — one appends new rows, and another runs a MERGE to update existing rows. Under what conditions will they conflict? How would you design around it?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Append + append never conflicts (both add new files to the log); append + MERGE conflicts only if MERGE touches the same partitions/files as the append; MERGE + MERGE always conflicts because both read the same files — design around this with partition isolation, scheduling order, or DLT.
 >
 > ### Key Points to Cover
 >
@@ -116,6 +120,8 @@ You have a Silver table that's written by two jobs simultaneously — one append
 A Delta table has 500 million rows and users typically filter by `customer_id` and `order_date`. You're seeing slow query performance. Walk me through how you'd decide between partitioning, Z-ordering, and Liquid Clustering.
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Partition on `order_date` (low cardinality, enables partition pruning) and Z-ORDER on `customer_id` within each partition for an existing table; for a new table, prefer Liquid Clustering on both columns — it auto-maintains, allows flexible column changes, and eliminates the need for manual `OPTIMIZE ZORDER` schedules.
 >
 > ### Key Points to Cover
 >
@@ -176,6 +182,8 @@ Walk me through exactly what happens under the hood when you run a MERGE stateme
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Delta MERGE uses min/max statistics from the transaction log to identify only the files that could contain matching rows (data skipping), opens and joins just those candidate files, then rewrites only the touched files atomically in the log — files with no matches are untouched, so a well-clustered table on the join key can limit MERGE to reading < 1% of total data.
+>
 > ### Key Points to Cover
 >
 > - Delta reads source, joins against target using join predicate
@@ -219,6 +227,8 @@ Walk me through exactly what happens under the hood when you run a MERGE stateme
 A data engineer accidentally ran `DELETE FROM orders WHERE order_date < '2024-01-01'` on production. They want to restore the deleted rows. How does Delta time travel work, and what could prevent it from working in this scenario?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Delta keeps logically removed Parquet files on disk until VACUUM deletes them; time travel works by reading the transaction log at an earlier version which still references those original files — `RESTORE TABLE` reverses the delete atomically, but only works if VACUUM hasn't already purged the files (default 7-day retention).
 >
 > ### Key Points to Cover
 >
@@ -275,6 +285,8 @@ A data engineer accidentally ran `DELETE FROM orders WHERE order_date < '2024-01
 A colleague says "Delta's Change Data Feed is the same as Change Data Capture — we don't need Debezium anymore." How would you respond? When would you use each?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Delta CDF tracks row-level changes (insert/update/delete with `_change_type` metadata) within Delta tables and is ideal for propagating changes between lakehouse layers; CDC tools like Debezium read changes from external database transaction logs and are required when the source is not a Delta table — they are complementary and most architectures use both.
 >
 > ### Key Points to Cover
 >

@@ -45,8 +45,9 @@ Practice questions designed to simulate a real Databricks technical job intervie
 | [04-performance-optimization.md](04-performance-optimization.md) | Query tuning, joins, skew | Professional | 5 |
 | [05-streaming-cdc.md](05-streaming-cdc.md) | Structured Streaming, CDF | Professional | 5 |
 | [06-governance-security.md](06-governance-security.md) | Unity Catalog, RBAC, lineage | Both | 5 |
+| [07-file-formats-spark.md](07-file-formats-spark.md) | Parquet, CSV, Delta vs Parquet, Spark internals | Both | 6 |
 
-**Total: 32 questions**
+**Total: 38 questions**
 
 ---
 

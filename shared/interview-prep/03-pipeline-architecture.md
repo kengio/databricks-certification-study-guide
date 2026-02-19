@@ -14,6 +14,8 @@ Explain the medallion (Bronze/Silver/Gold) architecture. A colleague argues it a
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Bronze preserves raw data for replay and audit, Silver provides a single cleansed row-level source of truth, and Gold pre-aggregates for query performance; the storage and latency cost is worth it for any non-trivial pipeline because Bronze alone eliminates the need to re-pull from source systems when bugs occur downstream.
+>
 > ### Key Points to Cover
 >
 > - Bronze: raw append-only, source of truth for reprocessing; schema-on-read
@@ -58,6 +60,8 @@ Explain the medallion (Bronze/Silver/Gold) architecture. A colleague argues it a
 You're starting a new data engineering project. When would you choose Delta Live Tables (LakeFlow Pipelines) over a traditional Databricks Workflow with notebooks? What are the trade-offs?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Choose DLT for declarative medallion pipelines that need built-in data quality expectations, automatic dependency resolution, and lineage; choose Notebooks + Workflows for complex custom logic, ML pipelines, or when you need fine-grained control and easier interactive debugging.
 >
 > ### Key Points to Cover
 >
@@ -130,6 +134,8 @@ You need to incrementally ingest Parquet files that land in cloud storage every 
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Use COPY INTO for SQL-friendly scheduled batch loads with a moderate file volume (< 10,000 files/day) where idempotency and simplicity matter; use Auto Loader for high-volume or near-real-time ingestion (> 10,000 files/day) because it uses cloud file notifications instead of directory listing, scales to millions of files, and handles schema evolution automatically.
+>
 > ### Key Points to Cover
 >
 > - Auto Loader: streaming, file notification via cloud events (or directory listing), handles millions of files
@@ -197,6 +203,8 @@ You need to incrementally ingest Parquet files that land in cloud storage every 
 Your Silver layer pipeline processes sensor events. Due to network issues, some events arrive 4–6 hours late. Your Gold aggregations are running hourly. How do you design the pipeline to handle late data without recomputing all historical Gold tables?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Set a 6-hour watermark in the streaming Silver job to bound state and produce eventually-consistent Gold aggregations, then run a separate daily batch correction job that re-aggregates the last 24 hours from Bronze and MERGEs corrections into affected Gold time windows — giving you sub-minute freshness with full accuracy applied daily.
 >
 > ### Key Points to Cover
 >
@@ -270,6 +278,8 @@ Your ingestion job runs every hour but occasionally gets triggered twice (duplic
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Idempotency means running the job twice produces the same result as running it once — achieve this by using Auto Loader or COPY INTO (file-level deduplication), MERGE on a business key (record-level deduplication), or INSERT OVERWRITE on a partition; never use plain `INSERT INTO` (append) without deduplication, as duplicate runs will double-count data.
+>
 > ### Key Points to Cover
 >
 > - COPY INTO / Auto Loader: inherently idempotent (track processed files)
@@ -330,6 +340,8 @@ Your ingestion job runs every hour but occasionally gets triggered twice (duplic
 You're building a DLT pipeline for financial transaction data. Compliance requires that all records are accounted for — even invalid ones. How would you use DLT expectations and quarantine tables to satisfy this requirement?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Use `@expect_or_drop` on the Silver table to pass only valid records, and define a separate quarantine table that reads from Bronze and filters for the same invalid conditions — this guarantees every Bronze record lands in exactly one place (Silver or Quarantine) and DLT's event log automatically provides an audit trail of all violations.
 >
 > ### Key Points to Cover
 >

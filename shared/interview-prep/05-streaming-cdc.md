@@ -14,6 +14,8 @@ Explain watermarking in Spark Structured Streaming. Why is it necessary, what pr
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: A watermark bounds state memory by telling Spark to finalize and discard any time window whose end is older than `max(event_time) − threshold`; setting it too tight drops late events (incorrect aggregations), while setting it too loose keeps all late events but grows state indefinitely — calibrate to the 99th percentile of your observed event lateness.
+>
 > ### Key Points to Cover
 >
 > - Watermark defines how long to wait for late events before closing a time window
@@ -72,6 +74,8 @@ Explain watermarking in Spark Structured Streaming. Why is it necessary, what pr
 What is stateful streaming in Spark, and what operational challenges come with running stateful streaming jobs in production? How do you manage state at scale?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Stateful streaming operations (windowed aggregations, stream-stream joins, custom state) maintain data across micro-batches in RocksDB (Databricks default) per executor; the key operational challenges are unbounded state growth without watermarks or TTL, checkpoint incompatibility when query logic changes, and slow recovery time from large state checkpoints after failure.
 >
 > ### Key Points to Cover
 >
@@ -135,6 +139,8 @@ How does Spark Structured Streaming achieve exactly-once end-to-end semantics? W
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Exactly-once requires three components working together — a replayable source (Kafka offsets, Auto Loader file tracking), an idempotent sink (Delta Lake deduplicates writes by batch ID in the transaction log), and checkpointing (records committed offsets and state so restarts resume from the right place with no skipped or double-processed batches).
+>
 > ### Key Points to Cover
 >
 > - Three guarantees: at-most-once, at-least-once, exactly-once
@@ -187,6 +193,8 @@ How does Spark Structured Streaming achieve exactly-once end-to-end semantics? W
 Explain the four Structured Streaming trigger types — `processingTime`, `once`, `availableNow`, and `continuous`. For each, describe the right use case and any important caveats.
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Use `processingTime` for continuous low-latency streaming, `availableNow` for scheduled batch-like streaming (processes all backlog across multiple micro-batches then stops — the preferred replacement for the deprecated `once`), and `continuous` only for sub-millisecond stateless pipelines; `once` is deprecated since Spark 3.3.
 >
 > ### Key Points to Cover
 >
@@ -248,6 +256,8 @@ Explain the four Structured Streaming trigger types — `processingTime`, `once`
 A critical Silver-layer streaming job has been failing silently for 3 hours — the job shows as "running" but no new data has been written. How would you diagnose this, and how do you design for resilience going forward?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Check the Spark Streaming UI for a stuck micro-batch (batch started 3 hours ago, still running) and executor logs for OOM/lock/schema errors; the job can resume cleanly from checkpoint without data loss — then add proactive resilience: alert on `batchDuration > threshold`, monitor data freshness (`MAX(_ingestion_timestamp)`), track Kafka consumer lag, and route bad records to a dead-letter table.
 >
 > ### Key Points to Cover
 >

@@ -14,6 +14,8 @@ Your team needs to ingest 10TB of raw IoT sensor data per day from thousands of 
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Stream IoT events from Kafka using Structured Streaming into an append-only Bronze Delta table (raw JSON + metadata columns), parse and deduplicate in Silver with watermarking for late data, then pre-aggregate device metrics in Gold; use checkpointing for fault tolerance and `autoCompact`/`optimizeWrite` to prevent small file accumulation.
+>
 > ### Key Points to Cover
 >
 > - Ingest from Kafka/Event Hubs using Structured Streaming into Bronze
@@ -72,6 +74,8 @@ Your team needs to ingest 10TB of raw IoT sensor data per day from thousands of 
 You need to replicate changes from a PostgreSQL OLTP database (orders table, ~100M rows, high write throughput) into a Databricks Delta lakehouse in near-real time. How would you architect this?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Use Debezium to read PostgreSQL's WAL into Kafka, store raw CDC events in an append-only Bronze table as your audit log, then apply `APPLY CHANGES INTO` (DLT) or a manual MERGE in Silver to maintain current row state; handle deletes explicitly and add SCD Type 2 columns if historical state tracking is required.
 >
 > ### Key Points to Cover
 >
@@ -134,6 +138,8 @@ Your company has 8 business domains (Sales, Marketing, Finance, HR, Legal, Engin
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Use a domain-per-catalog pattern — one catalog per business domain plus a shared catalog for cross-domain certified data; enforce isolation via group-based RBAC where each domain owns its catalog, and cross-domain access requires explicit GRANT SELECT on tables in the shared catalog.
+>
 > ### Key Points to Cover
 >
 > - One metastore per region; catalogs for domain isolation
@@ -187,6 +193,8 @@ A payments company needs to flag potentially fraudulent transactions within 5 se
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Route transactions from Kafka into a hot path (Structured Streaming with ~500ms micro-batches, feature lookup from Online Tables, ML model broadcast to executors, results to a fraud_alerts topic) and a warm path (rolling feature aggregations updated every 60 seconds); keeping the end-to-end budget under 5 seconds requires pre-computing features rather than computing them at scoring time.
+>
 > ### Key Points to Cover
 >
 > - Kafka as the streaming backbone for low-latency ingest
@@ -236,6 +244,8 @@ A payments company needs to flag potentially fraudulent transactions within 5 se
 Your company has been running Databricks for 3 years with a legacy Hive metastore containing 2,000 tables across 40 databases. You've been asked to migrate everything to Unity Catalog. How would you plan and execute this?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Inventory all 2,000 tables (managed vs external, owners, consumers), map Hive databases to UC catalogs and schemas, migrate in domain waves using CTAS or in-place upgrade commands, recreate ACLs as group-based UC GRANTs, then validate with row counts and schema diffs before cutting over — keeping the Hive metastore readable for 30 days as a rollback option.
 >
 > ### Key Points to Cover
 >

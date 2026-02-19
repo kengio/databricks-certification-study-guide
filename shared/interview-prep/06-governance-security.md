@@ -14,6 +14,8 @@ Explain Unity Catalog's securable object hierarchy. How does it differ from the 
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Unity Catalog organizes objects in a four-level hierarchy — Metastore (one per region, manages credentials and all metadata) → Catalog (domain or environment grouping) → Schema (groups tables and views) → Table — addressed via the three-level namespace `catalog.schema.table`, which enables centralized ACLs, cross-workspace access, and automatic audit logging unlike the workspace-scoped Hive metastore.
+>
 > ### Key Points to Cover
 >
 > - Hierarchy: Metastore → Catalog → Schema → Table/View/Function/Volume
@@ -77,6 +79,8 @@ Explain Unity Catalog's securable object hierarchy. How does it differ from the 
 Your HR table contains employee salary data and PII (name, SSN, email). HR managers should see all columns for their own department's employees only. Finance auditors should see salary but not SSN/email. Regular employees see no salary data. How do you implement this in Unity Catalog?
 
 > [!success]- Answer Framework
+>
+> **Short Answer**: Create a Row Filter function using `IS_ACCOUNT_GROUP_MEMBER` and attach it with `ALTER TABLE ... SET ROW FILTER` so HR managers automatically see only their department's rows; create Column Mask functions that return masked values for SSN and email to non-HR groups and attach them with `ALTER TABLE ... ALTER COLUMN SET MASK` — both are enforced transparently at query time with no changes needed for consumers.
 >
 > ### Key Points to Cover
 >
@@ -163,6 +167,8 @@ A new team member confuses "metastore", "catalog", "schema", and "table" when se
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: The metastore is a region-level container managed by account admins (not created in SQL); a catalog groups schemas by domain or environment; a schema groups tables, views, and functions within a catalog; and `USE CATALOG` / `USE SCHEMA` set the default namespace so you can write unqualified object names — they require navigation privileges but do not grant data access.
+>
 > ### Key Points to Cover
 >
 > - Metastore: one per region, managed by account admin; not created in SQL
@@ -239,6 +245,8 @@ You're building a data platform for a bank subject to BCBS 239 (data lineage req
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: Unity Catalog auto-captures column-level lineage for all SQL operations via `system.lineage.column_lineage`; supplement this with Bronze provenance metadata (source system, file path, extraction timestamp) that propagates through Silver to Gold, and use `system.access.audit` for immutable access logs — together these satisfy the BCBS 239 requirement to trace any report value to its source record.
+>
 > ### Key Points to Cover
 >
 > - Unity Catalog auto-captures column-level lineage for SQL operations (notebooks, SQL warehouses, DLT)
@@ -301,6 +309,8 @@ Explain how privilege inheritance works in Unity Catalog. If I `GRANT SELECT ON 
 
 > [!success]- Answer Framework
 >
+> **Short Answer**: The minimum grant set to query a table is `USE CATALOG` + `USE SCHEMA` (navigation only) + `SELECT ON TABLE` (or `SELECT ON SCHEMA` to cover all current and future tables); privileges do NOT cascade automatically through the hierarchy — `ALL PRIVILEGES ON CATALOG` does not grant access to the tables within it, and each level requires its own explicit grant.
+>
 > ### Key Points to Cover
 >
 > - Schema-level `SELECT` grant covers all current AND future tables in that schema
@@ -359,4 +369,4 @@ Explain how privilege inheritance works in Unity Catalog. If I `GRANT SELECT ON 
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Streaming & CDC](05-streaming-cdc.md)
+[Back to Interview Prep](./README.md) | [Previous: Streaming & CDC](05-streaming-cdc.md) | [Next: File Formats & Spark Internals](07-file-formats-spark.md)
