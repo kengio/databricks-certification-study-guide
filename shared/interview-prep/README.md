@@ -46,8 +46,11 @@ Practice questions designed to simulate a real Databricks technical job intervie
 | [05-streaming-cdc.md](05-streaming-cdc.md) | Structured Streaming, CDF | Professional | 5 |
 | [06-governance-security.md](06-governance-security.md) | Unity Catalog, RBAC, lineage | Both | 5 |
 | [07-file-formats-spark.md](07-file-formats-spark.md) | Parquet, CSV, Delta vs Parquet, Spark internals | Both | 6 |
+| [08-pyspark-api.md](08-pyspark-api.md) | Window functions, UDFs, complex types, QUALIFY | Both | 6 |
+| [09-python-code-quality.md](09-python-code-quality.md) | Generators, decorators, context managers, OOP, testing | Both | 5 |
+| [10-data-modeling.md](10-data-modeling.md) | Star schema, SCD types, Delta SCD2, schema versioning | Both | 5 |
 
-**Total: 38 questions**
+**Total: 54 questions**
 
 ---
 
