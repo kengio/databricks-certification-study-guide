@@ -1,3 +1,7 @@
+---
+tags: [prd, data-engineer-professional, planning]
+---
+
 # PRD: Databricks Data Engineer Professional Study Guide
 
 ## Overview

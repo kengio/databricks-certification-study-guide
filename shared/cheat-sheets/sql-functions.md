@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, sql, data-engineering, data-analyst]
+---
+
 # SQL Functions Cheat Sheet
 
 ## String Functions

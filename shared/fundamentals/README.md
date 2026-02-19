@@ -1,3 +1,7 @@
+---
+tags: [fundamentals, reference, data-engineering]
+---
+
 # Shared Fundamentals
 
 This directory contains foundational concepts used across multiple Databricks certifications.
@@ -15,6 +19,10 @@ This directory contains foundational concepts used across multiple Databricks ce
 | [Platform Architecture](platform-architecture.md) | All certifications |
 | [SQL Essentials](sql-essentials.md) | Data Analyst Associate |
 | [Python Essentials](python-essentials.md) | DE Associate, DE Professional, ML Associate, ML Professional, GenAI Engineer |
+| [Streaming Fundamentals](streaming-fundamentals.md) | DE Associate, DE Professional |
+| [MLflow Basics](mlflow-basics.md) | ML Associate, ML Professional |
+| [Feature Engineering Basics](feature-engineering-basics.md) | ML Associate, ML Professional |
+| [RAG & Vector Search Basics](rag-vector-search-basics.md) | GenAI Engineer Associate |
 
 ## How to Use
 

@@ -1,3 +1,7 @@
+---
+tags: [performance, troubleshooting, spark, data-engineering]
+---
+
 # Performance Troubleshooting Guide
 
 A diagnostic guide for identifying and resolving common Databricks performance issues.

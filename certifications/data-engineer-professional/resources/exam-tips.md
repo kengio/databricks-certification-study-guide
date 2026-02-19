@@ -1,3 +1,7 @@
+---
+tags: [exam-tips, data-engineer-professional, certification]
+---
+
 # Exam Tips and Strategies
 
 ## Exam Format

@@ -6,8 +6,10 @@ This directory contains recommended learning paths for progressing through Datab
 
 | Path                                         | Description                             |
 | -------------------------------------------- | --------------------------------------- |
-| [Data Engineer Path](data-engineer-path.md)  | Associate → Professional progression    |
-| [ML Engineer Path](ml-engineer-path.md)      | ML Associate → Professional progression |
+| [Data Engineer Path](data-engineer-path.md)     | Associate → Professional progression    |
+| [ML Engineer Path](ml-engineer-path.md)         | ML Associate → Professional progression |
+| [Data Analyst Path](data-analyst-path.md)       | Data Analyst Associate preparation      |
+| [GenAI Engineer Path](genai-path.md)            | GenAI Engineer Associate preparation    |
 
 ## Certification Overview
 

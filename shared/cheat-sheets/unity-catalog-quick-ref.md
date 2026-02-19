@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, unity-catalog, governance, data-engineering]
+---
+
 # Unity Catalog Quick Reference
 
 ## Hierarchy

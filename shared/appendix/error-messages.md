@@ -1,3 +1,7 @@
+---
+tags: [errors, troubleshooting, reference, data-engineering]
+---
+
 # Common Error Messages and Solutions
 
 ## Delta Lake Errors

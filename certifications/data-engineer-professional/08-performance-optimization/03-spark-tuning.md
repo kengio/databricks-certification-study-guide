@@ -1,3 +1,7 @@
+---
+tags: [spark, performance, tuning, data-engineer-professional]
+---
+
 # Spark Tuning
 
 Understanding Spark configuration and tuning is essential for optimizing performance of data engineering workloads. This guide covers key configurations, Adaptive Query Execution (AQE), and optimization strategies.

@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, performance, spark, data-engineering]
+---
+
 # Performance Optimization Cheat Sheet
 
 Quick reference for Databricks performance tuning decisions and configurations.

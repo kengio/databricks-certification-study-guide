@@ -1,3 +1,7 @@
+---
+tags: [reference, version-history, delta-lake, databricks]
+---
+
 # Version History and Feature Timeline
 
 ## Delta Lake Versions

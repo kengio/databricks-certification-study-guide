@@ -1,3 +1,7 @@
+---
+tags: [reference, comparison, data-engineering]
+---
+
 # Comparison Tables
 
 ## Batch vs Streaming Processing

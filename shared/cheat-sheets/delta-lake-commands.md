@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, delta-lake, sql, data-engineering]
+---
+
 # Delta Lake Commands Cheat Sheet
 
 ## Table Operations

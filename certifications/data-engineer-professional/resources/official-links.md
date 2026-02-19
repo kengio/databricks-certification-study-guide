@@ -1,3 +1,7 @@
+---
+tags: [reference, official-docs, data-engineer-professional, certification]
+---
+
 # Official Documentation Links
 
 ## Certification Resources

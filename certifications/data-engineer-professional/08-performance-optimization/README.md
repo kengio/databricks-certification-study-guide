@@ -24,7 +24,8 @@ flowchart LR
 | [03-spark-tuning.md](03-spark-tuning.md) | Configurations, AQE, shuffle optimization | High |
 | [04-cost-optimization.md](04-cost-optimization.md) | Spot instances, autoscaling, job clusters | Medium |
 | [05-explain-plans-aqe.md](05-explain-plans-aqe.md) | EXPLAIN plans, AQE deep dive, runtime optimization | High |
-| [06-photon-diagnostics-optimization.md](06-photon-diagnostics-optimization.md) | Photon acceleration, memory diagnostics, Spark UI, query optimization | High |
+| [06-photon-diagnostics-optimization.md](06-photon-diagnostics-optimization.md) | Photon acceleration, memory diagnostics, Spark UI analysis | High |
+| [08-photon-diagnostics-optimization-part2.md](08-photon-diagnostics-optimization-part2.md) | Query optimization strategies, common issues, exam tips, practice questions | High |
 | [07-streaming-optimization.md](07-streaming-optimization.md) | Streaming-specific performance tuning | Medium |
 
 ## File Size Optimization

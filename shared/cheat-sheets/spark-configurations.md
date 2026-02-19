@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, spark, performance, data-engineering]
+---
+
 # Spark Configurations Cheat Sheet
 
 ## Setting Configurations
