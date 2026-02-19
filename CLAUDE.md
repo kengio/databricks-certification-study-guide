@@ -39,6 +39,19 @@ databricks-certification-study-guide/
 2. **Certification-specific content** goes in `certifications/<cert-name>/`
 3. **Reference shared content** rather than duplicating it
 
+### File Size Guidelines
+
+- **Target size per file: 300–600 lines** — keeps files scannable in Obsidian without excessive scrolling
+- **Hard limit: ~800 lines (~20–25 KB)** — files beyond this should be split into focused sub-topics
+- **When to split**: when a file contains two or more conceptually distinct sub-topics that can each stand alone (e.g., "joins & state" vs "monitoring & tuning")
+- **How to split**:
+  1. Part 1 keeps the original file number; Part 2 takes the next sequential number
+  2. Each part gets its own YAML frontmatter and a brief 1–2 sentence intro paragraph
+  3. Terminal sections (Exam Tips, Practice Questions, Related Topics, Official Docs, Common Issues) go to **Part 2 only** — end Part 1 with a single forward link to Part 2
+  4. Update the section `README.md` index table to list both new files
+  5. Delete the original oversized file
+  6. Search the repo for any links pointing to the old filename and update them all
+
 ### Markdown Conventions
 
 - Always run markdownlint to check for issues with every MD file

@@ -8,16 +8,16 @@ Complete study guide for the Databricks Data Engineer Professional certification
 
 | Section | Exam Weight | Status | Files |
 |---------|-------------|--------|-------|
-| 01-Data Processing | 30% | ✅ Complete | 8 |
+| 01-Data Processing | 30% | ✅ Complete | 9 |
 | 02-Databricks Tooling | 20% | ✅ Complete | 5 |
 | 03-Data Modeling | 15% | ✅ Complete | 5 |
-| 04-Security & Governance | 10% | ✅ Complete | 5 |
+| 04-Security & Governance | 10% | ✅ Complete | 6 |
 | 05-Monitoring & Logging | 10% | ✅ Complete | 4 |
-| 06-Testing & Deployment | 10% | ✅ Complete | 5 |
+| 06-Testing & Deployment | 10% | ✅ Complete | 6 |
 | 07-Lakeflow Pipelines | 5% | ✅ Complete | 4 |
-| 08-Performance Optimization | 5% | ✅ Complete | 5 |
+| 08-Performance Optimization | 5% | ✅ Complete | 7 |
 
-**Total content files: 41** (7 pre-existing + 34 created)
+**Total content files: 46** (split from 4 oversized files, each divided into 2 focused files)
 
 ## Content Format Standard
 
@@ -47,7 +47,8 @@ Each content file follows this structure:
 | `05-change-data-capture.md` | CDC patterns |
 | `06-delta-lake-operations.md` | Delta Lake fundamentals |
 | `07-data-deduplication.md` | Deduplication strategies |
-| `08-advanced-streaming.md` | Stream-stream joins, stateful ops, back-pressure |
+| `08-streaming-joins-stateful.md` | Stream-stream joins, stateful ops, watermarking, deduplication |
+| `09-streaming-monitoring-optimization.md` | Back-pressure, monitoring, state store, troubleshooting |
 
 ### Section 02: Databricks Tooling (20%)
 
@@ -77,7 +78,8 @@ Each content file follows this structure:
 | `02-access-control.md` | Access control | Row/column security, dynamic views |
 | `03-data-sharing.md` | Delta Sharing | External sharing, recipients, marketplace |
 | `04-secret-management.md` | Secrets | Scopes, dbutils.secrets, Key Vault integration |
-| `05-advanced-governance.md` | Advanced governance | Lineage, audit logging, compliance, network security |
+| `05-audit-lineage-network-security.md` | Audit & observability | Data lineage, audit logging, information schema, network security |
+| `06-classification-compliance-permissions.md` | Data protection | Data classification, GDPR/CCPA compliance, advanced permissions |
 
 ### Section 05: Monitoring & Logging (10%)
 
@@ -96,7 +98,8 @@ Each content file follows this structure:
 | `02-cicd-integration.md` | CI/CD | GitHub Actions, Azure DevOps, GitLab |
 | `03-git-folders.md` | Git integration | Git folders, branching, PR workflows |
 | `04-unit-testing.md` | Testing | pytest, Nutter framework, mocking |
-| `05-advanced-cicd.md` | Advanced CI/CD | OIDC, deployment strategies, GitOps patterns |
+| `05-bundle-deployment-strategies.md` | Deployment | Advanced bundle patterns, CI/CD pipelines, blue/green, OIDC |
+| `06-advanced-testing-operations.md` | Advanced testing | Property-based testing, DLT testing, integration tests, GitOps |
 
 ### Section 07: Lakeflow Pipelines (5%)
 
@@ -115,7 +118,9 @@ Each content file follows this structure:
 | `02-zorder-indexing.md` | Data skipping | Z-ORDER, liquid clustering, bloom filters |
 | `03-spark-tuning.md` | Spark configs | AQE, shuffle, joins, memory tuning |
 | `04-cost-optimization.md` | Cost management | Spot instances, autoscaling, serverless |
-| `05-query-plan-analysis.md` | Query analysis | EXPLAIN plans, Photon, memory diagnostics, Spark UI |
+| `05-explain-plans-aqe.md` | Query analysis | EXPLAIN plans, AQE deep dive, runtime optimization |
+| `06-photon-diagnostics-optimization.md` | Acceleration | Photon engine, memory diagnostics, Spark UI, query optimization |
+| `07-streaming-optimization.md` | Streaming perf | Streaming-specific performance tuning |
 
 ## Directory Structure
 
@@ -125,7 +130,7 @@ certifications/data-engineer-professional/
 ├── prd.md (this file)
 ├── 01-data-processing/
 │   ├── README.md
-│   └── [8 content files]
+│   └── [9 content files]
 ├── 02-databricks-tooling/
 │   ├── README.md
 │   └── [5 content files]
@@ -134,19 +139,19 @@ certifications/data-engineer-professional/
 │   └── [5 content files]
 ├── 04-security-governance/
 │   ├── README.md
-│   └── [5 content files]
+│   └── [6 content files]
 ├── 05-monitoring-logging/
 │   ├── README.md
 │   └── [4 content files]
 ├── 06-testing-deployment/
 │   ├── README.md
-│   └── [5 content files]
+│   └── [6 content files]
 ├── 07-lakeflow-pipelines/
 │   ├── README.md
 │   └── [4 content files]
 └── 08-performance-optimization/
     ├── README.md
-    └── [5 content files]
+    └── [7 content files]
 ```
 
 ## Enhancements Status

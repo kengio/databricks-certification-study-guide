@@ -62,6 +62,7 @@ See [Learning Paths](learning-paths/README.md) for detailed progression guides.
 | [Cheat Sheets](shared/cheat-sheets/README.md)               | Quick reference guides                 |
 | [Appendix](shared/appendix/README.md)                       | Glossary, comparisons, error reference |
 | [Code Examples](shared/code-examples/README.md)             | Python and SQL examples                |
+| [Interview Prep](shared/interview-prep/README.md)           | Open-ended design and architecture questions |
 
 ## Quick Start
 
@@ -86,7 +87,8 @@ databricks-certification-study-guide/
 │   ├── fundamentals/
 │   ├── cheat-sheets/
 │   ├── appendix/
-│   └── code-examples/
+│   ├── code-examples/
+│   └── interview-prep/
 ├── learning-paths/           # Certification progression guides
 └── images/                   # Shared images and diagrams
 ```
@@ -99,4 +101,4 @@ databricks-certification-study-guide/
 
 ---
 
-*Last updated: January 2026*
+*Last updated: February 2026*

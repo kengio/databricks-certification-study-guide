@@ -21,7 +21,8 @@ flowchart LR
     TD --> CICD[CI/CD Integration]
     TD --> Git[Git Folders]
     TD --> UT[Unit Testing]
-    TD --> AC[Advanced CI/CD]
+    TD --> BD[Bundle Deployment]
+    TD --> ATO[Advanced Testing & Ops]
 ```
 
 ## Section Contents
@@ -32,7 +33,8 @@ flowchart LR
 | [02-cicd-integration.md](02-cicd-integration.md) | GitHub Actions, Azure DevOps, workflow patterns | High |
 | [03-git-folders.md](03-git-folders.md) | Git integration, notebook versioning | Medium |
 | [04-unit-testing.md](04-unit-testing.md) | Testing notebooks, mocking, nutter framework | Medium |
-| [05-advanced-cicd.md](05-advanced-cicd.md) | Advanced DAB patterns, OIDC, deployment strategies | High |
+| [05-bundle-deployment-strategies.md](05-bundle-deployment-strategies.md) | Advanced bundle patterns, CI/CD pipelines, deployment strategies, OIDC | High |
+| [06-advanced-testing-operations.md](06-advanced-testing-operations.md) | Property-based testing, DLT testing, integration tests, GitOps | High |
 
 ## Databricks Asset Bundles (DAB)
 

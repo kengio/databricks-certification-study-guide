@@ -12,19 +12,21 @@ Practical, runnable code examples for Databricks exam preparation and developmen
 
 ## Python Examples
 
-| File | Description |
-| ---- | ----------- |
-| [Delta Lake Operations](python/delta_lake_operations.py) | Create, read, write, merge, time travel, VACUUM |
-| [Streaming Examples](python/streaming_examples.py) | Structured Streaming, Auto Loader, triggers, watermarks |
-| [Unity Catalog Setup](python/unity_catalog_setup.py) | Catalog/schema/table creation, grants, external locations |
+> [!note] Coming Soon
+> Example files are planned. Topics to be covered:
+
+- `python/delta_lake_operations.py` — Create, read, write, merge, time travel, VACUUM
+- `python/streaming_examples.py` — Structured Streaming, Auto Loader, triggers, watermarks
+- `python/unity_catalog_setup.py` — Catalog/schema/table creation, grants, external locations
 
 ## SQL Examples
 
-| File | Description |
-| ---- | ----------- |
-| [Delta Lake Operations](sql/delta_lake_operations.sql) | DDL, DML, OPTIMIZE, VACUUM, MERGE, CDF |
-| [Window Functions](sql/window_functions.sql) | ROW_NUMBER, RANK, LAG/LEAD, running aggregates |
-| [CTE Patterns](sql/cte_patterns.sql) | Common Table Expressions, PIVOT, UNPIVOT |
+> [!note] Coming Soon
+> Example files are planned. Topics to be covered:
+
+- `sql/delta_lake_operations.sql` — DDL, DML, OPTIMIZE, VACUUM, MERGE, CDF
+- `sql/window_functions.sql` — ROW_NUMBER, RANK, LAG/LEAD, running aggregates
+- `sql/cte_patterns.sql` — Common Table Expressions, PIVOT, UNPIVOT
 
 ## How to Use
 

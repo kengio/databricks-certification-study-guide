@@ -23,7 +23,8 @@ flowchart TD
     DP --> CDC[Change Data Capture]
     DP --> DL[Delta Lake Operations]
     DP --> Dedup[Data Deduplication]
-    DP --> Adv[Advanced Streaming]
+    DP --> Adv[Streaming Joins & Stateful Ops]
+    DP --> Mon[Streaming Monitoring & Optimization]
 ```
 
 ## Section Contents
@@ -37,7 +38,8 @@ flowchart TD
 | [05-change-data-capture.md](05-change-data-capture.md) | Delta CDF, CDC patterns with DLT | High |
 | [06-delta-lake-operations.md](06-delta-lake-operations.md) | MERGE, OPTIMIZE, VACUUM, ZORDER, time travel | High |
 | [07-data-deduplication.md](07-data-deduplication.md) | Deduplication strategies, idempotent writes | Medium |
-| [08-advanced-streaming.md](08-advanced-streaming.md) | Stream-stream joins, stateful ops, back-pressure | High |
+| [08-streaming-joins-stateful.md](08-streaming-joins-stateful.md) | Stream-stream joins, stateful ops, watermarking, deduplication | High |
+| [09-streaming-monitoring-optimization.md](09-streaming-monitoring-optimization.md) | Back-pressure, monitoring, state store, troubleshooting | High |
 
 ## Key Concepts to Master
 
