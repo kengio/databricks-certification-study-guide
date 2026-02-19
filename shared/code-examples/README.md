@@ -16,6 +16,7 @@ All examples are stored as Markdown files with fenced code blocks for readabilit
 - [python/delta_lake_operations.md](python/delta_lake_operations.md) — Create, read, write, merge, time travel, VACUUM
 - [python/streaming_examples.md](python/streaming_examples.md) — Structured Streaming, Auto Loader, triggers, watermarks
 - [python/unity_catalog_setup.md](python/unity_catalog_setup.md) — Catalog/schema/table creation, grants, external locations
+- [python/python_patterns.md](python/python_patterns.md) — Data structures, comprehensions, generators, dataclasses, context managers, string manipulation, inheritance, error handling, CSV/JSON, datetime, logging
 
 ## SQL Examples
 
