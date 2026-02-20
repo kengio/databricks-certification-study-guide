@@ -18,7 +18,8 @@ This directory contains foundational concepts used across multiple Databricks ce
 | [Databricks Workspace](databricks-workspace.md) | All certifications |
 | [Platform Architecture](platform-architecture.md) | All certifications |
 | [SQL Essentials](sql-essentials.md) | Data Analyst Associate |
-| [Python Essentials](python-essentials.md) | DE Associate, DE Professional, ML Associate, ML Professional, GenAI Engineer |
+| [Python Essentials — Part 1](python-essentials.md) | DE Associate, DE Professional, ML Associate, ML Professional, GenAI Engineer |
+| [Python Essentials — Part 2](python-essentials-2.md) | DE Associate, DE Professional, ML Associate, ML Professional, GenAI Engineer |
 | [Streaming Fundamentals](streaming-fundamentals.md) | DE Associate, DE Professional |
 | [MLflow Basics](mlflow-basics.md) | ML Associate, ML Professional |
 | [Feature Engineering Basics](feature-engineering-basics.md) | ML Associate, ML Professional |

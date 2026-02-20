@@ -261,9 +261,79 @@ mlflow.sklearn.log_model(
 4. **Aliases vs stages** — In MLflow 2.x/Databricks, aliases are preferred over lifecycle stages (None/Staging/Production/Archived)
 5. **Unity Catalog registry** — UC models use `catalog.schema.model` naming; set `mlflow.set_registry_uri("databricks-uc")` first
 
+## Practice Questions
+
+### Question 1: Runs vs. Experiments
+
+**Question**: What is the relationship between an MLflow Experiment and a Run?
+
+A) An experiment is a single training execution; a run is a collection of experiments
+B) An experiment is a named container; each run within it records one training execution
+C) They are synonyms — experiment and run refer to the same concept
+D) A run is a deployment unit; an experiment tracks serving metrics
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> An **experiment** is a logical grouping (like a project or model type) that contains
+> many **runs**. Each run captures one training execution: the hyperparameters used,
+> metrics produced, and artifacts created. You create an experiment once
+> (`mlflow.set_experiment(...)`) and generate many runs within it as you iterate on
+> hyperparameters, features, or algorithms.
+
+---
+
+### Question 2: Aliases vs. Lifecycle Stages
+
+**Question**: You are using Databricks with Unity Catalog. You want to designate version 5 of `prod_catalog.ml_models.fraud-detector` as the current production model. What is the recommended approach?
+
+A) Call `transition_model_version_stage(version=5, stage="Production")`
+B) Set an alias `champion` pointing to version 5 using `set_registered_model_alias`
+C) Delete all other versions so only version 5 remains
+D) Use `mlflow.register_model()` with `stage="Production"` as a parameter
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> In MLflow 2.x and Databricks Unity Catalog, **aliases** (`champion`, `challenger`,
+> etc.) replace legacy lifecycle stages (Staging/Production/Archived). Aliases are
+> flexible named pointers that can be updated independently of version numbering.
+> Load the model with `mlflow.pyfunc.load_model("models:/fraud-detector@champion")`.
+> The legacy `transition_model_version_stage` API still works but is deprecated for
+> UC-registered models.
+
+---
+
+### Question 3: MLflow Autolog
+
+**Question**: A data scientist enables `mlflow.autolog()` before training an XGBoost model. Which of the following is NOT automatically captured?
+
+A) Model hyperparameters passed to the `XGBClassifier` constructor
+B) Training and validation metrics at each boosting round
+C) The trained model artifact
+D) Business KPIs computed after the model is deployed to production
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> `mlflow.autolog()` intercepts training framework APIs and automatically logs what
+> the framework exposes: hyperparameters, in-training metrics (loss, eval scores per
+> round), and the final model artifact. It has no visibility into post-deployment
+> business metrics — those must be logged explicitly with `mlflow.log_metric()`.
+> Supported frameworks include scikit-learn, XGBoost, LightGBM, PyTorch, TensorFlow,
+> Keras, Spark ML, and Hugging Face Transformers.
+
 ## Related Topics
 
 - [ML Associate Certification](../../certifications/ml-associate/README.md)
 - [ML Professional Certification](../../certifications/ml-professional/README.md)
 - [Python Essentials](python-essentials.md)
 - [Spark Fundamentals](spark-fundamentals.md)
+
+## Official Documentation
+
+- [MLflow Tracking — Databricks](https://docs.databricks.com/en/mlflow/tracking.html)
+- [MLflow Model Registry — Databricks](https://docs.databricks.com/en/mlflow/model-registry.html)
+- [MLflow Autologging](https://mlflow.org/docs/latest/tracking/autolog.html)
+- [Unity Catalog Model Registry](https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/index.html)
+- [MLflow Model Serving — Databricks](https://docs.databricks.com/en/machine-learning/model-serving/index.html)

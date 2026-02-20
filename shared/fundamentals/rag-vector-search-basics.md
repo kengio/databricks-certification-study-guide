@@ -222,6 +222,59 @@ with mlflow.start_run():
     )
 ```text
 
+## Prompt Engineering for RAG
+
+Prompt engineering controls how the LLM uses retrieved context to generate accurate answers.
+
+### Prompt Structure
+
+A RAG prompt typically has three parts:
+
+```text
+System prompt:    Role and behavioral instructions for the LLM
+Retrieved context: The top-K chunks from vector search
+User question:    The user's original query
+```
+
+```python
+SYSTEM_PROMPT = """You are a helpful technical assistant for Databricks documentation.
+Answer the user's question using ONLY the provided context.
+If the context does not contain enough information, say "I don't know."
+Do not make up information or use knowledge outside the provided context."""
+
+def build_prompt(context: str, question: str) -> list[dict]:
+    return [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": (
+                f"Context:\n{context}\n\n"
+                f"Question: {question}"
+            ),
+        },
+    ]
+```
+
+### Key Parameters
+
+| Parameter | Effect | Typical Range |
+| :--- | :--- | :--- |
+| `temperature` | Controls randomness; 0 = deterministic, 1 = creative | 0.0–0.3 for Q&A |
+| `max_tokens` | Maximum length of the generated response | 256–1024 |
+| `top_p` | Nucleus sampling — limits to top P% probability mass | 0.9–1.0 |
+
+**For RAG applications**, use low temperature (0.0–0.2) to produce consistent, grounded answers. Higher temperatures introduce creativity but increase hallucination risk.
+
+### Citation Prompting
+
+Instructing the LLM to cite its sources improves faithfulness and user trust:
+
+```python
+CITATION_PROMPT = """Answer the question based on the provided context.
+After your answer, list the source documents you used in the format:
+Sources: [doc_1_title], [doc_2_title]"""
+```
+
 ## Use Cases
 
 | Use Case | Description |
@@ -240,9 +293,79 @@ with mlflow.start_run():
 4. **Vector Search requires Delta Sync** — The source table must be a Delta table for automatic sync; non-Delta sources require Direct Vector Access
 5. **Hallucination risk** — RAG reduces hallucinations but does not eliminate them; always evaluate faithfulness
 
+## Practice Questions
+
+### Question 1: Similarity Metric
+
+**Question**: You are building a RAG system using text embeddings from a pre-trained sentence transformer model. The embedding model normalizes all output vectors to unit length. Which similarity metric should you use for retrieval?
+
+A) Euclidean (L2) distance — most common default
+B) Cosine similarity — measures the angle between vectors
+C) Dot product — equivalent to cosine similarity for normalized vectors
+D) Manhattan distance — more robust to high-dimensional data
+
+> [!success]- Answer
+> **Correct Answers: B or C**
+>
+> When vectors are normalized to unit length (as sentence transformers typically do),
+> **cosine similarity and dot product produce identical rankings** because the
+> denominator of cosine similarity equals 1 for unit vectors. Both are correct answers
+> here. Euclidean (L2) distance is better suited for image embeddings where vectors
+> are not normalized. Cosine similarity is the conventional choice for text
+> embeddings and is the most explicit signal of semantic similarity.
+
+---
+
+### Question 2: Chunk Size Trade-off
+
+**Question**: A RAG system retrieves 5 chunks per query. You increase the chunk size from 256 tokens to 1024 tokens. What is the most likely effect?
+
+A) Retrieval precision improves because each chunk covers more context
+B) Retrieval precision decreases because individual chunks become less focused
+C) LLM response quality is unaffected — chunk size only impacts indexing speed
+D) Hallucination rate decreases because the LLM receives more total information
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Larger chunks contain more text, which means a single chunk may cover multiple
+> topics. When a query matches only part of a large chunk, the chunk is retrieved
+> but most of its content is irrelevant — reducing precision. Smaller, focused chunks
+> (256–512 tokens) match queries more precisely. However, chunks too small (< 100
+> tokens) lose context needed to answer multi-sentence questions. The optimal range
+> is 256–1024 tokens with 10–20% overlap to preserve boundary context.
+
+---
+
+### Question 3: RAG vs Fine-Tuning
+
+**Question**: A company wants its chatbot to answer questions about an internal knowledge base that is updated weekly. Which approach is most appropriate?
+
+A) Fine-tune the base LLM on the knowledge base documents every week
+B) Use RAG — retrieve relevant documents from a vector index at query time
+C) Increase the LLM's context window so it can accept all documents in the prompt
+D) Pre-compute all possible questions and answers and store them in a lookup table
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> RAG is the right choice when knowledge changes frequently. The vector index can be
+> updated incrementally (or via Delta Sync from a Delta table) without modifying the
+> LLM. Fine-tuning is expensive, slow, and encodes knowledge into weights — making
+> it impractical for weekly updates and causing the model to "forget" fine-tuned
+> knowledge over successive updates. Large context windows can work for small knowledge
+> bases but are slow and expensive at inference time; they do not scale to large corpora.
+
 ## Related Topics
 
 - [GenAI Engineer Associate Certification](../../certifications/genai-engineer-associate/README.md)
 - [MLflow Basics](mlflow-basics.md)
 - [Python Essentials](python-essentials.md)
 - [Platform Architecture](platform-architecture.md)
+
+## Official Documentation
+
+- [Databricks Vector Search](https://docs.databricks.com/en/generative-ai/vector-search.html)
+- [Databricks Foundation Model APIs](https://docs.databricks.com/en/machine-learning/foundation-models/index.html)
+- [MLflow Evaluate for RAG](https://mlflow.org/docs/latest/llms/rag/index.html)
+- [Mosaic AI Agent Framework](https://docs.databricks.com/en/generative-ai/agent-framework/index.html)

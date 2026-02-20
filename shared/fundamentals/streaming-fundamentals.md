@@ -294,6 +294,66 @@ matched = impressions.join(
 4. **Watermark required for stream-stream joins** — Both streams in a stream-stream join must have watermarks
 5. **Trigger(once) vs availableNow** — `once` processes all data in a single micro-batch; `availableNow` uses multiple micro-batches (more efficient for large backlogs)
 
+## Practice Questions
+
+### Question 1: Trigger Types
+
+**Question**: A Databricks job must process all data that arrived since the last run, then stop. Which trigger should you use?
+
+A) `trigger(processingTime="0 seconds")`
+B) `trigger(once=True)`
+C) `trigger(availableNow=True)`
+D) `trigger(continuous="1 second")`
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> `availableNow=True` processes all currently available data using multiple micro-batches
+> and then stops. It is preferred over `once=True` for large backlogs because it
+> distributes the work across micro-batches rather than loading everything into a single
+> batch, improving stability and fault tolerance. `once=True` is still valid but
+> processes everything in one micro-batch regardless of size.
+
+---
+
+### Question 2: Checkpointing
+
+**Question**: A streaming query has been running for three days. The checkpoint directory is accidentally deleted. What happens when the query is restarted?
+
+A) The query resumes from the last committed offset as if nothing happened
+B) The query throws an error and cannot start
+C) The query starts from the beginning of the stream, potentially reprocessing data
+D) The query skips all historical data and reads only new records
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> Without a checkpoint, Spark has no record of which offsets were already processed.
+> The query restarts as a new stream and will re-read from the source's beginning (or
+> `startingOffsets` setting). This can cause duplicate records in the sink if the sink
+> does not deduplicate. Always store checkpoint directories on durable cloud storage
+> (S3, ADLS, GCS) — never on ephemeral local disk.
+
+---
+
+### Question 3: Watermarks and Late Data
+
+**Question**: Your streaming aggregation uses `.withWatermark("event_time", "10 minutes")` and output mode `update`. An event arrives 15 minutes after the window closes. What happens?
+
+A) The event is processed and the window result is updated
+B) The event is silently dropped and the window result is not updated
+C) Spark throws a `LateDataException` and the query fails
+D) The event is held in a buffer until the next trigger
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> A watermark of `"10 minutes"` tells Spark to wait up to 10 minutes after the event
+> time for late data. Any event arriving more than 10 minutes past the window's end
+> is considered too late and is silently dropped. The watermark also allows Spark to
+> safely clean up state for old windows. To capture more late data, increase the
+> watermark delay — but this increases memory usage for state storage.
+
 ## Related Topics
 
 - [Structured Streaming (DE Pro)](../../certifications/data-engineer-professional/01-data-processing/03-structured-streaming.md)

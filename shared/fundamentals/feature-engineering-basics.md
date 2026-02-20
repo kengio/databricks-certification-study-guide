@@ -302,6 +302,69 @@ fe.write_table(
 4. **Pipeline vs manual transforms** — Always use `Pipeline` so that fit-time statistics (scaling params, index mappings) are stored and applied consistently
 5. **Target encoding leakage** — If computing target encoding on the full dataset before splitting, you leak label information into the features
 
+## Practice Questions
+
+### Question 1: Imputation Strategy
+
+**Question**: A numeric feature has 5% missing values and a highly skewed distribution with several outliers. Which imputation strategy is most appropriate?
+
+A) Mean imputation — fills with the arithmetic average
+B) Median imputation — fills with the middle value, robust to outliers
+C) Constant imputation — fills all missing values with zero
+D) Drop rows — remove all rows with missing values
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Median imputation is preferred when a distribution is skewed or contains outliers,
+> because the median is not affected by extreme values the way the mean is. Mean
+> imputation would pull the imputed value toward the outliers, distorting the
+> feature. Constant imputation (e.g., zero) is appropriate only when missing means
+> "none occurred" — not when the data is simply absent. Dropping 5% of rows is
+> wasteful and can introduce bias if missingness is not random.
+
+---
+
+### Question 2: Feature Store Benefit
+
+**Question**: A data scientist trains a churn model using features computed in a notebook. A month later, the production pipeline computes the same features differently due to a code change. Which Databricks tool best prevents this training/serving skew?
+
+A) MLflow Model Registry — version and stage-gate production models
+B) Databricks Feature Store — store computed features once, reuse at training and serving
+C) Delta Lake time travel — roll back feature data to training time
+D) Unity Catalog — audit who accessed feature data
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The Databricks Feature Store stores computed features in Delta tables with metadata
+> and lineage. At training time, `FeatureEngineeringClient` retrieves features and
+> records which feature table and version was used. At serving time, the same feature
+> lookup is replayed automatically, guaranteeing consistency. MLflow Registry governs
+> model promotion but does not solve feature computation consistency. Delta time travel
+> helps with data versioning but does not enforce consistent feature logic.
+
+---
+
+### Question 3: Pipeline vs Manual Transforms
+
+**Question**: Why should you use Spark ML's `Pipeline` instead of applying transformers manually in sequence?
+
+A) `Pipeline` is faster because it uses native JVM code
+B) `Pipeline` stores fit-time statistics and applies them consistently to new data
+C) `Pipeline` automatically selects the best features for the model
+D) `Pipeline` is required; applying transformers manually raises an exception
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The key benefit of `Pipeline` is that `pipeline.fit(train_df)` learns and stores all
+> transformation parameters — scaling means and standard deviations, string index
+> mappings, IDF weights, etc. — from the training data. When `pipeline_model.transform(test_df)`
+> is called, the exact same parameters are applied, preventing training/serving skew.
+> Applying transformers manually risks accidentally re-fitting on test data (leakage)
+> or using inconsistent parameters at inference time.
+
 ## Related Topics
 
 - [ML Associate Certification](../../certifications/ml-associate/README.md)
@@ -309,3 +372,10 @@ fe.write_table(
 - [MLflow Basics](mlflow-basics.md)
 - [Python Essentials](python-essentials.md)
 - [Spark Fundamentals](spark-fundamentals.md)
+
+## Official Documentation
+
+- [Databricks Feature Engineering (Feature Store)](https://docs.databricks.com/en/machine-learning/feature-store/index.html)
+- [Spark ML Pipelines](https://spark.apache.org/docs/latest/ml-pipeline.html)
+- [Spark ML Feature Transformers](https://spark.apache.org/docs/latest/ml-features.html)
+- [MLlib Feature Engineering Guide](https://spark.apache.org/docs/latest/ml-features.html#feature-transformers)
