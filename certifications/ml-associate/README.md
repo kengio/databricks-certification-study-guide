@@ -35,19 +35,38 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section               | Weight | Topics                                 |
-| --------------------- | ------ | -------------------------------------- |
-| 01-Databricks ML      | 29%    | Clusters, notebooks, repos, AutoML     |
-| 02-ML Workflows       | 29%    | Experimentation, MLflow tracking       |
-| 03-Feature Engineering| 33%    | Spark ML, feature pipelines            |
-| 04-MLflow             | 9%     | Model registry, deployment basics      |
+### Core Topics (By Exam Weight)
+
+| Section                                                     | Weight | Topics                                     |
+| ----------------------------------------------------------- | ------ | ------------------------------------------ |
+| [01-Databricks ML](01-databricks-ml/README.md)             | 29%    | Platform, clusters, notebooks, AutoML      |
+| [02-ML Workflows](02-ml-workflows/README.md)               | 29%    | Experimentation, tracking, MLflow          |
+| [03-Feature Engineering](03-feature-engineering/README.md) | 33%    | Spark ML, pipelines, feature store         |
+| [04-MLflow Deployment](04-mlflow-deployment/README.md)     | 9%     | Model registry, deployment, serving        |
+
+### Practice & Resources
+
+| Resource                                                | Description                              |
+| ------------------------------------------------------- | ---------------------------------------- |
+| [Practice Questions](resources/practice-questions/)    | Topic-specific practice questions        |
+| [Mock Exam 1](resources/mock-exam/)                    | Full-length practice exam                |
+| [Mock Exam 2](resources/mock-exam-2/)                  | Alternative practice exam                |
+| [Exam Tips](resources/exam-tips.md)                    | Exam strategies and tips                 |
+| [Official Links](resources/official-links.md)          | Documentation and resources              |
+
+## Interview Preparation
+
+After completing this certification, explore:
+
+- [Interview Prep Resource](../../shared/interview-prep/README.md) - System design, feature engineering, and model architecture questions
 
 ## Prerequisites
 
 Review these shared fundamentals:
 
 - [Spark Fundamentals](../../shared/fundamentals/spark-fundamentals.md)
-- [Databricks Workspace](../../shared/fundamentals/databricks-workspace.md)
+- [MLflow Basics](../../shared/fundamentals/mlflow-basics.md)
+- [Feature Engineering Basics](../../shared/fundamentals/feature-engineering-basics.md)
 
 ## Study Progress Tracker
 

@@ -71,6 +71,12 @@ pie title Exam Topic Distribution
 | [Exam Tips](resources/exam-tips.md)                 | Exam strategies and common traps              |
 | [Official Links](resources/official-links.md)       | Databricks documentation references           |
 
+## Interview Preparation
+
+After completing this certification, explore advanced architecture and design questions:
+
+- [Interview Prep Resource](../../shared/interview-prep/README.md) - System design, Delta Lake internals, pipeline architecture, performance optimization, and more
+
 ## Prerequisites
 
 Before starting this certification, review:

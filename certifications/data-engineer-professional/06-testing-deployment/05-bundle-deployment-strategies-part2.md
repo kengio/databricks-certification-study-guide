@@ -15,7 +15,7 @@ status: published
 
 This part covers rollback strategies, feature flags in data pipelines, schema migration patterns, and OIDC federation for secure CI/CD authentication.
 
-### Rollback Strategies
+## Rollback Strategies
 
 ```mermaid
 flowchart TD

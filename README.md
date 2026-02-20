@@ -16,29 +16,29 @@ A comprehensive study guide for all Databricks certifications.
 
 ### Data Engineering
 
-| Certification                                                                     | Level        | Status         |
-| --------------------------------------------------------------------------------- | ------------ | -------------- |
-| [Data Engineer Associate](certifications/data-engineer-associate/README.md)       | Associate    | 📝 Placeholder |
-| [Data Engineer Professional](certifications/data-engineer-professional/README.md) | Professional | ✅ In Progress |
+| Certification                                                                     | Level        | Status           |
+| --------------------------------------------------------------------------------- | ------------ | ---------------- |
+| [Data Engineer Associate](certifications/data-engineer-associate/README.md)       | Associate    | ✅ Structured    |
+| [Data Engineer Professional](certifications/data-engineer-professional/README.md) | Professional | ✅ In Progress   |
 
 ### Data Analytics
 
-| Certification                                                             | Level     | Status         |
-| ------------------------------------------------------------------------- | --------- | -------------- |
-| [Data Analyst Associate](certifications/data-analyst-associate/README.md) | Associate | 📝 Placeholder |
+| Certification                                                             | Level     | Status        |
+| ------------------------------------------------------------------------- | --------- | ------------- |
+| [Data Analyst Associate](certifications/data-analyst-associate/README.md) | Associate | ✅ Structured |
 
 ### Machine Learning
 
-| Certification                                                | Level        | Status         |
-| ------------------------------------------------------------ | ------------ | -------------- |
-| [ML Associate](certifications/ml-associate/README.md)        | Associate    | 📝 Placeholder |
-| [ML Professional](certifications/ml-professional/README.md)  | Professional | 📝 Placeholder |
+| Certification                                                | Level        | Status        |
+| ------------------------------------------------------------ | ------------ | ------------- |
+| [ML Associate](certifications/ml-associate/README.md)        | Associate    | ✅ Structured |
+| [ML Professional](certifications/ml-professional/README.md)  | Professional | ✅ Structured |
 
 ### Generative AI
 
-| Certification                                                                 | Level     | Status         |
-| ----------------------------------------------------------------------------- | --------- | -------------- |
-| [GenAI Engineer Associate](certifications/genai-engineer-associate/README.md) | Associate | 📝 Placeholder |
+| Certification                                                                 | Level     | Status        |
+| ----------------------------------------------------------------------------- | --------- | ------------- |
+| [GenAI Engineer Associate](certifications/genai-engineer-associate/README.md) | Associate | ✅ Structured |
 
 ## Certification Paths
 

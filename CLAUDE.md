@@ -54,12 +54,18 @@ databricks-certification-study-guide/
 - **Hard limit: ~800 lines (~20–25 KB)** — files beyond this should be split into focused sub-topics
 - **When to split**: when a file contains two or more conceptually distinct sub-topics that can each stand alone (e.g., "joins & state" vs "monitoring & tuning")
 - **How to split**:
-  1. Part 1 keeps the original file number; Part 2 takes the next sequential number
-  2. Each part gets its own YAML frontmatter and a brief 1–2 sentence intro paragraph
-  3. Terminal sections (Exam Tips, Practice Questions, Related Topics, Official Docs, Common Issues) go to **Part 2 only** — end Part 1 with a single forward link to Part 2
-  4. Update the section `README.md` index table to list both new files
-  5. Delete the original oversized file
-  6. Search the repo for any links pointing to the old filename and update them all
+  1. Part 1 keeps the original file number with name: `NN-topic-name.md`
+  2. Part 2 uses same number with `-part2` suffix: `NN-topic-name-part2.md` (NOT next sequential number)
+  3. Each part gets its own YAML frontmatter and a brief 1–2 sentence intro paragraph
+  4. Terminal sections (Exam Tips, Practice Questions, Related Topics, Official Docs, Common Issues) go to **Part 2 only** — end Part 1 with a single forward link to Part 2
+  5. Update the section `README.md` index table to list both new files
+  6. Delete the original oversized file
+  7. Search the repo for any links pointing to the old filename and update them all
+
+**Example**: If `03-structured-streaming.md` exceeds 800 lines:
+
+- Part 1 stays: `03-structured-streaming.md`
+- Part 2 becomes: `03-structured-streaming-part2.md` (NOT `12-structured-streaming-part2.md`)
 
 ### Markdown Conventions
 
@@ -173,6 +179,64 @@ flowchart TB
 - Add common issues/errors that appear in exam questions
 - Reference official Databricks documentation
 - Use information from 2025 or 2026 sources
+
+## Certification Folder Structure (Standardized)
+
+All certifications follow this consistent folder structure for easy navigation and scalability:
+
+```text
+certifications/{cert-name}/
+├── README.md                           # Certification overview, exam info, study path
+├── 01-topic-area/
+│   ├── README.md                      # Topic overview, exam weight, contents list
+│   ├── 01-subtopic.md                 # Study material (300-600 lines)
+│   ├── 02-subtopic.md
+│   ├── NN-subtopic.md
+│   └── NN-subtopic-part2.md           # If file exceeds 800 lines
+├── NN-final-topic-area/               # (same structure repeating)
+│   └── ...
+├── cheat-sheets/                       # (optional: cert-specific; link to shared/)
+│   └── README.md
+└── resources/
+    ├── README.md                       # Resources overview
+    ├── exam-tips.md                    # Exam strategies, time management
+    ├── official-links.md               # Links to docs, registration
+    ├── practice-questions/
+    │   ├── README.md                  # Q index by topic
+    │   ├── 01-topic.md
+    │   └── NN-topic.md
+    ├── mock-exam/
+    │   ├── README.md                  # Exam instructions, passing score
+    │   └── questions.md               # All questions
+    └── mock-exam-2/                    # (duplicate structure)
+        └── ...
+```
+
+### Certification Entry Point (README.md)
+
+Each certification's main README must include:
+
+- Frontmatter: `title`, `type: certification`, `aliases`, `tags`
+- Exam Overview table (questions, duration, passing score, languages, experience requirement)
+- Exam Domain Weights (pie chart visualization)
+- Study Topics table: Links to each topic folder with exam weights
+- Practice & Resources table: Links to exam tips, official links, practice questions, mock exams
+- Prerequisites: Links to shared fundamentals
+- Study Progress Tracker: Checkboxes for each phase
+- Interview Preparation: Link to `shared/interview-prep/`
+
+### Topic Folder Entry Point (README.md)
+
+Each topic folder's README must include:
+
+- Frontmatter: `title`, `type: category`, `tags`, `status`
+- Topic title with exam weight (e.g., "# Data Processing (30% of Exam)")
+- Topics Overview (mermaid flowchart showing subtopics)
+- Section Contents (table listing .md files with priority)
+- Key Concepts (definitions and concepts to master)
+- Related Resources (links to shared fundamentals and code examples)
+- Next Steps (link to next topic or back to certification)
+- Back button (link to parent certification README)
 
 ## Key Topics by Certification
 

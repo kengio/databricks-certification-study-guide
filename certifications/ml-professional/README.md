@@ -35,18 +35,37 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section          | Weight | Topics                                             |
-| ---------------- | ------ | -------------------------------------------------- |
-| Experimentation  | 30%    | Feature engineering, AutoML, hyperparameter tuning |
-| Model Lifecycle  | 30%    | MLflow, model registry, versioning                 |
-| Model Deployment | 25%    | Model serving, batch inference, real-time          |
-| Monitoring       | 15%    | Drift detection, performance monitoring            |
+### Core Topics (By Exam Weight)
+
+| Section                                                                | Weight | Topics                                          |
+| ---------------------------------------------------------------------- | ------ | ----------------------------------------------- |
+| [01-Advanced Feature Engineering](01-advanced-feature-engineering/README.md) | 20%    | Feature store, optimization, ML operations      |
+| [02-Hyperparameter Optimization](02-hyperparameter-optimization/README.md) | 20%    | Tuning strategies, AutoML, optimization         |
+| [03-Model Production Lifecycle](03-model-production-lifecycle/README.md)   | 30%    | MLflow, registry, versioning, serving           |
+| [04-Model Governance & MLOps](04-model-governance-mlops/README.md)        | 30%    | Monitoring, governance, drift detection, logging |
+
+### Practice & Resources
+
+| Resource                                                | Description                              |
+| ------------------------------------------------------- | ---------------------------------------- |
+| [Practice Questions](resources/practice-questions/)    | Topic-specific practice questions        |
+| [Mock Exam 1](resources/mock-exam/)                    | Full-length practice exam                |
+| [Mock Exam 2](resources/mock-exam-2/)                  | Alternative practice exam                |
+| [Exam Tips](resources/exam-tips.md)                    | Exam strategies and tips                 |
+| [Official Links](resources/official-links.md)          | Documentation and resources              |
+
+## Interview Preparation
+
+After completing this certification, explore:
+
+- [Interview Prep Resource](../../shared/interview-prep/README.md) - Advanced ML systems design, governance, and production architecture
 
 ## Prerequisites
 
 - Complete [ML Associate](../ml-associate/README.md) certification first
 - Review shared fundamentals:
   - [Spark Fundamentals](../../shared/fundamentals/spark-fundamentals.md)
+  - [MLflow Basics](../../shared/fundamentals/mlflow-basics.md)
 
 ## Study Progress Tracker
 

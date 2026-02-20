@@ -36,35 +36,67 @@ pie title Exam Topic Distribution
 
 ## Study Topics
 
-| Section               | Weight | Topics                               |
-| --------------------- | ------ | ------------------------------------ |
-| 01-Lakehouse Platform | 24%    | Architecture, components, workspace  |
-| 02-ETL with Spark     | 29%    | SQL, DataFrames, transformations     |
-| 03-Delta Lake         | 22%    | ACID, time travel, optimization      |
-| 04-Workflows          | 16%    | Jobs, scheduling, orchestration      |
-| 05-Data Governance    | 9%     | Unity Catalog basics, access control |
+### Core Topics (By Exam Weight)
+
+| Section                                                          | Weight | Topics                                   |
+| ---------------------------------------------------------------- | ------ | ---------------------------------------- |
+| [01-Lakehouse Platform](01-lakehouse-platform/README.md)         | 24%    | Architecture, workspace, compute         |
+| [02-ETL with Spark SQL and Python](02-etl-spark-sql/README.md)   | 29%    | SQL, DataFrames, joins, aggregations     |
+| [03-Delta Lake](03-delta-lake/README.md)                         | 22%    | ACID, time travel, optimization          |
+| [04-Workflows & Orchestration](04-workflows-orchestration/README.md) | 16%    | Jobs, scheduling, monitoring             |
+| [05-Data Governance](05-data-governance/README.md)               | 9%     | Unity Catalog, access control, sharing   |
+
+### Practice & Resources
+
+| Resource                                                | Description                              |
+| ------------------------------------------------------- | ---------------------------------------- |
+| [Practice Questions](resources/practice-questions/)    | Topic-specific practice questions        |
+| [Mock Exam 1](resources/mock-exam/)                    | Full-length practice exam (45 questions) |
+| [Mock Exam 2](resources/mock-exam-2/)                  | Alternative practice exam                |
+| [Exam Tips](resources/exam-tips.md)                    | Strategies and exam format guide         |
+| [Official Links](resources/official-links.md)          | Documentation and registration links     |
+
+## Interview Preparation
+
+After completing this certification, explore design and architecture questions:
+
+- [Interview Prep Resource](../../shared/interview-prep/README.md) - System design, Delta Lake internals, pipeline architecture, and more
 
 ## Prerequisites
 
-Review these shared fundamentals:
+Before starting this certification, review:
 
+- [Databricks Workspace](../../shared/fundamentals/databricks-workspace.md)
 - [Delta Lake Basics](../../shared/fundamentals/delta-lake-basics.md)
 - [Spark Fundamentals](../../shared/fundamentals/spark-fundamentals.md)
-- [Databricks Workspace](../../shared/fundamentals/databricks-workspace.md)
+- [Platform Architecture](../../shared/fundamentals/platform-architecture.md)
 
 ## Study Progress Tracker
 
-- [ ] Understand Lakehouse architecture
-- [ ] Master Spark SQL basics
-- [ ] Learn Delta Lake operations
-- [ ] Practice workflow creation
-- [ ] Review Unity Catalog basics
+### Phase 1: Foundations
 
-## Official Resources
+- [ ] Lakehouse Platform fundamentals
+- [ ] Delta Lake basics
 
-- [Databricks Certification Page](https://www.databricks.com/learn/certification/data-engineer-associate)
-- [Databricks Documentation](https://docs.databricks.com/)
+### Phase 2: Processing
+
+- [ ] Spark SQL and Python
+- [ ] DataFrame operations
+
+### Phase 3: Production
+
+- [ ] Workflows and jobs
+- [ ] Data governance
+
+### Phase 4: Practice
+
+- [ ] Complete practice questions (aim for 70%+)
+- [ ] Take Mock Exam 1 (under timed conditions)
+- [ ] Review weak areas
+- [ ] Take Mock Exam 2
 
 ## Recommended Path
 
-Complete this certification before attempting [Data Engineer Professional](../data-engineer-professional/README.md).
+1. Complete this **Data Engineer Associate** certification
+2. Progress to [Data Engineer Professional](../data-engineer-professional/README.md) for advanced topics
+3. Reference [Learning Paths](../../learning-paths/) for recommended progression
