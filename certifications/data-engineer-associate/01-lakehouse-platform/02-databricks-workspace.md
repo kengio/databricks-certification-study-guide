@@ -11,16 +11,256 @@ tags:
 
 ## Overview
 
-The Databricks workspace is your collaborative environment for data engineering.
+The Databricks workspace is your collaborative environment for developing, testing, and deploying data engineering solutions. It provides unified tools for SQL, Python, R, and Scala development.
 
-### Content to be expanded
+## Workspace Architecture
 
-This section will cover:
+```mermaid
+flowchart TB
+    subgraph Workspace["Databricks Workspace"]
+        subgraph Home["Home Directory"]
+            NB1["My Notebook 1"]
+            NB2["My Notebook 2"]
+        end
+        
+        subgraph Shared["Shared Folder"]
+            NB3["Team Notebook"]
+            NB4["Dashboard"]
+        end
+        
+        subgraph Repos["Repos"]
+            GIT["Git Integration"]
+            VCS["Version Control"]
+        end
+        
+        subgraph Clusters["Clusters"]
+            C1["Dev Cluster"]
+            C2["Prod Cluster"]
+        end
+    end
+```
 
-- Workspace organization and structure
-- Notebooks and repos
-- Collaboration features
-- Admin and security settings
+## Workspace Organization
+
+### Directory Structure
+
+| Path | Purpose | Access |
+|------|---------|--------|
+| `/Users/{email}/` | Personal home directory | Only you |
+| `/Shared/` | Team-accessible folder | All workspace users |
+| `/Repos/{name}/` | Git-connected repositories | Team with access |
+| `/Workplace/` | Legacy shared (deprecated) | All users |
+
+### Best Practices
+
+```
+Workspace Root/
+├── /Shared/
+│   ├── /datasets/               # Shared data references
+│   ├── /dashboards/             # BI dashboards
+│   ├── /team-notebooks/         # Collaborative notebooks
+│   └── /production-jobs/        # Job definitions
+├── /Repos/
+│   └── /data-platform/          # Git repo for IaC
+└── /Users/
+    └── {your-email}/
+        ├── /dev/                # Personal development
+        ├── /experiments/        # Ad-hoc analysis
+        └── /dashboards/         # Personal dashboards
+```
+
+## Notebooks
+
+Notebooks are the primary development tool in Databricks.
+
+### Notebook Features
+
+- **Multiple Languages**: SQL, Python, R, Scala in same notebook
+- **Magic Commands**: Control notebook behavior
+- **Collaborative**: Real-time multi-user editing
+- **Version History**: Automatic snapshots of changes (30-day retention)
+- **Publishing**: Share as HTML or embed dashboards
+
+### Language Magic Commands
+
+```markdown
+%python  # Switch to Python
+%sql     # Switch to SQL
+%r       # Switch to R
+%scala   # Switch to Scala
+%md      # Markdown formatting
+%sh      # Shell commands
+```
+
+### Key Notebook Capabilities
+
+```python
+# Display formatted output
+display(df)  # Better than df.show()
+
+# Databricks widgets for interactive dashboards
+dbutils.widgets.text("param_name", "default_value")
+dbutils.widgets.dropdown("env", "dev", ["dev", "prod"])
+
+# Access parameters in code
+env = dbutils.widgets.get("env")
+
+# File system operations
+dbutils.fs.ls("/mnt/data/")  # List files
+dbutils.fs.mv("/path/src", "/path/dst")  # Move files
+dbutils.fs.cp("/path/src", "/path/dst", True)  # Copy recursively
+```
+
+## Repos (Git Integration)
+
+Repositories enable version control and CI/CD for data engineering code.
+
+### Git Workflow
+
+```mermaid
+flowchart LR
+    Local["Local Changes"]
+    Stage["Stage Changes"]
+    Commit["Commit"]
+    Push["Push to Remote"]
+    GitHub["GitHub/GitLab"]
+    
+    Local --> Stage
+    Stage --> Commit
+    Commit --> Push
+    Push --> GitHub
+```
+
+### Common Operations
+
+```python
+# Git clone into Databricks
+# UI: Workspace > Repos > Create Repo > GitHub URL
+
+# Common git operations in workspace terminal
+git status
+git add <file>
+git commit -m "message"
+git push origin main
+git pull origin main
+```
+
+### Branching Strategy for Data Engineering
+
+```
+main (production)
+├── dev
+│   ├── feature/new-pipeline
+│   └── feature/optimization
+├── staging
+└── hotfix/urgent-fix
+```
+
+## Clusters
+
+Clusters provide the compute for running notebooks and jobs.
+
+### Cluster Types
+
+| Type | Use Case | Duration |
+|------|----------|----------|
+| **All-Purpose** | Interactive development | Hours to days |
+| **Jobs** | Automated batch/streaming | Minutes to hours |
+| **SQL Warehouse** | SQL queries & BI tools | Always on |
+
+### Personal Compute (Single-User Cluster)
+
+```python
+# Faster startup for personal
+Cluster config:
+- Single worker node
+- Pre-installed libraries
+- Shared with no one
+```
+
+### Shared Multi-Workspace Cluster
+
+```python
+# For team collaboration
+Cluster config:
+- Multiple workers
+- Shared libraries
+- Audit logging enabled
+```
+
+## Collaboration Features
+
+### Real-Time Collaboration
+
+```
+Alice opens notebook → Bob opens same notebook
+→ Both see cursor positions
+→ Edits appear in real-time
+→ Auto-merge compatible changes
+```
+
+### Comments and Discussion
+
+```markdown
+<!-- Inline comments on cells -->
+Click on cell → Comments icon → Add comment
+@mention team members for notifications
+Resolve comments when addressed
+```
+
+### Notebook Sharing
+
+- **View-only**: Share link for read access
+- **Edit permission**: Grant editing rights
+- **Folder sharing**: Permission inheritance
+
+## Administration & Security
+
+### Access Control
+
+```python
+Admins can control:
+- User & group management
+- Workspace features (notebooks, clusters, jobs)
+- Data access via UC (Unity Catalog)
+- External connectivity
+```
+
+### Multi-Factor Authentication (MFA)
+
+```
+Admin console → Security
+→ Enforce MFA for all users
+→ Support SCIM provisioning
+```
+
+### Audit Logs
+
+```python
+Workspace Admin Console → Audit log
+Captures:
+- Who accessed what, when
+- Login/logout activities
+- Resource creation/deletion
+- Settings changes
+```
+
+## Common Workspace Tasks
+
+1. **Create a notebook**: `Workspace > Create > Notebook`
+2. **Run a notebook**: Press `Run all` or `Ctrl+Alt+Enter`
+3. **Export notebook**: Download as DBC, PDF, or HTML
+4. **Move notebook**: Drag to folder or use `Move` option
+5. **Clone notebook**: Right-click > `Clone`
+6. **Publish notebook**: Share as HTML dashboard
+
+## Key Exam Concepts
+
+- **Workspace isolation**: Each workspace is independent
+- **Three-level permissions**: Admin, User, Viewer roles
+- **Notebook versions**: Automatically saved, 30-day recovery
+- **Repos**: Git integration for production code
+- **Multi-language support**: SQL + Python in same notebook
 
 ---
 
