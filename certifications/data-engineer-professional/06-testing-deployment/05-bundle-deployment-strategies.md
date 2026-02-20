@@ -40,7 +40,7 @@ flowchart TB
 
     AdvancedCI --> AdvancedCD
     AdvancedCD --> GitOps
-```
+```text
 
 ## Advanced Asset Bundle Patterns
 
@@ -72,7 +72,7 @@ databricks-platform/
 └── ci/
     ├── deploy-all.sh
     └── validate-all.sh
-```
+```text
 
 ### Bundle Inheritance with Includes
 
@@ -96,7 +96,7 @@ variables:
     default: dev_catalog
   owner_team:
     default: data-engineering
-```
+```text
 
 ```yaml
 # shared/common-clusters.yml
@@ -123,7 +123,7 @@ resources:
             autoscale:
               min_workers: 2
               max_workers: 16
-```
+```text
 
 ### Custom Variable Interpolation
 
@@ -184,7 +184,7 @@ resources:
               # Reference the job's own ID
               orchestrator_job_id: ${resources.jobs.orchestrator_job.id}
               workspace_host: ${workspace.host}
-```
+```text
 
 ### Resource Permissions in databricks.yml
 
@@ -214,7 +214,7 @@ resources:
           group_name: data-engineers
         - level: CAN_MANAGE
           service_principal_name: prod-etl-sp
-```
+```text
 
 ### Artifact Management
 
@@ -250,7 +250,7 @@ resources:
             # External PyPI dependencies
             - pypi:
                 package: great-expectations==0.18.0
-```
+```text
 
 ### Complex Target Configurations with Overrides
 
@@ -316,7 +316,7 @@ targets:
               - data-engineering-leads@company.com
             on_success:
               - data-engineering-metrics@company.com
-```
+```text
 
 ## Advanced CI/CD Pipeline Patterns
 
@@ -358,7 +358,7 @@ flowchart LR
     Approval --> DeployProd
     DeployProd --> Smoke
     Smoke --> Monitor
-```
+```text
 
 ### Multi-Environment Promotion Strategy
 
@@ -489,7 +489,7 @@ jobs:
           slack-message: "Production deployment succeeded for ${{ github.sha }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-```
+```text
 
 ### Blue/Green Deployment for Data Pipelines
 
@@ -513,7 +513,7 @@ flowchart TB
     GreenJob --> GreenTable
     View -->|Points to active| BlueTable
     View -.->|Switch after validation| GreenTable
-```
+```text
 
 ```yaml
 # Blue/green bundle targets
@@ -535,7 +535,7 @@ targets:
       target_schema: prod_green
     run_as:
       service_principal_name: prod-sp
-```
+```text
 
 ```python
 # scripts/blue_green_switch.py
@@ -563,7 +563,7 @@ def switch_active_slot(catalog: str, current_slot: str):
 
 if __name__ == "__main__":
     switch_active_slot(sys.argv[1], sys.argv[2])
-```
+```text
 
 ### Canary Deployment Pattern
 
@@ -619,6 +619,6 @@ def get_job_id(client, job_name):
     for job in jobs:
         return job.job_id
     raise ValueError(f"Job not found: {job_name}")
-```
+```text
 
 > **Continue reading:** [Part 2 — Rollback, Feature Flags & OIDC](./09-bundle-deployment-strategies-part2.md)

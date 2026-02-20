@@ -28,7 +28,7 @@ flowchart LR
     Consumers --> BI[BI/Analytics]
     Consumers --> ML[ML/AI]
     Consumers --> Apps[Applications]
-```
+```text
 
 ## Layer Characteristics
 
@@ -60,7 +60,7 @@ flowchart TB
     end
 
     Quality -.-> Layers
-```
+```text
 
 ## Bronze Layer
 
@@ -82,7 +82,7 @@ flowchart TB
     end
 
     Bronze --> BronzePrinciples
-```
+```text
 
 ### Bronze Table Design
 
@@ -104,7 +104,7 @@ bronze_df = (raw_df
     .mode("append")
     .option("mergeSchema", "true")
     .saveAsTable("bronze.customers_raw"))
-```
+```text
 
 ```sql
 -- Bronze table with metadata columns
@@ -123,7 +123,7 @@ CREATE TABLE bronze.customers_raw (
 )
 USING DELTA
 PARTITIONED BY (_ingested_at::date);
-```
+```text
 
 ### Auto Loader for Bronze Ingestion
 
@@ -146,7 +146,7 @@ df = (spark.readStream
   .option("mergeSchema", "true")
   .trigger(availableNow=True)
   .toTable("bronze.customers_raw"))
-```
+```text
 
 ### Bronze Layer Best Practices
 
@@ -180,7 +180,7 @@ flowchart TB
     end
 
     Transform --> SilverOps
-```
+```text
 
 ### Silver Table Design
 
@@ -218,7 +218,7 @@ spark.sql("""
     WHEN MATCHED THEN UPDATE SET *
     WHEN NOT MATCHED THEN INSERT *
 """)
-```
+```text
 
 ```sql
 -- Silver table with enforced schema and constraints
@@ -239,7 +239,7 @@ TBLPROPERTIES (
     'delta.minReaderVersion' = '2',
     'delta.minWriterVersion' = '5'
 );
-```
+```text
 
 ### Silver MERGE Pattern
 
@@ -266,7 +266,7 @@ def update_silver_customers(bronze_df):
         .whenMatchedUpdateAll()
         .whenNotMatchedInsertAll()
         .execute())
-```
+```text
 
 ### Silver Layer Best Practices
 
@@ -303,7 +303,7 @@ flowchart TB
     Gold --> BI[BI Dashboards]
     Gold --> ML[ML Models]
     Gold --> Reports[Reports]
-```
+```text
 
 ### Gold Table Design
 
@@ -329,7 +329,7 @@ customer_metrics = (customers.join(orders, "customer_id")
     .format("delta")
     .mode("overwrite")
     .saveAsTable("gold.customer_metrics"))
-```
+```text
 
 ```sql
 -- Gold table for customer metrics
@@ -364,7 +364,7 @@ SELECT
     AVG(order_amount) AS avg_order_value
 FROM silver.orders
 GROUP BY 1, 2, 3;
-```
+```text
 
 ### Dimensional Modeling in Gold
 
@@ -408,7 +408,7 @@ CREATE TABLE gold.dim_date (
     is_holiday BOOLEAN
 )
 USING DELTA;
-```
+```text
 
 ### Gold Layer Best Practices
 
@@ -474,7 +474,7 @@ def gold_customer_metrics():
             sum("order_amount").alias("lifetime_value")
         )
     )
-```
+```text
 
 ## Unity Catalog Organization
 
@@ -495,7 +495,7 @@ flowchart TB
     end
 
     Catalogs --> Schemas
-```
+```text
 
 ```sql
 -- Create catalog structure
@@ -516,7 +516,7 @@ USING DELTA;
 -- Create Gold table
 CREATE TABLE prod.gold.customer_metrics (...)
 USING DELTA;
-```
+```text
 
 ### Alternative: Domain-Based Organization
 
@@ -532,7 +532,7 @@ CREATE SCHEMA IF NOT EXISTS prod.sales_gold;
 CREATE SCHEMA IF NOT EXISTS prod.marketing_bronze;
 CREATE SCHEMA IF NOT EXISTS prod.marketing_silver;
 CREATE SCHEMA IF NOT EXISTS prod.marketing_gold;
-```
+```text
 
 ## Error Handling Patterns
 
@@ -545,7 +545,7 @@ flowchart LR
     Validate --> |No| Quarantine[Quarantine Table]
     Quarantine --> Review[Manual Review]
     Review --> |Fixed| Silver
-```
+```text
 
 ```python
 # Separate valid and invalid records
@@ -571,7 +571,7 @@ valid_df.write.mode("append").saveAsTable("silver.customers")
 
 # Write invalid records to quarantine
 invalid_df.write.mode("append").saveAsTable("silver.customers_quarantine")
-```
+```text
 
 ## Data Lineage
 
@@ -596,7 +596,7 @@ customers = spark.read.table("silver.customers")
 gold_df = create_customer_metrics(customers)
 gold_df = add_lineage(gold_df, "silver.customers", "create_customer_metrics")
 gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
-```
+```text
 
 ## Use Cases
 
@@ -626,7 +626,7 @@ gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
 
 ```python
 .option("mergeSchema", "true")
-```
+```text
 
 ### 2. Duplicate Records in Silver
 
@@ -637,7 +637,7 @@ gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
 ```python
 window = Window.partitionBy("customer_id").orderBy(col("_ingested_at").desc())
 deduped = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
-```
+```text
 
 ### 3. Stale Gold Aggregates
 

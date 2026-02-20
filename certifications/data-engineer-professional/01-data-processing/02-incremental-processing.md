@@ -27,7 +27,7 @@ flowchart TD
         I3 --> I4[Merge/Append]
         I4 --> I5[Update Progress]
     end
-```
+```text
 
 ## Full Load vs Incremental Load
 
@@ -67,7 +67,7 @@ flowchart TD
     Tables --> CDC[External CDC]
 
     WM --> HWM[High-Water Mark Pattern]
-```
+```text
 
 ### Strategy Comparison
 
@@ -99,7 +99,7 @@ sequenceDiagram
 
     Pipeline->>Target: Write records
     Pipeline->>Control: Update watermark to max(updated_at)
-```
+```text
 
 ### Implementation
 
@@ -135,7 +135,7 @@ if new_max:
         INSERT INTO control.incremental_tracking
         VALUES ('orders', '{new_max}', current_timestamp())
     """)
-```
+```text
 
 ### Control Table Schema
 
@@ -145,7 +145,7 @@ CREATE TABLE control.incremental_tracking (
     watermark_value TIMESTAMP,
     last_updated TIMESTAMP
 ) USING DELTA;
-```
+```text
 
 ### SQL-Based Implementation
 
@@ -161,7 +161,7 @@ SELECT o.*
 FROM source.orders o
 CROSS JOIN watermark w
 WHERE o.updated_at > w.wm;
-```
+```text
 
 ## Checkpoint Management
 
@@ -173,7 +173,7 @@ Checkpoints track streaming progress for exactly-once processing.
 query = (df.writeStream
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```
+```text
 
 ### Checkpoint Structure
 
@@ -200,7 +200,7 @@ query = (df.writeStream
 
 # After failure, restart the same query
 # It will resume from last checkpoint
-```
+```text
 
 ### When to Reset Checkpoints
 
@@ -215,7 +215,7 @@ query = (df.writeStream
 ```python
 # To reprocess from beginning, delete checkpoint
 dbutils.fs.rm("/path/to/checkpoint", recurse=True)
-```
+```text
 
 ## Delta Lake as Incremental Source
 
@@ -238,7 +238,7 @@ df = (spark.readStream
     .format("delta")
     .option("startingTimestamp", "2024-01-01")
     .load("/path/to/delta/table"))
-```
+```text
 
 ### Handling Updates and Deletes
 
@@ -256,7 +256,7 @@ df = (spark.readStream
     .format("delta")
     .option("ignoreChanges", "true")
     .load("/path/to/table"))
-```
+```text
 
 | Option | Behavior |
 |--------|----------|
@@ -287,7 +287,7 @@ df = (spark.readStream
     .format("delta")
     .option("maxBytesPerTrigger", "10g")
     .load("/path/to/table"))
-```
+```text
 
 ## MERGE for Incremental Updates
 
@@ -314,7 +314,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```
+```text
 
 ### MERGE with Delete Handling
 
@@ -329,7 +329,7 @@ target.alias("t").merge(
 ).whenNotMatchedInsertAll(
     condition="s.is_deleted = false"
 ).execute()
-```
+```text
 
 ## Batch Incremental Patterns
 
@@ -350,7 +350,7 @@ def process_incremental(table_name, source_query, target_path):
         # Update watermark
         new_watermark = df.agg(max("updated_at")).collect()[0][0]
         update_watermark(table_name, new_watermark)
-```
+```text
 
 ### Pattern 2: Version-Based
 
@@ -372,7 +372,7 @@ changes = (spark.read.format("delta")
 
 # Update tracked version
 update_processed_version("orders", current_version)
-```
+```text
 
 ## availableNow Trigger
 
@@ -392,7 +392,7 @@ query = (df.writeStream
 
 # Wait for completion
 query.awaitTermination()
-```
+```text
 
 ### Comparison with once=True
 
@@ -425,7 +425,7 @@ def daily_incremental_job():
         .start("/target/path"))
 
     query.awaitTermination()
-```
+```text
 
 ## Idempotent Incremental Processing
 
@@ -450,7 +450,7 @@ query = (source_stream.writeStream
     .foreachBatch(idempotent_incremental)
     .option("checkpointLocation", "/checkpoint")
     .start())
-```
+```text
 
 ### Deduplication Before Write
 
@@ -461,7 +461,7 @@ def process_with_dedup(batch_df, batch_id):
 
     # Then MERGE
     # ...
-```
+```text
 
 ## Monitoring Incremental Jobs
 
@@ -487,7 +487,7 @@ def log_metrics(job_name, count, duration, wm_before, wm_after):
         VALUES ('{job_name}', current_timestamp(), {count},
                 {duration}, '{wm_before}', '{wm_after}')
     """)
-```
+```text
 
 ### Alerting on Lag
 
@@ -505,7 +505,7 @@ lag_check = spark.sql("""
 if lag_check.count() > 0:
     # Send alert
     pass
-```
+```text
 
 ## Use Cases
 

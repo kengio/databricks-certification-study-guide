@@ -45,7 +45,7 @@ flowchart LR
     RBuf -- "Match on key + time range" --> Output
 
     Output --> Cleanup[Watermark advances -> State cleanup]
-```
+```text
 
 ### Inner Stream-Stream Join
 
@@ -86,7 +86,7 @@ query = (
     .outputMode("append")
     .start("/output/impression_clicks")
 )
-```
+```text
 
 ```sql
 -- SQL equivalent for stream-stream inner join
@@ -102,7 +102,7 @@ JOIN STREAM(clicks) c
     ON i.ad_id = c.ad_id
     AND c.click_time >= i.impression_time
     AND c.click_time <= i.impression_time + INTERVAL 1 HOUR;
-```
+```text
 
 ### Outer Stream-Stream Joins
 
@@ -131,7 +131,7 @@ right_outer_joined = impressions.join(
     """),
     "rightOuter"
 )
-```
+```text
 
 ### Stream-Stream Join Requirements
 
@@ -160,7 +160,7 @@ expr("""
 #   - Impressions are buffered up to: watermark(click) + 1 hour
 #   - Clicks are buffered up to: watermark(impression) + 0
 #   - Wider range = more state retained = more memory
-```
+```text
 
 | Time Range Width | State Size | Late Match Tolerance | Use Case |
 | :--- | :--- | :--- | :--- |
@@ -205,7 +205,7 @@ flowchart LR
     S3 --> |Join| D
 
     D --> Note["Static table re-read<br>each micro-batch"]
-```
+```text
 
 ### Stream-Static Join Code
 
@@ -234,7 +234,7 @@ query = (
     .outputMode("append")
     .start("/output/enriched_sales")
 )
-```
+```text
 
 ```sql
 -- SQL stream-static join pattern
@@ -247,7 +247,7 @@ SELECT
 FROM STREAM(sales_events) e
 LEFT JOIN dim_products p
     ON e.product_id = p.product_id;
-```
+```text
 
 ### Stream-Static vs Stream-Stream Comparison
 
@@ -273,7 +273,7 @@ dim_table = spark.table("catalog.schema.dim_products")
 dim_table = spark.table("catalog.schema.dim_products").cache()
 # WARNING: Cached tables are NOT re-read each batch
 # Only use cache if the static table rarely changes
-```
+```text
 
 ### Practice Question: Stream-Static Joins
 
@@ -307,7 +307,7 @@ flowchart TD
 
     MGS -.- Note1["Use for: session summary,<br>running totals, status tracking"]
     FMGS -.- Note2["Use for: alerts, anomaly detection,<br>session windowing with events"]
-```
+```text
 
 ### mapGroupsWithState Deep Dive
 
@@ -371,7 +371,7 @@ result = (
         timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
     )
 )
-```
+```text
 
 ### flatMapGroupsWithState Deep Dive
 
@@ -452,7 +452,7 @@ alerts = (
         timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
     )
 )
-```
+```text
 
 ### GroupState Timeout Types
 
@@ -473,7 +473,7 @@ state.setTimeoutTimestamp(event_time_ms + 3600000)  # 1 hour in ms
 
 # No timeout (dangerous - state grows forever)
 # Only appropriate when number of keys is bounded and small
-```
+```text
 
 ### When to Use Custom Stateful Operations vs Built-in
 
@@ -515,7 +515,7 @@ joined = stream_a.join(
         event_time_b <= event_time_a + INTERVAL 5 MINUTES
     """)
 )
-```
+```text
 
 ### Global Watermark Policy
 
@@ -533,7 +533,7 @@ spark.conf.set(
     "spark.sql.streaming.multipleWatermarkPolicy",
     "max"
 )
-```
+```text
 
 | Policy | Behavior | Data Safety | State Size |
 | :--- | :--- | :--- | :--- |
@@ -552,7 +552,7 @@ flowchart TD
 
     Policy -->|min policy| MinResult["Effective Watermark: 09:45<br>(conservative, more state)"]
     Policy -->|max policy| MaxResult["Effective Watermark: 10:05<br>(aggressive, less state)"]
-```
+```text
 
 ### Watermark Propagation Through Operations
 
@@ -579,7 +579,7 @@ Understanding exact boundary behavior is critical for exam questions.
 #   event_time = 10:15 -> PROCESSED (not dropped)
 #   event_time = 10:14 -> DROPPED (strictly less than watermark)
 #   event_time = 10:16 -> PROCESSED
-```
+```text
 
 | Event Time | Watermark (10:15) | Result |
 | :--- | :--- | :--- |
@@ -600,7 +600,7 @@ Watermark advancement triggers state cleanup for completed windows.
 # Window 10:00-10:10 end (10:10) < watermark (10:15) -> state cleaned
 # Window 10:05-10:15 end (10:15) <= watermark (10:15) -> state cleaned
 # Window 10:10-10:20 end (10:20) > watermark (10:15) -> state retained
-```
+```text
 
 ### Practice Question: Watermark Policy
 
@@ -631,7 +631,7 @@ flowchart TD
         W1[Tracks keys only within<br>watermark window] --> W2[State bounded by<br>watermark duration]
         W2 --> W3[Automatically cleaned<br>when watermark advances]
     end
-```
+```text
 
 ### dropDuplicatesWithinWatermark
 
@@ -654,7 +654,7 @@ query = (
     .outputMode("append")
     .start("/output/deduped_events")
 )
-```
+```text
 
 ```sql
 -- SQL streaming deduplication with watermark
@@ -663,7 +663,7 @@ SELECT *
 FROM STREAM(raw_transactions)
 -- Note: In DLT, deduplication is handled via APPLY CHANGES
 -- For standard SQL streaming, use Python API
-```
+```text
 
 ### Deduplication State Comparison
 
@@ -704,7 +704,7 @@ query = (
     .option("checkpointLocation", "/checkpoints/exact_once_dedup")
     .start()
 )
-```
+```text
 
 ### Practice Question: Streaming Deduplication
 

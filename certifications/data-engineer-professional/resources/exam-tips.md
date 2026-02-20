@@ -74,7 +74,7 @@ tags: [exam-tips, data-engineer-professional, certification]
 "A data engineer needs to process files as they arrive in cloud storage.
 The solution must handle schema changes automatically.
 Which approach should they use?"
-```
+```text
 
 **Strategy**: Identify requirements, match to feature capabilities.
 
@@ -82,7 +82,7 @@ Which approach should they use?"
 
 ```text
 "What is the recommended approach for handling late data in streaming?"
-```
+```text
 
 **Strategy**: Know official best practices, not just what "works."
 
@@ -91,7 +91,7 @@ Which approach should they use?"
 ```text
 "A streaming job is failing with OutOfMemoryError.
 What should the engineer check FIRST?"
-```
+```text
 
 **Strategy**: Know debugging steps and common causes.
 
@@ -99,7 +99,7 @@ What should the engineer check FIRST?"
 
 ```text
 "Which configuration enables automatic schema evolution for Delta writes?"
-```
+```text
 
 **Strategy**: Memorize key configuration names and their effects.
 

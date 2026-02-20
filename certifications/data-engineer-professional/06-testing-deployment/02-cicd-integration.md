@@ -45,7 +45,7 @@ flowchart TB
     DeployDev --> IntTest
     IntTest --> DeployStaging
     DeployStaging --> DeployProd
-```
+```text
 
 ## Authentication Methods
 
@@ -60,7 +60,7 @@ export DATABRICKS_CLIENT_SECRET="your-client-secret"
 # Or using OAuth token
 export DATABRICKS_HOST="https://adb-1234567890.1.azuredatabricks.net"
 export DATABRICKS_TOKEN="your-oauth-token"
-```
+```text
 
 ### Azure Service Principal Setup
 
@@ -73,7 +73,7 @@ az ad sp create-for-rbac --name "databricks-cicd-sp" --role Contributor \
 # In Databricks Admin Console:
 # 1. Add service principal to workspace
 # 2. Grant appropriate permissions (workspace admin or specific ACLs)
-```
+```text
 
 ### AWS Authentication
 
@@ -85,7 +85,7 @@ export DATABRICKS_HOST="https://my-workspace.cloud.databricks.com"
 # Using access keys (less recommended)
 export DATABRICKS_HOST="https://my-workspace.cloud.databricks.com"
 export DATABRICKS_TOKEN="dapi..."
-```
+```text
 
 ## GitHub Actions
 
@@ -202,7 +202,7 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.PROD_DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.PROD_DATABRICKS_TOKEN }}
-```
+```text
 
 ### Reusable Workflow
 
@@ -239,7 +239,7 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-```
+```text
 
 ```yaml
 # .github/workflows/main.yml - Using the template
@@ -268,7 +268,7 @@ jobs:
     secrets:
       DATABRICKS_HOST: ${{ secrets.PROD_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.PROD_TOKEN }}
-```
+```text
 
 ## Azure DevOps
 
@@ -403,7 +403,7 @@ stages:
                   env:
                     DATABRICKS_HOST: $(PROD_DATABRICKS_HOST)
                     DATABRICKS_TOKEN: $(PROD_DATABRICKS_TOKEN)
-```
+```text
 
 ### Variable Groups
 
@@ -417,7 +417,7 @@ variables:
 # databricks-dev-credentials:
 #   - DEV_DATABRICKS_HOST
 #   - DEV_DATABRICKS_TOKEN
-```
+```text
 
 ## GitLab CI/CD
 
@@ -504,7 +504,7 @@ deploy-prod:
   variables:
     DATABRICKS_HOST: $PROD_DATABRICKS_HOST
     DATABRICKS_TOKEN: $PROD_DATABRICKS_TOKEN
-```
+```text
 
 ## Jenkins
 
@@ -593,6 +593,6 @@ pipeline {
         }
     }
 }
-```
+```text
 
 > **Continue reading:** [Part 2 — Testing, Secrets & Monitoring](./08-cicd-integration-part2.md)

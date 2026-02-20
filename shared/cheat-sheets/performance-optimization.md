@@ -28,7 +28,7 @@ flowchart TD
     Q3 --> |No| Q4{Manual maintenance OK?}
     Q4 --> |Yes| ZO[Use Z-ORDER]
     Q4 --> |No| Migrate[Migrate to Liquid Clustering]
-```
+```text
 
 ### Decision Table
 
@@ -64,7 +64,7 @@ spark.conf.set("spark.sql.shuffle.partitions", 200)  # default
 # Large data (> 100 GB)
 spark.conf.set("spark.sql.shuffle.partitions", 2000)
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
-```
+```text
 
 ## OPTIMIZE / VACUUM Guidelines
 
@@ -95,7 +95,7 @@ VACUUM table_name DRY RUN;
 
 -- Check table file metrics
 DESCRIBE DETAIL table_name;
-```
+```text
 
 ## Join Optimization Quick Reference
 
@@ -109,7 +109,7 @@ DESCRIBE DETAIL table_name;
 # Force broadcast
 from pyspark.sql.functions import broadcast
 result = large_df.join(broadcast(small_df), "key")
-```
+```text
 
 ## Cost Optimization Checklist
 
@@ -161,7 +161,7 @@ EXPLAIN EXTENDED SELECT * FROM table_name WHERE col = 'value';
 SELECT COUNT(*) as num_files,
        SUM(size)/1024/1024/1024 as size_gb
 FROM (DESCRIBE DETAIL table_name);
-```
+```text
 
 ```python
 # Monitor query execution
@@ -172,7 +172,7 @@ df.rdd.getNumPartitions()
 
 # View Spark configurations
 spark.conf.get("spark.sql.shuffle.partitions")
-```
+```text
 
 ## Key Numbers to Remember
 

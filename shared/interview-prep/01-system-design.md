@@ -48,7 +48,7 @@ Your team needs to ingest 10TB of raw IoT sensor data per day from thousands of 
 >     .option("checkpointLocation", "/checkpoints/bronze/iot")
 >     .trigger(processingTime="1 minute")
 >     .toTable("bronze.iot_events"))
-> ```
+> ```text
 >
 > At the **Silver** layer, I'd read from Bronze, parse the JSON schema (using `from_json`), deduplicate on `device_id + event_time`, cast types, and apply watermarking for late data (e.g., 2 hours). This layer writes via MERGE to handle exactly-once semantics.
 >
@@ -101,7 +101,7 @@ You need to replicate changes from a PostgreSQL OLTP database (orders table, ~10
 > SEQUENCE BY _commit_timestamp
 > APPLY AS DELETE WHEN operation = 'd'
 > STORED AS SCD TYPE 1;
-> ```
+> ```text
 >
 > If not using DLT, I'd implement a manual MERGE that handles deletes by checking the operation column:
 >
@@ -115,7 +115,7 @@ You need to replicate changes from a PostgreSQL OLTP database (orders table, ~10
 > WHEN MATCHED AND source.operation = 'd' THEN DELETE
 > WHEN MATCHED THEN UPDATE SET *
 > WHEN NOT MATCHED THEN INSERT *;
-> ```
+> ```text
 >
 > For history (SCD Type 2), I'd add `valid_from`, `valid_to`, and `is_current` columns and use `APPLY CHANGES` with `STORED AS SCD TYPE 2`.
 >
@@ -164,7 +164,7 @@ Your company has 8 business domains (Sales, Marketing, Finance, HR, Legal, Engin
 > shared/
 > ├── certified/  (approved cross-domain tables)
 > └── reference/  (lookup tables: currencies, regions, etc.)
-> ```
+> ```text
 >
 > **RBAC model:**
 >
@@ -218,7 +218,7 @@ A payments company needs to flag potentially fraudulent transactions within 5 se
 > @udf(returnType=DoubleType())
 > def score_transaction(features):
 >     return float(model_broadcast.value.predict_proba([features])[0][1])
-> ```
+> ```text
 >
 > Transactions scored above the threshold get written to a `fraud_alerts` Kafka topic for immediate action by the payments system.
 >
@@ -275,7 +275,7 @@ Your company has been running Databricks for 3 years with a legacy Hive metastor
 > -- Upgrade managed table in place (converts metadata, data stays)
 > ALTER TABLE hive_metastore.sales.orders
 > SET TBLPROPERTIES ('upgraded_to' = 'prod.sales.orders');
-> ```
+> ```text
 >
 > I'd run the migration in waves by domain, starting with low-risk tables (Gold read-only) before higher-risk Silver/Bronze.
 >

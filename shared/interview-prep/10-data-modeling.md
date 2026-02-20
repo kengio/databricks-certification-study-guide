@@ -47,7 +47,7 @@ You're designing a Gold-layer data model for an e-commerce platform. The busines
 > dim_product: product_sk, product_id, name, category, brand, cost
 > dim_date: date_sk (YYYYMMDD INT), date, year, quarter, month, week, is_holiday
 > dim_promotion: promotion_sk, promo_code, discount_pct, start_date, end_date
-> ```
+> ```text
 >
 > **Measure types matter for aggregation:**
 >
@@ -100,7 +100,7 @@ A data architect proposes normalizing the product dimension into three tables: `
 > FROM fact_order_line f
 > JOIN dim_product p ON f.product_sk = p.product_sk
 > GROUP BY 1, 2, 3;
-> ```
+> ```text
 >
 > **Snowflake schema (what the architect proposes):**
 >
@@ -112,7 +112,7 @@ A data architect proposes normalizing the product dimension into three tables: `
 > JOIN dim_category c ON p.category_sk = c.category_sk
 > JOIN dim_brand b ON p.brand_sk = b.brand_sk
 > GROUP BY 1, 2, 3;
-> ```
+> ```text
 >
 > **Why the storage argument doesn't hold for Databricks**:
 >
@@ -168,7 +168,7 @@ A customer changes their shipping city from New York to San Francisco. Historica
 > UPDATE dim_customer
 > SET city = 'San Francisco', updated_at = current_timestamp()
 > WHERE customer_id = 42;
-> ```
+> ```text
 >
 > When to use: Email address (always send to current email), phone number, typo corrections. Historical reports show the current value — appropriate when the question is "what is true now?"
 >
@@ -183,7 +183,7 @@ A customer changes their shipping city from New York to San Francisco. Historica
 > -- Insert new row
 > INSERT INTO dim_customer
 > VALUES (42, 'San Francisco', current_date(), null, true, ...);
-> ```
+> ```text
 >
 > Result: Historical orders joined to `dim_customer` on `customer_sk` and `order_date BETWEEN valid_from AND valid_to` still show New York — because the old surrogate key was used when the order was placed.
 >
@@ -195,7 +195,7 @@ A customer changes their shipping city from New York to San Francisco. Historica
 > UPDATE dim_customer
 > SET previous_city = city, city = 'San Francisco'
 > WHERE customer_id = 42;
-> ```
+> ```text
 >
 > Keeps only one prior value — simpler than SCD2 but loses all earlier history. Use when you need "current and previous" but not full history (e.g., most recent job title change).
 >
@@ -252,7 +252,7 @@ Walk through a concrete implementation of SCD Type 2 for a `dim_customer` table 
 >     valid_to        DATE,                                 -- NULL = current record
 >     is_current      BOOLEAN NOT NULL
 > ) USING DELTA;
-> ```
+> ```text
 >
 > **Phase 1 — MERGE to close changed rows and insert new customers:**
 >
@@ -280,7 +280,7 @@ Walk through a concrete implementation of SCD Type 2 for a `dim_customer` table 
 >     UPDATE SET
 >         valid_to   = current_date(),
 >         is_current = false;
-> ```
+> ```text
 >
 > **Phase 2 — Insert new current rows for updated customers:**
 >
@@ -294,7 +294,7 @@ Walk through a concrete implementation of SCD Type 2 for a `dim_customer` table 
 >     ON source.customer_id = target.customer_id
 >    AND target.valid_to = current_date()   -- just closed today
 >    AND target.is_current = false;
-> ```
+> ```text
 >
 > **DLT alternative (recommended for production):**
 >
@@ -312,7 +312,7 @@ Walk through a concrete implementation of SCD Type 2 for a `dim_customer` table 
 >     sequence_by="updated_at",
 >     stored_as_scd_type=2
 > )
-> ```
+> ```text
 >
 > DLT handles both phases atomically, manages the surrogate key, and integrates with Unity Catalog lineage.
 >
@@ -327,7 +327,7 @@ Walk through a concrete implementation of SCD Type 2 for a `dim_customer` table 
 > WHERE customer_id = 42
 >   AND valid_from <= '2024-06-01'
 >   AND (valid_to IS NULL OR valid_to > '2024-06-01');
-> ```
+> ```text
 >
 > ### Follow-up Questions
 >
@@ -372,7 +372,7 @@ Your `gold.daily_sales_summary` table needs two changes: (1) add a new `channel`
 >     .mode("append")
 >     .option("mergeSchema", "true")
 >     .saveAsTable("gold.daily_sales_summary"))
-> ```
+> ```text
 >
 > Existing consumers that reference named columns are unaffected. `channel` appears as NULL for historical rows — additive, no breakage.
 >
@@ -383,7 +383,7 @@ Your `gold.daily_sales_summary` table needs two changes: (1) add a new `channel`
 > ```sql
 > -- This breaks every dashboard and pipeline immediately
 > ALTER TABLE gold.daily_sales_summary RENAME COLUMN customer_segment TO segment;
-> ```
+> ```text
 >
 > **Correct migration pattern:**
 >
@@ -403,7 +403,7 @@ Your `gold.daily_sales_summary` table needs two changes: (1) add a new `channel`
 >     revenue,
 >     order_count
 > FROM gold.daily_sales_summary;
-> ```
+> ```text
 >
 > **Step 4 — Communicate the deprecation** to dashboard owners and the ML team:
 >
@@ -413,14 +413,14 @@ Your `gold.daily_sales_summary` table needs two changes: (1) add a new `channel`
 >
 > ```sql
 > ALTER TABLE gold.daily_sales_summary DROP COLUMN customer_segment;
-> ```
+> ```text
 >
 > **UC Tags for governance:**
 >
 > ```sql
 > ALTER TABLE gold.daily_sales_summary
 > SET TAGS ('contract_version' = '2.0', 'deprecated_columns' = 'customer_segment');
-> ```
+> ```text
 >
 > **Change classification:**
 >

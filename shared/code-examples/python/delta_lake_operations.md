@@ -34,7 +34,7 @@ data = [
 df = spark.createDataFrame(data, schema)
 
 df.write.format("delta").mode("overwrite").saveAsTable("my_catalog.my_schema.employees")
-```
+```text
 
 ## Read a Delta Table
 
@@ -45,7 +45,7 @@ employees.show()
 
 # Using path
 employees = spark.read.format("delta").load("/path/to/employees")
-```
+```text
 
 ## Append Data
 
@@ -54,7 +54,7 @@ new_data = [(5, "Eve", "Engineering", 91000)]
 new_df = spark.createDataFrame(new_data, schema)
 
 new_df.write.format("delta").mode("append").saveAsTable("my_catalog.my_schema.employees")
-```
+```text
 
 ## Schema Evolution (mergeSchema)
 
@@ -71,7 +71,7 @@ extended_df = spark.createDataFrame(extended_data, extended_schema)
     .option("mergeSchema", "true")
     .saveAsTable("my_catalog.my_schema.employees")
 )
-```
+```text
 
 ## Merge (Upsert)
 
@@ -92,7 +92,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```
+```text
 
 ## Time Travel
 
@@ -114,7 +114,7 @@ df_ts = (
 # View table history
 history = DeltaTable.forName(spark, "my_catalog.my_schema.employees").history()
 history.select("version", "timestamp", "operation", "operationMetrics").show(truncate=False)
-```
+```text
 
 ## Optimize and Vacuum
 
@@ -130,7 +130,7 @@ spark.sql("VACUUM my_catalog.my_schema.employees")
 
 # Vacuum with custom retention (use with caution)
 spark.sql("VACUUM my_catalog.my_schema.employees RETAIN 168 HOURS")
-```
+```text
 
 ## Change Data Feed (CDF)
 
@@ -155,7 +155,7 @@ changes.select("id", "name", "salary", "_change_type", "_commit_version").show()
 inserts = changes.filter(col("_change_type") == "insert")
 updates = changes.filter(col("_change_type") == "update_postimage")
 deletes = changes.filter(col("_change_type") == "delete")
-```
+```text
 
 ## Liquid Clustering
 
@@ -176,4 +176,4 @@ spark.sql("ALTER TABLE my_catalog.my_schema.orders CLUSTER BY (customer_id)")
 
 # Remove clustering
 spark.sql("ALTER TABLE my_catalog.my_schema.orders CLUSTER BY NONE")
-```
+```text

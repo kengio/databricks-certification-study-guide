@@ -26,7 +26,7 @@ with mlflow.start_run(run_name="my-run"):
     mlflow.log_artifacts("outputs/")         # Directory
 
     mlflow.set_tag("team", "ml-platform")
-```
+```text
 
 ## Autologging
 
@@ -37,7 +37,7 @@ mlflow.xgboost.autolog()
 mlflow.pytorch.autolog()
 mlflow.tensorflow.autolog()
 mlflow.spark.autolog()
-```
+```text
 
 ## Logging Models
 
@@ -55,7 +55,7 @@ mlflow.pyfunc.log_model("model", python_model=MyModel(), artifacts={...})
 from mlflow.models import infer_signature
 signature = infer_signature(X_train, model.predict(X_train))
 mlflow.sklearn.log_model(model, "model", signature=signature)
-```
+```text
 
 ## Model Registry — Aliases (MLflow 2.x)
 
@@ -74,7 +74,7 @@ client.delete_registered_model_alias("my-model", "challenger")
 
 # Load by alias
 model = mlflow.pyfunc.load_model("models:/my-model@champion")
-```
+```text
 
 ## Model Registry — Legacy Stages
 
@@ -91,7 +91,7 @@ client.transition_model_version_stage("my-model", version=3, stage="Production")
 
 # Load by stage (legacy)
 model = mlflow.pyfunc.load_model("models:/my-model/Production")
-```
+```text
 
 ## Loading Models
 
@@ -107,7 +107,7 @@ model = mlflow.pytorch.load_model("runs:/RUN_ID/model")
 # Spark UDF for batch inference
 udf = mlflow.pyfunc.spark_udf(spark, "models:/my-model@champion", result_type="double")
 df = df.withColumn("prediction", udf(*feature_cols))
-```
+```text
 
 ## Searching Runs
 
@@ -119,7 +119,7 @@ runs = mlflow.search_runs(
     max_results=10
 )
 # Returns pandas DataFrame
-```
+```text
 
 ## Unity Catalog Model Registry
 
@@ -132,7 +132,7 @@ mlflow.sklearn.log_model(
     artifact_path="model",
     registered_model_name="prod_catalog.ml_models.my-model"
 )
-```
+```text
 
 ## Key Numbers
 

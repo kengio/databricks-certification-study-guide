@@ -23,25 +23,25 @@ flowchart TB
         DB["Databases"]
         Streaming["Streaming"]
     end
-    
+
     DataFrame["Apache Spark DataFrame"]
-    
+
     subgraph Operations["DataFrame Operations"]
         Transform["Transformations<br/>(select, filter, map)"]
         Action["Actions<br/>(show, collect, write)"]
     end
-    
+
     subgraph Output["Output"]
         DF["DeltaLake"]
         SQL["SQL Tables"]
         Files["Parquet/CSV"]
     end
-    
+
     Input --> DataFrame
     DataFrame --> Operations
     Transform --> Action
     Action --> Output
-```
+```text
 
 ## Creating DataFrames
 
@@ -57,7 +57,7 @@ data = [
 
 df = spark.createDataFrame(data, ["id", "name", "salary"])
 df.show()
-```
+```text
 
 ### From Files
 
@@ -76,7 +76,7 @@ df_parquet = spark.read.parquet("/path/to/data.parquet")
 
 # Delta
 df_delta = spark.read.format("delta").load("/path/to/delta/table")
-```
+```text
 
 ### From Pandas
 
@@ -90,7 +90,7 @@ pandas_df = pd.DataFrame({
 })
 
 spark_df = spark.createDataFrame(pandas_df)
-```
+```text
 
 ### From SQL Query
 
@@ -100,7 +100,7 @@ df = spark.sql("""
     FROM employees
     WHERE department = 'Engineering'
 """)
-```
+```text
 
 ## DataFrame Schema
 
@@ -124,7 +124,7 @@ columns = df.columns  # ['id', 'name', 'salary']
 
 # Get data types
 dtypes = df.dtypes  # [('id', 'long'), ('name', 'string'), ...]
-```
+```text
 
 ### Defining Schema Explicitly
 
@@ -138,7 +138,7 @@ schema = StructType([
 ])
 
 df = spark.read.schema(schema).csv("/path/to/data.csv", header=True)
-```
+```text
 
 ## Core DataFrame Transformations
 
@@ -161,7 +161,7 @@ df.selectExpr(
     "name as employee_name",
     "salary * 1.1 as projected_salary"
 ).show()
-```
+```text
 
 ### Filter and WHERE
 
@@ -174,7 +174,7 @@ df.filter((col("salary") > 50000) & (col("name") != "Bob")).show()
 
 # Using SQL filter
 df.filter("salary > 80000 AND department = 'Engineering'").show()
-```
+```text
 
 ### Adding and Dropping Columns
 
@@ -191,7 +191,7 @@ df_renamed = df.withColumnRenamed("salary", "annual_salary")
 
 # Drop column
 df_dropped = df.drop("bonus")
-```
+```text
 
 ### Distinct and Deduplication
 
@@ -204,7 +204,7 @@ df.select(col("department")).distinct().count()
 
 # Drop duplicates on specific columns
 df.dropDuplicates(["id", "name"])
-```
+```text
 
 ### Sorting
 
@@ -220,7 +220,7 @@ df.orderBy(
     col("department").asc(),
     col("salary").desc()
 ).show()
-```
+```text
 
 ## DataFrame Actions
 
@@ -243,7 +243,7 @@ first_5 = df.take(5)
 
 # Write
 df.write.format("delta").mode("overwrite").save("/path/to/table")
-```
+```text
 
 ## Data Types Reference
 
@@ -274,7 +274,7 @@ memory_usage = df.cache().memory_usage / 1024 / 1024
 # Schema info
 print(f"Columns: {len(df.columns)}")
 print(f"Rows: {df.count()}")
-```
+```text
 
 ### DataFrame to Pandas (for small datasets only)
 
@@ -284,7 +284,7 @@ pandas_df = df.toPandas()
 
 # Only first 1000 rows
 pandas_df = df.limit(1000).toPandas()
-```
+```text
 
 ### Sample Data
 
@@ -297,7 +297,7 @@ sample_df = df.sampleBy("category", fractions={
     "A": 0.2,
     "B": 0.3
 })
-```
+```text
 
 ## Performance Considerations
 

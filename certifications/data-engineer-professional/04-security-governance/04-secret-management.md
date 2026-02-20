@@ -26,7 +26,7 @@ flowchart TB
     end
 
     Scope --> Backends
-```
+```text
 
 ## Secret Scope Types
 
@@ -46,7 +46,7 @@ databricks secrets create-scope --scope my-scope
 
 # Create scope with initial manage principal
 databricks secrets create-scope --scope team-secrets --initial-manage-principal users
-```
+```text
 
 ```python
 # Via REST API
@@ -57,7 +57,7 @@ response = requests.post(
     headers={"Authorization": f"Bearer {token}"},
     json={"scope": "my-scope"}
 )
-```
+```text
 
 ### Managing Secrets
 
@@ -76,7 +76,7 @@ databricks secrets delete --scope my-scope --key db-password
 
 # Delete scope
 databricks secrets delete-scope --scope my-scope
-```
+```text
 
 ### Scope ACLs
 
@@ -90,7 +90,7 @@ databricks secrets put-acl --scope my-scope --principal data-engineers --permiss
 
 # Revoke access
 databricks secrets delete-acl --scope my-scope --principal user@company.com
-```
+```text
 
 | Permission | Capabilities |
 | :--- | :--- |
@@ -117,7 +117,7 @@ databricks secrets create-scope \
     --dns-name https://<vault-name>.vault.azure.net/
 
 # The scope automatically syncs with Key Vault
-```
+```text
 
 ### Key Vault Configuration
 
@@ -129,7 +129,7 @@ Azure Key Vault Setup:
    - Key Vault Secrets User role (read secrets)
    - Or configure Access Policies with Get secret permission
 4. Create scope in Databricks pointing to Key Vault
-```
+```text
 
 ## AWS Secrets Manager
 
@@ -156,7 +156,7 @@ def get_secret(secret_name, region_name="us-east-1"):
 # Usage
 db_creds = get_secret("prod/database/credentials")
 password = db_creds["password"]
-```
+```text
 
 ### Databricks-backed for AWS Secrets
 
@@ -166,7 +166,7 @@ databricks secrets create-scope --scope aws-creds
 
 # Store AWS credentials or other secrets
 databricks secrets put --scope aws-creds --key api-key
-```
+```text
 
 ## Accessing Secrets in Code
 
@@ -189,7 +189,7 @@ api_key = dbutils.secrets.get(scope="azure-kv", key="api-key")
 
 # Get secret as bytes (for binary secrets)
 ssh_key = dbutils.secrets.getBytes(scope="my-scope", key="ssh-key")
-```
+```text
 
 ### Secret Redaction
 
@@ -206,7 +206,7 @@ print(f"Password is: {password}")  # Output: Password is: [REDACTED]
 # In DataFrames
 df = spark.createDataFrame([(password,)], ["secret"])
 df.show()  # Shows [REDACTED]
-```
+```text
 
 ### When Redaction Doesn't Work
 
@@ -218,7 +218,7 @@ password = dbutils.secrets.get("my-scope", "db-password")
 print(password[0:5])  # Partial string - NOT redacted
 print(list(password))  # Converted to list - NOT redacted
 print(password.encode())  # Encoded - NOT redacted
-```
+```text
 
 ## Common Use Cases
 
@@ -242,7 +242,7 @@ df = (spark.read
     .option("user", username)
     .option("password", password)
     .load())
-```
+```text
 
 ### API Authentication
 
@@ -255,7 +255,7 @@ api_key = dbutils.secrets.get("api-scope", "external-api-key")
 # Use in API call
 headers = {"Authorization": f"Bearer {api_key}"}
 response = requests.get("https://api.example.com/data", headers=headers)
-```
+```text
 
 ### Cloud Storage Credentials
 
@@ -273,7 +273,7 @@ spark.conf.set(
 df = spark.read.format("parquet").load(
     f"wasbs://container@{storage_account}.blob.core.windows.net/data/"
 )
-```
+```text
 
 ### Service Principal Credentials
 
@@ -291,7 +291,7 @@ spark.conf.set("fs.azure.account.oauth2.client.id", client_id)
 spark.conf.set("fs.azure.account.oauth2.client.secret", client_secret)
 spark.conf.set("fs.azure.account.oauth2.client.endpoint",
     f"https://login.microsoftonline.com/{tenant_id}/oauth2/token")
-```
+```text
 
 ## Secrets in Job Parameters
 
@@ -305,7 +305,7 @@ spark.conf.set("fs.azure.account.oauth2.client.endpoint",
 password = dbutils.widgets.get("password")
 # or
 password = dbutils.secrets.get("my-scope", "db-password")
-```
+```text
 
 ### Job Configuration Example
 
@@ -323,7 +323,7 @@ password = dbutils.secrets.get("my-scope", "db-password")
     }
   }]
 }
-```
+```text
 
 ## Best Practices
 
@@ -337,7 +337,7 @@ Recommended scope structure:
 ├── api-keys               # External API keys
 ├── service-principals     # SP credentials
 └── team-secrets           # Team-specific secrets
-```
+```text
 
 ### Access Control Pattern
 
@@ -349,7 +349,7 @@ databricks secrets put-acl --scope prod-database --principal platform-admins --p
 # Development: Broader access
 databricks secrets put-acl --scope dev-database --principal developers --permission READ
 databricks secrets put-acl --scope dev-database --principal developers --permission WRITE
-```
+```text
 
 ### Secret Rotation
 
@@ -367,7 +367,7 @@ def rotate_database_password(scope, key, new_password):
 
     # 4. Log rotation event
     print(f"Rotated secret {scope}/{key}")
-```
+```text
 
 ## Integration with Unity Catalog
 
@@ -396,7 +396,7 @@ password = dbutils.secrets.get("app-scope", "password")
 
 # Storage access via UC (no secrets needed)
 df = spark.read.format("delta").load("/Volumes/catalog/schema/volume/data/")
-```
+```text
 
 ## Monitoring and Auditing
 
@@ -426,7 +426,7 @@ WHERE service_name = 'secrets'
     AND request_params.scope = 'prod-database'
     AND action_name = 'getSecret'
 GROUP BY user_identity.email;
-```
+```text
 
 ## Common Issues & Errors
 
@@ -436,14 +436,14 @@ GROUP BY user_identity.email;
 
 ```python
 # Error: Secret scope 'nonexistent' not found
-```
+```text
 
 **Fix:** Verify scope exists and user has access:
 
 ```bash
 databricks secrets list-scopes
 databricks secrets list-acls --scope my-scope
-```
+```text
 
 ### 2. Permission Denied
 
@@ -453,7 +453,7 @@ databricks secrets list-acls --scope my-scope
 
 ```bash
 databricks secrets put-acl --scope my-scope --principal user@company.com --permission READ
-```
+```text
 
 ### 3. Secret Not Found in Scope
 
@@ -461,7 +461,7 @@ databricks secrets put-acl --scope my-scope --principal user@company.com --permi
 
 ```python
 # Error: Secret 'missing-key' not found in scope 'my-scope'
-```
+```text
 
 **Fix:** Verify secret exists:
 
@@ -469,7 +469,7 @@ databricks secrets put-acl --scope my-scope --principal user@company.com --permi
 databricks secrets list --scope my-scope
 # Add if missing
 databricks secrets put --scope my-scope --key missing-key
-```
+```text
 
 ### 4. Azure Key Vault Connection Failed
 

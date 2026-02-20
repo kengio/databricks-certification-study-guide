@@ -30,7 +30,7 @@ flowchart LR
     subgraph Target
         Output --> Delta[Delta Table]
     end
-```
+```text
 
 ## Why Auto Loader?
 
@@ -57,7 +57,7 @@ query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/path/to/checkpoint")
     .start("/path/to/target"))
-```
+```text
 
 ### Supported File Formats
 
@@ -85,7 +85,7 @@ flowchart TD
     FN --> FN1[Cloud events trigger processing]
     FN --> FN2[Requires cloud setup]
     FN --> FN3[Faster, more efficient]
-```
+```text
 
 ### Directory Listing Mode (Default)
 
@@ -97,7 +97,7 @@ df = (spark.readStream
     .option("cloudFiles.useNotifications", "false")  # Default
     .option("cloudFiles.schemaLocation", "/schema")
     .load("/path/to/files"))
-```
+```text
 
 | Aspect | Directory Listing |
 | :--- | :--- |
@@ -117,7 +117,7 @@ df = (spark.readStream
     .option("cloudFiles.useNotifications", "true")
     .option("cloudFiles.schemaLocation", "/schema")
     .load("/path/to/files"))
-```
+```text
 
 | Aspect | File Notification |
 | :--- | :--- |
@@ -158,7 +158,7 @@ df = (spark.readStream
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/path/to/schema")
     .load("/path/to/files"))
-```
+```text
 
 The schema location stores:
 
@@ -176,7 +176,7 @@ df = (spark.readStream
     .option("cloudFiles.inferColumnTypes", "true")  # Infer types (not just strings)
     .option("cloudFiles.schemaHints", "id INT, amount DOUBLE")  # Override specific columns
     .load("/path/to/files"))
-```
+```text
 
 | Option | Default | Description |
 | :--- | :--- | :--- |
@@ -200,7 +200,7 @@ df = (spark.readStream
     .option("cloudFiles.format", "json")
     .schema(schema)
     .load("/path/to/files"))
-```
+```text
 
 ## Schema Evolution Modes (Exam Critical)
 
@@ -215,7 +215,7 @@ flowchart TD
     Rescue --> R1[Put unexpected data in _rescued_data]
     Fail --> F1[Fail on new columns]
     None --> N1[Ignore schema changes]
-```
+```text
 
 ### Schema Evolution Options
 
@@ -226,7 +226,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaLocation", "/schema")
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/path/to/files"))
-```
+```text
 
 | Mode | Behavior | Use Case |
 |------|----------|----------|
@@ -245,7 +245,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaLocation", "/schema")
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/path/to/files"))
-```
+```text
 
 When a new field appears:
 
@@ -265,7 +265,7 @@ df = (spark.readStream
     .load("/path/to/files"))
 
 # _rescued_data column contains JSON of unexpected fields
-```
+```text
 
 | Data Scenario | Rescued Column Contains |
 |---------------|-------------------------|
@@ -284,7 +284,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .option("rescuedDataColumn", "_rescued_data")
     .load("/path/to/files"))
-```
+```text
 
 ## Key Configuration Options
 
@@ -302,7 +302,7 @@ df = (spark.readStream
     .option("cloudFiles.maxFilesPerTrigger", 1000)
     .option("cloudFiles.maxBytesPerTrigger", "10g")
     .load("/path/to/files"))
-```
+```text
 
 | Option | Default | Description |
 |--------|---------|-------------|
@@ -330,7 +330,7 @@ df = (spark.readStream
     .option("delimiter", ",")
     .option("inferSchema", "true")
     .load("/path/to/files"))
-```
+```text
 
 ## Handling Corrupt Records
 
@@ -343,7 +343,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaLocation", "/schema")
     .option("badRecordsPath", "/path/to/bad_records")
     .load("/path/to/files"))
-```
+```text
 
 Bad records are written to the specified path with:
 
@@ -361,7 +361,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaLocation", "/schema")
     .option("columnNameOfCorruptRecord", "_corrupt_record")
     .load("/path/to/files"))
-```
+```text
 
 ## Auto Loader with Unity Catalog
 
@@ -382,7 +382,7 @@ query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .toTable("catalog.schema.table_name"))
-```
+```text
 
 ### Reading from Volumes
 
@@ -393,7 +393,7 @@ df = (spark.readStream
     .option("cloudFiles.format", "parquet")
     .option("cloudFiles.schemaLocation", "/Volumes/catalog/schema/volume/schema")
     .load("/Volumes/catalog/schema/volume/data/"))
-```
+```text
 
 ### External Locations
 
@@ -412,7 +412,7 @@ query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "abfss://container@storage/checkpoint/")
     .start("abfss://container@storage/bronze/orders/"))
-```
+```text
 
 ### UC Permissions for Auto Loader
 
@@ -439,7 +439,7 @@ query = (source_df.writeStream
     .format("delta")
     .option("checkpointLocation", "/Volumes/target_catalog/schema/vol/checkpoint/")
     .toTable("target_catalog.target_schema.target_table"))
-```
+```text
 
 ### Schema Evolution with UC
 
@@ -460,7 +460,7 @@ query = (df.writeStream
     .option("checkpointLocation", "/checkpoint")
     .option("mergeSchema", "true")  # Required for schema evolution
     .toTable("catalog.schema.table"))
-```
+```text
 
 ### Credential Management
 
@@ -477,7 +477,7 @@ df = (spark.readStream
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/Volumes/catalog/schema/vol/schema")
     .load("/Volumes/catalog/schema/vol/data/"))  # UC credentials automatic
-```
+```text
 
 ## Common Patterns
 
@@ -504,7 +504,7 @@ query = (bronze_with_metadata.writeStream
     .option("checkpointLocation", "/checkpoints/bronze_orders")
     .option("mergeSchema", "true")
     .toTable("bronze.orders"))
-```
+```text
 
 ### Multi-Format Ingestion
 
@@ -522,7 +522,7 @@ def create_ingestion_stream(format, source_path, schema_path):
 json_stream = create_ingestion_stream("json", "/data/json/", "/schema/json/")
 csv_stream = create_ingestion_stream("csv", "/data/csv/", "/schema/csv/")
 parquet_stream = create_ingestion_stream("parquet", "/data/parquet/", "/schema/parquet/")
-```
+```text
 
 ### Scheduled Batch with availableNow
 
@@ -542,7 +542,7 @@ query = (df.writeStream
     .start("/target/path"))
 
 query.awaitTermination()
-```
+```text
 
 ## Performance Tuning
 
@@ -557,7 +557,7 @@ df = (spark.readStream
     .option("maxFilesPerTrigger", 10000)
     .option("spark.sql.files.maxPartitionBytes", "128mb")
     .load("/path/to/files"))
-```
+```text
 
 ### Memory Optimization
 
@@ -565,7 +565,7 @@ df = (spark.readStream
 # For very large schemas or many files
 spark.conf.set("spark.databricks.cloudFiles.schemaInference.sampleSize.numFiles", 100)
 spark.conf.set("spark.databricks.cloudFiles.schemaInference.sampleSize.numBytes", "10mb")
-```
+```text
 
 ### Backlog Processing
 
@@ -584,7 +584,7 @@ query = (df.writeStream
     .trigger(availableNow=True)
     .option("checkpointLocation", "/checkpoint")
     .start("/target"))
-```
+```text
 
 ## SQL Interface
 
@@ -600,7 +600,7 @@ FROM STREAM read_files(
     format => 'json',
     schemaLocation => '/schema/orders'
 );
-```
+```text
 
 ## Troubleshooting
 
@@ -625,7 +625,7 @@ query = (df.writeStream
 # View progress
 print(query.lastProgress)
 print(query.status)
-```
+```text
 
 ## Use Cases
 

@@ -47,7 +47,7 @@ a ^ b        # symmetric difference → {1, 2, 5, 6}
 point = (10, 20)
 x, y = point                           # unpacking
 first, *rest = [1, 2, 3, 4]           # splat unpacking → first=1, rest=[2,3,4]
-```
+```text
 
 ## Comprehensions
 
@@ -79,7 +79,7 @@ flat = [item for batch in batches for item in batch]  # [1, 2, 3, 4, 5]
 
 # Generator expression — lazy, avoids building full list in memory
 total_chars = sum(len(line) for line in open("data.txt"))
-```
+```text
 
 ## Functions — Args, Kwargs, and Functools
 
@@ -126,7 +126,7 @@ append(df, "catalog.schema.orders")
 # functools.reduce — fold a sequence into a single value
 from functools import reduce
 product = reduce(lambda acc, x: acc * x, [1, 2, 3, 4, 5])   # 120
-```
+```text
 
 ## Generators and Iterators
 
@@ -164,7 +164,7 @@ envs = ["dev", "prod"]
 tables = ["orders", "events"]
 combos = list(itertools.product(envs, tables))
 # [("dev", "orders"), ("dev", "events"), ("prod", "orders"), ("prod", "events")]
-```
+```text
 
 For a full paginated-API generator pipeline with composition and error handling, see
 [Python for Production Data Engineering](../../interview-prep/09-python-code-quality.md) Question 1.
@@ -207,7 +207,7 @@ class TableRef:
 cfg = PipelineConfig(source_path="/landing/orders", target_table="bronze.orders")
 as_dict = asdict(cfg)       # {"source_path": "/landing/orders", ...}
 as_tuple = astuple(cfg)     # ("/landing/orders", "bronze.orders", 1000, [])
-```
+```text
 
 ## Context Managers
 
@@ -255,7 +255,7 @@ class TempDirectory:
 with TempDirectory("pipeline_") as tmp:
     process_files(tmp)
 # Directory deleted automatically, even if process_files raises
-```
+```text
 
 For the JDBC connection context manager and `__exit__` returning `True` semantics, see
 [Python for Production Data Engineering](../../interview-prep/09-python-code-quality.md) Question 3.
@@ -297,7 +297,7 @@ versions = re.findall(r"v\d+", "schema_v2_patch_v3.json")   # ["v2", "v3"]
 
 # Compile for reuse in loops
 date_pattern = re.compile(r"\d{4}-\d{2}-\d{2}")
-```
+```text
 
 ## Inheritance Patterns
 
@@ -352,7 +352,7 @@ class BaseConfig:
 class StreamingConfig(BaseConfig):
     checkpoint_path: str = ""
     trigger_interval: str = "30 seconds"
-```
+```text
 
 ## Error Handling Patterns
 
@@ -398,7 +398,7 @@ def safe_fetch(url: str) -> dict:
         return requests.get(url, timeout=5).json()
     except ConnectionError as e:
         raise IngestError(f"Cannot reach {url}") from e   # __cause__ preserved
-```
+```text
 
 ## Working with JSON
 
@@ -446,7 +446,7 @@ config = read_json_file("/config/pipeline.json")
 write_json_file({"status": "ok", "rows": 1000}, "/output/result.json")
 flat = flatten_nested_json({"user": {"id": 1, "name": "alice"}, "env": "prod"})
 # {"user.id": 1, "user.name": "alice", "env": "prod"}
-```
+```text
 
 ## Working with CSV
 
@@ -491,7 +491,7 @@ def load_all_csvs(directory: str | Path) -> list[dict[str, str]]:
 rows = read_csv_to_dicts("/data/landing/orders.csv")
 write_dicts_to_csv(rows, "/output/orders_clean.csv", fieldnames=["id", "amount", "date"])
 all_rows = load_all_csvs("/data/landing/orders/")
-```
+```text
 
 ## Datetime and Logging
 
@@ -533,4 +533,4 @@ logger.info("Pipeline started for table: %s", table_name)   # lazy %-formatting
 logger.warning("Row count %d below threshold %d", count, threshold)
 logger.error("Write failed: %s", error_msg)
 logger.exception("Unexpected error")   # auto-includes current traceback
-```
+```text

@@ -41,7 +41,7 @@ FROM prod.silver.customers;
 
 -- Limit results
 SELECT * FROM prod.silver.orders LIMIT 100;
-```
+```text
 
 ### Filtering with WHERE
 
@@ -74,7 +74,7 @@ WHERE phone IS NULL;
 
 SELECT * FROM prod.silver.customers
 WHERE phone IS NOT NULL;
-```
+```text
 
 ### Sorting with ORDER BY
 
@@ -94,7 +94,7 @@ ORDER BY customer_id ASC, order_date DESC;
 -- NULL handling in sort
 SELECT * FROM prod.silver.orders
 ORDER BY ship_date NULLS LAST;
-```
+```text
 
 ## Aggregations
 
@@ -116,7 +116,7 @@ SELECT
   MIN(amount) AS min_order,
   MAX(amount) AS max_order
 FROM prod.silver.orders;
-```
+```text
 
 ### GROUP BY
 
@@ -149,7 +149,7 @@ SELECT
   COUNT(*) AS count
 FROM prod.silver.orders
 GROUP BY 1;  -- Reference by position
-```
+```text
 
 ### HAVING (Filter Aggregations)
 
@@ -164,7 +164,7 @@ GROUP BY customer_id
 HAVING COUNT(*) >= 5
   AND SUM(amount) > 1000
 ORDER BY total_spent DESC;
-```
+```text
 
 ## Joins
 
@@ -187,7 +187,7 @@ flowchart TB
 
     A --> JoinTypes
     B --> JoinTypes
-```
+```text
 
 ### Join Examples
 
@@ -226,7 +226,7 @@ SELECT
 FROM prod.silver.employees e
 LEFT JOIN prod.silver.employees m
   ON e.manager_id = m.employee_id;
-```
+```text
 
 ## Subqueries and CTEs
 
@@ -262,7 +262,7 @@ SELECT
   (SELECT COUNT(*) FROM prod.silver.orders o
    WHERE o.customer_id = c.customer_id) AS order_count
 FROM prod.silver.customers c;
-```
+```text
 
 ### CTEs (Common Table Expressions)
 
@@ -306,7 +306,7 @@ SELECT
   prev_revenue,
   ROUND((revenue - prev_revenue) / prev_revenue * 100, 2) AS growth_pct
 FROM monthly_growth;
-```
+```text
 
 ## Window Functions
 
@@ -318,7 +318,7 @@ function(column) OVER (
   [ORDER BY order_column]
   [ROWS/RANGE frame_specification]
 )
-```
+```text
 
 ### Ranking Functions
 
@@ -354,7 +354,7 @@ SELECT
   total_spent,
   NTILE(4) OVER (ORDER BY total_spent DESC) AS quartile
 FROM prod.gold.customer_metrics;
-```
+```text
 
 ### Analytic Functions
 
@@ -392,7 +392,7 @@ SELECT
     ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
   ) AS moving_avg_7day
 FROM prod.silver.orders;
-```
+```text
 
 ## Date Functions
 
@@ -435,7 +435,7 @@ FROM prod.silver.orders;
 -- Parse strings to dates
 SELECT TO_DATE('2025-01-15', 'yyyy-MM-dd');
 SELECT TO_TIMESTAMP('2025-01-15 10:30:00', 'yyyy-MM-dd HH:mm:ss');
-```
+```text
 
 ## String Functions
 
@@ -480,7 +480,7 @@ SELECT LENGTH(name) AS name_length;
 -- Pattern matching
 SELECT * FROM prod.silver.customers
 WHERE REGEXP_LIKE(email, '^[a-z]+@');
-```
+```text
 
 ## Conditional Logic
 
@@ -508,7 +508,7 @@ SELECT IF(amount > 100, 'Large', 'Small') AS size;
 
 -- IIF (same as IF)
 SELECT IIF(amount > 100, 'Large', 'Small') AS size;
-```
+```text
 
 ## Creating Objects
 
@@ -535,7 +535,7 @@ GROUP BY 1;
 -- Create or replace
 CREATE OR REPLACE TABLE prod.gold.customer_metrics AS
 SELECT * FROM customer_aggregation_query;
-```
+```text
 
 ### Views
 
@@ -549,7 +549,7 @@ WHERE status = 'active';
 CREATE OR REPLACE VIEW prod.gold.active_customers AS
 SELECT * FROM prod.silver.customers
 WHERE status = 'active';
-```
+```text
 
 ## Use Cases
 

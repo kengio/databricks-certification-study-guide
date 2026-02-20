@@ -21,7 +21,7 @@ flowchart LR
     DM --> Schema[Schema Management]
     DM --> SCD[SCD Patterns]
     DM --> Part[Partitioning]
-```
+```text
 
 ## Section Contents
 
@@ -56,7 +56,7 @@ flowchart LR
     end
 
     Bronze --> Silver --> Gold
-```
+```text
 
 ### Layer Characteristics
 

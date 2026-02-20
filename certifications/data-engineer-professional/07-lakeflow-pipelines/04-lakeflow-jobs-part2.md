@@ -23,7 +23,7 @@ schedule:
   quartz_cron_expression: "0 0 6 * * ?"  # Daily at 6 AM
   timezone_id: "America/New_York"
   pause_status: UNPAUSED
-```
+```text
 
 ### Common Cron Expressions
 
@@ -44,7 +44,7 @@ trigger:
     url: "s3://bucket/landing/data/"
     min_time_between_triggers_seconds: 60
     wait_after_last_change_seconds: 30
-```
+```text
 
 ### Continuous Trigger
 
@@ -53,7 +53,7 @@ trigger:
   periodic:
     interval: 1
     unit: HOURS
-```
+```text
 
 ## Compute Configuration
 
@@ -91,7 +91,7 @@ job_clusters:
         max_workers: 10
       spark_conf:
         spark.databricks.adaptive.autoOptimizeShuffle.enabled: "true"
-```
+```text
 
 ### Serverless Compute
 
@@ -102,7 +102,7 @@ tasks:
       notebook_path: ../notebooks/process.py
     # Uses serverless compute (no cluster config)
     environment_key: default  # Or custom environment
-```
+```text
 
 ## Notifications
 
@@ -120,7 +120,7 @@ email_notifications:
   on_duration_warning_threshold_exceeded:
     - team@company.com
   no_alert_for_skipped_runs: true
-```
+```text
 
 ### Webhook Notifications
 
@@ -133,7 +133,7 @@ webhook_notifications:
   on_failure:
     - id: ${var.pagerduty_webhook_id}
     - id: ${var.slack_webhook_id}
-```
+```text
 
 ### Duration Warning
 
@@ -144,7 +144,7 @@ health:
     - metric: RUN_DURATION_SECONDS
       op: GREATER_THAN
       value: 1800  # 30 minutes
-```
+```text
 
 ## Job Parameters
 
@@ -160,7 +160,7 @@ dbutils.widgets.text("source_path", "/mnt/landing/")
 date = dbutils.widgets.get("date")
 env = dbutils.widgets.get("environment")
 source = dbutils.widgets.get("source_path")
-```
+```text
 
 ### Job-Level Parameters
 
@@ -178,7 +178,7 @@ tasks:
       base_parameters:
         date: "{{job.parameters.date}}"
         environment: "{{job.parameters.environment}}"
-```
+```text
 
 ### Dynamic Parameters
 
@@ -191,7 +191,7 @@ databricks jobs run-now --job-id 12345 \
 curl -X POST "$WORKSPACE_URL/api/2.1/jobs/run-now" \
     -H "Authorization: Bearer $TOKEN" \
     -d '{"job_id": 12345, "notebook_params": {"date": "2024-01-20"}}'
-```
+```text
 
 ## Error Handling
 
@@ -207,7 +207,7 @@ tasks:
     min_retry_interval_millis: 60000  # 1 minute
     retry_on_timeout: true
     timeout_seconds: 600
-```
+```text
 
 ### Failure Handling Task
 
@@ -223,7 +223,7 @@ tasks:
     run_if: AT_LEAST_ONE_FAILED
     notebook_task:
       notebook_path: ../notebooks/failure_handler.py
-```
+```text
 
 ## Monitoring and Logging
 
@@ -243,7 +243,7 @@ for run in runs:
 run = w.jobs.get_run(run_id=67890)
 print(f"Duration: {run.run_duration / 1000} seconds")
 print(f"State: {run.state.life_cycle_state}")
-```
+```text
 
 ### System Tables for Job Monitoring
 
@@ -272,7 +272,7 @@ SELECT
 FROM system.lakeflow.job_task_run_timeline
 WHERE job_id = 12345
 ORDER BY start_time DESC;
-```
+```text
 
 ## Common Issues & Errors
 
@@ -288,7 +288,7 @@ tasks:
     notebook_task:
       notebook_path: ../notebooks/heavy_processing.py
     timeout_seconds: 7200  # 2 hours
-```
+```text
 
 ### 2. Cluster Start Failure
 
@@ -304,7 +304,7 @@ job_clusters:
       # Use smaller instance if quota issues
       node_type_id: "Standard_DS2_v2"
       num_workers: 1
-```
+```text
 
 ### 3. Task Value Not Found
 
@@ -322,7 +322,7 @@ value = dbutils.jobs.taskValues.get(
     key="result",
     default="unknown"
 )
-```
+```text
 
 ### 4. Circular Dependencies
 
@@ -343,7 +343,7 @@ tasks:
   - task_key: a
   - task_key: b
     depends_on: [{task_key: a}]
-```
+```text
 
 ## Exam Tips
 

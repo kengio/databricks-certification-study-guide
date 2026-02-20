@@ -25,7 +25,7 @@ ON t.id = s.id
 WHEN MATCHED AND s.is_deleted = true THEN DELETE
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```
+```text
 
 ```python
 # PySpark MERGE
@@ -39,7 +39,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```
+```text
 
 ## OPTIMIZE
 
@@ -54,7 +54,7 @@ ZORDER BY (column1, column2);
 -- Optimize specific partitions
 OPTIMIZE catalog.schema.table
 WHERE date = '2024-01-15';
-```
+```text
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -73,7 +73,7 @@ VACUUM catalog.schema.table RETAIN 168 HOURS;
 
 -- Dry run (show files to delete)
 VACUUM catalog.schema.table DRY RUN;
-```
+```text
 
 | Parameter | Default | Notes |
 |-----------|---------|-------|
@@ -105,7 +105,7 @@ CREATE TABLE my_table (
 
 -- Change clustering columns
 ALTER TABLE my_table CLUSTER BY (region, country);
-```
+```text
 
 ## Time Travel
 
@@ -123,7 +123,7 @@ DESCRIBE HISTORY my_table;
 -- Restore to version
 RESTORE TABLE my_table TO VERSION AS OF 5;
 RESTORE TABLE my_table TO TIMESTAMP AS OF '2024-01-15';
-```
+```text
 
 | Property | Default | Description |
 |----------|---------|-------------|
@@ -144,7 +144,7 @@ ALTER TABLE my_table DROP CONSTRAINT valid_price;
 
 -- View constraints
 DESCRIBE TABLE EXTENDED my_table;
-```
+```text
 
 ## Key Table Properties
 
@@ -167,7 +167,7 @@ ALTER TABLE my_table SET TBLPROPERTIES (
 
 -- View all properties
 SHOW TBLPROPERTIES my_table;
-```
+```text
 
 | Property | Default | Description |
 |----------|---------|-------------|
@@ -191,7 +191,7 @@ ALTER TABLE my_table RENAME COLUMN old_name TO new_name;
 
 -- Change column type (limited)
 ALTER TABLE my_table ALTER COLUMN col_name TYPE BIGINT;
-```
+```text
 
 ```python
 # Auto merge schema on write
@@ -199,7 +199,7 @@ ALTER TABLE my_table ALTER COLUMN col_name TYPE BIGINT;
     .option("mergeSchema", "true")
     .mode("append")
     .saveAsTable("my_table"))
-```
+```text
 
 ## Cloning
 
@@ -212,7 +212,7 @@ CREATE TABLE my_clone DEEP CLONE source_table;
 
 -- Clone to specific version
 CREATE TABLE my_clone CLONE source_table VERSION AS OF 5;
-```
+```text
 
 | Clone Type | Use Case | Data Copied |
 |------------|----------|-------------|

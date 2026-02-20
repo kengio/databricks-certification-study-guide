@@ -50,7 +50,7 @@ flowchart TB
     end
 
     VectorDB --> Retrieve
-```
+```text
 
 ## Key Concepts
 
@@ -68,7 +68,7 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("all-MiniLM-L6-v2")
 embeddings = model.encode(["What is Delta Lake?", "How do I optimize queries?"])
 # Returns (2, 384) numpy array
-```
+```text
 
 ### Chunking Strategies
 
@@ -103,7 +103,7 @@ flowchart LR
     Delta[(Delta Table<br>Source Documents)] --> VS[Vector Search<br>Index]
     VS --> Query[Query API]
     Query --> App[LLM Application]
-```
+```text
 
 ### Index Types
 
@@ -135,7 +135,7 @@ client.create_delta_sync_index(
     embedding_source_column="chunk_text",
     embedding_model_endpoint_name="databricks-gte-large-en"
 )
-```
+```text
 
 ### Querying the Index
 
@@ -151,7 +151,7 @@ results = client.get_index(
 )
 
 # results.get("result", {}).get("data_array", [])
-```
+```text
 
 ## Building a RAG Pipeline
 
@@ -199,7 +199,7 @@ Answer:"""
     )
 
     return response["choices"][0]["message"]["content"]
-```
+```text
 
 ## RAG Evaluation
 
@@ -220,7 +220,7 @@ with mlflow.start_run():
         model_type="question-answering",
         evaluators="default"
     )
-```
+```text
 
 ## Use Cases
 

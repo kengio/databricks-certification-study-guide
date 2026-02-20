@@ -17,7 +17,7 @@ The Databricks Lakehouse combines the best of data warehouses and data lakes, en
 
 ```mermaid
 flowchart LR
-    subgraph DataLake["Data Lake"] 
+    subgraph DataLake["Data Lake"]
         S1["Raw Data Sources"]
         S2["Historical Logs"]
         S3["Streaming Data"]
@@ -52,7 +52,7 @@ flowchart LR
     UC --> Governance
     Policy --> Governance
     Audit --> Governance
-```
+```text
 
 ## Data Warehouse vs Data Lake vs Lakehouse
 
@@ -68,12 +68,14 @@ flowchart LR
 ## Key Lakehouse Concepts
 
 ### 1. **ACID Transactions**
+
 - Ensures data reliability and consistency
 - Supports concurrent reads and writes
 - Enables rollback and recovery
 - Built into Delta Lake format
 
 ### 2. **Schema Enforcement & Evolution**
+
 ```python
 # Schema enforcement prevents bad data
 df.write \
@@ -87,9 +89,10 @@ df.write \
     .mode("append") \
     .option("mergeSchema", "true") \
     .save("/mnt/data/table")
-```
+```text
 
 ### 3. **Data Versioning & Time Travel**
+
 - Access historical versions of data
 - Query data "as of" a specific timestamp
 - No git, snapshots work like version control
@@ -106,9 +109,10 @@ spark.read \
     .format("delta") \
     .option("timestampAsOf", "2025-01-15") \
     .load("/mnt/data/table")
-```
+```text
 
 ### 4. **Data Lineage & Audit Logs**
+
 - Track data changes over time
 - Who modified data and when
 - Support compliance requirements
@@ -130,7 +134,7 @@ df.write.format("delta").mode("overwrite").save("/mnt/delta/my_table")
 # Or convert existing Parquet
 from delta.tables import DeltaTable
 DeltaTable.convertToDelta(spark, "parquet.`/path/to/data`")
-```
+```text
 
 ## Medallion Architecture (Bronze/Silver/Gold)
 
@@ -139,36 +143,37 @@ A best-practice data organization pattern:
 ```mermaid
 flowchart TB
     Raw["Raw Data Sources"]
-    
+
     subgraph Bronze["🥉 Bronze Layer"]
         B1["Raw Ingestion"]
         B2["Minimal Transformation"]
         B3["Append-Only"]
     end
-    
+
     subgraph Silver["🥈 Silver Layer"]
         S1["Cleaned & Deduplicated"]
         S2["Schema Enforced"]
         S3["Business Logic Applied"]
     end
-    
+
     subgraph Gold["🥇 Gold Layer"]
         G1["Business Aggregates"]
         G2["Dimension Tables"]
         G3["Optimized for BI/ML"]
     end
-    
+
     BI["BI Tools & Dashboards"]
     ML["ML Models"]
-    
+
     Raw --> Bronze
     Bronze --> Silver
     Silver --> Gold
     Gold --> BI
     Gold --> ML
-```
+```text
 
 ### Bronze Layer
+
 - **Purpose**: Raw ingestion from source systems
 - **Schema**: Matches source exactly (may be unstructured)
 - **Retention**: Minimal transformation, keep all raw data
@@ -176,6 +181,7 @@ flowchart TB
 - **Use Case**: Preserve original data for audit trails
 
 ### Silver Layer
+
 - **Purpose**: Cleansed, deduplicated analytical hub
 - **Schema**: Standardized, enforced
 - **Retention**: Remove duplicates, handle nulls
@@ -183,6 +189,7 @@ flowchart TB
 - **Use Case**: Join source systems, identify dimensions
 
 ### Gold Layer
+
 - **Purpose**: Business-ready aggregates for BI/ML
 - **Schema**: Optimized for specific use cases
 - **Retention**: Only needed for analytics
@@ -211,7 +218,7 @@ Unity Catalog provides a unified governance solution:
 spark.sql("SELECT * FROM main.default.my_table")
 #          ^     ^       ^
 #      catalog schema  table
-```
+```text
 
 ## Use Cases
 

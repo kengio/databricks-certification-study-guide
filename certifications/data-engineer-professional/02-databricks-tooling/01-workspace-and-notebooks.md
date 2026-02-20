@@ -29,7 +29,7 @@ flowchart TB
     end
 
     Workspace --> Notebook
-```
+```text
 
 ## Workspace Organization
 
@@ -47,7 +47,7 @@ flowchart TB
 ├── Repos/                          # Git-connected repositories
 │   └── project-name/
 └── Applications/                   # Databricks Apps (if enabled)
-```
+```text
 
 ### Workspace vs DBFS Paths
 
@@ -67,7 +67,7 @@ df = spark.read.format("csv").load("dbfs:/data/input.csv")
 
 # Read from Unity Catalog Volume
 df = spark.read.format("parquet").load("/Volumes/main/default/raw_data/")
-```
+```text
 
 ## Notebook Languages
 
@@ -89,19 +89,19 @@ Magic commands allow switching languages within a notebook.
 ```python
 # Default cell runs in notebook's default language
 df = spark.read.table("my_table")
-```
+```text
 
 ```sql
 %sql
 -- Switch to SQL for this cell
 SELECT * FROM my_table LIMIT 10
-```
+```text
 
 ```scala
 %scala
 // Switch to Scala for this cell
 val df = spark.read.table("my_table")
-```
+```text
 
 ### Complete Magic Commands Reference
 
@@ -127,7 +127,7 @@ def clean_data(df):
     return df.dropna().dropDuplicates()
 
 ENVIRONMENT = "production"
-```
+```text
 
 ```python
 # In main notebook
@@ -136,7 +136,7 @@ ENVIRONMENT = "production"
 # Now clean_data() and ENVIRONMENT are available
 cleaned_df = clean_data(raw_df)
 print(ENVIRONMENT)  # "production"
-```
+```text
 
 **%run Characteristics:**
 
@@ -155,7 +155,7 @@ print(ENVIRONMENT)  # "production"
 # In etl_pipeline notebook:
 # dbutils.widgets.text("date", "2024-01-01")
 # date = dbutils.widgets.get("date")
-```
+```text
 
 ### The %fs Command
 
@@ -169,7 +169,7 @@ print(ENVIRONMENT)  # "production"
 %fs cp /source/file.csv /dest/file.csv
 
 %fs rm /data/temp/ --recurse
-```
+```text
 
 | Operation | Command | Description |
 | :--- | :--- | :--- |
@@ -198,7 +198,7 @@ flowchart LR
     Dropdown --> D1["Single selection, fixed options"]
     Combobox --> C1["Single selection, editable"]
     Multiselect --> M1["Multiple selections"]
-```
+```text
 
 ### Creating Widgets
 
@@ -214,7 +214,7 @@ dbutils.widgets.combobox("table_name", "customers", ["customers", "orders", "pro
 
 # Multiselect widget - multiple selections
 dbutils.widgets.multiselect("regions", "US", ["US", "EU", "APAC"], "Regions")
-```
+```text
 
 ### Getting Widget Values
 
@@ -226,7 +226,7 @@ environment = dbutils.widgets.get("environment")
 # Get multiselect values (returns comma-separated string)
 regions = dbutils.widgets.get("regions")  # "US,EU"
 region_list = regions.split(",")  # ["US", "EU"]
-```
+```text
 
 ### Managing Widgets
 
@@ -236,7 +236,7 @@ dbutils.widgets.remove("start_date")
 
 # Remove all widgets from notebook
 dbutils.widgets.removeAll()
-```
+```text
 
 ### Widget Scope and Jobs
 
@@ -258,7 +258,7 @@ dbutils.widgets.removeAll()
 #     }
 #   }
 # }
-```
+```text
 
 ### SQL Widgets
 
@@ -273,7 +273,7 @@ CREATE WIDGET DROPDOWN env DEFAULT 'dev' CHOICES ['dev', 'staging', 'prod'];
 SELECT * FROM events
 WHERE event_date >= '${start_date}'
 AND environment = '${env}';
-```
+```text
 
 ```sql
 -- Get all widget values
@@ -281,7 +281,7 @@ SELECT getArgument('start_date') AS start_date;
 
 -- Remove widgets
 REMOVE WIDGET start_date;
-```
+```text
 
 ## dbutils (Databricks Utilities)
 
@@ -298,7 +298,7 @@ flowchart TB
     dbutils --> jobs["jobs"]
     dbutils --> library["library"]
     dbutils --> credentials["credentials"]
-```
+```text
 
 ### dbutils.fs - File System Operations
 
@@ -335,7 +335,7 @@ content = dbutils.fs.head("/data/sample.txt", maxBytes=1000)
 
 # Write text file (not recommended for large data)
 dbutils.fs.put("/data/output.txt", "Hello World", overwrite=True)
-```
+```text
 
 ### File System Operations Comparison
 
@@ -367,7 +367,7 @@ api_key = dbutils.secrets.get(scope="azure-kv", key="api-key")
 
 # Secrets are redacted in logs
 print(password)  # Prints [REDACTED] in notebook output
-```
+```text
 
 **Secret Scope Types:**
 
@@ -392,7 +392,7 @@ print(f"Notebook returned: {result}")
 dbutils.notebook.exit("Success: Processed 1000 rows")
 
 # In calling notebook, result contains the exit value
-```
+```text
 
 **dbutils.notebook.run vs %run:**
 
@@ -429,7 +429,7 @@ with ThreadPoolExecutor(max_workers=3) as executor:
 
 for result in results:
     print(result)
-```
+```text
 
 ### dbutils.jobs - Job Task Values
 
@@ -455,7 +455,7 @@ metrics = dbutils.jobs.taskValues.get(
     key="metrics",
     default={}
 )
-```
+```text
 
 ```mermaid
 sequenceDiagram
@@ -474,7 +474,7 @@ sequenceDiagram
 
     Load->>Load: taskValues.get("transform", "status")
     Load->>Load: Final processing
-```
+```text
 
 ### dbutils.library - Library Management
 
@@ -484,7 +484,7 @@ dbutils.library.restartPython()
 
 # Install library (deprecated - use %pip instead)
 # dbutils.library.install("pypi-package")  # Not recommended
-```
+```text
 
 **Best Practice:** Use `%pip` for package installation:
 
@@ -493,7 +493,7 @@ dbutils.library.restartPython()
 
 # Restart Python after installing
 dbutils.library.restartPython()
-```
+```text
 
 ## Notebook Permissions
 
@@ -519,7 +519,7 @@ dbutils.library.restartPython()
 #     {"group_name": "data-engineers", "permission_level": "CAN_RUN"}
 #   ]
 # }
-```
+```text
 
 ## Notebook Formats
 
@@ -543,7 +543,7 @@ databricks workspace export /Users/user/notebook /local/path/notebook.dbc --form
 
 # Import notebook
 databricks workspace import /local/path/notebook.py /Users/user/notebook --language PYTHON
-```
+```text
 
 ## Compute Attachment
 
@@ -555,7 +555,7 @@ flowchart LR
     Attach --> AllPurpose[All-Purpose Cluster]
     Attach --> Serverless[Serverless Compute]
     Attach --> SQLWarehouse[SQL Warehouse]
-```
+```text
 
 | Compute Type | Languages | Best For |
 |--------------|-----------|----------|
@@ -599,7 +599,7 @@ flowchart TD
     Extract -.-> Utils
     Transform -.-> Utils
     Load -.-> Utils
-```
+```text
 
 ```python
 # Main orchestrator notebook
@@ -622,7 +622,7 @@ except Exception as e:
     dbutils.notebook.exit(f"FAILED: {e}")
 
 dbutils.notebook.exit("SUCCESS")
-```
+```text
 
 ## Common Issues & Errors
 
@@ -633,7 +633,7 @@ dbutils.notebook.exit("SUCCESS")
 ```python
 # Error: InputWidgetNotDefined: No widget named 'missing_widget' defined
 value = dbutils.widgets.get("missing_widget")
-```
+```text
 
 **Fix:** Create widget first or use try-except:
 
@@ -642,7 +642,7 @@ try:
     value = dbutils.widgets.get("missing_widget")
 except Exception:
     value = "default_value"
-```
+```text
 
 ### 2. %run Path Not Found
 
@@ -651,13 +651,13 @@ except Exception:
 ```python
 # Error: Notebook not found: ./utils/helpers
 %run ./utils/helpers
-```
+```text
 
 **Fix:** Verify path is relative to current notebook location or use absolute path:
 
 ```python
 %run /Workspace/Users/user/project/utils/helpers
-```
+```text
 
 ### 3. dbutils.notebook.run Timeout
 
@@ -666,13 +666,13 @@ except Exception:
 ```python
 # Error: Run timed out after 3600 seconds
 result = dbutils.notebook.run("/path/to/slow_notebook", timeout_seconds=3600)
-```
+```text
 
 **Fix:** Increase timeout or optimize notebook:
 
 ```python
 result = dbutils.notebook.run("/path/to/notebook", timeout_seconds=7200)
-```
+```text
 
 ### 4. Secret Scope Access Denied
 
@@ -681,7 +681,7 @@ result = dbutils.notebook.run("/path/to/notebook", timeout_seconds=7200)
 ```python
 # Error: User does not have READ permission on secret scope
 secret = dbutils.secrets.get("restricted-scope", "key")
-```
+```text
 
 **Fix:** Request access to secret scope from admin.
 
@@ -696,7 +696,7 @@ value = dbutils.jobs.taskValues.get(
     key="count",
     default=-1  # Always provide a default
 )
-```
+```text
 
 ## Exam Tips
 

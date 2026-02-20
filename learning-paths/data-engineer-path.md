@@ -17,7 +17,7 @@ A recommended progression from Data Engineer Associate to Data Engineer Professi
 graph LR
     F[Shared Fundamentals] --> DEA[Data Engineer Associate]
     DEA --> DEP[Data Engineer Professional]
-```
+```text
 
 ## Prerequisites
 

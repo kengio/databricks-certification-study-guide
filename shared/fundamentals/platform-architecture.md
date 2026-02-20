@@ -35,7 +35,7 @@ flowchart TB
     ControlPlane -->|"HTTPS (TLS 1.2+)"| DataPlane
     Clusters --> Storage
     SQLWh --> Storage
-```
+```text
 
 ## Control Plane
 
@@ -99,7 +99,7 @@ flowchart TB
             DataLake[(Customer data lakes)]
         end
     end
-```
+```text
 
 **Benefits:**
 
@@ -126,7 +126,7 @@ flowchart TB
     end
 
     DatabricksAccount --> Storage
-```
+```text
 
 **Benefits:**
 
@@ -166,7 +166,7 @@ sequenceDiagram
     DP-->>CP: 5. Status updates
     CP-->>User: 6. Show results
     Note over S: Data never leaves<br/>your account
-```
+```text
 
 ### Secure Cluster Connectivity (SCC)
 
@@ -175,7 +175,7 @@ With SCC enabled, clusters have no public IP addresses. All communication initia
 ```mermaid
 flowchart LR
     DP["Data Plane<br/>(No public IPs)"] -->|Outbound only| CP["Control Plane"]
-```
+```text
 
 **Benefits:**
 
@@ -192,7 +192,7 @@ flowchart LR
     Source[(Source<br/>S3/ADLS)] --> Cluster[Cluster<br/>Data Plane]
     Cluster --> Target[(Target<br/>S3/ADLS)]
     Cluster -.-x|Data never goes to| CP[Control Plane]
-```
+```text
 
 ## Cloud Provider Deployments
 
@@ -213,7 +213,7 @@ flowchart TB
         IAM[IAM Roles<br/>Cross-account role]
         PL[PrivateLink endpoints]
     end
-```
+```text
 
 ### Azure
 
@@ -233,7 +233,7 @@ flowchart TB
         SP[Service Principal /<br/>Managed Identity]
         PL[Private Link]
     end
-```
+```text
 
 ### GCP
 
@@ -251,7 +251,7 @@ flowchart TB
         SA[Service Account]
         PGA[Private Google Access]
     end
-```
+```text
 
 ### Cloud Comparison
 
@@ -276,7 +276,7 @@ flowchart TB
     subgraph Option2["2. Private Link"]
         CP2[Control Plane] <-->|Private Endpoint| DP2[Data Plane]
     end
-```
+```text
 
 ### Private Link / Private Endpoints
 
@@ -311,7 +311,7 @@ flowchart LR
         Svc[Services]
     end
     DB <-->|Peering| Your
-```
+```text
 
 ## Security Implications
 

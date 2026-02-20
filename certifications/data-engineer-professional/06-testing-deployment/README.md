@@ -23,7 +23,7 @@ flowchart LR
     TD --> UT[Unit Testing]
     TD --> BD[Bundle Deployment]
     TD --> ATO[Advanced Testing & Ops]
-```
+```text
 
 ## Section Contents
 
@@ -56,7 +56,7 @@ my-project/
 │   └── python/             # Python modules
 └── tests/
     └── unit/               # Unit tests
-```
+```text
 
 ### Deployment Flow
 
@@ -65,7 +65,7 @@ flowchart LR
     Dev[Development] --> |databricks bundle validate| Valid[Validated]
     Valid --> |databricks bundle deploy| Staging[Staging]
     Staging --> |databricks bundle deploy -t prod| Prod[Production]
-```
+```text
 
 ## CI/CD Pipeline Architecture
 
@@ -77,7 +77,7 @@ flowchart TD
     Build --> DeployDev[Deploy to Dev]
     DeployDev --> IntTest[Integration Tests]
     IntTest --> DeployProd[Deploy to Prod]
-```
+```text
 
 ### GitHub Actions Example
 
@@ -97,7 +97,7 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.DB_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-```
+```text
 
 ## Git Folders Integration
 
@@ -111,7 +111,7 @@ sequenceDiagram
     Git->>DB: Webhook trigger
     DB->>DB: Pull & sync notebooks
     DB-->>Dev: Changes reflected
-```
+```text
 
 ## Testing Strategies
 

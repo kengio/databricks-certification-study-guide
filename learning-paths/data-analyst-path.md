@@ -17,7 +17,7 @@ A recommended progression for preparing for the Databricks Certified Data Analys
 graph LR
     SQL[SQL & Data Basics] --> DAA[Data Analyst Associate]
     DAA --> DEA[Data Engineer Associate<br><i>Optional next step</i>]
-```
+```text
 
 ## Prerequisites
 
@@ -79,7 +79,7 @@ Dashboard
 │   ├── Auto-refresh settings
 │   └── Parameters and filters
 └── Alerts (threshold-based notifications)
-```
+```text
 
 Key skills:
 
@@ -116,7 +116,7 @@ WITH monthly_totals AS (
 SELECT month, region, total,
        total / SUM(total) OVER (PARTITION BY month) AS share_of_month
 FROM monthly_totals;
-```
+```text
 
 ## Phase 3: Practice and Exam Preparation
 

@@ -29,7 +29,7 @@ databricks-certification-study-guide/
 │   └── code-examples/       # Python and SQL examples
 ├── learning-paths/          # Certification progression guides
 └── images/                  # Shared images and diagrams
-```
+```text
 
 ## Content Guidelines
 
@@ -84,7 +84,7 @@ databricks-certification-study-guide/
   df = spark.read.format("delta") \
       .option("key", "value") \
       .load("/path")
-  ```
+  ```text
 
 - **Use Obsidian foldable callouts** for answers/spoilers (collapsed by default in Obsidian). Use the `[!success]-` callout type:
 
@@ -93,7 +93,7 @@ databricks-certification-study-guide/
   > **Correct Answer: X**
   >
   > Explanation text here.
-  ```
+  ```text
 
 - **Practice Question Choices**: Format as separate lines without bullets. End each line with **two spaces** to force a hard line break:
 
@@ -101,7 +101,7 @@ databricks-certification-study-guide/
   A) Option one
   B) Option two
   C) Option three
-  ```
+  ```text
 
 ### Diagrams
 
@@ -126,7 +126,7 @@ flowchart TB
     end
     ControlPlane --> DataPlane
 \`\`\`
-```
+```text
 
 ### Images
 
@@ -140,7 +140,7 @@ flowchart TB
 ![Alt text describing the image](../../images/databricks-ui/feature/image-name.png)
 
 *Caption explaining what the screenshot shows*
-```
+```text
 
 - **Note:** Avoid HTML image tags (`<img>`) - use markdown syntax for Obsidian compatibility
 
@@ -156,7 +156,7 @@ flowchart TB
 
   <!-- Wrong: Obsidian may resolve to root README.md -->
   [Back to Practice Questions](README.md)
-  ```
+  ```text
 
 - When adding or modifying links, confirm the target file exists
 - Standard entry points for each section:
@@ -210,7 +210,7 @@ certifications/{cert-name}/
     │   └── questions.md               # All questions
     └── mock-exam-2/                    # (duplicate structure)
         └── ...
-```
+```text
 
 ### Certification Entry Point (README.md)
 

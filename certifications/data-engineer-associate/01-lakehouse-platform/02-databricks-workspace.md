@@ -22,23 +22,23 @@ flowchart TB
             NB1["My Notebook 1"]
             NB2["My Notebook 2"]
         end
-        
+
         subgraph Shared["Shared Folder"]
             NB3["Team Notebook"]
             NB4["Dashboard"]
         end
-        
+
         subgraph Repos["Repos"]
             GIT["Git Integration"]
             VCS["Version Control"]
         end
-        
+
         subgraph Clusters["Clusters"]
             C1["Dev Cluster"]
             C2["Prod Cluster"]
         end
     end
-```
+```text
 
 ## Workspace Organization
 
@@ -53,7 +53,7 @@ flowchart TB
 
 ### Best Practices
 
-```
+```text
 Workspace Root/
 ├── /Shared/
 │   ├── /datasets/               # Shared data references
@@ -67,7 +67,7 @@ Workspace Root/
         ├── /dev/                # Personal development
         ├── /experiments/        # Ad-hoc analysis
         └── /dashboards/         # Personal dashboards
-```
+```text
 
 ## Notebooks
 
@@ -90,7 +90,7 @@ Notebooks are the primary development tool in Databricks.
 %scala   # Switch to Scala
 %md      # Markdown formatting
 %sh      # Shell commands
-```
+```text
 
 ### Key Notebook Capabilities
 
@@ -109,7 +109,7 @@ env = dbutils.widgets.get("env")
 dbutils.fs.ls("/mnt/data/")  # List files
 dbutils.fs.mv("/path/src", "/path/dst")  # Move files
 dbutils.fs.cp("/path/src", "/path/dst", True)  # Copy recursively
-```
+```text
 
 ## Repos (Git Integration)
 
@@ -124,12 +124,12 @@ flowchart LR
     Commit["Commit"]
     Push["Push to Remote"]
     GitHub["GitHub/GitLab"]
-    
+
     Local --> Stage
     Stage --> Commit
     Commit --> Push
     Push --> GitHub
-```
+```text
 
 ### Common Operations
 
@@ -143,18 +143,18 @@ git add <file>
 git commit -m "message"
 git push origin main
 git pull origin main
-```
+```text
 
 ### Branching Strategy for Data Engineering
 
-```
+```text
 main (production)
 ├── dev
 │   ├── feature/new-pipeline
 │   └── feature/optimization
 ├── staging
 └── hotfix/urgent-fix
-```
+```text
 
 ## Clusters
 
@@ -176,7 +176,7 @@ Cluster config:
 - Single worker node
 - Pre-installed libraries
 - Shared with no one
-```
+```text
 
 ### Shared Multi-Workspace Cluster
 
@@ -186,18 +186,18 @@ Cluster config:
 - Multiple workers
 - Shared libraries
 - Audit logging enabled
-```
+```text
 
 ## Collaboration Features
 
 ### Real-Time Collaboration
 
-```
+```text
 Alice opens notebook → Bob opens same notebook
 → Both see cursor positions
 → Edits appear in real-time
 → Auto-merge compatible changes
-```
+```text
 
 ### Comments and Discussion
 
@@ -206,7 +206,7 @@ Alice opens notebook → Bob opens same notebook
 Click on cell → Comments icon → Add comment
 @mention team members for notifications
 Resolve comments when addressed
-```
+```text
 
 ### Notebook Sharing
 
@@ -224,15 +224,15 @@ Admins can control:
 - Workspace features (notebooks, clusters, jobs)
 - Data access via UC (Unity Catalog)
 - External connectivity
-```
+```text
 
 ### Multi-Factor Authentication (MFA)
 
-```
+```text
 Admin console → Security
 → Enforce MFA for all users
 → Support SCIM provisioning
-```
+```text
 
 ### Audit Logs
 
@@ -243,7 +243,7 @@ Captures:
 - Login/logout activities
 - Resource creation/deletion
 - Settings changes
-```
+```text
 
 ## Common Workspace Tasks
 

@@ -17,7 +17,7 @@ df = (spark.readStream.format("kafka")
     .option("kafka.bootstrap.servers", "host:port")
     .option("subscribe", "topic")
     .load())
-```
+```text
 
 ## Basic Streaming Write
 
@@ -36,7 +36,7 @@ df = (spark.readStream.format("kafka")
     .trigger(availableNow=True)
     .option("checkpointLocation", "/checkpoint/path")
     .toTable("target_table"))
-```
+```text
 
 ## Trigger Types
 
@@ -57,7 +57,7 @@ df = (spark.readStream.format("kafka")
 
 # Available now (preferred for batch-like streaming)
 .trigger(availableNow=True)
-```
+```text
 
 ## Output Modes
 
@@ -74,7 +74,7 @@ df = (spark.readStream.format("kafka")
 (df.withWatermark("event_time", "10 minutes")
     .groupBy(window("event_time", "5 minutes"))
     .count())
-```
+```text
 
 | Watermark | Meaning |
 |-----------|---------|
@@ -93,7 +93,7 @@ df.groupBy(window("timestamp", "10 minutes", "5 minutes"))
 
 # Session window
 df.groupBy(session_window("timestamp", "10 minutes"))
-```
+```text
 
 ## Auto Loader Options
 
@@ -112,7 +112,7 @@ df.groupBy(session_window("timestamp", "10 minutes"))
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .option("cloudFiles.inferColumnTypes", "true")
     .load("/data/path"))
-```
+```text
 
 ## Stream-Stream Joins
 
@@ -130,14 +130,14 @@ ordersWithWatermark.join(
     """),
     "inner"
 )
-```
+```text
 
 ## Checkpoint Management
 
 ```python
 # Checkpoint location (required for exactly-once)
 .option("checkpointLocation", "/mnt/checkpoint/stream_name")
-```
+```text
 
 **Important**: Never change checkpoint location for a running stream. To restart fresh, delete the checkpoint.
 
@@ -152,7 +152,7 @@ def process_batch(batch_df, batch_id):
     .foreachBatch(process_batch)
     .option("checkpointLocation", "/checkpoint")
     .start())
-```
+```text
 
 ## Monitoring
 
@@ -168,7 +168,7 @@ query.stop()
 
 # Await termination
 query.awaitTermination()
-```
+```text
 
 ## Key Concepts
 

@@ -25,7 +25,7 @@ flowchart TD
     DP --> Dedup[Data Deduplication]
     DP --> Adv[Streaming Joins & Stateful Ops]
     DP --> Mon[Streaming Monitoring & Optimization]
-```
+```text
 
 ## Section Contents
 

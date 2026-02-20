@@ -26,14 +26,14 @@ flowchart TB
     Failed["FAILED"]
     Timeout["TIMEOUT"]
     Skipped["SKIPPED"]
-    
+
     Scheduled --> Pending
     Pending --> Running
     Running --> Success
     Running --> Failed
     Running --> Timeout
     Scheduled -.->|If prev running| Skipped
-```
+```text
 
 ### Run Status Meanings
 
@@ -70,7 +70,7 @@ response = requests.get(
 
 run_details = response.json()
 print(run_details["state"])  # SUCCESS/FAILED/etc
-```
+```text
 
 ## Logs and Debugging
 
@@ -95,13 +95,13 @@ logger.error("Failed to connect to database")
 # print statements (also logged)
 print("INFO: Step 1 complete")
 print("ERROR: Step 2 failed")
-```
+```text
 
 ### SQL Query Logs
 
 ```sql
 -- View query execution history (in SQL queries)
-SELECT 
+SELECT
     query_id,
     query_text,
     execution_time_ms,
@@ -110,16 +110,18 @@ FROM system.query_history
 WHERE execution_date > CURRENT_DATE - 1
 ORDER BY execution_time_ms DESC
 LIMIT 10
-```
+```text
 
 ### Driver and Worker Logs
 
 #### Driver Logs
+
 - Contain job initialization, parameter setup
 - Available in job run details
 - Useful for understanding early failures
 
 #### Worker Logs
+
 - Task-specific logs from Spark workers
 - Less accessible than driver logs
 - Check for out-of-memory errors
@@ -144,7 +146,7 @@ LIMIT 10
 
 # Success
 # [INFO] Pipeline completed successfully
-```
+```text
 
 ### Debugging Failed Jobs
 
@@ -159,23 +161,23 @@ def debug_log(message):
 
 try:
     debug_log("Starting ETL")
-    
+
     # Read data
     df = spark.read.delta("/mnt/data/raw")
     debug_log(f"Read {df.count()} rows")
-    
+
     # Transform
     df_clean = df.filter(col("value") > 0)
     debug_log(f"After filter: {df_clean.count()} rows")
-    
+
     # Write
     df_clean.write.format("delta").mode("overwrite").save("/mnt/data/clean")
     debug_log("Write complete")
-    
+
 except Exception as e:
     debug_log(f"ERROR: {str(e)}")
     raise
-```
+```text
 
 ## Alerts and Notifications
 
@@ -188,7 +190,7 @@ except Exception as e:
     "on_failure": ["user@company.com", "ops@company.com"]
   }
 }
-```
+```text
 
 ### Slack Integration
 
@@ -216,7 +218,7 @@ Then configure job:
     ]
   }
 }
-```
+```text
 
 ### Custom Alerts via Notebooks
 
@@ -234,7 +236,7 @@ def send_slack_alert(message, webhook_url):
 try:
     # Job logic
     df = spark.read.delta("/mnt/data/input")
-    
+
     if df.count() == 0:
         send_slack_alert(
             "WARNING: Input data is empty!",
@@ -247,7 +249,7 @@ except Exception as e:
         os.environ.get("SLACK_WEBHOOK")
     )
     raise
-```
+```text
 
 ## Performance Metrics
 
@@ -273,11 +275,12 @@ print(f"Run Duration: {run_info['end_time'] - run_info['start_time']} ms")
 # Check task-specific metrics
 for task in run_info['tasks']:
     print(f"Task {task['task_key']}: {task['state']}")
-```
+```text
 
 ### Cluster Metrics
 
 During job execution, monitor:
+
 - **Driver CPU/Memory**: Main Spark driver
 - **Worker CPU/Memory**: Task execution nodes
 - **Shuffle Read/Write**: Data movement overhead
@@ -303,7 +306,7 @@ spark.createDataFrame([
     (duration, datetime.now())
 ], ["execution_seconds", "run_time"]
 ).write.mode("append").save("/mnt/metrics/job_duration")
-```
+```text
 
 ## Troubleshooting Common Issues
 
@@ -314,6 +317,7 @@ spark.createDataFrame([
 **Causes**: Long-running query, insufficient cluster size, inefficient code
 
 **Solutions**:
+
 - Increase `timeout_seconds` in job config
 - Optimize query with OPTIMIZE/Z-order
 - Increase cluster worker count
@@ -323,7 +327,7 @@ spark.createDataFrame([
 {
   "timeout_seconds": 7200  // Increase from 3600
 }
-```
+```text
 
 ### Issue 2: Out of Memory
 
@@ -332,6 +336,7 @@ spark.createDataFrame([
 **Causes**: Large DataFrame in memory, no shuffle partitions
 
 **Solutions**:
+
 - Increase cluster worker count
 - Add repartitioning
 - Use streaming for large files
@@ -341,7 +346,7 @@ spark.createDataFrame([
 # Repartition to use more workers
 df = spark.read.delta("/mnt/data/large") \
     .repartition(1000)  # Spread across workers
-```
+```text
 
 ### Issue 3: Max Concurrent Runs Skipped
 
@@ -350,6 +355,7 @@ df = spark.read.delta("/mnt/data/large") \
 **Cause**: Previous run still executing with `max_concurrent_runs: 1`
 
 **Solutions**:
+
 - Increase `timeout_seconds` to complete faster
 - Optimize job code for speed
 - Set `max_concurrent_runs: 2` if parallel safe
@@ -359,7 +365,7 @@ df = spark.read.delta("/mnt/data/large") \
   "max_concurrent_runs": 1,
   "timeout_seconds": 3600
 }
-```
+```text
 
 ### Issue 4: Cluster Launch Failure
 
@@ -368,6 +374,7 @@ df = spark.read.delta("/mnt/data/large") \
 **Causes**: Quota exceeded, instance type unavailable, subnet issues
 
 **Solutions**:
+
 - Check AWS/Azure/GCP quota
 - Use different node type
 - Check network/VPC configuration
@@ -378,6 +385,7 @@ df = spark.read.delta("/mnt/data/large") \
 **Error**: Job completes but data looks wrong
 
 **Solutions**:
+
 - Add data quality checks
 - Log row counts at each stage
 - Validate schema changes
@@ -395,7 +403,7 @@ if row_count_after > row_count_before * 2:
     raise ValueError("Output has suspiciously high row count!")
 
 print(f"Validation passed: {row_count_after} rows processed")
-```
+```text
 
 ## Monitoring Dashboard Pattern
 
@@ -427,7 +435,7 @@ job_metrics.write \
 
 # Analyze trends
 spark.sql("""
-SELECT 
+SELECT
     DATE(run_date) as date,
     COUNT(*) as total_runs,
     COUNTIF(status = 'SUCCESS') as successful,
@@ -438,7 +446,7 @@ WHERE job_id = 123
 GROUP BY DATE(run_date)
 ORDER BY date DESC
 """).show()
-```
+```text
 
 ## Audit and Compliance
 
@@ -449,12 +457,12 @@ ORDER BY date DESC
 from pyspark.sql.functions import lit, current_timestamp, current_user
 
 spark.sql("""
-SELECT 
+SELECT
     current_user() as user,
     current_timestamp() as execution_time,
     'daily_pipeline' as job_name
 """).write.mode("append").save("/mnt/audit/executions")
-```
+```text
 
 ### Job Run API for Integration
 
@@ -470,7 +478,7 @@ runs = response.json()["runs"]
 
 for run in runs:
     print(f"Run {run['run_id']}: {run['state']} - {run['start_time']}")
-```
+```text
 
 ## Key Exam Concepts
 

@@ -58,7 +58,7 @@ flowchart TB
     Code --> Tracking
     Tracking --> Registry
     Registry --> Serving
-```
+```text
 
 ## Experiment Tracking
 
@@ -93,7 +93,7 @@ with mlflow.start_run(run_name="rf-baseline"):
         artifact_path="model",
         registered_model_name="fraud-detector"
     )
-```
+```text
 
 ### Autologging
 
@@ -107,7 +107,7 @@ with mlflow.start_run():
     model = RandomForestClassifier(n_estimators=100)
     model.fit(X_train, y_train)
     # Parameters, metrics, and model are logged automatically
-```
+```text
 
 Supported frameworks: scikit-learn, XGBoost, LightGBM, PyTorch, TensorFlow, Keras, Spark ML, Hugging Face.
 
@@ -124,7 +124,7 @@ with mlflow.start_run():
     # Log a dataset reference
     dataset = mlflow.data.from_spark(training_df, table="training_data_v2")
     mlflow.log_input(dataset, context="training")
-```
+```text
 
 ## Model Registry
 
@@ -146,7 +146,7 @@ result = mlflow.register_model(
     name="fraud-detector"
 )
 print(f"Model version: {result.version}")
-```
+```text
 
 ### Model Aliases (MLflow 2.x — recommended)
 
@@ -166,7 +166,7 @@ client.set_registered_model_alias(
 
 # Load by alias
 model = mlflow.pyfunc.load_model("models:/fraud-detector@champion")
-```
+```text
 
 ### Legacy Lifecycle Stages (older APIs)
 
@@ -184,7 +184,7 @@ client.transition_model_version_stage(
     version=3,
     stage="Production"
 )
-```
+```text
 
 ## Loading Models for Inference
 
@@ -199,7 +199,7 @@ model = mlflow.sklearn.load_model("models:/fraud-detector/3")
 # Batch inference with Spark
 predict_udf = mlflow.pyfunc.spark_udf(spark, "models:/fraud-detector@champion")
 predictions = df.withColumn("prediction", predict_udf(*feature_cols))
-```
+```text
 
 ## Comparing Runs
 
@@ -216,7 +216,7 @@ runs = mlflow.search_runs(
 best_run = runs.iloc[0]
 print(f"Best run ID: {best_run.run_id}")
 print(f"Best F1: {best_run['metrics.f1_score']}")
-```
+```text
 
 ## MLflow on Databricks
 
@@ -241,7 +241,7 @@ mlflow.sklearn.log_model(
     artifact_path="model",
     registered_model_name="prod_catalog.ml_models.fraud-detector"
 )
-```
+```text
 
 ## Use Cases
 

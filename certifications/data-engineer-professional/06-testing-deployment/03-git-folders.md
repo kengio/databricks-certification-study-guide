@@ -33,7 +33,7 @@ flowchart TB
     GitProvider <-->|Clone/Pull/Push| GitFolder
     GitFolder --> Notebooks
     GitFolder --> Files
-```
+```text
 
 ## Git Folders vs Legacy Repos
 
@@ -57,7 +57,7 @@ UI Steps:
 4. Select Git provider
 5. Choose branch
 6. Click Create
-```
+```text
 
 ### Git Provider Configuration
 
@@ -68,7 +68,7 @@ Supported Providers:
 - Azure DevOps (dev.azure.com)
 - Bitbucket (bitbucket.org, Bitbucket Server)
 - AWS CodeCommit
-```
+```text
 
 ### Personal Access Token Setup
 
@@ -87,7 +87,7 @@ For Azure DevOps:
    - Code (Read & Write)
 3. In Databricks: User Settings → Git Integration
 4. Select Azure DevOps Services, enter token
-```
+```text
 
 ## Working with Git Folders
 
@@ -113,7 +113,7 @@ Create Branch:
 Switch Branch:
 - Right-click folder → Git → Switch Branch
 - Select from available branches
-```
+```text
 
 ### Resolving Conflicts
 
@@ -127,7 +127,7 @@ flowchart TD
     Options --> Manual[Manual Merge]
     Manual --> Edit[Edit Files]
     Edit --> Commit[Commit Resolution]
-```
+```text
 
 ```text
 Conflict Resolution:
@@ -138,7 +138,7 @@ Conflict Resolution:
    - Manual merge (edit conflicting files)
 3. Commit resolution
 4. Push changes
-```
+```text
 
 ## File Organization
 
@@ -185,7 +185,7 @@ my-data-project/
 └── resources/
     ├── jobs.yml
     └── pipelines.yml
-```
+```text
 
 ### Notebook Source Format
 
@@ -225,7 +225,7 @@ df = spark.read.format("json").load(source_path)
 # COMMAND ----------
 
 df.write.format("delta").mode("append").saveAsTable(target_table)
-```
+```text
 
 ## Branching Strategies
 
@@ -247,7 +247,7 @@ gitGraph
     merge release/1.0 tag: "v1.0"
     checkout develop
     merge release/1.0
-```
+```text
 
 ### Environment Branches
 
@@ -261,7 +261,7 @@ Branch Strategy:
 │   └── Integration branch
 └── feature/*
     └── Individual feature branches
-```
+```text
 
 ### PR Workflow
 
@@ -280,7 +280,7 @@ sequenceDiagram
     Develop->>Develop: Merge PR
     Develop->>Main: Open release PR
     Main->>Main: Deploy to production
-```
+```text
 
 ## Integration with Workflows
 
@@ -297,7 +297,7 @@ sequenceDiagram
         }
     }
 }
-```
+```text
 
 ### %run with Git Folders
 
@@ -314,7 +314,7 @@ sequenceDiagram
 
 # Or absolute workspace path
 %run /Workspace/Users/user@company.com/my-project/src/notebooks/utils/common_functions
-```
+```text
 
 ### Importing Python Modules
 
@@ -337,7 +337,7 @@ from transformations import clean_data
 df = spark.table("bronze.events")
 df_cleaned = clean_data(df)
 data_validation.check_nulls(df_cleaned)
-```
+```text
 
 ## Automating Git Operations
 
@@ -349,7 +349,7 @@ flowchart LR
     Webhook --> API[Databricks API]
     API --> Update[Update Git Folder]
     Update --> Job[Trigger Job]
-```
+```text
 
 ### REST API for Git Folders
 
@@ -375,7 +375,7 @@ response = requests.post(
     headers={"Authorization": f"Bearer {token}"},
     json={"name": "feature/new-feature"}
 )
-```
+```text
 
 ### CLI Operations
 
@@ -394,7 +394,7 @@ databricks repos create \
     --url https://github.com/company/project.git \
     --provider github \
     --path /Workspace/Users/user@company.com/my-project
-```
+```text
 
 ## Security and Permissions
 
@@ -410,7 +410,7 @@ Permission Levels:
 Inheritance:
 - Follows workspace folder permissions
 - Can be overridden at folder level
-```
+```text
 
 ### Credential Management
 
@@ -424,7 +424,7 @@ Git Credentials Storage:
    - Admin Console → Git Integration
    - Shared service account credentials
    - Used when personal credentials not set
-```
+```text
 
 ### Branch Protection
 
@@ -436,7 +436,7 @@ Enforce in Git Provider:
 4. Restrict who can push to protected branches
 
 Databricks follows Git provider rules
-```
+```text
 
 ## Comparison: Git Folders vs Asset Bundles
 
@@ -462,7 +462,7 @@ Asset Bundles:
 - Environment promotion
 - Resource configuration as code
 - CI/CD pipelines
-```
+```text
 
 ### Combined Workflow
 
@@ -492,7 +492,7 @@ flowchart TB
     Test --> Bundle
     Bundle --> Deploy
     Deploy --> Prod
-```
+```text
 
 ## Troubleshooting
 
@@ -509,7 +509,7 @@ flowchart TB
 2. Check token permissions (repo scope for GitHub)
 3. Ensure token hasn't expired
 4. For SSO: Re-authenticate with Git provider
-```
+```text
 
 #### 2. Merge Conflicts
 
@@ -523,7 +523,7 @@ flowchart TB
 3. Pull again
 4. Reapply changes manually
 5. Commit and push
-```
+```text
 
 #### 3. Notebook Format Issues
 
@@ -541,7 +541,7 @@ flowchart TB
 
 # For Scala:
 // Databricks notebook source
-```
+```text
 
 #### 4. Missing Files After Pull
 
@@ -554,7 +554,7 @@ flowchart TB
 2. Check .gitignore: File might be ignored
 3. Refresh workspace: Close and reopen folder
 4. Check permissions: Ensure read access to files
-```
+```text
 
 #### 5. Large Repository Performance
 
@@ -567,7 +567,7 @@ flowchart TB
 2. Split into smaller repositories
 3. Use shallow clone (limited history)
 4. Archive old notebooks to separate repo
-```
+```text
 
 ## Best Practices
 
@@ -580,7 +580,7 @@ flowchart TB
 4. Pull frequently to stay updated
 5. Use PR reviews for quality control
 6. Delete merged branches
-```
+```text
 
 ### Repository Organization
 
@@ -591,7 +591,7 @@ flowchart TB
 4. Use .gitignore for generated files
 5. Keep notebooks focused and modular
 6. Separate code from configuration
-```
+```text
 
 ### Collaboration
 
@@ -601,7 +601,7 @@ flowchart TB
 3. Use consistent naming conventions
 4. Communicate before major changes
 5. Keep main branch always deployable
-```
+```text
 
 ## Exam Tips
 

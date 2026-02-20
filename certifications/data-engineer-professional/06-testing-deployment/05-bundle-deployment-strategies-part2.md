@@ -30,7 +30,7 @@ flowchart TD
     BundleRollback --> Verify[Verify Rollback]
     DataRollback --> Verify
     ConfigRollback --> Verify
-```
+```text
 
 ```bash
 #!/bin/bash
@@ -53,7 +53,7 @@ databricks bundle deploy -t "${ENVIRONMENT}"
 databricks bundle run smoke_test_job -t "${ENVIRONMENT}"
 
 echo "Rollback to ${PREVIOUS_COMMIT} completed successfully"
-```
+```text
 
 ```sql
 -- Data rollback using Delta Time Travel
@@ -68,7 +68,7 @@ RESTORE TABLE prod_catalog.gold.daily_metrics TO VERSION AS OF 42;
 -- Or restore to a timestamp
 RESTORE TABLE prod_catalog.gold.daily_metrics
 TO TIMESTAMP AS OF '2025-12-01T00:00:00Z';
-```
+```text
 
 ### Feature Flags in Data Pipelines
 
@@ -103,7 +103,7 @@ if flags.is_enabled("use_new_transform_v2", environment="prod"):
     df = apply_transform_v2(df)
 else:
     df = apply_transform_v1(df)
-```
+```text
 
 ```sql
 -- Feature flags table schema
@@ -124,7 +124,7 @@ INSERT INTO config.feature_flags VALUES
   ('use_new_transform_v2', 'staging', true, 'New transform logic', 'user@co.com', current_timestamp()),
   ('use_new_transform_v2', 'prod', false, 'New transform logic', 'user@co.com', current_timestamp()),
   ('enable_streaming_ingest', 'prod', true, 'Switch to streaming', 'user@co.com', current_timestamp());
-```
+```text
 
 ### Schema Migration Patterns with Unity Catalog
 
@@ -188,7 +188,7 @@ class SchemaMigrator:
                     sql = f.read()
                 migrations.append((version, description, sql))
         return migrations
-```
+```text
 
 ```text
 migrations/
@@ -196,12 +196,12 @@ migrations/
 ├── 002_add_user_agent_column.sql
 ├── 003_create_silver_sessions.sql
 └── 004_add_gold_daily_metrics.sql
-```
+```text
 
 ```sql
 -- migrations/002_add_user_agent_column.sql
 ALTER TABLE bronze.events ADD COLUMN user_agent STRING;
-```
+```text
 
 ## OIDC Federation Deep Dive
 
@@ -223,7 +223,7 @@ sequenceDiagram
     SP->>DB: Grant access
     DB->>GH: Access Token
     GH->>DB: Deploy bundle
-```
+```text
 
 ```yaml
 # .github/workflows/oidc-deploy.yml
@@ -253,7 +253,7 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_SP_CLIENT_ID }}
           # Token exchange happens via OIDC - no client secret needed
-```
+```text
 
 ```bash
 # Configure Databricks service principal for OIDC
@@ -273,7 +273,7 @@ az ad app federated-credential create \
         "subject": "repo:my-org/my-repo:ref:refs/heads/main",
         "audiences": ["api://AzureADTokenExchange"]
     }'
-```
+```text
 
 ### Security Best Practices for CI/CD Credentials
 
@@ -301,7 +301,7 @@ az ad app federated-credential create \
 # - Require status checks to pass
 # - Require CODEOWNERS review
 # - No force pushes
-```
+```text
 
 ## Exam Tips
 

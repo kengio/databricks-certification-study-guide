@@ -45,7 +45,7 @@ def process_cdc_idempotent(changes_df, target_table):
     ).whenNotMatchedInsertAll(
         condition="s._change_type IN ('insert', 'update_postimage')"
     ).execute()
-```
+```text
 
 ### Handling Out-of-Order Events
 
@@ -57,14 +57,14 @@ ordered_changes = (changes_df
     .withColumn("rn", row_number().over(window))
     .filter(col("rn") == 1)
     .drop("rn"))
-```
+```text
 
 ### Deduplication Before Apply
 
 ```python
 # Remove duplicates before applying CDC
 deduped = changes_df.dropDuplicates(["id", "_commit_version"])
-```
+```text
 
 ## CDC Pipeline Patterns
 
@@ -85,7 +85,7 @@ flowchart LR
         S1 -->|Read CDF| CDC2[CDC Stream]
         CDC2 -->|Aggregate| G1[orders_daily_summary]
     end
-```
+```text
 
 ```python
 # Bronze table - CDF enabled
@@ -112,7 +112,7 @@ query = (bronze_cdf.writeStream
     .foreachBatch(apply_to_silver)
     .option("checkpointLocation", "/checkpoint/bronze_to_silver")
     .start())
-```
+```text
 
 ## Row Tracking
 
@@ -131,7 +131,7 @@ TBLPROPERTIES ('delta.enableRowTracking' = 'true');
 -- Enable on existing table (backfills existing rows)
 ALTER TABLE table_name
 SET TBLPROPERTIES ('delta.enableRowTracking' = 'true');
-```
+```text
 
 ### Row Tracking Columns
 
@@ -146,7 +146,7 @@ Row tracking adds hidden system columns:
 # Access row tracking columns
 df = spark.table("table_name")
 df.select("*", "_metadata.row_id", "_metadata.row_commit_version").show()
-```
+```text
 
 ### Row Tracking Use Cases
 
@@ -161,7 +161,7 @@ df.filter(col("_metadata.row_commit_version") == 5).show()
 
 # Detect potential duplicates
 df.groupBy("_metadata.row_id").count().filter(col("count") > 1).show()
-```
+```text
 
 ## Multi-Hop CDC Propagation
 
@@ -187,7 +187,7 @@ flowchart LR
         SV -->|CDF Stream| G1[daily_summary]
         SV -->|CDF Stream| G2[customer_metrics]
     end
-```
+```text
 
 ### Implementation
 
@@ -243,7 +243,7 @@ gold_query = (silver_changes
     .outputMode("complete")
     .option("checkpointLocation", "/checkpoint/silver_to_gold")
     .toTable("gold.daily_summary"))
-```
+```text
 
 ### CDC Amplification
 
@@ -304,7 +304,7 @@ def debezium_to_delta(df):
         col("_change_type"),
         col("ts_ms").alias("_source_ts")
     )
-```
+```text
 
 ### Custom CDC Format Parsing
 
@@ -327,7 +327,7 @@ def parse_custom_cdc(df, op_column="operation"):
              create_map([lit(k), lit(v) for k, v in op_mapping.items()])[upper(col(op_column))])
         .otherwise("unknown")
     )
-```
+```text
 
 ## Monitoring CDC
 
@@ -345,7 +345,7 @@ lag_df = spark.sql("""
         current_timestamp() - last_processed_timestamp as time_lag
     FROM cdc_monitoring.processing_status
 """)
-```
+```text
 
 ### CDC Metrics
 
@@ -361,7 +361,7 @@ CREATE TABLE cdc_monitoring.metrics (
     processing_time_ms LONG,
     timestamp TIMESTAMP
 ) USING DELTA;
-```
+```text
 
 ## Use Cases
 

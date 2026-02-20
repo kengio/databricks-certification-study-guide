@@ -57,7 +57,7 @@ delta_stream = (
     .option("maxBytesPerTrigger", "5g")
     .load("/data/source_table")
 )
-```
+```text
 
 ### Rate Limiting Parameters by Source
 
@@ -97,7 +97,7 @@ def check_backpressure(query):
 
     if trigger_ms > 0 and batch_duration > trigger_ms:
         print("WARNING: Batch duration exceeds trigger interval!")
-```
+```text
 
 ### Back-Pressure Indicators
 
@@ -144,7 +144,7 @@ class BackpressureListener(StreamingQueryListener):
 
 # Register the listener
 spark.streams.addListener(BackpressureListener())
-```
+```text
 
 ## Streaming Monitoring and Troubleshooting
 
@@ -184,7 +184,7 @@ if progress_list:
             f"proc={process_rate:.0f}/s"
             f"{state_info}"
         )
-```
+```text
 
 ### Key Progress Metrics Reference
 
@@ -223,7 +223,7 @@ flowchart TD
 
     Source --> SR1["Kafka broker down<br>Fix: Retry with failOnDataLoss=false"]
     Source --> SR2["File source empty<br>Fix: Check path, permissions"]
-```
+```text
 
 ### Checkpoint Corruption Recovery
 
@@ -258,7 +258,7 @@ query = (
     .option("checkpointLocation", "/checkpoints/my_query_v2/")
     .start("/output/table")
 )
-```
+```text
 
 ### Checkpoint Compatibility Rules
 
@@ -315,7 +315,7 @@ def streaming_health_check():
             print(f"ERROR [{name}]: {exc}")
 
 streaming_health_check()
-```
+```text
 
 ## State Store Deep Dive
 
@@ -339,7 +339,7 @@ flowchart TD
 
     Decision{State Size?} -->|< 100 MB| HDFS
     Decision -->|> 100 MB| RocksDB
-```
+```text
 
 ### RocksDB Configuration
 
@@ -362,7 +362,7 @@ spark.conf.set(
 # Changelog checkpointing: reduces checkpoint time by writing
 # only changes (deltas) instead of full snapshots
 # Recommended for large state stores
-```
+```text
 
 ### State Store Selection Guide
 

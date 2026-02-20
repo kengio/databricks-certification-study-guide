@@ -30,7 +30,7 @@ sync:
     - "*.pyc"
     - ".git/**"
     - "tests/**"
-```
+```text
 
 ### State Files
 
@@ -46,7 +46,7 @@ Bundle state is stored locally:
 
 # Add to .gitignore:
 .databricks/
-```
+```text
 
 ## Integration with CI/CD
 
@@ -113,7 +113,7 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.PROD_DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.PROD_DATABRICKS_TOKEN }}
-```
+```text
 
 ### Azure DevOps Pipeline
 
@@ -160,7 +160,7 @@ stages:
                   env:
                     DATABRICKS_HOST: $(PROD_HOST)
                     DATABRICKS_TOKEN: $(PROD_TOKEN)
-```
+```text
 
 ## Bundle Templates
 
@@ -178,7 +178,7 @@ databricks bundle init default-python
 
 # Initialize from custom template URL
 databricks bundle init https://github.com/company/bundle-template
-```
+```text
 
 ### Custom Template Structure
 
@@ -192,7 +192,7 @@ my-template/
 │   └── src/
 │       └── notebooks/
 │           └── main.py.tmpl
-```
+```text
 
 ### Template Schema
 
@@ -211,7 +211,7 @@ my-template/
     }
   }
 }
-```
+```text
 
 ## Common Patterns
 
@@ -243,7 +243,7 @@ targets:
       host: https://prod.cloud.databricks.com
     run_as:
       service_principal_name: prod-sp
-```
+```text
 
 ### Shared Resources Across Teams
 
@@ -253,7 +253,7 @@ include:
   - ./shared/common-clusters.yml
   - ./shared/notification-settings.yml
   - ./team-specific/*.yml
-```
+```text
 
 ### Parameterized Notebooks
 
@@ -267,7 +267,7 @@ environment = dbutils.widgets.get("environment")
 
 # Use in queries
 spark.sql(f"USE CATALOG {catalog}")
-```
+```text
 
 ## Common Issues & Errors
 
@@ -286,7 +286,7 @@ databricks bundle validate --var db_password=secret
 
 # Or set environment variable
 export BUNDLE_VAR_db_password=secret
-```
+```text
 
 ### 2. Permission Denied on Deploy
 
@@ -302,7 +302,7 @@ targets:
     permissions:
       - level: CAN_MANAGE
         group_name: data-engineers
-```
+```text
 
 ### 3. Resource Already Exists
 
@@ -317,7 +317,7 @@ databricks bundle deploy -t dev
 
 # Or modify to allow updates
 # Check for naming conflicts in development mode
-```
+```text
 
 ### 4. State File Conflicts
 
@@ -331,7 +331,7 @@ rm -rf .databricks/bundle/dev/
 
 # Redeploy
 databricks bundle deploy -t dev
-```
+```text
 
 ### 5. Artifact Build Failure
 
@@ -350,7 +350,7 @@ artifacts:
     type: whl
     path: ./src/python
     build: poetry build  # Ensure command is correct
-```
+```text
 
 ## Exam Tips
 

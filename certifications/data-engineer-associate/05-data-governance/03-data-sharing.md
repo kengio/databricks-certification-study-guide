@@ -22,25 +22,26 @@ flowchart LR
         ShareData["Shared Tables"]
         Share["Delta Share"]
     end
-    
+
     subgraph Network["Secure Channel<br/>Delta Sharing Protocol"]
         API["REST API<br/>HTTPS"]
     end
-    
+
     subgraph Consumer["Consumer Workspace"]
         SharedCatalog["Shared Catalog"]
         Query["Query Data<br/>Read-Only"]
     end
-    
+
     ProdCatalog --> Share
     Share --> API
     API --> SharedCatalog
     SharedCatalog --> Query
-```
+```text
 
 ## Delta Sharing Protocol
 
 Delta Sharing is an **open protocol** that:
+
 - Doesn't require data copying
 - Provides read-only access
 - Uses REST APIs
@@ -69,12 +70,12 @@ COMMENT "Q1-Q4 2025 sales data for marketing team";
 
 -- Check share exists
 SHOW SHARES;
-```
+```text
 
 ```python
 # Via Python
 spark.sql("CREATE SHARE sales_data_2025")
-```
+```text
 
 ### Step 2: Add Tables to Share
 
@@ -86,7 +87,7 @@ ADD TABLE prod.analytics.revenue TO SHARE sales_data_2025;
 
 -- Verify
 SHOW ALL IN SHARE sales_data_2025;
-```
+```text
 
 ### Step 3: Create Recipients
 
@@ -102,7 +103,7 @@ CREATE RECIPIENT partner_company
 COMMENT "External partner access"
 USING EMAIL
 VALUE partner.contact@externalcompany.com;
-```
+```text
 
 ### Step 4: Grant Share Access to Recipient
 
@@ -112,7 +113,7 @@ GRANT ALL PRIVILEGES ON SHARE sales_data_2025 TO etl_team;
 
 -- Or specific privileges (limited, usually ALL)
 GRANT SELECT ON SHARE sales_data_2025 TO etl_team;
-```
+```text
 
 ## Accepting Shares (Consumer)
 
@@ -133,7 +134,7 @@ USING SHARE sales_data_2025;
 
 -- Verify
 SHOW CATALOGS;
-```
+```text
 
 ### Query Shared Data
 
@@ -142,14 +143,14 @@ SHOW CATALOGS;
 SELECT * FROM shared_data.analytics.orders LIMIT 10;
 
 -- Join shared data with local data
-SELECT 
+SELECT
     o.order_id,
     o.amount,
     l.inventory
 FROM shared_data.analytics.orders o
 LEFT JOIN local.warehouse.inventory l
     ON o.product_id = l.product_id;
-```
+```text
 
 ## Access Control Within Shares
 
@@ -163,7 +164,7 @@ ADD TABLE prod.analytics.public_orders TO SHARE public_data;
 
 -- Don't add sensitive tables
 -- DO NOT ADD prod.analytics.sensitive_employee_info
-```
+```text
 
 ### Row-Level Filtering
 
@@ -172,7 +173,7 @@ Currently not supported in Delta Sharing, but can use views:
 ```sql
 -- Provider: Create filtered view
 CREATE VIEW prod.analytics.v_orders_by_region AS
-SELECT 
+SELECT
     order_id,
     region,
     amount
@@ -183,14 +184,14 @@ WHERE region != 'North America';  -- Hide N.A. data
 ADD VIEW prod.analytics.v_orders_by_region TO SHARE partner_data;
 
 -- Consumer sees only filtered rows
-```
+```text
 
 ### Column Filtering (with View)
 
 ```sql
 -- Provider: Create view with specific columns
 CREATE VIEW prod.analytics.v_orders_public AS
-SELECT 
+SELECT
     order_id,
     customer_id,
     amount,
@@ -202,7 +203,7 @@ FROM prod.analytics.orders;
 
 -- Add to share
 ADD VIEW prod.analytics.v_orders_public TO SHARE public_data;
-```
+```text
 
 ## Managing Shares
 
@@ -214,7 +215,7 @@ SHOW SHARES;
 
 -- Consumer: List shares they subscribed to
 SHOW SUBSCRIPTIONS;
-```
+```text
 
 ### Show Share Details
 
@@ -224,7 +225,7 @@ SHOW ALL IN SHARE sales_data_2025;
 
 -- Consumer: See shared objects available
 SHOW ALL IN SHARE sales_data_2025;
-```
+```text
 
 ### Update Share Contents
 
@@ -236,7 +237,7 @@ ALTER SHARE sales_data_2025 ADD TABLE prod.analytics.new_metrics;
 ALTER SHARE sales_data_2025 REMOVE TABLE prod.analytics.old_data;
 
 -- Changes immediately visible to consumers
-```
+```text
 
 ### Revoke Share Access
 
@@ -245,7 +246,7 @@ ALTER SHARE sales_data_2025 REMOVE TABLE prod.analytics.old_data;
 REVOKE ALL PRIVILEGES ON SHARE sales_data_2025 FROM partner_company;
 
 -- Consumer immediately loses access
-```
+```text
 
 ## Recipient Management
 
@@ -258,7 +259,7 @@ COMMENT "Internal BI warehouse";
 
 -- Enable share
 GRANT ALL PRIVILEGES ON SHARE sales_data TO internal_warehouse;
-```
+```text
 
 ### Create External Recipient (Email)
 
@@ -271,7 +272,7 @@ VALUE partner.data.team@acmecorp.com;
 
 -- Acme Corp accepts share via email link
 -- Can then query the shared data
-```
+```text
 
 ### Manage Recipients
 
@@ -284,13 +285,13 @@ DESCRIBE RECIPIENT partner_organization;
 
 -- Revoke recipient (they lose access to shares)
 DROP RECIPIENT partner_organization;
-```
+```text
 
 ## Common Sharing Patterns
 
 ### Pattern 1: Scheduled Data Export (Replacement for CSV Export)
 
-**Before**: Daily CSV export to SFTP  
+**Before**: Daily CSV export to SFTP
 **After**: Delta Share with live tables
 
 ```sql
@@ -307,7 +308,7 @@ GRANT ALL PRIVILEGES ON SHARE daily_export TO etl_partner;
 
 -- Consumer: Reference live data (no nightly copy)
 SELECT * FROM shared.analytics.sales;
-```
+```text
 
 ### Pattern 2: Cross-Regional Access
 
@@ -323,7 +324,7 @@ GRANT ALL PRIVILEGES ON SHARE eu_market_data TO eu_office;
 
 -- EU office (separate workspace) queries shared data
 -- No data copy across regions
-```
+```text
 
 ### Pattern 3: Partner Data Integration
 
@@ -336,7 +337,7 @@ ADD TABLE prod.analytics.price_list TO SHARE partner_feeds;
 ADD TABLE prod.analytics.service_offerings TO SHARE partner_feeds;
 
 -- Partner integrates shared data into their pipelines
-```
+```text
 
 ## Security Considerations
 
@@ -358,7 +359,7 @@ SELECT year, month, revenue  -- No customer/employee info
 FROM prod.analytics.metrics;
 
 ADD VIEW prod.analytics.v_public_metrics TO SHARE public_data;
-```
+```text
 
 ### Consumer Side
 
@@ -372,7 +373,7 @@ ADD VIEW prod.analytics.v_public_metrics TO SHARE public_data;
 
 -- Track shared data usage
 -- Audit which shared tables you query
-```
+```text
 
 ## Delta Sharing Limitations
 
@@ -390,7 +391,7 @@ ADD VIEW prod.analytics.v_public_metrics TO SHARE public_data;
 
 ```sql
 -- Provider: See who accessed shared data
-SELECT 
+SELECT
     recipient_email,
     object_name,
     access_time,
@@ -398,7 +399,7 @@ SELECT
 FROM system.access.audit
 WHERE share_name = 'sales_data_2025'
 ORDER BY access_time DESC;
-```
+```text
 
 ### Data Lineage
 
@@ -406,14 +407,14 @@ Delta Sharing integrates with Unity Catalog lineage:
 
 ```sql
 -- See which tables are shared
-SELECT 
+SELECT
     table_name,
     created_date,
     shared_date
 FROM system.lineage.table_sharing
 WHERE catalog = 'prod'
 ORDER BY shared_date DESC;
-```
+```text
 
 ## Comparison: Data Sharing Methods
 
@@ -439,7 +440,7 @@ FROM prod.raw.events
 WHERE year = YEAR(current_date());
 
 ADD VIEW prod.analytics.v_partner_events TO SHARE partner_data;
-```
+```text
 
 ### 2. Version Shares for Change Control
 
@@ -450,7 +451,7 @@ ADD TABLE ... TO SHARE partner_data_v2;
 
 -- Keep old share running during transition
 -- Then deprecate partner_data_v1
-```
+```text
 
 ### 3. Document Shared Tables
 
@@ -462,13 +463,13 @@ ALTER TABLE prod.analytics.orders SET TBLPROPERTIES (
     'update_frequency' = 'daily',
     'contact' = 'data-team@company.com'
 );
-```
+```text
 
 ### 4. Monitor Share Usage
 
 ```sql
 -- Track which consumers use which shares
-SELECT 
+SELECT
     recipient_name,
     share_name,
     object_accessed,
@@ -477,7 +478,7 @@ FROM system.access.audit
 WHERE action = 'SELECT'
 GROUP BY recipient_name, share_name, object_accessed
 ORDER BY query_count DESC;
-```
+```text
 
 ## Key Exam Concepts
 

@@ -34,7 +34,7 @@ flowchart TB
     style E2E fill:#ff6b6b
     style Integration fill:#feca57
     style Unit fill:#48dbfb
-```
+```text
 
 | Test Level | Runs Where | Spark Required | Typical Duration | CI Stage |
 | :--- | :--- | :--- | :--- | :--- |
@@ -121,7 +121,7 @@ class TestCleaningProperties:
         unique_ids = result.select("id").distinct().count()
 
         assert unique_ids == result.count()
-```
+```text
 
 ### Data Quality Testing with Great Expectations
 
@@ -180,7 +180,7 @@ def test_bronze_events_quality():
     results = batch.validate(suite, dataframe=df)
 
     assert results.success, f"Data quality check failed: {results}"
-```
+```text
 
 ### Testing DLT Pipelines
 
@@ -217,7 +217,7 @@ def enrich_events(events_df: DataFrame, users_df: DataFrame) -> DataFrame:
             users_df["user_segment"]
         )
     )
-```
+```text
 
 ```python
 # src/pipelines/dlt_notebook.py (Databricks DLT notebook)
@@ -244,7 +244,7 @@ def gold_enriched_events():
     events = dlt.read("silver_events")
     users = dlt.read("dim_users")
     return enrich_events(events, users)
-```
+```text
 
 ```python
 # tests/unit/test_dlt_transforms.py
@@ -303,7 +303,7 @@ class TestDLTTransforms:
         assert "user_segment" in result.columns
         alice = result.filter("event_id = 1").collect()[0]
         assert alice.user_name == "Alice"
-```
+```text
 
 ### Testing Streaming Pipelines
 
@@ -394,7 +394,7 @@ class TestStreamingAggregation:
         # user1 should have events in 2 windows (00:00 and 01:00)
         u1_windows = result.filter("user_id = 'u1'").count()
         assert u1_windows == 2
-```
+```text
 
 ### Mocking Databricks-Specific APIs
 
@@ -461,7 +461,7 @@ def mock_spark_catalog():
         MagicMock(name="sessions", database="silver", tableType="MANAGED"),
     ]
     return catalog
-```
+```text
 
 ### Code Coverage for PySpark
 
@@ -477,7 +477,7 @@ addopts =
     --cov-report=xml:coverage.xml
     --cov-report=html:htmlcov
     --cov-fail-under=80
-```
+```text
 
 ```yaml
 # .github/workflows/coverage.yml
@@ -507,7 +507,7 @@ jobs:
         with:
           files: coverage.xml
           fail_ci_if_error: true
-```
+```text
 
 ```text
 # .coveragerc - Fine-tune what to measure
@@ -526,7 +526,7 @@ exclude_lines =
     raise NotImplementedError
 show_missing = True
 fail_under = 80
-```
+```text
 
 ## Integration Testing Patterns
 
@@ -561,7 +561,7 @@ def test_schema(db_spark):
     db_spark.sql(f"CREATE SCHEMA IF NOT EXISTS {full_name}")
     yield full_name
     db_spark.sql(f"DROP SCHEMA IF EXISTS {full_name} CASCADE")
-```
+```text
 
 ```python
 # tests/integration/test_pipeline_integration.py
@@ -600,7 +600,7 @@ class TestBronzeToSilverPipeline:
         result = db_spark.table(f"{test_schema}.silver_events")
         # Null IDs should be filtered out
         assert result.filter("id IS NULL").count() == 0
-```
+```text
 
 ### Test Isolation Strategies
 
@@ -618,7 +618,7 @@ flowchart TB
 
     Prefix --> PrefixCreate["test_run_42_bronze_events"]
     Cleanup --> After["after_each: DROP TABLE IF EXISTS"]
-```
+```text
 
 ```python
 # tests/integration/test_isolation.py
@@ -650,7 +650,7 @@ def isolated_table(db_spark, isolated_schema):
     table_name = f"{isolated_schema}.table_{table_id}"
     yield table_name
     db_spark.sql(f"DROP TABLE IF EXISTS {table_name}")
-```
+```text
 
 ### Cost Management for Test Clusters
 
@@ -689,7 +689,7 @@ targets:
                   ResourceClass: SingleNode
                   purpose: testing
                 autotermination_minutes: 10
-```
+```text
 
 ---
 

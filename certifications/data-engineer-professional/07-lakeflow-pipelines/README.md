@@ -10,7 +10,7 @@ flowchart LR
     LF --> DQ[Data Quality/Expectations]
     LF --> AC[APPLY CHANGES API]
     LF --> Jobs[Lakeflow Jobs]
-```
+```text
 
 ## Section Contents
 
@@ -55,7 +55,7 @@ flowchart TD
     SV1 --> G1
     SV2 --> G2
     SV1 --> G2
-```
+```text
 
 ## Table Types
 
@@ -88,7 +88,7 @@ CONSTRAINT valid_email
 CONSTRAINT valid_id
   EXPECT (id IS NOT NULL)
   ON VIOLATION FAIL UPDATE
-```
+```text
 
 ## APPLY CHANGES (CDC)
 
@@ -102,7 +102,7 @@ sequenceDiagram
     DLT->>DLT: Order by sequence
     DLT->>DLT: Apply SCD logic
     DLT->>Target: Upsert changes
-```
+```text
 
 ### CDC Operation Types
 

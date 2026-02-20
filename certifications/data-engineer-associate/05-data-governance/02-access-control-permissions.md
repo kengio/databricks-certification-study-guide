@@ -22,10 +22,10 @@ flowchart TB
         Group["👥 Groups<br/>finance_team"]
         SP["🔑 Service Principals<br/>CI/CD, automation"]
     end
-    
+
     Principals --> Roles["Roles & Privileges"]
     Roles --> Objects["Catalogs, Schemas<br/>Tables, Views"]
-```
+```text
 
 ### Users
 
@@ -41,7 +41,7 @@ GRANT SELECT, MODIFY
 ON prod.analytics.orders
 TO `user@company.com`
 """)
-```
+```text
 
 ### Groups
 
@@ -58,7 +58,7 @@ Collection of users for easier management:
 spark.sql("GRANT SELECT ON prod.analytics.orders TO finance_team")
 
 # When user joins group, automatically receives access
-```
+```text
 
 ### Service Principals
 
@@ -78,7 +78,7 @@ spark.sql("GRANT SELECT, MODIFY ON prod.analytics.orders TO `my-etl-app-abc123`"
 {
     "service_credential_service_principal_id": "my-etl-app-abc123"
 }
-```
+```text
 
 ## Privilege Hierarchy
 
@@ -91,16 +91,17 @@ flowchart TB
         Table["├─ Table"]
         Column["├─ Column (Future)"]
     end
-    
+
     subgraph PermInherit["Permission Inheritance"]
         ParentPerm["Parent Permission"]
         ChildInherit["Children Inherit"]
     end
-    
+
     ObjHierarchy --> PermInherit
-```
+```text
 
 Permissions **cascade downward**:
+
 - Grant on Catalog → applies to all Schemas, Tables in that Catalog
 - Grant on Schema → applies to all Tables in that Schema
 - Grant on Table → applies only to that Table
@@ -159,7 +160,7 @@ GRANT USAGE, CREATE_TABLE ON prod.analytics TO analytics_team;
 
 -- Grant on catalog
 GRANT USAGE ON prod TO all_users;
-```
+```text
 
 ### REVOKE Syntax
 
@@ -177,7 +178,7 @@ REVOKE SELECT ON prod.analytics.orders FROM finance_team;
 
 -- Revoke all privileges
 REVOKE ALL PRIVILEGES ON prod.analytics.orders FROM `user@company.com`;
-```
+```text
 
 ## Role-Based Access Control (RBAC)
 
@@ -209,7 +210,7 @@ GRANT SELECT ON prod.analytics TO finance_team;
 
 -- Individual users join groups
 -- Automatically receive all group permissions
-```
+```text
 
 ## Best Practices for Access Control
 
@@ -223,7 +224,7 @@ GRANT SELECT ON prod.analytics.public_sales TO junior_analyst;
 
 -- Bad: Over-permissive
 GRANT ALL PRIVILEGES ON prod TO junior_analyst;
-```
+```text
 
 ### 2. Use Groups for Scalability
 
@@ -237,11 +238,11 @@ GRANT SELECT ON prod.analytics.orders TO `charlie@company.com`;
 GRANT SELECT ON prod.analytics.orders TO analytics_team;
 
 -- Users join/leave group, permissions automatic
-```
+```text
 
 ### 3. Organize by Schema for Security
 
-```
+```text
 prod/
 ├── finance/          (Finance-sensitive data)
 ├── analytics/        (Open analytics)
@@ -251,11 +252,11 @@ prod/
 -- Data engineers: access raw
 -- Analysts: access analytics
 -- Finance team: access finance
-```
+```text
 
 ### 4. Separate Environments
 
-```
+```text
 -- Production (strict access)
 prod/analytics/        SELECT only
 prod/raw/              READ_METADATA only (Engineers with MODIFY)
@@ -263,7 +264,7 @@ prod/raw/              READ_METADATA only (Engineers with MODIFY)
 -- Staging (more permissive)
 staging/analytics/     SELECT, CREATE_TABLE
 staging/experimental/  ALL_PRIVILEGES (test freely)
-```
+```text
 
 ## Viewing Current Permissions
 
@@ -276,7 +277,7 @@ SHOW GRANT ON TABLE prod.analytics.orders;
 -- What permissions does a principal have? (admin only)
 SHOW GRANT TO `user@company.com`;
 SHOW GRANT TO finance_team;
-```
+```text
 
 ### Querying Permissions Programmatically
 
@@ -290,7 +291,7 @@ grants_df.show()
 # finance_team | SELECT | GROUP
 # data_engineers | SELECT, MODIFY | GROUP
 # user@company.com | SELECT | USER
-```
+```text
 
 ## Column-Level Access Control (Future)
 
@@ -302,7 +303,7 @@ GRANT SELECT(order_id, amount) ON prod.analytics.orders TO junior_analyst;
 
 -- Restrictions:
 GRANT SELECT(credit_card_number) ON prod.analytics.orders TO fraud_team;
-```
+```text
 
 ## Dynamic Views for Access Control
 
@@ -311,7 +312,7 @@ Until column-level UC is available, use views to restrict columns:
 ```sql
 -- Create public view (subset of columns)
 CREATE VIEW prod.analytics.v_orders_public AS
-SELECT 
+SELECT
     order_id,
     customer_id,
     amount,
@@ -320,7 +321,7 @@ FROM prod.analytics.orders;
 
 -- Create sensitive view (with sensitive columns)
 CREATE VIEW prod.analytics.v_orders_sensitive AS
-SELECT 
+SELECT
     order_id,
     customer_id,
     amount,
@@ -332,7 +333,7 @@ FROM prod.analytics.orders;
 -- Grant accordingly
 GRANT SELECT ON prod.analytics.v_orders_public TO all_users;
 GRANT SELECT ON prod.analytics.v_orders_sensitive TO finance_team;
-```
+```text
 
 ## Service Principal for Automation
 
@@ -358,7 +359,7 @@ job_config = {
     "service_credential_service_principal_id": "my-ci-app-xyz123",
     "tasks": [...]
 }
-```
+```text
 
 ## Default Catalog and Schema
 
@@ -370,7 +371,7 @@ ALTER WORKSPACE CATALOG_SETTING FOR `user@company.com` SET TO prod;
 
 -- Users' queries default to:
 SELECT * FROM analytics.orders;  -- Resolves to prod.analytics.orders
-```
+```text
 
 ## Audit and Compliance
 
@@ -378,7 +379,7 @@ SELECT * FROM analytics.orders;  -- Resolves to prod.analytics.orders
 
 ```sql
 -- View who accessed what (availability varies)
-SELECT 
+SELECT
     user_identity.email as user_email,
     action_name,
     resource_name,
@@ -387,7 +388,7 @@ FROM system.access.audit
 WHERE resource_type = 'TABLE'
     AND action_name IN ('SELECT', 'MODIFY')
 ORDER BY timestamp DESC
-```
+```text
 
 ### Track Permission Changes
 
@@ -395,7 +396,7 @@ ORDER BY timestamp DESC
 -- Who made permission changes?
 -- Admin Console > Audit Logs
 -- Filter by action: "GRANT", "REVOKE"
-```
+```text
 
 ## Permission Scenarios
 
@@ -413,7 +414,7 @@ SELECT * FROM prod.raw.transactions WHERE YEAR(date) = 2025;
 GRANT USAGE ON prod TO analysts;
 GRANT USAGE ON prod.analytics TO analysts;
 GRANT SELECT ON prod.analytics.revenue_v2025 TO analysts;
-```
+```text
 
 ### Scenario 2: Data Engineer
 
@@ -425,7 +426,7 @@ GRANT USAGE, CREATE_TABLE, CREATE_VIEW ON prod.analytics TO data_engineers;
 
 -- But restrict sensitive schemas
 REVOKE ALL PRIVILEGES ON prod.finance FROM data_engineers;
-```
+```text
 
 ### Scenario 3: External Partner
 
@@ -438,7 +439,7 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 
 -- Grant share access to recipient
 -- Recipient gets read-only access via Share
-```
+```text
 
 ## Key Exam Concepts
 

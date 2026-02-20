@@ -14,7 +14,7 @@ Metastore
         ├── View
         ├── Function
         └── Volume
-```
+```text
 
 ## Three-Level Namespace
 
@@ -26,7 +26,7 @@ SELECT * FROM catalog_name.schema_name.table_name;
 USE CATALOG catalog_name;
 USE SCHEMA schema_name;
 SELECT * FROM table_name;
-```
+```text
 
 ## Creating Objects
 
@@ -36,7 +36,7 @@ SELECT * FROM table_name;
 CREATE CATALOG catalog_name;
 CREATE CATALOG IF NOT EXISTS catalog_name;
 CREATE CATALOG catalog_name COMMENT 'Description';
-```
+```text
 
 ### Schemas
 
@@ -45,7 +45,7 @@ CREATE SCHEMA catalog_name.schema_name;
 CREATE SCHEMA IF NOT EXISTS schema_name;
 CREATE SCHEMA schema_name
   MANAGED LOCATION 'abfss://container@storage/path';
-```
+```text
 
 ### Tables
 
@@ -62,7 +62,7 @@ CREATE TABLE catalog.schema.table (
   name STRING
 )
 LOCATION 'abfss://container@storage/path';
-```
+```text
 
 ### Views
 
@@ -74,7 +74,7 @@ SELECT * FROM catalog.schema.source_table;
 CREATE VIEW catalog.schema.secure_view AS
 SELECT * FROM catalog.schema.table
 WHERE region = current_user();
-```
+```text
 
 ### Volumes
 
@@ -85,7 +85,7 @@ CREATE VOLUME catalog.schema.volume_name;
 -- External volume
 CREATE EXTERNAL VOLUME catalog.schema.volume_name
 LOCATION 'abfss://container@storage/path';
-```
+```text
 
 ## Permissions
 
@@ -124,14 +124,14 @@ GRANT USE CATALOG ON CATALOG catalog_name TO `user@email.com`;
 
 -- Grant all privileges
 GRANT ALL PRIVILEGES ON TABLE catalog.schema.table TO `user@email.com`;
-```
+```text
 
 ### Revoke Syntax
 
 ```sql
 REVOKE SELECT ON TABLE catalog.schema.table FROM `user@email.com`;
 REVOKE ALL PRIVILEGES ON SCHEMA catalog.schema FROM `user@email.com`;
-```
+```text
 
 ### Show Grants
 
@@ -139,7 +139,7 @@ REVOKE ALL PRIVILEGES ON SCHEMA catalog.schema FROM `user@email.com`;
 SHOW GRANTS ON TABLE catalog.schema.table;
 SHOW GRANTS TO `user@email.com`;
 SHOW GRANTS ON CATALOG catalog_name;
-```
+```text
 
 ## Ownership
 
@@ -148,7 +148,7 @@ SHOW GRANTS ON CATALOG catalog_name;
 ALTER TABLE catalog.schema.table SET OWNER TO `new_owner@email.com`;
 ALTER SCHEMA catalog.schema SET OWNER TO `new_owner@email.com`;
 ALTER CATALOG catalog_name SET OWNER TO `new_owner@email.com`;
-```
+```text
 
 ## Row & Column Level Security
 
@@ -159,7 +159,7 @@ CREATE VIEW catalog.schema.filtered_data AS
 SELECT * FROM catalog.schema.source_table
 WHERE department = current_user()
    OR is_account_group_member('admins');
-```
+```text
 
 ### Column-Level (Column Masking)
 
@@ -175,7 +175,7 @@ END;
 -- Apply to column
 ALTER TABLE catalog.schema.table
 ALTER COLUMN email SET MASK catalog.schema.mask_email;
-```
+```text
 
 ## External Locations & Storage Credentials
 
@@ -194,7 +194,7 @@ WITH (STORAGE CREDENTIAL credential_name);
 -- Grant access
 GRANT READ FILES ON EXTERNAL LOCATION location_name TO `user@email.com`;
 GRANT WRITE FILES ON EXTERNAL LOCATION location_name TO `user@email.com`;
-```
+```text
 
 ## Delta Sharing
 
@@ -210,7 +210,7 @@ CREATE RECIPIENT recipient_name;
 
 -- Grant share to recipient
 GRANT SELECT ON SHARE share_name TO RECIPIENT recipient_name;
-```
+```text
 
 ## Key Functions
 

@@ -14,7 +14,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("checkpointLocation", "/path/to/checkpoint")
     .trigger(availableNow=True)
     .toTable("catalog.schema.target_table"))
-```
+```text
 
 ## Essential Options
 
@@ -33,7 +33,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("cloudFiles.inferColumnTypes", "true")
     .option("cloudFiles.schemaHints", "id INT, timestamp TIMESTAMP")
     .load("/data/source"))
-```
+```text
 
 ## Schema Evolution Modes
 
@@ -51,7 +51,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("cloudFiles.schemaLocation", "/schema")
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/data/source"))
-```
+```text
 
 ### Rescued Data Column
 
@@ -67,7 +67,7 @@ df = (spark.readStream.format("cloudFiles")
 # - Unparseable records
 # - Unexpected columns
 # - Type mismatches
-```
+```text
 
 ## Directory Listing vs File Notification
 
@@ -83,7 +83,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("cloudFiles.schemaLocation", "/schema")
     .option("cloudFiles.useNotifications", "true")
     .load("/data/source"))
-```
+```text
 
 | Aspect | Directory Listing | File Notification |
 |--------|-------------------|-------------------|
@@ -103,7 +103,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("cloudFiles.schemaLocation", "/schema")
     .option("multiLine", "true")
     .load("/data/json/"))
-```
+```text
 
 ### CSV
 
@@ -115,7 +115,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("sep", ",")
     .option("inferSchema", "false")
     .load("/data/csv/"))
-```
+```text
 
 ### Parquet
 
@@ -124,7 +124,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("cloudFiles.format", "parquet")
     .load("/data/parquet/"))
 # No schema location needed - schema embedded in files
-```
+```text
 
 ## Common Options Reference
 
@@ -156,7 +156,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("cloudFiles.format", "parquet")
     .option("recursiveFileLookup", "true")
     .load("/data/source"))
-```
+```text
 
 ## Metadata Columns
 
@@ -173,7 +173,7 @@ df = (spark.readStream.format("cloudFiles")
         "_metadata.file_size",
         "_metadata.file_modification_time"
     ))
-```
+```text
 
 | Metadata Column | Description |
 |-----------------|-------------|
@@ -206,7 +206,7 @@ df = (spark.readStream.format("cloudFiles")
     .option("mergeSchema", "true")
     .trigger(availableNow=True)
     .toTable("bronze.events"))
-```
+```text
 
 ## Common Exam Tips
 

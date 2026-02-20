@@ -37,7 +37,7 @@ flowchart TB
     Keep --> Metrics
     Drop --> Metrics
     Metrics --> EventLog
-```
+```text
 
 ## Expectation Types
 
@@ -66,7 +66,7 @@ EXPECT OR FAIL:
 - Critical business rules
 - Schema enforcement
 - Data integrity that must be preserved
-```
+```text
 
 ## SQL Syntax
 
@@ -94,7 +94,7 @@ CREATE OR REFRESH STREAMING TABLE silver_customers (
         -- Invalid emails logged but kept
 )
 AS SELECT * FROM STREAM(LIVE.bronze_customers);
-```
+```text
 
 ### EXPECT OR DROP ROW
 
@@ -124,7 +124,7 @@ CREATE OR REFRESH STREAMING TABLE silver_orders (
         ON VIOLATION DROP ROW
 )
 AS SELECT * FROM STREAM(LIVE.bronze_orders);
-```
+```text
 
 ### EXPECT OR FAIL UPDATE
 
@@ -152,7 +152,7 @@ AS SELECT
     SUM(amount) AS total_amount
 FROM LIVE.silver_orders
 GROUP BY DATE(order_date);
-```
+```text
 
 ## Python Syntax
 
@@ -171,7 +171,7 @@ def silver_orders():
         dlt.read_stream("bronze_orders")
         .select("order_id", "customer_id", "amount", "order_date")
     )
-```
+```text
 
 ### @dlt.expect_or_drop
 
@@ -185,7 +185,7 @@ def silver_events():
         dlt.read_stream("bronze_events")
         .select("event_id", "event_time", "user_id", "event_type")
     )
-```
+```text
 
 ### @dlt.expect_or_fail
 
@@ -195,7 +195,7 @@ def silver_events():
 @dlt.expect_or_fail("valid_checksum", "checksum = calculated_checksum")
 def silver_critical():
     return dlt.read_stream("bronze_critical")
-```
+```text
 
 ### Multiple Expectations with expect_all
 
@@ -224,7 +224,7 @@ def silver_orders_strict():
 @dlt.expect_all_or_fail(order_expectations)
 def silver_orders_critical():
     return dlt.read_stream("bronze_orders")
-```
+```text
 
 ## Quarantine Pattern
 
@@ -238,7 +238,7 @@ flowchart LR
     Quarantine --> Review[Manual Review]
     Review --> Repair[Repair & Reprocess]
     Repair --> Silver
-```
+```text
 
 ### SQL Implementation
 
@@ -272,7 +272,7 @@ WHERE NOT (
     AND amount > 0
     AND order_date IS NOT NULL
 );
-```
+```text
 
 ### Python Implementation
 
@@ -303,7 +303,7 @@ def quarantine_orders():
             .otherwise("Unknown")
         )
     )
-```
+```text
 
 ## Complex Expectations
 
@@ -326,7 +326,7 @@ CREATE OR REFRESH STREAMING TABLE silver_orders (
         EXPECT (amount < 10000 OR approval_code IS NOT NULL)
 )
 AS SELECT * FROM STREAM(LIVE.bronze_orders);
-```
+```text
 
 ### Cross-Column Validations
 
@@ -338,7 +338,7 @@ AS SELECT * FROM STREAM(LIVE.bronze_orders);
 @dlt.expect("valid_dimensions", "length * width * height <= 10000")
 def silver_shipments():
     return dlt.read_stream("bronze_shipments")
-```
+```text
 
 ### Aggregate Expectations
 
@@ -356,7 +356,7 @@ AS SELECT
     AVG(amount) AS avg_amount
 FROM LIVE.silver_orders
 GROUP BY order_date;
-```
+```text
 
 ## Monitoring Expectations
 
@@ -380,7 +380,7 @@ FROM event_log(TABLE(my_pipeline))
 WHERE event_type = 'flow_progress'
     AND details:expectation IS NOT NULL
 ORDER BY timestamp DESC;
-```
+```text
 
 ### Tracking Quality Over Time
 
@@ -402,7 +402,7 @@ WHERE event_type = 'flow_progress'
     AND details:expectation IS NOT NULL
 GROUP BY DATE(timestamp), details:flow_name, details:expectation:name
 ORDER BY date DESC, failure_rate_pct DESC;
-```
+```text
 
 ### Alert on Quality Issues
 
@@ -429,7 +429,7 @@ quality_issues = event_log_df.filter(
 if quality_issues.count() > 0:
     # Send alert
     send_alert("Data quality issues detected", quality_issues.collect())
-```
+```text
 
 ## Best Practices
 
@@ -444,7 +444,7 @@ CONSTRAINT future_ship_date EXPECT (ship_date >= order_date)
 -- Bad: Generic names
 CONSTRAINT c1 EXPECT (email RLIKE '...')
 CONSTRAINT check EXPECT (amount > 0)
-```
+```text
 
 ### Layered Quality Checks
 
@@ -463,7 +463,7 @@ Gold Layer:
 - Aggregate validations
 - Use FAIL for critical metrics
 - Ensure completeness
-```
+```text
 
 ### Documentation
 
@@ -485,7 +485,7 @@ Gold Layer:
 )
 def silver_orders():
     return dlt.read_stream("bronze_orders")
-```
+```text
 
 ## Common Issues & Errors
 
@@ -508,7 +508,7 @@ CONSTRAINT valid_type EXPECT (type IN ('A', 'B', 'C'))
 
 -- Correct: Handle case
 CONSTRAINT valid_type EXPECT (UPPER(type) IN ('A', 'B', 'C'))
-```
+```text
 
 ### 2. Expectation Not Logging
 
@@ -528,7 +528,7 @@ def temp_view():
 @dlt.expect("test", "col IS NOT NULL")
 def actual_table():
     return ...
-```
+```text
 
 ### 3. Null Handling
 
@@ -542,7 +542,7 @@ CONSTRAINT valid_amount EXPECT (amount > 0)
 
 -- This catches NULLs
 CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
-```
+```text
 
 ### 4. Performance Impact
 
@@ -559,7 +559,7 @@ CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 
 # Or validate JSON parse
 @dlt.expect("valid_json", "TRY(from_json(payload, schema)) IS NOT NULL")
-```
+```text
 
 ## Comparison with Other Quality Tools
 

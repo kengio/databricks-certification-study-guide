@@ -28,7 +28,7 @@ flowchart TB
 
     SQL --> SQLWarehouse[SQL Warehouses]
     SQL --> ServerlessSQL[Serverless SQL]
-```
+```text
 
 ## Compute Types Comparison
 
@@ -53,7 +53,7 @@ flowchart LR
     AP --> Persistent["Persistent until terminated"]
     AP --> Languages["Python, SQL, Scala, R"]
     AP --> Notebooks["Notebook execution"]
-```
+```text
 
 | Feature | Behavior |
 | :--- | :--- |
@@ -88,12 +88,12 @@ cluster = w.clusters.create(
 ).result()
 
 print(f"Cluster ID: {cluster.cluster_id}")
-```
+```text
 
 ```sql
 -- Via SQL (for serverless SQL or existing cluster)
 -- Clusters are typically created via UI or API, not SQL
-```
+```text
 
 ### Auto-Termination
 
@@ -109,7 +109,7 @@ w.clusters.edit(
     cluster_id="xxx",
     autotermination_minutes=0  # Never auto-terminate
 )
-```
+```text
 
 | Setting | Behavior |
 | :--- | :--- |
@@ -129,7 +129,7 @@ flowchart LR
     JC --> Isolated["Isolated execution"]
     JC --> Auto["Auto-terminated"]
     JC --> Cost["Lower cost"]
-```
+```text
 
 | Feature | Behavior |
 | :--- | :--- |
@@ -166,7 +166,7 @@ job = w.jobs.create(
         )
     ]
 )
-```
+```text
 
 ### Job Cluster vs Existing Cluster
 
@@ -188,7 +188,7 @@ task_with_existing_cluster = Task(
     existing_cluster_id="1234-567890-abc",
     notebook_task=NotebookTask(notebook_path="/Jobs/task1")
 )
-```
+```text
 
 | Approach | Pros | Cons |
 | :--- | :--- | :--- |
@@ -218,7 +218,7 @@ sequenceDiagram
     end
     Job->>Job: Run workload
     Job->>Pool: Return instances to pool
-```
+```text
 
 ### Pool Configuration
 
@@ -237,7 +237,7 @@ pool = w.instance_pools.create(
 )
 
 print(f"Pool ID: {pool.instance_pool_id}")
-```
+```text
 
 ### Using Pools with Clusters
 
@@ -265,7 +265,7 @@ job = w.jobs.create(
         notebook_task=NotebookTask(notebook_path="/Jobs/task1")
     )]
 )
-```
+```text
 
 ### Pool Best Practices
 
@@ -287,7 +287,7 @@ flowchart LR
     User[User] --> Notebook[Notebook]
     Notebook --> Serverless[Serverless Compute]
     Serverless --> |Instant| Execution[Code Execution]
-```
+```text
 
 | Feature | Behavior |
 | :--- | :--- |
@@ -302,7 +302,7 @@ flowchart LR
 ```python
 # Serverless is enabled at workspace level
 # Attach notebook to "Serverless" compute option in UI
-```
+```text
 
 ### Serverless Limitations
 
@@ -331,7 +331,7 @@ flowchart TB
     Pro --> P2["Query federation"]
     Serverless --> S1["Instant startup"]
     Serverless --> S2["Auto-scaling"]
-```
+```text
 
 | Type | Features | Best For |
 | :--- | :--- | :--- |
@@ -359,7 +359,7 @@ warehouse = w.warehouses.create(
 ).result()
 
 print(f"Warehouse ID: {warehouse.id}")
-```
+```text
 
 ### Warehouse Sizing
 
@@ -382,7 +382,7 @@ warehouse = w.warehouses.edit(
     max_num_clusters=10,  # Maximum concurrent clusters
     auto_stop_mins=15     # Stop after 15 mins idle
 )
-```
+```text
 
 ```mermaid
 flowchart LR
@@ -390,7 +390,7 @@ flowchart LR
     Scale --> |High load| ScaleUp[Add clusters]
     Scale --> |Low load| ScaleDown[Remove clusters]
     Scale --> |No queries| Stop[Auto-stop]
-```
+```text
 
 ## Photon Engine
 
@@ -422,7 +422,7 @@ warehouse = w.warehouses.create(
     enable_photon=True,  # Enable Photon
     # ...
 )
-```
+```text
 
 ### Photon Limitations
 
@@ -464,7 +464,7 @@ Cluster policies enforce configuration standards and cost controls.
     "value": "data-engineering"
   }
 }
-```
+```text
 
 ### Policy Types
 
@@ -493,7 +493,7 @@ policy = w.cluster_policies.create(
         "autotermination_minutes": {"type": "fixed", "value": 60}
     })
 )
-```
+```text
 
 ### Using Policies
 
@@ -504,7 +504,7 @@ cluster = w.clusters.create(
     policy_id="policy-123",  # Apply policy
     num_workers=4  # Must comply with policy
 )
-```
+```text
 
 ## Autoscaling
 
@@ -521,7 +521,7 @@ cluster = w.clusters.create(
         "max_workers": 10
     }
 )
-```
+```text
 
 ### Autoscaling Behavior
 
@@ -534,7 +534,7 @@ flowchart TD
 
     ScaleUp --> |Max reached| Cap[At max_workers]
     ScaleDown --> |Min reached| Floor[At min_workers]
-```
+```text
 
 | Metric | Scale Up Trigger | Scale Down Trigger |
 | :--- | :--- | :--- |
@@ -558,7 +558,7 @@ cluster = w.clusters.create(
         "spark.databricks.cluster.scaling.optimized.enabled": "true"
     }
 )
-```
+```text
 
 ## Spot Instances
 
@@ -592,7 +592,7 @@ cluster = w.clusters.create(
         "spot_bid_max_price": -1  # Use current price
     }
 )
-```
+```text
 
 ### Spot Availability Options
 
@@ -632,7 +632,7 @@ w.permissions.set(
         )
     ]
 )
-```
+```text
 
 ## Use Cases
 
@@ -659,7 +659,7 @@ flowchart TD
     Automated --> Frequent{Frequent runs?}
     Frequent --> |Yes| Pool[Job Cluster + Pool]
     Frequent --> |No| JobCluster[Job Cluster]
-```
+```text
 
 ## Common Issues & Errors
 
@@ -680,7 +680,7 @@ flowchart TD
 spark_conf = {
     "spark.driver.memory": "8g"
 }
-```
+```text
 
 ### 3. Spot Instance Interruption
 
@@ -693,7 +693,7 @@ aws_attributes = {
     "first_on_demand": 2,  # Keep driver + 1 worker on-demand
     "availability": "SPOT_WITH_FALLBACK"
 }
-```
+```text
 
 ### 4. Policy Violation
 

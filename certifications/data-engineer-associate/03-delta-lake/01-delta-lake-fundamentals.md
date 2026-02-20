@@ -22,7 +22,7 @@ flowchart TB
         NoACID["No ACID guarantees"]
         Corruption["Data corruption issues"]
     end
-    
+
     subgraph DeltaLake["Delta Lake"]
         DeltaFormat["Delta Format<br/>(Parquet + Log)"]
         ACID["ACID Transactions"]
@@ -30,11 +30,11 @@ flowchart TB
         Lineage["Data Lineage"]
         TimeTavel["Time Travel"]
     end
-    
+
     Traditional -.->|Upgrade| DeltaLake
-    
+
     DeltaLake --> Features["Better Data Quality<br/>& Reliability"]
-```
+```text
 
 ## Why Delta Lake Matters
 
@@ -55,16 +55,17 @@ flowchart LR
         Parquet["Parquet Data Files"]
         Log["Transaction Log<br/>(_delta_log/)"]
     end
-    
+
     subgraph Engine["Spark/Databricks"]
         Read["Read Engine"]
         Write["Write Engine"]
     end
-    
+
     CloudStorage <-->|ACID| Engine
-```
+```text
 
 The Delta table consists of:
+
 - **Data Files**: Parquet format (at `/path/to/table/`)
 - **Transaction Log**: JSON files tracking all changes (at `/path/to/table/_delta_log/`)
 
@@ -87,7 +88,7 @@ df.write.format("parquet").mode("overwrite").save("/path")
 # Delta Lake - ACID protected
 # If write fails, table rolled back automatically
 df.write.format("delta").mode("overwrite").save("/path")
-```
+```text
 
 ## Delta Table Formats
 
@@ -107,7 +108,7 @@ USING DELTA
 # Data location: /user/hive/warehouse/employees
 # Dropping table also deletes data
 spark.sql("DROP TABLE employees")  # Data deleted
-```
+```text
 
 ### External Tables
 
@@ -126,7 +127,7 @@ LOCATION '/mnt/data/employees'
 # Data location: /mnt/data/employees
 # Dropping table does NOT delete data
 spark.sql("DROP TABLE employees_external")  # Data remains
-```
+```text
 
 ## Creating Delta Tables
 
@@ -149,7 +150,7 @@ employees_df.write \
     .format("delta") \
     .mode("overwrite") \
     .saveAsTable("employees")
-```
+```text
 
 ### Convert Existing Parquet
 
@@ -163,7 +164,7 @@ DeltaTable.convertToDelta(
 )
 
 # Table now has transaction log and ACID guarantees
-```
+```text
 
 ### Using SQL
 
@@ -192,7 +193,7 @@ CREATE TABLE orders (
 )
 USING DELTA
 LOCATION '/mnt/data/orders';
-```
+```text
 
 ## Table Metadata
 
@@ -210,7 +211,7 @@ spark.sql("SHOW TABLES").show()
 
 # Check if table is Delta
 spark.sql("SHOW TBLPROPERTIES employees").show()
-```
+```text
 
 ### Delta Table Properties
 
@@ -226,7 +227,7 @@ SET TBLPROPERTIES (
 
 # Check property
 spark.sql("SHOW TBLPROPERTIES employees").show()
-```
+```text
 
 ## Appending vs Overwriting
 
@@ -242,7 +243,7 @@ new_employees.write \
     .format("delta") \
     .mode("append") \
     .save("/mnt/data/employees")
-```
+```text
 
 ### Overwrite Modes
 
@@ -265,7 +266,7 @@ updated_data.write \
     .mode("append") \
     .option("mergeSchema", "true") \
     .save("/mnt/data/employees")
-```
+```text
 
 ## Schema Enforcement and Evolution
 
@@ -282,7 +283,7 @@ bad_data.write \
     .format("delta") \
     .mode("append") \
     .save("/mnt/data/employees")  # Failed!
-```
+```text
 
 ### Schema Evolution (Add New Columns)
 
@@ -300,7 +301,7 @@ new_schema_data.write \
     .save("/mnt/data/employees")
 
 # Table now has: id, name, salary, department
-```
+```text
 
 ## Mutation Operations
 
@@ -311,7 +312,7 @@ INSERT INTO employees VALUES (4, "David", 80000);
 
 INSERT INTO employees
 SELECT id, name, salary FROM new_hires;
-```
+```text
 
 ### UPDATE
 
@@ -319,14 +320,14 @@ SELECT id, name, salary FROM new_hires;
 UPDATE employees
 SET salary = salary * 1.1
 WHERE department = 'Engineering';
-```
+```text
 
 ### DELETE
 
 ```sql
 DELETE FROM employees
 WHERE salary < 30000;
-```
+```text
 
 ### MERGE (Upsert)
 
@@ -336,7 +337,7 @@ USING new_employees s
 ON t.id = s.id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```
+```text
 
 ## Comparison: Delta vs Parquet vs Iceberg
 
@@ -362,9 +363,10 @@ The `_delta_log/` directory contains JSON files recording every transaction:
     "dataChange": true
   }
 }
-```
+```text
 
 Each JSON file represents one committed transaction, enabling:
+
 - Atomicity (all-or-nothing)
 - Consistency (schema validation)
 - Isolation (multi-version concurrency)

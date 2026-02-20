@@ -30,7 +30,7 @@ flowchart TB
     end
 
     Storage --> Cloud
-```
+```text
 
 ## DBFS (Databricks File System)
 
@@ -47,7 +47,7 @@ flowchart LR
 
     Root --> Cloud[Cloud Storage]
     Mounts --> Cloud
-```
+```text
 
 ### DBFS Path Formats
 
@@ -69,7 +69,7 @@ with open("/dbfs/data/config.json", "r") as f:
 # These read the same file:
 spark.read.text("dbfs:/data/sample.txt")  # Spark
 open("/dbfs/data/sample.txt", "r")         # Python
-```
+```text
 
 ### DBFS Root Storage
 
@@ -85,7 +85,7 @@ flowchart TB
     User --> Hive[Hive metastore data]
     FileStore --> Uploads[Uploaded files, images]
     MLflow --> Artifacts[MLflow artifacts]
-```
+```text
 
 | Path | Purpose | Notes |
 | :--- | :--- | :--- |
@@ -130,7 +130,7 @@ content = dbutils.fs.head("dbfs:/data/sample.txt", maxBytes=1024)
 
 # Write small text file
 dbutils.fs.put("dbfs:/data/output.txt", "Hello World", overwrite=True)
-```
+```text
 
 ### FileStore
 
@@ -145,7 +145,7 @@ dbutils.fs.cp("dbfs:/data/image.png", "dbfs:/FileStore/images/image.png")
 
 # Display image in notebook
 displayHTML('<img src="/files/images/image.png">')
-```
+```text
 
 | FileStore Path | URL Path |
 | :--- | :--- |
@@ -163,7 +163,7 @@ flowchart LR
     Code[Spark Code] --> Mount["/mnt/data"]
     Mount --> DBFS[DBFS Layer]
     DBFS --> Cloud["s3://bucket/data or abfss://container@storage.dfs"]
-```
+```text
 
 ### AWS S3 Mounts
 
@@ -186,7 +186,7 @@ dbutils.fs.mount(
         "fs.s3a.secret.key": secret_key
     }
 )
-```
+```text
 
 ### Azure Data Lake Storage Mounts
 
@@ -217,7 +217,7 @@ dbutils.fs.mount(
     mount_point="/mnt/blob-data",
     extra_configs=configs
 )
-```
+```text
 
 ### GCS Mounts
 
@@ -227,7 +227,7 @@ dbutils.fs.mount(
     source="gs://my-bucket/data",
     mount_point="/mnt/gcs-data"
 )
-```
+```text
 
 ### Managing Mounts
 
@@ -246,7 +246,7 @@ dbutils.fs.unmount("/mnt/s3-data")
 
 # Refresh mounts (after external changes)
 dbutils.fs.refreshMounts()
-```
+```text
 
 ### Mount Best Practices
 
@@ -273,7 +273,7 @@ flowchart TB
 
     External --> E1["User provides storage location"]
     External --> E2["Bring your own data"]
-```
+```text
 
 | Type | Storage | Governance | Use Case |
 | :--- | :--- | :--- | :--- |
@@ -293,7 +293,7 @@ LOCATION 's3://my-bucket/landing/';
 -- Create external volume (Azure)
 CREATE EXTERNAL VOLUME main.default.landing_zone
 LOCATION 'abfss://container@storage.dfs.core.windows.net/landing/';
-```
+```text
 
 ### Volume Paths
 
@@ -313,7 +313,7 @@ with open("/Volumes/main/default/my_volume/config.json", "r") as f:
 
 # List volume contents
 files = dbutils.fs.ls("/Volumes/main/default/my_volume/")
-```
+```text
 
 ### Volume Operations
 
@@ -326,7 +326,7 @@ DESCRIBE VOLUME main.default.my_volume;
 
 -- Drop volume
 DROP VOLUME main.default.my_volume;
-```
+```text
 
 ### Volume vs Mount Comparison
 
@@ -357,7 +357,7 @@ df = spark.read.format("parquet").load("s3a://bucket/path/")
 spark.conf.set("fs.s3a.aws.credentials.provider",
     "org.apache.hadoop.fs.s3a.auth.AssumedRoleCredentialProvider")
 spark.conf.set("fs.s3a.assumed.role.arn", "arn:aws:iam::123456789:role/my-role")
-```
+```text
 
 ### Azure Direct Access
 
@@ -379,7 +379,7 @@ df = spark.read.format("parquet").load(f"abfss://container@{storage_account}.dfs
 spark.conf.set(f"fs.azure.sas.{container}.{storage_account}.blob.core.windows.net",
     dbutils.secrets.get("azure", "sas-token"))
 df = spark.read.format("parquet").load(f"wasbs://{container}@{storage_account}.blob.core.windows.net/path/")
-```
+```text
 
 ### GCS Direct Access
 
@@ -390,7 +390,7 @@ df = spark.read.format("parquet").load("gs://bucket/path/")
 # With service account key file
 spark.conf.set("google.cloud.auth.service.account.enable", "true")
 spark.conf.set("google.cloud.auth.service.account.json.keyfile", "/path/to/keyfile.json")
-```
+```text
 
 ## Storage Protocols
 
@@ -417,7 +417,7 @@ flowchart TD
 
     Azure --> |ADLS Gen2| ABFSS[Use abfss://]
     Azure --> |Blob| WASBS[Use wasbs://]
-```
+```text
 
 ## Access Patterns
 
@@ -434,7 +434,7 @@ flowchart TD
 
     Direct --> |Yes| SparkConf[Spark conf settings]
     Direct --> |No| Instance[Instance profile/Managed identity]
-```
+```text
 
 ### Recommended Access Pattern by Use Case
 
@@ -460,7 +460,7 @@ dbutils.fs.cp("s3://bucket/data/", "dbfs:/local-copy/", recurse=True)
 # Copy using Spark (for large data)
 df = spark.read.format("parquet").load("s3://source-bucket/data/")
 df.write.format("parquet").save("abfss://container@storage/dest/")
-```
+```text
 
 ### Upload/Download with REST API
 
@@ -477,7 +477,7 @@ response = requests.post(url, headers=headers, json={
     "contents": data,
     "overwrite": True
 })
-```
+```text
 
 ## Use Cases
 
@@ -489,7 +489,7 @@ flowchart LR
     Landing --> Bronze["/Volumes/main/bronze/tables/"]
     Bronze --> Silver["/Volumes/main/silver/tables/"]
     Silver --> Gold["/Volumes/main/gold/tables/"]
-```
+```text
 
 ```python
 # Landing zone with external volume
@@ -504,7 +504,7 @@ for file in new_files:
 
         # Archive processed file
         dbutils.fs.mv(file.path, f"/Volumes/main/raw/archive/{file.name}")
-```
+```text
 
 ### Multi-Cloud Data Access
 
@@ -518,7 +518,7 @@ azure_df = spark.read.format("parquet").load("/Volumes/azure/raw/data/")
 # Combine data
 combined = aws_df.unionByName(azure_df)
 combined.write.format("delta").saveAsTable("main.combined.all_data")
-```
+```text
 
 ## Common Issues & Errors
 
@@ -534,7 +534,7 @@ combined.write.format("delta").saveAsTable("main.combined.all_data")
 
 ```python
 # Error: Directory already mounted
-```
+```text
 
 **Fix:** Unmount first or use different mount point:
 
@@ -542,7 +542,7 @@ combined.write.format("delta").saveAsTable("main.combined.all_data")
 if mount_exists("/mnt/data"):
     dbutils.fs.unmount("/mnt/data")
 dbutils.fs.mount(source="...", mount_point="/mnt/data")
-```
+```text
 
 ### 3. Credential Not Found
 
@@ -553,7 +553,7 @@ dbutils.fs.mount(source="...", mount_point="/mnt/data")
 ```python
 # Check if config is set
 spark.conf.get("fs.s3a.access.key", "NOT_SET")
-```
+```text
 
 ### 4. Path Format Mismatch
 
@@ -568,7 +568,7 @@ df = spark.read.csv("dbfs:/data/file.csv")
 
 # Correct: Use /dbfs/ with Python
 with open("/dbfs/data/file.csv") as f: ...
-```
+```text
 
 ### 5. Volume Not Found
 
@@ -579,7 +579,7 @@ with open("/dbfs/data/file.csv") as f: ...
 ```sql
 SHOW VOLUMES IN main.default;
 DESCRIBE VOLUME main.default.my_volume;
-```
+```text
 
 ## Exam Tips
 

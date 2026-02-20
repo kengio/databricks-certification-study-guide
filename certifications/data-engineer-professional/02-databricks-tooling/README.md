@@ -21,7 +21,7 @@ flowchart LR
     DT --> API[REST API]
     DT --> Compute[Compute Options]
     DT --> Storage[DBFS & Mounts]
-```
+```text
 
 ## Section Contents
 
@@ -77,7 +77,7 @@ flowchart TD
     Jobs --> Create[create]
     Jobs --> Run["run-now"]
     Jobs --> List[list]
-```
+```text
 
 ## Exam Tips
 

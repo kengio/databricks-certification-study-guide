@@ -32,7 +32,7 @@ flowchart LR
     subgraph Load
         Clean --> Write[Write to Delta]
     end
-```
+```text
 
 ## ETL vs ELT
 
@@ -62,7 +62,7 @@ flowchart LR
     Gold -.- G1[Business aggregates]
     Gold -.- G2[Ready for BI]
     Gold -.- G3[Optimized for queries]
-```
+```text
 
 ## Reading Data
 
@@ -87,7 +87,7 @@ df = (spark.read.format("json")
 # Read Delta
 df = spark.read.format("delta").load("/path/to/delta")
 df = spark.table("catalog.schema.table_name")
-```
+```text
 
 ### Read Options by Format
 
@@ -113,7 +113,7 @@ schema = StructType([
 df = (spark.read.format("json")
     .schema(schema)
     .load("/path/to/files"))
-```
+```text
 
 ### Handling Corrupt Records
 
@@ -134,7 +134,7 @@ df = (spark.read.format("csv")
 df = (spark.read.format("csv")
     .option("mode", "FAILFAST")
     .load("/path/to/files"))
-```
+```text
 
 | Mode | Behavior |
 | :--- | :--- |
@@ -166,7 +166,7 @@ df.withColumn("status",
 
 # Handle nulls
 df.withColumn("value", coalesce(col("primary"), col("backup"), lit(0)))
-```
+```text
 
 ### Filter Operations
 
@@ -187,7 +187,7 @@ df.filter(col("phone").isNull())
 df.filter(col("name").like("%Smith%"))
 df.filter(col("name").rlike("^[A-Z].*"))  # Regex
 df.filter(col("email").contains("@company.com"))
-```
+```text
 
 ### Type Casting
 
@@ -201,7 +201,7 @@ df.withColumn("id", col("id").cast("integer"))
 # Date/timestamp conversions
 df.withColumn("date", to_date(col("date_string"), "yyyy-MM-dd"))
 df.withColumn("timestamp", to_timestamp(col("ts_string"), "yyyy-MM-dd HH:mm:ss"))
-```
+```text
 
 ### SQL Expressions
 
@@ -211,7 +211,7 @@ from pyspark.sql.functions import expr
 # Use SQL expressions in DataFrame API
 df.withColumn("discount_price", expr("price * (1 - discount_rate)"))
 df.selectExpr("*", "price * quantity AS total")
-```
+```text
 
 ## Join Operations
 
@@ -233,7 +233,7 @@ flowchart TD
         F1[Left: 1,2,3] --- F2[Right: 2,3,4]
         F2 --> FR[Result: 1,2,3,4]
     end
-```
+```text
 
 ```python
 # Inner join (default)
@@ -256,7 +256,7 @@ df1.join(df2, df1.id == df2.id, "left_semi")
 
 # Cross join
 df1.crossJoin(df2)
-```
+```text
 
 ### Join on Multiple Columns
 
@@ -269,7 +269,7 @@ df1.join(df2,
 
 # Same column names (simpler syntax)
 df1.join(df2, ["id", "date"], "inner")
-```
+```text
 
 ### Join Strategies
 
@@ -280,7 +280,7 @@ flowchart TD
     Size -->|No| Keys{Keys sortable?}
     Keys -->|Yes| SortMerge[Sort-Merge Join]
     Keys -->|No| ShuffleHash[Shuffle Hash Join]
-```
+```text
 
 | Strategy | When Used | Performance |
 |----------|-----------|-------------|
@@ -314,7 +314,7 @@ spark.sql("""
     SELECT /*+ SHUFFLE_HASH(df2) */ *
     FROM df1 JOIN df2 ON df1.id = df2.id
 """)
-```
+```text
 
 ### Broadcast Threshold
 
@@ -325,7 +325,7 @@ spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "50MB")
 
 # Disable auto broadcast
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
-```
+```text
 
 ## Aggregations
 
@@ -344,7 +344,7 @@ df.agg(
     avg("amount").alias("avg_amount"),
     countDistinct("customer_id").alias("unique_customers")
 )
-```
+```text
 
 ### Group By
 
@@ -359,7 +359,7 @@ df.groupBy("region").agg(
 df.groupBy("region", "product_category").agg(
     sum("amount").alias("total")
 )
-```
+```text
 
 ### Pivot
 
@@ -369,7 +369,7 @@ df.groupBy("region").pivot("year").agg(sum("amount"))
 
 # Pivot with specific values (more efficient)
 df.groupBy("region").pivot("year", [2022, 2023, 2024]).agg(sum("amount"))
-```
+```text
 
 ## Window Functions
 
@@ -388,7 +388,7 @@ window = Window.partitionBy("customer_id").orderBy("order_date")
 window_frame = (Window.partitionBy("customer_id")
     .orderBy("order_date")
     .rowsBetween(Window.unboundedPreceding, Window.currentRow))
-```
+```text
 
 ### Ranking Functions
 
@@ -401,7 +401,7 @@ df.withColumn("rank", rank().over(window))
 
 # Dense rank (no gaps for ties)
 df.withColumn("dense_rank", dense_rank().over(window))
-```
+```text
 
 | Function | Ties Handling | Example: [100, 100, 90] |
 |----------|---------------|------------------------|
@@ -420,7 +420,7 @@ df.withColumn("prev_amount", lag("amount", 1).over(window))
 
 # With default value
 df.withColumn("prev_amount", lag("amount", 1, 0).over(window))
-```
+```text
 
 ### Running Totals
 
@@ -431,7 +431,7 @@ window_running = (Window.partitionBy("customer_id")
     .rowsBetween(Window.unboundedPreceding, Window.currentRow))
 
 df.withColumn("running_total", sum("amount").over(window_running))
-```
+```text
 
 ### Deduplication with Window Functions
 
@@ -442,7 +442,7 @@ window = Window.partitionBy("customer_id").orderBy(col("updated_at").desc())
 (df.withColumn("rn", row_number().over(window))
     .filter(col("rn") == 1)
     .drop("rn"))
-```
+```text
 
 ## Writing Data
 
@@ -460,7 +460,7 @@ df.write.format("delta").mode("error").save("/path/to/table")
 
 # Ignore - skip if data exists
 df.write.format("delta").mode("ignore").save("/path/to/table")
-```
+```text
 
 | Mode | Behavior |
 |------|----------|
@@ -480,7 +480,7 @@ df.write.format("delta").mode("append").saveAsTable("catalog.schema.table_name")
 
 # Insert into existing table
 df.write.insertInto("catalog.schema.table_name")
-```
+```text
 
 ### Partitioning
 
@@ -496,7 +496,7 @@ df.write.insertInto("catalog.schema.table_name")
     .mode("overwrite")
     .option("replaceWhere", "year = 2024 AND month = 1")
     .save("/path/to/table"))
-```
+```text
 
 ### Dynamic Partition Overwrite
 
@@ -508,7 +508,7 @@ spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
     .mode("overwrite")
     .partitionBy("date")
     .save("/path/to/table"))
-```
+```text
 
 ## SQL Batch Operations
 
@@ -522,7 +522,7 @@ SELECT * FROM source_table WHERE status = 'active';
 -- Create or replace
 CREATE OR REPLACE TABLE catalog.schema.new_table AS
 SELECT * FROM source_table;
-```
+```text
 
 ### INSERT Operations
 
@@ -541,7 +541,7 @@ SELECT * FROM source_table;
 -- Insert overwrite partition
 INSERT OVERWRITE table_name PARTITION (date = '2024-01-01')
 SELECT id, name FROM source_table WHERE date = '2024-01-01';
-```
+```text
 
 ## User-Defined Functions (UDFs)
 
@@ -560,7 +560,7 @@ def format_phone(phone):
 
 # Use UDF
 df.withColumn("formatted_phone", format_phone(col("phone")))
-```
+```text
 
 ### Pandas UDFs (Vectorized)
 
@@ -574,7 +574,7 @@ def calculate_discount(amount: pd.Series, rate: pd.Series) -> pd.Series:
     return amount * (1 - rate)
 
 df.withColumn("discounted", calculate_discount(col("amount"), col("rate")))
-```
+```text
 
 | UDF Type | Performance | Use Case |
 |----------|-------------|----------|

@@ -24,7 +24,7 @@ spark.sql("CREATE SCHEMA IF NOT EXISTS dev.gold")
 # Set default catalog and schema for the session
 spark.sql("USE CATALOG dev")
 spark.sql("USE SCHEMA bronze")
-```
+```text
 
 ## Create Managed Tables
 
@@ -55,7 +55,7 @@ data = [(1, "Acme Corp", "US"), (2, "Global Inc", "EU")]
 df = spark.createDataFrame(data, schema)
 
 df.write.format("delta").saveAsTable("dev.bronze.customers")
-```
+```text
 
 ## Create External Tables
 
@@ -86,7 +86,7 @@ spark.sql("""
     USING DELTA
     LOCATION 's3://my-bucket/raw-data/logs/'
 """)
-```
+```text
 
 ## Grant Permissions
 
@@ -110,7 +110,7 @@ spark.sql("GRANT ALL PRIVILEGES ON SCHEMA dev.silver TO `data-engineers`")
 # View current grants
 grants = spark.sql("SHOW GRANTS ON SCHEMA dev.gold")
 grants.show(truncate=False)
-```
+```text
 
 ## Inspect Metadata
 
@@ -121,7 +121,7 @@ spark.sql("SHOW TABLES IN dev.bronze").show()
 
 spark.sql("DESCRIBE EXTENDED dev.bronze.raw_events").show(truncate=False)
 spark.sql("SHOW TBLPROPERTIES dev.bronze.raw_events").show(truncate=False)
-```
+```text
 
 ## Views
 
@@ -144,7 +144,7 @@ spark.sql("""
         OR (is_account_group_member('eu-analysts') AND region = 'EU')
         OR is_account_group_member('admin')
 """)
-```
+```text
 
 ## Data Lineage (System Tables)
 
@@ -158,7 +158,7 @@ spark.sql("""
 #     LIMIT 10
 # """)
 # lineage.show(truncate=False)
-```
+```text
 
 ## Cleanup
 
@@ -171,4 +171,4 @@ spark.sql("""
 
 # Drop catalog (must be empty or use CASCADE)
 # spark.sql("DROP CATALOG IF EXISTS dev CASCADE")
-```
+```text

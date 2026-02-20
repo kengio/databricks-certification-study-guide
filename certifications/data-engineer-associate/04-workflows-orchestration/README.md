@@ -21,7 +21,7 @@ flowchart TD
     WO --> Scheduling[Scheduling]
     WO --> Triggers[Triggers]
     WO --> Monitoring[Monitoring Jobs]
-```
+```text
 
 ## Section Contents
 

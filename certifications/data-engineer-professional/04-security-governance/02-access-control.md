@@ -25,7 +25,7 @@ flowchart TB
     RowLevel --> DynamicViews[Dynamic Views]
     ColumnLevel --> ColumnMask[Column Masking]
     Masking --> Functions[Masking Functions]
-```
+```text
 
 ## Table-Level Access Control
 
@@ -62,7 +62,7 @@ GRANT SELECT ON TABLE prod.gold.revenue TO `finance-team`;
 
 -- Grant to service principal
 GRANT SELECT ON TABLE prod.gold.revenue TO `sp-etl-pipeline`;
-```
+```text
 
 ### Revoking Privileges
 
@@ -75,7 +75,7 @@ REVOKE ALL PRIVILEGES ON TABLE prod.gold.customers FROM `analysts`;
 
 -- Revoke from schema
 REVOKE SELECT ON SCHEMA prod.gold FROM `analysts`;
-```
+```text
 
 ### Viewing Privileges
 
@@ -91,7 +91,7 @@ SHOW GRANTS TO `analysts`;
 
 -- Show grants for current user
 SHOW GRANTS TO `current_user`;
-```
+```text
 
 ### Grant Hierarchy
 
@@ -101,7 +101,7 @@ flowchart TD
     Schema --> Table[TABLE: SELECT, MODIFY]
     Schema --> View[VIEW: SELECT]
     Schema --> Function[FUNCTION: EXECUTE]
-```
+```text
 
 Users need access at each level to reach objects:
 
@@ -110,7 +110,7 @@ Users need access at each level to reach objects:
 GRANT USE CATALOG ON CATALOG prod TO `analysts`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `analysts`;
 GRANT SELECT ON TABLE prod.gold.customers TO `analysts`;
-```
+```text
 
 ## Row-Level Security
 
@@ -131,7 +131,7 @@ WHERE region = (
 -- Grant access to view only
 GRANT SELECT ON VIEW prod.secure.my_customers TO `regional-analysts`;
 -- Do NOT grant access to underlying table
-```
+```text
 
 ### Using current_user()
 
@@ -150,7 +150,7 @@ JOIN prod.admin.manager_hierarchy h
     ON s.sales_rep_id = h.employee_id
 WHERE h.manager_email = current_user()
    OR s.sales_rep_email = current_user();
-```
+```text
 
 ### Using is_account_group_member()
 
@@ -173,7 +173,7 @@ WHERE
     is_account_group_member('executives')
     OR (is_account_group_member('regional-managers') AND region = 'US')
     OR (is_account_group_member('analysts') AND order_date >= current_date() - 365);
-```
+```text
 
 ### Row-Level Security with Mapping Table
 
@@ -199,7 +199,7 @@ JOIN prod.admin.user_data_access a
     ON d.region = a.allowed_region
     AND d.department = a.allowed_department
 WHERE a.username = current_user();
-```
+```text
 
 ## Column-Level Security
 
@@ -226,7 +226,7 @@ SELECT
     city,
     state
 FROM prod.gold.customers;
-```
+```text
 
 ### Column Masking Functions
 
@@ -247,7 +247,7 @@ SELECT
     prod.functions.mask_email(email) AS email,
     phone
 FROM prod.gold.contacts;
-```
+```text
 
 ### Common Masking Patterns
 
@@ -269,7 +269,7 @@ CONCAT(LEFT(first_name, 1), '*** ', LEFT(last_name, 1), '**')
 
 -- Null sensitive columns
 CASE WHEN is_account_group_member('authorized') THEN sensitive_col ELSE NULL END
-```
+```text
 
 ## Row and Column Filters (Unity Catalog)
 
@@ -296,7 +296,7 @@ RETURN (
 
 -- Remove row filter
 ALTER TABLE prod.gold.orders DROP ROW FILTER;
-```
+```text
 
 ### Column Masks
 
@@ -315,7 +315,7 @@ END;
 
 -- Remove column mask
 ALTER TABLE prod.gold.customers ALTER COLUMN ssn DROP MASK;
-```
+```text
 
 ### Benefits of Declarative Filters
 
@@ -345,7 +345,7 @@ GRANT SELECT ON SCHEMA prod.gold TO `developers`;
 
 -- Production write access only for ETL
 GRANT MODIFY ON SCHEMA prod.silver TO `etl-service-principal`;
-```
+```text
 
 ### Role-Based Access Control (RBAC)
 
@@ -368,7 +368,7 @@ GRANT SELECT ON SCHEMA prod.gold TO `data-engineers`;
 GRANT USE CATALOG ON CATALOG prod TO `data-scientists`;
 GRANT SELECT ON SCHEMA prod.gold TO `data-scientists`;
 GRANT ALL PRIVILEGES ON SCHEMA prod.sandbox TO `data-scientists`;
-```
+```text
 
 ### Least Privilege Pattern
 
@@ -381,7 +381,7 @@ GRANT USE CATALOG ON CATALOG prod TO `app-users`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `app-users`;
 GRANT SELECT ON TABLE prod.gold.products TO `app-users`;
 -- Only specific tables, not entire schema
-```
+```text
 
 ## Data Access Auditing
 
@@ -400,7 +400,7 @@ FROM system.access.audit
 WHERE action_name IN ('getTable', 'selectFromTable')
     AND event_date >= current_date() - 7
 ORDER BY event_time DESC;
-```
+```text
 
 ### Common Audit Queries
 
@@ -436,7 +436,7 @@ SELECT
 FROM system.access.audit
 WHERE action_name IN ('grant', 'revoke', 'updatePermissions')
 ORDER BY event_time DESC;
-```
+```text
 
 ## Service Principal Access
 
@@ -452,7 +452,7 @@ GRANT SELECT, MODIFY ON SCHEMA prod.bronze TO `sp-etl-pipeline`;
 GRANT USE CATALOG ON CATALOG prod TO `sp-bi-dashboard`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `sp-bi-dashboard`;
 GRANT SELECT ON SCHEMA prod.gold TO `sp-bi-dashboard`;
-```
+```text
 
 ### Service Principal Best Practices
 
@@ -474,7 +474,7 @@ GRANT SELECT ON SCHEMA prod.gold TO `sp-bi-dashboard`;
 ```sql
 GRANT USE CATALOG ON CATALOG prod TO `user@company.com`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `user@company.com`;
-```
+```text
 
 ### 2. View Security Bypass
 
@@ -485,7 +485,7 @@ GRANT USE SCHEMA ON SCHEMA prod.gold TO `user@company.com`;
 ```sql
 REVOKE SELECT ON TABLE prod.gold.customers FROM `analysts`;
 GRANT SELECT ON VIEW prod.secure.customers TO `analysts`;
-```
+```text
 
 ### 3. Function Not Executing
 
@@ -495,7 +495,7 @@ GRANT SELECT ON VIEW prod.secure.customers TO `analysts`;
 
 ```sql
 GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
-```
+```text
 
 ### 4. Row Filter Performance
 

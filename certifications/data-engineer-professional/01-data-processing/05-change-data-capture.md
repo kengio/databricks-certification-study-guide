@@ -31,7 +31,7 @@ flowchart LR
         Changes --> Apply[Apply Changes]
         Apply --> Delta[Delta Tables]
     end
-```
+```text
 
 ## CDC Fundamentals
 
@@ -71,7 +71,7 @@ TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
 -- Enable on existing table
 ALTER TABLE orders
 SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
-```
+```text
 
 ```python
 # Enable via Python
@@ -79,7 +79,7 @@ spark.sql("""
     ALTER TABLE orders
     SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
 """)
-```
+```text
 
 ### CDF Metadata Columns
 
@@ -102,7 +102,7 @@ SELECT * FROM table_changes('catalog.schema.orders', '2024-01-01', '2024-01-31')
 
 -- Read changes from specific version to latest
 SELECT * FROM table_changes('catalog.schema.orders', 5);
-```
+```text
 
 ### Reading Change Data - Python (Batch)
 
@@ -120,7 +120,7 @@ changes_df = (spark.read.format("delta")
     .option("startingTimestamp", "2024-01-01")
     .option("endingTimestamp", "2024-01-31")
     .table("catalog.schema.orders"))
-```
+```text
 
 ### Reading Change Data - Python (Streaming)
 
@@ -136,7 +136,7 @@ query = (changes_stream.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .start("/target/path"))
-```
+```text
 
 ### CDF Change Types
 
@@ -155,7 +155,7 @@ sequenceDiagram
 
     User->>Table: DELETE (id=1)
     Table->>CDF: delete: (id=1, value=150)
-```
+```text
 
 ## Processing CDF Changes
 
@@ -182,7 +182,7 @@ deletes = changes_df.filter(col("_change_type") == "delete")
 latest_changes = changes_df.filter(
     col("_change_type").isin("insert", "update_postimage")
 )
-```
+```text
 
 ### Propagate Changes to Downstream Table
 
@@ -213,7 +213,7 @@ target.alias("t").merge(
 ).whenNotMatchedInsertAll(
     condition="s._change_type = 'insert'"
 ).execute()
-```
+```text
 
 ## MERGE and CDF
 
@@ -228,7 +228,7 @@ flowchart TD
     Match -->|Yes, UPDATE| UP[update_preimage + update_postimage]
     Match -->|Yes, DELETE| DEL[delete]
     Match -->|No, INSERT| INS[insert]
-```
+```text
 
 ```sql
 -- This MERGE on a CDF-enabled table
@@ -243,7 +243,7 @@ WHEN NOT MATCHED THEN INSERT *;
 -- For matched deletes: _change_type = 'delete'
 -- For matched updates: _change_type = 'update_preimage' and 'update_postimage'
 -- For not matched: _change_type = 'insert'
-```
+```text
 
 ## APPLY CHANGES (Lakeflow/DLT)
 
@@ -268,7 +268,7 @@ dlt.apply_changes(
     apply_as_truncates=expr("operation = 'TRUNCATE'"),
     except_column_list=["operation", "_rescued_data"]
 )
-```
+```text
 
 ### APPLY CHANGES Parameters
 
@@ -295,7 +295,7 @@ dlt.apply_changes(
     sequence_by=col("updated_at"),
     stored_as_scd_type=1  # Default
 )
-```
+```text
 
 ### SCD Type 2
 
@@ -309,7 +309,7 @@ dlt.apply_changes(
     sequence_by=col("updated_at"),
     stored_as_scd_type=2
 )
-```
+```text
 
 SCD Type 2 adds these columns to the target:
 
@@ -324,7 +324,7 @@ gantt
     Version 1 (Name: John) :v1, 2024-01-01, 2024-03-15
     Version 2 (Name: Johnny) :v2, 2024-03-15, 2024-06-01
     Version 3 (Name: John D.) :active, v3, 2024-06-01, 2024-12-31
-```
+```text
 
 ### SQL Syntax (DLT)
 
@@ -340,7 +340,7 @@ KEYS (customer_id)
 SEQUENCE BY updated_at
 COLUMNS * EXCEPT (operation, _rescued_data)
 STORED AS SCD TYPE 2;
-```
+```text
 
 ## SCD Patterns with MERGE
 
@@ -358,7 +358,7 @@ WHEN MATCHED THEN
 WHEN NOT MATCHED THEN
     INSERT (customer_id, name, email, created_at, updated_at)
     VALUES (s.customer_id, s.name, s.email, current_timestamp(), current_timestamp());
-```
+```text
 
 ### SCD Type 2 (Historical)
 
@@ -392,7 +392,7 @@ WHERE NOT EXISTS (
     AND t.name = s.name
     AND t.email = s.email
 );
-```
+```text
 
 ### SCD Type 2 with MERGE (Single Statement)
 
@@ -439,6 +439,6 @@ spark.sql("""
         AND t.name = s.name AND t.email = s.email
     )
 """)
-```
+```text
 
 > **Continue reading:** [Part 2 — CDC Best Practices, Pipeline Patterns, Row Tracking, Multi-Hop CDC & Exam Tips](./11-change-data-capture-part2.md)

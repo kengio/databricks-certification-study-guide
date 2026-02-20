@@ -38,7 +38,7 @@ SELECT id
       ,lastName
 FROM customerLocations
 WHERE country = 'FRANCE';
-```
+```text
 
 Which line of code correctly fills in the blank to add a table property indicating PII?
 
@@ -93,7 +93,7 @@ Which line of code correctly fills in the blank to add a table property indicati
 > SELECT * FROM march_transactions
 > UNION
 > SELECT * FROM april_transactions;
-> ```
+> ```text
 >
 > `UNION` (without `ALL`) removes duplicate rows across the combined result. Since the two tables share no overlapping records, all rows from both tables are included exactly once in the output.
 
@@ -109,7 +109,7 @@ review_period = check_review_period()
 
 _____
     run_final_block()
-```
+```text
 
 What control flow statement should be used to complete the blank?
 
@@ -227,7 +227,7 @@ What control flow statement should be used to complete the blank?
 SELECT store_id,
        _____ AS exp_employees
 FROM stores
-```
+```text
 
 Which code correctly completes the blank using the FILTER higher-order function?
 
@@ -245,7 +245,7 @@ Which code correctly completes the blank using the FILTER higher-order function?
 ```python
 table_name = "sales"
 result = _____(f"SELECT * FROM {table_name}")
-```
+```text
 
 Which method completes the blank?
 
@@ -262,7 +262,7 @@ Which method completes the blank?
 
 ```sql
 CREATE DATABASE IF NOT EXISTS customer360;
-```
+```text
 
 Where will the `customer360` database be situated?
 
@@ -304,7 +304,7 @@ Where will the `customer360` database be situated?
 > ```python
 > def add_integers(x, y):
 >     return x + y
-> ```
+> ```text
 >
 > In Python, `def` defines a function and `return` outputs the result. Using `print` instead of `return` would output to the console but the function would return `None`, making it unusable in further computation. Using `function` (JavaScript syntax) would cause a `SyntaxError`.
 
@@ -327,7 +327,7 @@ Where will the `customer360` database be situated?
 
 ```sql
 SELECT name, count(*) FROM people GROUP BY 2
-```
+```text
 
 > [!success]- Answer
 > `GROUP BY` using a numeric ordinal position is not valid in Spark SQL.

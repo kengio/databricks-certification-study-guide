@@ -29,7 +29,7 @@ flowchart TD
         S1 & S2 & S3 & S4 --> D3[Post-load]
         S1 & S2 & S3 & S4 --> D4[Continuous streaming]
     end
-```
+```text
 
 ## Why Duplicates Occur
 
@@ -55,7 +55,7 @@ flowchart TD
     DuringLoad --> D1[MERGE / dropDuplicates]
     PostLoad --> P1[Periodic cleanup jobs]
     Streaming --> S1[Watermark-based dedup]
-```
+```text
 
 | Strategy | When | Pros | Cons |
 | :--- | :--- | :--- | :--- |
@@ -77,7 +77,7 @@ df_deduped = df.dropDuplicates(["order_id"])
 
 # Remove duplicates on multiple columns
 df_deduped = df.dropDuplicates(["customer_id", "order_date", "product_id"])
-```
+```text
 
 ### Keep First vs Keep Last
 
@@ -102,7 +102,7 @@ df_first = (df
     .withColumn("rn", row_number().over(window))
     .filter(col("rn") == 1)
     .drop("rn"))
-```
+```text
 
 ### SQL Deduplication
 
@@ -128,7 +128,7 @@ SELECT
     FIRST(name) as name
 FROM customers
 GROUP BY customer_id;
-```
+```text
 
 ### rank() vs row_number() vs dense_rank()
 
@@ -140,7 +140,7 @@ window = Window.partitionBy("customer_id").orderBy(col("amount").desc())
 (df.withColumn("row_num", row_number().over(window))
     .withColumn("rank", rank().over(window))
     .withColumn("dense_rank", dense_rank().over(window)))
-```
+```text
 
 | Function | Ties Handling | Values for [100, 100, 90] |
 | :--- | :--- | :--- |
@@ -162,7 +162,7 @@ MERGE INTO target AS t
 USING source AS s
 ON t.id = s.id
 WHEN NOT MATCHED THEN INSERT *;
-```
+```text
 
 ### MERGE with Duplicate Source
 
@@ -186,7 +186,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```
+```text
 
 ### Handling Multiple Matches in MERGE
 
@@ -199,7 +199,7 @@ target.merge(source, "t.order_id = s.order_id")  # Error!
 # Fix: Deduplicate source
 source_deduped = source.dropDuplicates(["order_id"])
 target.merge(source_deduped, "t.order_id = s.order_id")  # Works
-```
+```text
 
 ## Streaming Deduplication
 
@@ -215,7 +215,7 @@ query = (deduped_stream.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .start("/target"))
-```
+```text
 
 ### Watermark Requirement (Exam Important)
 
@@ -235,7 +235,7 @@ query = (deduped_stream.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .start("/target"))
-```
+```text
 
 **Why watermarks are required:**
 
@@ -252,7 +252,7 @@ More efficient streaming dedup that only checks within watermark window:
 deduped_stream = (stream_df
     .withWatermark("event_time", "10 minutes")
     .dropDuplicatesWithinWatermark(["id"]))
-```
+```text
 
 | Method | State Size | Duplicate Detection |
 |--------|------------|---------------------|
@@ -268,7 +268,7 @@ from pyspark.sql.functions import window
 deduped = (stream_df
     .withWatermark("event_time", "1 hour")
     .dropDuplicates(["id", window("event_time", "1 hour")]))
-```
+```text
 
 ## Idempotent Writes (Exam Critical)
 
@@ -297,7 +297,7 @@ def idempotent_write(batch_df, batch_id):
     ).whenMatchedUpdateAll(
     ).whenNotMatchedInsertAll(
     ).execute()
-```
+```text
 
 ### foreachBatch Idempotent Pattern
 
@@ -323,7 +323,7 @@ query = (stream_df.writeStream
     .foreachBatch(process_batch_idempotent)
     .option("checkpointLocation", "/checkpoint")
     .start())
-```
+```text
 
 ### Transaction ID Pattern
 
@@ -348,7 +348,7 @@ def process_with_txn_tracking(batch_df, batch_id):
     spark.sql(f"""
         INSERT INTO processing_log VALUES ({batch_id}, current_timestamp())
     """)
-```
+```text
 
 ## Deduplication in Medallion Architecture
 
@@ -365,7 +365,7 @@ flowchart LR
     subgraph Gold
         S --> G[Aggregations<br>naturally handle dupes]
     end
-```
+```text
 
 ### Bronze Layer
 
@@ -378,7 +378,7 @@ bronze_df = (raw_df
     .withColumn("_source_file", input_file_name()))
 
 bronze_df.write.format("delta").mode("append").save("/bronze/orders")
-```
+```text
 
 ### Silver Layer
 
@@ -404,7 +404,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```
+```text
 
 ### Gold Layer
 
@@ -420,7 +420,7 @@ gold_df = spark.sql("""
     FROM silver.orders
     GROUP BY date
 """)
-```
+```text
 
 ## Performance Considerations
 
@@ -432,7 +432,7 @@ df.dropDuplicates(["order_id"])
 
 # Avoid: Using all columns when key exists
 df.dropDuplicates()  # Slower, hashes all columns
-```
+```text
 
 ### Partition Alignment
 
@@ -447,7 +447,7 @@ from pyspark.sql.functions import concat, lit, floor, rand
 (df.withColumn("salt", floor(rand() * 10))
     .repartition("salt")
     .dropDuplicates(["order_id"]))
-```
+```text
 
 ### Memory for Streaming State
 
@@ -457,7 +457,7 @@ query.lastProgress["stateOperators"]
 
 # Configure state checkpointing
 spark.conf.set("spark.sql.streaming.stateStore.stateSchemaCheck", "true")
-```
+```text
 
 ## Monitoring Duplicates
 
@@ -474,7 +474,7 @@ total_duplicates = duplicate_counts.agg(
 ).collect()[0][0]
 
 print(f"Total duplicate records: {total_duplicates}")
-```
+```text
 
 ### Duplicate Detection Query
 
@@ -488,7 +488,7 @@ FROM orders
 GROUP BY order_id
 HAVING COUNT(*) > 1
 ORDER BY occurrence_count DESC;
-```
+```text
 
 ### Data Quality Metrics
 
@@ -500,7 +500,7 @@ duplicate_records = total_records - unique_records
 duplicate_rate = duplicate_records / total_records * 100
 
 print(f"Duplicate rate: {duplicate_rate:.2f}%")
-```
+```text
 
 ## Use Cases
 
@@ -565,7 +565,7 @@ CREATE TABLE orders (
 -- Inserts automatically get unique order_id
 INSERT INTO orders (customer_id, order_date, amount)
 VALUES (100, '2024-01-15', 99.99);
-```
+```text
 
 Identity columns provide:
 
@@ -585,7 +585,7 @@ SET TBLPROPERTIES ('delta.enableRowTracking' = 'true');
 -- Query includes hidden _metadata columns for lineage
 SELECT *, _metadata.row_id, _metadata.row_commit_version
 FROM orders;
-```
+```text
 
 Use Row Tracking to:
 

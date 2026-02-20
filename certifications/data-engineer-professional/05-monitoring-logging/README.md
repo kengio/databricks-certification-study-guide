@@ -21,7 +21,7 @@ flowchart LR
     ML --> SU[Spark UI Debugging]
     ML --> LE[Lakeflow Event Logs]
     ML --> QP[Query Profiler]
-```
+```text
 
 ## Section Contents
 
@@ -45,7 +45,7 @@ flowchart TD
     Billing --> BU[system.billing.usage]
     Compute --> CL[system.compute.clusters]
     Query --> QH[system.query.history]
-```
+```text
 
 ### Key System Tables
 
@@ -66,7 +66,7 @@ flowchart TD
     Stage1 --> Task2[Task 1.2]
     Stage2 --> Task3[Task 2.1]
     Stage2 --> Task4[Task 2.2]
-```
+```text
 
 ### Key Metrics to Monitor
 
@@ -96,7 +96,7 @@ flowchart TD
 SELECT *
 FROM event_log(TABLE(pipeline_name))
 WHERE event_type = 'flow_progress'
-```
+```text
 
 ## Exam Tips
 

@@ -41,7 +41,7 @@ flowchart TB
         Cat2["CATALOG: dev"]
         Cat3["CATALOG: sandbox"]
     end
-```
+```text
 
 ![Unity Catalog Explorer showing namespace hierarchy](../../images/databricks-ui/catalog-explorer/namespace-hierarchy.png)
 
@@ -57,7 +57,7 @@ catalog.schema.table
 prod.bronze.raw_orders
 dev.silver.customers
 main.gold.daily_sales
-```
+```text
 
 ## Key Concepts
 
@@ -88,7 +88,7 @@ SHOW CATALOGS;
 
 -- Use a catalog
 USE CATALOG prod;
-```
+```text
 
 ### Schema (Database)
 
@@ -105,7 +105,7 @@ SHOW SCHEMAS IN prod;
 USE SCHEMA prod.bronze;
 -- or
 USE prod.bronze;
-```
+```text
 
 ### Tables
 
@@ -122,7 +122,7 @@ CREATE TABLE prod.silver.customers (
   name STRING,
   email STRING
 );
-```
+```text
 
 #### External Tables
 
@@ -135,7 +135,7 @@ CREATE TABLE prod.silver.customers (
 CREATE TABLE prod.bronze.raw_orders
 LOCATION 's3://my-bucket/raw/orders/'
 AS SELECT * FROM json.`s3://my-bucket/landing/orders/`;
-```
+```text
 
 ### Views
 
@@ -150,7 +150,7 @@ CREATE MATERIALIZED VIEW prod.gold.customer_summary AS
 SELECT customer_id, COUNT(*) as order_count
 FROM prod.silver.orders
 GROUP BY customer_id;
-```
+```text
 
 ### Functions
 
@@ -162,7 +162,7 @@ RETURN CONCAT(LEFT(email, 2), '****@', SPLIT(email, '@')[1]);
 
 -- Use the function
 SELECT prod.common.mask_email(email) FROM prod.silver.customers;
-```
+```text
 
 ## Access Control
 
@@ -206,7 +206,7 @@ REVOKE SELECT ON TABLE prod.gold.daily_sales FROM `data_analysts`;
 
 -- Show grants
 SHOW GRANTS ON TABLE prod.gold.daily_sales;
-```
+```text
 
 ### Ownership
 
@@ -219,7 +219,7 @@ SET OWNER TO `data_engineering`;
 
 -- Check ownership
 DESCRIBE TABLE EXTENDED prod.silver.customers;
-```
+```text
 
 ## External Locations and Credentials
 
@@ -233,7 +233,7 @@ CREATE STORAGE CREDENTIAL my_s3_cred
 WITH (
   AWS_IAM_ROLE = 'arn:aws:iam::123456789:role/databricks-access'
 );
-```
+```text
 
 ### External Locations
 
@@ -247,7 +247,7 @@ WITH (STORAGE CREDENTIAL my_s3_cred);
 
 -- Grant access
 GRANT READ FILES ON EXTERNAL LOCATION my_external_loc TO `data_engineers`;
-```
+```text
 
 ## Data Lineage
 
@@ -276,7 +276,7 @@ View lineage in the Databricks UI:
 SELECT *
 FROM system.information_schema.tables
 WHERE table_name LIKE '%customer%';
-```
+```text
 
 ### Tags and Comments
 
@@ -291,7 +291,7 @@ ALTER COLUMN email COMMENT 'Customer email address, PII';
 -- Add tags (for classification)
 ALTER TABLE prod.silver.customers
 SET TAGS ('pii' = 'true', 'owner' = 'data-team');
-```
+```text
 
 ## Common Patterns
 
@@ -305,7 +305,7 @@ flowchart LR
         dev[dev]
         sandbox[sandbox]
     end
-```
+```text
 
 ### Data Mesh
 
@@ -317,7 +317,7 @@ flowchart LR
         finance[finance]
         shared[shared]
     end
-```
+```text
 
 ## Use Cases
 
@@ -346,7 +346,7 @@ CREATE TABLE prod.silver.customers
 AS SELECT * FROM hive_metastore.default.customers;
 
 -- Or use SYNC to keep in sync during migration
-```
+```text
 
 ## Practice Questions
 

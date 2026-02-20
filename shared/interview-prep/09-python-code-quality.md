@@ -43,7 +43,7 @@ You're writing a Python function to read 50 million records from a paginated RES
 >
 > for record in fetch_all_records(url):  # processing starts only after all pages fetched
 >     process(record)
-> ```
+> ```text
 >
 > **The generator approach (memory-efficient)**:
 >
@@ -63,7 +63,7 @@ You're writing a Python function to read 50 million records from a paginated RES
 >
 > for record in stream_records(url):  # processing starts immediately, O(1) memory
 >     process(record)
-> ```
+> ```text
 >
 > **Composing generator pipelines**:
 >
@@ -85,7 +85,7 @@ You're writing a Python function to read 50 million records from a paginated RES
 > # Process first 1000 without fetching everything
 > for record in itertools.islice(pipeline, 1000):
 >     write_to_delta(record)
-> ```
+> ```text
 >
 > **Key trade-off**: Generators cannot be iterated twice — once exhausted, you must re-create them. If you need to iterate the same dataset multiple times (e.g., compute stats then process), materialize to a list or use Delta Lake as the intermediate store.
 >
@@ -164,7 +164,7 @@ Your pipeline steps fail intermittently due to transient API errors (429 rate li
 >     response = requests.get(endpoint, params=params, timeout=10)
 >     response.raise_for_status()
 >     return response.json()
-> ```
+> ```text
 >
 > **Why `functools.wraps` matters**:
 >
@@ -174,7 +174,7 @@ Your pipeline steps fail intermittently due to transient API errors (429 rate li
 >
 > # With functools.wraps:
 > ingest_from_api.__name__  # returns "ingest_from_api" — correct
-> ```
+> ```text
 >
 > **Production alternative — `tenacity`**:
 >
@@ -188,7 +188,7 @@ Your pipeline steps fail intermittently due to transient API errors (429 rate li
 > )
 > def ingest_from_api(endpoint, params):
 >     ...
-> ```
+> ```text
 >
 > `tenacity` handles jitter, custom callbacks on retry, and structured logging out of the box.
 >
@@ -244,7 +244,7 @@ You're writing code that opens a JDBC connection, writes a batch of records, and
 > # Connection closes automatically on success OR failure
 > with JDBCConnection(url, props) as conn:
 >     conn.write(df)
-> ```
+> ```text
 >
 > **Approach 2 — `@contextlib.contextmanager` (simpler for functions)**:
 >
@@ -270,7 +270,7 @@ You're writing code that opens a JDBC connection, writes a batch of records, and
 >
 > with managed_jdbc(url, props) as conn:
 >     conn.write(df)
-> ```
+> ```text
 >
 > **Timer context manager (common pattern)**:
 >
@@ -286,7 +286,7 @@ You're writing code that opens a JDBC connection, writes a batch of records, and
 >
 > with timer("ingest_orders"):
 >     ingest_orders()
-> ```
+> ```text
 >
 > **Key rule**: Put cleanup in `finally`, not in `except` — `finally` runs whether an exception was raised, caught, or never occurred. `except` alone does not run if no exception is raised.
 >
@@ -397,7 +397,7 @@ Your team maintains 20 ingestion pipelines that all follow the same structure: r
 >     checkpoint_path="/checkpoints/orders"
 > )
 > OrdersPipeline(spark, config).run()
-> ```
+> ```text
 >
 > **What `@abstractmethod` enforces**: If you instantiate `BasePipeline` directly or a subclass that does not implement all abstract methods, Python raises `TypeError` at instantiation — not at runtime when the method is called.
 >
@@ -447,7 +447,7 @@ Write a unit test for a PySpark function `deduplicate_orders(df)` that removes d
 >         .withColumn("_rn", row_number().over(window))
 >         .filter(col("_rn") == 1)
 >         .drop("_rn"))
-> ```
+> ```text
 >
 > **Test file:**
 >
@@ -510,7 +510,7 @@ Write a unit test for a PySpark function `deduplicate_orders(df)` that removes d
 >     input_df = spark.createDataFrame(input_data, SCHEMA)
 >     actual_df = deduplicate_orders(input_df)
 >     assert actual_df.count() == 2
-> ```
+> ```text
 >
 > **Why `chispa` over manual `collect()` comparison**:
 >

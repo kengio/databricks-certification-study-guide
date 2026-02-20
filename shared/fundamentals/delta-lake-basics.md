@@ -46,7 +46,7 @@ my_table/
 │   └── 00000000000000000002.json
 ├── part-00000-xxx.parquet
 └── part-00001-xxx.parquet
-```
+```text
 
 Each JSON file contains:
 
@@ -71,7 +71,7 @@ DESCRIBE EXTENDED my_table;
 
 -- View table history
 DESCRIBE HISTORY my_table;
-```
+```text
 
 ## Basic Operations
 
@@ -83,13 +83,13 @@ df = spark.read.format("delta").load("/path/to/table")
 
 # Or using table name
 df = spark.table("my_table")
-```
+```text
 
 ```sql
 -- SQL
 SELECT * FROM my_table;
 SELECT * FROM delta.`/path/to/table`;
-```
+```text
 
 ### Writing to Delta Tables
 
@@ -102,13 +102,13 @@ df.write.format("delta").mode("append").save("/path/to/table")
 
 # Using saveAsTable
 df.write.format("delta").saveAsTable("my_table")
-```
+```text
 
 ```sql
 -- SQL
 INSERT INTO my_table VALUES (1, 'Alice', current_timestamp());
 INSERT OVERWRITE my_table SELECT * FROM source_table;
-```
+```text
 
 ### Update and Delete
 
@@ -121,7 +121,7 @@ WHERE id = 1;
 -- Delete records
 DELETE FROM my_table
 WHERE id = 1;
-```
+```text
 
 ```python
 # Python DeltaTable API
@@ -137,7 +137,7 @@ delta_table.update(
 
 # Delete
 delta_table.delete("id = 1")
-```
+```text
 
 ### MERGE (Upsert)
 
@@ -147,7 +147,7 @@ USING source_table s
 ON t.id = s.id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```
+```text
 
 ```python
 delta_table.alias("t").merge(
@@ -156,7 +156,7 @@ delta_table.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```
+```text
 
 ## Time Travel
 
@@ -171,13 +171,13 @@ SELECT * FROM my_table TIMESTAMP AS OF '2025-01-15 10:00:00';
 
 -- Restore to previous version
 RESTORE TABLE my_table TO VERSION AS OF 5;
-```
+```text
 
 ```python
 # Python
 df = spark.read.format("delta").option("versionAsOf", 5).load("/path/to/table")
 df = spark.read.format("delta").option("timestampAsOf", "2025-01-15").load("/path/to/table")
-```
+```text
 
 ## Schema Management
 
@@ -188,7 +188,7 @@ Delta Lake rejects writes that don't match the table schema:
 ```python
 # This will fail if schema doesn't match
 df.write.format("delta").mode("append").save("/path/to/table")
-```
+```text
 
 ### Schema Evolution
 
@@ -200,7 +200,7 @@ Allow schema changes during writes:
     .mode("append")
     .option("mergeSchema", "true")
     .save("/path/to/table"))
-```
+```text
 
 ```sql
 -- SQL: Add column
@@ -208,7 +208,7 @@ ALTER TABLE my_table ADD COLUMN email STRING;
 
 -- SQL: Change column type (if compatible)
 ALTER TABLE my_table ALTER COLUMN id TYPE BIGINT;
-```
+```text
 
 ## Liquid Clustering
 
@@ -241,7 +241,7 @@ ALTER TABLE orders CLUSTER BY (customer_id);
 
 -- Remove clustering
 ALTER TABLE orders CLUSTER BY NONE;
-```
+```text
 
 ### Liquid Clustering vs Partitioning vs Z-ORDER
 
@@ -285,7 +285,7 @@ SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
 
 -- Enable CDF by default for all new tables in the session
 SET spark.databricks.delta.properties.defaults.enableChangeDataFeed = true;
-```
+```text
 
 ### CDF Metadata Columns
 
@@ -305,7 +305,7 @@ SELECT * FROM table_changes('orders', 1, 10);
 
 -- SQL: Read changes between timestamps
 SELECT * FROM table_changes('orders', '2025-01-01', '2025-01-31');
-```
+```text
 
 ```python
 # Python: Read changes by version range
@@ -319,7 +319,7 @@ changes_df = (spark.read.format("delta")
 inserts = changes_df.filter(col("_change_type") == "insert")
 updates = changes_df.filter(col("_change_type") == "update_postimage")
 deletes = changes_df.filter(col("_change_type") == "delete")
-```
+```text
 
 ### Key Points
 

@@ -27,7 +27,7 @@ flowchart TB
     Parser --> DAG
     DAG --> Execute
     Execute --> Output
-```
+```text
 
 ## Table Types
 
@@ -50,7 +50,7 @@ flowchart TD
     Q1 -->|No| Q3{Updates/Deletes?}
     Q3 -->|Yes| MV2[Materialized View]
     Q3 -->|No| V[View - temporary]
-```
+```text
 
 ## SQL Syntax
 
@@ -103,7 +103,7 @@ AS SELECT
     CURRENT_TIMESTAMP() AS processed_at
 FROM STREAM(LIVE.bronze_orders)
 WHERE order_status != 'cancelled';
-```
+```text
 
 ### Materialized Views
 
@@ -137,7 +137,7 @@ AS SELECT
     COUNT(*) AS order_count
 FROM LIVE.silver_orders
 GROUP BY order_status;
-```
+```text
 
 ### Views (Temporary)
 
@@ -157,7 +157,7 @@ AS SELECT *
 FROM LIVE.silver_customers
 WHERE is_active = true
     AND last_order_date >= DATE_SUB(CURRENT_DATE(), 365);
-```
+```text
 
 ## Python Syntax
 
@@ -228,7 +228,7 @@ def v_recent_orders():
         dlt.read("silver_orders")
         .filter(col("order_date") >= date_sub(current_date(), 30))
     )
-```
+```text
 
 ### Table Properties and Configuration
 
@@ -246,7 +246,7 @@ def v_recent_orders():
 )
 def silver_customers():
     return dlt.read_stream("bronze_customers")
-```
+```text
 
 ### Temporary Tables
 
@@ -261,7 +261,7 @@ def temp_order_enrichment():
         dlt.read("silver_orders")
         .join(dlt.read("silver_products"), "product_id")
     )
-```
+```text
 
 ## Auto Loader Integration
 
@@ -301,7 +301,7 @@ AS SELECT * FROM cloud_files(
     '/mnt/landing/parquet/',
     'parquet'
 );
-```
+```text
 
 ### Python Auto Loader
 
@@ -317,7 +317,7 @@ def bronze_auto_loader():
         .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
         .load("/mnt/landing/events/")
     )
-```
+```text
 
 ## Reading from External Sources
 
@@ -359,7 +359,7 @@ def streaming_from_eventhub():
         .options(**{"eventhubs.connectionString": connection_string})
         .load()
     )
-```
+```text
 
 ### Batch Sources in Materialized Views
 
@@ -376,7 +376,7 @@ def mv_from_jdbc():
         .option("password", dbutils.secrets.get("scope", "password"))
         .load()
     )
-```
+```text
 
 ## Pipeline Configuration
 
@@ -417,7 +417,7 @@ resources:
           alerts:
             - on-update-failure
             - on-flow-failure
-```
+```text
 
 ### Pipeline Parameters
 
@@ -438,7 +438,7 @@ def parameterized_table():
         .load(source_path)
         .withColumn("environment", lit(environment))
     )
-```
+```text
 
 ## Development vs Production
 
@@ -451,7 +451,7 @@ Development Mode (development: true):
 - No schema enforcement initially
 - Pipeline stops on error for debugging
 - Outputs to development target schema
-```
+```text
 
 ### Production Mode
 
@@ -463,7 +463,7 @@ Production Mode (development: false):
 - Retries on transient failures
 - Outputs to production target schema
 - Event log retention for monitoring
-```
+```text
 
 ### Environment-Specific Configuration
 
@@ -496,7 +496,7 @@ targets:
               autoscale:
                 min_workers: 2
                 max_workers: 8
-```
+```text
 
 ## Triggered vs Continuous
 
@@ -509,7 +509,7 @@ Triggered Mode (continuous: false):
 - Cluster terminates after completion
 - Cost-effective for batch workloads
 - Good for: Daily/hourly ETL jobs
-```
+```text
 
 ```python
 # Triggered pipeline processes all data in source
@@ -521,7 +521,7 @@ def batch_processing():
         .format("cloudFiles")
         .load("/mnt/landing/")
     )
-```
+```text
 
 ### Continuous Pipelines
 
@@ -532,7 +532,7 @@ Continuous Mode (continuous: true):
 - Cluster always running
 - Near real-time latency
 - Good for: Streaming workloads, low-latency requirements
-```
+```text
 
 ```python
 # Continuous pipeline for near real-time
@@ -544,7 +544,7 @@ def realtime_processing():
         .option("subscribe", "realtime-topic")
         .load()
     )
-```
+```text
 
 ## Schema Evolution
 
@@ -562,7 +562,7 @@ AS SELECT * FROM cloud_files(
         'cloudFiles.schemaHints', 'id INT, timestamp TIMESTAMP'
     )
 );
-```
+```text
 
 ### Schema Evolution Modes
 
@@ -586,7 +586,7 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 
 # Refresh specific tables
 databricks pipelines start --pipeline-id abc123 --refresh-selection "silver_orders,gold_sales"
-```
+```text
 
 ### Full Refresh vs Incremental
 
@@ -601,7 +601,7 @@ Full Refresh:
 - Clears all data and checkpoints
 - Reprocesses from beginning
 - Use when: Schema changes, backfill, recovery
-```
+```text
 
 ## Common Issues & Errors
 
@@ -623,7 +623,7 @@ FROM cloud_files(
     'json',
     map('cloudFiles.inferColumnTypes', 'true')
 );
-```
+```text
 
 ### 2. Materialized View Performance
 
@@ -639,7 +639,7 @@ AS SELECT
     DATE(event_time) AS date_partition,
     ...
 FROM LIVE.source_table;
-```
+```text
 
 ### 3. Dependency Not Found
 
@@ -659,7 +659,7 @@ def source_table():
 @dlt.table(name="dependent_table")
 def dependent_table():
     return dlt.read_stream("source_table")  # Now it exists
-```
+```text
 
 ### 4. Checkpoint Location Issues
 
@@ -669,7 +669,7 @@ def dependent_table():
 
 ```bash
 databricks pipelines start --pipeline-id abc123 --full-refresh
-```
+```text
 
 ## Exam Tips
 

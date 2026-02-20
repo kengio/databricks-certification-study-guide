@@ -31,7 +31,7 @@ enriched = events_stream.join(
     events_stream.product_id == dim_products.id,
     "left"
 )
-```
+```text
 
 **Important**: The static DataFrame is read once at query start. Changes to the static table won't be reflected until the streaming query is restarted.
 
@@ -63,7 +63,7 @@ result = (df
         outputMode="update",
         timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
     ))
-```
+```text
 
 ### flatMapGroupsWithState
 
@@ -77,7 +77,7 @@ def emit_alerts(key, events, state: GroupState):
         if event.value > threshold:
             alerts.append(Alert(key, event.value, event.timestamp))
     return iter(alerts)
-```
+```text
 
 ## State Store Management
 
@@ -95,7 +95,7 @@ spark.conf.set(
     "spark.sql.streaming.stateStore.providerClass",
     "org.apache.spark.sql.execution.streaming.state.RocksDBStateStoreProvider"
 )
-```
+```text
 
 | Backend | Best For | Memory Usage |
 |---------|----------|--------------|
@@ -113,7 +113,7 @@ spark.conf.set(
 # RocksDB configuration
 spark.conf.set("spark.sql.streaming.stateStore.rocksdb.compactOnCommit", "true")
 spark.conf.set("spark.sql.streaming.stateStore.rocksdb.changelogCheckpointing.enabled", "true")
-```
+```text
 
 ### State Monitoring
 
@@ -129,7 +129,7 @@ if progress and "stateOperators" in progress:
         print(f"  numRowsUpdated: {op.get('numRowsUpdated')}")  # Rows updated this batch
         print(f"  memoryUsedBytes: {op.get('memoryUsedBytes')}")  # Memory usage
         print(f"  numRowsDroppedByWatermark: {op.get('numRowsDroppedByWatermark')}")
-```
+```text
 
 ### Key State Metrics
 
@@ -166,7 +166,7 @@ result = df.groupByKey(...).mapGroupsWithState(
     outputMode="update",
     timeoutConf=GroupStateTimeout.NoTimeout  # State grows forever!
 )
-```
+```text
 
 | Timeout Type | Behavior | Use Case |
 |--------------|----------|----------|
@@ -189,7 +189,7 @@ def update_with_timeout(key, events, state):
         return None
     # ... process events
     state.setTimeoutDuration("30 minutes")  # Reset timeout
-```
+```text
 
 ### Debugging State Issues
 
@@ -205,7 +205,7 @@ progress_history = query.recentProgress
 for p in progress_history:
     if p and "stateOperators" in p:
         print(f"Batch {p['batchId']}: {p['stateOperators'][0].get('numRowsTotal')} rows")
-```
+```text
 
 ## Query Management
 
@@ -229,7 +229,7 @@ query = (df.writeStream
     .queryName("my_streaming_query")
     .format("delta")
     .start("/output/path"))
-```
+```text
 
 ### Monitoring Queries
 
@@ -251,7 +251,7 @@ query.isActive
 
 # Exception (if failed)
 query.exception()
-```
+```text
 
 ### Stopping Queries
 
@@ -268,7 +268,7 @@ query.stop()
 # Stop all queries
 for q in spark.streams.active:
     q.stop()
-```
+```text
 
 ## Checkpoints
 
@@ -278,7 +278,7 @@ Checkpoints store query progress for fault tolerance.
 query = (df.writeStream
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```
+```text
 
 ### Checkpoint Contents
 

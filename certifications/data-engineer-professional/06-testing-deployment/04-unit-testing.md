@@ -32,7 +32,7 @@ flowchart TB
     Unit --> Pytest
     Integration --> Nutter
     E2E --> Great
-```
+```text
 
 ## Testing Pyramid for Data Engineering
 
@@ -63,7 +63,7 @@ my-project/
 │       └── test_aggregations.py
 ├── pytest.ini
 └── requirements-dev.txt
-```
+```text
 
 ### pytest Configuration
 
@@ -79,7 +79,7 @@ markers =
     unit: Unit tests
     integration: Integration tests
     slow: Slow running tests
-```
+```text
 
 ### requirements-dev.txt
 
@@ -89,7 +89,7 @@ pytest-cov>=4.0.0
 pytest-mock>=3.10.0
 pyspark>=3.4.0
 chispa>=0.9.0
-```
+```text
 
 ## Writing Unit Tests
 
@@ -142,7 +142,7 @@ class TestCleaning:
         # Assert
         names = [row.name for row in result.collect()]
         assert names == ["alice", "bob"]
-```
+```text
 
 ### Source Code Being Tested
 
@@ -162,7 +162,7 @@ def standardize_names(df: DataFrame, column: str) -> DataFrame:
 def deduplicate(df: DataFrame, key_columns: list) -> DataFrame:
     """Remove duplicate rows based on key columns."""
     return df.dropDuplicates(key_columns)
-```
+```text
 
 ## Testing with chispa
 
@@ -217,7 +217,7 @@ class TestAggregations:
 
         # Assert
         assert result.count() == 0
-```
+```text
 
 ### Schema Comparison
 
@@ -240,7 +240,7 @@ def test_output_schema_matches_expected(self, spark):
 
     # Assert
     assert_schema_equality(result.schema, expected_schema)
-```
+```text
 
 ## Mocking Spark and dbutils
 
@@ -269,7 +269,7 @@ def mock_spark():
     """Mock SparkSession for unit tests not needing real Spark."""
     mock = MagicMock(spec=SparkSession)
     return mock
-```
+```text
 
 ### Mocking dbutils
 
@@ -303,7 +303,7 @@ def test_function_using_dbutils(mock_dbutils):
     with patch('src.my_module.dbutils', mock_dbutils):
         result = my_function_using_dbutils()
         assert result is not None
-```
+```text
 
 ### Mocking External Services
 
@@ -343,7 +343,7 @@ class TestAPIClient:
         with pytest.raises(Exception) as exc_info:
             fetch_data("https://api.example.com/data")
         assert "Connection failed" in str(exc_info.value)
-```
+```text
 
 ## Nutter Framework
 
@@ -355,7 +355,7 @@ Nutter is a Databricks-native testing framework:
 - Supports test fixtures (before/after)
 - Integrates with CI/CD pipelines
 - Generates JUnit-compatible reports
-```
+```text
 
 ### Installing Nutter
 
@@ -365,7 +365,7 @@ pip install nutter
 
 # Or add to cluster library
 # Libraries → Install New → PyPI: nutter
-```
+```text
 
 ### Nutter Test Notebook
 
@@ -438,7 +438,7 @@ print(result.to_string())
 is_job = dbutils.notebook.entry_point.getDbutils().notebook().getContext().currentRunId().isDefined()
 if is_job:
     result.exit(dbutils)
-```
+```text
 
 ### Running Nutter from CLI
 
@@ -461,6 +461,6 @@ nutter run /Workspace/Users/user@company.com/project/tests/ \
 nutter run /Workspace/Users/user@company.com/project/tests/ \
     --cluster_id abc-123-def \
     --junit_report results.xml
-```
+```text
 
 > **Continue reading:** [Part 2 — Testing Patterns, CI/CD Integration, Best Practices & Exam Tips](./11-unit-testing-part2.md)

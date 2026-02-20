@@ -23,13 +23,13 @@ flowchart TB
     Optimizer["Catalyst Optimizer"]
     Planner["Physical Planner"]
     Executor["Spark Engine"]
-    
+
     SQL --> Parser
     Parser --> Analyzer
     Analyzer --> Optimizer
     Optimizer --> Planner
     Planner --> Executor
-```
+```text
 
 ## Spark SQL vs DataFrames
 
@@ -65,7 +65,7 @@ CREATE TABLE my_external (
 USING DELTA
 LOCATION '/mnt/data/my_table'
 """)
-```
+```text
 
 ### From DataFrame
 
@@ -85,7 +85,7 @@ CREATE TABLE my_parquet
 USING PARQUET
 LOCATION '/mnt/data/input.parquet'
 """)
-```
+```text
 
 ## Queries and Aggregations
 
@@ -93,7 +93,7 @@ LOCATION '/mnt/data/input.parquet'
 
 ```python
 spark.sql("""
-SELECT 
+SELECT
     id,
     name,
     salary
@@ -102,13 +102,13 @@ WHERE salary > 50000
 ORDER BY salary DESC
 LIMIT 10
 """).show()
-```
+```text
 
 ### Aggregations
 
 ```python
 spark.sql("""
-SELECT 
+SELECT
     department,
     COUNT(*) as emp_count,
     AVG(salary) as avg_salary,
@@ -118,19 +118,19 @@ FROM employees
 GROUP BY department
 HAVING COUNT(*) > 5
 """)
-```
+```text
 
 ### Window Functions
 
 ```sql
-SELECT 
+SELECT
     name,
     department,
     salary,
     ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) as rank,
     SUM(salary) OVER (PARTITION BY department) as dept_total
 FROM employees
-```
+```text
 
 ## Views and Temporary Views
 
@@ -147,7 +147,7 @@ WHERE salary > 100000
 
 # Drop view
 spark.sql("DROP VIEW IF EXISTS high_earners")
-```
+```text
 
 ### Temporary Views
 
@@ -166,7 +166,7 @@ SELECT * FROM large_table
 
 # Query global temp view
 spark.sql("SELECT * FROM global_temp.global_view")
-```
+```text
 
 ## Catalog Operations
 
@@ -184,7 +184,7 @@ spark.catalog.listColumns("my_table")
 
 # Check if table exists
 spark.catalog.tableExists("my_table")
-```
+```text
 
 ### Switching Context
 
@@ -194,7 +194,7 @@ spark.sql("USE my_database")
 
 # Now queries reference my_database by default
 spark.sql("SELECT * FROM my_table")  # Uses my_database.my_table
-```
+```text
 
 ## Data Types
 
@@ -202,7 +202,7 @@ spark.sql("SELECT * FROM my_table")  # Uses my_database.my_table
 -- Numeric Types
 INT, BIGINT, FLOAT, DOUBLE, DECIMAL(10,2)
 
--- String Types  
+-- String Types
 STRING, VARCHAR(100), CHAR(10)
 
 -- Boolean
@@ -218,7 +218,7 @@ STRUCT<name STRING, age INT>
 
 -- Binary
 BINARY
-```
+```text
 
 ## Partitioning
 
@@ -235,11 +235,11 @@ USING DELTA
 
 # Insert with partition
 spark.sql("""
-INSERT INTO sales 
+INSERT INTO sales
 PARTITION (year=2025, month=1)
 SELECT id, amount FROM new_sales
 """)
-```
+```text
 
 ## SQL vs Hive SQL Differences
 

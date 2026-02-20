@@ -33,7 +33,7 @@ This part covers testing strategies within CI/CD pipelines, secret management, d
   uses: codecov/codecov-action@v3
   with:
     files: coverage.xml
-```
+```text
 
 ### Integration Testing
 
@@ -63,7 +63,7 @@ This part covers testing strategies within CI/CD pipelines, secret management, d
   env:
     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-```
+```text
 
 ### Data Quality Testing
 
@@ -85,7 +85,7 @@ def test_gold_aggregation():
     """Verify gold aggregation produces expected results."""
     df = spark.table("catalog.gold.daily_summary")
     assert df.count() > 0, "Gold table is empty"
-```
+```text
 
 ## Deployment Strategies
 
@@ -102,7 +102,7 @@ flowchart LR
     Deploy[Deploy] --> Green
     Test[Test Green] --> Switch[Switch Traffic]
     Switch --> Green
-```
+```text
 
 ```yaml
 # Bundle configuration for blue-green
@@ -124,7 +124,7 @@ targets:
       jobs:
         etl_job:
           name: "ETL Pipeline - Green"
-```
+```text
 
 ### Canary Deployment
 
@@ -152,7 +152,7 @@ def canary_deploy(job_name, canary_percentage=10):
         print("Canary unhealthy, rolling back")
         rollback_canary(job_name)
         raise Exception("Canary deployment failed")
-```
+```text
 
 ## Secret Management in CI/CD
 
@@ -170,7 +170,7 @@ jobs:
     environment: production
     env:
       DATABRICKS_HOST: ${{ secrets.PROD_DATABRICKS_HOST }}
-```
+```text
 
 ### Azure DevOps Variable Groups
 
@@ -182,7 +182,7 @@ variables:
 # Or use Azure Key Vault
 variables:
   - group: databricks-keyvault-secrets
-```
+```text
 
 ### HashiCorp Vault Integration
 
@@ -199,7 +199,7 @@ variables:
 
 - name: Deploy
   run: databricks bundle deploy -t prod
-```
+```text
 
 ## Monitoring and Notifications
 
@@ -219,7 +219,7 @@ variables:
       Commit: ${{ github.sha }}
   env:
     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-```
+```text
 
 ### Email Notifications
 
@@ -234,7 +234,7 @@ variables:
       Pipeline $(Build.DefinitionName) failed.
       Branch: $(Build.SourceBranch)
       Build: $(Build.BuildNumber)
-```
+```text
 
 ## Common Issues & Errors
 
@@ -253,7 +253,7 @@ databricks workspace list /
 # Check token expiration
 # PAT tokens have configurable lifetime
 # Service principal tokens may need refresh
-```
+```text
 
 ### 2. Bundle Validation Errors
 
@@ -267,7 +267,7 @@ databricks workspace list /
   run: |
     echo "Host: $DATABRICKS_HOST"
     databricks bundle validate --debug
-```
+```text
 
 ### 3. Deployment Timeout
 
@@ -284,7 +284,7 @@ databricks workspace list /
 # Or deploy incrementally
 - name: Deploy jobs only
   run: databricks bundle deploy -t prod --resource jobs
-```
+```text
 
 ### 4. State File Conflicts
 
@@ -297,7 +297,7 @@ databricks workspace list /
 concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: false
-```
+```text
 
 ### 5. Missing Dependencies
 
@@ -314,7 +314,7 @@ from unittest.mock import MagicMock
 def mock_spark():
     spark = MagicMock()
     return spark
-```
+```text
 
 ## Exam Tips
 

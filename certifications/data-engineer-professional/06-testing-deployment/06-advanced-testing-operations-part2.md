@@ -141,7 +141,7 @@ class PostDeploymentValidator:
                     for row in response.result.data_array
                 ]
         return []
-```
+```text
 
 ```bash
 #!/bin/bash
@@ -169,7 +169,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Post-deployment validation PASSED"
-```
+```text
 
 ### Automated Rollback Triggers
 
@@ -232,7 +232,7 @@ jobs:
             Rolled back to: ${{ steps.pre-deploy.outputs.commit_before }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-```
+```text
 
 ## GitOps for Databricks
 
@@ -273,7 +273,7 @@ databricks-platform/
 └── infrastructure/           # Terraform/IaC
     ├── workspaces/
     └── unity-catalog/
-```
+```text
 
 ```yaml
 # .github/workflows/cd.yml - Path-filtered deployment for mono-repo
@@ -331,7 +331,7 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.PROD_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.PROD_TOKEN }}
-```
+```text
 
 ### Branch Strategy Comparison
 
@@ -354,7 +354,7 @@ flowchart LR
         Develop --> Release
         Release --> Main2
     end
-```
+```text
 
 | Strategy | Best For | Pros | Cons |
 | :--- | :--- | :--- | :--- |
@@ -400,7 +400,7 @@ flowchart LR
 
 ## Rollback Plan
 <!-- How would you roll back this change if something goes wrong? -->
-```
+```text
 
 ```text
 # CODEOWNERS - Enforce reviews by area
@@ -418,7 +418,7 @@ flowchart LR
 # CI/CD changes require platform team review
 /.github/                   @data-platform-team
 **/databricks.yml           @data-platform-team
-```
+```text
 
 ## Practice Questions
 
@@ -505,7 +505,7 @@ D) Skip unit tests and use Great Expectations for all validation
 - name: Debug OIDC
   run: |
     echo "Subject: repo:${{ github.repository }}:ref:${{ github.ref }}"
-```
+```text
 
 ### 2. Multi-Project Bundle Include Path Resolution
 
@@ -519,7 +519,7 @@ D) Skip unit tests and use Great Expectations for all validation
 include:
   - ../../shared/common-clusters.yml    # Relative to databricks.yml
   - resources/*.yml                      # Relative to databricks.yml
-```
+```text
 
 ### 3. Coverage Drops Below Threshold
 
@@ -541,7 +541,7 @@ exclude_lines =
     # Databricks-specific lines that cannot run locally
     dbutils.widgets
     display\(
-```
+```text
 
 ### 4. Integration Test Schema Collisions
 
@@ -558,7 +558,7 @@ def test_schema(db_spark):
     db_spark.sql(f"CREATE SCHEMA {schema}")
     yield schema
     db_spark.sql(f"DROP SCHEMA {schema} CASCADE")
-```
+```text
 
 ### 5. Blue/Green View Switch Fails
 
@@ -573,7 +573,7 @@ GRANT USAGE ON SCHEMA prod_catalog.prod_blue TO `prod-deploy-sp`;
 GRANT SELECT ON SCHEMA prod_catalog.prod_blue TO `prod-deploy-sp`;
 GRANT USAGE ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
-```
+```text
 
 ### 6. Canary Deployment Timeout
 
@@ -594,7 +594,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 - name: Check canary health
   run: |
     databricks bundle run canary_health_check -t prod-canary
-```
+```text
 
 ### 7. Artifact Build Fails in CI
 
@@ -614,7 +614,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
     cd libs/etl-core
     poetry install
     poetry build
-```
+```text
 
 ## Exam Tips
 

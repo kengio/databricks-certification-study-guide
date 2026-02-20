@@ -30,7 +30,7 @@ flowchart TB
     Problem --> Impact
     Impact --> Solution
     Solution --> Optimal[Optimal 1GB Files]
-```
+```text
 
 ## Why File Size Matters
 
@@ -68,7 +68,7 @@ WHERE order_date >= '2024-01-01';
 -- Optimize with Z-ORDER
 OPTIMIZE catalog.schema.orders
 ZORDER BY (customer_id, order_date);
-```
+```text
 
 ### OPTIMIZE Behavior
 
@@ -96,7 +96,7 @@ flowchart LR
     Read --> Combine
     Combine --> Write
     Write --> After
-```
+```text
 
 ### OPTIMIZE Output
 
@@ -110,7 +110,7 @@ OPTIMIZE my_table;
 -- sizeOfFilesAdded: 5368709120 (5 GB)
 -- sizeOfFilesRemoved: 5368709120 (5 GB)
 -- operationMetrics: {...}
-```
+```text
 
 ### Monitoring OPTIMIZE Results
 
@@ -132,7 +132,7 @@ FROM (
     DESCRIBE HISTORY catalog.schema.orders
 )
 WHERE operation = 'OPTIMIZE';
-```
+```text
 
 ## Auto Optimize
 
@@ -147,7 +147,7 @@ SET TBLPROPERTIES (
 
 -- Optimized writes bin-pack data during writes
 -- Reduces small file creation at write time
-```
+```text
 
 ```python
 # Spark configuration for optimized writes
@@ -159,7 +159,7 @@ spark.conf.set("spark.databricks.delta.optimizeWrite.enabled", "true")
     .option("optimizeWrite", "true")
     .mode("append")
     .saveAsTable("catalog.schema.table"))
-```
+```text
 
 ### Auto Compaction
 
@@ -173,7 +173,7 @@ SET TBLPROPERTIES (
 -- Auto compaction runs after writes
 -- Compacts small files automatically
 -- Less aggressive than manual OPTIMIZE
-```
+```text
 
 ### Configuration Options
 
@@ -193,7 +193,7 @@ spark.conf.set("spark.databricks.delta.optimizeWrite.enabled", "true")
 
 # File size configuration
 spark.conf.set("spark.databricks.delta.optimizeWrite.fileSize", "128mb")
-```
+```text
 
 ## Streaming Considerations
 
@@ -209,7 +209,7 @@ Without optimization:
 - Hundreds of small files per hour
 - Query performance degrades over time
 - Maintenance overhead increases
-```
+```text
 
 ### Optimized Writes for Streaming
 
@@ -221,7 +221,7 @@ Without optimization:
     .option("optimizeWrite", "true")
     .trigger(processingTime="10 seconds")
     .table("catalog.schema.streaming_table"))
-```
+```text
 
 ### Auto Compaction for Streaming
 
@@ -232,7 +232,7 @@ SET TBLPROPERTIES (
     'delta.autoOptimize.optimizeWrite' = 'true',
     'delta.autoOptimize.autoCompact' = 'true'
 );
-```
+```text
 
 ### Trigger OPTIMIZE After Streaming
 
@@ -248,7 +248,7 @@ def optimize_after_batch(batch_df, batch_id):
 (stream_df.writeStream
     .foreachBatch(optimize_after_batch)
     .start())
-```
+```text
 
 ## Partitioning Impact on File Size
 
@@ -263,7 +263,7 @@ flowchart TD
     Multiple --> Check{Data Per Partition?}
     Check -->|Large| Good[Good File Sizes]
     Check -->|Small| Bad[Small Files Per Partition]
-```
+```text
 
 ### Over-Partitioning Problem
 
@@ -277,7 +277,7 @@ PARTITIONED BY (order_date, hour, region, store_id)
 CREATE TABLE orders
 PARTITIONED BY (order_date)
 -- 365 partitions, each with good file sizes
-```
+```text
 
 ### File Size Per Partition Target
 
@@ -290,7 +290,7 @@ Example:
 - Daily data: 500 MB → Don't partition by day
 - Daily data: 10 GB → Partition by day is fine
 - Daily data: 100 GB → Consider partitioning by day + hour
-```
+```text
 
 ## VACUUM and File Management
 
@@ -305,7 +305,7 @@ VACUUM catalog.schema.orders RETAIN 168 HOURS;
 
 -- Dry run to see files that would be deleted
 VACUUM catalog.schema.orders DRY RUN;
-```
+```text
 
 ### VACUUM Behavior
 
@@ -319,7 +319,7 @@ VACUUM does NOT:
 - Compact files (use OPTIMIZE)
 - Remove current files
 - Remove files within retention period
-```
+```text
 
 ### VACUUM Best Practices
 
@@ -331,7 +331,7 @@ VACUUM catalog.schema.orders RETAIN 168 HOURS;
 -- Requires disabling safety check
 SET spark.databricks.delta.retentionDurationCheck.enabled = false;
 VACUUM catalog.schema.orders RETAIN 24 HOURS;
-```
+```text
 
 ## Monitoring File Sizes
 
@@ -345,7 +345,7 @@ DESCRIBE DETAIL catalog.schema.orders;
 -- numFiles: 150
 -- sizeInBytes: 5368709120
 -- numPartitions: 30
-```
+```text
 
 ### File Size Distribution
 
@@ -362,7 +362,7 @@ FROM (
 WHERE add IS NOT NULL
 ORDER BY size_mb DESC
 LIMIT 100;
-```
+```text
 
 ### Identify Small File Tables
 
@@ -381,7 +381,7 @@ WHERE table_type = 'MANAGED'
     AND (size_in_bytes / num_files) < 128 * 1024 * 1024  -- < 128 MB
 ORDER BY num_files DESC
 LIMIT 20;
-```
+```text
 
 ## Compaction Strategies
 
@@ -407,7 +407,7 @@ for table in tables:
 
     # Vacuum older data
     spark.sql(f"VACUUM {table} RETAIN 168 HOURS")
-```
+```text
 
 ### Incremental Compaction
 
@@ -416,7 +416,7 @@ for table in tables:
 -- Use predicate to target specific partitions
 OPTIMIZE catalog.schema.orders
 WHERE order_date BETWEEN '2024-01-01' AND '2024-01-07';
-```
+```text
 
 ### Compaction with Z-ORDER
 
@@ -425,7 +425,7 @@ WHERE order_date BETWEEN '2024-01-01' AND '2024-01-07';
 OPTIMIZE catalog.schema.orders
 WHERE order_date >= '2024-01-01'
 ZORDER BY (customer_id);
-```
+```text
 
 ## DLT and File Sizing
 
@@ -438,7 +438,7 @@ Delta Live Tables automatically:
 - Handles streaming compaction
 
 No manual configuration needed for basic use.
-```
+```text
 
 ### DLT Table Properties
 
@@ -453,7 +453,7 @@ No manual configuration needed for basic use.
 )
 def optimized_table():
     return dlt.read_stream("source")
-```
+```text
 
 ## Common Issues & Errors
 
@@ -474,7 +474,7 @@ WHERE order_date = '2024-01-15';
 -- Or by date range
 OPTIMIZE catalog.schema.orders
 WHERE order_date BETWEEN '2024-01-01' AND '2024-01-07';
-```
+```text
 
 ### 2. Files Grow Back After OPTIMIZE
 
@@ -488,7 +488,7 @@ SET TBLPROPERTIES (
     'delta.autoOptimize.optimizeWrite' = 'true',
     'delta.autoOptimize.autoCompact' = 'true'
 );
-```
+```text
 
 ### 3. VACUUM Removes Too Many Files
 
@@ -506,7 +506,7 @@ SET TBLPROPERTIES (
     'delta.logRetentionDuration' = 'interval 30 days',
     'delta.deletedFileRetentionDuration' = 'interval 30 days'
 );
-```
+```text
 
 ### 4. Out of Memory During OPTIMIZE
 
@@ -523,7 +523,7 @@ spark.conf.set("spark.databricks.delta.optimize.minFileSize", "64mb")
 spark.sql("""
     OPTIMIZE table WHERE partition_col = 'specific_value'
 """)
-```
+```text
 
 ## Exam Tips
 

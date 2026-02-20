@@ -28,7 +28,7 @@ curl -X GET \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/permissions/clusters/1234-567890-abc' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ### Set Permissions
 
@@ -48,7 +48,7 @@ curl -X PATCH \
       }
     ]
   }'
-```
+```text
 
 ### Permission Levels
 
@@ -72,7 +72,7 @@ curl -X POST \
     "statement": "SELECT * FROM main.default.my_table LIMIT 100",
     "wait_timeout": "30s"
   }'
-```
+```text
 
 ```python
 # Using SDK
@@ -85,7 +85,7 @@ statement = w.statement_execution.execute_statement(
 # Get results
 for row in statement.result.data_array:
     print(row)
-```
+```text
 
 ## Error Handling
 
@@ -108,7 +108,7 @@ for row in statement.result.data_array:
   "error_code": "RESOURCE_DOES_NOT_EXIST",
   "message": "Job 123456 does not exist"
 }
-```
+```text
 
 ### Common Error Codes
 
@@ -137,7 +137,7 @@ except PermissionDenied:
     print("Access denied")
 except Exception as e:
     print(f"Unexpected error: {e}")
-```
+```text
 
 ## Rate Limiting
 
@@ -171,7 +171,7 @@ def call_with_retry(func, max_retries=3):
 
 # Usage
 result = call_with_retry(lambda: w.jobs.list())
-```
+```text
 
 ## Use Cases
 
@@ -195,7 +195,7 @@ def deploy_job(w, job_config):
         # Create new job
         job = w.jobs.create(**job_config)
         return job.job_id
-```
+```text
 
 ### Monitoring Job Runs
 
@@ -224,7 +224,7 @@ def wait_for_run(w, run_id, timeout_seconds=3600):
 run = w.jobs.run_now(job_id=123456)
 result = wait_for_run(w, run.run_id)
 print(f"Run completed with: {result}")
-```
+```text
 
 ## Common Issues & Errors
 
@@ -244,7 +244,7 @@ https://adb-xxx.azuredatabricks.net//api/2.0/jobs/list
 
 # Correct
 https://adb-xxx.azuredatabricks.net/api/2.0/jobs/list
-```
+```text
 
 ### 3. JSON Encoding Issues
 
@@ -256,7 +256,7 @@ https://adb-xxx.azuredatabricks.net/api/2.0/jobs/list
 import json
 
 payload = json.dumps({"name": "Job with \"quotes\""})
-```
+```text
 
 ### 4. Cluster Not Running for Job
 
@@ -270,7 +270,7 @@ cluster = w.clusters.get(cluster_id="xxx")
 if cluster.state != "RUNNING":
     w.clusters.start(cluster_id="xxx")
     # Wait for startup...
-```
+```text
 
 ## Exam Tips
 

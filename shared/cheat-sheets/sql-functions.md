@@ -78,7 +78,7 @@ function() OVER (
   ORDER BY col2
   ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
 )
-```
+```text
 
 | Function              | Description           |
 | --------------------- | --------------------- |
@@ -107,7 +107,7 @@ SELECT
   salary,
   RANK() OVER (PARTITION BY department ORDER BY salary DESC) as rank
 FROM employees;
-```
+```text
 
 ## Array Functions
 
@@ -142,7 +142,7 @@ FROM table;
 -- Access nested JSON
 SELECT json_col:name, json_col:address:city
 FROM table;
-```
+```text
 
 ## Conditional Functions
 
@@ -164,7 +164,7 @@ SELECT
     ELSE 'large'
   END as size_category
 FROM orders;
-```
+```text
 
 ## Type Conversion
 
@@ -179,4 +179,4 @@ CAST('123' AS INT)
 CAST(date_col AS STRING)
 '123'::INT
 TRY_CAST('abc' AS INT)  -- Returns NULL
-```
+```text

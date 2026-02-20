@@ -15,7 +15,7 @@ CATALOG (USE CATALOG)
     └── SCHEMA (USE SCHEMA)  ← Requires USE CATALOG on parent
             │
             └── TABLE (SELECT)  ← Requires USE SCHEMA on parent
-```
+```text
 
 **Rule**: Accessing a table always requires `USE CATALOG` + `USE SCHEMA` + `SELECT`.
 
@@ -27,7 +27,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA my_catalog.my_schema TO `analysts`;
 
 -- Grant to groups (best practice — not individuals)
 GRANT SELECT ON TABLE my_table TO `data_analysts_group`;
-```
+```text
 
 ---
 
@@ -50,7 +50,7 @@ WHERE table_catalog = 'my_catalog';
 SELECT * FROM system.information_schema.columns
 WHERE table_catalog = 'my_catalog'
   AND table_schema = 'my_schema';
-```
+```text
 
 | System Table | Description |
 |--------------|-------------|
@@ -67,7 +67,7 @@ WHERE table_catalog = 'my_catalog'
 # Volumes are accessed via /Volumes/<catalog>/<schema>/<volume>/<path>
 df = spark.read.csv("/Volumes/my_catalog/my_schema/my_volume/data.csv")
 dbutils.fs.ls("/Volumes/my_catalog/my_schema/my_volume/")
-```
+```text
 
 ---
 

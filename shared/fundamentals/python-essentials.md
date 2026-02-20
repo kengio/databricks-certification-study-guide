@@ -46,7 +46,7 @@ reversed_list = items[::-1]
 # Sort in-place vs sorted() returning a new list
 items.sort()                        # mutates in place
 sorted_copy = sorted(items, reverse=True)
-```
+```text
 
 ### Dicts
 
@@ -63,7 +63,7 @@ config.setdefault("batch_size", 1000)   # set only if key absent
 overrides = {"retries": 5}
 merged = config | overrides             # new dict
 config |= overrides                     # in-place merge
-```
+```text
 
 ### Sets
 
@@ -76,7 +76,7 @@ new_ids = {3, 4, 5, 6}
 unique = ids | new_ids        # union:        {1, 2, 3, 4, 5, 6}
 common = ids & new_ids        # intersection: {3, 4}
 only_ids = ids - new_ids      # difference:   {1, 2}
-```
+```text
 
 ## String Manipulation
 
@@ -96,7 +96,7 @@ path.lstrip("/")                  # strip leading slashes
 "orders".upper()                  # "ORDERS"
 "ORDERS".lower()                  # "orders"
 "orders".find("der")             # 1 (index), -1 if not found
-```
+```text
 
 ### f-Strings and Formatting
 
@@ -113,7 +113,7 @@ msg = f"Loading {table} partition {partition}"
 row_count = 1_234_567
 print(f"Rows loaded: {row_count:,}")      # "Rows loaded: 1,234,567"
 print(f"Ratio: {0.9876:.2%}")             # "Ratio: 98.76%"
-```
+```text
 
 ### Regex with `re`
 
@@ -139,7 +139,7 @@ clean = re.sub(r"[^a-z0-9_]", "_", "My Table Name!".lower())
 # Compile for reuse in loops
 date_pattern = re.compile(r"\d{4}-\d{2}-\d{2}")
 dates = [date_pattern.search(f).group() for f in filenames if date_pattern.search(f)]
-```
+```text
 
 **DE use cases:** parse partition dates from filenames, sanitize column names before writing to Delta, extract schema version from file paths.
 
@@ -166,7 +166,7 @@ match env:
         db = "staging_catalog"
     case _:
         db = "dev_catalog"
-```
+```text
 
 **Truthiness:** empty collections (`[]`, `{}`, `set()`, `""`) and `None` evaluate to `False`. Prefer `if items:` over `if len(items) > 0:`.
 
@@ -194,7 +194,7 @@ while True:
         break
     process(data)
     page += 1
-```
+```text
 
 ### Comprehensions
 
@@ -214,7 +214,7 @@ extensions = {f.split(".")[-1] for f in filenames}
 
 # Generator expression — lazy, O(1) memory
 total = sum(len(line) for line in open("large.txt"))
-```
+```text
 
 Prefer comprehensions for simple transforms. Use explicit `for` loops when the body has side effects or spans multiple lines.
 
@@ -249,7 +249,7 @@ def create_table(name: str, **options: Any) -> None:
     print(f"Creating {name} with options: {options}")
 
 create_table("orders", format="delta", partitioned_by="date")
-```
+```text
 
 ### Lambda and functools
 
@@ -268,7 +268,7 @@ def write_table(df, mode, table):
 
 append_table = functools.partial(write_table, mode="append")
 append_table(df, "catalog.schema.orders")
-```
+```text
 
 ## Type Hints
 
@@ -292,7 +292,7 @@ def transform(
 # Union type (Python 3.10+ shorthand)
 def parse_value(v: str | int | None) -> str:
     return str(v) if v is not None else ""
-```
+```text
 
 Type hints are **not enforced at runtime**. Use `mypy` or `pyright` for static checking. Databricks supports type-annotated PySpark UDFs via `@udf` with return type annotation.
 
@@ -317,7 +317,7 @@ class DataSource:
         if not isinstance(other, DataSource):
             return NotImplemented
         return self.name == other.name and self.path == other.path
-```
+```text
 
 ### Inheritance
 
@@ -350,7 +350,7 @@ class JsonReader(BaseReader):
 reader = JsonReader("/data/records.json")
 isinstance(reader, BaseReader)      # True — checks instance against class or hierarchy
 issubclass(JsonReader, BaseReader)  # True — checks class relationships
-```
+```text
 
 **Mixin pattern:** Mixins add behaviour to a class without being a standalone base.
 
@@ -367,7 +367,7 @@ class CsvReader(LoggingMixin, BaseReader):
         import csv
         with open(self.path) as f:
             return list(csv.DictReader(f))
-```
+```text
 
 ### Dataclasses
 
@@ -402,7 +402,7 @@ class StreamingConfig(PipelineConfig):
 
 config = PipelineConfig(source_path="/landing/orders", target_table="bronze.orders")
 asdict(config)   # convert to plain dict for JSON serialisation
-```
+```text
 
 For abstract base classes and the template method pattern, see [Python for Production Data Engineering](../interview-prep/09-python-code-quality.md) Question 4.
 
@@ -419,7 +419,7 @@ BaseException
     ├── FileNotFoundError
     ├── IOError
     └── RuntimeError
-```
+```text
 
 ### try / except / else / finally
 
@@ -442,7 +442,7 @@ else:
 finally:
     # always runs — use for cleanup (close connections, flush buffers)
     cleanup()
-```
+```text
 
 ### Custom Exception Hierarchy
 
@@ -468,7 +468,7 @@ try:
     raw = fetch_from_api()
 except ConnectionError as e:
     raise IngestError("API unreachable") from e    # original traceback preserved
-```
+```text
 
 Catch `PipelineError` at the orchestration layer to handle all pipeline-specific failures in one place.
 
@@ -521,7 +521,7 @@ def flatten_nested_json(
 nested = {"user": {"id": 1, "name": "alice"}, "env": "prod"}
 flatten_nested_json(nested)
 # {"user.id": 1, "user.name": "alice", "env": "prod"}
-```
+```text
 
 ### CSV Helper Functions
 
@@ -562,7 +562,7 @@ def load_all_csvs(directory: str | Path) -> list[dict[str, str]]:
         for csv_path in sorted(Path(directory).glob("*.csv"))
         for row in read_csv_to_dicts(csv_path)
     ]
-```
+```text
 
 ## Standard Library Extras
 
@@ -577,7 +577,7 @@ parsed = datetime.strptime("2025-01-15", "%Y-%m-%d")
 
 yesterday = now_utc - timedelta(days=1)
 week_ago = now_utc - timedelta(weeks=1)
-```
+```text
 
 Always use timezone-aware datetimes in pipelines to avoid ambiguous offsets at DST boundaries.
 
@@ -602,7 +602,7 @@ logger.info("Pipeline started: %s", table_name)   # lazy formatting — no f-str
 logger.warning("Row count below threshold: %d", count)
 logger.error("Write failed for partition %s", partition)
 logger.exception("Unexpected error")   # includes traceback automatically
-```
+```text
 
 ### Environment Config
 
@@ -613,7 +613,7 @@ import os
 
 env = os.environ.get("ENV", "dev")          # safe — returns default if key absent
 token = os.environ["DATABRICKS_TOKEN"]      # raises KeyError if missing
-```
+```text
 
 ## Common Pitfalls
 
@@ -638,7 +638,7 @@ def add_item(item, data=[]):
 
 print(add_item("a"))
 print(add_item("b"))
-```
+```text
 
 A) `["a"]` then `["b"]`
 B) `["a"]` then `["a", "b"]`

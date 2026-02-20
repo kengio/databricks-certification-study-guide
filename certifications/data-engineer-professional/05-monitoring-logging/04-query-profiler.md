@@ -28,7 +28,7 @@ flowchart TB
         Optimized[Optimized Logical Plan]
         PhysicalPlan[Physical Plan]
     end
-```
+```text
 
 ## Query Plans
 
@@ -55,7 +55,7 @@ EXPLAIN FORMATTED SELECT * FROM orders WHERE order_date = '2024-01-15';
 
 -- EXPLAIN COST shows estimated costs
 EXPLAIN COST SELECT * FROM orders WHERE order_date = '2024-01-15';
-```
+```text
 
 ```python
 # DataFrame API
@@ -72,7 +72,7 @@ df.explain(mode="formatted")
 
 # Print cost plan
 df.explain(mode="cost")
-```
+```text
 
 ## Reading Physical Plans
 
@@ -90,7 +90,7 @@ df.explain(mode="cost")
                      Batched: true, DataFilters: [isnotnull(order_date#125), (order_date#125 = 2024-01-15)]
                      PartitionFilters: []
                      PushedFilters: [IsNotNull(order_date), EqualTo(order_date,2024-01-15)]
-```
+```text
 
 ### Key Operators
 
@@ -119,7 +119,7 @@ Exchange hashpartitioning(customer_id#123, 200)
         └─ Shuffle by customer_id hash
 
 #123 - Column reference ID
-```
+```text
 
 ## Identifying Performance Issues
 
@@ -136,7 +136,7 @@ flowchart TD
 
     CheckJoin --> |SortMergeJoin| JoinCost[Check shuffle size]
     CheckJoin --> |BroadcastHashJoin| LowJoin[Efficient join]
-```
+```text
 
 ### Signs of Poor Performance
 
@@ -159,7 +159,7 @@ Indicators:
 - High partition count with small data = overhead
 - Low partition count with large data = memory pressure
 - "ENSURE_REQUIREMENTS" = shuffle required for correctness
-```
+```text
 
 ## Query Plan Optimization
 
@@ -174,7 +174,7 @@ SELECT * FROM orders WHERE order_date = '2024-01-15';
 -- Look for:
 -- PartitionFilters: [isnotnull(order_date), (order_date = 2024-01-15)]
 -- vs empty PartitionFilters: [] means NO pruning
-```
+```text
 
 ```text
 Good (Pruning):
@@ -183,7 +183,7 @@ PartitionFilters: [(order_date = 2024-01-15)]
 Bad (No Pruning):
 PartitionFilters: []
 DataFilters: [(order_date = 2024-01-15)]  -- Filter after scan
-```
+```text
 
 ### Predicate Pushdown
 
@@ -195,7 +195,7 @@ SELECT * FROM orders WHERE amount > 100;
 
 -- Look for:
 -- PushedFilters: [IsNotNull(amount), GreaterThan(amount,100)]
-```
+```text
 
 ### Join Strategy Selection
 
@@ -210,7 +210,7 @@ JOIN customers c ON o.customer_id = c.customer_id;
 -- BroadcastHashJoin (good for small table)
 -- SortMergeJoin (for large tables)
 -- BroadcastNestedLoopJoin (avoid - usually wrong)
-```
+```text
 
 ## Query Profiler in Databricks
 
@@ -227,7 +227,7 @@ Shows:
 - Per-operator metrics
 - Time breakdown
 - Data scanned/shuffled
-```
+```text
 
 ### Metrics Available
 
@@ -257,7 +257,7 @@ FROM t1 JOIN t2 ON t1.id = t2.id;
 -- Shuffle hash join
 SELECT /*+ SHUFFLE_HASH(t2) */ *
 FROM t1 JOIN t2 ON t1.id = t2.id;
-```
+```text
 
 ### Aggregate Optimization
 
@@ -272,7 +272,7 @@ GROUP BY customer_id;
 -- HashAggregate (final)
 -- +- Exchange
 --    +- HashAggregate (partial)  -- Partial agg before shuffle
-```
+```text
 
 ### Filter Pushdown
 
@@ -285,7 +285,7 @@ SELECT * FROM (
 WHERE amount > 100;
 
 -- Both filters should be at scan level
-```
+```text
 
 ## AQE (Adaptive Query Execution)
 
@@ -309,7 +309,7 @@ SELECT /*+ REPARTITION_BY_RANGE(10, customer_id) */ *
 FROM orders;
 
 -- Look for "AdaptiveSparkPlan" in output
-```
+```text
 
 ### AQE Configuration
 
@@ -319,7 +319,7 @@ spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 spark.conf.set("spark.sql.adaptive.localShuffleReader.enabled", "true")
-```
+```text
 
 ## ANALYZE TABLE
 
@@ -334,7 +334,7 @@ ANALYZE TABLE orders COMPUTE STATISTICS FOR COLUMNS customer_id, amount;
 
 -- View statistics
 DESCRIBE EXTENDED orders;
-```
+```text
 
 ### Statistics Impact
 
@@ -348,7 +348,7 @@ With statistics:
 - Accurate row count estimates
 - Better join ordering
 - Optimal join strategy selection
-```
+```text
 
 ## Query Optimization Patterns
 
@@ -366,7 +366,7 @@ SELECT /*+ BROADCAST(c), BROADCAST(p) */ *
 FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id
 JOIN products p ON o.product_id = p.product_id;
-```
+```text
 
 ### Pattern 2: Filter Early
 
@@ -381,7 +381,7 @@ SELECT *
 FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id
 WHERE o.order_date = '2024-01-15';
-```
+```text
 
 ### Pattern 3: Avoid Expensive Functions in Filters
 
@@ -393,7 +393,7 @@ WHERE YEAR(order_date) = 2024;
 -- Good: Direct comparison enables pruning
 SELECT * FROM orders
 WHERE order_date >= '2024-01-01' AND order_date < '2025-01-01';
-```
+```text
 
 ### Pattern 4: Select Only Needed Columns
 
@@ -403,7 +403,7 @@ SELECT * FROM large_table WHERE ...;
 
 -- Good: Select only needed columns
 SELECT col1, col2, col3 FROM large_table WHERE ...;
-```
+```text
 
 ## Common Issues & Errors
 
@@ -419,7 +419,7 @@ WHERE CAST(order_date AS STRING) = '2024-01-15'
 
 -- Good: Direct comparison
 WHERE order_date = DATE'2024-01-15'
-```
+```text
 
 ### 2. Missed Broadcast Join
 
@@ -433,7 +433,7 @@ SELECT /*+ BROADCAST(small_table) */ ...
 
 -- Option 2: Increase threshold
 SET spark.sql.autoBroadcastJoinThreshold = 100m;
-```
+```text
 
 ### 3. Excessive Shuffles
 
@@ -444,7 +444,7 @@ SET spark.sql.autoBroadcastJoinThreshold = 100m;
 ```python
 # Pre-partition data by common join key
 df.repartition("customer_id").write.saveAsTable("orders_by_customer")
-```
+```text
 
 ### 4. Cartesian Join
 
@@ -458,7 +458,7 @@ SELECT * FROM t1, t2 WHERE t1.x > t2.y;
 
 -- Good: Proper equi-join
 SELECT * FROM t1 JOIN t2 ON t1.id = t2.id WHERE t1.x > t2.y;
-```
+```text
 
 ## Exam Tips
 

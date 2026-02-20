@@ -19,7 +19,7 @@ graph LR
     Python[Python & ML Basics] --> MLA[ML Associate<br><i>Recommended first</i>]
     MLA --> GAIA[GenAI Engineer Associate]
     Python --> GAIA
-```
+```text
 
 ## Prerequisites
 
@@ -67,7 +67,7 @@ flowchart TB
     end
 
     VS --> Ret
-```
+```text
 
 Key decisions in RAG design:
 
@@ -102,7 +102,7 @@ results = client.get_index(
     columns=["chunk_text", "source_url"],
     num_results=5
 )
-```
+```text
 
 ### Foundation Models on Databricks
 
@@ -133,7 +133,7 @@ response = client.predict(
     }
 )
 answer = response["choices"][0]["message"]["content"]
-```
+```text
 
 ### Model Serving
 
@@ -160,7 +160,7 @@ with mlflow.start_run():
         artifacts={"chain_path": "./rag_chain"},
         registered_model_name="prod_catalog.ml.rag_pyfunc"
     )
-```
+```text
 
 Key concepts:
 
@@ -197,7 +197,7 @@ rag_chain = RetrievalQA.from_chain_type(
     retriever=retriever,
     return_source_documents=True
 )
-```
+```text
 
 ### Prompt Engineering
 
@@ -220,7 +220,7 @@ Question: {user_question}
 Answer:"""
     }
 ]
-```
+```text
 
 Best practices:
 
@@ -267,7 +267,7 @@ with mlflow.start_run():
     # Log the chain as a model
     mlflow.langchain.log_model(rag_chain, "rag_chain",
                                registered_model_name="prod_catalog.ml.rag_chatbot")
-```
+```text
 
 ### Evaluation with MLflow
 
@@ -283,7 +283,7 @@ results = mlflow.evaluate(
     model_type="question-answering",
     extra_metrics=[mlflow.metrics.genai.faithfulness()]
 )
-```
+```text
 
 ### CI/CD and Monitoring for AI Apps
 
@@ -307,7 +307,7 @@ w.serving_endpoints.patch(
         "table_name_prefix": "rag_inference"
     }
 )
-```
+```text
 
 ### Recommended Study Activities
 

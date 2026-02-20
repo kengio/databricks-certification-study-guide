@@ -37,7 +37,7 @@ flowchart TB
 
     Trigger --> Job
     Job --> Execution
-```
+```text
 
 ## Job Components
 
@@ -64,7 +64,7 @@ flowchart LR
         Notify[Notifications]
         Params[Parameters]
     end
-```
+```text
 
 ### Task Types
 
@@ -170,7 +170,7 @@ resources:
       # Retry and timeout
       max_concurrent_runs: 1
       timeout_seconds: 3600
-```
+```text
 
 ### Python Job Definition (SDK)
 
@@ -229,7 +229,7 @@ job = w.jobs.create(
 )
 
 print(f"Created job: {job.job_id}")
-```
+```text
 
 ## Task Dependencies
 
@@ -249,7 +249,7 @@ tasks:
     depends_on:
       - task_key: step_2
     # Runs after step_2
-```
+```text
 
 ### Parallel Execution
 
@@ -270,7 +270,7 @@ tasks:
       - task_key: ingest_customers
       - task_key: ingest_products
     # Waits for all three to complete
-```
+```text
 
 ### DAG Visualization
 
@@ -284,7 +284,7 @@ flowchart TD
     E --> G[Archive]
     F --> H[Publish]
     G --> H
-```
+```text
 
 ## Task Values (Inter-Task Communication)
 
@@ -304,7 +304,7 @@ dbutils.jobs.taskValues.set(
     key="metrics",
     value={"rows": 10000, "errors": 5, "duration": 120}
 )
-```
+```text
 
 ### Getting Task Values
 
@@ -332,7 +332,7 @@ metrics = dbutils.jobs.taskValues.get(
     default={}
 )
 print(f"Processed {metrics.get('rows', 0)} rows")
-```
+```text
 
 ### Task Values in SQL Tasks
 
@@ -342,7 +342,7 @@ print(f"Processed {metrics.get('rows', 0)} rows")
 
 SELECT COUNT(*) FROM ${output_table}
 WHERE processed_date = '${date}'
-```
+```text
 
 ## Conditional Execution
 
@@ -376,7 +376,7 @@ tasks:
         outcome: "false"
     notebook_task:
       notebook_path: ../notebooks/quarantine.py
-```
+```text
 
 ### Run If Dependencies
 
@@ -406,7 +406,7 @@ tasks:
     run_if: ALL_DONE
     notebook_task:
       notebook_path: ../notebooks/cleanup.py
-```
+```text
 
 ## For Each Task (Loops)
 
@@ -430,7 +430,7 @@ tasks:
           notebook_path: ../notebooks/process_table.py
           base_parameters:
             table_name: "{{input}}"
-```
+```text
 
 ### Notebook Returning Loop Input
 
@@ -443,7 +443,7 @@ dbutils.jobs.taskValues.set(
     key="table_list",
     value=tables
 )
-```
+```text
 
 ### Processing Each Item
 
@@ -457,6 +457,6 @@ df = spark.table(f"bronze.{table_name}")
 df.write.format("delta").mode("overwrite").saveAsTable(f"silver.{table_name}")
 
 print(f"Processed table: {table_name}")
-```
+```text
 
 > **Continue reading:** [Part 2 — Triggers, Compute, Notifications, Parameters, Error Handling & Exam Tips](./05-lakeflow-jobs-part2.md)

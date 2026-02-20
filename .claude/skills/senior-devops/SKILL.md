@@ -22,7 +22,7 @@ python scripts/terraform_scaffolder.py [options]
 
 # Script 3: Deployment Manager
 python scripts/deployment_manager.py [options]
-```
+```text
 
 ## Core Capabilities
 
@@ -39,7 +39,7 @@ Automated tool for pipeline generator tasks.
 **Usage:**
 ```bash
 python scripts/pipeline_generator.py <project-path> [options]
-```
+```text
 
 ### 2. Terraform Scaffolder
 
@@ -54,7 +54,7 @@ Comprehensive analysis and optimization tool.
 **Usage:**
 ```bash
 python scripts/terraform_scaffolder.py <target-path> [--verbose]
-```
+```text
 
 ### 3. Deployment Manager
 
@@ -69,7 +69,7 @@ Advanced tooling for specialized tasks.
 **Usage:**
 ```bash
 python scripts/deployment_manager.py [arguments] [options]
-```
+```text
 
 ## Reference Documentation
 
@@ -124,7 +124,7 @@ pip install -r requirements.txt
 
 # Configure environment
 cp .env.example .env
-```
+```text
 
 ### 2. Run Quality Checks
 
@@ -134,7 +134,7 @@ python scripts/terraform_scaffolder.py .
 
 # Review recommendations
 # Apply fixes
-```
+```text
 
 ### 3. Implement Best Practices
 
@@ -186,7 +186,7 @@ python scripts/deployment_manager.py --analyze
 docker build -t app:latest .
 docker-compose up -d
 kubectl apply -f k8s/
-```
+```text
 
 ## Troubleshooting
 

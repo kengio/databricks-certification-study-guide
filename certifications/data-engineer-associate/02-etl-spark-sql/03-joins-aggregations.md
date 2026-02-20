@@ -26,15 +26,15 @@ flowchart LR
         Anti["Anti Join<br/>Left NOT in right"]
         Semi["Semi Join<br/>Left with match"]
     end
-    
+
     LeftDF["Left DataFrame"]
     RightDF["Right DataFrame"]
     Result["Joined Result"]
-    
+
     LeftDF --> Types
     RightDF --> Types
     Types --> Result
-```
+```text
 
 ## SQL Joins Syntax
 
@@ -50,7 +50,7 @@ FROM employees l
 INNER JOIN departments r
     ON l.department_id = r.id
 WHERE l.salary > 50000
-```
+```text
 
 ```python
 df_inner = employees.join(
@@ -65,7 +65,7 @@ df_inner = employees.join(
     ["department_id"],
     how="inner"
 )
-```
+```text
 
 ### Left Outer Join
 
@@ -77,7 +77,7 @@ SELECT
 FROM employees l
 LEFT OUTER JOIN departments r
     ON l.department_id = r.id
-```
+```text
 
 ```python
 df_left = employees.join(
@@ -85,7 +85,7 @@ df_left = employees.join(
     employees.department_id == departments.id,
     how="left"
 )
-```
+```text
 
 ### Right Outer Join
 
@@ -97,7 +97,7 @@ SELECT
 FROM employees l
 RIGHT OUTER JOIN departments r
     ON l.department_id = r.id
-```
+```text
 
 ```python
 df_right = employees.join(
@@ -105,7 +105,7 @@ df_right = employees.join(
     employees.department_id == departments.id,
     how="right"
 )
-```
+```text
 
 ### Full Outer Join
 
@@ -117,7 +117,7 @@ SELECT
 FROM employees l
 FULL OUTER JOIN departments r
     ON l.department_id = r.id
-```
+```text
 
 ```python
 df_full = employees.join(
@@ -125,7 +125,7 @@ df_full = employees.join(
     employees.department_id == departments.id,
     how="outer"
 )
-```
+```text
 
 ### Cross Join
 
@@ -136,14 +136,14 @@ SELECT
     r.option
 FROM employees l
 CROSS JOIN product_options r
-```
+```text
 
 ```python
 df_cross = employees.join(
     options,
     how="cross"
 )
-```
+```text
 
 ### Semi Join (Filtering Join)
 
@@ -156,7 +156,7 @@ WHERE EXISTS (
     WHERE l.department_id = r.id
     AND r.budget > 100000
 )
-```
+```text
 
 ```python
 df_semi = employees.join(
@@ -164,7 +164,7 @@ df_semi = employees.join(
     employees.department_id == departments.id,
     how="semi"
 )
-```
+```text
 
 ### Anti Join (Anti-Filter)
 
@@ -176,7 +176,7 @@ WHERE NOT EXISTS (
     SELECT 1 FROM blacklist r
     WHERE l.id = r.employee_id
 )
-```
+```text
 
 ```python
 df_anti = employees.join(
@@ -184,7 +184,7 @@ df_anti = employees.join(
     employees.id == blacklist.employee_id,
     how="anti"
 )
-```
+```text
 
 ## Join Comparison
 
@@ -212,7 +212,7 @@ SELECT
     SUM(salary) as total_salary
 FROM employees
 GROUP BY department
-```
+```text
 
 ```python
 df_agg = (employees
@@ -225,7 +225,7 @@ df_agg = (employees
         F.sum("salary").alias("total_salary")
     )
 )
-```
+```text
 
 ### Multiple Grouping Columns
 
@@ -238,7 +238,7 @@ df_multi_group = (employees
         F.stddev("salary").alias("salary_stddev")
     )
 )
-```
+```text
 
 ### HAVING Clause (Filter After GROUP BY)
 
@@ -250,7 +250,7 @@ SELECT
 FROM employees
 GROUP BY department
 HAVING COUNT(*) > 10 AND AVG(salary) > 80000
-```
+```text
 
 ```python
 df_having = (employees
@@ -261,7 +261,7 @@ df_having = (employees
     )
     .filter((F.col("emp_count") > 10) & (F.col("avg_salary") > 80000))
 )
-```
+```text
 
 ## Aggregation Functions
 
@@ -295,7 +295,7 @@ df_complex = (employees
         F.collect_list("name").alias("employee_names")
     )
 )
-```
+```text
 
 ### Conditional Aggregation
 
@@ -310,7 +310,7 @@ df_conditional = (employees
             .alias("regular_earners")
     )
 )
-```
+```text
 
 ## Join Performance Considerations
 
@@ -325,7 +325,7 @@ df_result = large_df.join(
     large_df.key == small_df.key,
     how="inner"
 )
-```
+```text
 
 ### Bucketing for Joins
 
@@ -337,7 +337,7 @@ employees.write \
     .saveAsTable("employees_bucketed")
 
 # Subsequent joins on department_id will be faster
-```
+```text
 
 ### Salting for Skewed Joins
 
@@ -361,7 +361,7 @@ result = (employees_salt.join(
     (employees_salt.salt == departments_salt.salt),
     "inner"
 ).drop("salt"))
-```
+```text
 
 ## Window Functions with Aggregations
 
@@ -373,7 +373,7 @@ SELECT
     AVG(salary) OVER (PARTITION BY department) as dept_avg,
     RANK() OVER (PARTITION BY department ORDER BY salary DESC) as salary_rank
 FROM employees
-```
+```text
 
 ```python
 from pyspark.sql.window import Window
@@ -385,7 +385,7 @@ df_window = employees.withColumn(
 ).withColumn(
     "salary_rank", F.rank().over(window)
 )
-```
+```text
 
 ## Common Join Issues
 

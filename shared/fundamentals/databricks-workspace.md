@@ -32,7 +32,7 @@ flowchart TB
             Catalog[Catalog Explorer]
         end
     end
-```
+```text
 
 ![Databricks workspace navigation sidebar](../../images/databricks-ui/workspace/navigation-sidebar.png)
 
@@ -78,19 +78,19 @@ Interactive documents that combine code, visualizations, and text. Support multi
 # Python cell
 df = spark.read.table("my_catalog.my_schema.my_table")
 df.display()
-```
+```text
 
 ```sql
 %sql
 -- SQL cell
 SELECT * FROM my_catalog.my_schema.my_table LIMIT 10
-```
+```text
 
 ```markdown
 %md
 ## Markdown Cell
 Document your analysis with **formatted text**.
-```
+```text
 
 ### Notebook Utilities (dbutils)
 
@@ -113,7 +113,7 @@ dbutils.notebook.run("/path/to/notebook", timeout_seconds=600, arguments={"param
 
 # Exit notebook with value
 dbutils.notebook.exit("Success")
-```
+```text
 
 ## Clusters
 
@@ -224,7 +224,7 @@ flowchart LR
     T1[Task 1: Ingest<br/>Notebook] --> T2[Task 2: Transform<br/>Notebook]
     T2 --> T3[Task 3: Quality Check<br/>SQL]
     T3 --> T4[Task 4: Aggregate<br/>Notebook]
-```
+```text
 
 ![Databricks job workflow task visualization](../../images/databricks-ui/workspace/job-task-dag.png)
 
@@ -248,7 +248,7 @@ date = dbutils.widgets.get("date")
 
 # Or from task context
 date = spark.conf.get("spark.databricks.job.parameters.date")
-```
+```text
 
 ## Delta Live Tables (DLT)
 
@@ -272,7 +272,7 @@ def gold_daily_summary():
         .groupBy("order_date")
         .agg(sum("amount").alias("total"))
     )
-```
+```text
 
 ## Catalog Explorer
 
@@ -313,7 +313,7 @@ flowchart TB
             ProdJobs[jobs/]
         end
     end
-```
+```text
 
 ![Databricks workspace folder organization](../../images/databricks-ui/workspace/folder-structure.png)
 
@@ -337,7 +337,7 @@ databricks secrets create-scope --scope my-scope
 
 databricks secrets put --scope my-scope --key db-password
 # Enter secret value when prompted
-```
+```text
 
 ### Using Secrets
 
@@ -347,7 +347,7 @@ password = dbutils.secrets.get(scope="my-scope", key="db-password")
 
 # Secrets are redacted in output
 print(password)  # Shows [REDACTED]
-```
+```text
 
 ## Use Cases
 

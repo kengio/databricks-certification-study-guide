@@ -32,7 +32,7 @@ df = (spark.table("orders")
 
 df.explain()
 # Should show PushedFilters: [EqualTo(order_date,...), EqualTo(status,...)]
-```
+```text
 
 ```sql
 -- Verify pushdown in SQL
@@ -43,7 +43,7 @@ WHERE order_date = '2024-01-15'
   AND status = 'completed';
 
 -- Look for PushedFilters in the output
-```
+```text
 
 ### Column Pruning
 
@@ -60,7 +60,7 @@ df = spark.table("orders").select("customer_id", "amount", "order_date")
 # The physical plan shows ReadSchema with only requested columns:
 # FileScan parquet [customer_id,amount,order_date]
 # ReadSchema: struct<customer_id:string,amount:double,order_date:date>
-```
+```text
 
 ### Constant Folding
 
@@ -77,7 +77,7 @@ Also applies to:
   - String concatenation of literals
   - Date arithmetic with constants
   - Boolean simplification (true AND x -> x)
-```
+```text
 
 ### Join Reordering
 
@@ -97,7 +97,7 @@ result = (table_a
 result = (table_a
     .join(broadcast(table_c), "key_ac")
     .join(table_b, "key_ab"))
-```
+```text
 
 ### Statistics Collection: ANALYZE TABLE
 
@@ -114,14 +114,14 @@ DESCRIBE EXTENDED orders;
 
 -- Column statistics include:
 --   distinct count, min, max, null count, avg length, max length, histogram
-```
+```text
 
 ```python
 # Verify statistics are being used
 df = spark.table("orders").filter(col("amount") > 1000)
 df.explain(mode="cost")
 # Look for "Statistics(sizeInBytes=..., rowCount=...)" in the plan
-```
+```text
 
 ### Histogram-Based Optimization
 
@@ -138,7 +138,7 @@ ANALYZE TABLE orders COMPUTE STATISTICS FOR COLUMNS amount;
 SET spark.sql.cbo.enabled = true;
 SET spark.sql.cbo.joinReorder.enabled = true;
 SET spark.sql.statistics.histogram.enabled = true;
-```
+```text
 
 ### Subquery Elimination
 
@@ -158,7 +158,7 @@ After optimization:
 
 Tip: Use EXISTS instead of IN for large subqueries:
   WHERE EXISTS (SELECT 1 FROM customers c WHERE c.id = o.customer_id AND c.region = 'US')
-```
+```text
 
 ## Common Issues and Errors
 
@@ -179,7 +179,7 @@ WHERE o.amount > 100;
 SELECT * FROM orders o
 JOIN customers c ON o.customer_id = c.id
 WHERE o.amount > 100;
-```
+```text
 
 ### 2. Predicate Pushdown Not Working
 
@@ -199,7 +199,7 @@ df = (spark.table("orders")
 df = (spark.table("orders")
     .filter(col("order_date") == "2024-01-15")  # Pushed down
     .withColumn("processed", my_udf(col("data"))))
-```
+```text
 
 ### 3. AQE Not Converting to Broadcast Join
 
@@ -215,7 +215,7 @@ spark.conf.set("spark.sql.adaptive.autoBroadcastJoinThreshold", "100MB")
 
 # Verify AQE is enabled
 spark.conf.get("spark.sql.adaptive.enabled")  # Should be "true"
-```
+```text
 
 ### 4. Photon Fallback to Spark
 
@@ -237,7 +237,7 @@ df = df.withColumn("clean_name", clean_udf(col("name")))
 
 # Good: Built-in functions use Photon
 df = df.withColumn("clean_name", lower(trim(col("name"))))
-```
+```text
 
 ### 5. Excessive Shuffle in Multi-Join Queries
 
@@ -258,7 +258,7 @@ spark.sql("""
     CLUSTERED BY (customer_id) INTO 100 BUCKETS
     AS SELECT * FROM orders
 """)
-```
+```text
 
 ### 6. Spill Causing Slow Aggregations
 
@@ -275,7 +275,7 @@ spark.conf.set("spark.memory.fraction", "0.8")
 
 # For extreme cases, use sort-based aggregation (spills more gracefully)
 spark.conf.set("spark.sql.execution.useObjectHashAggregateExec", "false")
-```
+```text
 
 ## Exam Tips
 
@@ -302,7 +302,7 @@ An engineer runs `EXPLAIN FORMATTED` on a query joining two Delta tables and see
    :  +- FileScan parquet [customer_id, amount]
    +- Exchange hashpartitioning(id, 200)
       +- FileScan parquet [id, name, region]
-```
+```text
 
 The `customers` table has only 5 MB of data. What should the engineer do to improve performance?
 
@@ -338,7 +338,7 @@ In the Spark UI Stages tab, an engineer observes the following task summary for 
 Duration:     Min=2s   Median=4s   Max=180s
 Input Size:   Min=50MB Median=65MB Max=8GB
 Spill (Disk): Min=0    Median=0    Max=6GB
-```
+```text
 
 What does this indicate and what is the best solution?
 

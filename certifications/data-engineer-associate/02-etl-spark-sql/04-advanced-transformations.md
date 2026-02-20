@@ -37,7 +37,7 @@ categorize_udf = udf(categorize_salary, StringType())
 df_categorized = (employees
     .withColumn("level", categorize_udf(col("salary")))
 )
-```
+```text
 
 ### Pandas UDFs (Vectorized)
 
@@ -59,7 +59,7 @@ def categorize_salary_pandas(salary_series: pd.Series) -> pd.Series:
 df_categorized = (employees
     .withColumn("level", categorize_salary_pandas(col("salary")))
 )
-```
+```text
 
 ### SQL UDFs
 
@@ -76,7 +76,7 @@ result = spark.sql("""
         categorize_salary_sql(salary) as level
     FROM employees
 """)
-```
+```text
 
 ### Scala UDFs
 
@@ -86,7 +86,7 @@ spark.udf.registerJavaFunction(
     "com.example.MyFunctions.processData",
     StringType()
 )
-```
+```text
 
 ## Window Functions
 
@@ -96,11 +96,11 @@ flowchart LR
     Window["Window Specification<br/>PARTITION BY + ORDER BY"]
     Compute["Compute over<br/>window frame"]
     Result["Result<br/>New columns"]
-    
+
     Data --> Window
     Window --> Compute
     Compute --> Result
-```
+```text
 
 ### Window Function Syntax
 
@@ -113,16 +113,16 @@ SELECT
     ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) as row_num,
     RANK() OVER (PARTITION BY department ORDER BY salary DESC) as rank,
     DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) as dense_rank,
-    
+
     -- Aggregate functions over window
     AVG(salary) OVER (PARTITION BY department) as dept_avg,
     SUM(salary) OVER (PARTITION BY department) as dept_total,
-    
+
     -- Lead/Lag
     LAG(salary) OVER (ORDER BY hire_date) as prev_salary,
     LEAD(salary) OVER (ORDER BY hire_date) as next_salary
 FROM employees
-```
+```text
 
 ### Window Functions in Python
 
@@ -139,7 +139,7 @@ df_windowed = (employees
     .withColumn("dense_rank", dense_rank().over(window_dept))
     .withColumn("dept_avg", avg("salary").over(Window.partitionBy("department")))
 )
-```
+```text
 
 ### Common Window Functions
 
@@ -184,7 +184,7 @@ df_collected = (employees
     .groupBy("department")
     .agg(F.collect_list("name").alias("employees"))
 )
-```
+```text
 
 ### Maps
 
@@ -210,7 +210,7 @@ df_accessed = (employees
 df_exploded = (employees
     .selectExpr("name", "explode(info) as (key, value)")
 )
-```
+```text
 
 ### Structs
 
@@ -232,7 +232,7 @@ df_accessed = (employees
     .withColumn("emp_name", col("employee_info.full_name"))
     .withColumn("emp_sal", col("employee_info.annual_salary"))
 )
-```
+```text
 
 ## String Operations
 
@@ -248,7 +248,7 @@ df_strings = employees.select(
     concat(col("first_name"), lit(" "), col("last_name")).alias("full_name"),
     length(col("name")).alias("name_length")
 )
-```
+```text
 
 ## Date and Timestamp Operations
 
@@ -265,7 +265,7 @@ df_dates = employees.select(
     date_add(col("hire_date"), 365).alias("one_year_anniversary"),
     from_unixtime(col("timestamp_ms") / 1000).alias("readable_timestamp")
 )
-```
+```text
 
 ## Conditional Logic
 
@@ -274,7 +274,7 @@ from pyspark.sql.functions import when, otherwise, case, coalesce
 
 # Simple when/otherwise
 df_conditional = (employees
-    .withColumn("bonus_eligible", 
+    .withColumn("bonus_eligible",
         when(col("salary") > 100000, True).otherwise(False)
     )
 )
@@ -291,11 +291,11 @@ df_bonus = (employees
 
 # Coalesce (first non-null value)
 df_coalesce = (employees
-    .withColumn("contact", 
+    .withColumn("contact",
         coalesce(col("email"), col("phone"), lit("No contact"))
     )
 )
-```
+```text
 
 ## Flattening nested structures
 
@@ -315,7 +315,7 @@ df_flattened = (employees
         col("contact_info.phone").alias("phone")
     )
 )
-```
+```text
 
 ## Pivot Operations
 
@@ -328,7 +328,7 @@ PIVOT (
     SUM(salary)
     FOR department IN ('Engineering' as eng, 'Sales' as sales, 'HR' as hr)
 )
-```
+```text
 
 ```python
 df_pivoted = (employees
@@ -336,7 +336,7 @@ df_pivoted = (employees
     .pivot("department", ["Engineering", "Sales", "HR"])
     .agg(F.sum("salary"))
 )
-```
+```text
 
 ## Null Handling
 
@@ -369,7 +369,7 @@ df_forward_filled = employees.withColumn(
         window_fill.rowsBetween(Window.unboundedPreceding, 0)
     )
 )
-```
+```text
 
 ## Performance Considerations
 
@@ -386,7 +386,7 @@ result = large_df.join(
 
 # Shuffle for large-to-large joins
 result = df1.join(df2, df1.key == df2.key)
-```
+```text
 
 ### Caching Strategy
 
@@ -401,7 +401,7 @@ result2 = df_cleaned.filter(col("sales") > 500)
 
 # Remove from cache
 df_cleaned.unpersist()
-```
+```text
 
 ## UDF vs Built-in Functions
 

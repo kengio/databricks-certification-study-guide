@@ -31,7 +31,7 @@ pie title Exam Topic Distribution
     "ML Workflows" : 29
     "Spark ML" : 33
     "Scaling ML" : 9
-```
+```text
 
 ## Study Topics
 

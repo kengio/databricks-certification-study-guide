@@ -22,7 +22,7 @@ flowchart TB
     end
 
     Tuning --> Goals
-```
+```text
 
 ## Trigger Interval Optimization
 
@@ -45,7 +45,7 @@ flowchart TD
     Q1 --> |No| Q2{Catch-up scenario?}
     Q2 --> |Yes| AN[availableNow]
     Q2 --> |One-time| Once[once]
-```
+```text
 
 ### Trigger Configuration
 
@@ -70,7 +70,7 @@ query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", checkpoint_path)
     .start(output_path))
-```
+```text
 
 ### Trigger Interval Trade-offs
 
@@ -97,7 +97,7 @@ df_with_watermark = (df
         "device_id"
     )
     .agg(avg("temperature").alias("avg_temp")))
-```
+```text
 
 ### Watermark Strategy
 
@@ -114,7 +114,7 @@ flowchart LR
         W[Watermark<br>10:00] --> |Late data accepted| Accept[Events > 10:00]
         W --> |Dropped| Drop[Events < 10:00]
     end
-```
+```text
 
 ### State Store Configuration
 
@@ -130,7 +130,7 @@ spark.conf.set(
     "spark.sql.streaming.stateStore.rocksdb.blockCacheSizeMB",
     "256"
 )
-```
+```text
 
 ### Stateful Operation Best Practices
 
@@ -151,7 +151,7 @@ query = (df.writeStream
     .option("checkpointLocation", "/mnt/checkpoints/my_stream")
     .format("delta")
     .start(output_path))
-```
+```text
 
 ### Checkpoint Best Practices
 
@@ -173,7 +173,7 @@ dbutils.fs.rm(checkpoint_path, recurse=True)
 
 # Option 2: Use checkpoint version compatibility
 # (only works for compatible changes)
-```
+```text
 
 ## File Sizing for Streaming
 
@@ -206,7 +206,7 @@ SET TBLPROPERTIES (
     'delta.autoOptimize.autoCompact' = 'true'
 )
 """)
-```
+```text
 
 ### Streaming File Management
 
@@ -228,7 +228,7 @@ flowchart TB
 
     Writes --> |optimizeWrite| OptWrite
     OptWrite --> |autoCompact| AC
-```
+```text
 
 ## Source-Specific Tuning
 
@@ -247,7 +247,7 @@ df = (spark.readStream
     # Fetch size tuning
     .option("kafka.fetch.max.bytes", 52428800)  # 50 MB
     .load())
-```
+```text
 
 ### Kafka Tuning Parameters
 
@@ -272,7 +272,7 @@ df = (spark.readStream
     # Use notifications for faster discovery
     .option("cloudFiles.useNotifications", "true")
     .load(input_path))
-```
+```text
 
 ### Auto Loader Parameters
 
@@ -297,7 +297,7 @@ df = (spark.readStream
 
 # Rate source (testing): Control rate
 .option("rowsPerSecond", 1000)
-```
+```text
 
 ### Detecting Backpressure
 
@@ -308,7 +308,7 @@ for q in spark.streams.active:
     print(f"  Input rows: {q.lastProgress['numInputRows']}")
     print(f"  Processing rate: {q.lastProgress['processedRowsPerSecond']}")
     print(f"  Batch duration: {q.lastProgress['batchDuration']}")
-```
+```text
 
 ### Backpressure Indicators
 
@@ -334,7 +334,7 @@ print(f"Input rows: {progress['numInputRows']}")
 print(f"Input rate: {progress['inputRowsPerSecond']}")
 print(f"Process rate: {progress['processedRowsPerSecond']}")
 print(f"Batch duration: {progress['batchDuration']} ms")
-```
+```text
 
 ### Streaming Metrics Dashboard
 

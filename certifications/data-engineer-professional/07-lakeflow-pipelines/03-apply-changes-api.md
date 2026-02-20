@@ -26,7 +26,7 @@ flowchart TB
     Apply --> SCD
     SCD --> SCD1
     SCD --> SCD2
-```
+```text
 
 ## CDC Concepts
 
@@ -51,7 +51,7 @@ Typical CDC record:
     "email": "john@newdomain.com",   -- Updated field
     "source_timestamp": "2024-01-15 10:30:00"
 }
-```
+```text
 
 ## SQL Syntax
 
@@ -74,7 +74,7 @@ KEYS (customer_id)
 SEQUENCE BY operation_timestamp
 COLUMNS * EXCEPT (operation, operation_timestamp, _rescued_data)
 STORED AS SCD TYPE 1;
-```
+```text
 
 ### SCD Type 1 (Overwrite)
 
@@ -94,7 +94,7 @@ COLUMNS (
     updated_at
 )
 STORED AS SCD TYPE 1;
-```
+```text
 
 ### SCD Type 2 (Full History)
 
@@ -112,7 +112,7 @@ STORED AS SCD TYPE 2;
 -- SCD Type 2 creates these columns automatically:
 -- __START_AT: When this version became active
 -- __END_AT: When this version was superseded (NULL for current)
-```
+```text
 
 ### Tracking Deletes
 
@@ -139,7 +139,7 @@ APPLY AS DELETE WHEN operation = 'DELETE'
 COLUMNS * EXCEPT (operation, sequence_number)
 STORED AS SCD TYPE 2
 TRACK HISTORY ON * EXCEPT (last_modified);
-```
+```text
 
 ### Handling Operation Types
 
@@ -158,7 +158,7 @@ APPLY AS DELETE WHEN
 APPLY AS TRUNCATE WHEN operation_type = 'TRUNCATE'
 COLUMNS * EXCEPT (operation_type, event_timestamp, is_deleted)
 STORED AS SCD TYPE 1;
-```
+```text
 
 ## Python Syntax
 
@@ -188,7 +188,7 @@ dlt.apply_changes(
     sequence_by=col("operation_timestamp"),
     stored_as_scd_type=1
 )
-```
+```text
 
 ### SCD Type 2 with Python
 
@@ -204,7 +204,7 @@ dlt.apply_changes(
     stored_as_scd_type=2,
     track_history_column_list=["name", "email", "address", "phone"]
 )
-```
+```text
 
 ### Handling Deletes in Python
 
@@ -220,7 +220,7 @@ dlt.apply_changes(
     stored_as_scd_type=1,
     except_column_list=["operation", "sequence_id", "_rescued_data"]
 )
-```
+```text
 
 ### Complete Example with All Options
 
@@ -287,7 +287,7 @@ dlt.apply_changes(
         "title"
     ]
 )
-```
+```text
 
 ## Sequence Key Strategies
 
@@ -300,7 +300,7 @@ FROM STREAM(LIVE.source)
 KEYS (id)
 SEQUENCE BY change_timestamp  -- Timestamp column
 ...
-```
+```text
 
 ### LSN (Log Sequence Number)
 
@@ -311,7 +311,7 @@ FROM STREAM(LIVE.source)
 KEYS (id)
 SEQUENCE BY lsn  -- Numeric sequence from source
 ...
-```
+```text
 
 ### Composite Sequence
 
@@ -326,7 +326,7 @@ dlt.apply_changes(
     sequence_by=struct(col("event_date"), col("event_sequence")),
     stored_as_scd_type=1
 )
-```
+```text
 
 ## SCD Type 2 Details
 
@@ -342,7 +342,7 @@ Example:
 |-------------|-------|---------------------|----------------------|
 | 100         | John  | 2024-01-01 00:00:00 | 2024-01-15 00:00:00 |
 | 100         | John D| 2024-01-15 00:00:00 | NULL                |  ← Current
-```
+```text
 
 ### Querying SCD Type 2 Tables
 
@@ -363,7 +363,7 @@ SELECT *
 FROM silver_customers_history
 WHERE customer_id = 100
 ORDER BY __START_AT;
-```
+```text
 
 ### Track History Options
 
@@ -381,7 +381,7 @@ TRACK HISTORY ON (name, email, address);
 STORED AS SCD TYPE 2
 TRACK HISTORY ON * EXCEPT (last_login, view_count);
 -- Changes to excluded columns update in place
-```
+```text
 
 ## CDC Source Patterns
 
@@ -418,7 +418,7 @@ dlt.apply_changes(
     except_column_list=["operation", "event_timestamp"],
     stored_as_scd_type=1
 )
-```
+```text
 
 ### AWS DMS Format
 
@@ -449,7 +449,7 @@ dlt.apply_changes(
     except_column_list=["Op", "_timestamp"],
     stored_as_scd_type=1
 )
-```
+```text
 
 ### Oracle GoldenGate Format
 
@@ -470,7 +470,7 @@ SEQUENCE BY event_timestamp
 APPLY AS DELETE WHEN operation = 'DELETE'
 COLUMNS * EXCEPT (operation, event_timestamp)
 STORED AS SCD TYPE 1;
-```
+```text
 
 ## Handling Out-of-Order Events
 
@@ -483,7 +483,7 @@ APPLY CHANGES guarantees:
 3. Duplicate events deduplicated by sequence
 4. Only latest state per key maintained (SCD1)
 5. Complete history preserved (SCD2)
-```
+```text
 
 ### Example: Late Arrivals
 
@@ -495,7 +495,7 @@ APPLY CHANGES guarantees:
 
 -- APPLY CHANGES orders by sequence:
 -- Final result: value=C (timestamp 10:02 is latest)
-```
+```text
 
 ## Multi-Table CDC
 
@@ -529,7 +529,7 @@ for config in tables_config:
         apply_as_deletes=expr("operation = 'DELETE'"),
         stored_as_scd_type=1
     )
-```
+```text
 
 ## Common Issues & Errors
 
@@ -548,7 +548,7 @@ dlt.apply_changes(
     sequence_by=struct(col("event_timestamp"), col("event_id")),
     stored_as_scd_type=1
 )
-```
+```text
 
 ### 2. Null Primary Keys
 
@@ -563,7 +563,7 @@ def bronze_filtered():
     return dlt.read_stream("bronze_raw")
 
 # Then apply changes from filtered source
-```
+```text
 
 ### 3. Schema Mismatch
 
@@ -584,7 +584,7 @@ COLUMNS (
     CAST(phone AS STRING) AS phone  -- With transformation
 )
 STORED AS SCD TYPE 1;
-```
+```text
 
 ### 4. Delete Not Working
 
@@ -602,7 +602,7 @@ APPLY AS DELETE WHEN
     OR operation = 'DELETE'
     OR operation = 'delete'  -- Case sensitivity
     OR UPPER(operation) = 'DELETE'
-```
+```text
 
 ### 5. SCD Type 2 Growing Too Large
 
@@ -615,7 +615,7 @@ APPLY AS DELETE WHEN
 STORED AS SCD TYPE 2
 TRACK HISTORY ON (salary, department, title)
 -- Ignore changes to: last_login, session_count, etc.
-```
+```text
 
 ## Exam Tips
 

@@ -21,18 +21,18 @@ flowchart LR
     T1["Version 1<br/>Insert 100 rows<br/>1100 rows"]
     T2["Version 2<br/>Update salaries<br/>1100 rows"]
     T3["Version 3<br/>Delete 10 rows<br/>1090 rows"]
-    
+
     T0 -->|delta_log/00...json| T1
     T1 -->|delta_log/01...json| T2
     T2 -->|delta_log/02...json| T3
-    
+
     AccessPoint["Query any version"]
-    
+
     T0 -.->|Time Travel| AccessPoint
     T1 -.->|Time Travel| AccessPoint
     T2 -.->|Time Travel| AccessPoint
     T3 -.->|Time Travel| AccessPoint
-```
+```text
 
 ## Viewing Version History
 
@@ -42,18 +42,18 @@ flowchart LR
 DESCRIBE HISTORY employees
 
 -- Output: version, timestamp, userId, userName, operation, operationParameters, cluster_id
-```
+```text
 
 ```python
 # Get history as DataFrame
 history_df = spark.sql("DESCRIBE HISTORY employees")
 history_df.show()
-```
+```text
 
 ### Version Details
 
 ```sql
-SELECT 
+SELECT
     version,
     timestamp,
     operation,
@@ -62,7 +62,7 @@ FROM
     (DESCRIBE HISTORY employees)
 ORDER BY version DESC
 LIMIT 10;
-```
+```text
 
 ## Time Travel Queries
 
@@ -83,7 +83,7 @@ df_v5 = spark.read \
 # Compare versions
 df_v0.count()  # 1000 rows
 df_v5.count()  # 1150 rows
-```
+```text
 
 ### Query by Timestamp
 
@@ -102,7 +102,7 @@ df_yesterday = spark.read \
     .format("delta") \
     .option("timestampAsOf", yesterday) \
     .load("/mnt/data/employees")
-```
+```text
 
 ### SQL Time Travel
 
@@ -116,7 +116,7 @@ SELECT * FROM employees@v5;
 SELECT * FROM employees TIMESTAMP AS OF '2025-01-15T10:30:00Z';
 
 SELECT * FROM employees@'2025-01-15';
-```
+```text
 
 ## Data Recovery and Rollback
 
@@ -128,7 +128,7 @@ RESTORE TABLE employees TO VERSION AS OF 5;
 
 -- Restore to timestamp
 RESTORE TABLE employees TO TIMESTAMP AS OF '2025-01-15';
-```
+```text
 
 ```python
 # Via PySpark
@@ -136,7 +136,7 @@ from delta.tables import DeltaTable
 
 delta_table = DeltaTable.forPath(spark, "/mnt/data/employees")
 delta_table.restoreToVersion(5)
-```
+```text
 
 ### Complete Rollback Example
 
@@ -155,7 +155,7 @@ spark.sql("RESTORE TABLE employees TO VERSION AS OF 10")
 
 # Verify recovery
 spark.sql("SELECT COUNT(*) FROM employees").show()  # 1000 rows (recovered!)
-```
+```text
 
 ## Clone Operations
 
@@ -173,9 +173,10 @@ SHALLOW CLONE employees;
 # Or with Python
 DeltaTable.forPath(spark, "/mnt/data/employees") \
     .clone("/mnt/data/employees_clone", isShallow=True)
-```
+```text
 
 Shallow clone benefits:
+
 - Nearly instant (copies only metadata)
 - Minimal storage (references existing files)
 - Changes only affect the clone
@@ -194,9 +195,10 @@ DEEP CLONE employees;
 # Or with Python
 DeltaTable.forPath(spark, "/mnt/data/employees") \
     .clone("/mnt/data/employees_backup", isShallow=False)
-```
+```text
 
 Deep clone benefits:
+
 - Full independence (separate data)
 - Safe for testing/experiments
 - Larger storage footprint
@@ -212,7 +214,7 @@ spark.sql("CREATE TABLE backup_20250115 DEEP CLONE employees")
 
 # Use Case 3: Zero-copy reference for read-only access
 spark.sql("CREATE TABLE read_only SHALLOW CLONE sensitive_data")
-```
+```text
 
 ## Comparing Versions
 
@@ -242,7 +244,7 @@ v5.count()  # 1100 rows
 # Find new rows
 new_rows = v5.except(v3)  # Rows in v5 not in v3
 new_rows.show()
-```
+```text
 
 ### Audit Data Changes
 
@@ -252,7 +254,7 @@ employee_id = 123
 
 # Check history
 spark.sql(f"""
-    SELECT 
+    SELECT
         version,
         timestamp,
         operation,
@@ -271,7 +273,7 @@ for version in [0, 5, 10, 15]:
         .load("/mnt/data/employees") \
         .filter(f"id = {employee_id}") \
         .show()
-```
+```text
 
 ## Retention Policies
 
@@ -289,7 +291,7 @@ ALTER TABLE employees
 SET TBLPROPERTIES (
     'delta.logRetentionDuration' = 'interval 30 days'
 );
-```
+```text
 
 ### Delete Old Versions
 
@@ -297,7 +299,7 @@ SET TBLPROPERTIES (
 # Manual cleanup (remove versions older than 30 days)
 DeltaTable.forPath(spark, "/mnt/data/employees") \
     .delete(condition="timestamp < current_timestamp() - interval 30 days")
-```
+```text
 
 ## Version Management Best Practices
 
@@ -310,14 +312,14 @@ spark.sql("CREATE TABLE staging DEEP CLONE production")
 
 # 3. Document significant operations
 spark.sql("""
-INSERT INTO employees 
+INSERT INTO employees
 SELECT * FROM external_source
 """)
 spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
 # 4. Archive old data via clones
 spark.sql("""
-CREATE TABLE archive_2024_12_31 
+CREATE TABLE archive_2024_12_31
 DEEP CLONE employees
 """)
 
@@ -325,7 +327,7 @@ DEEP CLONE employees
 import os
 log_path = "/mnt/data/employees/_delta_log"
 # Check filesystem for accumulating logs
-```
+```text
 
 ## Time Travel Limitations
 

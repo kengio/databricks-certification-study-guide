@@ -21,7 +21,7 @@ flowchart TD
     DG --> AC[Access Control]
     DG --> Sharing[Data Sharing]
     DG --> Lineage[Lineage & Auditing]
-```
+```text
 
 ## Section Contents
 

@@ -28,7 +28,7 @@ SELECT * FROM VALUES
     (9,  101, '2025-03-20', 'Clothing',     75.00),
     (10, 102, '2025-03-25', 'Home',        210.00)
 AS t(order_id, customer_id, order_date, category, amount);
-```
+```text
 
 ## Basic CTE
 
@@ -48,7 +48,7 @@ SELECT
     total_revenue / order_count AS avg_order_value
 FROM monthly_totals
 ORDER BY month;
-```
+```text
 
 ## Multiple CTEs (Chained)
 
@@ -88,7 +88,7 @@ SELECT
 FROM customer_segments
 GROUP BY segment
 ORDER BY avg_spending DESC;
-```
+```text
 
 ## CTE with Window Functions
 
@@ -116,7 +116,7 @@ SELECT
     DATEDIFF(order_date, prev_order_date) AS days_between_orders
 FROM ranked_orders
 ORDER BY customer_id, order_sequence;
-```
+```text
 
 ## PIVOT — Rows to Columns
 
@@ -148,7 +148,7 @@ PIVOT (
     FOR category IN ('Electronics', 'Clothing', 'Home')
 )
 ORDER BY customer_id;
-```
+```text
 
 ## UNPIVOT — Columns to Rows
 
@@ -168,7 +168,7 @@ FROM quarterly_metrics
 UNPIVOT (
     value FOR quarter IN (Q1, Q2, Q3, Q4)
 );
-```
+```text
 
 ## CTE for Data Quality Checks
 
@@ -191,7 +191,7 @@ SELECT
     ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS percentage
 FROM validation
 GROUP BY validation_status;
-```
+```text
 
 ## CTE for Deduplication
 
@@ -209,7 +209,7 @@ WITH ranked AS (
 SELECT order_id, customer_id, order_date, category, amount
 FROM ranked
 WHERE rn = 1;
-```
+```text
 
 ## CTE with Aggregation Patterns
 
@@ -242,4 +242,4 @@ SELECT
 FROM current_period c
 LEFT JOIN previous_period p ON c.category = p.category
 ORDER BY growth_pct DESC;
-```
+```text

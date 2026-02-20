@@ -69,7 +69,7 @@ class TestDeltaOperations:
 
         updated_row = result.filter("id = 1").collect()[0]
         assert updated_row.value == "new_value"
-```
+```text
 
 ### Testing Streaming
 
@@ -125,7 +125,7 @@ class TestStreaming:
         result = spark.read.format("delta").load(output_path)
         user1_count = result.filter("user_id = 'user1'").collect()[0]["count"]
         assert user1_count == 2
-```
+```text
 
 ### Testing with Fixtures
 
@@ -168,7 +168,7 @@ def sample_customers(spark):
         data,
         ["customer_id", "name", "email"]
     )
-```
+```text
 
 ## CI/CD Integration
 
@@ -247,7 +247,7 @@ jobs:
         with:
           name: nutter-results
           path: nutter-results.xml
-```
+```text
 
 ### Test Environments
 
@@ -271,7 +271,7 @@ targets:
                 spark_version: "14.3.x-scala2.12"
                 node_type_id: "Standard_DS3_v2"
                 num_workers: 0
-```
+```text
 
 ## Best Practices
 
@@ -290,7 +290,7 @@ tests/
 │   └── test_gold_layer.py
 └── e2e/                     # End-to-end tests
     └── test_full_pipeline.py
-```
+```text
 
 ### Naming Conventions
 
@@ -311,7 +311,7 @@ def test_function():
 
 def test_it_works():
     pass
-```
+```text
 
 ### Test Isolation
 
@@ -328,7 +328,7 @@ class TestTransformations:
         """Test B - doesn't depend on Test A."""
         df = spark.createDataFrame([(2,)], ["id"])
         # ... test logic
-```
+```text
 
 ## Common Issues & Errors
 
@@ -342,7 +342,7 @@ class TestTransformations:
 @pytest.fixture(scope="session")  # Not "function"
 def spark():
     return SparkSession.builder.master("local[*]").getOrCreate()
-```
+```text
 
 ### 2. Tests Interfere with Each Other
 
@@ -357,7 +357,7 @@ def clean_table(spark):
     spark.sql("DROP TABLE IF EXISTS test_table")
     yield
     spark.sql("DROP TABLE IF EXISTS test_table")
-```
+```text
 
 ### 3. Slow Test Execution
 
@@ -372,7 +372,7 @@ spark = (SparkSession.builder
     .config("spark.default.parallelism", "1")
     .config("spark.executor.memory", "1g")
     .getOrCreate())
-```
+```text
 
 ### 4. Delta Lake Not Available
 
@@ -385,7 +385,7 @@ spark = (SparkSession.builder
     .config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0")
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
     .getOrCreate())
-```
+```text
 
 ## Exam Tips
 

@@ -35,7 +35,7 @@ flowchart LR
         Stateful --> D3[Console]
         Stateful --> D4[foreachBatch]
     end
-```
+```text
 
 ## Streaming Fundamentals
 
@@ -69,7 +69,7 @@ query = (transformed.writeStream
     .outputMode("append")
     .option("checkpointLocation", "/path/to/checkpoint")
     .start("/path/to/target"))
-```
+```text
 
 ## Streaming Sources
 
@@ -98,7 +98,7 @@ df = (spark.readStream
     .format("delta")
     .option("ignoreChanges", "true")
     .load("/path/to/table"))
-```
+```text
 
 | Option | Behavior |
 | :--- | :--- |
@@ -125,7 +125,7 @@ parsed = df.select(
     col("key").cast("string"),
     from_json(col("value").cast("string"), schema).alias("data")
 ).select("key", "data.*")
-```
+```text
 
 | Option | Values |
 | :--- | :--- |
@@ -141,7 +141,7 @@ df = (spark.readStream
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/path/to/schema")
     .load("/path/to/files"))
-```
+```text
 
 See [Auto Loader](04-auto-loader.md) for detailed coverage.
 
@@ -154,7 +154,7 @@ df = (spark.readStream
     .option("rowsPerSecond", 100)
     .load())
 # Schema: timestamp, value (Long)
-```
+```text
 
 ## Streaming Sinks
 
@@ -173,7 +173,7 @@ query = (df.writeStream
     .outputMode("append")
     .option("checkpointLocation", "/path/to/checkpoint")
     .toTable("catalog.schema.table_name"))
-```
+```text
 
 ### Kafka Sink
 
@@ -185,7 +185,7 @@ query = (df.selectExpr("CAST(id AS STRING) AS key", "to_json(struct(*)) AS value
     .option("topic", "output_topic")
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```
+```text
 
 ### Console Sink (Debugging)
 
@@ -195,7 +195,7 @@ query = (df.writeStream
     .outputMode("append")
     .option("truncate", False)
     .start())
-```
+```text
 
 ### foreachBatch Sink
 
@@ -211,7 +211,7 @@ query = (df.writeStream
     .foreachBatch(process_batch)
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```
+```text
 
 ## Trigger Types (Exam Critical)
 
@@ -228,7 +228,7 @@ flowchart TD
     Once -.- O1[Single batch, then stop]
     AN -.- AN1[All available data, then stop]
     Cont -.- C1[Low-latency experimental]
-```
+```text
 
 ### Trigger Comparison
 
@@ -252,7 +252,7 @@ query = (df.writeStream
 query = (df.writeStream
     .trigger(availableNow=True)
     .start())
-```
+```text
 
 | Aspect | once=True | availableNow=True |
 |--------|-----------|-------------------|
@@ -280,7 +280,7 @@ query = (df.writeStream
 query = (df.writeStream
     .trigger(continuous="1 second")
     .start())
-```
+```text
 
 ## Output Modes (Exam Critical)
 
@@ -298,7 +298,7 @@ flowchart TD
 
     Update -.- U1[Only changed rows]
     Update -.- U2[For stateful operations]
-```
+```text
 
 | Mode | Output | Use Case | Restrictions |
 |------|--------|----------|--------------|
@@ -336,7 +336,7 @@ sequenceDiagram
 
     Events->>State: Event time: 9:56
     Note over State: 9:56 > 9:55 = PROCESSED
-```
+```text
 
 ### Watermark Syntax
 
@@ -354,7 +354,7 @@ result = (df_with_watermark
         "device_id"
     )
     .agg(avg("temperature").alias("avg_temp")))
-```
+```text
 
 ### Watermark Behavior
 
@@ -374,7 +374,7 @@ df.withWatermark("event_time", "1 minute")
 
 # Long delay: More memory, accepts more late data
 df.withWatermark("event_time", "1 hour")
-```
+```text
 
 | Delay | Memory Usage | Late Data Tolerance |
 |-------|--------------|---------------------|
@@ -397,7 +397,7 @@ from pyspark.sql.functions import window
         "device_id"
     )
     .agg(count("*").alias("event_count")))
-```
+```text
 
 ```mermaid
 gantt
@@ -408,7 +408,7 @@ gantt
     Window 1 :w1, 00:00, 5m
     Window 2 :w2, 00:05, 5m
     Window 3 :w3, 00:10, 5m
-```
+```text
 
 ### Sliding Windows
 
@@ -422,7 +422,7 @@ Overlapping windows with a slide interval.
         "device_id"
     )
     .agg(avg("value").alias("avg_value")))
-```
+```text
 
 ```mermaid
 gantt
@@ -433,7 +433,7 @@ gantt
     Window 1 :w1, 00:00, 10m
     Window 2 :w2, 00:05, 10m
     Window 3 :w3, 00:10, 10m
-```
+```text
 
 ### Session Windows
 
@@ -449,7 +449,7 @@ from pyspark.sql.functions import session_window
         "user_id"
     )
     .agg(count("*").alias("events_in_session")))
-```
+```text
 
 | Window Type | Size | Overlap | Use Case |
 |-------------|------|---------|----------|
@@ -476,7 +476,7 @@ joined = impressions.join(
     (clicks.click_time >= impressions.impression_time) &
     (clicks.click_time <= impressions.impression_time + expr("INTERVAL 1 HOUR"))
 )
-```
+```text
 
 ```mermaid
 sequenceDiagram
@@ -494,7 +494,7 @@ sequenceDiagram
     Note over Out: Match found, emit join result
 
     Note over L,R: After watermarks pass, state cleaned
-```
+```text
 
 ### Stream-Stream Join Requirements
 

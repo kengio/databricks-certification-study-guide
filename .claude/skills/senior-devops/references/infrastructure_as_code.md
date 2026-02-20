@@ -22,7 +22,7 @@ Detailed explanation of the pattern.
 export class Example {
   // Implementation details
 }
-```
+```text
 
 **Benefits:**
 - Benefit 1
@@ -45,7 +45,7 @@ Another important pattern for senior devops.
 async function advancedExample() {
   // Code here
 }
-```
+```text
 
 ## Guidelines
 

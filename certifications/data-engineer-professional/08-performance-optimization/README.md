@@ -13,7 +13,7 @@ flowchart LR
     PO --> QP[EXPLAIN Plans & AQE]
     PO --> PH[Photon & Diagnostics]
     PO --> SO[Streaming Optimization]
-```
+```text
 
 ## Section Contents
 
@@ -44,7 +44,7 @@ flowchart TD
     end
 
     Problem --> |OPTIMIZE| Solution
-```
+```text
 
 ### Optimal File Sizes
 
@@ -82,7 +82,7 @@ flowchart LR
     AQE --> SJO[Skew Join Optimization]
     AQE --> BC[Broadcast Hash Join]
     AQE --> RP[Runtime Plan Changes]
-```
+```text
 
 ## Cost Optimization Strategies
 
@@ -107,7 +107,7 @@ flowchart TD
     AllPurpose --> Pool{High Frequency?}
     Pool --> |Yes| UsePool[Use Instance Pool]
     Pool --> |No| NoPool[Standard Cluster]
-```
+```text
 
 ## Exam Tips
 

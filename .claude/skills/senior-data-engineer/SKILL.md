@@ -15,12 +15,12 @@ World-class senior data engineer skill for production-grade AI/ML/Data systems.
 # Core Tool 1
 python scripts/pipeline_orchestrator.py --input data/ --output results/
 
-# Core Tool 2  
+# Core Tool 2
 python scripts/data_quality_validator.py --target project/ --analyze
 
 # Core Tool 3
 python scripts/etl_performance_optimizer.py --config config.yaml --deploy
-```
+```text
 
 ## Core Expertise
 
@@ -182,7 +182,7 @@ helm upgrade service ./charts/
 # Monitoring
 kubectl logs -f deployment/service
 python scripts/health_check.py
-```
+```text
 
 ## Resources
 

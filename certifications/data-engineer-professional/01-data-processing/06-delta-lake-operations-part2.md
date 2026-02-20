@@ -22,20 +22,20 @@ This part covers schema operations, key table properties, transaction log intern
 ALTER TABLE table_name ADD COLUMN new_col STRING;
 ALTER TABLE table_name ADD COLUMN new_col STRING AFTER existing_col;
 ALTER TABLE table_name ADD COLUMNS (col1 STRING, col2 INT);
-```
+```text
 
 ### Rename Column
 
 ```sql
 ALTER TABLE table_name RENAME COLUMN old_name TO new_name;
-```
+```text
 
 ### Change Column Type
 
 ```sql
 -- Only widening conversions allowed (e.g., INT to BIGINT)
 ALTER TABLE table_name ALTER COLUMN col_name TYPE BIGINT;
-```
+```text
 
 ### Add Constraints
 
@@ -51,7 +51,7 @@ ALTER TABLE table_name ALTER COLUMN col_name SET NOT NULL;
 
 -- Drop constraint
 ALTER TABLE table_name DROP CONSTRAINT constraint_name;
-```
+```text
 
 ## Key Table Properties
 
@@ -77,7 +77,7 @@ flowchart LR
         J3 --> CP[00010.checkpoint.parquet]
         CP --> J4[00011.json]
     end
-```
+```text
 
 - JSON files record each transaction
 - Checkpoint files (every 10 commits) for faster reads
@@ -102,7 +102,7 @@ flowchart LR
         D2[DELETE row] --> R2[Write small DV file]
         R2 --> S2[Fast, constant time]
     end
-```
+```text
 
 | Aspect | Without DVs | With DVs |
 |--------|-------------|----------|
@@ -124,12 +124,12 @@ TBLPROPERTIES ('delta.enableDeletionVectors' = 'true');
 -- Enable on existing table
 ALTER TABLE table_name
 SET TBLPROPERTIES ('delta.enableDeletionVectors' = 'true');
-```
+```text
 
 ```python
 # Check if DVs are enabled
 spark.sql("DESCRIBE DETAIL table_name").select("properties").show(truncate=False)
-```
+```text
 
 **Exam Tip**: Deletion vectors are enabled by default on Databricks Runtime 14.x+ for new tables.
 
@@ -141,7 +141,7 @@ Databricks automatically analyzes table access patterns and runs OPTIMIZE and VA
 -- Enable at table level
 ALTER TABLE table_name
 SET TBLPROPERTIES ('delta.enablePredictiveOptimization' = 'true');
-```
+```text
 
 | Feature | Behavior |
 |---------|----------|
@@ -171,7 +171,7 @@ SET TBLPROPERTIES ('delta.universalFormat.enabledFormats' = 'iceberg');
 -- Enable both Iceberg and Hudi
 ALTER TABLE table_name
 SET TBLPROPERTIES ('delta.universalFormat.enabledFormats' = 'iceberg,hudi');
-```
+```text
 
 | Format | Use Case | Compatibility |
 |--------|----------|---------------|
@@ -202,7 +202,7 @@ CREATE TABLE orders (
     customer_id INT,
     amount DOUBLE
 ) USING DELTA;
-```
+```text
 
 | Option | Behavior |
 |--------|----------|
@@ -223,7 +223,7 @@ VACUUM table_name LITE;
 
 -- Still supports retention
 VACUUM table_name LITE RETAIN 168 HOURS;
-```
+```text
 
 | Aspect | Standard VACUUM | VACUUM LITE |
 |--------|-----------------|-------------|
@@ -244,7 +244,7 @@ TBLPROPERTIES ('delta.enableRowTracking' = 'true');
 -- Enable on existing table (requires backfill)
 ALTER TABLE table_name
 SET TBLPROPERTIES ('delta.enableRowTracking' = 'true');
-```
+```text
 
 Row tracking adds hidden columns:
 
@@ -268,7 +268,7 @@ ALTER TABLE table_name CLUSTER BY (col1, col2);
 
 -- Step 3: Trigger initial clustering
 OPTIMIZE table_name;
-```
+```text
 
 #### Liquid Clustering vs ZORDER vs Partitioning
 
@@ -286,7 +286,7 @@ OPTIMIZE table_name;  -- Applies clustering
 
 -- Check clustering columns
 DESCRIBE DETAIL table_name;
-```
+```text
 
 ## Use Cases
 

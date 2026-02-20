@@ -16,7 +16,7 @@ AS SELECT * FROM STREAM(source_table);
 CREATE OR REFRESH MATERIALIZED VIEW aggregated_sales
 AS SELECT region, SUM(amount) as total
 FROM sales GROUP BY region;
-```
+```text
 
 ```python
 import dlt
@@ -31,7 +31,7 @@ def raw_events():
 def aggregated_sales():
     return (spark.read.table("live.sales")
         .groupBy("region").agg(sum("amount").alias("total")))
-```
+```text
 
 ## DLT Decorator Options
 
@@ -47,7 +47,7 @@ def aggregated_sales():
 )
 def my_table():
     return df
-```
+```text
 
 | Parameter | Description |
 |-----------|-------------|
@@ -91,7 +91,7 @@ CREATE OR REFRESH STREAMING TABLE critical_events (
   CONSTRAINT valid_id EXPECT (id IS NOT NULL) ON VIOLATION FAIL UPDATE
 )
 AS SELECT * FROM STREAM(raw_events);
-```
+```text
 
 ### Python Examples
 
@@ -132,7 +132,7 @@ def multi_validated():
 })
 def multi_clean():
     return spark.readStream.table("live.raw_events")
-```
+```text
 
 ## APPLY CHANGES (CDC)
 
@@ -148,7 +148,7 @@ KEYS (id)
 SEQUENCE BY timestamp
 COLUMNS * EXCEPT (_commit_version, _commit_timestamp)
 STORED AS SCD TYPE 1;
-```
+```text
 
 ### Python Syntax
 
@@ -167,7 +167,7 @@ dlt.apply_changes(
     sequence_by="timestamp",
     stored_as_scd_type=1  # or 2
 )
-```
+```text
 
 ### SCD Types
 
@@ -186,7 +186,7 @@ dlt.apply_changes(
     stored_as_scd_type=2,
     track_history_column_list=["name", "email", "status"]
 )
-```
+```text
 
 ### APPLY CHANGES Options
 
@@ -216,7 +216,7 @@ dlt.apply_changes(
   "development": false,
   "channel": "CURRENT"
 }
-```
+```text
 
 | Setting | Description |
 |---------|-------------|
@@ -238,7 +238,7 @@ def silver_events():
 @dlt.table
 def silver_events_stream():
     return spark.readStream.table("live.bronze_events")
-```
+```text
 
 | Reference | Syntax | Use |
 |-----------|--------|-----|
@@ -257,7 +257,7 @@ SELECT
 FROM event_log(TABLE(my_catalog.my_schema.__dlt_event_log))
 WHERE event_type = 'flow_progress'
   AND details:expectation IS NOT NULL;
-```
+```text
 
 ## Common Exam Tips
 

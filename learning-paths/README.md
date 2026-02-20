@@ -21,7 +21,7 @@ graph TD
     DEA --> MLA
     GAIA[GenAI Engineer Associate]
     MLA --> GAIA
-```
+```text
 
 ## Recommended Order
 

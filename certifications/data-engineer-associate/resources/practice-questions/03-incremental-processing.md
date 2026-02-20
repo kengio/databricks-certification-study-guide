@@ -71,7 +71,7 @@
   .outputMode("complete")
   ._____
   .table("new_sales"))
-```
+```text
 
 If the data engineer aims to run a micro-batch query that processes data every 5 seconds, which line of code should be used to complete the blank?
 
@@ -146,7 +146,7 @@ If the data engineer aims to run a micro-batch query that processes data every 5
 ```python
 df = spark.read.json("data/")
 df.write.save("output", format="delta")
-```
+```text
 
 > [!success]- Answer
 > The code saves files to a path but does not register the output as a named Delta table in the metastore. To create a queryable Delta table accessible via SQL, use `.write.format("delta").saveAsTable("table_name")` instead.
@@ -180,7 +180,7 @@ df.write.save("output", format="delta")
   .outputMode("append")
   ._____
   .table("transactions_gold"))
-```
+```text
 
 If the data engineer intends for the query to process all available data across as many batches as needed and then stop, which line of code should be used to complete the blank?
 
@@ -255,7 +255,7 @@ df = (spark.read
       .format("delta")
       .schema(schema)
       .load("/delta/transactions"))
-```
+```text
 
 What single change must be made for this code block to work correctly when the `transactions` table acts as a streaming source?
 
@@ -273,7 +273,7 @@ What single change must be made for this code block to work correctly when the `
 ```python
 df = spark.readStream.format("delta").load("dbfs:/delta/events")
 df.write.csv("output")
-```
+```text
 
 > [!success]- Answer
 > `df.write` must be `df.writeStream`.
@@ -288,7 +288,7 @@ df.write.csv("output")
 
 ```python
 df.writeStream.format("delta").start("output")
-```
+```text
 
 > [!success]- Answer
 > A checkpoint location is missing.

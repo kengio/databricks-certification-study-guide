@@ -43,7 +43,7 @@ A new data engineer asks: "Our team uses both Parquet files and CSVs in the data
 > revenue column: [99.00, 49.00, 120.00, ...]  ← only this is read
 > order_id column: [1, 2, 3, ...]              ← skipped entirely
 > customer_id column: [42, 77, 15, ...]        ← skipped entirely
-> ```
+> ```text
 >
 > Parquet also stores **min/max statistics** per row group. A query with `WHERE revenue > 1000` can skip entire row groups where `max(revenue) < 1000` — without reading a single data byte from them. CSV has no such metadata.
 >
@@ -93,7 +93,7 @@ A new data engineer asks: "Our team uses both Parquet files and CSVs in the data
 >         col("revenue").cast(DoubleType()),
 >         col("region"),
 >     ))
-> ```
+> ```text
 >
 > Never use `inferSchema=True` in production — it forces a full file scan before writing a single row (doubles read time) and can infer wrong types (e.g., a column with 99.9% integers and one decimal becomes `DoubleType`).
 >
@@ -168,7 +168,7 @@ A data architect says: "We already store everything in Parquet on S3. Why should
 > SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
 >
 > SELECT * FROM table_changes('prod.silver.orders', 50);
-> ```
+> ```text
 >
 > The `_delta_log/` directory is Delta's write-ahead log — every successful commit appends a JSON file listing exactly which Parquet files were added or removed. This log is the source of all Delta's guarantees. Readers always read the log first to determine which files constitute the current (or any historical) version of the table.
 >
@@ -227,7 +227,7 @@ Two Bronze ingestion pipelines broke this week: one ingesting Parquet files from
 >     ALTER TABLE bronze.vendor_feed
 >     SET TBLPROPERTIES ('delta.schema.autoMerge.enabled' = 'true')
 > """)
-> ```
+> ```text
 >
 > Safe backward-compatible changes with `mergeSchema`:
 >
@@ -247,7 +247,7 @@ Two Bronze ingestion pipelines broke this week: one ingesting Parquet files from
 >         coalesce(col("new_column_name"), col("old_column_name")).alias("canonical_name"),
 >         col("revenue").cast(DoubleType()),
 >     ))
-> ```
+> ```text
 >
 > **CSV — unstructured and silent:**
 >
@@ -268,7 +268,7 @@ Two Bronze ingestion pipelines broke this week: one ingesting Parquet files from
 >     .format("delta")
 >     .option("checkpointLocation", "/checkpoints/erp")
 >     .toTable("bronze.erp_export"))
-> ```
+> ```text
 >
 > With `schemaEvolutionMode = "rescue"`, any column not in the expected schema is captured as JSON in a `_rescued_data` column — no data is silently lost. Monitor it with an alert query:
 >
@@ -279,7 +279,7 @@ Two Bronze ingestion pipelines broke this week: one ingesting Parquet files from
 > FROM bronze.erp_export
 > WHERE _rescued_data IS NOT NULL
 >   AND _ingestion_date = current_date();
-> ```
+> ```text
 >
 > For CSV with embedded newlines in field values, add `.option("multiLine", "true")` — but note this prevents Spark from splitting the file across tasks, reducing parallelism. Prefer vendor-negotiated quoting conventions over multiline when possible.
 >
@@ -339,7 +339,7 @@ A junior engineer on your team wrote a PySpark job with 10 transformation steps 
 >          (no shuffle after join — pipelined to sink)
 >
 > Total: 2 shuffles → 3 stages
-> ```
+> ```text
 >
 > Within a stage, all tasks run the full chain of narrow transformations in memory — no intermediate results written to disk. This is highly efficient.
 >
@@ -354,7 +354,7 @@ A junior engineer on your team wrote a PySpark job with 10 transformation steps 
 > # Check how many shuffles your job has with EXPLAIN
 > df.groupBy("customer_id").agg(sum("revenue")).explain(mode="formatted")
 > # Look for "Exchange" nodes in the plan — each Exchange = a shuffle = a stage boundary
-> ```
+> ```text
 >
 > ### Follow-up Questions
 >
@@ -401,7 +401,7 @@ You have a 500GB DataFrame with only 20 partitions after reading a Delta table (
 >
 > # Can also partition by key (useful before joins/groupBy on that key)
 > df.repartition(200, col("customer_id")).rdd.getNumPartitions()  # → 200 ✓
-> ```
+> ```text
 >
 > After `repartition`, every partition is approximately equal in size. Use this when you need to **increase** partition count or need **even sizes** before a downstream operation.
 >
@@ -413,7 +413,7 @@ You have a 500GB DataFrame with only 20 partitions after reading a Delta table (
 >
 > # CRITICAL: coalesce CANNOT increase partition count
 > df.coalesce(200).rdd.getNumPartitions()  # → 20 ✗ (silently unchanged!)
-> ```
+> ```text
 >
 > `coalesce` combines partitions that already exist on the same executor — no data moves over the network. It's much cheaper than `repartition`, but the resulting partition sizes will be **uneven** (it merges, not redistributes).
 >
@@ -437,7 +437,7 @@ You have a 500GB DataFrame with only 20 partitions after reading a Delta table (
 > optimal = data_size_bytes // target_size  # ≈ 4000 partitions
 >
 > df.repartition(optimal).write.format("delta").saveAsTable("silver.large_table")
-> ```
+> ```text
 >
 > ### Follow-up Questions
 >
@@ -484,7 +484,7 @@ A Spark job processing a 2TB DataFrame is running slowly. You open the Spark UI 
 > │   ├── Execution Memory — shuffle buffers, sort, aggregation state
 > │   └── Storage Memory — df.cache(), df.persist()
 > └── User Memory (40% of remaining heap) — UDFs, user data structures
-> ```
+> ```text
 >
 > **Execution and storage share the same pool.** If you cache a large DataFrame, storage memory expands and execution memory shrinks. When execution needs more space for a shuffle, it evicts cached blocks — but if there's nothing to evict, it spills to disk.
 >
@@ -497,7 +497,7 @@ A Spark job processing a 2TB DataFrame is running slowly. You open the Spark UI 
 > ```python
 > # Target ~200MB per partition: 2TB / 200MB ≈ 10,000 partitions
 > spark.conf.set("spark.sql.shuffle.partitions", 10000)
-> ```
+> ```text
 >
 > Smaller partitions fit in execution memory → no spill.
 >
@@ -511,7 +511,7 @@ A Spark job processing a 2TB DataFrame is running slowly. You open the Spark UI 
 > # Free storage memory before the expensive shuffle
 > df_cached.unpersist()
 > result = run_heavy_shuffle(df)
-> ```
+> ```text
 >
 > **Fix 4 — Tune memory fractions** (advanced):
 >
@@ -520,7 +520,7 @@ A Spark job processing a 2TB DataFrame is running slowly. You open the Spark UI 
 > spark.conf.set("spark.memory.fraction", "0.8")        # default 0.6
 > # Give more of Spark's pool to execution (less to storage)
 > spark.conf.set("spark.memory.storageFraction", "0.2")  # default 0.5
-> ```
+> ```text
 >
 > **Caution**: increasing `spark.memory.fraction` to 0.9 leaves only 10% for user memory — UDFs and user objects can cause OOM if they allocate more than that.
 >

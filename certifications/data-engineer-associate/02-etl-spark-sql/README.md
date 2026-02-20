@@ -21,7 +21,7 @@ flowchart TD
     ETL --> DF[DataFrames]
     ETL --> Joins[Joins & Aggregations]
     ETL --> UDFs[UDFs & Advanced]
-```
+```text
 
 ## Section Contents
 

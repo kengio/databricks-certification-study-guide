@@ -29,7 +29,7 @@ flowchart TB
     Jobs --> Create[Create/Update Jobs]
     Jobs --> Run[Run Jobs]
     Jobs --> Monitor[Monitor Runs]
-```
+```text
 
 ## API Basics
 
@@ -41,7 +41,7 @@ https://<workspace-url>/api/<version>/<endpoint>
 Examples:
 https://adb-1234567890.12.azuredatabricks.net/api/2.1/jobs/list
 https://adb-1234567890.12.azuredatabricks.net/api/2.0/clusters/list
-```
+```text
 
 ### API Versions
 
@@ -60,7 +60,7 @@ https://adb-1234567890.12.azuredatabricks.net/api/2.0/clusters/list
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.1/jobs/list' \
   -H 'Authorization: Bearer dapi1234567890abcdef'
-```
+```text
 
 ### Python SDK Authentication
 
@@ -79,7 +79,7 @@ w = WorkspaceClient(
 
 # Using config profile
 w = WorkspaceClient(profile="production")
-```
+```text
 
 ### OAuth (Service Principal)
 
@@ -92,7 +92,7 @@ w = WorkspaceClient(
     client_id="your-client-id",
     client_secret="your-client-secret"
 )
-```
+```text
 
 ## Jobs API 2.1
 
@@ -110,7 +110,7 @@ curl -X GET \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.1/jobs/list?limit=25&offset=0' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ```python
 # Python SDK
@@ -119,7 +119,7 @@ from databricks.sdk import WorkspaceClient
 w = WorkspaceClient()
 for job in w.jobs.list():
     print(f"{job.job_id}: {job.settings.name}")
-```
+```text
 
 ### Get Job Details
 
@@ -127,13 +127,13 @@ for job in w.jobs.list():
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.1/jobs/get?job_id=123456' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ```python
 job = w.jobs.get(job_id=123456)
 print(job.settings.name)
 print(job.settings.tasks)
-```
+```text
 
 ### Create Job
 
@@ -163,7 +163,7 @@ curl -X POST \
       "timezone_id": "America/New_York"
     }
   }'
-```
+```text
 
 ```python
 from databricks.sdk.service.jobs import Task, NotebookTask, JobCluster
@@ -186,7 +186,7 @@ job = w.jobs.create(
     ]
 )
 print(f"Created job: {job.job_id}")
-```
+```text
 
 ### Job Task Types
 
@@ -198,7 +198,7 @@ flowchart LR
     Task --> SQL[sql_task]
     Task --> DLT[pipeline_task]
     Task --> DBT[dbt_task]
-```
+```text
 
 | Task Type | Use Case | Key Fields |
 |-----------|----------|------------|
@@ -225,7 +225,7 @@ curl -X POST \
       "env": "prod"
     }
   }'
-```
+```text
 
 ```python
 run = w.jobs.run_now(
@@ -233,7 +233,7 @@ run = w.jobs.run_now(
     notebook_params={"date": "2024-01-15", "env": "prod"}
 )
 print(f"Run ID: {run.run_id}")
-```
+```text
 
 ### Submit One-Time Run (runs/submit)
 
@@ -258,7 +258,7 @@ curl -X POST \
       }
     }]
   }'
-```
+```text
 
 ### run-now vs runs/submit
 
@@ -276,13 +276,13 @@ curl -X POST \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.1/jobs/runs/get?run_id=789012' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ```python
 run = w.jobs.get_run(run_id=789012)
 print(f"State: {run.state.life_cycle_state}")
 print(f"Result: {run.state.result_state}")
-```
+```text
 
 ### Run States
 
@@ -299,7 +299,7 @@ stateDiagram-v2
 
     PENDING --> SKIPPED
     SKIPPED --> [*]
-```
+```text
 
 | Life Cycle State | Meaning |
 |-----------------|---------|
@@ -325,11 +325,11 @@ curl -X POST \
   -H 'Authorization: Bearer $TOKEN' \
   -H 'Content-Type: application/json' \
   -d '{"run_id": 789012}'
-```
+```text
 
 ```python
 w.jobs.cancel_run(run_id=789012)
-```
+```text
 
 ### Update Job
 
@@ -358,7 +358,7 @@ curl -X POST \
       "name": "New Name Only"
     }
   }'
-```
+```text
 
 ### Delete Job
 
@@ -368,7 +368,7 @@ curl -X POST \
   -H 'Authorization: Bearer $TOKEN' \
   -H 'Content-Type: application/json' \
   -d '{"job_id": 123456}'
-```
+```text
 
 ## Clusters API 2.0
 
@@ -378,12 +378,12 @@ curl -X POST \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/clusters/list' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ```python
 for cluster in w.clusters.list():
     print(f"{cluster.cluster_id}: {cluster.cluster_name} ({cluster.state})")
-```
+```text
 
 ### Get Cluster Details
 
@@ -391,7 +391,7 @@ for cluster in w.clusters.list():
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/clusters/get?cluster_id=1234-567890-abc' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ### Create Cluster
 
@@ -413,7 +413,7 @@ curl -X POST \
       "team": "data-engineering"
     }
   }'
-```
+```text
 
 ```python
 cluster = w.clusters.create(
@@ -424,7 +424,7 @@ cluster = w.clusters.create(
     autotermination_minutes=60
 ).result()  # Wait for creation
 print(f"Cluster ID: {cluster.cluster_id}")
-```
+```text
 
 ### Cluster Operations
 
@@ -452,7 +452,7 @@ curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/clusters/permanent-delete' \
   -H 'Authorization: Bearer $TOKEN' \
   -d '{"cluster_id": "1234-567890-abc"}'
-```
+```text
 
 ### Cluster States
 
@@ -474,7 +474,7 @@ curl -X POST \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/dbfs/list?path=/data/' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ### Read File
 
@@ -483,7 +483,7 @@ curl -X GET \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/dbfs/read?path=/data/sample.txt&offset=0&length=1000' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ### Upload File
 
@@ -509,7 +509,7 @@ curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/dbfs/close' \
   -H 'Authorization: Bearer $TOKEN' \
   -d '{"handle": 123456789}'
-```
+```text
 
 ### File Operations
 
@@ -531,7 +531,7 @@ curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/dbfs/move' \
   -H 'Authorization: Bearer $TOKEN' \
   -d '{"source_path": "/old/path.csv", "destination_path": "/new/path.csv"}'
-```
+```text
 
 ## Workspace API 2.0
 
@@ -541,7 +541,7 @@ curl -X POST \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/workspace/list?path=/Users/user/' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ### Export Notebook
 
@@ -552,7 +552,7 @@ curl -X GET \
   -H 'Authorization: Bearer $TOKEN'
 
 # Response contains base64 encoded content
-```
+```text
 
 ### Import Notebook
 
@@ -567,7 +567,7 @@ curl -X POST \
     "content": "base64_encoded_content",
     "overwrite": true
   }'
-```
+```text
 
 ### Delete Workspace Object
 
@@ -576,7 +576,7 @@ curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/workspace/delete' \
   -H 'Authorization: Bearer $TOKEN' \
   -d '{"path": "/Users/user/old_notebook", "recursive": false}'
-```
+```text
 
 ## Secrets API 2.0
 
@@ -586,7 +586,7 @@ curl -X POST \
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/secrets/scopes/list' \
   -H 'Authorization: Bearer $TOKEN'
-```
+```text
 
 ### Create Scope
 
@@ -595,7 +595,7 @@ curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/secrets/scopes/create' \
   -H 'Authorization: Bearer $TOKEN' \
   -d '{"scope": "my-scope"}'
-```
+```text
 
 ### Manage Secrets
 
@@ -620,6 +620,6 @@ curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/secrets/delete' \
   -H 'Authorization: Bearer $TOKEN' \
   -d '{"scope": "my-scope", "key": "db-password"}'
-```
+```text
 
 > **Continue reading:** [Part 2 — Permissions, SQL, Error Handling & Use Cases](./06-rest-api-part2.md)

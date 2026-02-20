@@ -37,7 +37,7 @@ flowchart TB
 
     Development --> Bundle
     Bundle --> Targets
-```
+```text
 
 ## Bundle Structure
 
@@ -63,7 +63,7 @@ my-databricks-project/
 │   └── integration/           # Integration tests
 ├── fixtures/                  # Test data
 └── .databricks/               # Generated state files (gitignore)
-```
+```text
 
 ### Core Configuration File
 
@@ -123,7 +123,7 @@ targets:
       root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
     run_as:
       service_principal_name: etl-service-principal
-```
+```text
 
 ## Resource Definitions
 
@@ -182,7 +182,7 @@ resources:
             num_workers: 2
             spark_conf:
               spark.databricks.delta.preview.enabled: "true"
-```
+```text
 
 ### DLT Pipeline Configuration
 
@@ -216,7 +216,7 @@ resources:
           alerts:
             - on-update-failure
             - on-flow-failure
-```
+```text
 
 ### Cluster Configuration
 
@@ -235,7 +235,7 @@ resources:
         spark.databricks.cluster.profile: serverless
       custom_tags:
         environment: ${var.environment}
-```
+```text
 
 ## Variables and Substitutions
 
@@ -256,7 +256,7 @@ variables:
   instance_pool_id:
     lookup:
       instance_pool: etl-pool
-```
+```text
 
 ### Built-in Variables
 
@@ -286,7 +286,7 @@ resources:
               catalog: ${var.catalog}
               # Use bundle metadata
               bundle_name: ${bundle.name}
-```
+```text
 
 ## Bundle Commands
 
@@ -316,7 +316,7 @@ databricks bundle destroy
 
 # Show bundle summary
 databricks bundle summary
-```
+```text
 
 ### Development Mode
 
@@ -329,7 +329,7 @@ databricks bundle deploy -t dev
 # - Pauses job schedules
 # - Sets pipelines to development mode
 # - Uses personal workspace path
-```
+```text
 
 ### Validation and Debugging
 
@@ -345,7 +345,7 @@ databricks bundle validate --output json
 
 # Debug deployment issues
 databricks bundle deploy --debug
-```
+```text
 
 ## Target Configuration
 
@@ -366,7 +366,7 @@ targets:
     # - Uses exact resource names
     # - Enables schedules
     # - Requires run_as for identity
-```
+```text
 
 ### Environment-Specific Overrides
 
@@ -394,7 +394,7 @@ targets:
               new_cluster:
                 num_workers: 8
                 driver_node_type_id: "Standard_DS5_v2"
-```
+```text
 
 ### Service Principal Authentication
 
@@ -408,7 +408,7 @@ targets:
     # Or use service principal ID
     # run_as:
     #   service_principal_id: "00000000-0000-0000-0000-000000000000"
-```
+```text
 
 ## Artifacts and Libraries
 
@@ -434,7 +434,7 @@ resources:
             entry_point: main
           libraries:
             - whl: ../artifacts/etl_package/*.whl
-```
+```text
 
 ### JAR Artifacts
 
@@ -452,6 +452,6 @@ resources:
         - task_key: main
           libraries:
             - jar: ../artifacts/spark_extensions/*.jar
-```
+```text
 
 > **Continue reading:** [Part 2 — Sync, CI/CD Integration, Bundle Templates, Common Patterns & Exam Tips](./10-asset-bundles-part2.md)

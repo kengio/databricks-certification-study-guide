@@ -41,7 +41,7 @@ CLUSTER BY (customer_id, order_date);
 CREATE TABLE my_catalog.my_schema.high_value_orders AS
 SELECT * FROM my_catalog.my_schema.orders
 WHERE total > 1000;
-```
+```text
 
 ## Insert Data
 
@@ -60,7 +60,7 @@ SELECT * FROM my_catalog.staging.new_orders;
 -- Overwrite entire table
 INSERT OVERWRITE my_catalog.my_schema.products
 SELECT * FROM my_catalog.staging.products_full;
-```
+```text
 
 ## Update and Delete
 
@@ -73,7 +73,7 @@ WHERE product_id = 1;
 -- Delete records
 DELETE FROM my_catalog.my_schema.products
 WHERE category = 'Discontinued';
-```
+```text
 
 ## Merge (Upsert)
 
@@ -91,7 +91,7 @@ WHEN NOT MATCHED THEN
     VALUES (source.product_id, source.name, source.category, source.price, current_timestamp())
 WHEN NOT MATCHED BY SOURCE THEN
     DELETE;
-```
+```text
 
 ## Time Travel
 
@@ -107,7 +107,7 @@ DESCRIBE HISTORY my_catalog.my_schema.products;
 
 -- Restore to previous version
 RESTORE TABLE my_catalog.my_schema.products TO VERSION AS OF 3;
-```
+```text
 
 ## Optimize and Vacuum
 
@@ -127,7 +127,7 @@ VACUUM my_catalog.my_schema.orders RETAIN 168 HOURS;
 
 -- Check file metrics after OPTIMIZE
 DESCRIBE DETAIL my_catalog.my_schema.orders;
-```
+```text
 
 ## Change Data Feed (CDF)
 
@@ -146,7 +146,7 @@ SELECT * FROM table_changes('my_catalog.my_schema.orders', '2025-01-01', '2025-0
 SELECT order_id, customer_id, total, _change_type, _commit_version
 FROM table_changes('my_catalog.my_schema.orders', 5)
 WHERE _change_type IN ('insert', 'update_postimage');
-```
+```text
 
 ## Schema Management
 
@@ -169,7 +169,7 @@ SET TBLPROPERTIES (
     'delta.autoOptimize.optimizeWrite' = 'true',
     'delta.autoOptimize.autoCompact' = 'true'
 );
-```
+```text
 
 ## Table Metadata
 
@@ -185,4 +185,4 @@ SHOW CREATE TABLE my_catalog.my_schema.products;
 
 -- Show file-level details (size, numFiles, clustering info)
 DESCRIBE DETAIL my_catalog.my_schema.orders;
-```
+```text

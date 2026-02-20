@@ -24,9 +24,9 @@ This is a paragraph.
 
 This is another paragraph (blank line between creates separate paragraphs).
 
-For a line break within a paragraph, add two spaces at the end  
+For a line break within a paragraph, add two spaces at the end
 or use Shift+Enter.
-```
+```text
 
 ### Headings
 
@@ -37,7 +37,7 @@ or use Shift+Enter.
 #### Heading 4
 ##### Heading 5
 ###### Heading 6
-```
+```text
 
 ### Text Formatting
 
@@ -57,7 +57,7 @@ Use backslash to escape special characters:
 \*This won't be italic\*
 \#This won't be a heading
 1\. This won't be a list item
-```
+```text
 
 Common characters to escape: `\*`, `\_`, `\#`, `` \` ``, `\|`, `\~`
 
@@ -69,7 +69,7 @@ Common characters to escape: `\*`, `\_`, `\#`, `` \` ``, `\|`, `\~`
 [[Note Name]]
 [[Note Name.md]]
 [[Note Name|Display Text]]
-```
+```text
 
 ### Link to Headings
 
@@ -78,19 +78,19 @@ Common characters to escape: `\*`, `\_`, `\#`, `` \` ``, `\|`, `\~`
 [[Note Name#Heading|Custom Text]]
 [[#Heading in same note]]
 [[##Search all headings in vault]]
-```
+```text
 
 ### Link to Blocks
 
 ```markdown
 [[Note Name#^block-id]]
 [[Note Name#^block-id|Custom Text]]
-```
+```text
 
 Define a block ID by adding `^block-id` at the end of a paragraph:
 ```markdown
 This is a paragraph that can be linked to. ^my-block-id
-```
+```text
 
 For lists and quotes, add the block ID on a separate line:
 ```markdown
@@ -98,14 +98,14 @@ For lists and quotes, add the block ID on a separate line:
 > With multiple lines
 
 ^quote-id
-```
+```text
 
 ### Search Links
 
 ```markdown
 [[##heading]]     Search for headings containing "heading"
 [[^^block]]       Search for blocks containing "block"
-```
+```text
 
 ## Markdown-Style Links
 
@@ -114,7 +114,7 @@ For lists and quotes, add the block ID on a separate line:
 [Display Text](Note%20Name.md#Heading)
 [Display Text](https://example.com)
 [Note](obsidian://open?vault=VaultName&file=Note.md)
-```
+```text
 
 Note: Spaces must be URL-encoded as `%20` in Markdown links.
 
@@ -126,7 +126,7 @@ Note: Spaces must be URL-encoded as `%20` in Markdown links.
 ![[Note Name]]
 ![[Note Name#Heading]]
 ![[Note Name#^block-id]]
-```
+```text
 
 ### Embed Images
 
@@ -134,21 +134,21 @@ Note: Spaces must be URL-encoded as `%20` in Markdown links.
 ![[image.png]]
 ![[image.png|640x480]]    Width x Height
 ![[image.png|300]]        Width only (maintains aspect ratio)
-```
+```text
 
 ### External Images
 
 ```markdown
 ![Alt text](https://example.com/image.png)
 ![Alt text|300](https://example.com/image.png)
-```
+```text
 
 ### Embed Audio
 
 ```markdown
 ![[audio.mp3]]
 ![[audio.ogg]]
-```
+```text
 
 ### Embed PDF
 
@@ -156,13 +156,13 @@ Note: Spaces must be URL-encoded as `%20` in Markdown links.
 ![[document.pdf]]
 ![[document.pdf#page=3]]
 ![[document.pdf#height=400]]
-```
+```text
 
 ### Embed Lists
 
 ```markdown
 ![[Note#^list-id]]
-```
+```text
 
 Where the list has been defined with a block ID:
 ```markdown
@@ -171,15 +171,15 @@ Where the list has been defined with a block ID:
 - Item 3
 
 ^list-id
-```
+```text
 
 ### Embed Search Results
 
 ````markdown
 ```query
 tag:#project status:done
-```
-````
+```text
+````text
 
 ## Callouts
 
@@ -193,7 +193,7 @@ tag:#project status:done
 > This callout has a custom title.
 
 > [!tip] Title Only
-```
+```text
 
 ### Foldable Callouts
 
@@ -203,7 +203,7 @@ tag:#project status:done
 
 > [!faq]+ Expanded by default
 > This content is visible but can be collapsed.
-```
+```text
 
 ### Nested Callouts
 
@@ -211,7 +211,7 @@ tag:#project status:done
 > [!question] Outer callout
 > > [!note] Inner callout
 > > Nested content
-```
+```text
 
 ### Supported Callout Types
 
@@ -238,7 +238,7 @@ tag:#project status:done
   --callout-color: 255, 0, 0;
   --callout-icon: lucide-alert-circle;
 }
-```
+```text
 
 ## Lists
 
@@ -253,7 +253,7 @@ tag:#project status:done
 
 * Also works with asterisks
 + Or plus signs
-```
+```text
 
 ### Ordered Lists
 
@@ -266,7 +266,7 @@ tag:#project status:done
 
 1) Alternative syntax
 2) With parentheses
-```
+```text
 
 ### Task Lists
 
@@ -276,7 +276,7 @@ tag:#project status:done
 - [ ] Task with sub-tasks
   - [ ] Subtask 1
   - [x] Subtask 2
-```
+```text
 
 ## Quotes
 
@@ -287,7 +287,7 @@ tag:#project status:done
 > And include multiple paragraphs.
 >
 > > Nested quotes work too.
-```
+```text
 
 ## Code
 
@@ -296,28 +296,28 @@ tag:#project status:done
 ```markdown
 Use `backticks` for inline code.
 Use double backticks for ``code with a ` backtick inside``.
-```
+```text
 
 ### Code Blocks
 
 ````markdown
-```
+```text
 Plain code block
-```
+```text
 
 ```javascript
 // Syntax highlighted code block
 function hello() {
   console.log("Hello, world!");
 }
-```
+```text
 
 ```python
 # Python example
 def greet(name):
     print(f"Hello, {name}!")
-```
-````
+```text
+````text
 
 ### Nesting Code Blocks
 
@@ -328,9 +328,9 @@ Use more backticks or tildes for the outer block:
 Here's how to create a code block:
 ```js
 console.log("Hello")
-```
-````
-`````
+```text
+````text
+`````text
 
 ## Tables
 
@@ -339,7 +339,7 @@ console.log("Hello")
 |----------|----------|----------|
 | Cell 1   | Cell 2   | Cell 3   |
 | Cell 4   | Cell 5   | Cell 6   |
-```
+```text
 
 ### Alignment
 
@@ -347,7 +347,7 @@ console.log("Hello")
 | Left     | Center   | Right    |
 |:---------|:--------:|---------:|
 | Left     | Center   | Right    |
-```
+```text
 
 ### Using Pipes in Tables
 
@@ -356,7 +356,7 @@ Escape pipes with backslash:
 | Column 1 | Column 2 |
 |----------|----------|
 | [[Link\|Display]] | ![[Image\|100]] |
-```
+```text
 
 ## Math (LaTeX)
 
@@ -364,7 +364,7 @@ Escape pipes with backslash:
 
 ```markdown
 This is inline math: $e^{i\pi} + 1 = 0$
-```
+```text
 
 ### Block Math
 
@@ -375,7 +375,7 @@ a & b \\
 c & d
 \end{vmatrix} = ad - bc
 $$
-```
+```text
 
 ### Common Math Syntax
 
@@ -387,7 +387,7 @@ $\sqrt{x}$         Square root
 $\sum_{i=1}^{n}$   Summation
 $\int_a^b$         Integral
 $\alpha, \beta$    Greek letters
-```
+```text
 
 ## Diagrams (Mermaid)
 
@@ -399,8 +399,8 @@ graph TD
     B -->|No| D[Do that]
     C --> E[End]
     D --> E
-```
-````
+```text
+````text
 
 ### Sequence Diagrams
 
@@ -409,8 +409,8 @@ graph TD
 sequenceDiagram
     Alice->>Bob: Hello Bob
     Bob-->>Alice: Hi Alice
-```
-````
+```text
+````text
 
 ### Linking in Diagrams
 
@@ -421,8 +421,8 @@ graph TD
     B[Chemistry]
     A --> B
     class A,B internal-link;
-```
-````
+```text
+````text
 
 ## Footnotes
 
@@ -436,7 +436,7 @@ You can also use named footnotes[^note].
 [^note]: Named footnotes still appear as numbers.
 
 Inline footnotes are also supported.^[This is an inline footnote.]
-```
+```text
 
 ## Comments
 
@@ -447,7 +447,7 @@ This is visible %%but this is hidden%% text.
 This entire block is hidden.
 It won't appear in reading view.
 %%
-```
+```text
 
 ## Horizontal Rules
 
@@ -457,7 +457,7 @@ It won't appear in reading view.
 ___
 - - -
 * * *
-```
+```text
 
 ## Properties (Frontmatter)
 
@@ -480,7 +480,7 @@ rating: 4.5
 completed: false
 due: 2024-02-01T14:30:00
 ---
-```
+```text
 
 ### Property Types
 
@@ -514,7 +514,7 @@ tags:
   - tag1
   - nested/tag2
 ---
-```
+```text
 
 Tags can contain:
 - Letters (any language)
@@ -538,7 +538,7 @@ Obsidian supports HTML within Markdown:
 </details>
 
 <kbd>Ctrl</kbd> + <kbd>C</kbd>
-```
+```text
 
 ## Complete Example
 
@@ -579,7 +579,7 @@ The main algorithm uses the formula $O(n \log n)$ for sorting.
 ```python
 def process_data(items):
     return sorted(items, key=lambda x: x.priority)
-```
+```text
 
 ## Architecture
 
@@ -588,7 +588,7 @@ graph LR
     A[Input] --> B[Process]
     B --> C[Output]
     B --> D[Cache]
-```
+```text
 
 ## Related Documents
 
@@ -607,7 +607,7 @@ Internal notes:
 - Review with team on Friday
 - Consider alternative approaches
 %%
-````
+````text
 
 ## References
 

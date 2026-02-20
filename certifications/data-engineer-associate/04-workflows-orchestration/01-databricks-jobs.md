@@ -23,24 +23,25 @@ flowchart TB
         Tasks["Task List"]
         Schedule["Schedule/Trigger"]
     end
-    
+
     subgraph Execution["Job Execution"]
         Run1["Run 1"]
         Run2["Run 2"]
         Run3["Run 3"]
     end
-    
+
     subgraph Monitoring["Monitoring"]
         Logs["Logs"]
         Status["Status"]
         Alerts["Alerts"]
     end
-    
+
     JobDef --> Execution
     Execution --> Monitoring
-```
+```text
 
 A job packages together:
+
 - **Tasks**: Code to execute (notebook, Python, SQL, JAR, etc.)
 - **Configuration**: Parameters, clusters, dependencies
 - **Scheduling**: When/how often to run
@@ -89,7 +90,7 @@ df_processed.write \
     .save(f"/mnt/data/processed/{dbutils.widgets.get('date')}")
 
 print("Pipeline complete!")
-```
+```text
 
 ### Python Script Task Example
 
@@ -105,15 +106,15 @@ def main():
     parser.add_argument("--environment", required=True)
     parser.add_argument("--date", required=True)
     args = parser.parse_args()
-    
+
     spark = SparkSession.builder.appName("ETL").getOrCreate()
-    
+
     # Read
     df = spark.read.delta(f"/mnt/data/raw/{args.date}")
-    
+
     # Transform
     result = df.filter(F.col("value") > 0)
-    
+
     # Write
     result.write \
         .format("delta") \
@@ -122,7 +123,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
+```text
 
 ## Creating Jobs via UI
 
@@ -173,7 +174,7 @@ if __name__ == "__main__":
     "timezone_id": "America/Los_Angeles"
   }
 }
-```
+```text
 
 ### Create Job via API
 
@@ -182,7 +183,7 @@ curl -X POST \
   https://databricks-instance.cloud.databricks.com/api/2.1/jobs/create \
   -H "Authorization: Bearer <PAT>" \
   -d @job_config.json
-```
+```text
 
 ```python
 # Python request
@@ -211,7 +212,7 @@ response = requests.post(
 
 job_id = response.json()["job_id"]
 print(f"Created job: {job_id}")
-```
+```text
 
 ## Job Parameters
 
@@ -234,7 +235,7 @@ print(f"Created job: {job_id}")
         "task_run_id": "{{task.run_id}}"
     }
 }
-```
+```text
 
 ### Parameter Macros Available
 
@@ -259,7 +260,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--environment")
 parser.add_argument("--run_date")
 args = parser.parse_args()
-```
+```text
 
 ## Multi-Task Jobs
 
@@ -294,7 +295,7 @@ args = parser.parse_args()
     }
   ]
 }
-```
+```text
 
 ### Parallel Tasks
 
@@ -322,7 +323,7 @@ args = parser.parse_args()
     }
   ]
 }
-```
+```text
 
 ## Cluster Options
 
@@ -334,9 +335,9 @@ args = parser.parse_args()
   "notebook_task": {"notebook_path": "/path/to/notebook"},
   "existing_cluster_id": "cluster-123"
 }
-```
+```text
 
-Pros: Faster startup (cluster already running)  
+Pros: Faster startup (cluster already running)
 Cons: Manual cluster management, cost if not shared
 
 ### Job Cluster
@@ -354,9 +355,9 @@ Cons: Manual cluster management, cost if not shared
     }
   }
 }
-```
+```text
 
-Pros: Automatic cluster creation/cleanup, cost-efficient  
+Pros: Automatic cluster creation/cleanup, cost-efficient
 Cons: Startup latency (3-5 minutes)
 
 ## Job Configuration Best Practices
@@ -369,7 +370,7 @@ Cons: Startup latency (3-5 minutes)
   "max_retries": 2,
   "min_retry_interval_millis": 60000
 }
-```
+```text
 
 ### Resource Limits
 
@@ -383,7 +384,7 @@ Cons: Startup latency (3-5 minutes)
     }
   ]
 }
-```
+```text
 
 ### Alerts and Notifications
 
@@ -401,7 +402,7 @@ Cons: Startup latency (3-5 minutes)
     ]
   }
 }
-```
+```text
 
 ## Job Lifecycle
 
@@ -413,7 +414,7 @@ flowchart LR
     Success["Success"]
     Failed["Failed"]
     Retry["Retry"]
-    
+
     Created --> Scheduled
     Scheduled --> Running
     Running --> Success
@@ -421,7 +422,7 @@ flowchart LR
     Failed --> Retry
     Retry --> Running
     Success -.->|Next run| Scheduled
-```
+```text
 
 ## Common Job Patterns
 
@@ -442,7 +443,7 @@ flowchart LR
     }
   ]
 }
-```
+```text
 
 ### Pattern 2: Incremental Load
 
@@ -464,7 +465,7 @@ flowchart LR
     }
   ]
 }
-```
+```text
 
 ## Key Exam Concepts
 
