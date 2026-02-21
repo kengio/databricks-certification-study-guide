@@ -383,12 +383,12 @@ champion version and remove the old served model from the endpoint configuration
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for A/B Testing and Canary Deployments do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for A/B Testing and Canary Deployments to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting A/B Testing and Canary Deployments to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for A/B Testing and Canary Deployments prior to deployment.

@@ -350,7 +350,7 @@ spark.conf.set("spark.default.parallelism", "200")
 spark.conf.set("spark.sql.shuffle.partitions", "200")
 
 # Rule: 2-3 tasks per core
-# 100 cores → 200-300 partitions
+# cores → 200-300 partitions
 
 ```
 
@@ -529,7 +529,7 @@ CACHE TABLE orders SELECT * FROM orders WHERE date >= '2024-01-01';
 
 ## Common Issues & Errors
 
-### 1. Shuffle Spill to Disk
+### Shuffle Spill to Disk
 
 **Scenario:** Tasks spilling to disk, slow performance.
 
@@ -545,7 +545,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "1000")  # Smaller partitions
 
 ```
 
-### 2. Skewed Data in Joins
+### Skewed Data in Joins
 
 **Scenario:** One task takes much longer than others.
 
@@ -566,7 +566,7 @@ salted_df = df.withColumn("salted_key",
     concat(col("key"), lit("_"), (rand() * 10).cast("int")))
 ```
 
-### 3. Broadcast Timeout
+### Broadcast Timeout
 
 **Scenario:** BroadcastExchangeExec timeout error.
 
@@ -582,7 +582,7 @@ spark.conf.set("spark.sql.broadcastTimeout", "600")
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
 ```
 
-### 4. Out of Memory
+### Out of Memory
 
 **Scenario:** ExecutorLostFailure or OutOfMemoryError.
 

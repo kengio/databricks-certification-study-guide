@@ -48,7 +48,7 @@ flowchart TB
 
 ## Cluster Types
 
-### 1. **All-Purpose Clusters**
+### **All-Purpose Clusters**
 
 Used for interactive development and shared workloads.
 
@@ -86,7 +86,7 @@ cluster_config = {
 - Ad-hoc analysis
 - Shared team work
 
-### 2. **Job Clusters**
+### **Job Clusters**
 
 Dedicated clusters for scheduled jobs, automatically terminated after job completion.
 
@@ -126,7 +126,7 @@ job_config = {
 - Scheduled experiments
 - Production inference
 
-### 3. **SQL Warehouses**
+### **SQL Warehouses**
 
 Specialized compute for SQL queries without creating clusters.
 
@@ -400,12 +400,12 @@ print(f"Created cluster: {cluster.cluster_id}")
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Compute Clusters for ML do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compute Clusters for ML to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Compute Clusters for ML to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Compute Clusters for ML prior to deployment.

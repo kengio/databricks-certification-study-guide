@@ -44,7 +44,7 @@ flowchart TB
 
 ## Core Features
 
-### 1. **Data Exploration & Preprocessing**
+### **Data Exploration & Preprocessing**
 
 ```python
 
@@ -74,7 +74,7 @@ automl_config = {
 
 ```
 
-### 2. **Feature Engineering Pipeline**
+### **Feature Engineering Pipeline**
 
 ```python
 
@@ -107,7 +107,7 @@ pipeline_stages = [
 ]
 ```
 
-### 3. **Algorithm Selection**
+### **Algorithm Selection**
 
 AutoML tries multiple algorithms and selects the best:
 
@@ -135,7 +135,7 @@ models_tested = {
 }
 ```
 
-### 4. **Hyperparameter Tuning**
+### **Hyperparameter Tuning**
 
 ```python
 
@@ -321,7 +321,7 @@ predictions = model.predict(new_data)
 
 ## Best Practices for AutoML
 
-### 1. **Data Preparation**
+### **Data Preparation**
 
 ✓ **Do:**
 
@@ -336,7 +336,7 @@ predictions = model.predict(new_data)
 - Include row IDs or timestamps
 - Mix training and test data
 
-### 2. **Configuration**
+### **Configuration**
 
 ```python
 # Good time budget for different scenarios
@@ -357,17 +357,17 @@ metrics = {
 }
 ```
 
-### 3. **Post-AutoML Steps**
+### **Post-AutoML Steps**
 
 ```python
 
 # After AutoML:
-# 1. Review best model notebook
-# 2. Understand feature importance
-# 3. Validate on hold-out test set
-# 4. Check for data drift
-# 5. Deploy if performance acceptable
-# 6. Monitor in production
+# Review best model notebook
+# Understand feature importance
+# Validate on hold-out test set
+# Check for data drift
+# Deploy if performance acceptable
+# Monitor in production
 
 # Example validation
 
@@ -401,11 +401,11 @@ print(classification_report(y_test, y_pred))
 from databricks import automl
 import mlflow
 
-# 1. Load customer data
+# Load customer data
 
 df = spark.read.table("production.customer_360.data")
 
-# 2. Configure AutoML
+# Configure AutoML
 
 churn_experiment = automl.classify(
     dataset=df,
@@ -414,20 +414,20 @@ churn_experiment = automl.classify(
     experiment_dir="/Workspace/Shared/ml-projects/churn"
 )
 
-# 3. Review results
+# Review results
 
 best_metrics = churn_experiment.best_trial.metrics
 print(f"Best AUC: {best_metrics['auc']}")
 print(f"Best Accuracy: {best_metrics['accuracy']}")
 
-# 4. Register model
+# Register model
 
 mlflow.register_model(
     churn_experiment.best_model.source,
     "customer_churn_predictor"
 )
 
-# 5. Deploy to production
+# Deploy to production
 
 model_uri = f"models:/customer_churn_predictor/Production"
 ```
@@ -439,12 +439,12 @@ model_uri = f"models:/customer_churn_predictor/Production"
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Databricks AutoML do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks AutoML to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Databricks AutoML to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks AutoML prior to deployment.

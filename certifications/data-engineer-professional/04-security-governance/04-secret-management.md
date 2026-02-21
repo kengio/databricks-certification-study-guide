@@ -471,7 +471,7 @@ GROUP BY user_identity.email;
 
 ## Common Issues & Errors
 
-### 1. Secret Scope Not Found
+### Secret Scope Not Found
 
 **Scenario:** Scope doesn't exist or user lacks access.
 
@@ -487,7 +487,7 @@ databricks secrets list-scopes
 databricks secrets list-acls --scope my-scope
 ```
 
-### 2. Permission Denied
+### Permission Denied
 
 **Scenario:** User can't read secrets.
 
@@ -497,7 +497,7 @@ databricks secrets list-acls --scope my-scope
 databricks secrets put-acl --scope my-scope --principal user@company.com --permission READ
 ```
 
-### 3. Secret Not Found in Scope
+### Secret Not Found in Scope
 
 **Scenario:** Key doesn't exist in scope.
 
@@ -515,7 +515,7 @@ databricks secrets list --scope my-scope
 databricks secrets put --scope my-scope --key missing-key
 ```
 
-### 4. Azure Key Vault Connection Failed
+### Azure Key Vault Connection Failed
 
 **Scenario:** Can't access Key Vault-backed scope.
 
@@ -525,7 +525,7 @@ databricks secrets put --scope my-scope --key missing-key
 2. Service principal has Key Vault access
 3. Network connectivity (private endpoints if applicable)
 
-### 5. Secret Value Accidentally Exposed
+### Secret Value Accidentally Exposed
 
 **Scenario:** Secret leaked in logs or output.
 

@@ -179,7 +179,7 @@ Tip: Use EXISTS instead of IN for large subqueries:
 
 ## Common Issues and Errors
 
-### 1. Query Plan Shows CartesianProduct
+### Query Plan Shows CartesianProduct
 
 **Scenario:** Unexpectedly slow query with CartesianProduct in the plan.
 
@@ -198,7 +198,7 @@ JOIN customers c ON o.customer_id = c.id
 WHERE o.amount > 100;
 ```
 
-### 2. Predicate Pushdown Not Working
+### Predicate Pushdown Not Working
 
 **Scenario:** PushedFilters is empty when you expect pushdown.
 
@@ -220,7 +220,7 @@ df = (spark.table("orders")
     .withColumn("processed", my_udf(col("data"))))
 ```
 
-### 3. AQE Not Converting to Broadcast Join
+### AQE Not Converting to Broadcast Join
 
 **Scenario:** AQE does not convert SortMergeJoin to BroadcastHashJoin despite small data.
 
@@ -238,7 +238,7 @@ spark.conf.set("spark.sql.adaptive.autoBroadcastJoinThreshold", "100MB")
 spark.conf.get("spark.sql.adaptive.enabled")  # Should be "true"
 ```
 
-### 4. Photon Fallback to Spark
+### Photon Fallback to Spark
 
 **Scenario:** Expected Photon acceleration but plan shows standard Spark operators.
 
@@ -263,7 +263,7 @@ df = df.withColumn("clean_name", clean_udf(col("name")))
 df = df.withColumn("clean_name", lower(trim(col("name"))))
 ```
 
-### 5. Excessive Shuffle in Multi-Join Queries
+### Excessive Shuffle in Multi-Join Queries
 
 **Scenario:** Plan shows multiple Exchange operators (shuffles) across joins.
 
@@ -286,7 +286,7 @@ spark.sql("""
 """)
 ```
 
-### 6. Spill Causing Slow Aggregations
+### Spill Causing Slow Aggregations
 
 **Scenario:** HashAggregate shows large spill metrics in Spark UI.
 

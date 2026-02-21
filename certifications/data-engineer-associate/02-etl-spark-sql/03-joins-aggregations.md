@@ -420,12 +420,12 @@ df_window = employees.withColumn(
 
 ## Common Issues & Errors
 
-### 1. OOM Errors
+### OOM Errors
 
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Joins and Aggregations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Joins and Aggregations prior to deployment.

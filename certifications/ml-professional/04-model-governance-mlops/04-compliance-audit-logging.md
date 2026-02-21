@@ -385,12 +385,12 @@ under GDPR Article 22.
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Compliance and Audit Logging do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compliance and Audit Logging to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Compliance and Audit Logging to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Compliance and Audit Logging prior to deployment.

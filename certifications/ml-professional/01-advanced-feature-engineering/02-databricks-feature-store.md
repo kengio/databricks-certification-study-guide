@@ -49,7 +49,7 @@ flowchart TB
 
 ## Core APIs
 
-### 1. **Feature Table Creation and Management**
+### **Feature Table Creation and Management**
 
 ```python
 from databricks.feature_store import FeatureStoreClient
@@ -98,7 +98,7 @@ fs.write_table(
 )
 ```
 
-### 2. **Feature Discovery and Lookup**
+### **Feature Discovery and Lookup**
 
 ```python
 # Read feature table for training
@@ -126,7 +126,7 @@ user_feature_values = fs.read_table(
 
 ```
 
-### 3. **Feature Versioning and Time Travel**
+### **Feature Versioning and Time Travel**
 
 ```python
 # Read feature table at specific timestamp (Delta Lake time travel)
@@ -153,7 +153,7 @@ spark.sql("""
 """)
 ```
 
-### 4. **Training Dataset Creation**
+### **Training Dataset Creation**
 
 ```python
 # Create training dataset with labeled data
@@ -321,7 +321,7 @@ mlflow.end_run()
 
 ## Advanced Operations
 
-### 1. **Feature Table Schema Evolution**
+### **Feature Table Schema Evolution**
 
 ```python
 # Add new feature column
@@ -348,7 +348,7 @@ fs.write_table(
 )
 ```
 
-### 2. **Multi-table Feature Joins**
+### **Multi-table Feature Joins**
 
 ```python
 # Create composite features from multiple tables
@@ -373,7 +373,7 @@ training_df = (
 )
 ```
 
-### 3. **Monitoring Feature Freshness**
+### **Monitoring Feature Freshness**
 
 ```python
 # Track when features were last computed
@@ -471,12 +471,12 @@ fs.write_table(
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Databricks Feature Store to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Feature Store prior to deployment.

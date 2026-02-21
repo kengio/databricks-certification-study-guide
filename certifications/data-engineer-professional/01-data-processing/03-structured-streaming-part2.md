@@ -189,13 +189,13 @@ result = df.groupByKey(...).mapGroupsWithState(
 ### State Cleanup Strategies
 
 ```python
-# 1. Use watermarks for automatic cleanup
+# Use watermarks for automatic cleanup
 
 (df.withWatermark("event_time", "1 hour")
     .groupBy(window("event_time", "10 minutes"))
     .count())  # State cleaned after watermark passes window
 
-# 2. Set timeout in mapGroupsWithState
+# Set timeout in mapGroupsWithState
 
 def update_with_timeout(key, events, state):
     if state.hasTimedOut:
@@ -338,7 +338,7 @@ query = (df.writeStream
 
 ## Common Issues & Errors
 
-### 1. AnalysisException: Append output mode not supported
+### AnalysisException: Append output mode not supported
 
 **Scenario:** Trying to use `append` mode with aggregations without watermarking.
 
@@ -346,19 +346,19 @@ query = (df.writeStream
 
 **Exam Context:** Identifying incompatible source/sink/transformation combinations.
 
-### 2. Massive State Store Growth (OOM)
+### Massive State Store Growth (OOM)
 
 **Scenario:** Running a stream-stream join or deduplication without watermarks.
 
 **Fix:** Define watermarks on both sides of join or on the dedup stream to allow state cleanup.
 
-### 3. Checkpoint Incompatibility
+### Checkpoint Incompatibility
 
 **Scenario:** Changing stateful operations (like grouping keys) and trying to resume from old checkpoint.
 
 **Fix:** New query structure requires a new checkpoint location.
 
-### 4. Output Mode "Update" Not Supported by Sink
+### Output Mode "Update" Not Supported by Sink
 
 **Scenario:** Using `update` mode with a file sink (Parquet/ORC).
 

@@ -288,7 +288,7 @@ ORDER BY start_time DESC;
 
 ## Common Issues & Errors
 
-### 1. Task Timeout
+### Task Timeout
 
 **Scenario:** Task exceeds timeout and is killed.
 
@@ -302,7 +302,7 @@ tasks:
     timeout_seconds: 7200  # 2 hours
 ```
 
-### 2. Cluster Start Failure
+### Cluster Start Failure
 
 **Scenario:** Job cluster fails to start.
 
@@ -318,7 +318,7 @@ job_clusters:
       num_workers: 1
 ```
 
-### 3. Task Value Not Found
+### Task Value Not Found
 
 **Scenario:** Downstream task can't read task value.
 
@@ -338,7 +338,7 @@ value = dbutils.jobs.taskValues.get(
 )
 ```
 
-### 4. Circular Dependencies
+### Circular Dependencies
 
 **Scenario:** Job fails validation due to circular deps.
 

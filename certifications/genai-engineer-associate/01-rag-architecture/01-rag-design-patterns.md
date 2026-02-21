@@ -466,12 +466,12 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 
 ## Common Issues & Errors
 
-### 1. High Latency Responses
+### High Latency Responses
 
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting RAG Design Patterns to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for RAG Design Patterns prior to deployment.

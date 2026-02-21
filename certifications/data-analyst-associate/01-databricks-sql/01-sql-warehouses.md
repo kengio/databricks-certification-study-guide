@@ -50,7 +50,7 @@ flowchart TD
 
 Databricks offers three SQL warehouse types optimized for different use cases:
 
-### 1. **Pro Warehouses**
+### **Pro Warehouses**
 
 - **Best for**: Production analytics workloads
 - **Compute**: On-demand, scales automatically
@@ -69,14 +69,14 @@ FROM sales
 GROUP BY customer_segment;
 ```
 
-### 2. **Classic Warehouses (Legacy)**
+### **Classic Warehouses (Legacy)**
 
 - **Deprecated in favor of Pro**
 - Still available for legacy systems
 - Slower startup time
 - Recommend migration to Pro
 
-### 3. **Serverless SQL Warehouses**
+### **Serverless SQL Warehouses**
 
 - **Best for**: Predictable, consistent workloads
 - **Setup**: Fully managed, no configuration needed
@@ -275,7 +275,7 @@ LIMIT 100;
 
 ## SQL Warehouse Best Practices
 
-### 1. **Right-sizing for Your Workload**
+### **Right-sizing for Your Workload**
 
 ```sql
 -- Start with Small warehouse for analytics
@@ -283,7 +283,7 @@ LIMIT 100;
 -- Use Small → Medium → Large progression
 ```
 
-### 2. **Query Optimization**
+### **Query Optimization**
 
 ```sql
 -- ❌ Inefficient - full table scan
@@ -295,7 +295,7 @@ FROM large_table
 WHERE status = 'active' AND date >= '2024-01-01';
 ```
 
-### 3. **Use Appropriate Data Types**
+### **Use Appropriate Data Types**
 
 ```sql
 -- ❌ Storage waste - string instead of integer
@@ -305,7 +305,7 @@ CREATE TABLE users (id STRING, name STRING, age STRING);
 CREATE TABLE users (id INT, name STRING, age INT);
 ```
 
-### 4. **Partition Large Tables**
+### **Partition Large Tables**
 
 ```sql
 -- Partition by date for faster filtering
@@ -322,13 +322,13 @@ FROM sales
 WHERE sale_date >= '2024-01-01';  -- Fast!
 ```
 
-### 5. **Schedule Peak Workloads**
+### **Schedule Peak Workloads**
 
 - Run heavy analytical jobs during off-peak hours
 - Dashboard refreshes during business hours (smaller warehouse)
 - Batch jobs overnight (larger warehouse, cost-optimized)
 
-### 6. **Use Multiple Warehouses**
+### **Use Multiple Warehouses**
 
 ```yaml
 # Example warehouse strategy
@@ -386,12 +386,12 @@ testing:
 
 ## Common Issues & Errors
 
-### 1. OOM Errors
+### OOM Errors
 
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting SQL Warehouses to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for SQL Warehouses prior to deployment.

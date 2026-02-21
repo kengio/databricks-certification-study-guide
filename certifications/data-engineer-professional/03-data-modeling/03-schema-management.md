@@ -622,7 +622,7 @@ migrate_table_schema("old.customers", "new.customers", transformations)
 
 ## Common Issues & Errors
 
-### 1. Schema Mismatch on Write
+### Schema Mismatch on Write
 
 **Scenario:** Write fails due to schema mismatch.
 
@@ -637,7 +637,7 @@ migrate_table_schema("old.customers", "new.customers", transformations)
 df.write.option("mergeSchema", "true").saveAsTable("table")
 ```
 
-### 2. Cannot Change Column Type
+### Cannot Change Column Type
 
 **Scenario:** ALTER COLUMN TYPE fails.
 
@@ -651,7 +651,7 @@ df.write.option("mergeSchema", "true").saveAsTable("table")
 ALTER TABLE table SET TBLPROPERTIES ('delta.columnMapping.mode' = 'name');
 ```
 
-### 3. Cannot Rename/Drop Column
+### Cannot Rename/Drop Column
 
 **Scenario:** Rename or drop operation fails.
 
@@ -665,7 +665,7 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 );
 ```
 
-### 4. Streaming Schema Change
+### Streaming Schema Change
 
 **Scenario:** Streaming job fails on schema change.
 

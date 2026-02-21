@@ -467,12 +467,12 @@ Alert Escalation:
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Alerts & Scheduling do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Alerts & Scheduling to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Alerts & Scheduling to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Alerts & Scheduling prior to deployment.

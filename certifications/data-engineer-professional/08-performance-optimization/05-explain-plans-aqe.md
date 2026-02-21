@@ -440,12 +440,12 @@ SET spark.sql.adaptive.enabled;
 
 ## Common Issues & Errors
 
-### 1. Hard-to-Read Physical Plans
+### Hard-to-Read Physical Plans
 
 **Scenario:** Raw `EXPLAIN` output is dense and difficult to interpret.
 **Fix:** Always use `EXPLAIN FORMATTED` in SQL or `.explain(mode="formatted")` in Python to get a structured, easier-to-read layout.
 
-### 2. Missing Statistics Leading to Bad Plans
+### Missing Statistics Leading to Bad Plans
 
 **Scenario:** Optimizer chooses slow operations (e.g., SortMergeJoin over BroadcastHashJoin) for small tables.
 **Fix:** Run `ANALYZE TABLE <name> COMPUTE STATISTICS` so Catalyst has accurate file and row counts to inform Cost-Based Optimization.

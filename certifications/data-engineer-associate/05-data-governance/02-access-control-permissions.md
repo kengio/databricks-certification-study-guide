@@ -222,7 +222,7 @@ GRANT SELECT ON prod.analytics TO finance_team;
 
 ## Best Practices for Access Control
 
-### 1. Principle of Least Privilege
+### Principle of Least Privilege
 
 Grant only necessary permissions:
 
@@ -234,7 +234,7 @@ GRANT SELECT ON prod.analytics.public_sales TO junior_analyst;
 GRANT ALL PRIVILEGES ON prod TO junior_analyst;
 ```
 
-### 2. Use Groups for Scalability
+### Use Groups for Scalability
 
 ```sql
 -- Instead of granting to each user...
@@ -248,7 +248,7 @@ GRANT SELECT ON prod.analytics.orders TO analytics_team;
 -- Users join/leave group, permissions automatic
 ```
 
-### 3. Organize by Schema for Security
+### Organize by Schema for Security
 
 ```text
 prod/
@@ -262,7 +262,7 @@ prod/
 -- Finance team: access finance
 ```
 
-### 4. Separate Environments
+### Separate Environments
 
 ```text
 -- Production (strict access)
@@ -351,14 +351,14 @@ GRANT SELECT ON prod.analytics.v_orders_sensitive TO finance_team;
 
 ```python
 
-# 1. Admin creates service principal
+# Admin creates service principal
 # Admin Console > Service Principals > Create
 
-# 2. Generate personal access token
+# Generate personal access token
 # Service Principal Details > Generate Token
 # Token: dapi...
 
-# 3. Grant permissions
+# Grant permissions
 
 spark.sql("""
 GRANT SELECT, MODIFY
@@ -366,7 +366,7 @@ ON prod.analytics.orders
 TO `my-ci-app-xyz123`
 """)
 
-# 4. Use in job configuration
+# Use in job configuration
 
 job_config = {
     "service_credential_service_principal_id": "my-ci-app-xyz123",
@@ -475,12 +475,12 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Access Control and Permissions do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Access Control and Permissions to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Access Control and Permissions to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control and Permissions prior to deployment.

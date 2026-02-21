@@ -50,7 +50,7 @@ flowchart TB
     T4 -->|Report Score| Driver
 ```
 
-## 1. Distributed XGBoost Tuning
+## Distributed XGBoost Tuning
 
 ```python
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
@@ -120,7 +120,7 @@ best_model = cv_model.bestModel
 print(f"Best ROC-AUC: {max(cv_model.avgMetrics):.4f}")
 ```
 
-## 2. Spark Trials with Hyperopt
+## Spark Trials with Hyperopt
 
 ```python
 from hyperopt import hp, fmin, tpe, SparkTrials, space_eval, Trials
@@ -200,7 +200,7 @@ best_params = space_eval(space, best)
 print(f"Best parameters: {best_params}")
 ```
 
-## 3. Population-Based Training (PBT)
+## Population-Based Training (PBT)
 
 ```python
 # PBT: Evolutionary approach with migration
@@ -300,7 +300,7 @@ class PopulationBasedTraining:
         return max(self.population, key=lambda x: x["score"])
 ```
 
-## 4. Ray Tune for Distributed Hyperparameter Optimization
+## Ray Tune for Distributed Hyperparameter Optimization
 
 ```python
 from ray import tune
@@ -355,7 +355,7 @@ best_result = results.get_best_result(metric="score", mode="max")
 print(f"Best config: {best_result.config}")
 ```
 
-## 5. Optuna for Distributed Tuning
+## Optuna for Distributed Tuning
 
 ```python
 import optuna
@@ -507,12 +507,12 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Distributed Hyperparameter Tuning do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Distributed Hyperparameter Tuning to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Distributed Hyperparameter Tuning to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Distributed Hyperparameter Tuning prior to deployment.

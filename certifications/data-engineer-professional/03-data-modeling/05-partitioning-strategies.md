@@ -602,7 +602,7 @@ OPTIMIZE application_logs ZORDER BY (service_name, log_level);
 
 ## Common Issues & Errors
 
-### 1. Too Many Small Partitions
+### Too Many Small Partitions
 
 **Scenario:** Partitioning by high-cardinality column creates millions of small files.
 
@@ -617,7 +617,7 @@ PARTITIONED BY (event_date)
 CLUSTER BY (event_timestamp)
 ```
 
-### 2. Partition Pruning Not Working
+### Partition Pruning Not Working
 
 **Scenario:** Query scans all partitions despite filter.
 
@@ -631,7 +631,7 @@ SELECT * FROM orders WHERE YEAR(order_date) = 2024;
 SELECT * FROM orders WHERE order_date >= '2024-01-01' AND order_date < '2025-01-01';
 ```
 
-### 3. Skewed Partitions
+### Skewed Partitions
 
 **Scenario:** One partition has much more data than others.
 
@@ -644,7 +644,7 @@ spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 ```
 
-### 4. Z-ORDER Not Effective
+### Z-ORDER Not Effective
 
 **Scenario:** Z-ORDER doesn't improve query performance.
 

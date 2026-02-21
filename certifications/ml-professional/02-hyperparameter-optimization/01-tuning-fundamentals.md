@@ -30,7 +30,7 @@ flowchart TD
     Population --> PopPro["Pro: Parallelizable, adaptive"]
 ```
 
-## 1. Grid Search
+## Grid Search
 
 ```python
 from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
@@ -93,7 +93,7 @@ print(f"Total combinations: {total_combinations}")  # 3,125 combinations!
 
 ```
 
-## 2. Random Search
+## Random Search
 
 ```python
 import random
@@ -147,7 +147,7 @@ def compare_search_strategies(param_space_size, num_trials):
     return grid_trials, random_trials
 ```
 
-## 3. Objective Functions and Metrics
+## Objective Functions and Metrics
 
 ```python
 from pyspark.ml.evaluation import (
@@ -455,12 +455,12 @@ pipeline = Pipeline(stages=[
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Hyperparameter Tuning Fundamentals do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Hyperparameter Tuning Fundamentals to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Hyperparameter Tuning Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Hyperparameter Tuning Fundamentals prior to deployment.

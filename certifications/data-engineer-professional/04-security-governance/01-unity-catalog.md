@@ -673,7 +673,7 @@ GRANT USE CATALOG, USE SCHEMA, SELECT ON CATALOG sales_domain TO `marketing-data
 
 ## Common Issues & Errors
 
-### 1. Permission Denied
+### Permission Denied
 
 **Scenario:** User cannot access table.
 
@@ -693,7 +693,7 @@ GRANT USE SCHEMA ON SCHEMA prod.gold TO `user@company.com`;
 GRANT SELECT ON TABLE prod.gold.revenue TO `user@company.com`;
 ```
 
-### 2. Cannot Create External Table
+### Cannot Create External Table
 
 **Scenario:** External location not configured.
 
@@ -707,7 +707,7 @@ USING DELTA
 LOCATION 's3://bucket/path/';
 ```
 
-### 3. Catalog Not Visible
+### Catalog Not Visible
 
 **Scenario:** User cannot see catalog.
 

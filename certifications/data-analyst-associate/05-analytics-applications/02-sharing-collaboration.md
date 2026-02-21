@@ -85,7 +85,7 @@ Dashboard → Underlying Queries
 
 ## Sharing Methods
 
-### 1. Direct User/Group Sharing
+### Direct User/Group Sharing
 
 ```yaml
 Share Dashboard with People:
@@ -112,7 +112,7 @@ Share Dashboard with People:
     - Changes apply to all members
 ```
 
-### 2. Shareable Link
+### Shareable Link
 
 ```yaml
 Generate Shareable Link:
@@ -128,7 +128,7 @@ Link Characteristics:
   - Lifetime: Indefinite until revoked
 ```
 
-### 3. Email Distribution
+### Email Distribution
 
 ```yaml
 Schedule Email Distribution:
@@ -153,7 +153,7 @@ Send Options:
   - Link to interactive dashboard
 ```
 
-### 4. Embedded in Applications
+### Embedded in Applications
 
 ```html
 <!-- Embed dashboard in website or app -->
@@ -490,12 +490,12 @@ Subscribe to Alerts:
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Sharing & Collaboration do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Sharing & Collaboration to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Sharing & Collaboration to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Sharing & Collaboration prior to deployment.

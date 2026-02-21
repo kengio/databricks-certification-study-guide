@@ -392,7 +392,7 @@ SELECT * FROM production.shared.customer_gold;
 
 ## Best Practices
 
-### 1. Naming Conventions
+### Naming Conventions
 
 ```sql
 -- Clear, consistent names
@@ -403,7 +403,7 @@ prod_analytics.gold.event_summary
 -- Not: prod_analytics.schema_1.tbl_123
 ```
 
-### 2. Documentation
+### Documentation
 
 ```sql
 -- Add descriptions at all levels
@@ -420,7 +420,7 @@ CREATE TABLE production.sales.orders (
 );
 ```
 
-### 3. Access Control
+### Access Control
 
 ```sql
 -- Principle of least privilege
@@ -432,7 +432,7 @@ TO `engineer@company.com`;
 -- Modify only needed table, not entire catalog
 ```
 
-### 4. Version Control
+### Version Control
 
 ```sql
 -- Track catalog schema in version control
@@ -476,12 +476,12 @@ TO `engineer@company.com`;
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Unity Catalog do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Unity Catalog to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Unity Catalog to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Unity Catalog prior to deployment.

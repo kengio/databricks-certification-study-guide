@@ -394,12 +394,12 @@ A typical promotion workflow:
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Governance Frameworks do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Governance Frameworks to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Governance Frameworks to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Governance Frameworks prior to deployment.

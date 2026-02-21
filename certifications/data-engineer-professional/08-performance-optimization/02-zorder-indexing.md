@@ -422,7 +422,7 @@ OPTIMIZE catalog.schema.orders;
 
 ## Common Issues & Errors
 
-### 1. Z-ORDER Not Improving Performance
+### Z-ORDER Not Improving Performance
 
 **Scenario:** Queries still scan many files.
 
@@ -439,7 +439,7 @@ SELECT * FROM orders WHERE customer_id = 123;
 SELECT * FROM orders WHERE product_id = 456;
 ```
 
-### 2. Too Many Z-ORDER Columns
+### Too Many Z-ORDER Columns
 
 **Scenario:** Diminishing returns with many columns.
 
@@ -453,7 +453,7 @@ OPTIMIZE orders ZORDER BY (a, b, c, d, e, f);
 OPTIMIZE orders ZORDER BY (a, b, c);
 ```
 
-### 3. Z-ORDER on Low-Cardinality Column
+### Z-ORDER on Low-Cardinality Column
 
 **Scenario:** Poor clustering effectiveness.
 
@@ -468,7 +468,7 @@ CREATE TABLE orders PARTITIONED BY (status);
 OPTIMIZE orders ZORDER BY (customer_id);
 ```
 
-### 4. Liquid Clustering Not Working
+### Liquid Clustering Not Working
 
 **Scenario:** Data not being clustered.
 

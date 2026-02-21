@@ -626,7 +626,7 @@ Full Refresh:
 
 ## Common Issues & Errors
 
-### 1. Streaming Table Not Processing
+### Streaming Table Not Processing
 
 **Scenario:** New files not being processed.
 
@@ -646,7 +646,7 @@ FROM cloud_files(
 );
 ```
 
-### 2. Materialized View Performance
+### Materialized View Performance
 
 **Scenario:** Materialized view slow to refresh.
 
@@ -662,7 +662,7 @@ AS SELECT
 FROM LIVE.source_table;
 ```
 
-### 3. Dependency Not Found
+### Dependency Not Found
 
 **Scenario:** Table not found error.
 
@@ -684,7 +684,7 @@ def dependent_table():
     return dlt.read_stream("source_table")  # Now it exists
 ```
 
-### 4. Checkpoint Location Issues
+### Checkpoint Location Issues
 
 **Scenario:** Streaming fails after schema change.
 

@@ -396,12 +396,12 @@ with mlflow.start_run(run_name="rag-v3-llama-70b"):
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting MLflow for GenAI to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for MLflow for GenAI prior to deployment.

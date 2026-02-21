@@ -428,7 +428,7 @@ ORDER BY shared_date DESC;
 
 ## Best Practices
 
-### 1. Share Views, Not Raw Tables
+### Share Views, Not Raw Tables
 
 ```sql
 -- Bad: Share all raw data
@@ -443,7 +443,7 @@ WHERE year = YEAR(current_date());
 ADD VIEW prod.analytics.v_partner_events TO SHARE partner_data;
 ```
 
-### 2. Version Shares for Change Control
+### Version Shares for Change Control
 
 ```sql
 -- Create new share for new version
@@ -454,7 +454,7 @@ ADD TABLE ... TO SHARE partner_data_v2;
 -- Then deprecate partner_data_v1
 ```
 
-### 3. Document Shared Tables
+### Document Shared Tables
 
 ```sql
 -- Add comments for consumers
@@ -466,7 +466,7 @@ ALTER TABLE prod.analytics.orders SET TBLPROPERTIES (
 );
 ```
 
-### 4. Monitor Share Usage
+### Monitor Share Usage
 
 ```sql
 -- Track which consumers use which shares
@@ -501,12 +501,12 @@ ORDER BY query_count DESC;
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Data Sharing do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Data Sharing to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Data Sharing to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Data Sharing prior to deployment.

@@ -465,12 +465,12 @@ GROUP BY c.region;
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Aggregations & Grouping do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Aggregations & Grouping to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Aggregations & Grouping to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Aggregations & Grouping prior to deployment.

@@ -217,7 +217,7 @@ Parameter: selected_region
 
 ## Parameter Best Practices
 
-### 1. Sensible Defaults
+### Sensible Defaults
 
 ```sql
 -- Good: Defaults to last 30 days
@@ -232,7 +232,7 @@ end_date default: CURRENT_DATE
 -- Users see recent data without setting anything
 ```
 
-### 2. Validation & Constraints
+### Validation & Constraints
 
 ```yaml
 Parameter Validation:
@@ -252,7 +252,7 @@ Parameter Validation:
     Required: Yes (must select something)
 ```
 
-### 3. Performance Optimization
+### Performance Optimization
 
 ```sql
 -- ❌ Problematic - full table scan for each text search
@@ -519,12 +519,12 @@ selected_region = ''
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Query Parameters & Dynamic Queries do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Query Parameters & Dynamic Queries to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Query Parameters & Dynamic Queries to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Query Parameters & Dynamic Queries prior to deployment.

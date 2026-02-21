@@ -354,12 +354,12 @@ Answer:"""
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Prompt Engineering do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Prompt Engineering to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Prompt Engineering to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Prompt Engineering prior to deployment.

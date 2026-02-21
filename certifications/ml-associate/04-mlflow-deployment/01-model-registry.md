@@ -59,7 +59,7 @@ flowchart TB
 
 ## Core Concepts
 
-### 1. **Registering Models**
+### **Registering Models**
 
 ```python
 import mlflow
@@ -87,7 +87,7 @@ model_version = client.create_model_version(
 print(f"Registered model version: {model_version.version}")
 ```
 
-### 2. **Model Versions**
+### **Model Versions**
 
 Each version tracks a specific model artifact and its metadata.
 
@@ -115,7 +115,7 @@ print(f"Version 3 tags: {mv.tags}")
 print(f"Version 3 metrics: {mv.metrics}")
 ```
 
-### 3. **Model Stages**
+### **Model Stages**
 
 Stages represent where a model is in its lifecycle.
 
@@ -413,7 +413,7 @@ model = mlflow.sklearn.load_model(
 
 ## Advanced Registry Features
 
-### 1. **Aliases for Semantic Versioning**
+### **Aliases for Semantic Versioning**
 
 ```python
 from mlflow.tracking import MlflowClient
@@ -440,7 +440,7 @@ client.set_registered_model_alias(
 champion = mlflow.sklearn.load_model("models:/customer_churn_model@champion")
 ```
 
-### 2. **Automatic Stage Transitions**
+### **Automatic Stage Transitions**
 
 ```python
 
@@ -463,7 +463,7 @@ promotion_criteria = {
 
 ## Best Practices for Model Registry
 
-### 1. **Naming Conventions**
+### **Naming Conventions**
 
 ```python
 # Clear, semantic names
@@ -489,7 +489,7 @@ bad_names = [
 
 ```
 
-### 2. **Versioning Strategy**
+### **Versioning Strategy**
 
 ```python
 # Track what changed between versions
@@ -511,7 +511,7 @@ client.update_model_version(
 )
 ```
 
-### 3. **Stage Transition Approval**
+### **Stage Transition Approval**
 
 ```python
 
@@ -566,7 +566,7 @@ client = MlflowClient()
 
 # Company ML-Ops workflow
 
-# 1. Data scientist trains and registers model
+# Data scientist trains and registers model
 
 print("=== Data Scientist ===")
 with mlflow.start_run(run_name="monthly_retraining"):
@@ -581,7 +581,7 @@ mv = client.create_model_version(
 )
 print(f"Registered v{mv.version}")
 
-# 2. ML-Ops promotes to staging
+# ML-Ops promotes to staging
 
 print("\n=== ML-Ops Engineer ===")
 client.transition_model_version_stage(
@@ -589,7 +589,7 @@ client.transition_model_version_stage(
 )
 print(f"v{mv.version} moved to Staging for testing")
 
-# 3. Automated tests run
+# Automated tests run
 
 print("\n=== CI/CD Pipeline ===")
 # Run integration tests, performance benchmarks, etc.
@@ -613,12 +613,12 @@ else:
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Model Registry to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Registry prior to deployment.

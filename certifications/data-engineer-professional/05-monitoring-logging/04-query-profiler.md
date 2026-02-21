@@ -420,7 +420,7 @@ SELECT col1, col2, col3 FROM large_table WHERE ...;
 
 ## Common Issues & Errors
 
-### 1. No Partition Pruning
+### No Partition Pruning
 
 **Scenario:** Full table scan despite partition filter.
 
@@ -434,7 +434,7 @@ WHERE CAST(order_date AS STRING) = '2024-01-15'
 WHERE order_date = DATE'2024-01-15'
 ```
 
-### 2. Missed Broadcast Join
+### Missed Broadcast Join
 
 **Scenario:** SortMergeJoin when broadcast expected.
 
@@ -448,7 +448,7 @@ SELECT /*+ BROADCAST(small_table) */ ...
 SET spark.sql.autoBroadcastJoinThreshold = 100m;
 ```
 
-### 3. Excessive Shuffles
+### Excessive Shuffles
 
 **Scenario:** Multiple Exchange nodes for simple query.
 
@@ -460,7 +460,7 @@ SET spark.sql.autoBroadcastJoinThreshold = 100m;
 df.repartition("customer_id").write.saveAsTable("orders_by_customer")
 ```
 
-### 4. Cartesian Join
+### Cartesian Join
 
 **Scenario:** BroadcastNestedLoopJoin or CartesianProduct in plan.
 

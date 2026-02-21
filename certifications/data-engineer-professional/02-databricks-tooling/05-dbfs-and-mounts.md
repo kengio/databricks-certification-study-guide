@@ -566,13 +566,13 @@ combined.write.format("delta").saveAsTable("main.combined.all_data")
 
 ## Common Issues & Errors
 
-### 1. Permission Denied on DBFS
+### Permission Denied on DBFS
 
 **Scenario:** Cannot access DBFS path.
 
 **Fix:** Check cluster IAM role or storage permissions.
 
-### 2. Mount Point Already Exists
+### Mount Point Already Exists
 
 **Scenario:** Mount fails because path exists.
 
@@ -589,7 +589,7 @@ if mount_exists("/mnt/data"):
 dbutils.fs.mount(source="...", mount_point="/mnt/data")
 ```
 
-### 3. Credential Not Found
+### Credential Not Found
 
 **Scenario:** Direct access fails due to missing credentials.
 
@@ -601,7 +601,7 @@ dbutils.fs.mount(source="...", mount_point="/mnt/data")
 spark.conf.get("fs.s3a.access.key", "NOT_SET")
 ```
 
-### 4. Path Format Mismatch
+### Path Format Mismatch
 
 **Scenario:** Mixing `/dbfs/` and `dbfs:/` incorrectly.
 
@@ -619,7 +619,7 @@ df = spark.read.csv("dbfs:/data/file.csv")
 with open("/dbfs/data/file.csv") as f: ...
 ```
 
-### 5. Volume Not Found
+### Volume Not Found
 
 **Scenario:** Unity Catalog volume path not accessible.
 

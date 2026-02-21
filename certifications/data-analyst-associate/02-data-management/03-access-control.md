@@ -43,7 +43,7 @@ flowchart TD
 
 ## Authentication Methods
 
-### 1. Personal Access Token (PAT)
+### Personal Access Token (PAT)
 
 Most common for programmatic access:
 
@@ -74,7 +74,7 @@ connection = sql.connect(
 - Expires after 90 days (configurable)
 - Should be rotated regularly
 
-### 2. Single Sign-On (SSO)
+### Single Sign-On (SSO)
 
 Enterprise authentication via identity provider:
 
@@ -93,7 +93,7 @@ Workflow:
   5. Session created with enterprise identity
 ```
 
-### 3. Service Principals (M2M)
+### Service Principals (M2M)
 
 For automation and service-to-service authentication:
 
@@ -394,7 +394,7 @@ WHERE user_name = current_user();
 
 ## Best Practices
 
-### 1. Principle of Least Privilege
+### Principle of Least Privilege
 
 ```sql
 -- ❌ Too broad
@@ -406,7 +406,7 @@ GRANT SELECT ON VIEW production.reports.daily_summary
 TO `user@company.com`;
 ```
 
-### 2. Use Groups
+### Use Groups
 
 ```sql
 -- Create group one time
@@ -421,7 +421,7 @@ GRANT SELECT ON CATALOG production TO `analysts`;
 -- Automatically applies to all group members
 ```
 
-### 3. Audit Regularly
+### Audit Regularly
 
 ```sql
 -- Who has what permissions?
@@ -440,7 +440,7 @@ ORDER BY timestamp DESC
 LIMIT 100;
 ```
 
-### 4. Secure PII
+### Secure PII
 
 ```sql
 -- Identify PII columns
@@ -492,12 +492,12 @@ CREATE TABLE production.meta.pii_columns (
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Access Control & Security do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Access Control & Security to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Access Control & Security to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control & Security prior to deployment.

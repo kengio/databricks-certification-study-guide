@@ -345,7 +345,7 @@ class TestTransformations:
 
 ## Common Issues & Errors
 
-### 1. SparkSession Not Available
+### SparkSession Not Available
 
 **Scenario:** Tests fail because SparkSession is None.
 
@@ -357,7 +357,7 @@ def spark():
     return SparkSession.builder.master("local[*]").getOrCreate()
 ```
 
-### 2. Tests Interfere with Each Other
+### Tests Interfere with Each Other
 
 **Scenario:** Tests pass individually but fail together.
 
@@ -372,7 +372,7 @@ def clean_table(spark):
     spark.sql("DROP TABLE IF EXISTS test_table")
 ```
 
-### 3. Slow Test Execution
+### Slow Test Execution
 
 **Scenario:** Tests take too long.
 
@@ -387,7 +387,7 @@ spark = (SparkSession.builder
     .getOrCreate())
 ```
 
-### 4. Delta Lake Not Available
+### Delta Lake Not Available
 
 **Scenario:** Delta operations fail in tests.
 

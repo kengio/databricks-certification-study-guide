@@ -642,7 +642,7 @@ PARTITIONED BY (effective_year);
 
 ## Common Issues & Errors
 
-### 1. Duplicate Surrogate Keys
+### Duplicate Surrogate Keys
 
 **Scenario:** Multiple current records for same business key.
 
@@ -672,7 +672,7 @@ WHERE surrogate_key IN (
 );
 ```
 
-### 2. Incorrect End Dates
+### Incorrect End Dates
 
 **Scenario:** Gap or overlap in effective date ranges.
 
@@ -689,7 +689,7 @@ JOIN dim_customer_type2 t2
     AND t2.surrogate_key > t1.surrogate_key;
 ```
 
-### 3. Performance Issues on Large Type 2 Tables
+### Performance Issues on Large Type 2 Tables
 
 **Scenario:** Queries on Type 2 dimension are slow.
 

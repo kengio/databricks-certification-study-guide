@@ -40,7 +40,7 @@ flowchart TD
 
 ## Table Types
 
-### 1. Managed Tables
+### Managed Tables
 
 **Definition**: Databricks manages both data and metadata
 
@@ -91,7 +91,7 @@ DROP TABLE customers;
 -- Data is permanently deleted from workspace location
 ```
 
-### 2. External Tables
+### External Tables
 
 **Definition**: Databricks stores only metadata; data lives in external cloud storage
 
@@ -134,7 +134,7 @@ USING PARQUET
 LOCATION '/mnt/data/marketing/campaigns/';
 ```
 
-### 3. Temporary Tables
+### Temporary Tables
 
 **Definition**: Session-scoped tables that exist only during the current connection
 
@@ -482,12 +482,12 @@ AND status = 'active';
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Tables & Schemas do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Tables & Schemas to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Tables & Schemas to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Tables & Schemas prior to deployment.

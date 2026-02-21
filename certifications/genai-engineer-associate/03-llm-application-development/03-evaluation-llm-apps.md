@@ -365,12 +365,12 @@ quality assessment.
 
 ## Common Issues & Errors
 
-### 1. High Latency Responses
+### High Latency Responses
 
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Evaluating LLM Applications to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Evaluating LLM Applications prior to deployment.

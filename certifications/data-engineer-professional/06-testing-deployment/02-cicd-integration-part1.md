@@ -74,8 +74,8 @@ az ad sp create-for-rbac --name "databricks-cicd-sp" --role Contributor \
 
 # Grant Databricks workspace access
 # In Databricks Admin Console:
-# 1. Add service principal to workspace
-# 2. Grant appropriate permissions (workspace admin or specific ACLs)
+# Add service principal to workspace
+# Grant appropriate permissions (workspace admin or specific ACLs)
 
 ```
 

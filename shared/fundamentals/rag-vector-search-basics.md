@@ -119,13 +119,13 @@ from databricks.vector_search.client import VectorSearchClient
 
 client = VectorSearchClient()
 
-# 1. Create an endpoint (shared compute for vector search)
+# Create an endpoint (shared compute for vector search)
 client.create_endpoint(
     name="my-vs-endpoint",
     endpoint_type="STANDARD"
 )
 
-# 2. Create a Delta Sync index (auto-syncs from Delta table)
+# Create a Delta Sync index (auto-syncs from Delta table)
 client.create_delta_sync_index(
     endpoint_name="my-vs-endpoint",
     index_name="prod_catalog.ml.docs_index",

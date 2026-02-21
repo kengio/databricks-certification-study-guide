@@ -797,7 +797,7 @@ DATABRICKS_CONFIG_PROFILE=target databricks jobs create --json-file job_clean.js
 
 ## Common Issues & Errors
 
-### 1. Authentication Failed
+### Authentication Failed
 
 **Scenario:** Invalid or expired token.
 
@@ -812,7 +812,7 @@ DATABRICKS_CONFIG_PROFILE=target databricks jobs create --json-file job_clean.js
 databricks configure --token
 ```
 
-### 2. Profile Not Found
+### Profile Not Found
 
 **Scenario:** Specified profile doesn't exist in config.
 
@@ -823,7 +823,7 @@ databricks configure --token
 
 **Fix:** Check profile name matches config file or create profile.
 
-### 3. Permission Denied on Workspace
+### Permission Denied on Workspace
 
 **Scenario:** User lacks permission for workspace operation.
 
@@ -834,7 +834,7 @@ databricks configure --token
 
 **Fix:** Request appropriate workspace permissions from admin.
 
-### 4. Cluster Not Found
+### Cluster Not Found
 
 **Scenario:** Cluster ID is invalid or cluster was deleted.
 
@@ -845,7 +845,7 @@ databricks configure --token
 
 **Fix:** Verify cluster ID with `databricks clusters list`.
 
-### 5. Rate Limiting
+### Rate Limiting
 
 **Scenario:** Too many API requests.
 

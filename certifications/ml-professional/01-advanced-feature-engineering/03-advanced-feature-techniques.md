@@ -16,7 +16,7 @@ Production-grade feature engineering techniques including feature selection, sca
 
 ## Feature Selection Techniques
 
-### 1. **Statistical Feature Selection**
+### **Statistical Feature Selection**
 
 ```python
 from pyspark.ml.feature import ChiSqSelector, UnivariateFeatureSelector
@@ -52,7 +52,7 @@ rformula = RFormula(
 )
 ```
 
-### 2. **Tree-Based Feature Importance**
+### **Tree-Based Feature Importance**
 
 ```python
 from pyspark.ml.classification import GBTClassifier
@@ -90,7 +90,7 @@ importance_df = spark.createDataFrame(
 print(importance_df.show())
 ```
 
-### 3. **Correlation and Multicollinearity Analysis**
+### **Correlation and Multicollinearity Analysis**
 
 ```python
 from pyspark.ml.stat import Correlation
@@ -551,12 +551,12 @@ query = (
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Advanced Feature Techniques to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Advanced Feature Techniques prior to deployment.

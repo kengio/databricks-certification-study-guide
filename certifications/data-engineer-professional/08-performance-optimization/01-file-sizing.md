@@ -471,7 +471,7 @@ def optimized_table():
 
 ## Common Issues & Errors
 
-### 1. OPTIMIZE Takes Too Long
+### OPTIMIZE Takes Too Long
 
 **Scenario:** OPTIMIZE runs for hours.
 
@@ -490,7 +490,7 @@ OPTIMIZE catalog.schema.orders
 WHERE order_date BETWEEN '2024-01-01' AND '2024-01-07';
 ```
 
-### 2. Files Grow Back After OPTIMIZE
+### Files Grow Back After OPTIMIZE
 
 **Scenario:** Small files return after optimization.
 
@@ -504,7 +504,7 @@ SET TBLPROPERTIES (
 );
 ```
 
-### 3. VACUUM Removes Too Many Files
+### VACUUM Removes Too Many Files
 
 **Scenario:** Time travel fails after VACUUM.
 
@@ -522,7 +522,7 @@ SET TBLPROPERTIES (
 );
 ```
 
-### 4. Out of Memory During OPTIMIZE
+### Out of Memory During OPTIMIZE
 
 **Scenario:** Driver OOM during OPTIMIZE.
 

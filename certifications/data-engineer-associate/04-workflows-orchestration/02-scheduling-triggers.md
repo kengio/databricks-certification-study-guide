@@ -359,7 +359,7 @@ curl -X POST \
 
 ## Scheduling Best Practices
 
-### 1. Avoid Peak Hours When Possible
+### Avoid Peak Hours When Possible
 
 ```json
 {
@@ -372,7 +372,7 @@ curl -X POST \
 
 Off-peak scheduling reduces contention with interactive users.
 
-### 2. Stagger Interdependent Jobs
+### Stagger Interdependent Jobs
 
 ```text
 Job A: 0 0 * * * ?       // Top of every hour
@@ -380,7 +380,7 @@ Job B: 0 15 * * * ?      // 15 min past every hour
 Job C: 0 30 * * * ?      // 30 min past every hour
 ```
 
-### 3. Set Appropriate Timeouts
+### Set Appropriate Timeouts
 
 ```json
 {
@@ -395,7 +395,7 @@ Job C: 0 30 * * * ?      // 30 min past every hour
 
 Prevents hanging jobs from consuming resources.
 
-### 4. Use Max Concurrent Runs for Safety
+### Use Max Concurrent Runs for Safety
 
 ```json
 {
@@ -405,7 +405,7 @@ Prevents hanging jobs from consuming resources.
 
 Prevents duplicate processing if previous run still running.
 
-### 5. Different Schedules for Environments
+### Different Schedules for Environments
 
 ```json
 [
@@ -451,12 +451,12 @@ When DST changes occur:
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Scheduling and Triggers do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Scheduling and Triggers to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Scheduling and Triggers to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Scheduling and Triggers prior to deployment.

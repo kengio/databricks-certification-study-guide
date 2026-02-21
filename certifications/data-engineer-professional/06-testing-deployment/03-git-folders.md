@@ -517,7 +517,7 @@ flowchart TB
 
 ## Common Issues & Errors
 
-### 1. Authentication Failed
+### Authentication Failed
 
 **Scenario:** Cannot clone or push to repository.
 
@@ -530,7 +530,7 @@ flowchart TB
 4. For SSO: Re-authenticate with Git provider
 ```
 
-### 2. Merge Conflicts
+### Merge Conflicts
 
 **Scenario:** Pull fails due to conflicts.
 
@@ -544,7 +544,7 @@ flowchart TB
 5. Commit and push
 ```
 
-### 3. Notebook Format Issues
+### Notebook Format Issues
 
 **Scenario:** Notebook doesn't render correctly.
 
@@ -565,7 +565,7 @@ flowchart TB
 // Databricks notebook source
 ```
 
-### 4. Missing Files After Pull
+### Missing Files After Pull
 
 **Scenario:** Files missing after Git operation.
 
@@ -578,7 +578,7 @@ flowchart TB
 4. Check permissions: Ensure read access to files
 ```
 
-### 5. Large Repository Performance
+### Large Repository Performance
 
 **Scenario:** Operations slow on large repos.
 

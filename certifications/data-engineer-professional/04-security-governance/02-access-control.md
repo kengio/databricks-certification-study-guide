@@ -465,7 +465,7 @@ GRANT SELECT ON SCHEMA prod.gold TO `sp-bi-dashboard`;
 
 ## Common Issues & Errors
 
-### 1. User Can't See Tables
+### User Can't See Tables
 
 **Scenario:** User has SELECT but can't see tables.
 
@@ -476,7 +476,7 @@ GRANT USE CATALOG ON CATALOG prod TO `user@company.com`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `user@company.com`;
 ```
 
-### 2. View Security Bypass
+### View Security Bypass
 
 **Scenario:** User queries underlying table directly.
 
@@ -487,7 +487,7 @@ REVOKE SELECT ON TABLE prod.gold.customers FROM `analysts`;
 GRANT SELECT ON VIEW prod.secure.customers TO `analysts`;
 ```
 
-### 3. Function Not Executing
+### Function Not Executing
 
 **Scenario:** Masking function not working.
 
@@ -497,7 +497,7 @@ GRANT SELECT ON VIEW prod.secure.customers TO `analysts`;
 GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
 ```
 
-### 4. Row Filter Performance
+### Row Filter Performance
 
 **Scenario:** Row filter causes slow queries.
 

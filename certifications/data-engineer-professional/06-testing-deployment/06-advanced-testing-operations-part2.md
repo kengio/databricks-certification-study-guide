@@ -501,7 +501,7 @@ D) Skip unit tests and use Great Expectations for all validation
 
 ## Common Issues / Errors
 
-### 1. OIDC Token Exchange Fails
+### OIDC Token Exchange Fails
 
 **Scenario:** GitHub Actions OIDC authentication fails with "invalid token" error.
 
@@ -526,7 +526,7 @@ D) Skip unit tests and use Great Expectations for all validation
     echo "Subject: repo:${{ github.repository }}:ref:${{ github.ref }}"
 ```
 
-### 2. Multi-Project Bundle Include Path Resolution
+### Multi-Project Bundle Include Path Resolution
 
 **Scenario:** `include` paths fail with "file not found" when deploying.
 
@@ -542,7 +542,7 @@ include:
   - resources/*.yml                      # Relative to databricks.yml
 ```
 
-### 3. Coverage Drops Below Threshold
+### Coverage Drops Below Threshold
 
 **Scenario:** CI fails because PySpark code coverage is below the required threshold.
 
@@ -565,7 +565,7 @@ exclude_lines =
     display\(
 ```
 
-### 4. Integration Test Schema Collisions
+### Integration Test Schema Collisions
 
 **Scenario:** Parallel CI runs cause test failures because they write to the same schema.
 
@@ -582,7 +582,7 @@ def test_schema(db_spark):
     db_spark.sql(f"DROP SCHEMA {schema} CASCADE")
 ```
 
-### 5. Blue/Green View Switch Fails
+### Blue/Green View Switch Fails
 
 **Scenario:** Switching views between blue and green schemas fails due to permissions.
 
@@ -597,7 +597,7 @@ GRANT USAGE ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 ```
 
-### 6. Canary Deployment Timeout
+### Canary Deployment Timeout
 
 **Scenario:** Canary monitoring exceeds the CI job timeout.
 
@@ -619,7 +619,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
     databricks bundle run canary_health_check -t prod-canary
 ```
 
-### 7. Artifact Build Fails in CI
+### Artifact Build Fails in CI
 
 **Scenario:** Python wheel build succeeds locally but fails in CI.
 

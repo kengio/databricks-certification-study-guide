@@ -416,12 +416,12 @@ Each JSON file represents one committed transaction, enabling:
 
 ## Common Issues & Errors
 
-### 1. Small File Problem
+### Small File Problem
 
 **Scenario:** Frequent micro-batch writes cause slow reads.
 **Fix:** Run OPTIMIZE with Z-ORDER regularly.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Delta Lake Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Fundamentals prior to deployment.

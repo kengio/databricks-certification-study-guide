@@ -507,7 +507,7 @@ jobs:
 
 ## Common Issues & Errors
 
-### 1. Clusters Running Idle
+### Clusters Running Idle
 
 **Scenario:** All-purpose clusters running 24/7.
 
@@ -520,7 +520,7 @@ new_cluster:
   autotermination_minutes: 30
 ```
 
-### 2. Over-Provisioned Clusters
+### Over-Provisioned Clusters
 
 **Scenario:** Large clusters for small workloads.
 
@@ -532,7 +532,7 @@ new_cluster:
 3. Consider autoscaling
 ```
 
-### 3. Spot Instance Interruptions
+### Spot Instance Interruptions
 
 **Scenario:** Jobs fail due to spot interruption.
 
@@ -544,7 +544,7 @@ aws_attributes:
   spot_bid_price_percent: 100
 ```
 
-### 4. High Development Costs
+### High Development Costs
 
 **Scenario:** Expensive clusters for development.
 

@@ -462,7 +462,7 @@ WHERE event_type = 'flow_progress'
 
 ## Common Issues & Errors
 
-### 1. Event Log Not Found
+### Event Log Not Found
 
 **Scenario:** Can't query event log.
 
@@ -473,7 +473,7 @@ WHERE event_type = 'flow_progress'
 SELECT * FROM delta.`/pipelines/<pipeline-id>/system/events` LIMIT 10;
 ```
 
-### 2. Missing Expectation Results
+### Missing Expectation Results
 
 **Scenario:** No expectation data in logs.
 
@@ -485,7 +485,7 @@ def my_table():
     return ...
 ```
 
-### 3. Stale Metrics
+### Stale Metrics
 
 **Scenario:** Metrics not updating.
 

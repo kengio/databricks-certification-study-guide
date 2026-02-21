@@ -39,7 +39,7 @@ flowchart TD
 
 ## Cluster Types
 
-### 1. All-Purpose Clusters
+### All-Purpose Clusters
 
 **Use Case**: Interactive development and collaboration
 
@@ -58,7 +58,7 @@ Typical Config:
 
 **Cost**: $0.40-$1.00 per DBU per hour (depends on region)
 
-### 2. Job Clusters
+### Job Clusters
 
 **Use Case**: Automated batch or streaming jobs
 
@@ -77,7 +77,7 @@ Typical Config:
 
 **Cost**: Lower per-DBU cost (optimized pricing)
 
-### 3. SQL Warehouses (formerly SQL Endpoints)
+### SQL Warehouses (formerly SQL Endpoints)
 
 **Use Case**: SQL queries and BI tool connectivity
 
@@ -314,12 +314,12 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Compute and Clusters do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compute and Clusters to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Compute and Clusters to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Compute and Clusters prior to deployment.

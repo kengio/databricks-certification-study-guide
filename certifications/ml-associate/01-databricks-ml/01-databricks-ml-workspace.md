@@ -49,7 +49,7 @@ flowchart TB
 
 ## Workspace Components
 
-### 1. **Notebooks**
+### **Notebooks**
 
 Interactive development environment supporting multiple languages:
 
@@ -87,7 +87,7 @@ df.show()
 - **Widgets**: Interactive parameters for notebooks
 - **Rich Output**: Display tables, plots, graphs
 
-### 2. **Widgets for Parameterization**
+### **Widgets for Parameterization**
 
 ```python
 # Create text widget
@@ -110,7 +110,7 @@ selected_features = dbutils.widgets.get("features").split(",")
 dbutils.widgets.removeAll()
 ```
 
-### 3. **File System Access**
+### **File System Access**
 
 ```python
 # Databricks File System (DBFS) operations
@@ -186,7 +186,7 @@ results_df.to_csv("/Workspace/Shared/results/model_metrics.csv", index=False)
 
 ## Notebook Best Practices for ML
 
-### 1. **Initialization Cell**
+### **Initialization Cell**
 
 ```python
 # Cell 1: Setup and imports
@@ -212,7 +212,7 @@ spark.sparkContext.setCheckpointDir("/tmp/checkpoints")
 pd.set_option("display.max_columns", None)
 ```
 
-### 2. **Data Loading Pattern**
+### **Data Loading Pattern**
 
 ```python
 # Load from Unity Catalog
@@ -229,7 +229,7 @@ df.printSchema()
 display(df.limit(5))
 ```
 
-### 3. **Visualization**
+### **Visualization**
 
 ```python
 # Using Databricks display() function
@@ -299,15 +299,15 @@ Team: Data Science
 Date: 2025-02-20
 
 %python
-# 1. Load data
+# Load data
 
 df = spark.read.table("production.customer_analytics.customer_data")
 
-# 2. Explore & prepare
+# Explore & prepare
 
 df.groupBy("churn").count().show()
 
-# 3. Build model
+# Build model
 
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import VectorAssembler
@@ -318,11 +318,11 @@ pipeline = Pipeline(stages=[
     LogisticRegression(labelCol="churn")
 ])
 
-# 4. Share with team
+# Share with team
 
 display(df.limit(10))
 
-# 5. Save to shared location
+# Save to shared location
 
 df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 ```
@@ -334,12 +334,12 @@ df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Databricks ML Workspace & Notebooks do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks ML Workspace & Notebooks to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Databricks ML Workspace & Notebooks to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks ML Workspace & Notebooks prior to deployment.

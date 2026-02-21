@@ -34,7 +34,7 @@ flowchart TD
     Converge -->|Yes| End["Best Hyperparameters"]
 ```
 
-## 1. Gaussian Process Surrogate
+## Gaussian Process Surrogate
 
 ```python
 # Databricks-integrated Bayesian optimization
@@ -137,7 +137,7 @@ print(f"Predicted performance: {y_pred}")
 print(f"Uncertainty: {sigma}")  # Higher = more uncertain
 ```
 
-## 2. Acquisition Functions
+## Acquisition Functions
 
 ```python
 import numpy as np
@@ -190,7 +190,7 @@ print("Upper Confidence Bound: Principled trade-off between exploitation and exp
 print("Probability of Improvement: Greedy, focuses on likely improvement")
 ```
 
-## 3. Tree-structured Parzen Estimator (TPE)
+## Tree-structured Parzen Estimator (TPE)
 
 ```python
 
@@ -246,7 +246,7 @@ def early_stop_with_tpe(trials, best_loss_threshold):
     return False
 ```
 
-## 4. Distributed Bayesian Optimization
+## Distributed Bayesian Optimization
 
 ```python
 from databricks.labs.mlflow.client import DatabricksMLflowClient
@@ -290,7 +290,7 @@ best = fmin(
 print(f"Best hyperparameters: {space_eval(space, best)}")
 ```
 
-## 5. Practical Multi-Algorithm Tuning
+## Practical Multi-Algorithm Tuning
 
 ```python
 # Combine multiple algorithms for robust optimization
@@ -450,12 +450,12 @@ print(f"Best XGBoost config: {best_config}")
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Bayesian Optimization do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Bayesian Optimization to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Bayesian Optimization to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Bayesian Optimization prior to deployment.

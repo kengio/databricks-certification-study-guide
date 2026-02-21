@@ -235,13 +235,13 @@ print(f"Run completed with: {result}")
 
 ## Common Issues & Errors
 
-### 1. Invalid Token Format
+### Invalid Token Format
 
 **Scenario:** Token doesn't start with `dapi` or is malformed.
 
 **Fix:** Regenerate PAT from Databricks UI: Settings > Developer > Access tokens.
 
-### 2. Workspace URL Trailing Slash
+### Workspace URL Trailing Slash
 
 **Scenario:** API calls fail due to URL formatting.
 
@@ -255,7 +255,7 @@ https://adb-xxx.azuredatabricks.net//api/2.0/jobs/list
 https://adb-xxx.azuredatabricks.net/api/2.0/jobs/list
 ```
 
-### 3. JSON Encoding Issues
+### JSON Encoding Issues
 
 **Scenario:** Special characters break JSON payload.
 
@@ -267,7 +267,7 @@ import json
 payload = json.dumps({"name": "Job with \"quotes\""})
 ```
 
-### 4. Cluster Not Running for Job
+### Cluster Not Running for Job
 
 **Scenario:** Job fails because cluster is terminated.
 

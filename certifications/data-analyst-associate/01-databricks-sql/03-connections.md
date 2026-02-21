@@ -512,12 +512,12 @@ Ports required:
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Connections & Integrations do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Connections & Integrations to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Connections & Integrations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Connections & Integrations prior to deployment.

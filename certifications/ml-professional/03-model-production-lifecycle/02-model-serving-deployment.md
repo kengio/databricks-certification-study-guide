@@ -451,12 +451,12 @@ unfairly skew latency comparisons.
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Model Serving and Deployment to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Serving and Deployment prior to deployment.

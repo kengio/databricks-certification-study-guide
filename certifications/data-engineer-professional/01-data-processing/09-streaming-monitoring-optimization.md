@@ -393,7 +393,7 @@ spark.conf.set(
 
 ## Common Issues and Errors
 
-### 1. Stream-Stream Join State Explosion
+### Stream-Stream Join State Explosion
 
 **Scenario:** Two streams joined without time range condition. State grows without bound even with watermarks defined.
 
@@ -401,37 +401,37 @@ spark.conf.set(
 
 **Exam Context:** Questions often test whether you know that watermarks alone are not sufficient for stream-stream joins -- a time range condition in the join predicate is also required for effective state cleanup.
 
-### 2. Outer Join Producing No NULL Results
+### Outer Join Producing No NULL Results
 
 **Scenario:** Left outer stream-stream join never emits rows with NULL right-side columns. The watermark on the right stream is too short, or the time range condition is too narrow.
 
 **Fix:** Ensure the right-side watermark delay is large enough to allow reasonable matching time. NULL-padded rows emit only after the watermark guarantees no match can arrive.
 
-### 3. mapGroupsWithState Timeout Not Firing
+### mapGroupsWithState Timeout Not Firing
 
 **Scenario:** State timeout configured with `ProcessingTimeTimeout` but `hasTimedOut` never returns true.
 
 **Fix:** Timeouts only fire when there is data to process. If no new events arrive for a group, the timeout callback will not be invoked until the next micro-batch that has at least some data for any group. Ensure the stream receives regular input.
 
-### 4. Global Watermark Too Conservative
+### Global Watermark Too Conservative
 
 **Scenario:** Using "min" watermark policy with two streams where one is much slower. State grows excessively because the effective watermark is held back by the slow stream.
 
 **Fix:** Consider switching to "max" policy if some late data loss is acceptable. Alternatively, ensure both streams have similar data arrival rates.
 
-### 5. Dedup State OOM After Hours of Running
+### Dedup State OOM After Hours of Running
 
 **Scenario:** Using `dropDuplicates` without watermark or with a very wide watermark. State grows until executor runs out of memory.
 
 **Fix:** Use `dropDuplicatesWithinWatermark` with an appropriately sized watermark, or switch to RocksDB state store for large state.
 
-### 6. Checkpoint Incompatible After Adding Aggregation
+### Checkpoint Incompatible After Adding Aggregation
 
 **Scenario:** Adding a `groupBy` aggregation to an existing streaming query and trying to resume from the old checkpoint.
 
 **Fix:** Any change to stateful operators requires a new checkpoint location. Start the modified query with a fresh checkpoint path.
 
-### 7. StreamingQueryListener Not Receiving Events
+### StreamingQueryListener Not Receiving Events
 
 **Scenario:** Registered listener does not receive `onQueryProgress` events.
 

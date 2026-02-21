@@ -517,7 +517,7 @@ GRANT SELECT ON SHARE regulatory_reports TO RECIPIENT federal_regulator;
 
 ## Common Issues & Errors
 
-### 1. Recipient Cannot Access Share
+### Recipient Cannot Access Share
 
 **Scenario:** Recipient gets authentication error.
 
@@ -534,7 +534,7 @@ SHOW GRANTS TO RECIPIENT partner_analytics;
 GRANT SELECT ON SHARE customer_data_share TO RECIPIENT partner_analytics;
 ```
 
-### 2. Table Not Visible in Share
+### Table Not Visible in Share
 
 **Scenario:** Table added to share but recipient can't see it.
 
@@ -551,7 +551,7 @@ SHOW ALL IN SHARE customer_data_share;
 ALTER SHARE customer_data_share ADD TABLE prod.gold.customers;
 ```
 
-### 3. Credential File Expired
+### Credential File Expired
 
 **Scenario:** Open sharing recipient's token expired.
 
@@ -563,7 +563,7 @@ ALTER RECIPIENT external_partner ROTATE TOKEN;
 DESCRIBE RECIPIENT external_partner;
 ```
 
-### 4. Partition Filter Not Working
+### Partition Filter Not Working
 
 **Scenario:** Recipient sees all data despite partition filter.
 

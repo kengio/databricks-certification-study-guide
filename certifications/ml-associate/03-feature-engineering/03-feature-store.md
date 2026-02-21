@@ -49,7 +49,7 @@ flowchart TB
 
 ## Core Concepts
 
-### 1. **Feature Tables**
+### **Feature Tables**
 
 Feature tables store pre-computed features accessible across projects.
 
@@ -91,7 +91,7 @@ fs_client.create_table(
 
 ```
 
-### 2. **Feature Lookups**
+### **Feature Lookups**
 
 Combine features from multiple tables during training.
 
@@ -283,9 +283,9 @@ fs_client.create_online_table(
 )
 
 # Now can serve features in real-time:
-# 1. Send customer_id to serving endpoint
-# 2. Online store looks up pre-computed features
-# 3. Return features for immediate inference
+# Send customer_id to serving endpoint
+# Online store looks up pre-computed features
+# Return features for immediate inference
 
 ```
 
@@ -445,7 +445,7 @@ results.write.mode("overwrite").saveAsTable("predictions.purchase_amount_predict
 
 ## Feature Store Best Practices
 
-### 1. **Naming Conventions**
+### **Naming Conventions**
 
 ```python
 # Clear, hierarchical naming
@@ -471,7 +471,7 @@ column_naming = {
 }
 ```
 
-### 2. **Documentation**
+### **Documentation**
 
 ```python
 # Document features for discovery
@@ -491,7 +491,7 @@ fs_client.create_table(
 )
 ```
 
-### 3. **Refresh Schedules**
+### **Refresh Schedules**
 
 ```python
 
@@ -530,12 +530,12 @@ job_config = {
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Databricks Feature Store to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Feature Store prior to deployment.

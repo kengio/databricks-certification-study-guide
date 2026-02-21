@@ -214,10 +214,10 @@ LIMIT 20;
 # In Spark UI: Executors tab > Memory usage
 
 # Common causes:
-# 1. Broadcast too large
-# 2. Collect() on large dataset
-# 3. State in streaming
-# 4. Too few partitions
+# Broadcast too large
+# Collect() on large dataset
+# State in streaming
+# Too few partitions
 ```
 
 **Solutions:**

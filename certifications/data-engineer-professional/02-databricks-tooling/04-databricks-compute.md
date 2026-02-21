@@ -680,13 +680,13 @@ flowchart TD
 
 ## Common Issues & Errors
 
-### 1. Cluster Startup Timeout
+### Cluster Startup Timeout
 
 **Scenario:** Cluster takes too long to start.
 
 **Fix:** Use instance pools or check cloud quotas.
 
-### 2. Out of Memory
+### Out of Memory
 
 **Scenario:** Executor or driver OOM errors.
 
@@ -700,7 +700,7 @@ spark_conf = {
 }
 ```
 
-### 3. Spot Instance Interruption
+### Spot Instance Interruption
 
 **Scenario:** Spot instances preempted during job.
 
@@ -713,13 +713,13 @@ aws_attributes = {
 }
 ```
 
-### 4. Policy Violation
+### Policy Violation
 
 **Scenario:** Cluster creation blocked by policy.
 
 **Fix:** Adjust cluster config to comply with policy or request policy change.
 
-### 5. Quota Exceeded
+### Quota Exceeded
 
 **Scenario:** Cannot create cluster due to cloud quota.
 

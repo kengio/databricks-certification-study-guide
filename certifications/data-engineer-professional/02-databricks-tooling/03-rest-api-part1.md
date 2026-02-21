@@ -505,7 +505,7 @@ curl -X GET \
 For files larger than 1MB, use the streaming upload API:
 
 ```bash
-# 1. Create upload handle
+# Create upload handle
 
 curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/dbfs/create' \
@@ -514,14 +514,14 @@ curl -X POST \
 
 # Response: {"handle": 123456789}
 
-# 2. Add blocks (repeat for each chunk, max 1MB per block)
+# Add blocks (repeat for each chunk, max 1MB per block)
 
 curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/dbfs/add-block' \
   -H 'Authorization: Bearer $TOKEN' \
   -d '{"handle": 123456789, "data": "base64_encoded_data"}'
 
-# 3. Close handle
+# Close handle
 
 curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/dbfs/close' \

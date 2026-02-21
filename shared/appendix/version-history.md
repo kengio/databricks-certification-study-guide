@@ -61,16 +61,12 @@ tags: [reference, version-history, delta-lake, databricks]
 - Volumes GA
 - Enhanced Delta Sharing
 
-### 2023
-
-- Unity Catalog GA
+### - Unity Catalog GA
 - External locations
 - Storage credentials
 - System tables
 
-### 2022
-
-- Unity Catalog preview
+### - Unity Catalog preview
 - Three-level namespace
 - Centralized access control
 

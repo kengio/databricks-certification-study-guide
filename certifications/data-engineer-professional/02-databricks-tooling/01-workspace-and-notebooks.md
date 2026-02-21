@@ -674,7 +674,7 @@ dbutils.notebook.exit("SUCCESS")
 
 ## Common Issues & Errors
 
-### 1. Widget Not Found Error
+### Widget Not Found Error
 
 **Scenario:** Accessing widget that doesn't exist.
 
@@ -693,7 +693,7 @@ except Exception:
     value = "default_value"
 ```
 
-### 2. %run Path Not Found
+### %run Path Not Found
 
 **Scenario:** Incorrect relative path in %run.
 
@@ -709,7 +709,7 @@ except Exception:
 %run /Workspace/Users/user/project/utils/helpers
 ```
 
-### 3. dbutils.notebook.run Timeout
+### dbutils.notebook.run Timeout
 
 **Scenario:** Child notebook exceeds timeout.
 
@@ -725,7 +725,7 @@ result = dbutils.notebook.run("/path/to/slow_notebook", timeout_seconds=3600)
 result = dbutils.notebook.run("/path/to/notebook", timeout_seconds=7200)
 ```
 
-### 4. Secret Scope Access Denied
+### Secret Scope Access Denied
 
 **Scenario:** User doesn't have permission to secret scope.
 
@@ -737,7 +737,7 @@ secret = dbutils.secrets.get("restricted-scope", "key")
 
 **Fix:** Request access to secret scope from admin.
 
-### 5. Task Value Not Found
+### Task Value Not Found
 
 **Scenario:** Getting task value that wasn't set or from wrong task.
 

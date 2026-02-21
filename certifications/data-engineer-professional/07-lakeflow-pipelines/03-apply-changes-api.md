@@ -546,7 +546,7 @@ for config in tables_config:
 
 ## Common Issues & Errors
 
-### 1. Sequence Key Not Unique
+### Sequence Key Not Unique
 
 **Scenario:** Multiple events with same sequence key.
 
@@ -563,7 +563,7 @@ dlt.apply_changes(
 )
 ```
 
-### 2. Null Primary Keys
+### Null Primary Keys
 
 **Scenario:** Source contains null values in key columns.
 
@@ -579,7 +579,7 @@ def bronze_filtered():
 
 ```
 
-### 3. Schema Mismatch
+### Schema Mismatch
 
 **Scenario:** Source schema doesn't match target.
 
@@ -600,7 +600,7 @@ COLUMNS (
 STORED AS SCD TYPE 1;
 ```
 
-### 4. Delete Not Working
+### Delete Not Working
 
 **Scenario:** Deletes not being applied.
 
@@ -618,7 +618,7 @@ APPLY AS DELETE WHEN
     OR UPPER(operation) = 'DELETE'
 ```
 
-### 5. SCD Type 2 Growing Too Large
+### SCD Type 2 Growing Too Large
 
 **Scenario:** History table grows unbounded.
 

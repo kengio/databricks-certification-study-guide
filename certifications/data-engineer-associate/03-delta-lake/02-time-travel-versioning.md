@@ -330,15 +330,15 @@ DeltaTable.forPath(spark, "/mnt/data/employees") \
 ## Version Management Best Practices
 
 ```python
-# 1. Always check history before modifying
+# Always check history before modifying
 
 spark.sql("DESCRIBE HISTORY employees").show(5)
 
-# 2. Keep test/staging changes isolated via clones
+# Keep test/staging changes isolated via clones
 
 spark.sql("CREATE TABLE staging DEEP CLONE production")
 
-# 3. Document significant operations
+# Document significant operations
 
 spark.sql("""
 INSERT INTO employees
@@ -346,14 +346,14 @@ SELECT * FROM external_source
 """)
 spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
-# 4. Archive old data via clones
+# Archive old data via clones
 
 spark.sql("""
 CREATE TABLE archive_2024_12_31
 DEEP CLONE employees
 """)
 
-# 5. Monitor transaction log size
+# Monitor transaction log size
 
 import os
 log_path = "/mnt/data/employees/_delta_log"
@@ -397,12 +397,12 @@ log_path = "/mnt/data/employees/_delta_log"
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Time Travel and Versioning do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Time Travel and Versioning to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Time Travel and Versioning to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Time Travel and Versioning prior to deployment.

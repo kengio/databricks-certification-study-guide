@@ -52,7 +52,7 @@ flowchart LR
 
 ## Core Concepts
 
-### 1. **Transformers**
+### **Transformers**
 
 Transformers convert input DataFrames to output DataFrames. They have a `transform()` method.
 
@@ -84,7 +84,7 @@ transformers = {
 }
 ```
 
-### 2. **Estimators**
+### **Estimators**
 
 Estimators learn from data using `fit()` method, then produce transformers.
 
@@ -122,7 +122,7 @@ estimators = {
 }
 ```
 
-### 3. **Pipelines**
+### **Pipelines**
 
 Pipelines chain multiple stages (estimators and transformers) in sequence.
 
@@ -167,11 +167,11 @@ from pyspark.ml.classification import LogisticRegression
 from pyspark.sql import functions as F
 import mlflow
 
-# 1. LOAD DATA
+# LOAD DATA
 
 df = spark.read.table("ml_catalog.data.customer_data")
 
-# 2. DATA PREPARATION
+# DATA PREPARATION
 # Create label: convert string to 0/1
 
 df_processed = (df
@@ -179,7 +179,7 @@ df_processed = (df
     .drop("churned")
 )
 
-# 3. DEFINE PIPELINE STAGES
+# DEFINE PIPELINE STAGES
 
 stages = [
     # Categorical encoding
@@ -223,23 +223,23 @@ stages = [
     )
 ]
 
-# 4. CREATE PIPELINE
+# CREATE PIPELINE
 
 pipeline = Pipeline(stages=stages)
 
-# 5. SPLIT DATA
+# SPLIT DATA
 
 train_df, test_df = df_processed.randomSplit([0.8, 0.2], seed=42)
 
-# 6. FIT PIPELINE
+# FIT PIPELINE
 
 fitted_pipeline = pipeline.fit(train_df)
 
-# 7. MAKE PREDICTIONS
+# MAKE PREDICTIONS
 
 predictions = fitted_pipeline.transform(test_df)
 
-# 8. EVALUATE
+# EVALUATE
 
 from pyspark.ml.evaluation import BinaryClassificationEvaluator, MulticlassClassificationEvaluator
 
@@ -252,7 +252,7 @@ evaluator = BinaryClassificationEvaluator(
 auc = evaluator.evaluate(predictions)
 print(f"AUC: {auc:.3f}")
 
-# 9. LOG TO MLFLOW
+# LOG TO MLFLOW
 
 with mlflow.start_run(run_name="logistic_pipeline"):
     mlflow.log_param("model_type", "LogisticRegression")
@@ -262,7 +262,7 @@ with mlflow.start_run(run_name="logistic_pipeline"):
 
 ## Pipeline Best Practices
 
-### 1. **Handling Missing Values**
+### **Handling Missing Values**
 
 ```python
 from pyspark.ml.feature import Imputer
@@ -278,7 +278,7 @@ imputer = Imputer(
 stages = [imputer, ...other_stages...]
 ```
 
-### 2. **Categorical Encoding Order**
+### **Categorical Encoding Order**
 
 ```python
 
@@ -296,7 +296,7 @@ stages = [
 ]
 ```
 
-### 3. **Feature Scaling Strategies**
+### **Feature Scaling Strategies**
 
 ```python
 from pyspark.ml.feature import StandardScaler, MinMaxScaler
@@ -316,7 +316,7 @@ minmax_scaler = MinMaxScaler(inputCol="features", outputCol="scaledFeatures")
 
 ```
 
-### 4. **Feature Selection in Pipeline**
+### **Feature Selection in Pipeline**
 
 ```python
 from pyspark.ml.feature import VectorSlicer
@@ -362,7 +362,7 @@ predictions.select("customer_id", "prediction", "probability").show()
 
 ## Advanced Pipeline Features
 
-### 1. **Pipeline Parameters**
+### **Pipeline Parameters**
 
 ```python
 from pyspark.ml import Pipeline, Estimator
@@ -384,7 +384,7 @@ stages.append(stage3)
 pipeline = Pipeline(stages=stages)
 ```
 
-### 2. **Cross-Validation with Pipelines**
+### **Cross-Validation with Pipelines**
 
 ```python
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
@@ -422,7 +422,7 @@ cv_model = cv.fit(train_df)
 best_predictions = cv_model.transform(test_df)
 ```
 
-### 3. **Pipeline Persistence**
+### **Pipeline Persistence**
 
 ```python
 # Save fitted pipeline
@@ -454,11 +454,11 @@ predictions = loaded_pipeline.transform(new_data)
 
 # Complete production-ready pipeline
 
-# 1. Load data
+# Load data
 
 df = spark.read.table("production.customer_360.churn_data")
 
-# 2. Prepare
+# Prepare
 
 df_ready = df.select([
     F.col("customer_id"),
@@ -468,11 +468,11 @@ df_ready = df.select([
     F.col("region"), F.col("plan_type")
 ])
 
-# 3. Split
+# Split
 
 train, test = df_ready.randomSplit([0.8, 0.2], seed=42)
 
-# 4. Build & fit pipeline
+# Build & fit pipeline
 
 pipeline = Pipeline(stages=[
     StringIndexer(inputCol="region", outputCol="region_idx"),
@@ -488,13 +488,13 @@ pipeline = Pipeline(stages=[
 
 fitted_pipeline = pipeline.fit(train)
 
-# 5. Evaluate
+# Evaluate
 
 predictions = fitted_pipeline.transform(test)
 auc = BinaryClassificationEvaluator(labelCol="label").evaluate(predictions)
 print(f"AUC: {auc:.3f}")
 
-# 6. Save
+# Save
 
 mlflow.spark.log_model(fitted_pipeline, "pipeline")
 fitted_pipeline.save("/mnt/production/churn_pipeline")
@@ -507,12 +507,12 @@ fitted_pipeline.save("/mnt/production/churn_pipeline")
 
 ## Common Issues & Errors
 
-### 1. OOM Errors
+### OOM Errors
 
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Spark ML Pipelines to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Spark ML Pipelines prior to deployment.

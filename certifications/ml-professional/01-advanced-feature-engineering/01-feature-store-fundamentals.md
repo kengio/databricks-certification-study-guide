@@ -49,7 +49,7 @@ flowchart TB
 
 ## Core Concepts
 
-### 1. **Online vs. Offline Features**
+### **Online vs. Offline Features**
 
 **Offline Features** (Training & Batch Scoring):
 
@@ -112,7 +112,7 @@ class FeatureStore:
             )
 ```
 
-### 2. **Feature Store Components**
+### **Feature Store Components**
 
 | Component | Purpose | Technology Example |
 | :--- | :--- | :--- |
@@ -123,7 +123,7 @@ class FeatureStore:
 | **Orchestration** | Scheduled feature computation | Airflow, Databricks Jobs, dbt |
 | **Monitoring** | Feature quality and drift tracking | Monitoring service, logs |
 
-### 3. **Feature Definition & Lineage**
+### **Feature Definition & Lineage**
 
 ```python
 # Feature Definition with Lineage Tracking
@@ -301,7 +301,7 @@ account_features = {
 
 ## Best Practices
 
-### 1. **Feature Naming Conventions**
+### **Feature Naming Conventions**
 
 ```text
 {entity}_{aggregation_function}_{time_window}
@@ -311,7 +311,7 @@ Examples:
 - merchant_fraud_count_24h
 ```
 
-### 2. **Feature Documentation**
+### **Feature Documentation**
 
 ```python
 # Comprehensive feature metadata
@@ -334,7 +334,7 @@ feature_metadata = {
 }
 ```
 
-### 3. **Feature Monitoring**
+### **Feature Monitoring**
 
 ```python
 # Monitor feature quality
@@ -431,12 +431,12 @@ GROUP BY user_id
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Feature Store Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Store Fundamentals prior to deployment.

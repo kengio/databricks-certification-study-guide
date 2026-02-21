@@ -206,7 +206,7 @@ Job task to fail, which blocks all downstream tasks from running via the `ALL_SU
 
 Three trigger patterns cover the majority of production ML use cases:
 
-### 1. Scheduled Retraining
+### Scheduled Retraining
 
 A cron schedule fires regardless of data drift. This is the simplest approach and is appropriate
 for domains where the data distribution changes slowly and predictably (e.g., monthly demand
@@ -215,7 +215,7 @@ forecasting).
 Configure via the Databricks Jobs UI or SDK by setting a `CronSchedule` on the job. The downside
 is that retraining may fire unnecessarily when data has not changed, wasting compute.
 
-### 2. Drift-Triggered Retraining
+### Drift-Triggered Retraining
 
 A monitoring job detects feature or prediction drift, fires an alert, and the alert webhook calls
 the Databricks Jobs REST API to trigger an immediate retraining run.
@@ -246,7 +246,7 @@ def trigger_retraining_job(
 The `token` here must be a **service principal** token, not a personal access token, so the job
 runs under a non-human identity with only the permissions it needs.
 
-### 3. Data-Volume Triggered Retraining
+### Data-Volume Triggered Retraining
 
 When new labeled data accumulates past a threshold (e.g., 50,000 new labeled rows), a Delta Live
 Tables pipeline or a lightweight monitoring job counts new records and triggers training. This is
@@ -445,12 +445,12 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Model Lifecycle Orchestration to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Lifecycle Orchestration prior to deployment.

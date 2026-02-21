@@ -86,7 +86,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from databricks.vector_search.client import VectorSearchClient
 
-# 1. Build retriever from Databricks Vector Search index
+# Build retriever from Databricks Vector Search index
 
 vs_client = VectorSearchClient()
 index = vs_client.get_index(
@@ -96,7 +96,7 @@ index = vs_client.get_index(
 vectorstore = DatabricksVectorSearch(index, text_column="content")
 retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
-# 2. Prompt template
+# Prompt template
 
 prompt = ChatPromptTemplate.from_messages([
     (
@@ -108,7 +108,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("human", "{question}"),
 ])
 
-# 3. LLM
+# LLM
 
 llm = ChatDatabricks(endpoint="databricks-meta-llama-3-1-70b-instruct", temperature=0)
 
@@ -117,7 +117,7 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 
-# 4. Compose chain
+# Compose chain
 
 rag_chain = (
     {"context": retriever | format_docs, "question": RunnablePassthrough()}
@@ -351,12 +351,12 @@ Model Serving using `agents.deploy()`.
 
 ## Common Issues & Errors
 
-### 1. High Latency Responses
+### High Latency Responses
 
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting LLM Chains & Agents to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for LLM Chains & Agents prior to deployment.

@@ -255,7 +255,7 @@ variables:
 
 ## Common Issues & Errors
 
-### 1. Authentication Failures
+### Authentication Failures
 
 **Scenario:** CI/CD fails with authentication error.
 
@@ -274,7 +274,7 @@ databricks workspace list /
 
 ```
 
-### 2. Bundle Validation Errors
+### Bundle Validation Errors
 
 **Scenario:** Validation fails in CI but works locally.
 
@@ -289,7 +289,7 @@ databricks workspace list /
     databricks bundle validate --debug
 ```
 
-### 3. Deployment Timeout
+### Deployment Timeout
 
 **Scenario:** Deployment takes too long and times out.
 
@@ -308,7 +308,7 @@ databricks workspace list /
   run: databricks bundle deploy -t prod --resource jobs
 ```
 
-### 4. State File Conflicts
+### State File Conflicts
 
 **Scenario:** Multiple CI runs cause state conflicts.
 
@@ -322,7 +322,7 @@ concurrency:
   cancel-in-progress: false
 ```
 
-### 5. Missing Dependencies
+### Missing Dependencies
 
 **Scenario:** Tests fail due to missing Spark in CI.
 

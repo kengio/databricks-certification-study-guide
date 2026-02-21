@@ -239,7 +239,7 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 ## Common Issues & Errors
 
-### 1. AnalysisException: Path does not exist
+### AnalysisException: Path does not exist
 
 **Scenario:** Reading from a path that hasn't been created yet.
 
@@ -247,7 +247,7 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 **Exam Context:** Trick questions often omit the check for file existence before reading.
 
-### 2. OutOfMemoryError: Java heap space during specific transformation
+### OutOfMemoryError: Java heap space during specific transformation
 
 **Scenario:** Calling `.collect()` on a large DataFrame or broadcasting a table larger than the driver's memory.
 
@@ -255,7 +255,7 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 **Exam Context:** Identifying the specific line causing OOM (usually an action that brings data to the driver).
 
-### 3. Skew Join (Slow Stages/Stragglers)
+### Skew Join (Slow Stages/Stragglers)
 
 **Scenario:** One task takes significantly longer than others during a join (e.g., specific keys have millions of records while others have few).
 
@@ -263,13 +263,13 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 **Exam Context:** Identifying "straggler tasks" as a symptom of data skew.
 
-### 4. NullPointerException in UDFs
+### NullPointerException in UDFs
 
 **Scenario:** Python UDF fails on null input because it assumes a value exists.
 
 **Fix:** Explicitly handle `None` in Python code or use `df.na.fill()` before calling the UDF.
 
-### 5. Cartesian Product (Cross Join)
+### Cartesian Product (Cross Join)
 
 **Scenario:** Accidental cross join when join conditions are missing or incorrect.
 
@@ -277,7 +277,7 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 **Exam Context:** Queries that run forever or produce massive output unexpectedly.
 
-### 6. Small File Problem
+### Small File Problem
 
 **Scenario:** Writing too many small files (e.g., using `partitionBy` on a high-cardinality column like `timestamp`).
 

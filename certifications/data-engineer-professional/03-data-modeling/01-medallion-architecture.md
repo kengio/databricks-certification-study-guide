@@ -640,7 +640,7 @@ gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
 
 ## Common Issues & Errors
 
-### 1. Schema Drift in Bronze
+### Schema Drift in Bronze
 
 **Scenario:** New columns appear in source data.
 
@@ -650,7 +650,7 @@ gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
 .option("mergeSchema", "true")
 ```
 
-### 2. Duplicate Records in Silver
+### Duplicate Records in Silver
 
 **Scenario:** MERGE creates duplicates due to late-arriving data.
 
@@ -661,13 +661,13 @@ window = Window.partitionBy("customer_id").orderBy(col("_ingested_at").desc())
 deduped = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
 ```
 
-### 3. Stale Gold Aggregates
+### Stale Gold Aggregates
 
 **Scenario:** Gold tables not reflecting latest Silver data.
 
 **Fix:** Schedule Gold refreshes appropriately or use streaming tables.
 
-### 4. Cross-Layer Inconsistency
+### Cross-Layer Inconsistency
 
 **Scenario:** Silver and Gold tables out of sync.
 

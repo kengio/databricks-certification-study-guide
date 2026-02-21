@@ -35,7 +35,7 @@ flowchart TD
 
 ## Experiment Management
 
-### 1. **Creating Experiments**
+### **Creating Experiments**
 
 ```python
 import mlflow
@@ -67,7 +67,7 @@ for exp in experiments:
     print(f"{exp.name}: {len(client.search_runs(exp.experiment_id))} runs")
 ```
 
-### 2. **Experiment Organization Strategies**
+### **Experiment Organization Strategies**
 
 **Strategy 1: By Model Type**
 
@@ -111,7 +111,7 @@ mlflow.set_experiment(exp_name)
 
 ## Run Management
 
-### 1. **Creating & Managing Runs**
+### **Creating & Managing Runs**
 
 ```python
 import mlflow
@@ -143,7 +143,7 @@ finally:
     mlflow.end_run()
 ```
 
-### 2. **Run Status Tracking**
+### **Run Status Tracking**
 
 ```python
 from mlflow.tracking import MlflowClient
@@ -177,7 +177,7 @@ else:
     client.set_terminated(run_id, status="FINISHED")
 ```
 
-### 3. **Nested Runs**
+### **Nested Runs**
 
 ```python
 # Parent run
@@ -199,7 +199,7 @@ with mlflow.start_run(run_name="hyperparameter_sweep") as parent_run:
 
 ## Comparing Runs
 
-### 1. **Programmatic Comparison**
+### **Programmatic Comparison**
 
 ```python
 from mlflow.tracking import MlflowClient
@@ -236,7 +236,7 @@ best_run = comparison_df.loc[comparison_df["accuracy"].idxmax()]
 print(f"Best run: {best_run['run_name']} with accuracy {best_run['accuracy']}")
 ```
 
-### 2. **UI Comparison**
+### **UI Comparison**
 
 ```text
 MLflow UI workflow:
@@ -249,7 +249,7 @@ MLflow UI workflow:
    - Time series metrics
 ```
 
-### 3. **Advanced Filtering & Search**
+### **Advanced Filtering & Search**
 
 ```python
 from mlflow.tracking import MlflowClient
@@ -301,7 +301,7 @@ from mlflow.tracking import MlflowClient
 
 client = MlflowClient()
 
-# 1. EXPLORATION PHASE
+# EXPLORATION PHASE
 
 mlflow.set_experiment("/Projects/ChurnModel/Exploration")
 with mlflow.start_run(run_name="baseline_lr"):
@@ -310,7 +310,7 @@ with mlflow.start_run(run_name="baseline_lr"):
     mlflow.log_metric("auc", 0.82)
     mlflow.set_tag("phase", "exploration")
 
-# 2. HYPERPARAMETER TUNING PHASE
+# HYPERPARAMETER TUNING PHASE
 
 mlflow.set_experiment("/Projects/ChurnModel/Tuning")
 for max_depth in [5, 10, 15]:
@@ -322,7 +322,7 @@ for max_depth in [5, 10, 15]:
             mlflow.log_metrics(metrics)
             mlflow.set_tag("phase", "tuning")
 
-# 3. VALIDATION PHASE
+# VALIDATION PHASE
 
 mlflow.set_experiment("/Projects/ChurnModel/Validation")
 best_params = {"max_depth": 10, "n_estimators": 100}
@@ -334,7 +334,7 @@ with mlflow.start_run(run_name="final_validation"):
     mlflow.set_tag("phase", "validation")
     mlflow.set_tag("status", "ready_for_production")
 
-# 4. COMPARE PHASES
+# COMPARE PHASES
 
 exp_names = [
     "/Projects/ChurnModel/Exploration",
@@ -351,7 +351,7 @@ for exp_name in exp_names:
 
 ## Best Practices
 
-### 1. **Naming Conventions**
+### **Naming Conventions**
 
 ```python
 # ✓ Good: Descriptive, easy to identify
@@ -378,7 +378,7 @@ bad_names = [
 mlflow.start_run(run_name=f"rf_depth{max_depth}_n_est{n_estimators}")
 ```
 
-### 2. **Tagging Strategy**
+### **Tagging Strategy**
 
 ```python
 # Standardized tags for filtering
@@ -395,7 +395,7 @@ standard_tags = {
 mlflow.set_tags(standard_tags)
 ```
 
-### 3. **Experiment Cleanup**
+### **Experiment Cleanup**
 
 ```python
 # Archive old experiments
@@ -428,12 +428,12 @@ client.delete_experiment(old_exp.experiment_id)
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Experiments & Runs do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Experiments & Runs to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Experiments & Runs to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Experiments & Runs prior to deployment.

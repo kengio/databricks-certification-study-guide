@@ -502,7 +502,7 @@ def silver_orders():
 
 ## Common Issues & Errors
 
-### 1. Expectation Always Fails
+### Expectation Always Fails
 
 **Scenario:** Expectation fails for all records.
 
@@ -523,7 +523,7 @@ CONSTRAINT valid_type EXPECT (type IN ('A', 'B', 'C'))
 CONSTRAINT valid_type EXPECT (UPPER(type) IN ('A', 'B', 'C'))
 ```
 
-### 2. Expectation Not Logging
+### Expectation Not Logging
 
 **Scenario:** Expectation results not in event log.
 
@@ -545,7 +545,7 @@ def actual_table():
     return ...
 ```
 
-### 3. Null Handling
+### Null Handling
 
 **Scenario:** Unexpected behavior with NULL values.
 
@@ -559,7 +559,7 @@ CONSTRAINT valid_amount EXPECT (amount > 0)
 CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 ```
 
-### 4. Performance Impact
+### Performance Impact
 
 **Scenario:** Expectations slowing down pipeline.
 

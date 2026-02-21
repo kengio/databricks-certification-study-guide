@@ -16,7 +16,7 @@ This guide covers advanced data protection patterns: data classification & taggi
 
 > For audit logging, lineage tracking, and network security, see [Audit Logging, Data Lineage & Network Security](./05-audit-lineage-network-security.md).
 
-## 5. Data Classification and Tagging
+## Data Classification and Tagging
 
 Tags on Unity Catalog objects provide a mechanism for data classification, policy enforcement, and discovery. Tags are key-value pairs attached to catalogs, schemas, tables, and columns.
 
@@ -163,7 +163,7 @@ print(f"Detected PII columns: {detected}")
 
 ---
 
-## 6. Compliance Patterns
+## Compliance Patterns
 
 ### GDPR: Right to Be Forgotten
 
@@ -324,7 +324,7 @@ SELECT *, 'US' AS data_region FROM us_data.gold.customers;
 
 ---
 
-## 7. Advanced Permission Patterns
+## Advanced Permission Patterns
 
 ### Permission Inheritance Model
 
@@ -525,7 +525,7 @@ GRANT SELECT ON SCHEMA prod.gold TO `sales-engineers`;
 
 ## Common Issues & Errors
 
-### 1. Lineage Not Showing
+### Lineage Not Showing
 
 **Scenario:** Table lineage is empty in Catalog Explorer.
 
@@ -541,7 +541,7 @@ SELECT * FROM hive_metastore.default.orders;
 -- Run the pipeline again; lineage will now be captured
 ```
 
-### 2. Audit Logs Missing Events
+### Audit Logs Missing Events
 
 **Scenario:** Cannot find expected events in `system.access.audit`.
 
@@ -560,7 +560,7 @@ WHERE service_name = 'unityCatalog'
     AND event_date >= current_date() - 1;
 ```
 
-### 3. Information Schema Returns Empty Results
+### Information Schema Returns Empty Results
 
 **Scenario:** Query returns no rows.
 
@@ -575,7 +575,7 @@ GRANT USE CATALOG ON CATALOG prod TO `compliance-team`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `compliance-team`;
 ```
 
-### 4. Tags Not Appearing
+### Tags Not Appearing
 
 **Scenario:** Tags set on objects are not queryable.
 
@@ -591,7 +591,7 @@ SELECT * FROM system.information_schema.column_tags
 WHERE table_catalog = 'prod';
 ```
 
-### 5. VACUUM With RETAIN 0 HOURS Fails
+### VACUUM With RETAIN 0 HOURS Fails
 
 **Scenario:** Cannot run VACUUM with 0-hour retention.
 
@@ -604,7 +604,7 @@ VACUUM prod.gold.customers RETAIN 0 HOURS;
 SET spark.databricks.delta.retentionDurationCheck.enabled = true;
 ```
 
-### 6. Permission Denied on External Location
+### Permission Denied on External Location
 
 **Scenario:** User cannot create an external table.
 

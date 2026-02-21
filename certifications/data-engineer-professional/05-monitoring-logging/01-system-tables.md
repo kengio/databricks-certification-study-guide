@@ -526,13 +526,13 @@ GROUP BY event_date, service_name, action_name;
 
 ## Common Issues & Errors
 
-### 1. System Tables Not Enabled
+### System Tables Not Enabled
 
 **Scenario:** Can't query system tables.
 
 **Fix:** Request account admin to enable system tables.
 
-### 2. Permission Denied
+### Permission Denied
 
 **Scenario:** User can't access system tables.
 
@@ -543,7 +543,7 @@ GRANT SELECT ON SCHEMA system.billing TO `cost-analysts`;
 GRANT SELECT ON TABLE system.access.audit TO `security-team`;
 ```
 
-### 3. Query Performance
+### Query Performance
 
 **Scenario:** System table queries are slow.
 

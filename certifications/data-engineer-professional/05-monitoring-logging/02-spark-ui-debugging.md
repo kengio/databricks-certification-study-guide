@@ -247,7 +247,7 @@ The SQL tab shows:
 
 ## Common Performance Issues
 
-### 1. Data Skew
+### Data Skew
 
 **Symptoms:**
 
@@ -290,7 +290,7 @@ df_salted = df.withColumn(
 
 ```
 
-### 2. Shuffle Spill
+### Shuffle Spill
 
 **Symptoms:**
 
@@ -321,7 +321,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "400")
 
 ```
 
-### 3. Small File Problem
+### Small File Problem
 
 **Symptoms:**
 
@@ -353,7 +353,7 @@ df.repartition(100).write.format("delta").save("/path")
 spark.sql("OPTIMIZE my_table")
 ```
 
-### 4. Broadcast Join Failure
+### Broadcast Join Failure
 
 **Symptoms:**
 
@@ -383,7 +383,7 @@ result = large_df.join(broadcast(small_df), "key")
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "100MB")
 ```
 
-### 5. Excessive GC
+### Excessive GC
 
 **Symptoms:**
 
@@ -416,7 +416,7 @@ df.unpersist()
 spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
 ```
 
-### 6. OOM (Out of Memory)
+### OOM (Out of Memory)
 
 **Symptoms:**
 

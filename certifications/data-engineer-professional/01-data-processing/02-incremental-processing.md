@@ -549,7 +549,7 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 ## Common Issues & Errors
 
-### 1. AnalysisException: Checkpoint path does not exist or invalid
+### AnalysisException: Checkpoint path does not exist or invalid
 
 **Scenario:** Restarting a query with a new location but pointing to old checkpoint.
 
@@ -557,19 +557,19 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 **Exam Context:** Questions about why a stream failed to start after code changes.
 
-### 2. Stream-Static Join Result Empty
+### Stream-Static Join Result Empty
 
 **Scenario:** Joining a stream with a static table, but updates to the static table aren't reflected.
 
 **Fix:** Restart the streaming query to reload the static table cache.
 
-### 3. Delta Source: "Detected deleted data"
+### Delta Source: "Detected deleted data"
 
 **Scenario:** Source Delta table had a DELETE/UPDATE operation.
 
 **Fix:** Use `.option("ignoreChanges", "true")` or `.option("ignoreDeletes", "true")` if strict consistency isn't required, or use Delta CDF for exact propagation.
 
-### 4. Lag Growing Indefinitely
+### Lag Growing Indefinitely
 
 **Scenario:** Processing rate is slower than input rate.
 

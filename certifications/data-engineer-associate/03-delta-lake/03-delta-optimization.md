@@ -172,16 +172,16 @@ spark.conf.set("delta.deletedFileRetentionDuration", "interval 7 days")
 # VACUUM removes old files, breaking time travel to those versions
 # Example:
 
-# 1. Create table (v0)
+# Create table (v0)
 
 spark.sql("CREATE TABLE employees AS SELECT ...")
 
-# 2. Insert data daily for 60 days (v0 - v60)
-# 3. Run VACUUM RETAIN 30 DAYS
+# Insert data daily for 60 days (v0 - v60)
+# Run VACUUM RETAIN 30 DAYS
 #    - Removes versions older than 30 days
 #    - Time travel to v5 fails!
 
-# 4. Run VACUUM RETAIN 60 DAYS (safer)
+# Run VACUUM RETAIN 60 DAYS (safer)
 #    - Time travel works for all versions within 60 days
 
 ```
@@ -281,7 +281,7 @@ SET TBLPROPERTIES (
 
 ## Performance Tuning Strategy
 
-### 1. Monitor File Size
+### Monitor File Size
 
 ```python
 # Check average file size
@@ -296,7 +296,7 @@ files = spark.sql("""
 """)
 ```
 
-### 2. Schedule Regular OPTIMIZE
+### Schedule Regular OPTIMIZE
 
 ```python
 
@@ -311,7 +311,7 @@ def optimize_all_tables():
         spark.sql(f"OPTIMIZE {table_name}")
 ```
 
-### 3. Partition Strategy
+### Partition Strategy
 
 ```python
 # Partition large tables by date
@@ -414,21 +414,21 @@ from pyspark.sql.functions import *
 table_path = "/mnt/data/employees"
 delta_table = DeltaTable.forPath(spark, table_path)
 
-# 1. Analyze current state
+# Analyze current state
 
 spark.sql("ANALYZE TABLE employees COMPUTE STATISTICS")
 
-# 2. Optimize and Z-order
+# Optimize and Z-order
 
 delta_table.optimize() \
     .zorderBy("department", "hire_date") \
     .executeCompaction()
 
-# 3. VACUUM old files
+# VACUUM old files
 
 delta_table.vacuum(retention_hours=168)  # 7 days
 
-# 4. Verify improvements
+# Verify improvements
 
 print("Optimization complete!")
 spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
@@ -452,12 +452,12 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
 ## Common Issues & Errors
 
-### 1. Small File Problem
+### Small File Problem
 
 **Scenario:** Frequent micro-batch writes cause slow reads.
 **Fix:** Run OPTIMIZE with Z-ORDER regularly.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Delta Lake Optimization to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Optimization prior to deployment.

@@ -288,7 +288,7 @@ spark.sql(f"USE CATALOG {catalog}")
 
 ## Common Issues & Errors
 
-### 1. Bundle Validation Fails
+### Bundle Validation Fails
 
 **Scenario:** `databricks bundle validate` returns errors.
 
@@ -308,7 +308,7 @@ databricks bundle validate --var db_password=secret
 export BUNDLE_VAR_db_password=secret
 ```
 
-### 2. Permission Denied on Deploy
+### Permission Denied on Deploy
 
 **Scenario:** Deploy fails with permission error.
 
@@ -324,7 +324,7 @@ targets:
         group_name: data-engineers
 ```
 
-### 3. Resource Already Exists
+### Resource Already Exists
 
 **Scenario:** Deploy fails because resource exists.
 
@@ -341,7 +341,7 @@ databricks bundle deploy -t dev
 
 ```
 
-### 4. State File Conflicts
+### State File Conflicts
 
 **Scenario:** State file out of sync with workspace.
 
@@ -357,7 +357,7 @@ rm -rf .databricks/bundle/dev/
 databricks bundle deploy -t dev
 ```
 
-### 5. Artifact Build Failure
+### Artifact Build Failure
 
 **Scenario:** Wheel build fails during deploy.
 

@@ -401,12 +401,12 @@ D) The `num_results` parameter is too low to include the new documents
 
 ## Common Issues & Errors
 
-### 1. High Latency Responses
+### High Latency Responses
 
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Vector Search in Production to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Vector Search in Production prior to deployment.

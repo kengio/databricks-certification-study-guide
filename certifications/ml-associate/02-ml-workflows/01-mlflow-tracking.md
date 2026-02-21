@@ -48,7 +48,7 @@ flowchart TB
 
 ## Core Concepts
 
-### 1. **Tracking APIs**
+### **Tracking APIs**
 
 ```python
 # Initialize MLflow
@@ -86,7 +86,7 @@ mlflow.sklearn.log_model(model, "model")
 mlflow.end_run()
 ```
 
-### 2. **Logging Parameters**
+### **Logging Parameters**
 
 ```python
 # Log single parameter
@@ -105,7 +105,7 @@ params = {
 mlflow.log_params(params)
 ```
 
-### 3. **Logging Metrics**
+### **Logging Metrics**
 
 ```python
 # Single metric
@@ -133,7 +133,7 @@ for epoch in range(1, 101):
     mlflow.log_metric("val_loss", val_loss, step=epoch)
 ```
 
-### 4. **Logging Artifacts**
+### **Logging Artifacts**
 
 ```python
 import json
@@ -242,7 +242,7 @@ model = mlflow.sklearn.load_model(
 
 ## Advanced Tracking Features
 
-### 1. **Custom Tags**
+### **Custom Tags**
 
 ```python
 # Tag runs for organization
@@ -262,7 +262,7 @@ tags = {
 mlflow.set_tags(tags)
 ```
 
-### 2. **Run Management**
+### **Run Management**
 
 ```python
 from mlflow.tracking import MlflowClient
@@ -292,7 +292,7 @@ client.delete_run(run_id)
 client.restore_run(run_id)
 ```
 
-### 3. **Searching Experiments**
+### **Searching Experiments**
 
 ```python
 # Search runs by metrics
@@ -458,12 +458,12 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting MLflow Tracking to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for MLflow Tracking prior to deployment.

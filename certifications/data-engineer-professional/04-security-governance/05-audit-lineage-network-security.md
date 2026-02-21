@@ -40,7 +40,7 @@ flowchart TB
 
 ---
 
-## 1. Data Lineage and Impact Analysis
+## Data Lineage and Impact Analysis
 
 Unity Catalog automatically captures data lineage for tables, columns, notebooks, and jobs. Lineage records are created whenever data flows from one object to another through Spark queries or pipeline operations.
 
@@ -181,7 +181,7 @@ GROUP BY o.order_date, c.region;
 
 ---
 
-## 2. Audit Logging Deep Dive
+## Audit Logging Deep Dive
 
 The `system.access.audit` table captures all access events across workspaces and Unity Catalog. This is the primary tool for compliance monitoring and forensic investigation.
 
@@ -352,7 +352,7 @@ WHERE event_date >= current_date() - 1
 
 ---
 
-## 3. Information Schema
+## Information Schema
 
 The `system.information_schema` provides metadata about all Unity Catalog objects. It follows the SQL standard and enables compliance reporting and programmatic governance.
 
@@ -510,7 +510,7 @@ SHOW GRANTS TO `data-analysts`;
 
 ---
 
-## 4. Network Security
+## Network Security
 
 Network security controls how data flows between Databricks, cloud provider infrastructure, and external networks. These configurations are critical for meeting compliance requirements.
 
@@ -663,12 +663,12 @@ VPC Peering Setup:
 
 ## Common Issues & Errors
 
-### 1. Missing Audit Logs for Long-Term Compliance
+### Missing Audit Logs for Long-Term Compliance
 
 **Scenario:** An auditor requests access logs from 2 years ago, but the system table doesn't have them because the default retention is only 365 days.
 **Fix:** Create a scheduled job that incrementally copies `system.access.audit` records to your own Delta table for long-term archival.
 
-### 2. Lineage Blind Spots
+### Lineage Blind Spots
 
 **Scenario:** Data lineage is not showing up in the Catalog Explorer for a specific set of tables.
 **Fix:** Tables stored in the legacy `hive_metastore` do not support automatic lineage capture. Migrate the tables to Unity Catalog to enable lineage.

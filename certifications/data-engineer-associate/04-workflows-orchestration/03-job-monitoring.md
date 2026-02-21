@@ -520,12 +520,12 @@ for run in runs:
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for Job Monitoring do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Job Monitoring to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Job Monitoring to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Job Monitoring prior to deployment.

@@ -699,7 +699,7 @@ changes = history.filter(
 
 ## Common Issues & Errors
 
-### 1. Time Travel Version Not Found
+### Time Travel Version Not Found
 
 **Scenario:** Requested version no longer available.
 
@@ -711,7 +711,7 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 );
 ```
 
-### 2. VACUUM Breaks Time Travel
+### VACUUM Breaks Time Travel
 
 **Scenario:** Time travel fails after VACUUM.
 
@@ -728,13 +728,13 @@ delta_table.vacuum()  # Uses default 168 hours
 
 ```
 
-### 3. Shallow Clone Source Modified
+### Shallow Clone Source Modified
 
 **Scenario:** Shallow clone fails because source files were vacuumed.
 
 **Fix:** Use deep clone for long-term snapshots, or ensure source retention exceeds clone lifetime.
 
-### 4. Constraint Violation
+### Constraint Violation
 
 **Scenario:** Write fails due to constraint.
 

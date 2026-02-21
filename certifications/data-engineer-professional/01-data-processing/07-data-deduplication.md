@@ -541,25 +541,25 @@ print(f"Duplicate rate: {duplicate_rate:.2f}%")
 
 ## Common Issues & Errors
 
-### 1. State Store OOM (Streaming)
+### State Store OOM (Streaming)
 
 **Scenario:** Using `dropDuplicates` on a stream without a watermark.
 
 **Fix:** Add `.withWatermark()` before deduplication or use `dropDuplicatesWithinWatermark` if acceptable.
 
-### 2. Random Record Retention
+### Random Record Retention
 
 **Scenario:** Using `dropDuplicates()` without specifying order.
 
 **Fix:** Use `row_number().over(Window.orderBy(...))` to explicitly select which record to keep.
 
-### 3. MERGE Failure on Source Duplicates
+### MERGE Failure on Source Duplicates
 
 **Scenario:** Running MERGE when source dataset contains duplicate keys.
 
 **Fix:** Add a deduplication step to the source DataFrame *before* the MERGE operation.
 
-### 4. Dedup Not Working Across Partitions
+### Dedup Not Working Across Partitions
 
 **Scenario:** Using `dropDuplicates` after specific shuffle operations that might not preserve global uniqueness context (rare, but conceptual).
 

@@ -57,7 +57,7 @@ flowchart TB
 
 ## Governance Framework
 
-### 1. **Unity Catalog Integration**
+### **Unity Catalog Integration**
 
 ```python
 from databricks.sdk import WorkspaceClient
@@ -104,7 +104,7 @@ feature_df_with_metadata = df.withMetadata(
 )
 ```
 
-### 2. **Feature Ownership and Access Control**
+### **Feature Ownership and Access Control**
 
 ```python
 # RBAC for feature tables
@@ -143,7 +143,7 @@ for statement in sql_statements:
     )
 ```
 
-### 3. **Data Lineage Tracking**
+### **Data Lineage Tracking**
 
 ```python
 # Track feature lineage with OpenMetadata
@@ -197,7 +197,7 @@ lineage_df.write.mode("append").delta("/metadata/feature_lineage")
 
 ## Data Quality Framework
 
-### 1. **Feature Quality Validation**
+### **Feature Quality Validation**
 
 ```python
 from databricks import sql
@@ -282,7 +282,7 @@ validator.validate_accuracy(features_df, "email", expected_format="email")
 validator.validate_freshness("ml_features.user_features.user_spending", max_age_hours=2)
 ```
 
-### 2. **Monitoring Dashboard**
+### **Monitoring Dashboard**
 
 ```python
 # Feature quality monitoring dashboard SQL
@@ -482,7 +482,7 @@ query = (
 
 ## Advanced Monitoring
 
-### 1. **Feature Drift Detection**
+### **Feature Drift Detection**
 
 ```python
 from pyspark.sql.functions import col, approx_percentile, stddev
@@ -543,7 +543,7 @@ class DriftDetector:
         }
 ```
 
-### 2. **Performance Monitoring**
+### **Performance Monitoring**
 
 ```python
 # Log feature computation performance
@@ -624,12 +624,12 @@ log_feature_computation_metrics(
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Feature Store Production Patterns to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Store Production Patterns prior to deployment.

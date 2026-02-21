@@ -266,8 +266,8 @@ jobs:
 
 # Configure Databricks service principal for OIDC
 # In Databricks Account Console:
-# 1. Create service principal
-# 2. Add federation policy:
+# Create service principal
+# Add federation policy:
 #    - Issuer: https://token.actions.githubusercontent.com
 #    - Subject: repo:org/repo-name:ref:refs/heads/main
 #    - Audiences: https://accounts.cloud.databricks.com

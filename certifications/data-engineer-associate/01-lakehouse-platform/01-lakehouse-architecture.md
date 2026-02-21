@@ -67,14 +67,14 @@ flowchart LR
 
 ## Key Lakehouse Concepts
 
-### 1. **ACID Transactions**
+### **ACID Transactions**
 
 - Ensures data reliability and consistency
 - Supports concurrent reads and writes
 - Enables rollback and recovery
 - Built into Delta Lake format
 
-### 2. **Schema Enforcement & Evolution**
+### **Schema Enforcement & Evolution**
 
 ```python
 # Schema enforcement prevents bad data
@@ -93,7 +93,7 @@ df.write \
     .save("/mnt/data/table")
 ```
 
-### 3. **Data Versioning & Time Travel**
+### **Data Versioning & Time Travel**
 
 - Access historical versions of data
 - Query data "as of" a specific timestamp
@@ -115,7 +115,7 @@ spark.read \
     .load("/mnt/data/table")
 ```
 
-### 4. **Data Lineage & Audit Logs**
+### **Data Lineage & Audit Logs**
 
 - Track data changes over time
 - Who modified data and when
@@ -239,13 +239,13 @@ spark.sql("SELECT * FROM main.default.my_table")
 
 ## Common Issues & Errors
 
-### 1. Conflicting Data Formats
+### Conflicting Data Formats
 
 **Scenario:** Queries fail when mixing Parquet, CSV, and JSON files in the same directory.
 
 **Fix:** Convert all raw data to Delta format early in the medallion pipeline (Bronze layer) so downstream layers always read a consistent format.
 
-### 2. Stale Metadata Cache
+### Stale Metadata Cache
 
 **Scenario:** Newly written data is not visible to queries.
 

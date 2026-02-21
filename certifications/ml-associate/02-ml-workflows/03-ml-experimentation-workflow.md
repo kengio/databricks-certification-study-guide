@@ -89,22 +89,22 @@ problem_spec = {
 import pandas as pd
 from pyspark.sql import functions as F
 
-# 1. LOAD DATA
+# LOAD DATA
 
 df = spark.read.table("ml_catalog.raw.customer_data")
 
-# 2. DATA EXPLORATION
+# DATA EXPLORATION
 
 print(f"Shape: {df.count()} rows")
 print(f"Columns: {len(df.columns)}")
 print(f"Missing: {df.select([F.count(F.when(F.col(c).isNull(), c)).alias(c) for c in df.columns]).collect()}")
 
-# 3. DATA VALIDATION
+# DATA VALIDATION
 # Check distributions, ranges, missing patterns
 
 display(df.describe())
 
-# 4. FEATURE CREATION
+# FEATURE CREATION
 # Raw features → engineered features
 
 df_engineered = (df
@@ -113,11 +113,11 @@ df_engineered = (df
     .withColumn("is_premium", (F.col("plan_type") == "premium").cast("int"))
 )
 
-# 5. TRAIN/VAL/TEST SPLIT
+# TRAIN/VAL/TEST SPLIT
 
 train, val, test = df_engineered.randomSplit([0.6, 0.2, 0.2], seed=42)
 
-# 6. SAVE FOR ML
+# SAVE FOR ML
 
 train.write.mode("overwrite").saveAsTable("ml_catalog.ml_ready.train_data")
 val.write.mode("overwrite").saveAsTable("ml_catalog.ml_ready.val_data")
@@ -451,7 +451,7 @@ def check_feature_drift(new_data, train_data, threshold=0.05):
 
 ## Experimentation Best Practices
 
-### 1. **Experiment Tracking Guidelines**
+### **Experiment Tracking Guidelines**
 
 ```python
 # Track EVERYTHING
@@ -480,7 +480,7 @@ guidelines = {
 }
 ```
 
-### 2. **Experiment Design Checklist**
+### **Experiment Design Checklist**
 
 ```python
 checklist = {
@@ -542,12 +542,12 @@ Deploy & Monitor
 
 ## Common Issues & Errors
 
-### 1. Configuration Oversights
+### Configuration Oversights
 
 **Scenario:** The default settings for ML Experimentation Workflow do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for ML Experimentation Workflow to handle production-scale workloads.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting ML Experimentation Workflow to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for ML Experimentation Workflow prior to deployment.

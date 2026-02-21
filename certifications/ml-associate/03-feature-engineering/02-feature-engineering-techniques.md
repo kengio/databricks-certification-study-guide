@@ -27,7 +27,7 @@ flowchart TB
     Select --> Model["ML Model"]
 ```
 
-## 1. Handling Missing Values
+## Handling Missing Values
 
 ### **Removal vs Imputation**
 
@@ -74,7 +74,7 @@ df_imputed = df.withColumn("category",
 )
 ```
 
-## 2. Categorical Encoding
+## Categorical Encoding
 
 ### **String Indexer**
 
@@ -178,7 +178,7 @@ indexer = StringIndexer(
 ).fit(df.select("size").distinct())
 ```
 
-## 3. Numerical Feature Scaling
+## Numerical Feature Scaling
 
 ### **StandardScaler**
 
@@ -253,7 +253,7 @@ iqr = q3 - q1
 df_scaled = df.withColumn("age_scaled", (col("age") - q1) / iqr)
 ```
 
-## 4. Feature Interactions
+## Feature Interactions
 
 ### **Creating Interaction Features**
 
@@ -292,7 +292,7 @@ df_ratios = (df
 )
 ```
 
-## 5. Feature Selection
+## Feature Selection
 
 ### **Filtering by Variance**
 
@@ -362,7 +362,7 @@ while len(features) > 10:
     features = rfe_step(df, features)
 ```
 
-## 6. Temporal Features
+## Temporal Features
 
 ### **Time-Based Feature Engineering**
 
@@ -410,18 +410,18 @@ df_rolling = (df
 )
 ```
 
-## 7. Text Feature Extraction
+## Text Feature Extraction
 
 ### **TF-IDF (Term Frequency - Inverse Document Frequency)**
 
 ```python
 from pyspark.ml.feature import Tokenizer, CountVectorizer, IDF
 
-# 1. Tokenize text
+# Tokenize text
 
 tokenizer = Tokenizer(inputCol="text", outputCol="words")
 
-# 2. Count word frequencies
+# Count word frequencies
 
 cv = CountVectorizer(
     inputCol="words",
@@ -430,7 +430,7 @@ cv = CountVectorizer(
     minDF=2  # Appear in at least 2 docs
 )
 
-# 3. TF-IDF
+# TF-IDF
 
 idf = IDF(inputCol="rawFeatures", outputCol="features")
 
@@ -533,12 +533,12 @@ df_engineered.select("customer_id", "scaledFeatures", "label")\
 
 ## Common Issues & Errors
 
-### 1. Artifact Access Denied
+### Artifact Access Denied
 
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### 2. Integration Bottlenecks
+### Integration Bottlenecks
 
 **Scenario:** Connecting Feature Engineering Techniques to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Engineering Techniques prior to deployment.
