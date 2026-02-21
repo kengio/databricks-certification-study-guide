@@ -263,4 +263,4 @@ D) Fine-tune the LLM to never mention investment topics
 
 ---
 
-[← Vector Search & Embeddings](./02-vector-search-embeddings.md) | [Next: Databricks GenAI Tools →](./04-databricks-genai-tools.md)
+**[← Previous: Practice Questions — Vector Search & Embeddings](./02-vector-search-embeddings.md) | [↑ Back to Practice Questions — GenAI Engineer Associate](./README.md) | [Next: Practice Questions — Databricks GenAI Tools](./04-databricks-genai-tools.md) →**

@@ -112,4 +112,4 @@ D) Network latency to cloud storage
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
+**[← Previous: Mock Exam - Section 4: Security & Governance](./04-security-governance.md) | [↑ Back to Full-Length Practice Exam](./README.md) | [Next: Mock Exam - Section 6: Testing & Deployment](./06-testing-deployment.md) →**

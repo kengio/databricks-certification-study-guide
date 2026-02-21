@@ -207,3 +207,7 @@ D) Aggregate statistics across all 20 trials combined
 > When `mlflow.sklearn.autolog()` is active, each child run created by Hyperopt captures: the hyperparameter values passed to the trial, all metrics computed during `fit()` and `score()` (e.g., AUC, accuracy, RMSE depending on estimator type), and the fitted model serialized as an MLflow artifact. This makes each child run a complete, reproducible record of that trial. Aggregate analysis across trials is visible in the parent run.
 
 [← Back to Practice Questions](./README.md) | [Next: Model Lifecycle](03-model-lifecycle.md)
+
+---
+
+**[← Previous: Feature Engineering Practice Questions](./01-feature-engineering.md) | [↑ Back to ML Professional Practice Questions](./README.md) | [Next: "Practice Questions - Model Production Lifecycle"](./03-model-lifecycle.md) →**

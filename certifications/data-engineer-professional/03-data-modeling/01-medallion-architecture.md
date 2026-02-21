@@ -28,7 +28,7 @@ flowchart LR
     Consumers --> BI[BI/Analytics]
     Consumers --> ML[ML/AI]
     Consumers --> Apps[Applications]
-```text
+```
 
 ## Layer Characteristics
 
@@ -60,7 +60,7 @@ flowchart TB
     end
 
     Quality -.-> Layers
-```text
+```
 
 ## Bronze Layer
 
@@ -82,7 +82,7 @@ flowchart TB
     end
 
     Bronze --> BronzePrinciples
-```text
+```
 
 ### Bronze Table Design
 
@@ -90,21 +90,24 @@ flowchart TB
 from pyspark.sql.functions import current_timestamp, input_file_name, lit
 
 # Read raw data with minimal transformation
+
 raw_df = spark.read.format("json").load("/Volumes/raw/landing/customers/")
 
 # Add ingestion metadata (standard Bronze practice)
+
 bronze_df = (raw_df
     .withColumn("_ingested_at", current_timestamp())
     .withColumn("_source_file", input_file_name())
     .withColumn("_source_system", lit("crm_api")))
 
 # Write to Bronze layer (append-only)
+
 (bronze_df.write
     .format("delta")
     .mode("append")
     .option("mergeSchema", "true")
     .saveAsTable("bronze.customers_raw"))
-```text
+```
 
 ```sql
 -- Bronze table with metadata columns
@@ -123,12 +126,13 @@ CREATE TABLE bronze.customers_raw (
 )
 USING DELTA
 PARTITIONED BY (_ingested_at::date);
-```text
+```
 
 ### Auto Loader for Bronze Ingestion
 
 ```python
 # Auto Loader for incremental Bronze ingestion
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -138,6 +142,7 @@ df = (spark.readStream
     .load("/Volumes/raw/landing/customers/"))
 
 # Add metadata and write to Bronze
+
 (df.withColumn("_ingested_at", current_timestamp())
   .withColumn("_source_file", input_file_name())
   .writeStream
@@ -146,7 +151,7 @@ df = (spark.readStream
   .option("mergeSchema", "true")
   .trigger(availableNow=True)
   .toTable("bronze.customers_raw"))
-```text
+```
 
 ### Bronze Layer Best Practices
 
@@ -180,7 +185,7 @@ flowchart TB
     end
 
     Transform --> SilverOps
-```text
+```
 
 ### Silver Table Design
 
@@ -188,9 +193,11 @@ flowchart TB
 from pyspark.sql.functions import col, when, regexp_replace, lower, trim
 
 # Read from Bronze
+
 bronze_df = spark.read.table("bronze.customers_raw")
 
 # Clean and transform to Silver
+
 silver_df = (bronze_df
     .dropDuplicates(["customer_id"])
     .withColumn("customer_id", col("customer_id").cast("int"))
@@ -209,6 +216,7 @@ silver_df = (bronze_df
     ))
 
 # Write to Silver with MERGE for idempotency
+
 silver_df.createOrReplaceTempView("bronze_updates")
 
 spark.sql("""
@@ -218,7 +226,7 @@ spark.sql("""
     WHEN MATCHED THEN UPDATE SET *
     WHEN NOT MATCHED THEN INSERT *
 """)
-```text
+```
 
 ```sql
 -- Silver table with enforced schema and constraints
@@ -239,7 +247,7 @@ TBLPROPERTIES (
     'delta.minReaderVersion' = '2',
     'delta.minWriterVersion' = '5'
 );
-```text
+```
 
 ### Silver MERGE Pattern
 
@@ -247,6 +255,7 @@ TBLPROPERTIES (
 from delta.tables import DeltaTable
 
 # Incremental Silver update with MERGE
+
 def update_silver_customers(bronze_df):
     # Clean and prepare data
     updates_df = (bronze_df
@@ -266,7 +275,7 @@ def update_silver_customers(bronze_df):
         .whenMatchedUpdateAll()
         .whenNotMatchedInsertAll()
         .execute())
-```text
+```
 
 ### Silver Layer Best Practices
 
@@ -303,7 +312,7 @@ flowchart TB
     Gold --> BI[BI Dashboards]
     Gold --> ML[ML Models]
     Gold --> Reports[Reports]
-```text
+```
 
 ### Gold Table Design
 
@@ -311,10 +320,12 @@ flowchart TB
 from pyspark.sql.functions import sum, count, avg, max, date_trunc
 
 # Read from Silver
+
 customers = spark.read.table("silver.customers")
 orders = spark.read.table("silver.orders")
 
 # Create Gold aggregate table
+
 customer_metrics = (customers.join(orders, "customer_id")
     .groupBy("customer_id", "name", "email")
     .agg(
@@ -325,11 +336,12 @@ customer_metrics = (customers.join(orders, "customer_id")
     ))
 
 # Write to Gold layer
+
 (customer_metrics.write
     .format("delta")
     .mode("overwrite")
     .saveAsTable("gold.customer_metrics"))
-```text
+```
 
 ```sql
 -- Gold table for customer metrics
@@ -364,7 +376,7 @@ SELECT
     AVG(order_amount) AS avg_order_value
 FROM silver.orders
 GROUP BY 1, 2, 3;
-```text
+```
 
 ### Dimensional Modeling in Gold
 
@@ -408,7 +420,7 @@ CREATE TABLE gold.dim_date (
     is_holiday BOOLEAN
 )
 USING DELTA;
-```text
+```
 
 ### Gold Layer Best Practices
 
@@ -430,6 +442,7 @@ import dlt
 from pyspark.sql.functions import col, current_timestamp, input_file_name
 
 # Bronze Layer
+
 @dlt.table(
     comment="Raw customer data from CRM"
 )
@@ -445,6 +458,7 @@ def bronze_customers():
     )
 
 # Silver Layer
+
 @dlt.table(
     comment="Cleansed customer data"
 )
@@ -459,6 +473,7 @@ def silver_customers():
     )
 
 # Gold Layer
+
 @dlt.table(
     comment="Customer metrics for analytics"
 )
@@ -474,7 +489,7 @@ def gold_customer_metrics():
             sum("order_amount").alias("lifetime_value")
         )
     )
-```text
+```
 
 ## Unity Catalog Organization
 
@@ -495,7 +510,7 @@ flowchart TB
     end
 
     Catalogs --> Schemas
-```text
+```
 
 ```sql
 -- Create catalog structure
@@ -516,7 +531,7 @@ USING DELTA;
 -- Create Gold table
 CREATE TABLE prod.gold.customer_metrics (...)
 USING DELTA;
-```text
+```
 
 ### Alternative: Domain-Based Organization
 
@@ -532,7 +547,7 @@ CREATE SCHEMA IF NOT EXISTS prod.sales_gold;
 CREATE SCHEMA IF NOT EXISTS prod.marketing_bronze;
 CREATE SCHEMA IF NOT EXISTS prod.marketing_silver;
 CREATE SCHEMA IF NOT EXISTS prod.marketing_gold;
-```text
+```
 
 ## Error Handling Patterns
 
@@ -545,13 +560,15 @@ flowchart LR
     Validate --> |No| Quarantine[Quarantine Table]
     Quarantine --> Review[Manual Review]
     Review --> |Fixed| Silver
-```text
+```
 
 ```python
 # Separate valid and invalid records
+
 bronze_df = spark.read.table("bronze.customers_raw")
 
 # Define validation rules
+
 valid_df = bronze_df.filter(
     (col("customer_id").isNotNull()) &
     (col("email").rlike("^[a-zA-Z0-9._%+-]+@"))
@@ -567,11 +584,13 @@ invalid_df = bronze_df.filter(
 )
 
 # Write valid records to Silver
+
 valid_df.write.mode("append").saveAsTable("silver.customers")
 
 # Write invalid records to quarantine
+
 invalid_df.write.mode("append").saveAsTable("silver.customers_quarantine")
-```text
+```
 
 ## Data Lineage
 
@@ -579,6 +598,7 @@ invalid_df.write.mode("append").saveAsTable("silver.customers_quarantine")
 
 ```python
 # Add lineage tracking columns
+
 def add_lineage(df, source_table, transform_name):
     return (df
         .withColumn("_source_table", lit(source_table))
@@ -586,17 +606,19 @@ def add_lineage(df, source_table, transform_name):
         .withColumn("_transform_timestamp", current_timestamp()))
 
 # Bronze to Silver
+
 bronze_df = spark.read.table("bronze.customers_raw")
 silver_df = clean_customers(bronze_df)
 silver_df = add_lineage(silver_df, "bronze.customers_raw", "clean_customers")
 silver_df.write.mode("append").saveAsTable("silver.customers")
 
 # Silver to Gold
+
 customers = spark.read.table("silver.customers")
 gold_df = create_customer_metrics(customers)
 gold_df = add_lineage(gold_df, "silver.customers", "create_customer_metrics")
 gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
-```text
+```
 
 ## Use Cases
 
@@ -626,7 +648,7 @@ gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
 
 ```python
 .option("mergeSchema", "true")
-```text
+```
 
 ### 2. Duplicate Records in Silver
 
@@ -637,7 +659,7 @@ gold_df.write.mode("overwrite").saveAsTable("gold.customer_metrics")
 ```python
 window = Window.partitionBy("customer_id").orderBy(col("_ingested_at").desc())
 deduped = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
-```text
+```
 
 ### 3. Stale Gold Aggregates
 
@@ -675,3 +697,7 @@ deduped = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
 - [Medallion Architecture](https://docs.databricks.com/lakehouse/medallion.html)
 - [Delta Live Tables](https://docs.databricks.com/delta-live-tables/index.html)
 - [Data Engineering Best Practices](https://docs.databricks.com/lakehouse/data-engineering.html)
+
+---
+
+**[↑ Back to Data Modeling](./README.md) | [Next: Delta Lake Fundamentals](./02-delta-lake-fundamentals.md) →**

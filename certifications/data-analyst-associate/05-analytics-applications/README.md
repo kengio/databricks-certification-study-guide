@@ -20,7 +20,7 @@ flowchart TD
     AA[Analytics Applications] --> Params[Parameters & Dynamic Queries]
     AA --> Share[Sharing & Collaboration]
     AA --> Schedule[Scheduling & Automation]
-```text
+```
 
 ## Section Contents
 

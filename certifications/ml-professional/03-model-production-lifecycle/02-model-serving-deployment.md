@@ -110,6 +110,7 @@ import json
 import requests
 
 # Retrieve credentials from the Databricks notebook context
+
 token = (
     dbutils.notebook.entry_point
     .getDbutils().notebook().getContext()
@@ -124,6 +125,7 @@ headers = {
 }
 
 # dataframe_records: a list of dicts — one dict per row
+
 payload_records = {
     "dataframe_records": [
         {"amount": 250.0, "merchant_category": "online", "hour_of_day": 2},
@@ -141,6 +143,7 @@ for wide schemas:
 
 ```python
 # dataframe_split: column names once, then rows as arrays
+
 payload_split = {
     "dataframe_split": {
         "columns": ["amount", "merchant_category", "hour_of_day"],
@@ -169,6 +172,7 @@ import mlflow.pyfunc
 
 # Load the champion version as a Spark UDF
 # result_type must match the model's output dtype
+
 fraud_udf = mlflow.pyfunc.spark_udf(
     spark,
     model_uri="models:/ml_catalog.fraud_models.fraud_classifier@champion",
@@ -176,6 +180,7 @@ fraud_udf = mlflow.pyfunc.spark_udf(
 )
 
 # Apply UDF to any Spark DataFrame — runs on executors, fully distributed
+
 transactions_df = spark.table("silver.transactions")
 
 scored_df = transactions_df.withColumn(
@@ -184,6 +189,7 @@ scored_df = transactions_df.withColumn(
 )
 
 # Write results back to Delta — partitioning by date for downstream efficiency
+
 (scored_df
     .write
     .format("delta")
@@ -210,6 +216,7 @@ the infrastructure cost of a dedicated REST endpoint.
 import mlflow.pyfunc
 
 # Same UDF creation — works identically in streaming and batch contexts
+
 fraud_udf = mlflow.pyfunc.spark_udf(
     spark,
     model_uri="models:/ml_catalog.fraud_models.fraud_classifier@champion",
@@ -217,6 +224,7 @@ fraud_udf = mlflow.pyfunc.spark_udf(
 )
 
 # Read from a Delta streaming source
+
 streaming_scores = (
     spark.readStream
     .format("delta")
@@ -228,6 +236,7 @@ streaming_scores = (
 )
 
 # Write scored micro-batches to a Delta table
+
 query = (
     streaming_scores
     .writeStream
@@ -276,6 +285,7 @@ class FraudClassifierWithPreprocessing(mlflow.pyfunc.PythonModel):
 
 
 # Paths to pre-saved artifacts that will be bundled with the model
+
 artifacts = {
     "model_path": "/local/model.pkl",
     "scaler_path": "/local/scaler.pkl",
@@ -313,6 +323,7 @@ from databricks.sdk.service.serving import (
 )
 
 # Update an existing endpoint to split traffic 90/10
+
 client.serving_endpoints.update_config(
     name="fraud-classifier-endpoint",
     config=EndpointCoreConfigInput(
@@ -441,10 +452,12 @@ unfairly skew latency comparisons.
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Model Serving and Deployment to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Serving and Deployment prior to deployment.
 
@@ -456,4 +469,4 @@ unfairly skew latency comparisons.
 
 ---
 
-**[← Back to Model Production Lifecycle](./README.md)**
+**[← Previous: Model Versioning and Registry](./01-model-versioning-registry.md) | [↑ Back to Model Production Lifecycle](./README.md) | [Next: A/B Testing and Canary Deployments](./03-ab-testing-canary.md) →**

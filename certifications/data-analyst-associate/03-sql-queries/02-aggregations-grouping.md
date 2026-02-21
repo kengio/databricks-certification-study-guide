@@ -31,7 +31,7 @@ flowchart TD
 
     Agg --> String["String"]
     String --> Str1["COLLECT_LIST<br/>COLLECT_SET"]
-```text
+```
 
 ### COUNT Functions
 
@@ -54,7 +54,7 @@ SELECT
     COUNT(customer_id) as rows_with_customer,
     COUNT(DISTINCT customer_id) as unique_customers
 FROM orders;
-```text
+```
 
 ### SUM and AVG
 
@@ -75,7 +75,7 @@ SELECT
     AVG(amount) as avg_order_value
 FROM orders
 GROUP BY category;
-```text
+```
 
 ### String Aggregation
 
@@ -92,7 +92,7 @@ GROUP BY customer_id;
 -- customer_id=1:
 --   products: ["Widget", "Gadget", "Widget"]
 --   categories: ["Electronics", "Hardware"]
-```text
+```
 
 ### Statistical Functions
 
@@ -104,7 +104,7 @@ SELECT
     PERCENTILE(price, 0.5) as median_price,  -- 50th percentile
     PERCENTILE(price, 0.95) as p95_price     -- 95th percentile
 FROM products;
-```text
+```
 
 ## GROUP BY Basics
 
@@ -125,7 +125,7 @@ GROUP BY region;
 -- South         | 180,000     | $9,000,000
 -- East          | 350,000     | $17,500,000
 -- West          | 220,000     | $11,000,000
-```text
+```
 
 ### Multiple GROUP BY Columns
 
@@ -145,7 +145,7 @@ ORDER BY revenue DESC;
 -- Enables analysis like:
 -- North / Electronics / 2024: 50,000 orders, $5M revenue
 -- North / Electronics / 2023: 45,000 orders, $4.5M revenue
-```text
+```
 
 ### GROUP BY with HAVING
 
@@ -162,7 +162,7 @@ HAVING COUNT(*) > 100 AND SUM(amount) > 1000000;
 -- Difference:
 -- WHERE: Filters rows BEFORE grouping
 -- HAVING: Filters groups AFTER grouping
-```text
+```
 
 ### WHERE vs HAVING
 
@@ -182,7 +182,7 @@ HAVING COUNT(*) > 100;      -- Filter groups
 
 -- ✅ Correct: Use HAVING for aggregates
 -- HAVING COUNT(*) > 100
-```text
+```
 
 ## Advanced Grouping
 
@@ -202,7 +202,7 @@ GROUP BY ALL;
 
 -- Equivalent to:
 -- GROUP BY region, category, status
-```text
+```
 
 ### ROLLUP (Hierarchical Totals)
 
@@ -228,7 +228,7 @@ ORDER BY year DESC, quarter DESC, month DESC;
 -- 2024, Q1, NULL: 105,000 orders, $5.25M (Q1 subtotal)
 -- 2024, NULL, NULL: 250,000 orders, $12.5M (2024 total)
 -- NULL, NULL, NULL: 1,000,000 orders, $50M (grand total)
-```text
+```
 
 ### CUBE (All Combinations)
 
@@ -255,7 +255,7 @@ ORDER BY region, category, status;
 -- GRAND TOTAL
 
 -- 3 dimensions = 2^3 = 8 aggregation levels
-```text
+```
 
 ### GROUPING_ID Function
 
@@ -278,7 +278,7 @@ GROUP BY ROLLUP(region, category);
 
 -- Filter to show only subtotals
 WHERE GROUPING_ID(region, category) > 0;
-```text
+```
 
 ## Filter Order Matters
 
@@ -292,7 +292,7 @@ WHERE GROUPING_ID(region, category) > 0;
 5. SELECT - Project columns
 6. ORDER BY - Sort
 7. LIMIT - Return top N
-```text
+```
 
 ### Example: Correct Order
 
@@ -316,7 +316,7 @@ FROM orders
 GROUP BY region                      -- 3. Group ALL rows
 HAVING status = 'completed'          -- Error: Use WHERE!
 ORDER BY revenue DESC;
-```text
+```
 
 ## Common Aggregation Patterns
 
@@ -336,7 +336,7 @@ WITH ranked_customers AS (
 SELECT *
 FROM ranked_customers
 WHERE rank <= 3;
-```text
+```
 
 ### Cohort Analysis
 
@@ -350,7 +350,7 @@ SELECT
 FROM users
 GROUP BY DATE_TRUNC('month', signup_date)
 ORDER BY cohort;
-```text
+```
 
 ### Running Totals with GROUP BY
 
@@ -365,7 +365,7 @@ SELECT
 FROM orders
 GROUP BY DATE_TRUNC('month', order_date)
 ORDER BY month;
-```text
+```
 
 ## NULL Handling in Aggregations
 
@@ -384,7 +384,7 @@ SELECT
     COUNT(CASE WHEN phone IS NOT NULL THEN 1 END) as with_phone,
     COUNT(CASE WHEN phone IS NULL THEN 1 END) as without_phone
 FROM users;
-```text
+```
 
 ### NULL in GROUP BY
 
@@ -400,7 +400,7 @@ GROUP BY region;
 -- North: 250,000
 -- South: 180,000
 -- NULL: 5,000 (records with no region)
-```text
+```
 
 ## Performance Optimization
 
@@ -427,7 +427,7 @@ SELECT
 FROM customers c
 LEFT JOIN order_counts oc ON c.customer_id = oc.customer_id
 GROUP BY c.region;
-```text
+```
 
 ## Key Exam Concepts
 
@@ -458,10 +458,6 @@ GROUP BY c.region;
 
 - **A**: ROLLUP includes hierarchical subtotals and grand total
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Aggregations & Grouping Implementation**: Incorporating Aggregations & Grouping principles to build scalable and maintainable solutions in Databricks environments.
@@ -470,10 +466,15 @@ GROUP BY c.region;
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Aggregations & Grouping do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Aggregations & Grouping to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Aggregations & Grouping to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Aggregations & Grouping prior to deployment.
 
+---
+
+**[← Previous: Joins & Multi-table Operations](./01-joins.md) | [↑ Back to Advanced SQL Queries](./README.md) | [Next: Window Functions & Analytics](./03-window-functions.md) →**

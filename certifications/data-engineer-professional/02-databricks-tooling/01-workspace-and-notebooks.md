@@ -29,7 +29,7 @@ flowchart TB
     end
 
     Workspace --> Notebook
-```text
+```
 
 ## Workspace Organization
 
@@ -47,7 +47,7 @@ flowchart TB
 ├── Repos/                          # Git-connected repositories
 │   └── project-name/
 └── Applications/                   # Databricks Apps (if enabled)
-```text
+```
 
 ### Workspace vs DBFS Paths
 
@@ -59,15 +59,18 @@ flowchart TB
 
 ```python
 # Read file from workspace
+
 with open("/Workspace/Users/user@company.com/config.json", "r") as f:
     config = json.load(f)
 
 # Read file from DBFS
+
 df = spark.read.format("csv").load("dbfs:/data/input.csv")
 
 # Read from Unity Catalog Volume
+
 df = spark.read.format("parquet").load("/Volumes/main/default/raw_data/")
-```text
+```
 
 ## Notebook Languages
 
@@ -88,20 +91,21 @@ Magic commands allow switching languages within a notebook.
 
 ```python
 # Default cell runs in notebook's default language
+
 df = spark.read.table("my_table")
-```text
+```
 
 ```sql
 %sql
 -- Switch to SQL for this cell
 SELECT * FROM my_table LIMIT 10
-```text
+```
 
 ```scala
 %scala
 // Switch to Scala for this cell
 val df = spark.read.table("my_table")
-```text
+```
 
 ### Complete Magic Commands Reference
 
@@ -123,20 +127,23 @@ val df = spark.read.table("my_table")
 
 ```python
 # In /Workspace/Users/user/utils/helpers
+
 def clean_data(df):
     return df.dropna().dropDuplicates()
 
 ENVIRONMENT = "production"
-```text
+```
 
 ```python
 # In main notebook
+
 %run ./utils/helpers
 
 # Now clean_data() and ENVIRONMENT are available
+
 cleaned_df = clean_data(raw_df)
 print(ENVIRONMENT)  # "production"
-```text
+```
 
 **%run Characteristics:**
 
@@ -150,12 +157,14 @@ print(ENVIRONMENT)  # "production"
 
 ```python
 # Pass parameters via widgets
+
 %run ./etl_pipeline
 
 # In etl_pipeline notebook:
 # dbutils.widgets.text("date", "2024-01-01")
 # date = dbutils.widgets.get("date")
-```text
+
+```
 
 ### The %fs Command
 
@@ -169,7 +178,7 @@ print(ENVIRONMENT)  # "production"
 %fs cp /source/file.csv /dest/file.csv
 
 %fs rm /data/temp/ --recurse
-```text
+```
 
 | Operation | Command | Description |
 | :--- | :--- | :--- |
@@ -198,45 +207,53 @@ flowchart LR
     Dropdown --> D1["Single selection, fixed options"]
     Combobox --> C1["Single selection, editable"]
     Multiselect --> M1["Multiple selections"]
-```text
+```
 
 ### Creating Widgets
 
 ```python
 # Text widget - free-form input
+
 dbutils.widgets.text("start_date", "2024-01-01", "Start Date")
 
 # Dropdown widget - single selection from list
+
 dbutils.widgets.dropdown("environment", "dev", ["dev", "staging", "prod"], "Environment")
 
 # Combobox widget - editable dropdown
+
 dbutils.widgets.combobox("table_name", "customers", ["customers", "orders", "products"], "Table")
 
 # Multiselect widget - multiple selections
+
 dbutils.widgets.multiselect("regions", "US", ["US", "EU", "APAC"], "Regions")
-```text
+```
 
 ### Getting Widget Values
 
 ```python
 # Get single value
+
 start_date = dbutils.widgets.get("start_date")
 environment = dbutils.widgets.get("environment")
 
 # Get multiselect values (returns comma-separated string)
+
 regions = dbutils.widgets.get("regions")  # "US,EU"
 region_list = regions.split(",")  # ["US", "EU"]
-```text
+```
 
 ### Managing Widgets
 
 ```python
 # Remove a specific widget
+
 dbutils.widgets.remove("start_date")
 
 # Remove all widgets from notebook
+
 dbutils.widgets.removeAll()
-```text
+```
 
 ### Widget Scope and Jobs
 
@@ -247,6 +264,7 @@ dbutils.widgets.removeAll()
 | %run | Widgets inherited from parent notebook |
 
 ```python
+
 # When running as job, parameters override widget defaults
 # Job configuration:
 # {
@@ -258,7 +276,8 @@ dbutils.widgets.removeAll()
 #     }
 #   }
 # }
-```text
+
+```
 
 ### SQL Widgets
 
@@ -273,7 +292,7 @@ CREATE WIDGET DROPDOWN env DEFAULT 'dev' CHOICES ['dev', 'staging', 'prod'];
 SELECT * FROM events
 WHERE event_date >= '${start_date}'
 AND environment = '${env}';
-```text
+```
 
 ```sql
 -- Get all widget values
@@ -281,7 +300,7 @@ SELECT getArgument('start_date') AS start_date;
 
 -- Remove widgets
 REMOVE WIDGET start_date;
-```text
+```
 
 ## dbutils (Databricks Utilities)
 
@@ -298,17 +317,19 @@ flowchart TB
     dbutils --> jobs["jobs"]
     dbutils --> library["library"]
     dbutils --> credentials["credentials"]
-```text
+```
 
 ### dbutils.fs - File System Operations
 
 ```python
 # List files
+
 files = dbutils.fs.ls("/data/bronze/")
 for file in files:
     print(f"{file.name} - {file.size} bytes")
 
 # Check if path exists
+
 def path_exists(path):
     try:
         dbutils.fs.ls(path)
@@ -317,25 +338,31 @@ def path_exists(path):
         return False
 
 # Copy files
+
 dbutils.fs.cp("/source/data.csv", "/dest/data.csv")
 dbutils.fs.cp("/source/folder/", "/dest/folder/", recurse=True)
 
 # Move files
+
 dbutils.fs.mv("/old/path.csv", "/new/path.csv")
 
 # Remove files
+
 dbutils.fs.rm("/data/temp.csv")
 dbutils.fs.rm("/data/temp_folder/", recurse=True)
 
 # Create directory
+
 dbutils.fs.mkdirs("/data/new_folder/")
 
 # Read file head (first 64KB)
+
 content = dbutils.fs.head("/data/sample.txt", maxBytes=1000)
 
 # Write text file (not recommended for large data)
+
 dbutils.fs.put("/data/output.txt", "Hello World", overwrite=True)
-```text
+```
 
 ### File System Operations Comparison
 
@@ -352,22 +379,26 @@ dbutils.fs.put("/data/output.txt", "Hello World", overwrite=True)
 
 ```python
 # List available secret scopes
+
 scopes = dbutils.secrets.listScopes()
 for scope in scopes:
     print(scope.name)
 
 # List secrets in a scope (names only, not values)
+
 secrets = dbutils.secrets.list("my-scope")
 for secret in secrets:
     print(secret.key)
 
 # Get secret value
+
 password = dbutils.secrets.get(scope="my-scope", key="db-password")
 api_key = dbutils.secrets.get(scope="azure-kv", key="api-key")
 
 # Secrets are redacted in logs
+
 print(password)  # Prints [REDACTED] in notebook output
-```text
+```
 
 **Secret Scope Types:**
 
@@ -381,6 +412,7 @@ print(password)  # Prints [REDACTED] in notebook output
 
 ```python
 # Run another notebook and get return value
+
 result = dbutils.notebook.run(
     path="/Workspace/Users/user/etl/process_data",
     timeout_seconds=3600,
@@ -389,10 +421,12 @@ result = dbutils.notebook.run(
 print(f"Notebook returned: {result}")
 
 # Exit notebook with return value
+
 dbutils.notebook.exit("Success: Processed 1000 rows")
 
 # In calling notebook, result contains the exit value
-```text
+
+```
 
 **dbutils.notebook.run vs %run:**
 
@@ -418,6 +452,7 @@ def run_notebook(params):
     )
 
 # Run notebooks in parallel
+
 regions = [
     {"region": "US", "date": "2024-01-01"},
     {"region": "EU", "date": "2024-01-01"},
@@ -429,7 +464,7 @@ with ThreadPoolExecutor(max_workers=3) as executor:
 
 for result in results:
     print(result)
-```text
+```
 
 ### dbutils.jobs - Job Task Values
 
@@ -437,12 +472,14 @@ Task values enable passing data between tasks in a job.
 
 ```python
 # Set task value (in upstream task)
+
 dbutils.jobs.taskValues.set(key="row_count", value=1000)
 dbutils.jobs.taskValues.set(key="status", value="success")
 dbutils.jobs.taskValues.set(key="metrics", value={"processed": 1000, "failed": 5})
 
 # Get task value (in downstream task)
 # Specify the task name that set the value
+
 row_count = dbutils.jobs.taskValues.get(
     taskKey="extract_task",
     key="row_count",
@@ -450,12 +487,13 @@ row_count = dbutils.jobs.taskValues.get(
 )
 
 # Get complex value
+
 metrics = dbutils.jobs.taskValues.get(
     taskKey="extract_task",
     key="metrics",
     default={}
 )
-```text
+```
 
 ```mermaid
 sequenceDiagram
@@ -474,17 +512,19 @@ sequenceDiagram
 
     Load->>Load: taskValues.get("transform", "status")
     Load->>Load: Final processing
-```text
+```
 
 ### dbutils.library - Library Management
 
 ```python
 # Restart Python interpreter (clears all variables)
+
 dbutils.library.restartPython()
 
 # Install library (deprecated - use %pip instead)
 # dbutils.library.install("pypi-package")  # Not recommended
-```text
+
+```
 
 **Best Practice:** Use `%pip` for package installation:
 
@@ -492,8 +532,9 @@ dbutils.library.restartPython()
 %pip install requests==2.28.0 pandas==2.0.0
 
 # Restart Python after installing
+
 dbutils.library.restartPython()
-```text
+```
 
 ## Notebook Permissions
 
@@ -510,6 +551,7 @@ dbutils.library.restartPython()
 ### Setting Permissions
 
 ```python
+
 # Permissions are managed via UI or REST API
 # Example REST API call to set permissions:
 # POST /api/2.0/permissions/notebooks/{notebook_id}
@@ -519,7 +561,8 @@ dbutils.library.restartPython()
 #     {"group_name": "data-engineers", "permission_level": "CAN_RUN"}
 #   ]
 # }
-```text
+
+```
 
 ## Notebook Formats
 
@@ -536,14 +579,17 @@ dbutils.library.restartPython()
 
 ```bash
 # Export notebook as source file
+
 databricks workspace export /Users/user/notebook /local/path/notebook.py --format SOURCE
 
 # Export as DBC archive
+
 databricks workspace export /Users/user/notebook /local/path/notebook.dbc --format DBC
 
 # Import notebook
+
 databricks workspace import /local/path/notebook.py /Users/user/notebook --language PYTHON
-```text
+```
 
 ## Compute Attachment
 
@@ -555,7 +601,7 @@ flowchart LR
     Attach --> AllPurpose[All-Purpose Cluster]
     Attach --> Serverless[Serverless Compute]
     Attach --> SQLWarehouse[SQL Warehouse]
-```text
+```
 
 | Compute Type | Languages | Best For |
 |--------------|-----------|----------|
@@ -599,14 +645,16 @@ flowchart TD
     Extract -.-> Utils
     Transform -.-> Utils
     Load -.-> Utils
-```text
+```
 
 ```python
 # Main orchestrator notebook
+
 %run ./config/settings
 %run ./utils/helpers
 
 # Sequential execution with error handling
+
 try:
     result = dbutils.notebook.run("./etl/extract", 3600, {"date": process_date})
     print(f"Extract: {result}")
@@ -622,7 +670,7 @@ except Exception as e:
     dbutils.notebook.exit(f"FAILED: {e}")
 
 dbutils.notebook.exit("SUCCESS")
-```text
+```
 
 ## Common Issues & Errors
 
@@ -632,8 +680,9 @@ dbutils.notebook.exit("SUCCESS")
 
 ```python
 # Error: InputWidgetNotDefined: No widget named 'missing_widget' defined
+
 value = dbutils.widgets.get("missing_widget")
-```text
+```
 
 **Fix:** Create widget first or use try-except:
 
@@ -642,7 +691,7 @@ try:
     value = dbutils.widgets.get("missing_widget")
 except Exception:
     value = "default_value"
-```text
+```
 
 ### 2. %run Path Not Found
 
@@ -650,14 +699,15 @@ except Exception:
 
 ```python
 # Error: Notebook not found: ./utils/helpers
+
 %run ./utils/helpers
-```text
+```
 
 **Fix:** Verify path is relative to current notebook location or use absolute path:
 
 ```python
 %run /Workspace/Users/user/project/utils/helpers
-```text
+```
 
 ### 3. dbutils.notebook.run Timeout
 
@@ -665,14 +715,15 @@ except Exception:
 
 ```python
 # Error: Run timed out after 3600 seconds
+
 result = dbutils.notebook.run("/path/to/slow_notebook", timeout_seconds=3600)
-```text
+```
 
 **Fix:** Increase timeout or optimize notebook:
 
 ```python
 result = dbutils.notebook.run("/path/to/notebook", timeout_seconds=7200)
-```text
+```
 
 ### 4. Secret Scope Access Denied
 
@@ -680,8 +731,9 @@ result = dbutils.notebook.run("/path/to/notebook", timeout_seconds=7200)
 
 ```python
 # Error: User does not have READ permission on secret scope
+
 secret = dbutils.secrets.get("restricted-scope", "key")
-```text
+```
 
 **Fix:** Request access to secret scope from admin.
 
@@ -691,30 +743,13 @@ secret = dbutils.secrets.get("restricted-scope", "key")
 
 ```python
 # Returns default if task/key not found
+
 value = dbutils.jobs.taskValues.get(
     taskKey="wrong_task_name",
     key="count",
     default=-1  # Always provide a default
 )
-```text
-
-## Use Cases
-
-- **Interactive Development**: Data exploration and initial pipeline drafting using variables, widgets, and multi-language support.
-- **Workflow Orchestration**: Parameterizing notebooks via widgets and passing data via task values in a Job cluster.
-- **Collaboration**: Co-authoring code, leaving comments, and viewing revision history directly in the Workspace.
-
-## Common Issues & Errors
-
-**1. Widget Value Not Updating**
-- **Error**: Values read from `dbutils.widgets.get()` seem stale or missing.
-- **Issue**: Using a widget before defining it, or job parameters not matching widget names.
-- **Fix**: Ensure `dbutils.widgets.text()` is called before `dbutils.widgets.get()`, and verify parameter keys in Job definitions match exactly.
-
-**2. %run vs dbutils.notebook.run Isolation Context**
-- **Error**: Variables from another notebook are undefined.
-- **Issue**: Expecting isolated execution from `%run` or shared context from `dbutils.notebook.run`.
-- **Fix**: Remember `%run` executes in the *same* context (sharing variables), whereas `dbutils.notebook.run` executes in an *isolated* context and only returns a single string.
+```
 
 ## Exam Tips
 
@@ -732,7 +767,7 @@ value = dbutils.jobs.taskValues.get(
 ## Related Topics
 
 - [Databricks CLI](02-databricks-cli.md) - Command line management
-- [REST API](03-rest-api.md) - Programmatic workspace access
+- [REST API](03-rest-api-part1.md) - Programmatic workspace access
 - [Secret Management](../04-security-governance/04-secret-management.md) - Secure credential storage
 
 ## Official Documentation
@@ -741,3 +776,7 @@ value = dbutils.jobs.taskValues.get(
 - [dbutils Reference](https://docs.databricks.com/dev-tools/databricks-utils.html)
 - [Notebook Widgets](https://docs.databricks.com/notebooks/widgets.html)
 - [Notebook Workflows](https://docs.databricks.com/notebooks/notebook-workflows.html)
+
+---
+
+**[↑ Back to Databricks Tooling](./README.md) | [Next: Databricks CLI](./02-databricks-cli.md) →**

@@ -369,4 +369,4 @@ Explain how privilege inheritance works in Unity Catalog. If I `GRANT SELECT ON 
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Streaming & CDC](05-streaming-cdc.md) | [Next: File Formats & Spark Internals](07-file-formats-spark.md)
+**[← Previous: Interview Questions — Streaming & CDC](./05-streaming-cdc.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — File Formats & Spark Internals](./07-file-formats-spark.md) →**

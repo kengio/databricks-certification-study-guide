@@ -27,7 +27,7 @@ flowchart TD
         I3 --> I4[Merge/Append]
         I4 --> I5[Update Progress]
     end
-```text
+```
 
 ## Full Load vs Incremental Load
 
@@ -67,7 +67,7 @@ flowchart TD
     Tables --> CDC[External CDC]
 
     WM --> HWM[High-Water Mark Pattern]
-```text
+```
 
 ### Strategy Comparison
 
@@ -99,12 +99,13 @@ sequenceDiagram
 
     Pipeline->>Target: Write records
     Pipeline->>Control: Update watermark to max(updated_at)
-```text
+```
 
 ### Implementation
 
 ```python
 # Get last processed watermark from control table
+
 last_watermark = spark.sql("""
     SELECT MAX(watermark_value) as watermark
     FROM control.incremental_tracking
@@ -112,10 +113,12 @@ last_watermark = spark.sql("""
 """).collect()[0]["watermark"]
 
 # Handle first run (no watermark)
+
 if last_watermark is None:
     last_watermark = "1900-01-01"
 
 # Read only new records
+
 new_records = spark.sql(f"""
     SELECT *
     FROM source.orders
@@ -123,19 +126,21 @@ new_records = spark.sql(f"""
 """)
 
 # Process and write
+
 (new_records.write
     .format("delta")
     .mode("append")
     .save("/path/to/target"))
 
 # Update watermark
+
 new_max = new_records.agg(max("updated_at")).collect()[0][0]
 if new_max:
     spark.sql(f"""
         INSERT INTO control.incremental_tracking
         VALUES ('orders', '{new_max}', current_timestamp())
     """)
-```text
+```
 
 ### Control Table Schema
 
@@ -145,7 +150,7 @@ CREATE TABLE control.incremental_tracking (
     watermark_value TIMESTAMP,
     last_updated TIMESTAMP
 ) USING DELTA;
-```text
+```
 
 ### SQL-Based Implementation
 
@@ -161,7 +166,7 @@ SELECT o.*
 FROM source.orders o
 CROSS JOIN watermark w
 WHERE o.updated_at > w.wm;
-```text
+```
 
 ## Checkpoint Management
 
@@ -173,7 +178,7 @@ Checkpoints track streaming progress for exactly-once processing.
 query = (df.writeStream
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```text
+```
 
 ### Checkpoint Structure
 
@@ -194,13 +199,15 @@ When a streaming query restarts:
 
 ```python
 # Streaming query automatically recovers from checkpoint
+
 query = (df.writeStream
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
 
 # After failure, restart the same query
 # It will resume from last checkpoint
-```text
+
+```
 
 ### When to Reset Checkpoints
 
@@ -214,8 +221,9 @@ query = (df.writeStream
 
 ```python
 # To reprocess from beginning, delete checkpoint
+
 dbutils.fs.rm("/path/to/checkpoint", recurse=True)
-```text
+```
 
 ## Delta Lake as Incremental Source
 
@@ -223,22 +231,25 @@ dbutils.fs.rm("/path/to/checkpoint", recurse=True)
 
 ```python
 # Basic streaming read
+
 df = (spark.readStream
     .format("delta")
     .load("/path/to/delta/table"))
 
 # Start from specific version
+
 df = (spark.readStream
     .format("delta")
     .option("startingVersion", 10)
     .load("/path/to/delta/table"))
 
 # Start from timestamp
+
 df = (spark.readStream
     .format("delta")
     .option("startingTimestamp", "2024-01-01")
     .load("/path/to/delta/table"))
-```text
+```
 
 ### Handling Updates and Deletes
 
@@ -246,17 +257,19 @@ By default, streaming from Delta fails if source has updates or deletes.
 
 ```python
 # Skip deletes
+
 df = (spark.readStream
     .format("delta")
     .option("ignoreDeletes", "true")
     .load("/path/to/table"))
 
 # Skip updates and deletes
+
 df = (spark.readStream
     .format("delta")
     .option("ignoreChanges", "true")
     .load("/path/to/table"))
-```text
+```
 
 | Option | Behavior |
 |--------|----------|
@@ -277,17 +290,19 @@ Tables with Deletion Vectors enabled mark rows as deleted without rewriting file
 
 ```python
 # Limit files per trigger
+
 df = (spark.readStream
     .format("delta")
     .option("maxFilesPerTrigger", 100)
     .load("/path/to/table"))
 
 # Limit bytes per trigger
+
 df = (spark.readStream
     .format("delta")
     .option("maxBytesPerTrigger", "10g")
     .load("/path/to/table"))
-```text
+```
 
 ## MERGE for Incremental Updates
 
@@ -299,6 +314,7 @@ MERGE combines insert, update, and delete in one operation.
 from delta.tables import DeltaTable
 
 # Read incremental changes
+
 changes = spark.sql(f"""
     SELECT *
     FROM source_table
@@ -306,6 +322,7 @@ changes = spark.sql(f"""
 """)
 
 # MERGE into target
+
 target = DeltaTable.forPath(spark, "/path/to/target")
 
 target.alias("t").merge(
@@ -314,7 +331,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```text
+```
 
 ### MERGE with Delete Handling
 
@@ -329,7 +346,7 @@ target.alias("t").merge(
 ).whenNotMatchedInsertAll(
     condition="s.is_deleted = false"
 ).execute()
-```text
+```
 
 ## Batch Incremental Patterns
 
@@ -350,19 +367,22 @@ def process_incremental(table_name, source_query, target_path):
         # Update watermark
         new_watermark = df.agg(max("updated_at")).collect()[0][0]
         update_watermark(table_name, new_watermark)
-```text
+```
 
 ### Pattern 2: Version-Based
 
 ```python
 # Track processed Delta version
+
 last_version = get_last_processed_version("orders")
 
 # Get current version
+
 current_version = (DeltaTable.forPath(spark, source_path).history(1)
     .select("version").collect()[0][0])
 
 # Read changes between versions
+
 changes = (spark.read.format("delta")
     .option("versionAsOf", current_version)
     .load(source_path))
@@ -371,8 +391,9 @@ changes = (spark.read.format("delta")
 # ... process changes ...
 
 # Update tracked version
+
 update_processed_version("orders", current_version)
-```text
+```
 
 ## availableNow Trigger
 
@@ -384,6 +405,7 @@ Ideal for scheduled incremental jobs that need streaming semantics (checkpoints,
 
 ```python
 # Process all available data, then stop
+
 query = (df.writeStream
     .format("delta")
     .trigger(availableNow=True)
@@ -391,8 +413,9 @@ query = (df.writeStream
     .start("/output"))
 
 # Wait for completion
+
 query.awaitTermination()
-```text
+```
 
 ### Comparison with once=True
 
@@ -407,6 +430,7 @@ query.awaitTermination()
 
 ```python
 # Run daily via Databricks Workflows
+
 def daily_incremental_job():
     # Read stream from source
     source = (spark.readStream
@@ -425,7 +449,7 @@ def daily_incremental_job():
         .start("/target/path"))
 
     query.awaitTermination()
-```text
+```
 
 ## Idempotent Incremental Processing
 
@@ -446,11 +470,12 @@ def idempotent_incremental(batch_df, batch_id):
     ).execute()
 
 # Use with foreachBatch
+
 query = (source_stream.writeStream
     .foreachBatch(idempotent_incremental)
     .option("checkpointLocation", "/checkpoint")
     .start())
-```text
+```
 
 ### Deduplication Before Write
 
@@ -461,7 +486,7 @@ def process_with_dedup(batch_df, batch_id):
 
     # Then MERGE
     # ...
-```text
+```
 
 ## Monitoring Incremental Jobs
 
@@ -469,6 +494,7 @@ def process_with_dedup(batch_df, batch_id):
 
 ```python
 # Create metrics table
+
 spark.sql("""
     CREATE TABLE IF NOT EXISTS monitoring.incremental_metrics (
         job_name STRING,
@@ -481,18 +507,20 @@ spark.sql("""
 """)
 
 # Log metrics after each run
+
 def log_metrics(job_name, count, duration, wm_before, wm_after):
     spark.sql(f"""
         INSERT INTO monitoring.incremental_metrics
         VALUES ('{job_name}', current_timestamp(), {count},
                 {duration}, '{wm_before}', '{wm_after}')
     """)
-```text
+```
 
 ### Alerting on Lag
 
 ```python
 # Check for processing lag
+
 lag_check = spark.sql("""
     SELECT
         table_name,
@@ -505,7 +533,7 @@ lag_check = spark.sql("""
 if lag_check.count() > 0:
     # Send alert
     pass
-```text
+```
 
 ## Use Cases
 
@@ -571,13 +599,17 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 ## Related Topics
 
-- [Structured Streaming](03-structured-streaming.md) - Streaming fundamentals
+- [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals
 - [Auto Loader](04-auto-loader.md) - File-based incremental
-- [Change Data Capture](05-change-data-capture.md) - CDF for incremental
-- [Delta Lake Operations](06-delta-lake-operations.md) - MERGE patterns
+- [Change Data Capture](05-change-data-capture-part1.md) - CDF for incremental
+- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE patterns
 
 ## Official Documentation
 
 - [Delta Lake Streaming](https://docs.databricks.com/delta/delta-streaming.html)
 - [Structured Streaming](https://docs.databricks.com/structured-streaming/index.html)
 - [availableNow Trigger](https://docs.databricks.com/structured-streaming/triggers.html)
+
+---
+
+**[← Previous: Batch ETL Pipelines — Part 2](./01-batch-etl-pipelines-part2.md) | [↑ Back to Data Processing](./README.md) | [Next: Structured Streaming — Part 1](./03-structured-streaming-part1.md) →**

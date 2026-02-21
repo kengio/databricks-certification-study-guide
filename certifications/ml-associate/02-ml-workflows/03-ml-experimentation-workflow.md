@@ -47,13 +47,14 @@ flowchart TB
     style Start fill:#c8e6c9
     style 7 fill:#ffccbc
     style Monitor fill:#ffe0b2
-```text
+```
 
 ## Phase 1: Problem Definition
 
 ### **Key Decisions**
 
 ```python
+
 # Problem specification checklist
 
 problem_spec = {
@@ -76,7 +77,8 @@ problem_spec = {
 # Determine whether precision or recall is critical
 # Churned: False negatives (missing churn) are expensive
 # → Prioritize RECALL (catch churners)
-```text
+
+```
 
 ## Phase 2: Data Preparation
 
@@ -88,19 +90,23 @@ import pandas as pd
 from pyspark.sql import functions as F
 
 # 1. LOAD DATA
+
 df = spark.read.table("ml_catalog.raw.customer_data")
 
 # 2. DATA EXPLORATION
+
 print(f"Shape: {df.count()} rows")
 print(f"Columns: {len(df.columns)}")
 print(f"Missing: {df.select([F.count(F.when(F.col(c).isNull(), c)).alias(c) for c in df.columns]).collect()}")
 
 # 3. DATA VALIDATION
 # Check distributions, ranges, missing patterns
+
 display(df.describe())
 
 # 4. FEATURE CREATION
 # Raw features → engineered features
+
 df_engineered = (df
     .withColumn("tenure_days", F.datediff(F.current_date(), F.col("signup_date")))
     .withColumn("avg_monthly_usage", F.col("total_usage") / F.greatest(F.col("tenure_days"), 1))
@@ -108,13 +114,15 @@ df_engineered = (df
 )
 
 # 5. TRAIN/VAL/TEST SPLIT
+
 train, val, test = df_engineered.randomSplit([0.6, 0.2, 0.2], seed=42)
 
 # 6. SAVE FOR ML
+
 train.write.mode("overwrite").saveAsTable("ml_catalog.ml_ready.train_data")
 val.write.mode("overwrite").saveAsTable("ml_catalog.ml_ready.val_data")
 test.write.mode("overwrite").saveAsTable("ml_catalog.ml_ready.test_data")
-```text
+```
 
 ## Phase 3: Baseline Model
 
@@ -129,10 +137,12 @@ from sklearn.metrics import auc, roc, f1_score
 import pandas as pd
 
 # Load data
+
 train_df = spark.read.table("ml_catalog.ml_ready.train_data").toPandas()
 val_df = spark.read.table("ml_catalog.ml_ready.val_data").toPandas()
 
 # Create baseline experiment
+
 mlflow.set_experiment("/Projects/ChurnModel/Development")
 
 with mlflow.start_run(run_name="baseline_rf_default"):
@@ -170,7 +180,7 @@ with mlflow.start_run(run_name="baseline_rf_default"):
 
 print(f"Baseline AUC: {auc_score:.3f}")
 print(f"Baseline F1: {f1:.3f}")
-```text
+```
 
 ## Phase 4: Experimentation Cycle
 
@@ -186,6 +196,7 @@ client = MlflowClient()
 exp = mlflow.get_experiment_by_name("/Projects/ChurnModel/Development")
 
 # EXPERIMENT 1: Feature Engineering
+
 print("=== EXPERIMENT 1: Feature Engineering ===")
 mlflow.set_experiment("/Projects/ChurnModel/Development")
 
@@ -222,13 +233,14 @@ for feature_name, features in feature_sets.items():
 
 best_features = max(results, key=results.get)
 print(f"\n✓ Best feature set: {best_features} with AUC {results[best_features]:.4f}")
-```text
+```
 
 ### **Hyperparameter Tuning Example**
 
 ```python
 %python
 # EXPERIMENT 2: Hyperparameter Optimization
+
 print("\n=== EXPERIMENT 2: Hyperparameter Tuning ===")
 
 param_grid = {
@@ -276,7 +288,7 @@ for n_est in param_grid["n_estimators"]:
                     print(f"New best: {best_params} → AUC = {auc_score:.4f}")
 
 print(f"\n✓ Best hyperparameters: {best_params}")
-```text
+```
 
 ## Phase 5: Cross-Validation
 
@@ -289,9 +301,11 @@ from sklearn.model_selection import cross_validate, KFold
 print("=== PHASE 5: Cross-Validation ===")
 
 # Use best parameters from experimentation
+
 best_model = RandomForestClassifier(**best_params, random_state=42)
 
 # 5-fold cross-validation
+
 cv = KFold(n_splits=5, shuffle=True, random_state=42)
 scoring_metrics = ['roc_auc', 'f1', 'precision', 'recall']
 
@@ -299,11 +313,13 @@ cv_results = cross_validate(best_model, X_train_scaled, y_train,
                              cv=cv, scoring=scoring_metrics)
 
 # Print results
+
 for metric in scoring_metrics:
     scores = cv_results[f'test_{metric}']
     print(f"{metric:12s}: {scores.mean():.4f} (+/- {scores.std():.4f})")
 
 # Log to MLflow
+
 with mlflow.start_run(run_name="cross_validation"):
     mlflow.log_params(best_params)
     for metric in scoring_metrics:
@@ -311,7 +327,7 @@ with mlflow.start_run(run_name="cross_validation"):
         mlflow.log_metric(f"cv_mean_{metric}", scores.mean())
         mlflow.log_metric(f"cv_std_{metric}", scores.std())
     mlflow.set_tag("phase", "cross_validation")
-```text
+```
 
 ## Phase 6: Test Set Evaluation
 
@@ -327,10 +343,12 @@ y_test = test_df["churned"]
 X_test_scaled = scaler.transform(X_test)
 
 # Final model on combined train+val
+
 final_model = RandomForestClassifier(**best_params, random_state=42)
 final_model.fit(X_train_scaled, y_train)
 
 # Test set performance
+
 y_test_pred = final_model.predict(X_test_scaled)
 y_test_pred_proba = final_model.predict_proba(X_test_scaled)[:, 1]
 
@@ -341,15 +359,17 @@ print(f"TEST AUC: {test_auc:.4f}")
 print(f"TEST F1:  {test_f1:.4f}")
 
 # Compare train/val/test performance
+
 print("\nPerformance Summary:")
 print(f"Train AUC: {train_auc:.4f}")
 print(f"Val AUC:   {val_auc:.4f}")
 print(f"Test AUC:  {test_auc:.4f}")
 
 # Check for overfitting
+
 if train_auc - test_auc > 0.05:
     print("⚠ Warning: Potential overfitting detected")
-```text
+```
 
 ## Phase 7: Production Deployment
 
@@ -360,6 +380,7 @@ if train_auc - test_auc > 0.05:
 import mlflow
 
 # Register final model
+
 with mlflow.start_run(run_name="production_candidate") as run:
     mlflow.log_params(best_params)
     mlflow.log_metrics({
@@ -374,6 +395,7 @@ with mlflow.start_run(run_name="production_candidate") as run:
     run_id = run.info.run_id
 
 # Register model in registry
+
 client = MlflowClient()
 model_uri = f"runs:/{run_id}/model"
 registered_model = client.create_registered_model("customer_churn_predictor")
@@ -385,6 +407,7 @@ mv = client.create_model_version(
 )
 
 # Transition to staging for testing
+
 client.transition_model_version_stage(
     name="customer_churn_predictor",
     version=mv.version,
@@ -392,7 +415,7 @@ client.transition_model_version_stage(
 )
 
 print(f"Model {mv.name} v{mv.version} registered and staged")
-```text
+```
 
 ## Phase 8: Monitoring & Iteration
 
@@ -400,6 +423,7 @@ print(f"Model {mv.name} v{mv.version} registered and staged")
 
 ```python
 %python
+
 # After deployment: continuously monitor performance
 
 monitoring_tasks = {
@@ -410,6 +434,7 @@ monitoring_tasks = {
 }
 
 # Example: Monitor data drift
+
 from scipy.stats import ks_2samp
 
 def check_feature_drift(new_data, train_data, threshold=0.05):
@@ -421,7 +446,8 @@ def check_feature_drift(new_data, train_data, threshold=0.05):
     return drift_features
 
 # If drift detected → retrain or investigate
-```text
+
+```
 
 ## Experimentation Best Practices
 
@@ -429,6 +455,7 @@ def check_feature_drift(new_data, train_data, threshold=0.05):
 
 ```python
 # Track EVERYTHING
+
 guidelines = {
     "Log": [
         "All hyperparameters",
@@ -451,7 +478,7 @@ guidelines = {
         "Examples: rf_depth_10, with_derived_features"
     ]
 }
-```text
+```
 
 ### 2. **Experiment Design Checklist**
 
@@ -476,7 +503,7 @@ checklist = {
         "✓ Archive if not continuing"
     ]
 }
-```text
+```
 
 ## Real-World Decision Tree
 
@@ -506,7 +533,7 @@ Evaluate on held-out test set
 Meet production requirements? → No → Iterate
     ↓ Yes
 Deploy & Monitor
-```text
+```
 
 ## Use Cases
 
@@ -516,10 +543,12 @@ Deploy & Monitor
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for ML Experimentation Workflow do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for ML Experimentation Workflow to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting ML Experimentation Workflow to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for ML Experimentation Workflow prior to deployment.
 
@@ -555,3 +584,7 @@ Deploy & Monitor
 
 - [MLflow Best Practices](https://mlflow.org/docs/latest/tracking.html#best-practices)
 - [Experiment Design](https://docs.databricks.com/machine-learning/experiments/index.html)
+
+---
+
+**[← Previous: Experiments & Runs](./02-experiments-runs.md) | [↑ Back to ML Workflows](./README.md)**

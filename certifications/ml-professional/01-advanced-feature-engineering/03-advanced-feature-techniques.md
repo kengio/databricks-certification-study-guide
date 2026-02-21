@@ -24,6 +24,7 @@ from pyspark.ml.linalg import VectorAssembler
 from pyspark.ml import Pipeline
 
 # Chi-squared test for categorical features
+
 chi_sq_selector = ChiSqSelector(
     numTopFeatures=50,
     featuresCol="features",
@@ -32,6 +33,7 @@ chi_sq_selector = ChiSqSelector(
 )
 
 # Univariate feature selection (regression/classification)
+
 univariate_selector = UnivariateFeatureSelector(
     selectionThreshold=10.0,  # Chi-squared statistic threshold
     featuresCol="features",
@@ -40,6 +42,7 @@ univariate_selector = UnivariateFeatureSelector(
 )
 
 # RFormula for automatic feature selection
+
 from pyspark.ml.feature import RFormula
 
 rformula = RFormula(
@@ -56,6 +59,7 @@ from pyspark.ml.classification import GBTClassifier
 from pyspark.ml.feature import VectorAssembler
 
 # Train GBT for feature importance
+
 assembler = VectorAssembler(
     inputCols=feature_columns,
     outputCol="features"
@@ -71,11 +75,13 @@ pipeline = Pipeline(stages=[assembler, gbt])
 model = pipeline.fit(training_df)
 
 # Extract feature importance
+
 gbt_model = model.stages[-1]
 feature_importance = gbt_model.featureImportances
 feature_names = feature_columns
 
 # Convert to DataFrame for analysis
+
 importance_df = spark.createDataFrame(
     [(name, float(value)) for name, value in zip(feature_names, feature_importance)],
     ["feature", "importance"]
@@ -91,6 +97,7 @@ from pyspark.ml.stat import Correlation
 from pyspark.ml.feature import VectorAssembler
 
 # Compute correlation matrix
+
 assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 correlation_matrix = Correlation.corr(
     assembler.transform(df),
@@ -99,6 +106,7 @@ correlation_matrix = Correlation.corr(
 ).collect()[0][0].toArray()
 
 # Identify highly correlated features
+
 import numpy as np
 
 corr_df = pd.DataFrame(
@@ -108,6 +116,7 @@ corr_df = pd.DataFrame(
 )
 
 # Detect multicollinearity (VIF > 10)
+
 def calculate_vif(features):
     from sklearn.preprocessing import StandardScaler
     from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -125,6 +134,7 @@ def calculate_vif(features):
 from pyspark.ml.feature import StandardScaler, MinMaxScaler, Normalizer
 
 # StandardScaler: (x - mean) / std
+
 standard_scaler = StandardScaler(
     inputCol="features",
     outputCol="scaled_features",
@@ -133,6 +143,7 @@ standard_scaler = StandardScaler(
 )
 
 # MinMaxScaler: (x - min) / (max - min)
+
 min_max_scaler = MinMaxScaler(
     inputCol="features",
     outputCol="scaled_features",
@@ -141,6 +152,7 @@ min_max_scaler = MinMaxScaler(
 )
 
 # Normalizer: L2 norm normalization (useful for distance-based algorithms)
+
 normalizer = Normalizer(
     inputCol="features",
     outputCol="normalized_features",
@@ -148,6 +160,7 @@ normalizer = Normalizer(
 )
 
 # Pipeline for scaling
+
 scale_pipeline = Pipeline(stages=[
     VectorAssembler(inputCols=feature_cols, outputCol="features"),
     StandardScaler(inputCol="features", outputCol="scaled_features")
@@ -166,6 +179,7 @@ from pyspark.ml.feature import PolynomialExpansion, VectorAssembler
 from pyspark.sql.functions import col
 
 # Polynomial expansion for interaction terms
+
 poly_expansion = PolynomialExpansion(
     degree=2,
     inputCol="features",
@@ -173,6 +187,7 @@ poly_expansion = PolynomialExpansion(
 )
 
 # Manual interaction creation
+
 def create_interactions(df, feature_pairs):
     """Create interaction terms manually"""
     result = df
@@ -184,6 +199,7 @@ def create_interactions(df, feature_pairs):
     return result
 
 # Example: interaction between price and quantity
+
 interactions_df = create_interactions(
     df,
     [("price", "quantity"), ("user_age", "product_price")]
@@ -200,6 +216,7 @@ from pyspark.sql.functions import (
 from pyspark.sql.window import Window
 
 # Time decomposition
+
 temporal_features = df.select(
     col("timestamp"),
     year(col("timestamp")).alias("year"),
@@ -212,6 +229,7 @@ temporal_features = df.select(
 )
 
 # Cyclical encoding for cyclical features
+
 import math
 
 def cyclical_encode(df, column, max_value):
@@ -229,9 +247,11 @@ def cyclical_encode(df, column, max_value):
     )
 
 # Apply cyclical encoding to month (12 months)
+
 temporal_features = cyclical_encode(temporal_features, "month", 12)
 
 # Lag features (previous values)
+
 window_spec = Window.partitionBy("user_id").orderBy("date")
 
 lagged_features = df.withColumn(
@@ -252,6 +272,7 @@ from pyspark.ml.feature import (
 )
 
 # StringIndexer + OneHotEncoder pipeline for categorical
+
 categorical_cols = ["category", "region", "product_type"]
 
 indexers = [
@@ -265,6 +286,7 @@ encoders = [
 ]
 
 # TF-IDF for text features
+
 tfidf = TfidfVectorizer(
     inputCol="review_text",
     outputCol="tfidf_features",
@@ -274,6 +296,7 @@ tfidf = TfidfVectorizer(
 )
 
 # Count vectorizer for frequency
+
 count_vec = CountVectorizer(
     inputCol="review_text",
     outputCol="word_count_features",
@@ -287,9 +310,11 @@ pipeline = Pipeline(stages=indexers + encoders + [tfidf, count_vec])
 
 ```python
 # Using pre-trained embeddings
+
 from pyspark.ml.feature import Word2Vec
 
 # Word2Vec for text embeddings
+
 word2vec = Word2Vec(
     vectorSize=100,
     windowSize=5,
@@ -299,6 +324,7 @@ word2vec = Word2Vec(
 )
 
 # Example: user embedding from historical behavior
+
 def create_user_embeddings(interactions_df, embedding_dim=50):
     """Create user embeddings from interaction history"""
     from pyspark.ml.recommendation import ALS
@@ -366,6 +392,7 @@ def compute_user_features_at_scale(spark, events_path: str, output_path: str):
     return enriched_features
 
 # Usage
+
 user_features = compute_user_features_at_scale(
     spark,
     "/data/events",
@@ -419,6 +446,7 @@ class FeatureValidator:
 
 
 # Validation rules
+
 validation_rules = {
     "total_spending": {"min": 0, "max": 1000000, "null_threshold": 0.01},
     "transaction_count": {"min": 0, "max": 100000, "null_threshold": 0.01},
@@ -440,9 +468,11 @@ for feature, rules in validation_rules.items():
 
 ```python
 # Stream processing for real-time features
+
 from pyspark.sql.functions import window, col
 
 # Sliding window on stream
+
 streaming_df = (
     spark.readStream
     .format("kafka")
@@ -452,6 +482,7 @@ streaming_df = (
 )
 
 # Compute windowed features every minute
+
 windowed_features = (
     streaming_df
     .withColumn("user_event", from_json(col("value").cast("string"), event_schema))
@@ -468,6 +499,7 @@ windowed_features = (
 )
 
 # Write to streaming feature store
+
 query = (
     windowed_features
     .writeStream
@@ -520,10 +552,12 @@ query = (
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Advanced Feature Techniques to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Advanced Feature Techniques prior to deployment.
 
@@ -535,4 +569,4 @@ query = (
 
 ---
 
-**[← Back to Advanced Feature Engineering](./README.md)**
+**[← Previous: Databricks Feature Store](./02-databricks-feature-store.md) | [↑ Back to Advanced Feature Engineering](./README.md) | [Next: Feature Store Production Patterns](./04-feature-store-production.md) →**

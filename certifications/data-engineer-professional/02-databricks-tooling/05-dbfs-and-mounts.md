@@ -30,7 +30,7 @@ flowchart TB
     end
 
     Storage --> Cloud
-```text
+```
 
 ## DBFS (Databricks File System)
 
@@ -47,7 +47,7 @@ flowchart LR
 
     Root --> Cloud[Cloud Storage]
     Mounts --> Cloud
-```text
+```
 
 ### DBFS Path Formats
 
@@ -59,17 +59,20 @@ flowchart LR
 
 ```python
 # Spark APIs use dbfs:/ prefix
+
 df = spark.read.format("csv").load("dbfs:/data/input.csv")
 
 # Python file APIs use /dbfs/ path
+
 with open("/dbfs/data/config.json", "r") as f:
     config = json.load(f)
 
 # Equivalent operations
 # These read the same file:
+
 spark.read.text("dbfs:/data/sample.txt")  # Spark
 open("/dbfs/data/sample.txt", "r")         # Python
-```text
+```
 
 ### DBFS Root Storage
 
@@ -85,7 +88,7 @@ flowchart TB
     User --> Hive[Hive metastore data]
     FileStore --> Uploads[Uploaded files, images]
     MLflow --> Artifacts[MLflow artifacts]
-```text
+```
 
 | Path | Purpose | Notes |
 | :--- | :--- | :--- |
@@ -99,11 +102,13 @@ flowchart TB
 
 ```python
 # List files
+
 files = dbutils.fs.ls("dbfs:/data/")
 for f in files:
     print(f"{f.name} - {f.size} bytes - isDir: {f.isDir()}")
 
 # Check if path exists
+
 def path_exists(path):
     try:
         dbutils.fs.ls(path)
@@ -112,25 +117,31 @@ def path_exists(path):
         return False
 
 # Create directory
+
 dbutils.fs.mkdirs("dbfs:/data/new_folder/")
 
 # Copy files
+
 dbutils.fs.cp("dbfs:/source/file.csv", "dbfs:/dest/file.csv")
 dbutils.fs.cp("dbfs:/source/", "dbfs:/dest/", recurse=True)
 
 # Move files
+
 dbutils.fs.mv("dbfs:/old/path.csv", "dbfs:/new/path.csv")
 
 # Delete files
+
 dbutils.fs.rm("dbfs:/data/temp.csv")
 dbutils.fs.rm("dbfs:/data/temp_folder/", recurse=True)
 
 # Read file content (first 64KB)
+
 content = dbutils.fs.head("dbfs:/data/sample.txt", maxBytes=1024)
 
 # Write small text file
+
 dbutils.fs.put("dbfs:/data/output.txt", "Hello World", overwrite=True)
-```text
+```
 
 ### FileStore
 
@@ -138,14 +149,16 @@ FileStore is a special DBFS location accessible via web URLs.
 
 ```python
 # Upload file to FileStore
+
 dbutils.fs.cp("dbfs:/data/image.png", "dbfs:/FileStore/images/image.png")
 
 # Access via URL
 # https://<workspace-url>/files/images/image.png
 
 # Display image in notebook
+
 displayHTML('<img src="/files/images/image.png">')
-```text
+```
 
 | FileStore Path | URL Path |
 | :--- | :--- |
@@ -163,18 +176,20 @@ flowchart LR
     Code[Spark Code] --> Mount["/mnt/data"]
     Mount --> DBFS[DBFS Layer]
     DBFS --> Cloud["s3://bucket/data or abfss://container@storage.dfs"]
-```text
+```
 
 ### AWS S3 Mounts
 
 ```python
 # Mount S3 bucket with instance profile (recommended)
+
 dbutils.fs.mount(
     source="s3a://my-bucket/data",
     mount_point="/mnt/s3-data"
 )
 
 # Mount with access keys (not recommended for production)
+
 access_key = dbutils.secrets.get("aws", "access-key")
 secret_key = dbutils.secrets.get("aws", "secret-key")
 
@@ -186,12 +201,13 @@ dbutils.fs.mount(
         "fs.s3a.secret.key": secret_key
     }
 )
-```text
+```
 
 ### Azure Data Lake Storage Mounts
 
 ```python
 # Mount ADLS Gen2 with service principal
+
 configs = {
     "fs.azure.account.auth.type": "OAuth",
     "fs.azure.account.oauth.provider.type": "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider",
@@ -207,6 +223,7 @@ dbutils.fs.mount(
 )
 
 # Mount with SAS token
+
 configs = {
     "fs.azure.sas.<container>.<storage-account>.blob.core.windows.net":
         dbutils.secrets.get("azure", "sas-token")
@@ -217,36 +234,41 @@ dbutils.fs.mount(
     mount_point="/mnt/blob-data",
     extra_configs=configs
 )
-```text
+```
 
 ### GCS Mounts
 
 ```python
 # Mount Google Cloud Storage
+
 dbutils.fs.mount(
     source="gs://my-bucket/data",
     mount_point="/mnt/gcs-data"
 )
-```text
+```
 
 ### Managing Mounts
 
 ```python
 # List all mounts
+
 mounts = dbutils.fs.mounts()
 for mount in mounts:
     print(f"{mount.mountPoint} -> {mount.source}")
 
 # Check if mount exists
+
 def mount_exists(mount_point):
     return any(m.mountPoint == mount_point for m in dbutils.fs.mounts())
 
 # Unmount
+
 dbutils.fs.unmount("/mnt/s3-data")
 
 # Refresh mounts (after external changes)
+
 dbutils.fs.refreshMounts()
-```text
+```
 
 ### Mount Best Practices
 
@@ -273,7 +295,7 @@ flowchart TB
 
     External --> E1["User provides storage location"]
     External --> E2["Bring your own data"]
-```text
+```
 
 | Type | Storage | Governance | Use Case |
 | :--- | :--- | :--- | :--- |
@@ -293,27 +315,32 @@ LOCATION 's3://my-bucket/landing/';
 -- Create external volume (Azure)
 CREATE EXTERNAL VOLUME main.default.landing_zone
 LOCATION 'abfss://container@storage.dfs.core.windows.net/landing/';
-```text
+```
 
 ### Volume Paths
 
 ```python
+
 # Volume paths use /Volumes/ prefix
 # Format: /Volumes/<catalog>/<schema>/<volume>/
 
 # Read from volume
+
 df = spark.read.format("csv").load("/Volumes/main/default/landing_zone/data.csv")
 
 # Write to volume
+
 df.write.format("parquet").save("/Volumes/main/default/my_volume/output/")
 
 # Python file operations
+
 with open("/Volumes/main/default/my_volume/config.json", "r") as f:
     config = json.load(f)
 
 # List volume contents
+
 files = dbutils.fs.ls("/Volumes/main/default/my_volume/")
-```text
+```
 
 ### Volume Operations
 
@@ -326,7 +353,7 @@ DESCRIBE VOLUME main.default.my_volume;
 
 -- Drop volume
 DROP VOLUME main.default.my_volume;
-```text
+```
 
 ### Volume vs Mount Comparison
 
@@ -346,23 +373,27 @@ Access cloud storage directly without mounts or volumes.
 
 ```python
 # With instance profile (attached to cluster)
+
 df = spark.read.format("parquet").load("s3://bucket/path/")
 
 # With temporary credentials
+
 spark.conf.set("fs.s3a.access.key", access_key)
 spark.conf.set("fs.s3a.secret.key", secret_key)
 df = spark.read.format("parquet").load("s3a://bucket/path/")
 
 # Using assume role
+
 spark.conf.set("fs.s3a.aws.credentials.provider",
     "org.apache.hadoop.fs.s3a.auth.AssumedRoleCredentialProvider")
 spark.conf.set("fs.s3a.assumed.role.arn", "arn:aws:iam::123456789:role/my-role")
-```text
+```
 
 ### Azure Direct Access
 
 ```python
 # With service principal
+
 spark.conf.set(f"fs.azure.account.auth.type.{storage_account}.dfs.core.windows.net", "OAuth")
 spark.conf.set(f"fs.azure.account.oauth.provider.type.{storage_account}.dfs.core.windows.net",
     "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
@@ -376,21 +407,24 @@ spark.conf.set(f"fs.azure.account.oauth2.client.endpoint.{storage_account}.dfs.c
 df = spark.read.format("parquet").load(f"abfss://container@{storage_account}.dfs.core.windows.net/path/")
 
 # With SAS token
+
 spark.conf.set(f"fs.azure.sas.{container}.{storage_account}.blob.core.windows.net",
     dbutils.secrets.get("azure", "sas-token"))
 df = spark.read.format("parquet").load(f"wasbs://{container}@{storage_account}.blob.core.windows.net/path/")
-```text
+```
 
 ### GCS Direct Access
 
 ```python
 # With service account (attached to cluster)
+
 df = spark.read.format("parquet").load("gs://bucket/path/")
 
 # With service account key file
+
 spark.conf.set("google.cloud.auth.service.account.enable", "true")
 spark.conf.set("google.cloud.auth.service.account.json.keyfile", "/path/to/keyfile.json")
-```text
+```
 
 ## Storage Protocols
 
@@ -417,7 +451,7 @@ flowchart TD
 
     Azure --> |ADLS Gen2| ABFSS[Use abfss://]
     Azure --> |Blob| WASBS[Use wasbs://]
-```text
+```
 
 ## Access Patterns
 
@@ -434,7 +468,7 @@ flowchart TD
 
     Direct --> |Yes| SparkConf[Spark conf settings]
     Direct --> |No| Instance[Instance profile/Managed identity]
-```text
+```
 
 ### Recommended Access Pattern by Use Case
 
@@ -452,24 +486,29 @@ flowchart TD
 
 ```python
 # Copy between DBFS locations
+
 dbutils.fs.cp("dbfs:/source/", "dbfs:/dest/", recurse=True)
 
 # Copy from cloud to DBFS
+
 dbutils.fs.cp("s3://bucket/data/", "dbfs:/local-copy/", recurse=True)
 
 # Copy using Spark (for large data)
+
 df = spark.read.format("parquet").load("s3://source-bucket/data/")
 df.write.format("parquet").save("abfss://container@storage/dest/")
-```text
+```
 
 ### Upload/Download with REST API
 
 ```python
 # For small files, use REST API
+
 import requests
 import base64
 
 # Upload to DBFS
+
 url = f"{workspace_url}/api/2.0/dbfs/put"
 data = base64.b64encode(file_content).decode()
 response = requests.post(url, headers=headers, json={
@@ -477,7 +516,7 @@ response = requests.post(url, headers=headers, json={
     "contents": data,
     "overwrite": True
 })
-```text
+```
 
 ## Use Cases
 
@@ -489,13 +528,15 @@ flowchart LR
     Landing --> Bronze["/Volumes/main/bronze/tables/"]
     Bronze --> Silver["/Volumes/main/silver/tables/"]
     Silver --> Gold["/Volumes/main/gold/tables/"]
-```text
+```
 
 ```python
 # Landing zone with external volume
+
 landing_path = "/Volumes/main/raw/landing/"
 
 # Process new files
+
 new_files = dbutils.fs.ls(landing_path)
 for file in new_files:
     if file.name.endswith(".csv"):
@@ -504,21 +545,24 @@ for file in new_files:
 
         # Archive processed file
         dbutils.fs.mv(file.path, f"/Volumes/main/raw/archive/{file.name}")
-```text
+```
 
 ### Multi-Cloud Data Access
 
 ```python
 # Read from AWS
+
 aws_df = spark.read.format("parquet").load("/Volumes/aws/raw/data/")
 
 # Read from Azure
+
 azure_df = spark.read.format("parquet").load("/Volumes/azure/raw/data/")
 
 # Combine data
+
 combined = aws_df.unionByName(azure_df)
 combined.write.format("delta").saveAsTable("main.combined.all_data")
-```text
+```
 
 ## Common Issues & Errors
 
@@ -534,7 +578,8 @@ combined.write.format("delta").saveAsTable("main.combined.all_data")
 
 ```python
 # Error: Directory already mounted
-```text
+
+```
 
 **Fix:** Unmount first or use different mount point:
 
@@ -542,7 +587,7 @@ combined.write.format("delta").saveAsTable("main.combined.all_data")
 if mount_exists("/mnt/data"):
     dbutils.fs.unmount("/mnt/data")
 dbutils.fs.mount(source="...", mount_point="/mnt/data")
-```text
+```
 
 ### 3. Credential Not Found
 
@@ -552,8 +597,9 @@ dbutils.fs.mount(source="...", mount_point="/mnt/data")
 
 ```python
 # Check if config is set
+
 spark.conf.get("fs.s3a.access.key", "NOT_SET")
-```text
+```
 
 ### 4. Path Format Mismatch
 
@@ -561,14 +607,17 @@ spark.conf.get("fs.s3a.access.key", "NOT_SET")
 
 ```python
 # Wrong: Using /dbfs/ with Spark
+
 df = spark.read.csv("/dbfs/data/file.csv")  # Error
 
 # Correct: Use dbfs:/ with Spark
+
 df = spark.read.csv("dbfs:/data/file.csv")
 
 # Correct: Use /dbfs/ with Python
+
 with open("/dbfs/data/file.csv") as f: ...
-```text
+```
 
 ### 5. Volume Not Found
 
@@ -579,25 +628,7 @@ with open("/dbfs/data/file.csv") as f: ...
 ```sql
 SHOW VOLUMES IN main.default;
 DESCRIBE VOLUME main.default.my_volume;
-```text
-
-## Use Cases
-
-- **Legacy Workload Migration**: Running older Spark workloads that heavily rely on DBFS mount points before they can be refactored to use Unity Catalog external locations.
-- **Quick File Sharing**: Uploading small configuration files, mock JSON data, or ML artifacts directly to DBFS via the UI to temporarily test logic.
-- **Cluster Initialization**: Storing global init scripts or custom library wheel files that clusters need to access securely during startup.
-
-## Common Issues & Errors
-
-**1. Stale Mount Credentials**
-- **Error**: `java.nio.file.AccessDeniedException`.
-- **Issue**: A DBFS mount was created using a secret (like a storage account key or service principal secret) that has since expired or changed.
-- **Fix**: Unmount and remount the storage with updated credentials, or better, migrate the storage access model to Unity Catalog external locations.
-
-**2. Insecure Data Storage in DBFS Root**
-- **Error**: Unauthorized users accessing sensitive data.
-- **Issue**: DBFS root is accessible by default to all users in the workspace who have cluster creation/attachment privileges.
-- **Fix**: Never store production data or PII in the DBFS root. Use Unity Catalog to enforce fine-grained access control on data.
+```
 
 ## Exam Tips
 
@@ -624,3 +655,7 @@ DESCRIBE VOLUME main.default.my_volume;
 - [Unity Catalog Volumes](https://docs.databricks.com/volumes/index.html)
 - [Mount Cloud Storage](https://docs.databricks.com/dbfs/mounts.html)
 - [External Locations](https://docs.databricks.com/data-governance/unity-catalog/manage-external-locations-and-credentials.html)
+
+---
+
+**[← Previous: Databricks Compute](./04-databricks-compute.md) | [↑ Back to Databricks Tooling](./README.md)**

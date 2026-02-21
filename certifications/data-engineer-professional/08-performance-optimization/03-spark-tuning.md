@@ -25,7 +25,7 @@ flowchart TB
     end
 
     Tuning --> Outcome
-```text
+```
 
 ## Key Configurations
 
@@ -75,7 +75,7 @@ flowchart LR
     Query[Query] --> Without
     Query --> With
     With --> Better[Better Performance]
-```text
+```
 
 ### AQE Features
 
@@ -89,44 +89,53 @@ flowchart LR
 ### Enabling AQE
 
 ```python
+
 # AQE is enabled by default in Databricks
 # Verify it's enabled
+
 spark.conf.get("spark.sql.adaptive.enabled")  # Should be "true"
 
 # Enable specific AQE features
+
 spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 spark.conf.set("spark.sql.adaptive.localShuffleReader.enabled", "true")
-```text
+```
 
 ### AQE Coalesce Partitions
 
 ```python
+
 # Before AQE: 200 partitions regardless of data size
 # After AQE: Partitions automatically coalesced
 
 # Configure minimum partition size
+
 spark.conf.set("spark.sql.adaptive.coalescePartitions.minPartitionSize", "64MB")
 
 # Configure initial partitions (AQE will coalesce if needed)
+
 spark.conf.set("spark.sql.adaptive.coalescePartitions.initialPartitionNum", "200")
-```text
+```
 
 ### AQE Skew Join Handling
 
 ```python
 # Enable skew join optimization
+
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 
 # Configure skew thresholds
+
 spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionFactor", "5")
 spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes", "256MB")
 
 # A partition is skewed if:
 # size > skewedPartitionFactor * median_size AND
 # size > skewedPartitionThresholdInBytes
-```text
+
+```
 
 ## Shuffle Optimization
 
@@ -154,47 +163,54 @@ flowchart LR
     M3 --> S
     S --> R1
     S --> R2
-```text
+```
 
 ### Reducing Shuffles
 
 ```python
 # Bad: Multiple shuffles
+
 (df.groupBy("a").agg(sum("b"))
   .join(other_df, "a")
   .groupBy("a").agg(count("*")))
 
 # Better: Combine operations
+
 (df.join(other_df, "a")
   .groupBy("a").agg(sum("b"), count("*")))
-```text
+```
 
 ### Shuffle Partition Tuning
 
 ```python
+
 # Rule of thumb: 128MB per partition
 # Total data size / 128MB = number of partitions
 
 # For 100GB data:
 # 100GB / 128MB ≈ 800 partitions
+
 spark.conf.set("spark.sql.shuffle.partitions", "800")
 
 # With AQE, start high and let it coalesce
+
 spark.conf.set("spark.sql.shuffle.partitions", "1000")
 spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
-```text
+```
 
 ### Pre-Shuffle Operations
 
 ```python
 # Filter before shuffle
+
 (df.filter(col("date") >= "2024-01-01")
   .groupBy("customer_id").agg(sum("amount")))
 
 # Select only needed columns before shuffle
+
 (df.select("customer_id", "amount")
   .groupBy("customer_id").agg(sum("amount")))
-```text
+```
 
 ## Join Optimization
 
@@ -212,36 +228,41 @@ spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
 
 ```python
 # Automatic broadcast (table < 10MB)
+
 small_df.join(large_df, "key")  # Broadcasts small_df
 
 # Increase threshold for larger broadcasts
+
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "100MB")
 
 # Force broadcast with hint
+
 from pyspark.sql.functions import broadcast
 
 result = large_df.join(broadcast(medium_df), "key")
-```text
+```
 
 ```sql
 -- SQL broadcast hint
 SELECT /*+ BROADCAST(small_table) */ *
 FROM large_table l
 JOIN small_table s ON l.id = s.id;
-```text
+```
 
 ### Sort Merge Join Optimization
 
 ```python
 # Pre-sort data for repeated joins
+
 df_sorted = df.sortWithinPartitions("key")
 df_sorted.write.bucketBy(100, "key").saveAsTable("bucketed_table")
 
 # Bucketed tables skip shuffle for joins
+
 t1 = spark.table("bucketed_table_1")
 t2 = spark.table("bucketed_table_2")
 result = t1.join(t2, "key")  # No shuffle needed
-```text
+```
 
 ### Join Hints
 
@@ -257,7 +278,7 @@ SELECT /*+ SHUFFLE_HASH(t2) */ * FROM t1 JOIN t2 ON t1.id = t2.id;
 
 -- Force shuffle replicate nested loop
 SELECT /*+ SHUFFLE_REPLICATE_NL(t2) */ * FROM t1 JOIN t2 ON t1.id = t2.id;
-```text
+```
 
 ## Memory Tuning
 
@@ -278,36 +299,42 @@ flowchart TB
         Execution[Execution Memory]
         Storage[Storage/Cache Memory]
     end
-```text
+```
 
 ### Memory Configuration
 
 ```python
 # Executor memory settings
+
 spark.conf.set("spark.executor.memory", "8g")
 spark.conf.set("spark.executor.memoryOverhead", "2g")
 
 # Memory fraction settings
+
 spark.conf.set("spark.memory.fraction", "0.6")  # 60% for execution+storage
 spark.conf.set("spark.memory.storageFraction", "0.5")  # 50% of that for storage
 
 # For memory-intensive operations
+
 spark.conf.set("spark.memory.fraction", "0.8")  # More for execution
-```text
+```
 
 ### Avoiding OOM
 
 ```python
 # Increase memory overhead for Python UDFs
+
 spark.conf.set("spark.executor.memoryOverhead", "4g")
 
 # Reduce parallelism if tasks are too memory-intensive
+
 spark.conf.set("spark.sql.shuffle.partitions", "400")
 
 # Enable off-heap memory
+
 spark.conf.set("spark.memory.offHeap.enabled", "true")
 spark.conf.set("spark.memory.offHeap.size", "4g")
-```text
+```
 
 ## Parallelism Tuning
 
@@ -315,30 +342,37 @@ spark.conf.set("spark.memory.offHeap.size", "4g")
 
 ```python
 # Default parallelism for RDD operations
+
 spark.conf.set("spark.default.parallelism", "200")
 
 # Shuffle parallelism for DataFrame operations
+
 spark.conf.set("spark.sql.shuffle.partitions", "200")
 
 # Rule: 2-3 tasks per core
 # 100 cores → 200-300 partitions
-```text
+
+```
 
 ### Repartitioning
 
 ```python
 # Increase parallelism
+
 df = df.repartition(500)
 
 # Decrease parallelism (preserves order)
+
 df = df.coalesce(100)
 
 # Repartition by column (for joins)
+
 df = df.repartition("join_key")
 
 # Repartition with both count and column
+
 df = df.repartition(100, "join_key")
-```text
+```
 
 ### Coalesce vs Repartition
 
@@ -354,25 +388,30 @@ df = df.repartition(100, "join_key")
 
 ```python
 # Optimize write file sizes
+
 spark.conf.set("spark.databricks.delta.optimizeWrite.enabled", "true")
 
 # Auto-compact after writes
+
 spark.conf.set("spark.databricks.delta.autoCompact.enabled", "true")
 
 # Target file size
+
 spark.conf.set("spark.databricks.delta.optimizeWrite.fileSize", "128mb")
-```text
+```
 
 ### Read Optimization
 
 ```python
 # Enable data skipping
+
 spark.conf.set("spark.databricks.delta.stats.skipping", "true")
 
 # Optimize parquet reading
+
 spark.conf.set("spark.sql.parquet.filterPushdown", "true")
 spark.conf.set("spark.sql.parquet.enableVectorizedReader", "true")
-```text
+```
 
 ## Photon Engine
 
@@ -384,7 +423,7 @@ Photon is Databricks' native vectorized query engine:
 - Vectorized processing (SIMD)
 - Better memory management
 - Faster than Spark for supported operations
-```text
+```
 
 ### Photon Benefits
 
@@ -406,7 +445,7 @@ Photon is enabled by:
 Check if Photon is active:
 - Spark UI shows "Photon" in query plans
 - Query profile shows Photon operators
-```text
+```
 
 ### Photon-Optimized Operations
 
@@ -424,7 +463,7 @@ JOIN customers c ON o.customer_id = c.id;
 -- Filters with string operations
 SELECT * FROM events
 WHERE event_type LIKE '%purchase%';
-```text
+```
 
 ## Query Optimization
 
@@ -432,39 +471,47 @@ WHERE event_type LIKE '%purchase%';
 
 ```python
 # Filters pushed to scan
+
 df = (spark.read.parquet("data/")
     .filter(col("date") == "2024-01-15"))  # Pushed to file scan
 
 # Check query plan
+
 df.explain()
 # Should show PushedFilters in FileScan
-```text
+
+```
 
 ### Column Pruning
 
 ```python
 # Only read needed columns
+
 df = (spark.read.parquet("data/")
     .select("id", "name", "amount"))  # Only 3 columns read
 
 # Avoid SELECT *
 # Bad: df.select("*")
 # Good: df.select("col1", "col2", "col3")
-```text
+
+```
 
 ### Cache Strategies
 
 ```python
 # Cache for repeated access
+
 df = spark.table("orders").cache()
 
 # Use MEMORY_AND_DISK for large datasets
+
 from pyspark import StorageLevel
 df.persist(StorageLevel.MEMORY_AND_DISK)
 
 # Unpersist when done
+
 df.unpersist()
-```text
+```
 
 ```sql
 -- SQL caching
@@ -473,7 +520,7 @@ UNCACHE TABLE orders;
 
 -- With eager caching
 CACHE TABLE orders SELECT * FROM orders WHERE date >= '2024-01-01';
-```text
+```
 
 ## Use Cases
 
@@ -490,11 +537,13 @@ CACHE TABLE orders SELECT * FROM orders WHERE date >= '2024-01-01';
 
 ```python
 # Increase memory per partition
+
 spark.conf.set("spark.sql.shuffle.partitions", "1000")  # Smaller partitions
 
 # Or increase executor memory
 # In cluster config: spark.executor.memory = 16g
-```text
+
+```
 
 ### 2. Skewed Data in Joins
 
@@ -504,15 +553,18 @@ spark.conf.set("spark.sql.shuffle.partitions", "1000")  # Smaller partitions
 
 ```python
 # Enable skew join
+
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 
 # Or manually salt skewed keys
+
 from pyspark.sql.functions import rand, concat, lit
 
 # Add salt to skewed key
+
 salted_df = df.withColumn("salted_key",
     concat(col("key"), lit("_"), (rand() * 10).cast("int")))
-```text
+```
 
 ### 3. Broadcast Timeout
 
@@ -522,11 +574,13 @@ salted_df = df.withColumn("salted_key",
 
 ```python
 # Increase timeout
+
 spark.conf.set("spark.sql.broadcastTimeout", "600")
 
 # Or disable broadcast for this query
+
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
-```text
+```
 
 ### 4. Out of Memory
 
@@ -536,15 +590,18 @@ spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
 
 ```python
 # Increase overhead for Python/UDFs
+
 spark.conf.set("spark.executor.memoryOverhead", "4g")
 
 # Reduce parallelism
+
 spark.conf.set("spark.sql.shuffle.partitions", "100")
 
 # Enable off-heap
+
 spark.conf.set("spark.memory.offHeap.enabled", "true")
 spark.conf.set("spark.memory.offHeap.size", "4g")
-```text
+```
 
 ## Exam Tips
 
@@ -571,3 +628,7 @@ spark.conf.set("spark.memory.offHeap.size", "4g")
 - [Adaptive Query Execution](https://docs.databricks.com/optimizations/aqe.html)
 - [Photon](https://docs.databricks.com/compute/photon.html)
 - [Performance Tuning](https://docs.databricks.com/optimizations/index.html)
+
+---
+
+**[← Previous: Z-ORDER Indexing and Data Skipping](./02-zorder-indexing.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Cost Optimization](./04-cost-optimization.md) →**

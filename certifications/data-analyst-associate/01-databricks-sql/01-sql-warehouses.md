@@ -44,7 +44,7 @@ flowchart TD
     Executor --> Cache
     Cache --> Delta
     Cache --> Metadata
-```text
+```
 
 ## SQL Warehouse Types
 
@@ -67,7 +67,7 @@ Databricks offers three SQL warehouse types optimized for different use cases:
 SELECT COUNT(*), customer_segment
 FROM sales
 GROUP BY customer_segment;
-```text
+```
 
 ### 2. **Classic Warehouses (Legacy)**
 
@@ -99,7 +99,7 @@ flowchart LR
     S5 --> S6["X-Large<br/>64 DBU/h"]
     S6 --> S7["2X-Large<br/>128 DBU/h"]
     S7 --> S8["Max Size<br/>512 DBU/h"]
-```text
+```
 
 | Size | CPU Cores | Memory | DBU/hour | Best For |
 |------|-----------|--------|----------|----------|
@@ -115,19 +115,22 @@ flowchart LR
 
 ```yaml
 # Auto-scaling Settings
+
 min_num_clusters: 1        # Minimum instances to keep running
 max_num_clusters: 10       # Maximum instances to scale to
 auto_stop_mins: 20         # Minutes before shutdown
 
 # Performance Settings
+
 enable_spot_instances: true        # Cost optimization with spot VMs
 enable_result_cache: true          # Cache query results
 enable_schema_evolution: true      # Allow schema changes
 
 # Concurrency Settings
+
 sql_max_connections: 100           # Max concurrent connections
 query_queue_timeout_mins: 30       # Wait time in queue
-```text
+```
 
 ## DBU Consumption Model
 
@@ -137,14 +140,17 @@ query_queue_timeout_mins: 30       # Wait time in queue
 
 ```python
 # DBU Cost Calculation
+
 warehouse_size_dbu_per_hour = 16      # Medium warehouse
 hours_run = 8                          # 8 hours
 total_dbu = warehouse_size_dbu_per_hour * hours_run
+
 # total_dbu = 128 DBUs
 
 dbu_cost = total_dbu * 0.40           # ~$0.40/DBU average
 # Cost = 128 * 0.40 = $51.20
-```text
+
+```
 
 ### Cost Optimization Strategies
 
@@ -168,7 +174,7 @@ flowchart LR
     Stopped --> Starting
     Running --> Stopping["STOPPING<br/>Active queries killed"]
     Stopping --> Stopped
-```text
+```
 
 ### State Descriptions
 
@@ -200,7 +206,7 @@ Physical Planning (Execute strategy)
 Execution (Run on distributed cluster)
     ↓
 Results (Return to client)
-```text
+```
 
 ### Query Timeout and Concurrency
 
@@ -212,7 +218,7 @@ SET statement_timeout = 300000;  -- milliseconds
 SELECT * FROM system.query_history
 WHERE query_start_time > CURRENT_TIMESTAMP - INTERVAL 1 HOUR
 ORDER BY query_start_time DESC;
-```text
+```
 
 ## Result Caching
 
@@ -227,7 +233,7 @@ SELECT COUNT(*) FROM sales WHERE year = 2024;
 
 -- Different query or different year - no cache
 SELECT COUNT(*) FROM sales WHERE year = 2025;
-```text
+```
 
 ### Cache Invalidation
 
@@ -265,7 +271,7 @@ FROM system.query_history
 WHERE warehouse_id = 'abc123'
 ORDER BY query_start_time DESC
 LIMIT 100;
-```text
+```
 
 ## SQL Warehouse Best Practices
 
@@ -275,7 +281,7 @@ LIMIT 100;
 -- Start with Small warehouse for analytics
 -- Monitor query performance and scale up as needed
 -- Use Small → Medium → Large progression
-```text
+```
 
 ### 2. **Query Optimization**
 
@@ -287,7 +293,7 @@ SELECT * FROM large_table WHERE col IS NOT NULL;
 SELECT id, name, amount
 FROM large_table
 WHERE status = 'active' AND date >= '2024-01-01';
-```text
+```
 
 ### 3. **Use Appropriate Data Types**
 
@@ -297,7 +303,7 @@ CREATE TABLE users (id STRING, name STRING, age STRING);
 
 -- ✅ Appropriate types
 CREATE TABLE users (id INT, name STRING, age INT);
-```text
+```
 
 ### 4. **Partition Large Tables**
 
@@ -314,7 +320,7 @@ PARTITIONED BY (sale_date);
 SELECT SUM(amount)
 FROM sales
 WHERE sale_date >= '2024-01-01';  -- Fast!
-```text
+```
 
 ### 5. **Schedule Peak Workloads**
 
@@ -326,6 +332,7 @@ WHERE sale_date >= '2024-01-01';  -- Fast!
 
 ```yaml
 # Example warehouse strategy
+
 dashboards:
   size: Small
   purpose: Interactive dashboards
@@ -340,7 +347,7 @@ testing:
   size: 2X-Small
   purpose: Development and testing
   cost: Minimal
-```text
+```
 
 ## Key Exam Concepts
 
@@ -372,10 +379,6 @@ testing:
 
 - **A**: 16 × 2 = 32 DBUs
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -384,10 +387,15 @@ testing:
 ## Common Issues & Errors
 
 ### 1. OOM Errors
+
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting SQL Warehouses to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for SQL Warehouses prior to deployment.
 
+---
+
+**[↑ Back to Databricks SQL](./README.md) | [Next: Query Editor & Execution](./02-query-editor.md) →**

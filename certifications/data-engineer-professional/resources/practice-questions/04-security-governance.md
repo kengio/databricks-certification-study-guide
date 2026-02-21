@@ -220,4 +220,4 @@ D) Execute `DELETE FROM` on all tables containing the customer's data, then `VAC
 
 ---
 
-[Back to Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
+**[← Previous: Practice Questions - Section 03: Data Modeling](./03-data-modeling.md) | [↑ Back to Practice Questions](./README.md) | [Next: Practice Questions - Section 05: Monitoring & Logging](./05-monitoring-logging.md) →**

@@ -20,7 +20,7 @@ flowchart TD
     SQ[SQL Queries] --> Joins[Joins & Relationships]
     SQ --> Agg[Aggregations & Grouping]
     SQ --> Win[Window Functions]
-```text
+```
 
 ## Section Contents
 

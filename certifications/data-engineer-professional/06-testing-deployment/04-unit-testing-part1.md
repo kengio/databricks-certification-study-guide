@@ -32,7 +32,7 @@ flowchart TB
     Unit --> Pytest
     Integration --> Nutter
     E2E --> Great
-```text
+```
 
 ## Testing Pyramid for Data Engineering
 
@@ -63,12 +63,13 @@ my-project/
 │       └── test_aggregations.py
 ├── pytest.ini
 └── requirements-dev.txt
-```text
+```
 
 ### pytest Configuration
 
 ```ini
 # pytest.ini
+
 [pytest]
 testpaths = tests
 python_files = test_*.py
@@ -79,7 +80,7 @@ markers =
     unit: Unit tests
     integration: Integration tests
     slow: Slow running tests
-```text
+```
 
 ### requirements-dev.txt
 
@@ -89,7 +90,7 @@ pytest-cov>=4.0.0
 pytest-mock>=3.10.0
 pyspark>=3.4.0
 chispa>=0.9.0
-```text
+```
 
 ## Writing Unit Tests
 
@@ -97,6 +98,7 @@ chispa>=0.9.0
 
 ```python
 # tests/unit/test_cleaning.py
+
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
@@ -142,12 +144,13 @@ class TestCleaning:
         # Assert
         names = [row.name for row in result.collect()]
         assert names == ["alice", "bob"]
-```text
+```
 
 ### Source Code Being Tested
 
 ```python
 # src/transformations/cleaning.py
+
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import lower, trim
 
@@ -162,7 +165,7 @@ def standardize_names(df: DataFrame, column: str) -> DataFrame:
 def deduplicate(df: DataFrame, key_columns: list) -> DataFrame:
     """Remove duplicate rows based on key columns."""
     return df.dropDuplicates(key_columns)
-```text
+```
 
 ## Testing with chispa
 
@@ -170,6 +173,7 @@ def deduplicate(df: DataFrame, key_columns: list) -> DataFrame:
 
 ```python
 # tests/unit/test_aggregations.py
+
 import pytest
 from chispa import assert_df_equality
 from pyspark.sql import SparkSession
@@ -217,7 +221,7 @@ class TestAggregations:
 
         # Assert
         assert result.count() == 0
-```text
+```
 
 ### Schema Comparison
 
@@ -240,7 +244,7 @@ def test_output_schema_matches_expected(self, spark):
 
     # Assert
     assert_schema_equality(result.schema, expected_schema)
-```text
+```
 
 ## Mocking Spark and dbutils
 
@@ -248,6 +252,7 @@ def test_output_schema_matches_expected(self, spark):
 
 ```python
 # tests/conftest.py
+
 import pytest
 from unittest.mock import MagicMock, patch
 from pyspark.sql import SparkSession
@@ -269,12 +274,13 @@ def mock_spark():
     """Mock SparkSession for unit tests not needing real Spark."""
     mock = MagicMock(spec=SparkSession)
     return mock
-```text
+```
 
 ### Mocking dbutils
 
 ```python
 # tests/conftest.py
+
 import pytest
 from unittest.mock import MagicMock
 
@@ -298,17 +304,19 @@ def mock_dbutils():
     return dbutils
 
 # Using the mock
+
 def test_function_using_dbutils(mock_dbutils):
     """Test function that uses dbutils."""
     with patch('src.my_module.dbutils', mock_dbutils):
         result = my_function_using_dbutils()
         assert result is not None
-```text
+```
 
 ### Mocking External Services
 
 ```python
 # tests/unit/test_api_calls.py
+
 import pytest
 from unittest.mock import patch, MagicMock
 from src.connectors.api_client import fetch_data
@@ -343,7 +351,7 @@ class TestAPIClient:
         with pytest.raises(Exception) as exc_info:
             fetch_data("https://api.example.com/data")
         assert "Connection failed" in str(exc_info.value)
-```text
+```
 
 ## Nutter Framework
 
@@ -355,21 +363,24 @@ Nutter is a Databricks-native testing framework:
 - Supports test fixtures (before/after)
 - Integrates with CI/CD pipelines
 - Generates JUnit-compatible reports
-```text
+```
 
 ### Installing Nutter
 
 ```bash
 # Install via pip
+
 pip install nutter
 
 # Or add to cluster library
 # Libraries → Install New → PyPI: nutter
-```text
+
+```
 
 ### Nutter Test Notebook
 
 ```python
+
 # Databricks notebook source
 # MAGIC %pip install nutter
 
@@ -429,38 +440,48 @@ class TestBronzeIngestion(NutterFixture):
 # COMMAND ----------
 
 # Run tests
+
 result = TestBronzeIngestion().execute_tests()
 print(result.to_string())
 
 # COMMAND ----------
 
 # For CI/CD, check if tests passed
+
 is_job = dbutils.notebook.entry_point.getDbutils().notebook().getContext().currentRunId().isDefined()
 if is_job:
     result.exit(dbutils)
-```text
+```
 
 ### Running Nutter from CLI
 
 ```bash
 # Run all tests in a folder
+
 nutter run /Workspace/Users/user@company.com/project/tests/ \
     --cluster_id abc-123-def \
     --recursive
 
 # Run specific test notebook
+
 nutter run /Workspace/Users/user@company.com/project/tests/test_bronze \
     --cluster_id abc-123-def
 
 # Run with tags
+
 nutter run /Workspace/Users/user@company.com/project/tests/ \
     --cluster_id abc-123-def \
     --tag_filter schema
 
 # Generate JUnit report
+
 nutter run /Workspace/Users/user@company.com/project/tests/ \
     --cluster_id abc-123-def \
     --junit_report results.xml
-```text
+```
 
 > **Continue reading:** [Part 2 — Testing Patterns, CI/CD Integration, Best Practices & Exam Tips](./11-unit-testing-part2.md)
+
+---
+
+**[← Previous: Git Folders](./03-git-folders.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Unit Testing — Part 2](./04-unit-testing-part2.md) →**

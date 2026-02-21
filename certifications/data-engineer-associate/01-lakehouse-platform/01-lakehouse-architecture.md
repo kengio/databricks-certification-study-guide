@@ -52,7 +52,7 @@ flowchart LR
     UC --> Governance
     Policy --> Governance
     Audit --> Governance
-```text
+```
 
 ## Data Warehouse vs Data Lake vs Lakehouse
 
@@ -78,18 +78,20 @@ flowchart LR
 
 ```python
 # Schema enforcement prevents bad data
+
 df.write \
     .format("delta") \
     .mode("append") \
     .save("/mnt/data/table")
 
 # Schema evolution allows controlled changes
+
 df.write \
     .format("delta") \
     .mode("append") \
     .option("mergeSchema", "true") \
     .save("/mnt/data/table")
-```text
+```
 
 ### 3. **Data Versioning & Time Travel**
 
@@ -99,17 +101,19 @@ df.write \
 
 ```python
 # Time travel query
+
 spark.read \
     .format("delta") \
     .option("versionAsOf", 0) \
     .load("/mnt/data/table")
 
 # Or by timestamp
+
 spark.read \
     .format("delta") \
     .option("timestampAsOf", "2025-01-15") \
     .load("/mnt/data/table")
-```text
+```
 
 ### 4. **Data Lineage & Audit Logs**
 
@@ -129,12 +133,14 @@ Delta Lake is the open-source storage engine powering the Lakehouse:
 
 ```python
 # Create a Delta table
+
 df.write.format("delta").mode("overwrite").save("/mnt/delta/my_table")
 
 # Or convert existing Parquet
+
 from delta.tables import DeltaTable
 DeltaTable.convertToDelta(spark, "parquet.`/path/to/data`")
-```text
+```
 
 ## Medallion Architecture (Bronze/Silver/Gold)
 
@@ -170,7 +176,7 @@ flowchart TB
     Silver --> Gold
     Gold --> BI
     Gold --> ML
-```text
+```
 
 ### Bronze Layer
 
@@ -215,10 +221,13 @@ Unity Catalog provides a unified governance solution:
 
 ```python
 # Three-level namespace
+
 spark.sql("SELECT * FROM main.default.my_table")
+
 #          ^     ^       ^
 #      catalog schema  table
-```text
+
+```
 
 ## Use Cases
 
@@ -228,6 +237,20 @@ spark.sql("SELECT * FROM main.default.my_table")
 4. **Compliance**: Audit trails on all data changes, column-level masking
 5. **Data Sharing**: Secure external data sharing without data duplication
 
+## Common Issues & Errors
+
+### 1. Conflicting Data Formats
+
+**Scenario:** Queries fail when mixing Parquet, CSV, and JSON files in the same directory.
+
+**Fix:** Convert all raw data to Delta format early in the medallion pipeline (Bronze layer) so downstream layers always read a consistent format.
+
+### 2. Stale Metadata Cache
+
+**Scenario:** Newly written data is not visible to queries.
+
+**Fix:** Run `REFRESH TABLE <table_name>` or use Delta Lake (which handles metadata automatically) instead of plain Parquet/CSV tables.
+
 ---
 
-**[← Back to Lakehouse Platform](README.md)**
+**[↑ Back to Databricks Lakehouse Platform](./README.md) | [Next: Databricks Workspace](./02-databricks-workspace.md) →**

@@ -21,7 +21,7 @@ flowchart TD
     LP --> Components[Platform Components]
     LP --> Workspace[Workspace & Environment]
     LP --> Clusters[Compute & Clusters]
-```text
+```
 
 ## Section Contents
 

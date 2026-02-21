@@ -227,4 +227,4 @@ D) `MlflowClient().get_metric(run_id, "rmse")`
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: Feature Engineering →](./03-feature-engineering.md)
+**[← Previous: Practice Questions — Databricks ML](./01-databricks-ml.md) | [↑ Back to Practice Questions — ML Associate](./README.md) | [Next: Practice Questions — Feature Engineering](./03-feature-engineering.md) →**

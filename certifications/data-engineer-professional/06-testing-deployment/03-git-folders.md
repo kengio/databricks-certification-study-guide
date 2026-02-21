@@ -33,7 +33,7 @@ flowchart TB
     GitProvider <-->|Clone/Pull/Push| GitFolder
     GitFolder --> Notebooks
     GitFolder --> Files
-```text
+```
 
 ## Git Folders vs Legacy Repos
 
@@ -57,7 +57,7 @@ UI Steps:
 4. Select Git provider
 5. Choose branch
 6. Click Create
-```text
+```
 
 ### Git Provider Configuration
 
@@ -68,7 +68,7 @@ Supported Providers:
 - Azure DevOps (dev.azure.com)
 - Bitbucket (bitbucket.org, Bitbucket Server)
 - AWS CodeCommit
-```text
+```
 
 ### Personal Access Token Setup
 
@@ -87,7 +87,7 @@ For Azure DevOps:
    - Code (Read & Write)
 3. In Databricks: User Settings → Git Integration
 4. Select Azure DevOps Services, enter token
-```text
+```
 
 ## Working with Git Folders
 
@@ -113,7 +113,7 @@ Create Branch:
 Switch Branch:
 - Right-click folder → Git → Switch Branch
 - Select from available branches
-```text
+```
 
 ### Resolving Conflicts
 
@@ -127,7 +127,7 @@ flowchart TD
     Options --> Manual[Manual Merge]
     Manual --> Edit[Edit Files]
     Edit --> Commit[Commit Resolution]
-```text
+```
 
 ```text
 Conflict Resolution:
@@ -138,7 +138,7 @@ Conflict Resolution:
    - Manual merge (edit conflicting files)
 3. Commit resolution
 4. Push changes
-```text
+```
 
 ## File Organization
 
@@ -185,11 +185,12 @@ my-data-project/
 └── resources/
     ├── jobs.yml
     └── pipelines.yml
-```text
+```
 
 ### Notebook Source Format
 
 ```python
+
 # Databricks notebook source
 # MAGIC %md
 # MAGIC # Bronze Ingestion Notebook
@@ -225,7 +226,7 @@ df = spark.read.format("json").load(source_path)
 # COMMAND ----------
 
 df.write.format("delta").mode("append").saveAsTable(target_table)
-```text
+```
 
 ## Branching Strategies
 
@@ -247,7 +248,7 @@ gitGraph
     merge release/1.0 tag: "v1.0"
     checkout develop
     merge release/1.0
-```text
+```
 
 ### Environment Branches
 
@@ -261,7 +262,7 @@ Branch Strategy:
 │   └── Integration branch
 └── feature/*
     └── Individual feature branches
-```text
+```
 
 ### PR Workflow
 
@@ -280,7 +281,7 @@ sequenceDiagram
     Develop->>Develop: Merge PR
     Develop->>Main: Open release PR
     Main->>Main: Deploy to production
-```text
+```
 
 ## Integration with Workflows
 
@@ -288,6 +289,7 @@ sequenceDiagram
 
 ```python
 # In a job task configuration
+
 {
     "notebook_task": {
         "notebook_path": "/Workspace/Users/user@company.com/my-project/src/notebooks/bronze/ingest",
@@ -297,47 +299,54 @@ sequenceDiagram
         }
     }
 }
-```text
+```
 
 ### %run with Git Folders
 
 ```python
+
 # Databricks notebook source
 
 # Run a notebook from the same Git folder
 # COMMAND ----------
 
 # Relative path from current notebook
+
 %run ./utils/common_functions
 
 # COMMAND ----------
 
 # Or absolute workspace path
+
 %run /Workspace/Users/user@company.com/my-project/src/notebooks/utils/common_functions
-```text
+```
 
 ### Importing Python Modules
 
 ```python
+
 # Databricks notebook source
 
 # Add project root to path
+
 import sys
 sys.path.append("/Workspace/Users/user@company.com/my-project/src/python")
 
 # COMMAND ----------
 
 # Import project modules
+
 from utils import data_validation
 from transformations import clean_data
 
 # COMMAND ----------
 
 # Use imported functions
+
 df = spark.table("bronze.events")
 df_cleaned = clean_data(df)
 data_validation.check_nulls(df_cleaned)
-```text
+```
 
 ## Automating Git Operations
 
@@ -349,7 +358,7 @@ flowchart LR
     Webhook --> API[Databricks API]
     API --> Update[Update Git Folder]
     Update --> Job[Trigger Job]
-```text
+```
 
 ### REST API for Git Folders
 
@@ -357,6 +366,7 @@ flowchart LR
 import requests
 
 # Get Git folder status
+
 response = requests.get(
     f"{workspace_url}/api/2.0/workspace/get-status",
     headers={"Authorization": f"Bearer {token}"},
@@ -364,37 +374,43 @@ response = requests.get(
 )
 
 # Pull latest changes
+
 response = requests.post(
     f"{workspace_url}/api/2.0/repos/{repo_id}/pull",
     headers={"Authorization": f"Bearer {token}"}
 )
 
 # Create branch
+
 response = requests.post(
     f"{workspace_url}/api/2.0/repos/{repo_id}/branches",
     headers={"Authorization": f"Bearer {token}"},
     json={"name": "feature/new-feature"}
 )
-```text
+```
 
 ### CLI Operations
 
 ```bash
 # List Git folders
+
 databricks repos list
 
 # Get Git folder info
+
 databricks repos get --repo-id 12345
 
 # Update Git folder (pull)
+
 databricks repos update --repo-id 12345 --branch main
 
 # Create Git folder
+
 databricks repos create \
     --url https://github.com/company/project.git \
     --provider github \
     --path /Workspace/Users/user@company.com/my-project
-```text
+```
 
 ## Security and Permissions
 
@@ -410,7 +426,7 @@ Permission Levels:
 Inheritance:
 - Follows workspace folder permissions
 - Can be overridden at folder level
-```text
+```
 
 ### Credential Management
 
@@ -424,7 +440,7 @@ Git Credentials Storage:
    - Admin Console → Git Integration
    - Shared service account credentials
    - Used when personal credentials not set
-```text
+```
 
 ### Branch Protection
 
@@ -436,7 +452,7 @@ Enforce in Git Provider:
 4. Restrict who can push to protected branches
 
 Databricks follows Git provider rules
-```text
+```
 
 ## Comparison: Git Folders vs Asset Bundles
 
@@ -462,7 +478,7 @@ Asset Bundles:
 - Environment promotion
 - Resource configuration as code
 - CI/CD pipelines
-```text
+```
 
 ### Combined Workflow
 
@@ -492,7 +508,7 @@ flowchart TB
     Test --> Bundle
     Bundle --> Deploy
     Deploy --> Prod
-```text
+```
 
 ## Use Cases
 
@@ -501,7 +517,7 @@ flowchart TB
 
 ## Common Issues & Errors
 
-#### 1. Authentication Failed
+### 1. Authentication Failed
 
 **Scenario:** Cannot clone or push to repository.
 
@@ -512,9 +528,9 @@ flowchart TB
 2. Check token permissions (repo scope for GitHub)
 3. Ensure token hasn't expired
 4. For SSO: Re-authenticate with Git provider
-```text
+```
 
-#### 2. Merge Conflicts
+### 2. Merge Conflicts
 
 **Scenario:** Pull fails due to conflicts.
 
@@ -526,27 +542,30 @@ flowchart TB
 3. Pull again
 4. Reapply changes manually
 5. Commit and push
-```text
+```
 
-#### 3. Notebook Format Issues
+### 3. Notebook Format Issues
 
 **Scenario:** Notebook doesn't render correctly.
 
 **Fix:**
 
 ```python
+
 # Ensure notebook has correct header
 # For Python:
 # Databricks notebook source
 
 # For SQL:
+
 -- Databricks notebook source
 
 # For Scala:
-// Databricks notebook source
-```text
 
-#### 4. Missing Files After Pull
+// Databricks notebook source
+```
+
+### 4. Missing Files After Pull
 
 **Scenario:** Files missing after Git operation.
 
@@ -557,9 +576,9 @@ flowchart TB
 2. Check .gitignore: File might be ignored
 3. Refresh workspace: Close and reopen folder
 4. Check permissions: Ensure read access to files
-```text
+```
 
-#### 5. Large Repository Performance
+### 5. Large Repository Performance
 
 **Scenario:** Operations slow on large repos.
 
@@ -570,7 +589,7 @@ flowchart TB
 2. Split into smaller repositories
 3. Use shallow clone (limited history)
 4. Archive old notebooks to separate repo
-```text
+```
 
 ## Best Practices
 
@@ -583,7 +602,7 @@ flowchart TB
 4. Pull frequently to stay updated
 5. Use PR reviews for quality control
 6. Delete merged branches
-```text
+```
 
 ### Repository Organization
 
@@ -594,7 +613,7 @@ flowchart TB
 4. Use .gitignore for generated files
 5. Keep notebooks focused and modular
 6. Separate code from configuration
-```text
+```
 
 ### Collaboration
 
@@ -604,7 +623,7 @@ flowchart TB
 3. Use consistent naming conventions
 4. Communicate before major changes
 5. Keep main branch always deployable
-```text
+```
 
 ## Exam Tips
 
@@ -621,8 +640,8 @@ flowchart TB
 
 ## Related Topics
 
-- [Asset Bundles](01-asset-bundles.md) - Deployment automation
-- [CI/CD Integration](02-cicd-integration.md) - Pipeline workflows
+- [Asset Bundles](01-asset-bundles-part1.md) - Deployment automation
+- [CI/CD Integration](02-cicd-integration-part1.md) - Pipeline workflows
 - [Workspace and Notebooks](../02-databricks-tooling/01-workspace-and-notebooks.md) - Notebook features
 
 ## Official Documentation
@@ -631,3 +650,7 @@ flowchart TB
 - [Git Integration](https://docs.databricks.com/repos/git-operations.html)
 - [Configure Git Credentials](https://docs.databricks.com/repos/repos-setup.html)
 - [Notebooks in Git](https://docs.databricks.com/repos/work-with-notebooks-other-files.html)
+
+---
+
+**[← Previous: CI/CD Integration — Part 2 (Testing, Secrets & Monitoring)](./02-cicd-integration-part2.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Unit Testing — Part 1](./04-unit-testing-part1.md) →**

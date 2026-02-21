@@ -29,7 +29,7 @@ databricks-certification-study-guide/
 │   └── code-examples/       # Python and SQL examples
 ├── learning-paths/          # Certification progression guides
 └── images/                  # Shared images and diagrams
-```text
+```
 
 ## Content Guidelines
 
@@ -55,18 +55,18 @@ databricks-certification-study-guide/
   - **Exception**: Mock exam `questions.md` files are exempt from this limit to preserve the continuous testing experience. Do not split `mock-exam/questions.md` files.
 - **When to split**: when a file contains two or more conceptually distinct sub-topics that can each stand alone (e.g., "joins & state" vs "monitoring & tuning")
 - **How to split**:
-  1. Part 1 keeps the original file number with name: `NN-topic-name.md`
-  2. Part 2 uses same number with `-part2` suffix: `NN-topic-name-part2.md` (NOT next sequential number)
+  1. Part 1 appends the `-part1` suffix: `NN-topic-name-part1.md`
+  2. Part 2 uses same number with `-part2` suffix: `NN-topic-name-part2.md`
   3. Each part gets its own YAML frontmatter and a brief 1–2 sentence intro paragraph
   4. Terminal sections (Exam Tips, Practice Questions, Related Topics, Official Docs, Common Issues) go to **Part 2 only** — end Part 1 with a single forward link to Part 2
   5. Update the section `README.md` index table to list both new files
   6. Delete the original oversized file
-  7. Search the repo for any links pointing to the old filename and update them all
+  7. Search the repo for any links pointing to the old filename and update them all, and ensure the "Previous" and "Next" navigation links between the split files are correct.
 
 **Example**: If `03-structured-streaming.md` exceeds 800 lines:
 
-- Part 1 stays: `03-structured-streaming.md`
-- Part 2 becomes: `03-structured-streaming-part2.md` (NOT `12-structured-streaming-part2.md`)
+- Part 1 becomes: `03-structured-streaming-part1.md`
+- Part 2 becomes: `03-structured-streaming-part2.md`
 
 ### Markdown Conventions
 
@@ -85,7 +85,7 @@ databricks-certification-study-guide/
   df = spark.read.format("delta") \
       .option("key", "value") \
       .load("/path")
-  ```text
+  ```
 
 - **Use Obsidian foldable callouts** for answers/spoilers (collapsed by default in Obsidian). Use the `[!success]-` callout type:
 
@@ -94,7 +94,7 @@ databricks-certification-study-guide/
   > **Correct Answer: X**
   >
   > Explanation text here.
-  ```text
+  ```
 
 - **Practice Question Choices**: Format as separate lines without bullets. End each line with **two spaces** to force a hard line break:
 
@@ -102,7 +102,7 @@ databricks-certification-study-guide/
   A) Option one
   B) Option two
   C) Option three
-  ```text
+  ```
 
 ### Diagrams
 
@@ -127,7 +127,7 @@ flowchart TB
     end
     ControlPlane --> DataPlane
 \`\`\`
-```text
+```
 
 ### Images
 
@@ -141,7 +141,7 @@ flowchart TB
 ![Alt text describing the image](../../images/databricks-ui/feature/image-name.png)
 
 *Caption explaining what the screenshot shows*
-```text
+```
 
 - **Note:** Avoid HTML image tags (`<img>`) - use markdown syntax for Obsidian compatibility
 
@@ -157,7 +157,7 @@ flowchart TB
 
   <!-- Wrong: Obsidian may resolve to root README.md -->
   [Back to Practice Questions](README.md)
-  ```text
+  ```
 
 - When adding or modifying links, confirm the target file exists
 - Standard entry points for each section:
@@ -181,6 +181,19 @@ flowchart TB
 - Reference official Databricks documentation
 - Use information from 2025 or 2026 sources
 
+### Section Ordering (End of Topic Files)
+
+All topic `.md` files should end with sections in this order:
+
+1. `## Use Cases`
+2. `## Common Issues & Errors`
+3. `## Exam Tips`
+4. `## Related Topics`
+5. `## Official Documentation`
+6. `---` separator + navigation link (`**[← Back to ...](./README.md)**`)
+
+Navigation links (`← Back to ...`) must always be the **very last element** in each file. Never place Use Cases or Common Issues after navigation links.
+
 ## Certification Folder Structure (Standardized)
 
 All certifications follow this consistent folder structure for easy navigation and scalability:
@@ -192,7 +205,7 @@ certifications/{cert-name}/
 │   ├── README.md                      # Topic overview, exam weight, contents list
 │   ├── 01-subtopic.md                 # Study material (300-600 lines)
 │   ├── 02-subtopic.md
-│   ├── NN-subtopic.md
+│   ├── NN-subtopic-part1.md
 │   └── NN-subtopic-part2.md           # If file exceeds 800 lines
 ├── NN-final-topic-area/               # (same structure repeating)
 │   └── ...
@@ -211,7 +224,7 @@ certifications/{cert-name}/
     │   └── questions.md               # All questions
     └── mock-exam-2/                    # (duplicate structure)
         └── ...
-```text
+```
 
 ### Certification Entry Point (README.md)
 

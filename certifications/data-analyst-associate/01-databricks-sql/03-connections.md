@@ -43,7 +43,7 @@ flowchart TD
     Tools --> Protocols
     Protocols --> Auth
     Auth --> Warehouse["SQL Warehouse"]
-```text
+```
 
 ## JDBC Connection
 
@@ -52,13 +52,15 @@ JDBC (Java Database Connectivity) is used by Java applications and many tools.
 ### Download JDBC Driver
 
 ```bash
+
 # Available from Databricks downloads page
 # File: SimbaDriverforDatabricksSpark.jar
 # Version varies by SQL version
 
 # Add to classpath
+
 export CLASSPATH="$CLASSPATH:/path/to/SimbaDriverforDatabricksSpark.jar"
-```text
+```
 
 ### Connection String (JDBC URL)
 
@@ -70,7 +72,7 @@ jdbc:databricks://dbc-abc123def456ghi.cloud.databricks.com:443/;
   Password=dapi1234567890abcdefghijklmnop;
   SSL=1;
   ThriftTransport=2
-```text
+```
 
 ### Components
 
@@ -117,7 +119,7 @@ public class DatabricksConnection {
         }
     }
 }
-```text
+```
 
 ## ODBC Connection
 
@@ -127,15 +129,18 @@ ODBC (Open Database Connectivity) is used by BI tools, Excel, and many legacy ap
 
 ```bash
 # macOS: Using Homebrew
+
 brew install simba-spark-odbc
 
 # Linux: RPM package
+
 rpm -i SimbaSparkODBC*.rpm
 
 # Windows: MSI installer
 # Download from Databricks downloads page
 # Run installer: SimbaSparkODBC-x64-*.msi
-```text
+
+```
 
 ### ODBC Configuration (odbcinst.ini / odbc.ini)
 
@@ -146,7 +151,7 @@ rpm -i SimbaSparkODBC*.rpm
 Description=Simba Spark ODBC Driver
 Driver=/opt/simba/spark/lib/64/libsparkodbc64.so
 Setup=/opt/simba/spark/lib/64/libsparkodbc64setup.so
-```text
+```
 
 **odbc.ini** - Connection definition:
 
@@ -161,12 +166,13 @@ User=token
 Password=dapi1234567890abcdefghijklmnop
 SSL=1
 ThriftTransport=2
-```text
+```
 
 ### Test ODBC Connection
 
 ```bash
 # On Linux/macOS
+
 isql -v databricks-prod
 
 # When successful, shows:
@@ -175,7 +181,8 @@ isql -v databricks-prod
 # | Driver: Simba Spark ODBC Driver       |
 # | DSN: databricks-prod                  |
 # +---------------------------------------+
-```text
+
+```
 
 ## REST API Connection
 
@@ -185,14 +192,16 @@ For programmatic access and custom integrations.
 
 ```bash
 # Personal Access Token (PAT) Authentication
+
 curl -X GET https://dbc-abc123.cloud.databricks.com/api/2.1/warehouses \
   -H "Authorization: Bearer dapi1234567890abcdefghijklm"
-```text
+```
 
 ### Execute SQL Query via REST API
 
 ```bash
 # Execute a query
+
 curl -X POST \
   https://dbc-abc123.cloud.databricks.com/api/2.0/sql/statements \
   -H "Authorization: Bearer dapi..." \
@@ -204,23 +213,26 @@ curl -X POST \
   }'
 
 # Response (execution started):
+
 {
   "statement_id": "xyz789",
   "state": "RUNNING",
   "statementType": "SELECT"
 }
-```text
+```
 
 ### Query Results via REST API
 
 ```bash
 # Get execution result
+
 curl -X GET \
   https://dbc-abc123.cloud.databricks.com/api/2.0/sql/statements/xyz789/result/chunks \
   -H "Authorization: Bearer dapi..." \
   -H "Content-Type: application/json"
 
 # Response:
+
 {
   "chunks": [
     {
@@ -230,7 +242,7 @@ curl -X GET \
     }
   ]
 }
-```text
+```
 
 ## Python Connection
 
@@ -240,6 +252,7 @@ curl -X GET \
 from databricks import sql
 
 # Connect to warehouse
+
 connection = sql.connect(
     server_hostname="dbc-abc123.cloud.databricks.com",
     http_path="/sql/1.0/warehouses/abc123def456",
@@ -250,15 +263,18 @@ connection = sql.connect(
 )
 
 # Execute query
+
 cursor = connection.cursor()
 cursor.execute("SELECT * FROM sales WHERE amount > ?", [1000])
 
 # Fetch results
+
 results = cursor.fetchall()
 for row in results:
     print(row)
 
 # With DataFrame
+
 import pandas as pd
 
 df = pd.read_sql_query(
@@ -267,7 +283,7 @@ df = pd.read_sql_query(
     params=["US"]
 )
 print(df.head())
-```text
+```
 
 ### Using SQLAlchemy (ORM)
 
@@ -276,6 +292,7 @@ from sqlalchemy import create_engine, text
 import pandas as pd
 
 # Create engine
+
 engine = create_engine(
     "databricks://token:dapi123@dbc-abc123.cloud.databricks.com/"
     "main/sales?"
@@ -283,6 +300,7 @@ engine = create_engine(
 )
 
 # Execute query
+
 with engine.connect() as conn:
     result = conn.execute(text("""
         SELECT customer_id, SUM(amount) as total
@@ -297,7 +315,7 @@ with engine.connect() as conn:
     df = pd.DataFrame(result.fetchall(),
                      columns=result.keys())
     print(df)
-```text
+```
 
 ## Authentication Methods
 
@@ -309,13 +327,13 @@ Most common for API and tool connections.
 
 ```text
 Account Settings → User Settings → Personal Access Tokens → Generate New Token
-```text
+```
 
 **Format:**
 
 ```text
 dapi1234567890abcdefghijklmnopqrstu
-```text
+```
 
 ### OAuth 2.0 / Azure Active Directory
 
@@ -323,6 +341,7 @@ For enterprise environments with SSO.
 
 ```python
 # OAuth setup (Microsoft Azure example)
+
 oauth_config = {
     "client_id": "abc123def456",
     "client_secret": "xyz789secret",
@@ -335,7 +354,7 @@ connection = sql.connect(
     auth_type="oauth",
     **oauth_config
 )
-```text
+```
 
 ### M2M (Machine-to-Machine)
 
@@ -343,6 +362,7 @@ For service accounts and automation.
 
 ```python
 # Service principal authentication
+
 connection = sql.connect(
     server_hostname="dbc-abc123.cloud.databricks.com",
     http_path="/sql/1.0/warehouses/abc123",
@@ -351,7 +371,7 @@ connection = sql.connect(
     client_id="client-id",
     client_secret="client-secret"
 )
-```text
+```
 
 ## BI Tool Integrations
 
@@ -369,7 +389,7 @@ Tableau Server/Desktop:
 
   Catalog: main
   Schema: sales
-```text
+```
 
 ### Power BI Connection
 
@@ -382,13 +402,13 @@ Power BI Desktop:
   Password: dapi...
   Advanced:
     - SSL Enabled: True
-```text
+```
 
 ### Excel Connection (Excel 365)
 
 ```text
 Get Data → From Database → Spark
-```text
+```
 
 ## Connection Pooling & Performance
 
@@ -396,9 +416,11 @@ Get Data → From Database → Spark
 
 ```python
 # Using SQLAlchemy connection pooling
+
 from sqlalchemy.pool import NullPool, QueuePool
 
 # For high-concurrency scenarios
+
 engine = create_engine(
     "databricks://token:dapi@host/catalog/schema?...",
     poolclass=QueuePool,
@@ -407,7 +429,7 @@ engine = create_engine(
     pool_recycle=3600,         # Recycle every hour
     pool_pre_ping=True         # Test before using
 )
-```text
+```
 
 ### Best Practices
 
@@ -437,7 +459,7 @@ def execute_with_retry(connection, query, max_retries=3):
                 time.sleep(wait_time)
             else:
                 raise
-```text
+```
 
 ## Firewall & Network Configuration
 
@@ -452,7 +474,7 @@ Allow outbound connections:
 Ports required:
   - 443: HTTPS (primary)
   - 32000-32010: Driver communication (JDBC/ODBC)
-```text
+```
 
 ## Key Exam Concepts
 
@@ -483,10 +505,6 @@ Ports required:
 
 - **A**: 443 (HTTPS) for secure connections
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Connections & Integrations Implementation**: Incorporating Connections & Integrations principles to build scalable and maintainable solutions in Databricks environments.
@@ -495,10 +513,15 @@ Ports required:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Connections & Integrations do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Connections & Integrations to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Connections & Integrations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Connections & Integrations prior to deployment.
 
+---
+
+**[← Previous: Query Editor & Execution](./02-query-editor.md) | [↑ Back to Databricks SQL](./README.md)**

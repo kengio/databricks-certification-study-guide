@@ -25,7 +25,7 @@ flowchart TB
     Scale --> Encode["Categorical<br/>Encoding"]
     Encode --> Select["Feature<br/>Selection"]
     Select --> Model["ML Model"]
-```text
+```
 
 ## 1. Handling Missing Values
 
@@ -39,14 +39,17 @@ df = spark.read.table("data")
 
 # Option 1: REMOVE rows with missing values
 # Use if: Missing data is rare (< 5%)
+
 df_clean = df.dropna()
 
 # Option 2: REMOVE columns with too many missing values
 # Use if: Column has > 50% missing
+
 df_clean = df.select([c for c in df.columns if df.filter(F.col(c).isNull()).count() / df.count() < 0.5])
 
 # Option 3: IMPUTATION - Replace missing values
 # Mean imputation
+
 imputer = Imputer(
     inputCols=["age", "income", "tenure"],
     outputCols=["age", "income", "tenure"],
@@ -55,6 +58,7 @@ imputer = Imputer(
 df_imputed = imputer.fit(df).transform(df)
 
 # Forward/backward fill (for time series)
+
 from pyspark.sql.window import Window
 window = Window.orderBy("date").rowsBetween(-1, 0)
 df_filled = df.withColumn("value_filled", F.coalesce(
@@ -63,11 +67,12 @@ df_filled = df.withColumn("value_filled", F.coalesce(
 ))
 
 # Domain-specific imputation
+
 df_imputed = df.withColumn("category",
     F.when(F.col("category").isNull(), "Unknown")
      .otherwise(F.col("category"))
 )
-```text
+```
 
 ## 2. Categorical Encoding
 
@@ -77,6 +82,7 @@ df_imputed = df.withColumn("category",
 from pyspark.ml.feature import StringIndexer
 
 # Converts categories to indices (0, 1, 2, ...)
+
 indexer = StringIndexer(
     inputCol="region",
     outputCol="region_idx",
@@ -86,12 +92,14 @@ indexer = StringIndexer(
 
 # Frequency-based ordering: most frequent gets index 0
 # Alphabetical ordering: alphabetically first gets index 0
+
 indexed_df = indexer.fit(df).transform(df)
 
 # Example output:
 # region = ["North", "South", "North", "East", "South"]
 # region_idx = [1, 2, 1, 0, 2]  # East is most frequent (index 0)
-```text
+
+```
 
 ### **One-Hot Encoder**
 
@@ -99,6 +107,7 @@ indexed_df = indexer.fit(df).transform(df)
 from pyspark.ml.feature import OneHotEncoder
 
 # Converts indices to binary vectors (one-hot)
+
 encoder = OneHotEncoder(
     inputCols=["region_idx"],
     outputCols=["region_vec"],
@@ -111,23 +120,27 @@ encoded_df = encoder.fit(df).transform(df)
 # region_idx = 0 → region_vec = [1, 0]
 # region_idx = 1 → region_vec = [0, 1]
 # region_idx = 2 → region_vec = [0, 0]
-```text
+
+```
 
 ### **Target Encoding**
 
 ```python
+
 # Replace category with target variable mean
 # Use when: High cardinality categories
 
 df_with_target = df.select("region", "label")
 
 # Calculate mean target value for each region
+
 target_encoding = (df_with_target
     .groupBy("region")
     .agg(F.mean("label").alias("region_target_mean"))
 )
 
 # Join back to original data
+
 df_target_encoded = (df
     .join(target_encoding, "region")
     .drop("region")
@@ -136,14 +149,17 @@ df_target_encoded = (df
 
 # Problem: Risk of target leakage if not careful
 # Solution: Fit encoding on training set, apply to test set
-```text
+
+```
 
 ### **Ordinal/Label Encoding**
 
 ```python
+
 # Use when: Categories have natural order
 
 # Manual mapping for ordinal data
+
 from pyspark.sql.functions import when, col
 
 df_encoded = df.withColumn("size_encoded",
@@ -154,12 +170,13 @@ df_encoded = df.withColumn("size_encoded",
 )
 
 # Or use StringIndexer with custom order
+
 indexer = StringIndexer(
     inputCol="size",
     outputCol="size_idx",
     stringOrderType="frequencyAsc"  # Control ordering
 ).fit(df.select("size").distinct())
-```text
+```
 
 ## 3. Numerical Feature Scaling
 
@@ -186,7 +203,8 @@ df_scaled = pipeline.fit(df).transform(df)
 # - Prevents feature dominance
 # - Speeds up convergence
 # - Better for regularization (L1, L2)
-```text
+
+```
 
 ### **MinMaxScaler**
 
@@ -194,6 +212,7 @@ df_scaled = pipeline.fit(df).transform(df)
 from pyspark.ml.feature import MinMaxScaler
 
 # Scale to [min, max] range (default: [0, 1])
+
 scaler = MinMaxScaler(
     inputCol="features",
     outputCol="scaledFeatures",
@@ -206,17 +225,20 @@ df_scaled = scaler.fit(df).transform(df)
 # Formula: (x - min(x)) / (max(x) - min(x))
 # Best for: Tree models don't need scaling, but they use it for NN input
 # Sensitive to outliers
-```text
+
+```
 
 ### **RobustScaler (Manual)**
 
 ```python
+
 # Use for data with outliers
 # (x - median) / IQR
 
 from pyspark.sql.functions import percentile_approx, col
 
 # Calculate percentiles
+
 percentiles = df.agg(
     percentile_approx("age", 0.25).alias("q1"),
     percentile_approx("age", 0.75).alias("q3")
@@ -227,8 +249,9 @@ q3 = percentiles.collect()[0]["q3"]
 iqr = q3 - q1
 
 # Scale using IQR
+
 df_scaled = df.withColumn("age_scaled", (col("age") - q1) / iqr)
-```text
+```
 
 ## 4. Feature Interactions
 
@@ -238,10 +261,12 @@ df_scaled = df.withColumn("age_scaled", (col("age") - q1) / iqr)
 from pyspark.sql.functions import col
 
 # Polynomial interaction
+
 df_interactions = df.withColumn("age_income_interaction", col("age") * col("income"))
 df_interactions = df_interactions.withColumn("income_squared", col("income") ** 2)
 
 # Polynomial expansion
+
 from pyspark.ml.feature import PolynomialExpansion
 
 poly = PolynomialExpansion(
@@ -252,18 +277,20 @@ poly = PolynomialExpansion(
 
 # For features [a, b]:
 # Output: [a, b, a², ab, b²]
-```text
+
+```
 
 ### **Feature Ratios**
 
 ```python
 # Engineer domain-specific features
+
 df_ratios = (df
     .withColumn("charge_per_tenure", col("monthly_charge") / (col("tenure") + 1))
     .withColumn("total_charge_ratio", col("total_charges") / (col("monthly_charge") + 1))
     .withColumn("service_diversity", col("num_services") / col("account_age"))
 )
-```text
+```
 
 ## 5. Feature Selection
 
@@ -273,6 +300,7 @@ df_ratios = (df
 from pyspark.ml.feature import VarianceThresholdSelector
 
 # Remove low-variance features (likely not predictive)
+
 selector = VarianceThresholdSelector(
     featuresCol="features",
     outputCol="selectedFeatures",
@@ -280,12 +308,13 @@ selector = VarianceThresholdSelector(
 )
 
 df_selected = selector.fit(df).transform(df)
-```text
+```
 
 ### **Correlation Analysis**
 
 ```python
 # Select features with high correlation to target
+
 from pyspark.sql.functions import corr
 
 correlations = {}
@@ -295,12 +324,13 @@ for col_name in numeric_cols:
         correlations[col_name] = corr_value
 
 print("Important features:", correlations)
-```text
+```
 
 ### **Recursive Feature Elimination (Manual)**
 
 ```python
 # Iteratively remove least important features
+
 from pyspark.ml.classification import RandomForestClassifier
 
 def rfe_step(df, target_features):
@@ -326,10 +356,11 @@ def rfe_step(df, target_features):
     return [f for f in target_features if f != least_important]
 
 # Iteratively remove until desired number reached
+
 features = numeric_cols.copy()
 while len(features) > 10:
     features = rfe_step(df, features)
-```text
+```
 
 ## 6. Temporal Features
 
@@ -353,7 +384,7 @@ df_temporal = (df
     .withColumn("is_business_hours", ((col("hour") >= 9) & (col("hour") <= 17)).cast("int"))
     .withColumn("is_month_start", (col("day_of_month") <= 3).cast("int"))
 )
-```text
+```
 
 ### **Lag and Lead Features**
 
@@ -361,6 +392,7 @@ df_temporal = (df
 from pyspark.sql.window import Window
 
 # Create lag features (previous values)
+
 window = Window.partitionBy("customer_id").orderBy("date").rowsBetween(-1, -1)
 
 df_lag = (df
@@ -369,13 +401,14 @@ df_lag = (df
 )
 
 # Create rolling statistics
+
 window_rolling = Window.partitionBy("customer_id").orderBy("date").rowsBetween(-6, 0)
 
 df_rolling = (df
     .withColumn("rolling_mean_7", F.mean("value").over(window_rolling))
     .withColumn("rolling_std_7", F.stddev("value").over(window_rolling))
 )
-```text
+```
 
 ## 7. Text Feature Extraction
 
@@ -385,9 +418,11 @@ df_rolling = (df
 from pyspark.ml.feature import Tokenizer, CountVectorizer, IDF
 
 # 1. Tokenize text
+
 tokenizer = Tokenizer(inputCol="text", outputCol="words")
 
 # 2. Count word frequencies
+
 cv = CountVectorizer(
     inputCol="words",
     outputCol="rawFeatures",
@@ -396,12 +431,14 @@ cv = CountVectorizer(
 )
 
 # 3. TF-IDF
+
 idf = IDF(inputCol="rawFeatures", outputCol="features")
 
 # Pipeline it
+
 pipeline = Pipeline(stages=[tokenizer, cv, idf])
 features = pipeline.fit(df).transform(df)
-```text
+```
 
 ## Feature Engineering Checklist
 
@@ -438,7 +475,7 @@ checklist = {
         "✓ Domain expert validation"
     ]
 }
-```text
+```
 
 ## Real-World Example: Customer Feature Engineering
 
@@ -449,15 +486,18 @@ from pyspark.ml import Pipeline
 from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler, StandardScaler
 
 # Load raw customer data
+
 df_raw = spark.read.table("raw.customers")
 
 # STEP 1: Impute missing values
+
 df_imputed = (df_raw
     .withColumn("income", F.when(F.col("income").isNull(), F.mean("income").over()).otherwise(F.col("income")))
     .withColumn("region", F.when(F.col("region").isNull(), "Unknown").otherwise(F.col("region")))
 )
 
 # STEP 2: Create features
+
 df_featured = (df_imputed
     .withColumn("tenure_days", F.datediff(F.current_date(), F.col("signup_date")))
     .withColumn("monthly_usage_ratio", F.col("monthly_usage") / (F.col("historical_usage") + 1))
@@ -465,6 +505,7 @@ df_featured = (df_imputed
 )
 
 # STEP 3: Categorical encoding + scaling
+
 pipeline = Pipeline(stages=[
     StringIndexer(inputCol="region", outputCol="region_idx"),
     StringIndexer(inputCol="segment", outputCol="segment_idx"),
@@ -479,10 +520,11 @@ pipeline = Pipeline(stages=[
 df_engineered = pipeline.fit(df_featured).transform(df_featured)
 
 # STEP 4: Save for modeling
+
 df_engineered.select("customer_id", "scaledFeatures", "label")\
     .write.mode("overwrite")\
     .saveAsTable("ml_ready.customer_features")
-```text
+```
 
 ## Use Cases
 
@@ -492,10 +534,12 @@ df_engineered.select("customer_id", "scaledFeatures", "label")\
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Feature Engineering Techniques to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Engineering Techniques prior to deployment.
 
@@ -530,3 +574,7 @@ df_engineered.select("customer_id", "scaledFeatures", "label")\
 
 - [Spark ML Features](https://spark.apache.org/docs/latest/ml-features.html)
 - [Feature Engineering Guide](https://docs.databricks.com/machine-learning/feature-engineering/index.html)
+
+---
+
+**[← Previous: Spark ML Pipelines](./01-spark-ml-pipelines.md) | [↑ Back to Feature Engineering](./README.md) | [Next: Databricks Feature Store](./03-feature-store.md) →**

@@ -32,7 +32,7 @@ flowchart TB
     Month --> Syntax
     DayOfWeek --> Syntax
     Syntax --> Command
-```text
+```
 
 ### Cron Format: `minute hour day_of_month month day_of_week`
 
@@ -48,29 +48,37 @@ flowchart TB
 
 ```text
 # Daily at 2 AM UTC
+
 0 2 * * * ?
 
 # Every 15 minutes
+
 */15 * * * * ?
 
 # Monday-Friday at 9 AM
+
 0 9 * * 1-5 ?
 
 # Every hour at the top of the hour
+
 0 * * * * ?
 
 # First day of month at midnight
+
 0 0 1 * * ?
 
 # Every Sunday at 3 PM
+
 0 15 * * 0 ?
 
 # Weekdays (Mon-Fri) at 8 AM and 5 PM
+
 0 8,17 * * 1-5 ?
 
 # Every 6 hours
+
 0 0,6,12,18 * * * ?
-```text
+```
 
 ### Databricks Cron Format
 
@@ -78,7 +86,7 @@ Databricks uses Quartz Cron, which requires a seconds field:
 
 ```text
 second minute hour day_of_month month day_of_week ?
-```text
+```
 
 ### Common Databricks Cron Expressions
 
@@ -89,7 +97,7 @@ second minute hour day_of_month month day_of_week ?
     "timezone_id": "America/Los_Angeles"
   }
 }
-```text
+```
 
 | Frequency | Expression | Notes |
 |-----------|-----------|-------|
@@ -112,7 +120,7 @@ second minute hour day_of_month month day_of_week ?
     "timezone_id": "America/New_York"
   }
 }
-```text
+```
 
 ### Common Timezone IDs
 
@@ -142,7 +150,7 @@ Prevents multiple instances of the same job from running simultaneously:
     "quartz_cron_expression": "0 0 * * * ?"
   }
 }
-```text
+```
 
 If a job runs longer than the schedule interval with `max_concurrent_runs: 1`:
 
@@ -161,7 +169,7 @@ If a job runs longer than the schedule interval with `max_concurrent_runs: 1`:
     }
   ]
 }
-```text
+```
 
 When timeout exceeded:
 
@@ -178,6 +186,7 @@ External systems trigger jobs via webhook:
 
 ```bash
 # Example: Trigger job from CI/CD pipeline
+
 curl -X POST \
   https://databricks-instance.cloud.databricks.com/api/2.1/jobs/run-now \
   -H "Authorization: Bearer <PAT>" \
@@ -188,7 +197,7 @@ curl -X POST \
       "version": "1.2.3"
     }
   }'
-```text
+```
 
 ### File-Based Triggers
 
@@ -196,6 +205,7 @@ Monitor for new files in cloud storage:
 
 ```python
 # Check for new files before running (in notebook before main logic)
+
 import os
 from datetime import datetime
 
@@ -210,11 +220,13 @@ while not os.path.exists("/mnt/data/trigger_file.txt"):
     wait_time += 60
 
 # Continue with main logic
-```text
+
+```
 
 ### Object Storage Events (S3, ADLS)
 
 ```python
+
 # Databricks can monitor object storage for trigger events
 # Setup via Databricks Events API or UI
 
@@ -222,7 +234,8 @@ while not os.path.exists("/mnt/data/trigger_file.txt"):
 # - New files uploaded to S3/ADLS
 # - Specific pattern matches (e.g., *.csv)
 # - File size thresholds met
-```text
+
+```
 
 ## Scheduling Patterns
 
@@ -236,7 +249,7 @@ while not os.path.exists("/mnt/data/trigger_file.txt"):
     "timezone_id": "America/New_York"
   }
 }
-```text
+```
 
 Runs once daily at 6 AM Eastern Time.
 
@@ -249,7 +262,7 @@ Runs once daily at 6 AM Eastern Time.
     "quartz_cron_expression": "0 0 * * * ?"
   }
 }
-```text
+```
 
 Runs every hour at :00.
 
@@ -263,7 +276,7 @@ Runs every hour at :00.
     "timezone_id": "America/Chicago"
   }
 }
-```text
+```
 
 Runs every hour (9 AM - 5 PM) Monday-Friday.
 
@@ -284,7 +297,7 @@ Runs every hour (9 AM - 5 PM) Monday-Friday.
     "schedule": {"quartz_cron_expression": "0 20 * * * ?"}
   }
 ]
-```text
+```
 
 Stagger regional loads to distribute compute load.
 
@@ -305,7 +318,7 @@ curl -X POST \
   https://databricks-instance.cloud.databricks.com/api/2.1/jobs/pause \
   -H "Authorization: Bearer <PAT>" \
   -d '{"job_id": 123}'
-```text
+```
 
 ### Resume via API
 
@@ -314,7 +327,7 @@ curl -X POST \
   https://databricks-instance.cloud.databricks.com/api/2.1/jobs/unpause \
   -H "Authorization: Bearer <PAT>" \
   -d '{"job_id": 123}'
-```text
+```
 
 ## Manual Trigger
 
@@ -322,11 +335,12 @@ curl -X POST \
 
 ```bash
 # Run job immediately (ignores schedule)
+
 curl -X POST \
   https://databricks-instance.cloud.databricks.com/api/2.1/jobs/run-now \
   -H "Authorization: Bearer <PAT>" \
   -d '{"job_id": 123}'
-```text
+```
 
 ### Run with Custom Parameters
 
@@ -341,7 +355,7 @@ curl -X POST \
       "environment": "staging"
     }
   }'
-```text
+```
 
 ## Scheduling Best Practices
 
@@ -354,7 +368,7 @@ curl -X POST \
     "timezone_id": "UTC"
   }
 }
-```text
+```
 
 Off-peak scheduling reduces contention with interactive users.
 
@@ -364,7 +378,7 @@ Off-peak scheduling reduces contention with interactive users.
 Job A: 0 0 * * * ?       // Top of every hour
 Job B: 0 15 * * * ?      // 15 min past every hour
 Job C: 0 30 * * * ?      // 30 min past every hour
-```text
+```
 
 ### 3. Set Appropriate Timeouts
 
@@ -377,7 +391,7 @@ Job C: 0 30 * * * ?      // 30 min past every hour
     }
   ]
 }
-```text
+```
 
 Prevents hanging jobs from consuming resources.
 
@@ -387,7 +401,7 @@ Prevents hanging jobs from consuming resources.
 {
   "max_concurrent_runs": 1
 }
-```text
+```
 
 Prevents duplicate processing if previous run still running.
 
@@ -404,7 +418,7 @@ Prevents duplicate processing if previous run still running.
     "schedule": {"quartz_cron_expression": "0 0 6 * * ?"}
   }
 ]
-```text
+```
 
 Separate schedules by environment prevent cross-environment issues.
 
@@ -430,10 +444,6 @@ When DST changes occur:
 - **Staggering**: Space jobs to avoid resource contention
 - **Daylight Saving**: Automatic adjustment with timezone
 
----
-
-**[← Back to Workflows](README.md)**
-
 ## Use Cases
 
 - **Scheduling and Triggers Implementation**: Incorporating Scheduling and Triggers principles to build scalable and maintainable solutions in Databricks environments.
@@ -442,10 +452,15 @@ When DST changes occur:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Scheduling and Triggers do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Scheduling and Triggers to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Scheduling and Triggers to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Scheduling and Triggers prior to deployment.
 
+---
+
+**[← Previous: Databricks Jobs](./01-databricks-jobs.md) | [↑ Back to Workflows and Orchestration](./README.md) | [Next: Job Monitoring](./03-job-monitoring.md) →**

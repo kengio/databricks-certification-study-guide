@@ -289,4 +289,4 @@ Your company has been running Databricks for 3 years with a legacy Hive metastor
 
 ---
 
-[Back to Interview Prep](./README.md) | [Next: Delta Lake Internals](02-delta-lake-internals.md)
+**[↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Delta Lake Internals](./02-delta-lake-internals.md) →**

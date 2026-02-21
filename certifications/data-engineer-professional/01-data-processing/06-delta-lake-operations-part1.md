@@ -34,7 +34,7 @@ flowchart TD
 
     Schema --> Clone[Cloning]
     Schema --> Alter[ALTER TABLE]
-```text
+```
 
 ## MERGE Operation
 
@@ -48,7 +48,7 @@ USING source_table AS s
 ON t.id = s.id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ### MERGE Clauses
 
@@ -69,7 +69,7 @@ flowchart TD
     NotBySource --> BySourceAction{Action?}
     BySourceAction --> UpdateOrphan[UPDATE]
     BySourceAction --> DeleteOrphan[DELETE]
-```text
+```
 
 | Clause | Purpose | When Triggered |
 | :--- | :--- | :--- |
@@ -93,7 +93,7 @@ WHEN NOT MATCHED AND s.is_deleted = false THEN INSERT (
 ) VALUES (
     s.customer_id, s.name, s.email, current_timestamp(), current_timestamp()
 );
-```text
+```
 
 ### Star Syntax
 
@@ -104,7 +104,7 @@ USING source AS s
 ON t.id = s.id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ### MERGE with Schema Evolution
 
@@ -115,7 +115,7 @@ USING source AS s
 ON t.id = s.id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ### Python MERGE API
 
@@ -130,10 +130,11 @@ delta_table.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```text
+```
 
 ```python
 # With conditions
+
 delta_table.alias("t").merge(
     source_df.alias("s"),
     "t.id = s.id"
@@ -146,7 +147,7 @@ delta_table.alias("t").merge(
     condition="s.is_deleted = false",
     values={"id": "s.id", "name": "s.name", "email": "s.email"}
 ).execute()
-```text
+```
 
 ## Common MERGE Patterns
 
@@ -159,7 +160,7 @@ USING source AS s
 ON t.id = s.id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ### Upsert with Delete
 
@@ -171,7 +172,7 @@ ON t.id = s.id
 WHEN MATCHED AND s.operation = 'DELETE' THEN DELETE
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED AND s.operation != 'DELETE' THEN INSERT *;
-```text
+```
 
 ### Insert-Only Merge (Deduplication)
 
@@ -181,7 +182,7 @@ MERGE INTO target AS t
 USING source AS s
 ON t.id = s.id
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ### SCD Type 1 (Overwrite)
 
@@ -192,7 +193,7 @@ USING stg_customer AS s
 ON t.customer_id = s.customer_id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ## OPTIMIZE Command
 
@@ -209,7 +210,7 @@ OPTIMIZE table_name WHERE date = '2024-01-01';
 
 -- Optimize with predicate
 OPTIMIZE table_name WHERE region = 'us-west';
-```text
+```
 
 ### ZORDER BY
 
@@ -223,7 +224,7 @@ OPTIMIZE table_name ZORDER BY (customer_id, order_date);
 OPTIMIZE table_name
 WHERE date >= '2024-01-01'
 ZORDER BY (customer_id);
-```text
+```
 
 | Aspect | OPTIMIZE | ZORDER |
 |--------|----------|--------|
@@ -243,7 +244,7 @@ flowchart TD
     Q2 -->|No| Skip2[Skip - not filtered]
     Q3 -->|Yes| Include[Include in ZORDER]
     Q3 -->|No| Prioritize[Keep most selective columns]
-```text
+```
 
 ### Auto Optimize
 
@@ -253,7 +254,7 @@ ALTER TABLE table_name SET TBLPROPERTIES (
     'delta.autoOptimize.optimizeWrite' = 'true',
     'delta.autoOptimize.autoCompact' = 'true'
 );
-```text
+```
 
 | Property | Behavior |
 |----------|----------|
@@ -278,7 +279,7 @@ ALTER TABLE table_name CLUSTER BY (region, id);
 
 -- Remove clustering
 ALTER TABLE table_name CLUSTER BY NONE;
-```text
+```
 
 | Feature | ZORDER | Liquid Clustering |
 |---------|--------|-------------------|
@@ -302,7 +303,7 @@ VACUUM table_name RETAIN 240 HOURS;
 
 -- Dry run (preview files to delete)
 VACUUM table_name DRY RUN;
-```text
+```
 
 ### Critical VACUUM Facts (Exam Important)
 
@@ -320,7 +321,7 @@ flowchart LR
     Old --> Retention{Past Retention?}
     Retention -->|No| Keep[Keep for Time Travel]
     Retention -->|Yes| Vacuum[VACUUM Removes]
-```text
+```
 
 ### VACUUM Safety
 
@@ -331,7 +332,7 @@ VACUUM table_name RETAIN 0 HOURS;  -- Breaks time travel!
 
 -- Safe: Always use default or higher retention
 VACUUM table_name RETAIN 168 HOURS;
-```text
+```
 
 **Warning**: Running VACUUM with retention less than 7 days can break:
 
@@ -351,7 +352,7 @@ SELECT * FROM table_name VERSION AS OF 5;
 
 -- Using @ syntax
 SELECT * FROM table_name@v5;
-```text
+```
 
 ### Query by Timestamp
 
@@ -361,21 +362,23 @@ SELECT * FROM table_name TIMESTAMP AS OF '2024-01-15 10:00:00';
 
 -- Using @ syntax
 SELECT * FROM table_name@'2024-01-15';
-```text
+```
 
 ### Python Time Travel
 
 ```python
 # By version
+
 df = (spark.read.format("delta")
     .option("versionAsOf", 5)
     .load("/path/to/table"))
 
 # By timestamp
+
 df = (spark.read.format("delta")
     .option("timestampAsOf", "2024-01-15")
     .load("/path/to/table"))
-```text
+```
 
 ### DESCRIBE HISTORY
 
@@ -385,7 +388,7 @@ DESCRIBE HISTORY table_name;
 
 -- Limit results
 DESCRIBE HISTORY table_name LIMIT 10;
-```text
+```
 
 Returns columns:
 
@@ -403,7 +406,7 @@ RESTORE TABLE table_name TO VERSION AS OF 5;
 
 -- Restore to timestamp
 RESTORE TABLE table_name TO TIMESTAMP AS OF '2024-01-15';
-```text
+```
 
 ### Time Travel Retention
 
@@ -417,7 +420,7 @@ ALTER TABLE table_name SET TBLPROPERTIES (
 ALTER TABLE table_name SET TBLPROPERTIES (
     'delta.deletedFileRetentionDuration' = 'interval 14 days'
 );
-```text
+```
 
 ## Table Cloning
 
@@ -431,7 +434,7 @@ CREATE TABLE clone_table SHALLOW CLONE source_table;
 
 -- Clone specific version
 CREATE TABLE clone_table SHALLOW CLONE source_table VERSION AS OF 10;
-```text
+```
 
 ### Deep Clone
 
@@ -444,7 +447,7 @@ CREATE TABLE clone_table DEEP CLONE source_table;
 -- Clone to specific location
 CREATE TABLE clone_table DEEP CLONE source_table
 LOCATION 'abfss://container@storage/path';
-```text
+```
 
 | Feature | Shallow Clone | Deep Clone |
 |---------|---------------|------------|
@@ -467,6 +470,10 @@ ANALYZE TABLE table_name COMPUTE STATISTICS FOR COLUMNS col1, col2;
 
 -- Compute all column statistics
 ANALYZE TABLE table_name COMPUTE STATISTICS FOR ALL COLUMNS;
-```text
+```
 
 > **Continue reading:** [Part 2 — Schema Operations, Table Properties, Delta 3.0+ Features & Exam Tips](./13-delta-lake-operations-part2.md)
+
+---
+
+**[← Previous: Change Data Capture (CDC) — Part 2](./05-change-data-capture-part2.md) | [↑ Back to Data Processing](./README.md) | [Next: Delta Lake Operations — Part 2](./06-delta-lake-operations-part2.md) →**

@@ -10,7 +10,7 @@ status: published
 
 # Databricks REST API — Part 2: Permissions, SQL, Error Handling & Use Cases
 
-> For API basics, authentication, Jobs API, Clusters API, DBFS API, and Workspace API, see [Part 1](./03-rest-api.md).
+> For API basics, authentication, Jobs API, Clusters API, DBFS API, and Workspace API, see [Part 1](./03-rest-api-part1.md).
 
 This part covers the Permissions API, SQL Statement Execution API, error handling, rate limiting, automation use cases, and common issues.
 
@@ -20,15 +20,17 @@ This part covers the Permissions API, SQL Statement Execution API, error handlin
 
 ```bash
 # Get job permissions
+
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/permissions/jobs/123456' \
   -H 'Authorization: Bearer $TOKEN'
 
 # Get cluster permissions
+
 curl -X GET \
   'https://adb-xxx.azuredatabricks.net/api/2.0/permissions/clusters/1234-567890-abc' \
   -H 'Authorization: Bearer $TOKEN'
-```text
+```
 
 ### Set Permissions
 
@@ -48,7 +50,7 @@ curl -X PATCH \
       }
     ]
   }'
-```text
+```
 
 ### Permission Levels
 
@@ -64,6 +66,7 @@ Execute SQL statements on SQL warehouses:
 
 ```bash
 # Execute SQL
+
 curl -X POST \
   'https://adb-xxx.azuredatabricks.net/api/2.0/sql/statements' \
   -H 'Authorization: Bearer $TOKEN' \
@@ -72,10 +75,11 @@ curl -X POST \
     "statement": "SELECT * FROM main.default.my_table LIMIT 100",
     "wait_timeout": "30s"
   }'
-```text
+```
 
 ```python
 # Using SDK
+
 statement = w.statement_execution.execute_statement(
     warehouse_id="abc123def456",
     statement="SELECT * FROM main.default.my_table LIMIT 100",
@@ -83,9 +87,10 @@ statement = w.statement_execution.execute_statement(
 )
 
 # Get results
+
 for row in statement.result.data_array:
     print(row)
-```text
+```
 
 ## Error Handling
 
@@ -108,7 +113,7 @@ for row in statement.result.data_array:
   "error_code": "RESOURCE_DOES_NOT_EXIST",
   "message": "Job 123456 does not exist"
 }
-```text
+```
 
 ### Common Error Codes
 
@@ -137,7 +142,7 @@ except PermissionDenied:
     print("Access denied")
 except Exception as e:
     print(f"Unexpected error: {e}")
-```text
+```
 
 ## Rate Limiting
 
@@ -170,8 +175,9 @@ def call_with_retry(func, max_retries=3):
     raise Exception("Max retries exceeded")
 
 # Usage
+
 result = call_with_retry(lambda: w.jobs.list())
-```text
+```
 
 ## Use Cases
 
@@ -195,7 +201,7 @@ def deploy_job(w, job_config):
         # Create new job
         job = w.jobs.create(**job_config)
         return job.job_id
-```text
+```
 
 ### Monitoring Job Runs
 
@@ -221,10 +227,11 @@ def wait_for_run(w, run_id, timeout_seconds=3600):
         time.sleep(30)
 
 # Usage
+
 run = w.jobs.run_now(job_id=123456)
 result = wait_for_run(w, run.run_id)
 print(f"Run completed with: {result}")
-```text
+```
 
 ## Common Issues & Errors
 
@@ -240,11 +247,13 @@ print(f"Run completed with: {result}")
 
 ```bash
 # Wrong
+
 https://adb-xxx.azuredatabricks.net//api/2.0/jobs/list
 
 # Correct
+
 https://adb-xxx.azuredatabricks.net/api/2.0/jobs/list
-```text
+```
 
 ### 3. JSON Encoding Issues
 
@@ -256,7 +265,7 @@ https://adb-xxx.azuredatabricks.net/api/2.0/jobs/list
 import json
 
 payload = json.dumps({"name": "Job with \"quotes\""})
-```text
+```
 
 ### 4. Cluster Not Running for Job
 
@@ -266,29 +275,12 @@ payload = json.dumps({"name": "Job with \"quotes\""})
 
 ```python
 # Check cluster state before running
+
 cluster = w.clusters.get(cluster_id="xxx")
 if cluster.state != "RUNNING":
     w.clusters.start(cluster_id="xxx")
     # Wait for startup...
-```text
-
-## Use Cases
-
-- **Enterprise Orchestration**: Integrating Databricks with external schedulers like Apache Airflow or Control-M to trigger jobs programmatically.
-- **Automated Provisioning**: Writing scripts to automatically create clusters, set workspace permissions, or pre-configure secret scopes for new project environments.
-- **Custom Telemetry**: Extracting granular cluster events, billing data, or usage logs systematically for custom reporting dashboards.
-
-## Common Issues & Errors
-
-**1. Authentication and Authorization Failures**
-- **Error**: `401 Unauthorized` or `403 Forbidden`.
-- **Issue**: Token has expired, was revoked, or the principal lacks the required workspace or object-level permissions.
-- **Fix**: Use Service Principals instead of user tokens for automated API calls, and ensure the principal is granted necessary permissions via ACLs.
-
-**2. Rate Limiting**
-- **Error**: `429 Too Many Requests`.
-- **Issue**: Making too many API requests in a short period, hitting workspace-level API rate limits.
-- **Fix**: Implement exponential backoff and retry logic in API wrapper scripts, or batch operations where supported.
+```
 
 ## Exam Tips
 
@@ -315,3 +307,7 @@ if cluster.state != "RUNNING":
 - [Jobs API 2.1](https://docs.databricks.com/api/workspace/jobs)
 - [Clusters API](https://docs.databricks.com/api/workspace/clusters)
 - [Databricks SDK for Python](https://docs.databricks.com/dev-tools/sdk-python.html)
+
+---
+
+**[← Previous: REST API — Part 1 (Jobs, Clusters, DBFS & Workspace APIs)](./03-rest-api-part1.md) | [↑ Back to Databricks Tooling](./README.md) | [Next: Databricks Compute](./04-databricks-compute.md) →**

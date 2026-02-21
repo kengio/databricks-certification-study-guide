@@ -157,4 +157,4 @@ D) Both B and C are correct
 
 ---
 
-[← LLM Application Development](./03-llm-application-development.md) | [← Back to Practice Questions](./README.md)
+**[← Previous: Practice Questions — LLM Application Development](./03-llm-application-development.md) | [↑ Back to Practice Questions — GenAI Engineer Associate](./README.md)**

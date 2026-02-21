@@ -3,6 +3,7 @@
 This folder is intended to hold screenshots related to Databricks SQL, Serverless SQL Warehouses, and Dashboarding.
 
 Please add the following screenshots and name them appropriately:
+
 - `sql_warehouse_creation.png`: The UI for creating a new SQL Warehouse, highlighting the Serverless toggle.
 - `sql_editor_query_profile.png`: The SQL Editor view showing an executed query, with the Query Profile pane open on the side.
 - `sql_dashboard_parameters.png`: A Databricks dashboard showing interactive parameter widgets.

@@ -32,7 +32,7 @@ pie title Exam Topic Distribution
     "SQL Queries" : 29
     "Dashboards & Visualization" : 18
     "Analytics Applications" : 11
-```text
+```
 
 ## Study Topics
 

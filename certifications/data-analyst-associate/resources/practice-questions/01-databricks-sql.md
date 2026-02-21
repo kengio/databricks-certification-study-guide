@@ -182,4 +182,4 @@ D) Size doesn't matter — all sizes produce the same result
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: Data Management](02-data-management.md)
+**[↑ Back to Data Analyst Associate Practice Questions](./README.md) | [Next: Data Management Practice Questions](./02-data-management.md) →**

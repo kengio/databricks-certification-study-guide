@@ -25,7 +25,7 @@ flowchart TB
 
     Principals --> Roles["Roles & Privileges"]
     Roles --> Objects["Catalogs, Schemas<br/>Tables, Views"]
-```text
+```
 
 ### Users
 
@@ -33,21 +33,24 @@ Individual accounts with email-based identity:
 
 ```python
 # Grant permission to user
+
 spark.sql("GRANT SELECT ON prod.analytics.orders TO `user@company.com`")
 
 # Grant multiple privileges
+
 spark.sql("""
 GRANT SELECT, MODIFY
 ON prod.analytics.orders
 TO `user@company.com`
 """)
-```text
+```
 
 ### Groups
 
 Collection of users for easier management:
 
 ```python
+
 # Create group (admin task)
 # Admin Console > Groups > Create Group
 
@@ -55,16 +58,19 @@ Collection of users for easier management:
 # Admin Console > Groups > group_name > Add members
 
 # Grant to group (applies to all members)
+
 spark.sql("GRANT SELECT ON prod.analytics.orders TO finance_team")
 
 # When user joins group, automatically receives access
-```text
+
+```
 
 ### Service Principals
 
 Machine accounts for applications, CI/CD, automation:
 
 ```python
+
 # Create service principal (admin task)
 # Admin Console > Service Principals > Create Service Principal
 
@@ -72,13 +78,15 @@ Machine accounts for applications, CI/CD, automation:
 # Service principal name: my-etl-app-abc123
 
 # Grant permissions
+
 spark.sql("GRANT SELECT, MODIFY ON prod.analytics.orders TO `my-etl-app-abc123`")
 
 # Use in job configuration
+
 {
     "service_credential_service_principal_id": "my-etl-app-abc123"
 }
-```text
+```
 
 ## Privilege Hierarchy
 
@@ -98,7 +106,7 @@ flowchart TB
     end
 
     ObjHierarchy --> PermInherit
-```text
+```
 
 Permissions **cascade downward**:
 
@@ -160,7 +168,7 @@ GRANT USAGE, CREATE_TABLE ON prod.analytics TO analytics_team;
 
 -- Grant on catalog
 GRANT USAGE ON prod TO all_users;
-```text
+```
 
 ### REVOKE Syntax
 
@@ -178,7 +186,7 @@ REVOKE SELECT ON prod.analytics.orders FROM finance_team;
 
 -- Revoke all privileges
 REVOKE ALL PRIVILEGES ON prod.analytics.orders FROM `user@company.com`;
-```text
+```
 
 ## Role-Based Access Control (RBAC)
 
@@ -210,7 +218,7 @@ GRANT SELECT ON prod.analytics TO finance_team;
 
 -- Individual users join groups
 -- Automatically receive all group permissions
-```text
+```
 
 ## Best Practices for Access Control
 
@@ -224,7 +232,7 @@ GRANT SELECT ON prod.analytics.public_sales TO junior_analyst;
 
 -- Bad: Over-permissive
 GRANT ALL PRIVILEGES ON prod TO junior_analyst;
-```text
+```
 
 ### 2. Use Groups for Scalability
 
@@ -238,7 +246,7 @@ GRANT SELECT ON prod.analytics.orders TO `charlie@company.com`;
 GRANT SELECT ON prod.analytics.orders TO analytics_team;
 
 -- Users join/leave group, permissions automatic
-```text
+```
 
 ### 3. Organize by Schema for Security
 
@@ -252,7 +260,7 @@ prod/
 -- Data engineers: access raw
 -- Analysts: access analytics
 -- Finance team: access finance
-```text
+```
 
 ### 4. Separate Environments
 
@@ -264,7 +272,7 @@ prod/raw/              READ_METADATA only (Engineers with MODIFY)
 -- Staging (more permissive)
 staging/analytics/     SELECT, CREATE_TABLE
 staging/experimental/  ALL_PRIVILEGES (test freely)
-```text
+```
 
 ## Viewing Current Permissions
 
@@ -277,12 +285,13 @@ SHOW GRANT ON TABLE prod.analytics.orders;
 -- What permissions does a principal have? (admin only)
 SHOW GRANT TO `user@company.com`;
 SHOW GRANT TO finance_team;
-```text
+```
 
 ### Querying Permissions Programmatically
 
 ```python
 # Get table permissions
+
 grants_df = spark.sql("SHOW GRANT ON TABLE prod.analytics.orders")
 grants_df.show()
 
@@ -291,7 +300,8 @@ grants_df.show()
 # finance_team | SELECT | GROUP
 # data_engineers | SELECT, MODIFY | GROUP
 # user@company.com | SELECT | USER
-```text
+
+```
 
 ## Column-Level Access Control (Future)
 
@@ -303,7 +313,7 @@ GRANT SELECT(order_id, amount) ON prod.analytics.orders TO junior_analyst;
 
 -- Restrictions:
 GRANT SELECT(credit_card_number) ON prod.analytics.orders TO fraud_team;
-```text
+```
 
 ## Dynamic Views for Access Control
 
@@ -333,13 +343,14 @@ FROM prod.analytics.orders;
 -- Grant accordingly
 GRANT SELECT ON prod.analytics.v_orders_public TO all_users;
 GRANT SELECT ON prod.analytics.v_orders_sensitive TO finance_team;
-```text
+```
 
 ## Service Principal for Automation
 
 ### Create Service Principal for CI/CD
 
 ```python
+
 # 1. Admin creates service principal
 # Admin Console > Service Principals > Create
 
@@ -348,6 +359,7 @@ GRANT SELECT ON prod.analytics.v_orders_sensitive TO finance_team;
 # Token: dapi...
 
 # 3. Grant permissions
+
 spark.sql("""
 GRANT SELECT, MODIFY
 ON prod.analytics.orders
@@ -355,11 +367,12 @@ TO `my-ci-app-xyz123`
 """)
 
 # 4. Use in job configuration
+
 job_config = {
     "service_credential_service_principal_id": "my-ci-app-xyz123",
     "tasks": [...]
 }
-```text
+```
 
 ## Default Catalog and Schema
 
@@ -371,7 +384,7 @@ ALTER WORKSPACE CATALOG_SETTING FOR `user@company.com` SET TO prod;
 
 -- Users' queries default to:
 SELECT * FROM analytics.orders;  -- Resolves to prod.analytics.orders
-```text
+```
 
 ## Audit and Compliance
 
@@ -388,7 +401,7 @@ FROM system.access.audit
 WHERE resource_type = 'TABLE'
     AND action_name IN ('SELECT', 'MODIFY')
 ORDER BY timestamp DESC
-```text
+```
 
 ### Track Permission Changes
 
@@ -396,7 +409,7 @@ ORDER BY timestamp DESC
 -- Who made permission changes?
 -- Admin Console > Audit Logs
 -- Filter by action: "GRANT", "REVOKE"
-```text
+```
 
 ## Permission Scenarios
 
@@ -414,7 +427,7 @@ SELECT * FROM prod.raw.transactions WHERE YEAR(date) = 2025;
 GRANT USAGE ON prod TO analysts;
 GRANT USAGE ON prod.analytics TO analysts;
 GRANT SELECT ON prod.analytics.revenue_v2025 TO analysts;
-```text
+```
 
 ### Scenario 2: Data Engineer
 
@@ -426,7 +439,7 @@ GRANT USAGE, CREATE_TABLE, CREATE_VIEW ON prod.analytics TO data_engineers;
 
 -- But restrict sensitive schemas
 REVOKE ALL PRIVILEGES ON prod.finance FROM data_engineers;
-```text
+```
 
 ### Scenario 3: External Partner
 
@@ -439,7 +452,7 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 
 -- Grant share access to recipient
 -- Recipient gets read-only access via Share
-```text
+```
 
 ## Key Exam Concepts
 
@@ -455,10 +468,6 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 - **Service Principal**: Machine account for automation
 - **Dynamic Views**: Implement column-level security before UC supports it
 
----
-
-**[← Back to Data Governance](README.md)**
-
 ## Use Cases
 
 - **Access Control and Permissions Implementation**: Incorporating Access Control and Permissions principles to build scalable and maintainable solutions in Databricks environments.
@@ -467,10 +476,15 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Access Control and Permissions do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Access Control and Permissions to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Access Control and Permissions to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control and Permissions prior to deployment.
 
+---
+
+**[← Previous: Unity Catalog Basics](./01-unity-catalog-basics.md) | [↑ Back to Data Governance](./README.md) | [Next: Data Sharing](./03-data-sharing.md) →**

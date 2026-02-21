@@ -156,7 +156,7 @@ certifications/data-engineer-professional/
 └── 08-performance-optimization/
     ├── README.md
     └── [7 content files]
-```text
+```
 
 ## Enhancements Status
 

@@ -40,13 +40,14 @@ flowchart TB
 
     style Auto fill:#e3f2fd
     style Results fill:#c8e6c9
-```text
+```
 
 ## Core Features
 
 ### 1. **Data Exploration & Preprocessing**
 
 ```python
+
 # AutoML automatically performs:
 # - Data type detection
 # - Missing value handling
@@ -55,6 +56,7 @@ flowchart TB
 # - Feature scaling/normalization
 
 # Sample workflow
+
 from databricks.sdk.service import ml
 
 automl_config = {
@@ -69,11 +71,13 @@ automl_config = {
 # - Splits data: 80% train, 10% validation, 10% test
 # - Detects data types
 # - Identifies issues (skew, missing, outliers)
-```text
+
+```
 
 ### 2. **Feature Engineering Pipeline**
 
 ```python
+
 # AutoML generates multiple feature sets
 # Common transformations:
 
@@ -93,6 +97,7 @@ automl_config = {
 # - Seasonality indicators
 
 # Example: Feature engineering in generated notebook
+
 from pyspark.ml.feature import OneHotEncoder, VectorAssembler
 
 pipeline_stages = [
@@ -100,13 +105,14 @@ pipeline_stages = [
     VectorAssembler(inputCols=["category_encoded", "numeric_feature"],
                    outputCol="features")
 ]
-```text
+```
 
 ### 3. **Algorithm Selection**
 
 AutoML tries multiple algorithms and selects the best:
 
 ```python
+
 # Classification Algorithms
 # - Logistic Regression
 # - Random Forest Classifier
@@ -120,21 +126,24 @@ AutoML tries multiple algorithms and selects the best:
 # - ElasticNet
 
 # Example model comparison
+
 models_tested = {
     "Logistic Regression": {"accuracy": 0.82, "auc": 0.88},
     "Random Forest": {"accuracy": 0.85, "auc": 0.91},
     "Gradient Boosting": {"accuracy": 0.87, "auc": 0.93},  # Best
     "Linear SVM": {"accuracy": 0.84, "auc": 0.90}
 }
-```text
+```
 
 ### 4. **Hyperparameter Tuning**
 
 ```python
+
 # AutoML uses Hyperopt for tuning
 # Common hyperparameters optimized:
 
 # Random Forest
+
 rf_params = {
     "num_trees": [10, 50, 100, 200],
     "max_depth": [5, 10, 15, 20],
@@ -142,6 +151,7 @@ rf_params = {
 }
 
 # Gradient Boosting
+
 gb_params = {
     "n_estimators": [50, 100, 200, 300],
     "learning_rate": [0.001, 0.01, 0.1],
@@ -152,7 +162,8 @@ gb_params = {
 # Optimization method: Bayesian Optimization
 # Search space: thousands of combinations
 # Best parameters: based on metric (AUC, RMSE, etc.)
-```text
+
+```
 
 ## Using AutoML via UI
 
@@ -160,9 +171,9 @@ gb_params = {
 
 1. **Create Experiment**
 
-   ```text
-   Databricks Home → Create → AutoML Experiment
-   ```text
+    ```text
+    Databricks Home → Create → AutoML Experiment
+    ```
 
 2. **Select Data**
    - Choose table from catalog
@@ -171,12 +182,12 @@ gb_params = {
 
 3. **Configure Settings**
 
-   ```text
-   Target column: select prediction target
-   Problem type: Classification or Regression
-   Metric: AUC (classification), RMSE (regression)
-   Time budget: 30-120 minutes
-   ```text
+    ```text
+    Target column: select prediction target
+    Problem type: Classification or Regression
+    Metric: AUC (classification), RMSE (regression)
+    Time budget: 30-120 minutes
+    ```
 
 4. **Run AutoML**
    - Automatically trains multiple models
@@ -197,6 +208,7 @@ gb_params = {
 from databricks import automl
 
 # Create AutoML experiment
+
 summary = automl.classify(
     dataset=df,
     target_col="churn",
@@ -208,9 +220,10 @@ print(f"Best trial: {summary.best_trial.hyperparameters}")
 print(f"Best model: {summary.best_model}")
 
 # Access results
+
 best_model_uri = summary.best_model.source
 metric_value = summary.best_trial.metrics['log_loss']
-```text
+```
 
 ### **Classification Example**
 
@@ -219,9 +232,11 @@ import mlflow
 from databricks import automl
 
 # Load data
+
 df = spark.read.table("ml_catalog.data.customer_churn")
 
 # Run AutoML for classification
+
 churn_summary = automl.classify(
     dataset=df,
     target_col="churned",
@@ -230,13 +245,15 @@ churn_summary = automl.classify(
 )
 
 # Get best model info
+
 print(f"Best model accuracy: {churn_summary.best_trial.metrics['accuracy']}")
 print(f"Best model parameters: {churn_summary.best_trial.hyperparameters}")
 
 # Model URI for deployment
+
 model_uri = churn_summary.best_model.source
 mlflow.register_model(model_uri, "customer_churn_model")
-```text
+```
 
 ### **Regression Example**
 
@@ -244,9 +261,11 @@ mlflow.register_model(model_uri, "customer_churn_model")
 from databricks import automl
 
 # Load housing data
+
 df = spark.read.table("ml_catalog.data.housing")
 
 # Run AutoML for regression
+
 price_summary = automl.regress(
     dataset=df,
     target_col="price",
@@ -255,9 +274,10 @@ price_summary = automl.regress(
 )
 
 # Evaluate results
+
 print(f"Best model RMSE: {price_summary.best_trial.metrics['rmse']}")
 print(f"R² score: {price_summary.best_trial.metrics['r2_score']}")
-```text
+```
 
 ## AutoML Output & Artifacts
 
@@ -272,15 +292,17 @@ print(f"R² score: {price_summary.best_trial.metrics['r2_score']}")
 ├── model1_lr.ipynb               # Logistic Regression trial
 ├── model2_rf.ipynb               # Random Forest trial
 └── model3_gb.ipynb               # Gradient Boosting trial
-```text
+```
 
 ### **Model Registry Integration**
 
 ```python
+
 # AutoML automatically logs to MLflow
 # Best model available in Model Registry
 
 # Access registered model
+
 from mlflow.tracking import MlflowClient
 
 client = MlflowClient()
@@ -289,12 +311,13 @@ models = client.search_registered_models(
 )
 
 # Load for predictions
+
 import mlflow
 model = mlflow.sklearn.load_model(
     "models:/churn_prediction/Production"
 )
 predictions = model.predict(new_data)
-```text
+```
 
 ## Best Practices for AutoML
 
@@ -317,6 +340,7 @@ predictions = model.predict(new_data)
 
 ```python
 # Good time budget for different scenarios
+
 scenarios = {
     "Quick baseline": 15,        # minutes
     "Standard experimentation": 30,
@@ -325,16 +349,18 @@ scenarios = {
 }
 
 # Choose appropriate metric
+
 metrics = {
     "Binary Classification": ["auc", "accuracy", "f1"],
     "Multiclass": ["auc", "accuracy"],
     "Regression": ["rmse", "r2", "mae"]
 }
-```text
+```
 
 ### 3. **Post-AutoML Steps**
 
 ```python
+
 # After AutoML:
 # 1. Review best model notebook
 # 2. Understand feature importance
@@ -344,6 +370,7 @@ metrics = {
 # 6. Monitor in production
 
 # Example validation
+
 best_model = mlflow.sklearn.load_model(
     "runs:/<run_id>/model"
 )
@@ -351,7 +378,7 @@ best_model = mlflow.sklearn.load_model(
 y_pred = best_model.predict(X_test)
 from sklearn.metrics import classification_report
 print(classification_report(y_test, y_pred))
-```text
+```
 
 ## Comparison: AutoML vs Manual ML
 
@@ -375,9 +402,11 @@ from databricks import automl
 import mlflow
 
 # 1. Load customer data
+
 df = spark.read.table("production.customer_360.data")
 
 # 2. Configure AutoML
+
 churn_experiment = automl.classify(
     dataset=df,
     target_col="churned_flag",
@@ -386,19 +415,22 @@ churn_experiment = automl.classify(
 )
 
 # 3. Review results
+
 best_metrics = churn_experiment.best_trial.metrics
 print(f"Best AUC: {best_metrics['auc']}")
 print(f"Best Accuracy: {best_metrics['accuracy']}")
 
 # 4. Register model
+
 mlflow.register_model(
     churn_experiment.best_model.source,
     "customer_churn_predictor"
 )
 
 # 5. Deploy to production
+
 model_uri = f"models:/customer_churn_predictor/Production"
-```text
+```
 
 ## Use Cases
 
@@ -408,10 +440,12 @@ model_uri = f"models:/customer_churn_predictor/Production"
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Databricks AutoML do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks AutoML to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Databricks AutoML to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks AutoML prior to deployment.
 
@@ -445,3 +479,7 @@ model_uri = f"models:/customer_churn_predictor/Production"
 
 - [Databricks AutoML](https://docs.databricks.com/machine-learning/automl/index.html)
 - [AutoML Best Practices](https://docs.databricks.com/machine-learning/automl/best-practices.html)
+
+---
+
+**[← Previous: Compute Clusters for ML](./02-compute-clusters-ml.md) | [↑ Back to Databricks ML](./README.md)**

@@ -87,6 +87,7 @@ from langchain_core.runnables import RunnablePassthrough
 from databricks.vector_search.client import VectorSearchClient
 
 # 1. Build retriever from Databricks Vector Search index
+
 vs_client = VectorSearchClient()
 index = vs_client.get_index(
     endpoint_name="my_vs_endpoint",
@@ -96,6 +97,7 @@ vectorstore = DatabricksVectorSearch(index, text_column="content")
 retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
 # 2. Prompt template
+
 prompt = ChatPromptTemplate.from_messages([
     (
         "system",
@@ -107,6 +109,7 @@ prompt = ChatPromptTemplate.from_messages([
 ])
 
 # 3. LLM
+
 llm = ChatDatabricks(endpoint="databricks-meta-llama-3-1-70b-instruct", temperature=0)
 
 
@@ -115,6 +118,7 @@ def format_docs(docs):
 
 
 # 4. Compose chain
+
 rag_chain = (
     {"context": retriever | format_docs, "question": RunnablePassthrough()}
     | prompt
@@ -227,6 +231,7 @@ from langchain.agents import AgentExecutor, create_react_agent
 from langchain import hub
 
 # Pull a standard ReAct prompt from LangChain Hub
+
 react_prompt = hub.pull("hwchase17/react")
 
 agent = create_react_agent(llm=llm, tools=[search_policy, get_ticket_status], prompt=react_prompt)
@@ -339,8 +344,6 @@ Model Serving using `agents.deploy()`.
 > permissions to call Vector Search and Model Serving. `pip_requirements` handles Python packages;
 > concurrency and chunk size are separate configuration concerns.
 
-[← Back to LLM Application Development](./README.md)
-
 ## Use Cases
 
 - **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
@@ -349,10 +352,15 @@ Model Serving using `agents.deploy()`.
 ## Common Issues & Errors
 
 ### 1. High Latency Responses
+
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting LLM Chains & Agents to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for LLM Chains & Agents prior to deployment.
 
+---
+
+**[← Previous: Prompt Engineering](./01-prompt-engineering.md) | [↑ Back to LLM Application Development](./README.md) | [Next: Evaluating LLM Applications](./03-evaluation-llm-apps.md) →**

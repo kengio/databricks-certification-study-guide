@@ -398,4 +398,4 @@ You're building a DLT pipeline for financial transaction data. Compliance requir
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Delta Lake Internals](02-delta-lake-internals.md) | [Next: Performance Optimization](04-performance-optimization.md)
+**[← Previous: Interview Questions — Delta Lake Internals](./02-delta-lake-internals.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Performance Optimization](./04-performance-optimization.md) →**

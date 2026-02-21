@@ -31,7 +31,7 @@ pie title Exam Topic Distribution
     "Build RAG Solutions" : 40
     "Evaluate & Govern" : 15
     "Assemble & Deploy" : 15
-```text
+```
 
 ## Study Topics
 

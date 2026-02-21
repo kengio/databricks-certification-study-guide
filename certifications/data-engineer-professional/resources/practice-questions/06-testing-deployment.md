@@ -220,4 +220,4 @@ D) Extract the function to a separate module, unit test it with a local SparkSes
 
 ---
 
-[Back to Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow Pipelines](07-lakeflow-pipelines.md)
+**[← Previous: Practice Questions - Section 05: Monitoring & Logging](./05-monitoring-logging.md) | [↑ Back to Practice Questions](./README.md) | [Next: Practice Questions - Section 07: Lakeflow Pipelines](./07-lakeflow-pipelines.md) →**

@@ -54,4 +54,4 @@ Progress to [03-Model Production Lifecycle](../03-model-production-lifecycle/REA
 
 ---
 
-**[← Back to ML Professional](../README.md)**
+**[← Back to Certification](../README.md)**

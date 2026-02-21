@@ -34,7 +34,7 @@ flowchart TB
     Traditional -.->|Upgrade| DeltaLake
 
     DeltaLake --> Features["Better Data Quality<br/>& Reliability"]
-```text
+```
 
 ## Why Delta Lake Matters
 
@@ -62,7 +62,7 @@ flowchart LR
     end
 
     CloudStorage <-->|ACID| Engine
-```text
+```
 
 The Delta table consists of:
 
@@ -81,14 +81,17 @@ The Delta table consists of:
 ### Example: ACID Protection
 
 ```python
+
 # Traditional Parquet - no ACID
 # If write fails midway, data is corrupted
+
 df.write.format("parquet").mode("overwrite").save("/path")
 
 # Delta Lake - ACID protected
 # If write fails, table rolled back automatically
+
 df.write.format("delta").mode("overwrite").save("/path")
-```text
+```
 
 ## Delta Table Formats
 
@@ -96,6 +99,7 @@ df.write.format("delta").mode("overwrite").save("/path")
 
 ```python
 # Data stored in warehouse directory managed by Databricks
+
 spark.sql("""
 CREATE TABLE employees (
     id INT,
@@ -107,13 +111,15 @@ USING DELTA
 
 # Data location: /user/hive/warehouse/employees
 # Dropping table also deletes data
+
 spark.sql("DROP TABLE employees")  # Data deleted
-```text
+```
 
 ### External Tables
 
 ```python
 # Data stored in external location you control
+
 spark.sql("""
 CREATE TABLE employees_external (
     id INT,
@@ -126,8 +132,9 @@ LOCATION '/mnt/data/employees'
 
 # Data location: /mnt/data/employees
 # Dropping table does NOT delete data
+
 spark.sql("DROP TABLE employees_external")  # Data remains
-```text
+```
 
 ## Creating Delta Tables
 
@@ -135,6 +142,7 @@ spark.sql("DROP TABLE employees_external")  # Data remains
 
 ```python
 # Write DataFrame as Delta table
+
 employees_df = spark.createDataFrame([
     (1, "Alice", 85000),
     (2, "Bob", 75000)
@@ -146,11 +154,12 @@ employees_df.write \
     .save("/mnt/data/employees")
 
 # Or create managed table
+
 employees_df.write \
     .format("delta") \
     .mode("overwrite") \
     .saveAsTable("employees")
-```text
+```
 
 ### Convert Existing Parquet
 
@@ -158,13 +167,15 @@ employees_df.write \
 from delta.tables import DeltaTable
 
 # Convert existing Parquet to Delta
+
 DeltaTable.convertToDelta(
     spark,
     "parquet.`/path/to/parquet/data`"
 )
 
 # Table now has transaction log and ACID guarantees
-```text
+
+```
 
 ### Using SQL
 
@@ -193,7 +204,7 @@ CREATE TABLE orders (
 )
 USING DELTA
 LOCATION '/mnt/data/orders';
-```text
+```
 
 ## Table Metadata
 
@@ -201,22 +212,27 @@ LOCATION '/mnt/data/orders';
 
 ```python
 # Get table metadata
+
 spark.sql("DESCRIBE TABLE employees").show()
 
 # Get column details
+
 spark.sql("DESCRIBE TABLE EXTENDED employees").show()
 
 # List tables
+
 spark.sql("SHOW TABLES").show()
 
 # Check if table is Delta
+
 spark.sql("SHOW TBLPROPERTIES employees").show()
-```text
+```
 
 ### Delta Table Properties
 
 ```python
 # Set table properties
+
 spark.sql("""
 ALTER TABLE employees
 SET TBLPROPERTIES (
@@ -226,8 +242,9 @@ SET TBLPROPERTIES (
 """)
 
 # Check property
+
 spark.sql("SHOW TBLPROPERTIES employees").show()
-```text
+```
 
 ## Appending vs Overwriting
 
@@ -235,6 +252,7 @@ spark.sql("SHOW TBLPROPERTIES employees").show()
 
 ```python
 # Add new rows to existing table
+
 new_employees = spark.createDataFrame([
     (3, "Charlie", 95000)
 ], ["id", "name", "salary"])
@@ -243,38 +261,43 @@ new_employees.write \
     .format("delta") \
     .mode("append") \
     .save("/mnt/data/employees")
-```text
+```
 
 ### Overwrite Modes
 
 ```python
 # Overwrite all data
+
 updated_data.write \
     .format("delta") \
     .mode("overwrite") \
     .save("/mnt/data/employees")
 
 # Error if schema doesn't match
+
 updated_data.write \
     .format("delta") \
     .mode("append") \
     .save("/mnt/data/employees")
 
 # Merge schemas (add new columns)
+
 updated_data.write \
     .format("delta") \
     .mode("append") \
     .option("mergeSchema", "true") \
     .save("/mnt/data/employees")
-```text
+```
 
 ## Schema Enforcement and Evolution
 
 ### Schema Enforcement (Prevent Bad Data)
 
 ```python
+
 # Table schema: id INT, name STRING, salary DECIMAL
 # Attempt to write wrong schema -> ERROR
+
 bad_data = spark.createDataFrame([
     ("Alice", "Not a number", 85000)  # Wrong types
 ], ["name", "salary", "bonus"])
@@ -283,13 +306,15 @@ bad_data.write \
     .format("delta") \
     .mode("append") \
     .save("/mnt/data/employees")  # Failed!
-```text
+```
 
 ### Schema Evolution (Add New Columns)
 
 ```python
+
 # Table has: id, name, salary
 # New data adds: department column
+
 new_schema_data = spark.createDataFrame([
     (1, "Alice", 85000, "Engineering")
 ], ["id", "name", "salary", "department"])
@@ -301,7 +326,8 @@ new_schema_data.write \
     .save("/mnt/data/employees")
 
 # Table now has: id, name, salary, department
-```text
+
+```
 
 ## Mutation Operations
 
@@ -312,7 +338,7 @@ INSERT INTO employees VALUES (4, "David", 80000);
 
 INSERT INTO employees
 SELECT id, name, salary FROM new_hires;
-```text
+```
 
 ### UPDATE
 
@@ -320,14 +346,14 @@ SELECT id, name, salary FROM new_hires;
 UPDATE employees
 SET salary = salary * 1.1
 WHERE department = 'Engineering';
-```text
+```
 
 ### DELETE
 
 ```sql
 DELETE FROM employees
 WHERE salary < 30000;
-```text
+```
 
 ### MERGE (Upsert)
 
@@ -337,7 +363,7 @@ USING new_employees s
 ON t.id = s.id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ## Comparison: Delta vs Parquet vs Iceberg
 
@@ -363,7 +389,7 @@ The `_delta_log/` directory contains JSON files recording every transaction:
     "dataChange": true
   }
 }
-```text
+```
 
 Each JSON file represents one committed transaction, enabling:
 
@@ -383,10 +409,6 @@ Each JSON file represents one committed transaction, enabling:
 - **Schema Enforcement**: Prevents bad data, enforces types
 - **Schema Evolution**: Controlled addition of new columns via mergeSchema
 
----
-
-**[← Back to Delta Lake](README.md)**
-
 ## Use Cases
 
 - **ACID Transactions Backup**: Using Delta Lake's robust versioning to create a reliable and auditable data warehouse pipeline.
@@ -395,10 +417,15 @@ Each JSON file represents one committed transaction, enabling:
 ## Common Issues & Errors
 
 ### 1. Small File Problem
+
 **Scenario:** Frequent micro-batch writes cause slow reads.
 **Fix:** Run OPTIMIZE with Z-ORDER regularly.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Delta Lake Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Fundamentals prior to deployment.
 
+---
+
+**[↑ Back to Delta Lake](./README.md) | [Next: Time Travel and Versioning](./02-time-travel-versioning.md) →**

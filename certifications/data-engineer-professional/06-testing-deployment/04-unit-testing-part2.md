@@ -13,7 +13,7 @@ status: published
 
 This part covers testing patterns for Delta Lake and streaming, CI/CD integration, best practices, common issues, and exam tips for unit testing in Databricks.
 
-> For pytest fundamentals, chispa comparisons, mocking, and the Nutter framework, see [Part 1](./04-unit-testing.md).
+> For pytest fundamentals, chispa comparisons, mocking, and the Nutter framework, see [Part 1](./04-unit-testing-part1.md).
 
 ## Testing Patterns
 
@@ -21,6 +21,7 @@ This part covers testing patterns for Delta Lake and streaming, CI/CD integratio
 
 ```python
 # tests/unit/test_delta_operations.py
+
 import pytest
 from delta import DeltaTable
 from pyspark.sql import SparkSession
@@ -69,12 +70,13 @@ class TestDeltaOperations:
 
         updated_row = result.filter("id = 1").collect()[0]
         assert updated_row.value == "new_value"
-```text
+```
 
 ### Testing Streaming
 
 ```python
 # tests/unit/test_streaming.py
+
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, TimestampType
@@ -125,12 +127,13 @@ class TestStreaming:
         result = spark.read.format("delta").load(output_path)
         user1_count = result.filter("user_id = 'user1'").collect()[0]["count"]
         assert user1_count == 2
-```text
+```
 
 ### Testing with Fixtures
 
 ```python
 # tests/conftest.py
+
 import pytest
 from pyspark.sql import SparkSession
 
@@ -168,7 +171,7 @@ def sample_customers(spark):
         data,
         ["customer_id", "name", "email"]
     )
-```text
+```
 
 ## CI/CD Integration
 
@@ -176,6 +179,7 @@ def sample_customers(spark):
 
 ```yaml
 # .github/workflows/test.yml
+
 name: Run Tests
 
 on:
@@ -247,12 +251,13 @@ jobs:
         with:
           name: nutter-results
           path: nutter-results.xml
-```text
+```
 
 ### Test Environments
 
 ```yaml
 # databricks.yml - Test environment target
+
 targets:
   test:
     mode: development
@@ -271,7 +276,7 @@ targets:
                 spark_version: "14.3.x-scala2.12"
                 node_type_id: "Standard_DS3_v2"
                 num_workers: 0
-```text
+```
 
 ## Best Practices
 
@@ -290,12 +295,13 @@ tests/
 │   └── test_gold_layer.py
 └── e2e/                     # End-to-end tests
     └── test_full_pipeline.py
-```text
+```
 
 ### Naming Conventions
 
 ```python
 # Good test names - descriptive and specific
+
 def test_remove_nulls_removes_rows_with_null_values():
     pass
 
@@ -306,17 +312,19 @@ def test_merge_updates_existing_records_when_key_matches():
     pass
 
 # Bad test names - vague
+
 def test_function():
     pass
 
 def test_it_works():
     pass
-```text
+```
 
 ### Test Isolation
 
 ```python
 # Each test should be independent
+
 class TestTransformations:
 
     def test_transformation_a(self, spark):
@@ -328,7 +336,7 @@ class TestTransformations:
         """Test B - doesn't depend on Test A."""
         df = spark.createDataFrame([(2,)], ["id"])
         # ... test logic
-```text
+```
 
 ## Use Cases
 
@@ -347,7 +355,7 @@ class TestTransformations:
 @pytest.fixture(scope="session")  # Not "function"
 def spark():
     return SparkSession.builder.master("local[*]").getOrCreate()
-```text
+```
 
 ### 2. Tests Interfere with Each Other
 
@@ -362,7 +370,7 @@ def clean_table(spark):
     spark.sql("DROP TABLE IF EXISTS test_table")
     yield
     spark.sql("DROP TABLE IF EXISTS test_table")
-```text
+```
 
 ### 3. Slow Test Execution
 
@@ -377,7 +385,7 @@ spark = (SparkSession.builder
     .config("spark.default.parallelism", "1")
     .config("spark.executor.memory", "1g")
     .getOrCreate())
-```text
+```
 
 ### 4. Delta Lake Not Available
 
@@ -390,7 +398,7 @@ spark = (SparkSession.builder
     .config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0")
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
     .getOrCreate())
-```text
+```
 
 ## Exam Tips
 
@@ -407,8 +415,8 @@ spark = (SparkSession.builder
 
 ## Related Topics
 
-- [Asset Bundles](01-asset-bundles.md) - Test deployment
-- [CI/CD Integration](02-cicd-integration.md) - Pipeline testing
+- [Asset Bundles](01-asset-bundles-part1.md) - Test deployment
+- [CI/CD Integration](02-cicd-integration-part1.md) - Pipeline testing
 - [Git Folders](03-git-folders.md) - Test versioning
 
 ## Official Documentation
@@ -417,3 +425,7 @@ spark = (SparkSession.builder
 - [Nutter Framework](https://github.com/microsoft/nutter)
 - [pytest Documentation](https://docs.pytest.org/)
 - [chispa Library](https://github.com/MrPowers/chispa)
+
+---
+
+**[← Previous: Unit Testing — Part 1](./04-unit-testing-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Bundle Deployment Strategies — Part 1 (Bundle Patterns & CI/CD Pipelines)](./05-bundle-deployment-strategies-part1.md) →**

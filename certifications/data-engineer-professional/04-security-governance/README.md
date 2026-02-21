@@ -22,7 +22,7 @@ flowchart TD
     SG --> DS[Data Sharing]
     SG --> SM[Secret Management]
     SG --> AG[Advanced Governance]
-```text
+```
 
 ## Section Contents
 
@@ -46,13 +46,13 @@ erDiagram
     SCHEMA ||--o{ FUNCTION : contains
     SCHEMA ||--o{ VOLUME : contains
     TABLE ||--o{ COLUMN : has
-```text
+```
 
 ### Three-Level Namespace
 
 ```text
 catalog.schema.table
-```text
+```
 
 | Level | Description | Example |
 | :--- | :--- | :--- |
@@ -85,7 +85,7 @@ flowchart TD
     style C fill:#bbf
     style S fill:#bfb
     style T fill:#fbb
-```text
+```
 
 ## Secret Management
 
@@ -99,7 +99,7 @@ sequenceDiagram
     SS->>KV: Retrieve secret
     KV-->>SS: Secret value
     SS-->>N: Redacted in logs
-```text
+```
 
 ### Secret Scope Types
 
@@ -124,3 +124,7 @@ sequenceDiagram
 - [ ] Create dynamic views for row-level security
 - [ ] Configure Delta Sharing
 - [ ] Access secrets securely in notebooks
+
+---
+
+**[← Back to Certification](../README.md)**

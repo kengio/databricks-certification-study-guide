@@ -347,4 +347,4 @@ D) `SELECT * FROM employees WHERE salary > MEAN(salary)`
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: Dashboards](04-dashboards-visualization.md)
+**[← Previous: Data Management Practice Questions](./02-data-management.md) | [↑ Back to Data Analyst Associate Practice Questions](./README.md) | [Next: Dashboards & Visualization Practice Questions](./04-dashboards-visualization.md) →**

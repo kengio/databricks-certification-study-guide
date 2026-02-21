@@ -26,7 +26,7 @@ CREATE TABLE new_table AS SELECT * FROM source_table;
 
 -- Create or replace
 CREATE OR REPLACE TABLE table_name AS SELECT * FROM source;
-```text
+```
 
 ### Read Tables
 
@@ -39,7 +39,7 @@ SELECT * FROM table_name VERSION AS OF 5;
 
 -- Time travel by timestamp
 SELECT * FROM table_name TIMESTAMP AS OF '2024-01-01';
-```text
+```
 
 ```python
 # Python read
@@ -48,7 +48,7 @@ df = spark.read.format("delta").load("/path/to/table")
 # Time travel
 df = spark.read.format("delta").option("versionAsOf", 5).load("/path")
 df = spark.read.format("delta").option("timestampAsOf", "2024-01-01").load("/path")
-```text
+```
 
 ## Data Modification
 
@@ -58,24 +58,24 @@ df = spark.read.format("delta").option("timestampAsOf", "2024-01-01").load("/pat
 INSERT INTO table_name VALUES (1, 'John', current_timestamp());
 INSERT INTO table_name SELECT * FROM source_table;
 INSERT OVERWRITE table_name SELECT * FROM source_table;
-```text
+```
 
 ```python
 df.write.format("delta").mode("append").saveAsTable("table_name")
 df.write.format("delta").mode("overwrite").saveAsTable("table_name")
-```text
+```
 
 ### Update
 
 ```sql
 UPDATE table_name SET column = 'value' WHERE condition;
-```text
+```
 
 ### Delete
 
 ```sql
 DELETE FROM table_name WHERE condition;
-```text
+```
 
 ### Merge (Upsert)
 
@@ -93,7 +93,7 @@ ON t.id = s.id
 WHEN MATCHED AND s.deleted = true THEN DELETE
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ## Table Maintenance
 
@@ -108,7 +108,7 @@ OPTIMIZE table_name ZORDER BY (column1, column2);
 
 -- Specific partition
 OPTIMIZE table_name WHERE date = '2024-01-01';
-```text
+```
 
 ### VACUUM
 
@@ -121,7 +121,7 @@ VACUUM table_name RETAIN 168 HOURS;
 
 -- Dry run (see files to delete)
 VACUUM table_name DRY RUN;
-```text
+```
 
 ### ANALYZE
 
@@ -129,7 +129,7 @@ VACUUM table_name DRY RUN;
 -- Compute statistics
 ANALYZE TABLE table_name COMPUTE STATISTICS;
 ANALYZE TABLE table_name COMPUTE STATISTICS FOR COLUMNS col1, col2;
-```text
+```
 
 ## Schema Operations
 
@@ -140,7 +140,7 @@ DESCRIBE TABLE table_name;
 DESCRIBE EXTENDED table_name;
 DESCRIBE HISTORY table_name;
 DESCRIBE DETAIL table_name;
-```text
+```
 
 ### Alter Table
 
@@ -160,7 +160,7 @@ ALTER TABLE table_name ADD CONSTRAINT chk CHECK (amount > 0);
 
 -- Set table properties
 ALTER TABLE table_name SET TBLPROPERTIES ('delta.autoOptimize.optimizeWrite' = 'true');
-```text
+```
 
 ## Cloning
 
@@ -173,7 +173,7 @@ CREATE TABLE clone_table DEEP CLONE source_table;
 
 -- Clone specific version
 CREATE TABLE clone_table CLONE source_table VERSION AS OF 10;
-```text
+```
 
 ## Change Data Feed (CDF)
 
@@ -187,7 +187,7 @@ SELECT * FROM table_changes('table_name', '2024-01-01', '2024-01-31');
 
 -- Read changes from specific version to latest
 SELECT * FROM table_changes('table_name', 5);
-```text
+```
 
 ```python
 # Python CDF read
@@ -196,7 +196,7 @@ SELECT * FROM table_changes('table_name', 5);
   .option("startingVersion", 1)
   .option("endingVersion", 5)
   .table("table_name"))
-```text
+```
 
 > **Exam tip:** CDF only tracks changes made **after** it's enabled — it is NOT retroactive.
 

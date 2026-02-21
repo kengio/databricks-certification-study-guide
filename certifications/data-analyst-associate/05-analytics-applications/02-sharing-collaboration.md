@@ -39,7 +39,7 @@ Shareable Objects:
     - Tables via views
     - External files
     - Reports
-```text
+```
 
 ## Permission Levels
 
@@ -69,7 +69,7 @@ Viewer:
 Commenter (on queries):
   - View + leave comments
   - Cannot edit query
-```text
+```
 
 ### Permission Inheritance
 
@@ -81,7 +81,7 @@ Query → Dashboard
 Dashboard → Underlying Queries
   Must have permission to queries displayed
   If no query permission, widget shows error
-```text
+```
 
 ## Sharing Methods
 
@@ -110,7 +110,7 @@ Share Dashboard with People:
     - All team members can access immediately
     - Permissions managed centrally
     - Changes apply to all members
-```text
+```
 
 ### 2. Shareable Link
 
@@ -126,7 +126,7 @@ Link Characteristics:
   - Can be shared via email, chat, etc.
   - Works across organizations (with auth)
   - Lifetime: Indefinite until revoked
-```text
+```
 
 ### 3. Email Distribution
 
@@ -151,7 +151,7 @@ Send Options:
   - Static snapshot (PNG image)
   - Query results (CSV/Excel)
   - Link to interactive dashboard
-```text
+```
 
 ### 4. Embedded in Applications
 
@@ -170,7 +170,7 @@ Send Options:
   width="100%"
   height="600">
 </iframe>
-```text
+```
 
 ## Collaboration Features
 
@@ -189,7 +189,7 @@ Example:
   Comment: "@eng_team This query needs optimization"
   Reply: "Done! Reduced from 45s to 8s"
   Resolved: Mark as resolved
-```text
+```
 
 ### Version History
 
@@ -207,7 +207,7 @@ View History:
   - Restore previous version
   - Compare two versions
   - View who changed what
-```text
+```
 
 ### Diff/Compare Versions
 
@@ -223,7 +223,7 @@ Version 3 → Version 4 Diff:
 + WHERE status = 'active'
 +   AND signup_date >= '2024-01-01'    ← Added
 +   LIMIT 1000  ← Added
-```text
+```
 
 ## Publishing & Release
 
@@ -243,7 +243,7 @@ Published:
   - Version controlled
   - Locked for integrity
   - Changes require version bump
-```text
+```
 
 ### Publishing Process
 
@@ -257,7 +257,7 @@ Revise (Address comments)
 Publish (Release to audience)
     ↓ (Set permissions)
 Announce (Notify users)
-```text
+```
 
 ## Governance & Security
 
@@ -275,7 +275,7 @@ Announce (Notify users)
   - Use Owner role for viewers
   - Change permissions after sharing widely
   - Forget to revoke access when employee leaves
-```text
+```
 
 ### Data Sensitivity
 
@@ -302,7 +302,7 @@ Restricted (PII):
   - Masked/limited columns
   - No external access
   - Audit logged
-```text
+```
 
 ### Audit & Compliance
 
@@ -328,7 +328,7 @@ SELECT
     last_accessed
 FROM query_metrics
 WHERE last_accessed >= CURRENT_TIMESTAMP - INTERVAL 90 DAYS;
-```text
+```
 
 ## Collaboration Workflows
 
@@ -345,7 +345,7 @@ Query Review Workflow:
 6. Query published to production
 7. Announce to users via email
 8. Monitor performance/issues
-```text
+```
 
 ### Dashboard Development Cycle
 
@@ -371,41 +371,48 @@ Phase 4: Maintenance
   - Track query performance
   - Answer user questions
   - Plan updates/improvements
-```text
+```
 
 ## Communication & Documentation
 
 ### README & Labels
 
 ```markdown
+
 # Sales Performance Dashboard
 
 ## Purpose
+
 Tracks weekly sales by region and product
 
 ## Audience
+
 - Sales directors
 - Regional managers
 - Insights team
 
 ## Update Frequency
+
 Daily at 8 AM
 
 ## Key Metrics
+
 - Total Revenue ($ sum)
 - Order Count (# transactions)
 - Average Order Value ($ per order)
 
 ## How to Use
+
 1. Select date range with filters
 2. Click region for drill-down
 3. Export data via "Download" button
 
 ## Questions?
+
 Contact: analytics@company.com
 Last Updated: 2024-02-15
 Maintained By: Analytics Team
-```text
+```
 
 ### Metadata & Tags
 
@@ -420,7 +427,7 @@ Status: Production
 Last Updated: 2024-02-15
 Refresh Frequency: Daily 8 AM
 Dependencies: orders, customers, product tables
-```text
+```
 
 ## Team Collaboration Platforms
 
@@ -444,7 +451,7 @@ Subscribe to Alerts:
   - Daily summary in channel
   - Alerts when thresholds crossed
   - Query results posted
-```text
+```
 
 ## Key Exam Concepts
 
@@ -476,10 +483,6 @@ Subscribe to Alerts:
 
 - **A**: Create group (Sales Team), add users to group, grant group permission once
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Sharing & Collaboration Implementation**: Incorporating Sharing & Collaboration principles to build scalable and maintainable solutions in Databricks environments.
@@ -488,10 +491,15 @@ Subscribe to Alerts:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Sharing & Collaboration do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Sharing & Collaboration to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Sharing & Collaboration to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Sharing & Collaboration prior to deployment.
 
+---
+
+**[← Previous: Query Parameters & Dynamic Queries](./01-parameters-queries.md) | [↑ Back to Analytics Applications](./README.md)**

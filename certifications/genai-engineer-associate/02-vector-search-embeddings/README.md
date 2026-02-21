@@ -67,4 +67,4 @@ flowchart LR
 After completing this section, continue to
 [03 — LLM Application Development](../03-llm-application-development/README.md).
 
-[← Back to GenAI Engineer Associate](../README.md)
+[← Back to Certification](../README.md)

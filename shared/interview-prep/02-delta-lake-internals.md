@@ -336,4 +336,4 @@ A colleague says "Delta's Change Data Feed is the same as Change Data Capture �
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: System Design](01-system-design.md) | [Next: Pipeline Architecture](03-pipeline-architecture.md)
+**[← Previous: Interview Questions — System Design](./01-system-design.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Pipeline Architecture](./03-pipeline-architecture.md) →**

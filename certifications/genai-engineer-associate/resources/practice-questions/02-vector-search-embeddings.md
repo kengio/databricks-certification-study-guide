@@ -205,4 +205,4 @@ D) A Feature Store table to back the index
 
 ---
 
-[← RAG Architecture](./01-rag-architecture.md) | [Next: LLM Application Development →](./03-llm-application-development.md)
+**[← Previous: Practice Questions — RAG Architecture](./01-rag-architecture.md) | [↑ Back to Practice Questions — GenAI Engineer Associate](./README.md) | [Next: Practice Questions — LLM Application Development](./03-llm-application-development.md) →**

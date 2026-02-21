@@ -166,4 +166,4 @@ D) Both constraints are enforced independently at write time, and the entire wri
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
+**[← Previous: Mock Exam 2 - Section 2: Databricks Tooling](./02-databricks-tooling.md) | [↑ Back to Mock Exam 2 - Databricks Data Engineer Professional](./README.md) | [Next: Mock Exam 2 - Section 4: Security & Governance](./04-security-governance.md) →**

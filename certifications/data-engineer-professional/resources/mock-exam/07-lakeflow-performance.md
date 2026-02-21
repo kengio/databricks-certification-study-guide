@@ -116,4 +116,4 @@ D) Set `spark.executor.memoryOverhead` to 0 for maximum heap space
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md)
+**[← Previous: Mock Exam - Section 6: Testing & Deployment](./06-testing-deployment.md) | [↑ Back to Full-Length Practice Exam](./README.md)**

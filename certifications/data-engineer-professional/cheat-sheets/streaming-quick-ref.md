@@ -4,25 +4,29 @@
 
 ```python
 # Read from Delta
+
 df = spark.readStream.format("delta").table("source_table")
 
 # Read from Auto Loader
+
 df = (spark.readStream.format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/schema/path")
     .load("/data/path"))
 
 # Read from Kafka
+
 df = (spark.readStream.format("kafka")
     .option("kafka.bootstrap.servers", "host:port")
     .option("subscribe", "topic")
     .load())
-```text
+```
 
 ## Basic Streaming Write
 
 ```python
 # Write to Delta
+
 (df.writeStream
     .format("delta")
     .outputMode("append")
@@ -30,13 +34,14 @@ df = (spark.readStream.format("kafka")
     .toTable("target_table"))
 
 # Write to Delta with trigger
+
 (df.writeStream
     .format("delta")
     .outputMode("append")
     .trigger(availableNow=True)
     .option("checkpointLocation", "/checkpoint/path")
     .toTable("target_table"))
-```text
+```
 
 ## Trigger Types
 
@@ -50,14 +55,17 @@ df = (spark.readStream.format("kafka")
 
 ```python
 # Processing time trigger
+
 .trigger(processingTime='30 seconds')
 
 # Once trigger (deprecated, use availableNow)
+
 .trigger(once=True)
 
 # Available now (preferred for batch-like streaming)
+
 .trigger(availableNow=True)
-```text
+```
 
 ## Output Modes
 
@@ -71,10 +79,11 @@ df = (spark.readStream.format("kafka")
 
 ```python
 # Define watermark for late data
+
 (df.withWatermark("event_time", "10 minutes")
     .groupBy(window("event_time", "5 minutes"))
     .count())
-```text
+```
 
 | Watermark | Meaning |
 |-----------|---------|
@@ -86,14 +95,17 @@ df = (spark.readStream.format("kafka")
 
 ```python
 # Tumbling window (non-overlapping)
+
 df.groupBy(window("timestamp", "10 minutes"))
 
 # Sliding window (overlapping)
+
 df.groupBy(window("timestamp", "10 minutes", "5 minutes"))
 
 # Session window
+
 df.groupBy(session_window("timestamp", "10 minutes"))
-```text
+```
 
 ## Auto Loader Options
 
@@ -112,12 +124,13 @@ df.groupBy(session_window("timestamp", "10 minutes"))
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .option("cloudFiles.inferColumnTypes", "true")
     .load("/data/path"))
-```text
+```
 
 ## Stream-Stream Joins
 
 ```python
 # Inner join with watermarks
+
 ordersWithWatermark = orders.withWatermark("orderTime", "10 minutes")
 paymentsWithWatermark = payments.withWatermark("paymentTime", "10 minutes")
 
@@ -130,14 +143,15 @@ ordersWithWatermark.join(
     """),
     "inner"
 )
-```text
+```
 
 ## Checkpoint Management
 
 ```python
 # Checkpoint location (required for exactly-once)
+
 .option("checkpointLocation", "/mnt/checkpoint/stream_name")
-```text
+```
 
 **Important**: Never change checkpoint location for a running stream. To restart fresh, delete the checkpoint.
 
@@ -152,23 +166,26 @@ def process_batch(batch_df, batch_id):
     .foreachBatch(process_batch)
     .option("checkpointLocation", "/checkpoint")
     .start())
-```text
+```
 
 ## Monitoring
 
 ```python
 # Get current stream status
+
 query = df.writeStream...start()
 query.status
 query.lastProgress
 query.recentProgress
 
 # Stop stream
+
 query.stop()
 
 # Await termination
+
 query.awaitTermination()
-```text
+```
 
 ## Key Concepts
 

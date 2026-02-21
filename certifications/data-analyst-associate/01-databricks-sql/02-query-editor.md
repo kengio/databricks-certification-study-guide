@@ -47,7 +47,7 @@ flowchart TD
     QE --> Left
     QE --> Main
     QE --> Bottom
-```text
+```
 
 ## Writing Queries
 
@@ -61,14 +61,14 @@ SELECT      -- Blue (keyword)
     name,   -- White (identifier)
     100     -- Green (number)
 FROM users;
-```text
+```
 
 **Autocomplete**: Type Ctrl+Space for suggestions
 
 ```sql
 SELECT * FROM sales WHERE [Ctrl+Space]
 -- Suggests: date_created, status, amount, customer_id, etc.
-```text
+```
 
 **Query Templates**: Pre-built patterns for common tasks
 
@@ -86,7 +86,7 @@ SELECT COUNT(*) as active_count FROM active_users;
 
 -- Statement 3: Clean up (optional)
 DROP VIEW active_users;
-```text
+```
 
 ### Comments
 
@@ -104,7 +104,7 @@ SELECT
     email         /* Email address
                      Primary contact */
 FROM customers;
-```text
+```
 
 ## Query Execution
 
@@ -131,7 +131,7 @@ Executor runs on cluster
 Results collected
     ↓
 Display in UI / Cache
-```text
+```
 
 ### Execution Information
 
@@ -143,7 +143,7 @@ LIMIT 1;
 
 -- Returns: user_name, warehouse_id, execution_time_ms,
 --          rows_produced, query_start_time, query_end_time
-```text
+```
 
 ## Parameters in Queries
 
@@ -157,7 +157,7 @@ SELECT *
 FROM sales
 WHERE region = '{{ region }}'
 AND date >= '{{ start_date }}';
-```text
+```
 
 ### Parameter Types
 
@@ -181,7 +181,7 @@ AND year = {{ year }}              -- User selects year
 GROUP BY customer_id
 ORDER BY total_sales DESC
 LIMIT {{ top_n }};                 -- User selects top N
-```text
+```
 
 ## Result Visualization
 
@@ -199,7 +199,7 @@ flowchart TD
     RowCount -->|Categories<br/>Dimension + Measure| Pie["Pie Chart"]
     RowCount -->|Flat results<br/>Many columns| Table["Table View"]
     RowCount -->|Coordinates<br/>Lat/Lon| Map["Map"]
-```text
+```
 
 ### Chart Configuration
 
@@ -215,7 +215,7 @@ Visualization Tab:
   Aggregation: Automatic or manual
   Grouping: X-axis, Y-axis
   Formatting: Colors, labels, legend
-```text
+```
 
 ### Customizing Visualizations
 
@@ -239,7 +239,7 @@ SELECT
     income,
     purchase_amount
 FROM customers;
-```text
+```
 
 ## Saving and Sharing Queries
 
@@ -249,7 +249,7 @@ FROM customers;
 File → Save Query
 Name: "Q1 Sales Analysis by Region"
 Folder: /Queries/Analytics/
-```text
+```
 
 ### Query Metadata
 
@@ -259,7 +259,7 @@ Description: Analyzes regional sales performance YoY
 Last Modified: Feb 20, 2024
 Author: analyst@company.com
 Warehouse: prod_warehouse
-```text
+```
 
 ### Sharing Queries
 
@@ -274,7 +274,7 @@ Share With:
   - Groups
   - Teams
   - Everyone (organization-wide)
-```text
+```
 
 ## Query History
 
@@ -299,12 +299,13 @@ SELECT
 FROM system.query_history
 WHERE query_start_time > CURRENT_TIMESTAMP - INTERVAL 7 DAYS
 ORDER BY query_start_time DESC;
-```text
+```
 
 ### API Access to Query History
 
 ```python
 # Python: Fetch query history programmatically
+
 from databricks.sql import connect
 
 conn = connect(
@@ -323,7 +324,7 @@ LIMIT 10
 
 for row in cursor.fetchall():
     print(row)
-```text
+```
 
 ## Performance Insights
 
@@ -336,7 +337,7 @@ Parse Time:        5 ms  (syntax checking)
 Planning Time:     20 ms (optimization)
 Execution Time:    450 ms (actual computation)
 Total:             475 ms
-```text
+```
 
 ### Optimization Suggestions
 
@@ -349,7 +350,7 @@ EXPLAIN SELECT * FROM sales WHERE status = 'active';
 --   └─ Scan parquet [id#0, status#1, amount#2]
 --      PushedFilters: [Status = 'active']
 --      Metrics: 150 rows, 2.3 MB
-```text
+```
 
 ### Performance Tips
 
@@ -376,7 +377,7 @@ Query Editor
 ├─ Auto-visualization
 ├─ Quick execution
 └─ Results management
-```text
+```
 
 ### SQL Notebook
 
@@ -392,7 +393,7 @@ SQL Notebook
 ├─ SQL + Markdown + Python
 ├─ Rich documentation
 └─ Version history
-```text
+```
 
 ## Keyboard Shortcuts
 
@@ -426,12 +427,13 @@ with engine.connect() as conn:
 
     for row in result:
         print(row)
-```text
+```
 
 ### REST API
 
 ```bash
 # Execute SQL query via REST API
+
 curl -X POST \
   https://dbc-abc123.cloud.databricks.com/api/2.0/sql/statements \
   -H "Authorization: Bearer dapi..." \
@@ -442,7 +444,8 @@ curl -X POST \
 
 # Response includes execution_id for polling
 # {"statement_id": "xyz789", "state": "RUNNING", ...}
-```text
+
+```
 
 ## Key Exam Concepts
 
@@ -473,10 +476,6 @@ curl -X POST \
 
 - **A**: Changes are saved to the query object; previous versions accessible via history
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Query Editor & Execution Implementation**: Incorporating Query Editor & Execution principles to build scalable and maintainable solutions in Databricks environments.
@@ -485,10 +484,15 @@ curl -X POST \
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Query Editor & Execution do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Query Editor & Execution to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Query Editor & Execution to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Query Editor & Execution prior to deployment.
 
+---
+
+**[← Previous: SQL Warehouses](./01-sql-warehouses.md) | [↑ Back to Databricks SQL](./README.md) | [Next: Connections & Integrations](./03-connections.md) →**

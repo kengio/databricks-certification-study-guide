@@ -39,7 +39,7 @@ flowchart TD
 
     Dashboard --> Backend
     Backend --> Users
-```text
+```
 
 ## Creating Dashboards
 
@@ -58,7 +58,7 @@ Dashboard Settings:
   Timezone: America/New_York
   Layout: Grid (auto-resizing)
   Color Theme: Light/Dark
-```text
+```
 
 ### Dashboard Navigation
 
@@ -72,7 +72,7 @@ Dashboard Settings:
 ├─ Row 2: Charts & Trends
 ├─ Row 3: Detailed Metrics
 └─ Row 4: Drill-down Tables
-```text
+```
 
 ## Dashboard Widgets
 
@@ -87,7 +87,7 @@ flowchart LR
     Widgets --> Table["Table<br/>Detailed data"]
     Widgets --> Gauge["Gauge<br/>Progress"]
     Widgets --> Text["Text<br/>Context"]
-```text
+```
 
 ### KPI Card Widget
 
@@ -98,7 +98,7 @@ FROM orders
 WHERE order_date >= CURRENT_DATE - 30;
 
 -- Output: 1,245
-```text
+```
 
 **Widget Configuration:**
 
@@ -109,7 +109,7 @@ Font Size: Large (for prominence)
 Color: Green/Red based on threshold
 Icon: Up arrow (for trend)
 Comparison: "↑ 15% vs last month"
-```text
+```
 
 ### Time Series Chart
 
@@ -123,7 +123,7 @@ FROM orders
 WHERE order_date >= CURRENT_DATE - 90
 GROUP BY DATE_TRUNC('day', order_date)
 ORDER BY day;
-```text
+```
 
 **Visualization Configuration:**
 
@@ -136,7 +136,7 @@ Zoom: Enable
 Legend: Display
 Colors: Brand colors (blue #0066CC)
 Tooltip: Show on hover
-```text
+```
 
 ### Category Comparison (Bar Chart)
 
@@ -149,7 +149,7 @@ SELECT
 FROM orders
 GROUP BY region
 ORDER BY revenue DESC;
-```text
+```
 
 **Visualization Configuration:**
 
@@ -161,7 +161,7 @@ Sort: Descending by revenue
 Colors: Sequential gradient
 Drill-down: Click region for detailed view
 Show Values: On bars
-```text
+```
 
 ### Gauge/Progress Widget
 
@@ -175,7 +175,7 @@ FROM orders
 WHERE order_date >= CURRENT_DATE - 30;
 
 -- Output: actual=475000, target=500000, pct_of_target=95%
-```text
+```
 
 **Visualization Configuration:**
 
@@ -189,7 +189,7 @@ Threshold:
   Yellow: 70-84%
   Red: <70%
 Display: Percentage (95%)
-```text
+```
 
 ## Dashboard Layout & Design
 
@@ -207,7 +207,7 @@ Dashboard 12-column grid:
 │                          │  (Row 3: 12 cols full width)
 │        Data Table        │
 └─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘
-```text
+```
 
 ### Design Best Practices
 
@@ -220,7 +220,7 @@ Dashboard Structure:
 ├─ 3. Trends (time-series charts)
 ├─ 4. Details (filtered data, tables)
 └─ 5. Context (definitions, links)
-```text
+```
 
 **2. Color Coding**
 
@@ -231,7 +231,7 @@ Standard Colors:
   Red: Negative, below target
   Blue: Neutral information
   Gray: Disabled/unavailable states
-```text
+```
 
 **3. Information Density**
 
@@ -246,7 +246,7 @@ Standard Colors:
 ├─ Clear sections
 ├─ White space for focus
 └─ Easy to scan
-```text
+```
 
 ## Interactivity & Parameters
 
@@ -263,7 +263,7 @@ WHERE order_date >= '{{ start_date }}'
   AND order_date <= '{{ end_date }}'
   AND region = '{{ selected_region }}'
 GROUP BY DATE_TRUNC('day', order_date), region;
-```text
+```
 
 **Filter Widget Configuration:**
 
@@ -280,7 +280,7 @@ Parameter: selected_region
   Type: Dropdown
   Options: North, South, East, West, All
   Default: All
-```text
+```
 
 ### Drill-down Navigation
 
@@ -302,7 +302,7 @@ SELECT
 FROM orders
 WHERE region = '{{ selected_region }}'
 GROUP BY region, store_id;
-```text
+```
 
 **Navigation Configuration:**
 
@@ -311,7 +311,7 @@ Dashboard:
   - Regional Summary (click for drill)
     └─ Link to Store Detail Dashboard
          with parameter: region_filter = selected_region
-```text
+```
 
 ## Refresh Strategy
 
@@ -324,7 +324,7 @@ Refresh Options:
   Every hour: For active monitoring
   Every 5 minutes: Real-time dashboards
   Never: Static snapshots
-```text
+```
 
 ### Query Caching
 
@@ -338,7 +338,7 @@ Cache Strategy:
   - Edit query
   - Change parameters
   - Re-run to bypass cache
-```text
+```
 
 ## Sharing & Collaboration
 
@@ -359,7 +359,7 @@ Dashboard Permissions:
     - View only
     - Can interact with filters
     - Cannot modify dashboard
-```text
+```
 
 ### Share Dashboard
 
@@ -369,7 +369,7 @@ Dashboard Settings:
   ├─ Email: analyst@company.com (Editor)
   ├─ Email: executive@company.com (Viewer)
   └─ Group: Sales Team (Viewer)
-```text
+```
 
 ### Email Subscriptions
 
@@ -379,7 +379,7 @@ Scheduled Email:
   Recipients: team@company.com
   Include: Dashboard snapshot (PNG)
   Attachment: CSV export of data
-```text
+```
 
 ## Dashboard Performance
 
@@ -396,7 +396,7 @@ SELECT
 FROM orders
 WHERE order_date >= CURRENT_DATE - 30
 GROUP BY region;
-```text
+```
 
 ### Monitoring Refresh Time
 
@@ -410,7 +410,7 @@ Dashboard Performance:
   - Aggregate pre-computed tables
   - Use LIMIT for large datasets
   - Partition tables by date
-```text
+```
 
 ## Dashboard Naming & Organization
 
@@ -426,7 +426,7 @@ Poor names:
   "Dashboard 1"
   "Report123"
   "Sales"
-```text
+```
 
 ### Folder Organization
 
@@ -442,7 +442,7 @@ Dashboards/
 └── Operations/
     ├── Inventory
     └── Supply Chain
-```text
+```
 
 ## Key Exam Concepts
 
@@ -474,10 +474,6 @@ Dashboards/
 
 - **A**: Filter queries (date range, specific regions), pre-aggregate data, use caching
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Dashboards & Dashboard Design Implementation**: Incorporating Dashboards & Dashboard Design principles to build scalable and maintainable solutions in Databricks environments.
@@ -486,10 +482,15 @@ Dashboards/
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Dashboards & Dashboard Design do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Dashboards & Dashboard Design to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Dashboards & Dashboard Design to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Dashboards & Dashboard Design prior to deployment.
 
+---
+
+**[↑ Back to Dashboards & Visualization](./README.md) | [Next: Visualizations & Chart Types](./02-visualizations.md) →**

@@ -27,7 +27,7 @@ flowchart TB
     Parser --> DAG
     DAG --> Execute
     Execute --> Output
-```text
+```
 
 ## Table Types
 
@@ -50,7 +50,7 @@ flowchart TD
     Q1 -->|No| Q3{Updates/Deletes?}
     Q3 -->|Yes| MV2[Materialized View]
     Q3 -->|No| V[View - temporary]
-```text
+```
 
 ## SQL Syntax
 
@@ -103,7 +103,7 @@ AS SELECT
     CURRENT_TIMESTAMP() AS processed_at
 FROM STREAM(LIVE.bronze_orders)
 WHERE order_status != 'cancelled';
-```text
+```
 
 ### Materialized Views
 
@@ -137,7 +137,7 @@ AS SELECT
     COUNT(*) AS order_count
 FROM LIVE.silver_orders
 GROUP BY order_status;
-```text
+```
 
 ### Views (Temporary)
 
@@ -157,7 +157,7 @@ AS SELECT *
 FROM LIVE.silver_customers
 WHERE is_active = true
     AND last_order_date >= DATE_SUB(CURRENT_DATE(), 365);
-```text
+```
 
 ## Python Syntax
 
@@ -165,10 +165,12 @@ WHERE is_active = true
 
 ```python
 # Import DLT module
+
 import dlt
 from pyspark.sql.functions import col, current_timestamp, lit
 
 # Streaming table
+
 @dlt.table(
     name="bronze_orders",
     comment="Raw orders ingested from landing zone"
@@ -183,6 +185,7 @@ def bronze_orders():
     )
 
 # Streaming table from upstream streaming table
+
 @dlt.table(
     name="silver_orders",
     comment="Cleaned and validated orders"
@@ -203,6 +206,7 @@ def silver_orders():
     )
 
 # Materialized view
+
 @dlt.table(
     name="gold_daily_sales",
     comment="Daily sales aggregation"
@@ -219,6 +223,7 @@ def gold_daily_sales():
     )
 
 # View (temporary/virtual)
+
 @dlt.view(
     name="v_recent_orders",
     comment="Orders from last 30 days"
@@ -228,7 +233,7 @@ def v_recent_orders():
         dlt.read("silver_orders")
         .filter(col("order_date") >= date_sub(current_date(), 30))
     )
-```text
+```
 
 ### Table Properties and Configuration
 
@@ -246,12 +251,13 @@ def v_recent_orders():
 )
 def silver_customers():
     return dlt.read_stream("bronze_customers")
-```text
+```
 
 ### Temporary Tables
 
 ```python
 # Temporary table (not persisted, for intermediate processing)
+
 @dlt.table(
     name="temp_order_enrichment",
     temporary=True  # Not materialized to storage
@@ -261,7 +267,7 @@ def temp_order_enrichment():
         dlt.read("silver_orders")
         .join(dlt.read("silver_products"), "product_id")
     )
-```text
+```
 
 ## Auto Loader Integration
 
@@ -301,7 +307,7 @@ AS SELECT * FROM cloud_files(
     '/mnt/landing/parquet/',
     'parquet'
 );
-```text
+```
 
 ### Python Auto Loader
 
@@ -317,7 +323,7 @@ def bronze_auto_loader():
         .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
         .load("/mnt/landing/events/")
     )
-```text
+```
 
 ## Reading from External Sources
 
@@ -325,11 +331,13 @@ def bronze_auto_loader():
 
 ```python
 # From existing Delta table
+
 @dlt.table(name="streaming_from_delta")
 def streaming_from_delta():
     return spark.readStream.table("catalog.schema.source_table")
 
 # From Kafka
+
 @dlt.table(name="streaming_from_kafka")
 def streaming_from_kafka():
     return (
@@ -350,6 +358,7 @@ def streaming_from_kafka():
     )
 
 # From Event Hubs
+
 @dlt.table(name="streaming_from_eventhub")
 def streaming_from_eventhub():
     connection_string = spark.conf.get("eventhub.connectionString")
@@ -359,12 +368,13 @@ def streaming_from_eventhub():
         .options(**{"eventhubs.connectionString": connection_string})
         .load()
     )
-```text
+```
 
 ### Batch Sources in Materialized Views
 
 ```python
 # From external database
+
 @dlt.table(name="mv_from_jdbc")
 def mv_from_jdbc():
     return (
@@ -376,7 +386,7 @@ def mv_from_jdbc():
         .option("password", dbutils.secrets.get("scope", "password"))
         .load()
     )
-```text
+```
 
 ## Pipeline Configuration
 
@@ -417,12 +427,13 @@ resources:
           alerts:
             - on-update-failure
             - on-flow-failure
-```text
+```
 
 ### Pipeline Parameters
 
 ```python
 # Access pipeline configuration
+
 import dlt
 
 @dlt.table(name="parameterized_table")
@@ -438,7 +449,7 @@ def parameterized_table():
         .load(source_path)
         .withColumn("environment", lit(environment))
     )
-```text
+```
 
 ## Development vs Production
 
@@ -451,7 +462,7 @@ Development Mode (development: true):
 - No schema enforcement initially
 - Pipeline stops on error for debugging
 - Outputs to development target schema
-```text
+```
 
 ### Production Mode
 
@@ -463,7 +474,7 @@ Production Mode (development: false):
 - Retries on transient failures
 - Outputs to production target schema
 - Event log retention for monitoring
-```text
+```
 
 ### Environment-Specific Configuration
 
@@ -496,7 +507,7 @@ targets:
               autoscale:
                 min_workers: 2
                 max_workers: 8
-```text
+```
 
 ## Triggered vs Continuous
 
@@ -509,10 +520,11 @@ Triggered Mode (continuous: false):
 - Cluster terminates after completion
 - Cost-effective for batch workloads
 - Good for: Daily/hourly ETL jobs
-```text
+```
 
 ```python
 # Triggered pipeline processes all data in source
+
 @dlt.table(name="batch_processing")
 def batch_processing():
     # Processes all new files since last run
@@ -521,7 +533,7 @@ def batch_processing():
         .format("cloudFiles")
         .load("/mnt/landing/")
     )
-```text
+```
 
 ### Continuous Pipelines
 
@@ -532,10 +544,11 @@ Continuous Mode (continuous: true):
 - Cluster always running
 - Near real-time latency
 - Good for: Streaming workloads, low-latency requirements
-```text
+```
 
 ```python
 # Continuous pipeline for near real-time
+
 @dlt.table(name="realtime_processing")
 def realtime_processing():
     return (
@@ -544,7 +557,7 @@ def realtime_processing():
         .option("subscribe", "realtime-topic")
         .load()
     )
-```text
+```
 
 ## Schema Evolution
 
@@ -562,7 +575,7 @@ AS SELECT * FROM cloud_files(
         'cloudFiles.schemaHints', 'id INT, timestamp TIMESTAMP'
     )
 );
-```text
+```
 
 ### Schema Evolution Modes
 
@@ -579,14 +592,17 @@ AS SELECT * FROM cloud_files(
 
 ```bash
 # Via CLI
+
 databricks pipelines start --pipeline-id abc123
 
 # Full refresh
+
 databricks pipelines start --pipeline-id abc123 --full-refresh
 
 # Refresh specific tables
+
 databricks pipelines start --pipeline-id abc123 --refresh-selection "silver_orders,gold_sales"
-```text
+```
 
 ### Full Refresh vs Incremental
 
@@ -601,7 +617,7 @@ Full Refresh:
 - Clears all data and checkpoints
 - Reprocesses from beginning
 - Use when: Schema changes, backfill, recovery
-```text
+```
 
 ## Use Cases
 
@@ -628,7 +644,7 @@ FROM cloud_files(
     'json',
     map('cloudFiles.inferColumnTypes', 'true')
 );
-```text
+```
 
 ### 2. Materialized View Performance
 
@@ -644,7 +660,7 @@ AS SELECT
     DATE(event_time) AS date_partition,
     ...
 FROM LIVE.source_table;
-```text
+```
 
 ### 3. Dependency Not Found
 
@@ -654,9 +670,11 @@ FROM LIVE.source_table;
 
 ```python
 # Wrong - direct reference
+
 dlt.read("missing_table")
 
 # Correct - table must be defined in pipeline
+
 @dlt.table(name="source_table")
 def source_table():
     return spark.readStream.load(...)
@@ -664,7 +682,7 @@ def source_table():
 @dlt.table(name="dependent_table")
 def dependent_table():
     return dlt.read_stream("source_table")  # Now it exists
-```text
+```
 
 ### 4. Checkpoint Location Issues
 
@@ -674,7 +692,7 @@ def dependent_table():
 
 ```bash
 databricks pipelines start --pipeline-id abc123 --full-refresh
-```text
+```
 
 ## Exam Tips
 
@@ -693,7 +711,7 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 
 - [Expectations and Data Quality](02-expectations-data-quality.md) - Quality constraints
 - [APPLY CHANGES API](03-apply-changes-api.md) - CDC processing
-- [Lakeflow Jobs](04-lakeflow-jobs.md) - Pipeline orchestration
+- [Lakeflow Jobs](04-lakeflow-jobs-part1.md) - Pipeline orchestration
 - [Event Logs](../05-monitoring-logging/03-lakeflow-event-logs.md) - Monitoring
 
 ## Official Documentation
@@ -702,3 +720,7 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 - [DLT SQL Reference](https://docs.databricks.com/delta-live-tables/sql-ref.html)
 - [DLT Python Reference](https://docs.databricks.com/delta-live-tables/python-ref.html)
 - [Auto Loader](https://docs.databricks.com/ingestion/auto-loader/index.html)
+
+---
+
+**[↑ Back to Lakeflow Pipelines](./README.md) | [Next: Expectations and Data Quality](./02-expectations-data-quality.md) →**

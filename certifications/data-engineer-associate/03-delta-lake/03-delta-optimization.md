@@ -32,7 +32,7 @@ flowchart TB
     end
 
     Before -->|OPTIMIZE| After
-```text
+```
 
 ### Basic OPTIMIZE
 
@@ -43,15 +43,16 @@ OPTIMIZE employees;
 -- Added file count: 0
 -- Removed file count: 150
 -- Partition Values: [...]
-```text
+```
 
 ```python
 # Python API
+
 from delta.tables import DeltaTable
 
 delta_table = DeltaTable.forPath(spark, "/mnt/data/employees")
 delta_table.optimize().executeCompaction()
-```text
+```
 
 ### Partitioned OPTIMIZE
 
@@ -60,14 +61,15 @@ delta_table.optimize().executeCompaction()
 OPTIMIZE employees WHERE year = 2025;
 
 OPTIMIZE employees WHERE year = 2025 AND month = 1;
-```text
+```
 
 ```python
 # Optimize with partition pruning
+
 delta_table.optimize() \
     .where("year = 2025") \
     .executeCompaction()
-```text
+```
 
 ### OPTIMIZE with Z-order
 
@@ -81,23 +83,25 @@ ZORDER BY (department, year);
 -- Multiple columns for complex access patterns
 OPTIMIZE orders
 ZORDER BY (customer_id, order_date);
-```text
+```
 
 ```python
 # Z-order via Python
+
 from delta.tables import DeltaTable
 
 DeltaTable.forPath(spark, "/mnt/data/employees") \
     .optimize() \
     .zorderBy("department") \
     .executeCompaction()
-```text
+```
 
 ## Z-order Indexing
 
 Z-order clustering colocates related data to speed up queries:
 
 ```python
+
 # Scenario: Employee queries typically filter by department and salary range
 # Z-order on these columns
 
@@ -107,7 +111,8 @@ Z-order clustering colocates related data to speed up queries:
 # Good query (with Z-order):
 # Z-order clusters by (department, salary)
 # Only scans files containing relevant data
-```text
+
+```
 
 ### When to Use Z-order
 
@@ -135,35 +140,40 @@ VACUUM employees RETAIN 1 HOURS;
 
 -- Dry run (preview what would be deleted)
 VACUUM employees DRY RUN;
-```text
+```
 
 ```python
 # VACUUM via Python
+
 from delta.tables import DeltaTable
 
 delta_table = DeltaTable.forPath(spark, "/mnt/data/employees")
 delta_table.vacuum(retention_hours=168)  # 7 days
-```text
+```
 
 ### VACUUM Safety
 
 ```python
 # Default retention (7 days)
+
 spark.conf.set("delta.deletedFileRetentionDuration", "interval 7 days")
 
 # This prevents accidental data loss:
 # - Retains versions for 7 days
 # - Queries using timestamps within 7 days still work
 # - Restoring to old versions requires 7-day retention
-```text
+
+```
 
 ### VACUUM and Time Travel Impact
 
 ```python
+
 # VACUUM removes old files, breaking time travel to those versions
 # Example:
 
 # 1. Create table (v0)
+
 spark.sql("CREATE TABLE employees AS SELECT ...")
 
 # 2. Insert data daily for 60 days (v0 - v60)
@@ -173,7 +183,8 @@ spark.sql("CREATE TABLE employees AS SELECT ...")
 
 # 4. Run VACUUM RETAIN 60 DAYS (safer)
 #    - Time travel works for all versions within 60 days
-```text
+
+```
 
 ## Table Statistics
 
@@ -194,11 +205,12 @@ FROM
     (DESCRIBE EXTENDED employees)
 WHERE
     COLUMN_NAME IN ('id', 'salary')
-```text
+```
 
 ### Column Statistics
 
 ```python
+
 # Columns statistics tracked automatically:
 # - min value
 # - max value
@@ -211,7 +223,8 @@ WHERE
 # max: 500000
 # nullCount: 0
 # numValues: 10000
-```text
+
+```
 
 ### Collecting Statistics
 
@@ -223,13 +236,14 @@ ANALYZE TABLE employees COMPUTE STATISTICS;
 
 -- Per-column statistics
 ANALYZE TABLE employees COMPUTE STATISTICS FOR COLUMNS salary, department;
-```text
+```
 
 ```python
 # Python equivalent
+
 spark.sql("ANALYZE TABLE employees COMPUTE STATISTICS")
 spark.sql("ANALYZE TABLE employees COMPUTE STATISTICS FOR COLUMNS salary, department")
-```text
+```
 
 ## Delta Table Properties for Optimization
 
@@ -242,7 +256,7 @@ SET TBLPROPERTIES (
     'delta.autoOptimize.optimizeWrite' = 'true',
     'delta.autoOptimize.autoCompact' = 'true'
 );
-```text
+```
 
 ### Data Indexing
 
@@ -252,7 +266,7 @@ ALTER TABLE employees
 SET TBLPROPERTIES (
     'delta.dataSkippingNumIndexedCols' = '32'
 );
-```text
+```
 
 ### Bloom Filters
 
@@ -263,7 +277,7 @@ SET TBLPROPERTIES (
     'delta.bloomFilter.enabled' = 'true',
     'delta.bloomFilter.columns' = 'email'
 );
-```text
+```
 
 ## Performance Tuning Strategy
 
@@ -271,6 +285,7 @@ SET TBLPROPERTIES (
 
 ```python
 # Check average file size
+
 files = spark.sql("""
     SELECT
         COUNT(*) as num_files,
@@ -279,11 +294,12 @@ files = spark.sql("""
     FROM
         (SELECT path, size FROM delta.detail('employees'))
 """)
-```text
+```
 
 ### 2. Schedule Regular OPTIMIZE
 
 ```python
+
 # Recommended: Weekly optimization for large tables
 # Run during off-peak hours
 
@@ -293,12 +309,13 @@ def optimize_all_tables():
         table_name = table_row['tableName']
         print(f"Optimizing {table_name}")
         spark.sql(f"OPTIMIZE {table_name}")
-```text
+```
 
 ### 3. Partition Strategy
 
 ```python
 # Partition large tables by date
+
 spark.sql("""
 CREATE TABLE events (
     event_id INT,
@@ -311,32 +328,38 @@ PARTITIONED BY (year INT, month INT, day INT)
 """)
 
 # Insert with partition pruning
+
 spark.sql("""
 INSERT INTO events PARTITION (year=2025, month=1, day=15)
 SELECT event_id, event_name, timestamp, user_id
 FROM raw_events
 WHERE YEAR(timestamp) = 2025 AND MONTH(timestamp) = 1 AND DAY(timestamp) = 15
 """)
-```text
+```
 
 ## Maintenance Schedule
 
 ```python
+
 # Recommended maintenance tasks
 
 # Daily: Monitor table size
+
 spark.sql("SELECT COUNT(*) FROM employees").show()
 
 # Weekly: Optimize and analyze
+
 spark.sql("OPTIMIZE employees")
 spark.sql("ANALYZE TABLE employees COMPUTE STATISTICS")
 
 # Monthly: VACUUM old data
+
 spark.sql("VACUUM employees RETAIN 30 DAYS")
 
 # Quarterly: Review Z-order strategy and adjust
 # spark.sql("OPTIMIZE employees ZORDER BY (new_column)")
-```text
+
+```
 
 ## Compression and Format
 
@@ -344,6 +367,7 @@ spark.sql("VACUUM employees RETAIN 30 DAYS")
 
 ```python
 # Delta automatically uses optimal compression (Snappy by default)
+
 df.write \
     .format("delta") \
     .option("compression", "snappy") \
@@ -351,7 +375,8 @@ df.write \
     .save("/mnt/data/employees")
 
 # Other options: gzip, lz4, uncompressed
-```text
+
+```
 
 ### Storage Format Comparison
 
@@ -366,6 +391,7 @@ df.write \
 
 ```python
 # Check query execution plan
+
 spark.sql("""
 EXPLAIN EXTENDED
 SELECT * FROM employees WHERE salary > 100000
@@ -373,11 +399,13 @@ SELECT * FROM employees WHERE salary > 100000
 
 # Check if Z-order is used
 # Look for "DataFilters" section
-```text
+
+```
 
 ## Optimization Workflow Example
 
 ```python
+
 # Complete optimization example
 
 from delta.tables import DeltaTable
@@ -387,20 +415,24 @@ table_path = "/mnt/data/employees"
 delta_table = DeltaTable.forPath(spark, table_path)
 
 # 1. Analyze current state
+
 spark.sql("ANALYZE TABLE employees COMPUTE STATISTICS")
 
 # 2. Optimize and Z-order
+
 delta_table.optimize() \
     .zorderBy("department", "hire_date") \
     .executeCompaction()
 
 # 3. VACUUM old files
+
 delta_table.vacuum(retention_hours=168)  # 7 days
 
 # 4. Verify improvements
+
 print("Optimization complete!")
 spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
-```text
+```
 
 ## Key Exam Concepts
 
@@ -413,10 +445,6 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 - **Bloom Filters**: Fast lookup filtering on specific columns
 - **Maintenance**: Regular OPTIMIZE, ANALYZE, and VACUUM needed
 
----
-
-**[← Back to Delta Lake](README.md)**
-
 ## Use Cases
 
 - **ACID Transactions Backup**: Using Delta Lake's robust versioning to create a reliable and auditable data warehouse pipeline.
@@ -425,10 +453,15 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 ## Common Issues & Errors
 
 ### 1. Small File Problem
+
 **Scenario:** Frequent micro-batch writes cause slow reads.
 **Fix:** Run OPTIMIZE with Z-ORDER regularly.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Delta Lake Optimization to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Optimization prior to deployment.
 
+---
+
+**[← Previous: Time Travel and Versioning](./02-time-travel-versioning.md) | [↑ Back to Delta Lake](./README.md)**

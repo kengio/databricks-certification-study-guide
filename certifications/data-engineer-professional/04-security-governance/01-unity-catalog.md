@@ -40,7 +40,7 @@ flowchart TB
     end
 
     Metastore --> Objects
-```text
+```
 
 ## Unity Catalog Architecture
 
@@ -56,7 +56,7 @@ erDiagram
     SCHEMA ||--o{ FUNCTION : contains
     SCHEMA ||--o{ MODEL : contains
     TABLE ||--o{ COLUMN : has
-```text
+```
 
 ### Three-Level Namespace
 
@@ -69,7 +69,7 @@ catalog_name.schema_name.object_name
 main.default.customers
 prod.sales.orders
 dev.analytics.daily_metrics
-```text
+```
 
 | Level | Purpose | Examples |
 | :--- | :--- | :--- |
@@ -101,7 +101,7 @@ SELECT * FROM system.information_schema.metastores;
 
 -- View current metastore
 SELECT current_metastore();
-```text
+```
 
 ### Metastore Admin Capabilities
 
@@ -140,7 +140,7 @@ DROP CATALOG IF EXISTS temp_catalog;
 
 -- Force drop catalog with contents
 DROP CATALOG IF EXISTS temp_catalog CASCADE;
-```text
+```
 
 ### Catalog Best Practices
 
@@ -184,7 +184,7 @@ DESCRIBE SCHEMA prod.sales;
 -- Drop schema
 DROP SCHEMA IF EXISTS temp_schema;
 DROP SCHEMA IF EXISTS temp_schema CASCADE;
-```text
+```
 
 ### Default Schema
 
@@ -197,7 +197,7 @@ SELECT * FROM prod.default.customers;
 USE CATALOG prod;
 USE SCHEMA default;
 SELECT * FROM customers;
-```text
+```
 
 ## Tables
 
@@ -215,7 +215,7 @@ flowchart TB
     External --> E1["Data in external location"]
     External --> E2["User manages storage"]
     External --> E3["DROP keeps data"]
-```text
+```
 
 ### Creating Tables
 
@@ -244,7 +244,7 @@ SELECT
     SUM(amount) as total_revenue
 FROM prod.silver.orders
 GROUP BY order_date;
-```text
+```
 
 ### Table Properties
 
@@ -262,7 +262,7 @@ ALTER TABLE prod.sales.orders SET TBLPROPERTIES (
 
 -- Add table comment
 COMMENT ON TABLE prod.sales.orders IS 'Sales orders fact table';
-```text
+```
 
 ### Managed vs External Tables
 
@@ -300,7 +300,7 @@ GROUP BY customer_id;
 
 -- Materialized view (DLT only)
 -- See Lakeflow Pipelines section
-```text
+```
 
 ### Dynamic Views for Security
 
@@ -322,7 +322,7 @@ SELECT
         ELSE NULL
     END as amount
 FROM prod.sales.orders;
-```text
+```
 
 ## Volumes
 
@@ -350,24 +350,28 @@ SHOW VOLUMES IN prod.raw;
 
 -- Describe volume
 DESCRIBE VOLUME prod.raw.landing_zone;
-```text
+```
 
 ### Using Volumes
 
 ```python
 # Volume paths
+
 volume_path = "/Volumes/prod/raw/landing_zone/"
 
 # Read from volume
+
 df = spark.read.format("csv").load(f"{volume_path}data.csv")
 
 # Write to volume
+
 df.write.format("parquet").save(f"{volume_path}output/")
 
 # File operations
+
 dbutils.fs.ls(volume_path)
 dbutils.fs.cp(f"{volume_path}file.csv", f"{volume_path}archive/file.csv")
-```text
+```
 
 ## Storage Credentials and External Locations
 
@@ -390,7 +394,7 @@ WITH (
 
 -- List storage credentials
 SHOW STORAGE CREDENTIALS;
-```text
+```
 
 ### External Locations
 
@@ -407,7 +411,7 @@ GRANT READ FILES, WRITE FILES ON EXTERNAL LOCATION my_landing_zone TO `data-engi
 
 -- List external locations
 SHOW EXTERNAL LOCATIONS;
-```text
+```
 
 ## Permission Model
 
@@ -425,7 +429,7 @@ flowchart TD
         CREATE[CREATE TABLE]
         ALL[ALL PRIVILEGES]
     end
-```text
+```
 
 ### Common Privileges
 
@@ -466,7 +470,7 @@ GRANT SELECT ON TABLE prod.gold.revenue TO `team-lead` WITH GRANT OPTION;
 
 -- Grant ALL PRIVILEGES
 GRANT ALL PRIVILEGES ON SCHEMA prod.silver TO `data-engineers`;
-```text
+```
 
 ### Revoking Permissions
 
@@ -476,7 +480,7 @@ REVOKE SELECT ON TABLE prod.gold.revenue FROM `data-analysts`;
 
 -- Revoke all privileges
 REVOKE ALL PRIVILEGES ON SCHEMA prod.silver FROM `data-engineers`;
-```text
+```
 
 ### Viewing Permissions
 
@@ -489,7 +493,7 @@ SHOW GRANTS TO `data-analysts`;
 
 -- Show grants on schema
 SHOW GRANTS ON SCHEMA prod.gold;
-```text
+```
 
 ## Ownership
 
@@ -509,7 +513,7 @@ ALTER SCHEMA prod.sales SET OWNER TO `sales-team`;
 
 -- Change catalog owner
 ALTER CATALOG prod SET OWNER TO `platform-team`;
-```text
+```
 
 ### Owner Privileges
 
@@ -539,7 +543,7 @@ SELECT is_account_group_member('data-analysts');
 
 -- Get current user
 SELECT current_user();
-```text
+```
 
 ### Group-Based Access Pattern
 
@@ -553,7 +557,7 @@ GRANT USE CATALOG ON CATALOG prod TO `engineers`;
 GRANT USE SCHEMA ON SCHEMA prod.silver TO `engineers`;
 GRANT SELECT, MODIFY ON SCHEMA prod.silver TO `engineers`;
 GRANT CREATE TABLE ON SCHEMA prod.silver TO `engineers`;
-```text
+```
 
 ## Information Schema
 
@@ -578,7 +582,7 @@ WHERE table_name = 'orders';
 -- List all privileges
 SELECT * FROM system.information_schema.table_privileges
 WHERE table_name = 'orders';
-```text
+```
 
 ## Lineage
 
@@ -592,12 +596,14 @@ Unity Catalog automatically tracks data lineage.
 -- - Table to table dependencies
 -- - Column-level lineage
 -- - Notebook/job that created data
-```text
+```
 
 ```python
+
 # Access lineage via REST API
 # GET /api/2.1/unity-catalog/lineage/table-lineage
-```text
+
+```
 
 ## Migration from Hive Metastore
 
@@ -626,7 +632,7 @@ SELECT * FROM hive_metastore.default.my_table;
 CREATE TABLE prod.bronze.my_table
 USING DELTA
 LOCATION 'dbfs:/user/hive/warehouse/my_table';
-```text
+```
 
 ## Use Cases
 
@@ -647,7 +653,7 @@ CREATE SCHEMA prod.sales;
 GRANT ALL PRIVILEGES ON CATALOG dev TO `developers`;
 GRANT SELECT ON CATALOG staging TO `developers`;
 GRANT SELECT ON SCHEMA prod.gold TO `analysts`;
-```text
+```
 
 ### Data Mesh Pattern
 
@@ -663,7 +669,7 @@ GRANT ALL PRIVILEGES ON CATALOG marketing_domain TO `marketing-data-team`;
 
 -- Cross-domain read access
 GRANT USE CATALOG, USE SCHEMA, SELECT ON CATALOG sales_domain TO `marketing-data-team`;
-```text
+```
 
 ## Common Issues & Errors
 
@@ -685,7 +691,7 @@ GRANT USE SCHEMA ON SCHEMA prod.gold TO `user@company.com`;
 
 -- Grant table access
 GRANT SELECT ON TABLE prod.gold.revenue TO `user@company.com`;
-```text
+```
 
 ### 2. Cannot Create External Table
 
@@ -699,7 +705,7 @@ GRANT SELECT ON TABLE prod.gold.revenue TO `user@company.com`;
 CREATE TABLE prod.raw.external_data
 USING DELTA
 LOCATION 's3://bucket/path/';
-```text
+```
 
 ### 3. Catalog Not Visible
 
@@ -709,7 +715,7 @@ LOCATION 's3://bucket/path/';
 
 ```sql
 GRANT USE CATALOG ON CATALOG prod TO `data-team`;
-```text
+```
 
 ## Exam Tips
 
@@ -736,3 +742,7 @@ GRANT USE CATALOG ON CATALOG prod TO `data-team`;
 - [Unity Catalog Best Practices](https://docs.databricks.com/data-governance/unity-catalog/best-practices.html)
 - [Privileges](https://docs.databricks.com/data-governance/unity-catalog/manage-privileges/privileges.html)
 - [Volumes](https://docs.databricks.com/volumes/index.html)
+
+---
+
+**[↑ Back to Security & Governance](./README.md) | [Next: Access Control](./02-access-control.md) →**

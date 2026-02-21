@@ -18,7 +18,7 @@ graph LR
     F[Shared Fundamentals] --> MLA[ML Associate]
     MLA --> MLP[ML Professional]
     MLA --> GAIA[GenAI Engineer Associate]
-```text
+```
 
 ## Prerequisites
 

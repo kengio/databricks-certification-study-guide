@@ -440,4 +440,4 @@ Your `gold.daily_sales_summary` table needs two changes: (1) add a new `channel`
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Python for Production Data Engineering](09-python-code-quality.md)
+**[← Previous: Interview Questions — Python for Production Data Engineering](./09-python-code-quality.md) | [↑ Back to Databricks Interview Prep](./README.md)**

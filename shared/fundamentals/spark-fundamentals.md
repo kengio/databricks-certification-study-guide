@@ -45,7 +45,7 @@ flowchart TB
     CM --> Exec1
     CM --> Exec2
     CM --> ExecN
-```text
+```
 
 ### Key Components
 
@@ -70,7 +70,7 @@ spark = (SparkSession.builder
 
 # Access SparkContext
 sc = spark.sparkContext
-```text
+```
 
 ## DataFrames
 
@@ -89,7 +89,7 @@ df = spark.read.parquet("/path/to/file.parquet")
 # From a Delta table
 df = spark.read.format("delta").load("/path/to/delta")
 df = spark.table("my_catalog.my_schema.my_table")
-```text
+```
 
 ### Basic Operations
 
@@ -122,7 +122,7 @@ df.drop("age")
 # Distinct values
 df.distinct()
 df.dropDuplicates(["name"])
-```text
+```
 
 ### Aggregations
 
@@ -143,7 +143,7 @@ from pyspark.sql.functions import row_number, rank
 
 window = Window.partitionBy("department").orderBy("salary")
 df.withColumn("rank", rank().over(window))
-```text
+```
 
 ### Joins
 
@@ -159,7 +159,7 @@ df1.join(df2, "id", "left_outer")
 
 # Multiple conditions
 df1.join(df2, (df1.id == df2.id) & (df1.date == df2.date))
-```text
+```
 
 ## Transformations vs Actions
 
@@ -207,7 +207,7 @@ result = spark.sql("""
 # Global temp views (accessible across sessions)
 df.createOrReplaceGlobalTempView("global_view")
 spark.sql("SELECT * FROM global_temp.global_view")
-```text
+```
 
 ## Caching and Persistence
 
@@ -221,7 +221,7 @@ df.persist(StorageLevel.MEMORY_AND_DISK)
 
 # Unpersist
 df.unpersist()
-```text
+```
 
 | Storage Level       | Description                            |
 | ------------------- | -------------------------------------- |
@@ -244,7 +244,7 @@ df.repartition("column_name")
 
 # Coalesce (no shuffle, only decrease)
 df.coalesce(5)
-```text
+```
 
 ### Partition Pruning
 
@@ -254,7 +254,7 @@ df.write.partitionBy("year", "month").parquet("/path/to/output")
 
 # Read with partition filter (only reads relevant partitions)
 spark.read.parquet("/path/to/output").filter("year = 2025")
-```text
+```
 
 ## Broadcast Variables
 
@@ -267,7 +267,7 @@ broadcast_df = spark.broadcast(small_df)
 
 # Use in join (Spark auto-broadcasts small tables)
 large_df.join(broadcast(small_df), "key")
-```text
+```
 
 ## UDFs (User-Defined Functions)
 
@@ -292,7 +292,7 @@ def pandas_upper(s: pd.Series) -> pd.Series:
     return s.str.upper()
 
 df.withColumn("name_upper", pandas_upper(df.name))
-```text
+```
 
 ## Use Cases
 

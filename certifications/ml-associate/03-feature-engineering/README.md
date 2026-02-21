@@ -23,7 +23,7 @@ flowchart TD
     SML --> Transform["Transformations"]
     FT --> Selection["Feature Selection"]
     FS --> Serving["Feature Serving"]
-```text
+```
 
 ## Section Contents
 
@@ -53,4 +53,4 @@ Progress to [04-MLflow Deployment](../04-mlflow-deployment/README.md) to learn a
 
 ---
 
-**[← Back to ML Associate](../README.md)**
+**[← Back to Certification](../README.md)**

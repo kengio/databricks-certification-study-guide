@@ -202,4 +202,4 @@ D) `$date_range` (dollar sign prefix)
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: Analytics Applications](05-analytics-applications.md)
+**[← Previous: SQL Queries Practice Questions](./03-sql-queries.md) | [↑ Back to Data Analyst Associate Practice Questions](./README.md) | [Next: Analytics Applications Practice Questions](./05-analytics-applications.md) →**

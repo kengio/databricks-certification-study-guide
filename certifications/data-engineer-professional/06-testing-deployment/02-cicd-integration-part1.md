@@ -45,7 +45,7 @@ flowchart TB
     DeployDev --> IntTest
     IntTest --> DeployStaging
     DeployStaging --> DeployProd
-```text
+```
 
 ## Authentication Methods
 
@@ -53,19 +53,22 @@ flowchart TB
 
 ```bash
 # Environment variables for service principal
+
 export DATABRICKS_HOST="https://adb-1234567890.1.azuredatabricks.net"
 export DATABRICKS_CLIENT_ID="00000000-0000-0000-0000-000000000000"
 export DATABRICKS_CLIENT_SECRET="your-client-secret"
 
 # Or using OAuth token
+
 export DATABRICKS_HOST="https://adb-1234567890.1.azuredatabricks.net"
 export DATABRICKS_TOKEN="your-oauth-token"
-```text
+```
 
 ### Azure Service Principal Setup
 
 ```bash
 # Create service principal
+
 az ad sp create-for-rbac --name "databricks-cicd-sp" --role Contributor \
     --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group}
 
@@ -73,19 +76,23 @@ az ad sp create-for-rbac --name "databricks-cicd-sp" --role Contributor \
 # In Databricks Admin Console:
 # 1. Add service principal to workspace
 # 2. Grant appropriate permissions (workspace admin or specific ACLs)
-```text
+
+```
 
 ### AWS Authentication
 
 ```bash
 # Using instance profile (recommended for EC2/EKS)
+
 export DATABRICKS_HOST="https://my-workspace.cloud.databricks.com"
+
 # Instance profile attached to runner handles auth
 
 # Using access keys (less recommended)
+
 export DATABRICKS_HOST="https://my-workspace.cloud.databricks.com"
 export DATABRICKS_TOKEN="dapi..."
-```text
+```
 
 ## GitHub Actions
 
@@ -93,6 +100,7 @@ export DATABRICKS_TOKEN="dapi..."
 
 ```yaml
 # .github/workflows/databricks-cicd.yml
+
 name: Databricks CI/CD
 
 on:
@@ -202,12 +210,13 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.PROD_DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.PROD_DATABRICKS_TOKEN }}
-```text
+```
 
 ### Reusable Workflow
 
 ```yaml
 # .github/workflows/deploy-template.yml
+
 name: Deploy Template
 
 on:
@@ -239,10 +248,11 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-```text
+```
 
 ```yaml
 # .github/workflows/main.yml - Using the template
+
 name: Main Pipeline
 
 on:
@@ -268,7 +278,7 @@ jobs:
     secrets:
       DATABRICKS_HOST: ${{ secrets.PROD_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.PROD_TOKEN }}
-```text
+```
 
 ## Azure DevOps
 
@@ -276,6 +286,7 @@ jobs:
 
 ```yaml
 # azure-pipelines.yml
+
 trigger:
   branches:
     include:
@@ -403,12 +414,13 @@ stages:
                   env:
                     DATABRICKS_HOST: $(PROD_DATABRICKS_HOST)
                     DATABRICKS_TOKEN: $(PROD_DATABRICKS_TOKEN)
-```text
+```
 
 ### Variable Groups
 
 ```yaml
 # Reference variable groups in pipeline
+
 variables:
   - group: databricks-dev-credentials
   - group: databricks-prod-credentials
@@ -417,7 +429,8 @@ variables:
 # databricks-dev-credentials:
 #   - DEV_DATABRICKS_HOST
 #   - DEV_DATABRICKS_TOKEN
-```text
+
+```
 
 ## GitLab CI/CD
 
@@ -425,6 +438,7 @@ variables:
 
 ```yaml
 # .gitlab-ci.yml
+
 stages:
   - test
   - validate
@@ -504,7 +518,7 @@ deploy-prod:
   variables:
     DATABRICKS_HOST: $PROD_DATABRICKS_HOST
     DATABRICKS_TOKEN: $PROD_DATABRICKS_TOKEN
-```text
+```
 
 ## Jenkins
 
@@ -593,6 +607,10 @@ pipeline {
         }
     }
 }
-```text
+```
 
 > **Continue reading:** [Part 2 — Testing, Secrets & Monitoring](./08-cicd-integration-part2.md)
+
+---
+
+**[← Previous: Asset Bundles — Part 2](./01-asset-bundles-part2.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: CI/CD Integration — Part 2 (Testing, Secrets & Monitoring)](./02-cicd-integration-part2.md) →**

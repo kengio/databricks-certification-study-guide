@@ -112,4 +112,4 @@ D) Workspace files
 
 ---
 
-[Back to Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
+**[← Previous: Practice Questions - Section 01: Data Processing](./01-data-processing.md) | [↑ Back to Practice Questions](./README.md) | [Next: Practice Questions - Section 03: Data Modeling](./03-data-modeling.md) →**

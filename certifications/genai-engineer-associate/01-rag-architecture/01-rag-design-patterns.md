@@ -161,6 +161,7 @@ more accurate than bi-encoder cosine similarity but too slow to run over entire 
 
 ```python
 # Two-stage retrieval: fast ANN first, accurate reranking second
+
 from databricks.vector_search.client import VectorSearchClient
 
 def retrieve_and_rerank(
@@ -212,6 +213,7 @@ good answer. Large chunks provide context but reduce retrieval precision.
 
 ```python
 # Indexing: store both parent_id and child content
+
 def create_parent_child_chunks(document: str, parent_size: int = 1024,
                                 child_size: int = 256) -> list[dict]:
     """Split document into parents, then children referencing their parent."""
@@ -457,8 +459,6 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 > Metadata filtering (C) narrows recall rather than improving it. Fine-tuning on retrieved
 > documents (D) is not a standard pattern and does not address recall.
 
-[← Back to Topic](./README.md)
-
 ## Use Cases
 
 - **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
@@ -467,10 +467,15 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 ## Common Issues & Errors
 
 ### 1. High Latency Responses
+
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting RAG Design Patterns to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for RAG Design Patterns prior to deployment.
 
+---
+
+**[↑ Back to RAG Architecture](./README.md) | [Next: Document Processing & Chunking](./02-document-processing-chunking.md) →**

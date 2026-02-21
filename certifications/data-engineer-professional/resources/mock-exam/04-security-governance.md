@@ -112,4 +112,4 @@ D) Implement filtering in the application layer only
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
+**[← Previous: Mock Exam - Section 3: Data Modeling](./03-data-modeling.md) | [↑ Back to Full-Length Practice Exam](./README.md) | [Next: Mock Exam - Section 5: Monitoring & Logging](./05-monitoring-logging.md) →**

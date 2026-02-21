@@ -11,7 +11,7 @@ status: published
 
 # CI/CD Integration — Part 2: Testing, Secrets & Monitoring
 
-> For CI/CD platform configuration (GitHub Actions, Azure DevOps, GitLab, Jenkins), see [Part 1](./02-cicd-integration.md).
+> For CI/CD platform configuration (GitHub Actions, Azure DevOps, GitLab, Jenkins), see [Part 1](./02-cicd-integration-part1.md).
 
 This part covers testing strategies within CI/CD pipelines, secret management, deployment strategies, monitoring, and common issues.
 
@@ -21,6 +21,7 @@ This part covers testing strategies within CI/CD pipelines, secret management, d
 
 ```yaml
 # GitHub Actions example
+
 - name: Run unit tests
   run: |
     pytest tests/unit/ \
@@ -33,12 +34,13 @@ This part covers testing strategies within CI/CD pipelines, secret management, d
   uses: codecov/codecov-action@v3
   with:
     files: coverage.xml
-```text
+```
 
 ### Integration Testing
 
 ```yaml
 # Run Databricks job as integration test
+
 - name: Run integration tests
   run: |
     # Deploy test resources
@@ -63,12 +65,13 @@ This part covers testing strategies within CI/CD pipelines, secret management, d
   env:
     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-```text
+```
 
 ### Data Quality Testing
 
 ```python
 # tests/integration/test_data_quality.py
+
 def test_bronze_table_schema():
     """Verify bronze table has expected schema."""
     df = spark.table("catalog.bronze.events")
@@ -85,7 +88,7 @@ def test_gold_aggregation():
     """Verify gold aggregation produces expected results."""
     df = spark.table("catalog.gold.daily_summary")
     assert df.count() > 0, "Gold table is empty"
-```text
+```
 
 ## Deployment Strategies
 
@@ -102,10 +105,11 @@ flowchart LR
     Deploy[Deploy] --> Green
     Test[Test Green] --> Switch[Switch Traffic]
     Switch --> Green
-```text
+```
 
 ```yaml
 # Bundle configuration for blue-green
+
 targets:
   prod-blue:
     variables:
@@ -124,12 +128,13 @@ targets:
       jobs:
         etl_job:
           name: "ETL Pipeline - Green"
-```text
+```
 
 ### Canary Deployment
 
 ```python
 # Canary deployment script
+
 import time
 
 def canary_deploy(job_name, canary_percentage=10):
@@ -152,7 +157,7 @@ def canary_deploy(job_name, canary_percentage=10):
         print("Canary unhealthy, rolling back")
         rollback_canary(job_name)
         raise Exception("Canary deployment failed")
-```text
+```
 
 ## Secret Management in CI/CD
 
@@ -160,34 +165,39 @@ def canary_deploy(job_name, canary_percentage=10):
 
 ```yaml
 # Reference secrets in workflow
+
 env:
   DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
   DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
 # Environment-specific secrets
+
 jobs:
   deploy-prod:
     environment: production
     env:
       DATABRICKS_HOST: ${{ secrets.PROD_DATABRICKS_HOST }}
-```text
+```
 
 ### Azure DevOps Variable Groups
 
 ```yaml
 # Reference variable groups
+
 variables:
   - group: databricks-credentials
 
 # Or use Azure Key Vault
+
 variables:
   - group: databricks-keyvault-secrets
-```text
+```
 
 ### HashiCorp Vault Integration
 
 ```yaml
 # GitHub Actions with Vault
+
 - name: Import Secrets
   uses: hashicorp/vault-action@v2
   with:
@@ -199,7 +209,7 @@ variables:
 
 - name: Deploy
   run: databricks bundle deploy -t prod
-```text
+```
 
 ## Monitoring and Notifications
 
@@ -207,6 +217,7 @@ variables:
 
 ```yaml
 # GitHub Actions
+
 - name: Notify Slack on failure
   if: failure()
   uses: slackapi/slack-github-action@v1
@@ -219,12 +230,13 @@ variables:
       Commit: ${{ github.sha }}
   env:
     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-```text
+```
 
 ### Email Notifications
 
 ```yaml
 # Azure DevOps
+
 - task: SendEmail@1
   condition: failed()
   inputs:
@@ -234,7 +246,7 @@ variables:
       Pipeline $(Build.DefinitionName) failed.
       Branch: $(Build.SourceBranch)
       Build: $(Build.BuildNumber)
-```text
+```
 
 ## Use Cases
 
@@ -251,6 +263,7 @@ variables:
 
 ```bash
 # Test authentication locally
+
 export DATABRICKS_HOST="https://..."
 export DATABRICKS_TOKEN="dapi..."
 databricks workspace list /
@@ -258,7 +271,8 @@ databricks workspace list /
 # Check token expiration
 # PAT tokens have configurable lifetime
 # Service principal tokens may need refresh
-```text
+
+```
 
 ### 2. Bundle Validation Errors
 
@@ -268,11 +282,12 @@ databricks workspace list /
 
 ```yaml
 # Ensure all required variables are set
+
 - name: Debug variables
   run: |
     echo "Host: $DATABRICKS_HOST"
     databricks bundle validate --debug
-```text
+```
 
 ### 3. Deployment Timeout
 
@@ -282,14 +297,16 @@ databricks workspace list /
 
 ```yaml
 # GitHub Actions
+
 - name: Deploy
   run: databricks bundle deploy -t prod
   timeout-minutes: 30
 
 # Or deploy incrementally
+
 - name: Deploy jobs only
   run: databricks bundle deploy -t prod --resource jobs
-```text
+```
 
 ### 4. State File Conflicts
 
@@ -299,10 +316,11 @@ databricks workspace list /
 
 ```yaml
 # GitHub Actions - use concurrency
+
 concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: false
-```text
+```
 
 ### 5. Missing Dependencies
 
@@ -312,6 +330,7 @@ concurrency:
 
 ```python
 # conftest.py for unit tests
+
 import pytest
 from unittest.mock import MagicMock
 
@@ -319,7 +338,7 @@ from unittest.mock import MagicMock
 def mock_spark():
     spark = MagicMock()
     return spark
-```text
+```
 
 ## Exam Tips
 
@@ -336,9 +355,9 @@ def mock_spark():
 
 ## Related Topics
 
-- [Asset Bundles](01-asset-bundles.md) - DAB configuration
+- [Asset Bundles](01-asset-bundles-part1.md) - DAB configuration
 - [Git Folders](03-git-folders.md) - Version control
-- [Unit Testing](04-unit-testing.md) - Testing practices
+- [Unit Testing](04-unit-testing-part1.md) - Testing practices
 - [Databricks CLI](../02-databricks-tooling/02-databricks-cli.md) - CLI commands
 
 ## Official Documentation
@@ -347,3 +366,7 @@ def mock_spark():
 - [GitHub Actions Integration](https://docs.databricks.com/dev-tools/ci-cd/ci-cd-github.html)
 - [Azure DevOps Integration](https://docs.databricks.com/dev-tools/ci-cd/ci-cd-azure-devops.html)
 - [Service Principal Authentication](https://docs.databricks.com/dev-tools/authentication-oauth.html)
+
+---
+
+**[← Previous: CI/CD Integration — Part 1 (Platforms & Configuration)](./02-cicd-integration-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Git Folders](./03-git-folders.md) →**

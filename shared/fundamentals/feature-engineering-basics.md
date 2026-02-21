@@ -49,7 +49,7 @@ flowchart LR
     end
 
     Raw --> Transform --> Output
-```text
+```
 
 ## Numeric Feature Transformations
 
@@ -82,7 +82,7 @@ minmax = MinMaxScaler(
     min=0.0,
     max=1.0
 )
-```text
+```
 
 ### Binning / Bucketization
 
@@ -102,7 +102,7 @@ quantile = QuantileDiscretizer(
     inputCol="income",
     outputCol="income_quartile"
 )
-```text
+```
 
 ## Categorical Feature Encoding
 
@@ -124,7 +124,7 @@ encoder = OneHotEncoder(
     outputCols=["country_ohe"],
     dropLast=True  # avoid multicollinearity
 )
-```text
+```
 
 ### When to Use Each Encoding
 
@@ -157,7 +157,7 @@ word2vec = Word2Vec(
     inputCol="words",
     outputCol="w2v_features"
 )
-```text
+```
 
 ## Date and Time Features
 
@@ -178,7 +178,7 @@ df = (
         datediff("event_timestamp", "signup_date")
     )
 )
-```text
+```
 
 ## Aggregated / Computed Features
 
@@ -201,7 +201,7 @@ df = (
     .withColumn("avg_spend_7d", avg("purchase_amount").over(window_7d))
     .withColumn("purchase_count_7d", count("purchase_id").over(window_7d))
 )
-```text
+```
 
 ## ML Pipelines
 
@@ -228,7 +228,7 @@ pipeline_model = pipeline.fit(train_df)
 
 # Transform test data (applies same preprocessing)
 predictions = pipeline_model.transform(test_df)
-```text
+```
 
 **Key benefit:** The fitted pipeline stores all transformation statistics (mean, std dev, category mappings) from the training set and applies them consistently to new data.
 
@@ -262,7 +262,7 @@ flowchart LR
     Store --> Training
     Training --> MLflow
     MLflow --> Serving
-```text
+```
 
 ```python
 from databricks.feature_engineering import FeatureEngineeringClient
@@ -283,7 +283,7 @@ fe.write_table(
     df=feature_df,
     mode="merge"
 )
-```text
+```
 
 ## Use Cases
 

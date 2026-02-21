@@ -23,7 +23,7 @@ flowchart TB
     Enforcement --> Reject[Reject incompatible writes]
     Evolution --> Add[Add new columns]
     Changes --> Alter[Alter existing schema]
-```text
+```
 
 ## Schema Enforcement
 
@@ -36,7 +36,7 @@ flowchart LR
     Data[Incoming Data] --> Check{Schema Match?}
     Check --> |Yes| Write[Write to Table]
     Check --> |No| Reject[Reject Write]
-```text
+```
 
 ### Enforcement Rules
 
@@ -51,6 +51,7 @@ flowchart LR
 
 ```python
 # Create table with specific schema
+
 spark.sql("""
     CREATE TABLE main.default.customers (
         customer_id INT,
@@ -60,6 +61,7 @@ spark.sql("""
 """)
 
 # This succeeds - exact match
+
 df_valid = spark.createDataFrame([
     (1, "John", "john@example.com")
 ], ["customer_id", "name", "email"])
@@ -67,21 +69,25 @@ df_valid = spark.createDataFrame([
 df_valid.write.format("delta").mode("append").saveAsTable("main.default.customers")
 
 # This fails - extra column
+
 df_extra = spark.createDataFrame([
     (2, "Jane", "jane@example.com", "555-1234")
 ], ["customer_id", "name", "email", "phone"])
 
 # Error: A schema mismatch detected when writing to the Delta table
+
 df_extra.write.format("delta").mode("append").saveAsTable("main.default.customers")
 
 # This succeeds - missing nullable column fills with NULL
+
 df_missing = spark.createDataFrame([
     (3, "Bob")
 ], ["customer_id", "name"])
 
 df_missing.write.format("delta").mode("append").saveAsTable("main.default.customers")
 # email column will be NULL
-```text
+
+```
 
 ## Schema Evolution
 
@@ -91,6 +97,7 @@ Schema evolution allows automatic schema changes when writing data.
 
 ```python
 # Option 1: Per-write option
+
 (df.write
     .format("delta")
     .mode("append")
@@ -98,9 +105,10 @@ Schema evolution allows automatic schema changes when writing data.
     .saveAsTable("main.default.customers"))
 
 # Option 2: Spark configuration (session-wide)
+
 spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
 df.write.format("delta").mode("append").saveAsTable("main.default.customers")
-```text
+```
 
 ```sql
 -- SQL equivalent
@@ -108,7 +116,7 @@ SET spark.databricks.delta.schema.autoMerge.enabled = true;
 
 INSERT INTO main.default.customers
 SELECT * FROM new_data_with_extra_columns;
-```text
+```
 
 ### Schema Evolution Operations
 
@@ -124,9 +132,11 @@ SELECT * FROM new_data_with_extra_columns;
 ### mergeSchema Examples
 
 ```python
+
 # Original schema: customer_id INT, name STRING, email STRING
 
 # Add new column - succeeds with mergeSchema
+
 df_new_column = spark.createDataFrame([
     (4, "Alice", "alice@example.com", "555-9876")
 ], ["customer_id", "name", "email", "phone"])
@@ -139,7 +149,8 @@ df_new_column = spark.createDataFrame([
 
 # Table now has: customer_id, name, email, phone
 # Existing rows have NULL for phone
-```text
+
+```
 
 ### overwriteSchema
 
@@ -147,6 +158,7 @@ Use `overwriteSchema` for complete schema replacement:
 
 ```python
 # Completely replace schema (dangerous - loses data!)
+
 df_new_schema = spark.createDataFrame([
     ("C001", "John Doe", "Premium")
 ], ["customer_code", "full_name", "tier"])
@@ -159,12 +171,14 @@ df_new_schema = spark.createDataFrame([
 
 # Table now has completely different schema
 # All previous data is replaced
-```text
+
+```
 
 ### Auto Loader Schema Evolution
 
 ```python
 # Auto Loader with schema evolution
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -174,12 +188,13 @@ df = (spark.readStream
     .load("/landing/data/"))
 
 # Write with mergeSchema
+
 (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoints/_checkpoint")
     .option("mergeSchema", "true")
     .toTable("bronze.events"))
-```text
+```
 
 ### Schema Evolution Modes for Auto Loader
 
@@ -203,7 +218,7 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
     'delta.minReaderVersion' = '2',
     'delta.minWriterVersion' = '5'
 );
-```text
+```
 
 ### Column Mapping Modes
 
@@ -229,7 +244,7 @@ DROP COLUMN temp_column;
 -- Change column type (some changes)
 ALTER TABLE main.default.customers
 ALTER COLUMN customer_id TYPE BIGINT;
-```text
+```
 
 ### Without Column Mapping
 
@@ -241,7 +256,7 @@ ALTER TABLE main.default.customers RENAME COLUMN name TO full_name;
 -- Workaround: Create new table with desired schema
 CREATE TABLE main.default.customers_v2 AS
 SELECT customer_id, name AS full_name, email FROM main.default.customers;
-```text
+```
 
 ## ALTER TABLE Operations
 
@@ -270,7 +285,7 @@ ADD COLUMN phone STRING AFTER email;
 
 ALTER TABLE main.default.customers
 ADD COLUMN priority INT FIRST;
-```text
+```
 
 ### Change Column
 
@@ -289,7 +304,7 @@ ALTER COLUMN email DROP NOT NULL;
 -- Add/change column comment
 ALTER TABLE main.default.customers
 ALTER COLUMN email COMMENT 'Primary email address';
-```text
+```
 
 ### Rename Column
 
@@ -297,7 +312,7 @@ ALTER COLUMN email COMMENT 'Primary email address';
 -- Requires column mapping enabled
 ALTER TABLE main.default.customers
 RENAME COLUMN name TO full_name;
-```text
+```
 
 ### Drop Column
 
@@ -309,7 +324,7 @@ DROP COLUMN temp_column;
 -- Drop multiple columns
 ALTER TABLE main.default.customers
 DROP COLUMNS (temp1, temp2);
-```text
+```
 
 ### Type Widening
 
@@ -330,7 +345,7 @@ ALTER COLUMN quantity TYPE BIGINT;  -- INT to BIGINT
 -- Invalid type narrowing (fails)
 ALTER TABLE main.default.orders
 ALTER COLUMN quantity TYPE TINYINT;  -- BIGINT to TINYINT fails
-```text
+```
 
 ## Schema Validation Patterns
 
@@ -340,6 +355,7 @@ ALTER COLUMN quantity TYPE TINYINT;  -- BIGINT to TINYINT fails
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType
 
 # Define expected schema
+
 expected_schema = StructType([
     StructField("customer_id", IntegerType(), nullable=False),
     StructField("name", StringType(), nullable=False),
@@ -347,6 +363,7 @@ expected_schema = StructType([
 ])
 
 # Validate incoming data
+
 def validate_schema(df, expected):
     """Validate DataFrame schema matches expected schema."""
     actual_fields = {f.name: f for f in df.schema.fields}
@@ -369,10 +386,11 @@ def validate_schema(df, expected):
     return errors
 
 # Usage
+
 errors = validate_schema(incoming_df, expected_schema)
 if errors:
     raise ValueError(f"Schema validation failed: {errors}")
-```text
+```
 
 ### Schema Comparison
 
@@ -400,7 +418,7 @@ def compare_schemas(source_df, target_table):
         "removed_columns": removed,
         "type_changes": type_changes
     }
-```text
+```
 
 ## Schema in Streaming
 
@@ -408,22 +426,25 @@ def compare_schemas(source_df, target_table):
 
 ```python
 # Streaming with schema enforcement
+
 df = (spark.readStream
     .schema(expected_schema)  # Enforce schema on read
     .format("json")
     .load("/landing/data/"))
 
 # Write without mergeSchema - strict enforcement
+
 (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoints/")
     .toTable("bronze.events"))
-```text
+```
 
 ### Handling Schema Changes in Streaming
 
 ```python
 # Option 1: Use rescue column for unexpected data
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -432,6 +453,7 @@ df = (spark.readStream
     .load("/landing/data/"))
 
 # Unexpected fields go to _rescued_data column
+
 (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoints/_cp")
@@ -439,13 +461,14 @@ df = (spark.readStream
     .toTable("bronze.events"))
 
 # Option 2: Fail on schema changes and alert
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/checkpoints/_schema")
     .option("cloudFiles.schemaEvolutionMode", "failOnNewColumns")
     .load("/landing/data/"))
-```text
+```
 
 ## Schema Drift Handling
 
@@ -473,10 +496,11 @@ def detect_schema_drift(current_df, reference_table):
     return len(new_columns) > 0 or len(missing_columns) > 0
 
 # Usage
+
 if detect_schema_drift(incoming_df, "silver.customers"):
     # Handle drift - merge schema, reject, or alert
     pass
-```text
+```
 
 ### Pattern: Flexible Schema with Variant Type
 
@@ -495,7 +519,7 @@ SELECT
     event_data:action::STRING AS action,
     event_data:metadata.browser::STRING AS browser
 FROM bronze.events_raw;
-```text
+```
 
 ## DLT Schema Management
 
@@ -506,6 +530,7 @@ import dlt
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
 # Explicit schema
+
 @dlt.table(
     comment="Customers with enforced schema",
     schema=StructType([
@@ -518,6 +543,7 @@ def silver_customers():
     return dlt.read_stream("bronze_customers")
 
 # Or use schema hints
+
 @dlt.table(
     comment="Customers with inferred schema"
 )
@@ -527,7 +553,7 @@ def silver_customers():
         .withColumn("customer_id", col("customer_id").cast("int"))
         .withColumn("name", col("name").cast("string"))
     )
-```text
+```
 
 ## Use Cases
 
@@ -562,7 +588,7 @@ def handle_upstream_changes(source_path, target_table):
         .mode("append")
         .option("mergeSchema", "true")
         .saveAsTable(target_table))
-```text
+```
 
 ### Migration to New Schema
 
@@ -584,6 +610,7 @@ def migrate_table_schema(old_table, new_table, transformations):
     df.write.format("delta").saveAsTable(new_table)
 
 # Usage
+
 transformations = [
     ("name", "full_name", None),  # Simple rename
     ("customer_id", "customer_id", lambda c: c.cast("bigint")),  # Type change
@@ -591,7 +618,7 @@ transformations = [
 ]
 
 migrate_table_schema("old.customers", "new.customers", transformations)
-```text
+```
 
 ## Common Issues & Errors
 
@@ -601,13 +628,14 @@ migrate_table_schema("old.customers", "new.customers", transformations)
 
 ```python
 # Error: A schema mismatch detected when writing to the Delta table
-```text
+
+```
 
 **Fix:** Use `mergeSchema` or adjust data to match:
 
 ```python
 df.write.option("mergeSchema", "true").saveAsTable("table")
-```text
+```
 
 ### 2. Cannot Change Column Type
 
@@ -615,13 +643,13 @@ df.write.option("mergeSchema", "true").saveAsTable("table")
 
 ```sql
 -- Error: Cannot change data type from STRING to INT
-```text
+```
 
 **Fix:** Enable column mapping or create new table:
 
 ```sql
 ALTER TABLE table SET TBLPROPERTIES ('delta.columnMapping.mode' = 'name');
-```text
+```
 
 ### 3. Cannot Rename/Drop Column
 
@@ -635,7 +663,7 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
     'delta.minReaderVersion' = '2',
     'delta.minWriterVersion' = '5'
 );
-```text
+```
 
 ### 4. Streaming Schema Change
 
@@ -645,7 +673,7 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 
 ```python
 .option("cloudFiles.schemaEvolutionMode", "rescue")
-```text
+```
 
 ## Exam Tips
 
@@ -672,3 +700,7 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 - [Delta Lake Schema Evolution](https://docs.databricks.com/delta/update-schema.html)
 - [Column Mapping](https://docs.databricks.com/delta/column-mapping.html)
 - [ALTER TABLE](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-alter-table.html)
+
+---
+
+**[← Previous: Delta Lake Fundamentals](./02-delta-lake-fundamentals.md) | [↑ Back to Data Modeling](./README.md) | [Next: SCD Patterns](./04-scd-patterns.md) →**

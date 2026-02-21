@@ -253,4 +253,4 @@ D) Create a separate vector index for each department and query all indexes simu
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: Vector Search & Embeddings →](./02-vector-search-embeddings.md)
+**[↑ Back to Practice Questions — GenAI Engineer Associate](./README.md) | [Next: Practice Questions — Vector Search & Embeddings](./02-vector-search-embeddings.md) →**

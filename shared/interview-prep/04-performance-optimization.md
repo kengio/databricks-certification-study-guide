@@ -323,4 +323,4 @@ You have an existing production Delta table with 5TB of data, partitioned by `ev
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Pipeline Architecture](03-pipeline-architecture.md) | [Next: Streaming & CDC](05-streaming-cdc.md)
+**[← Previous: Interview Questions — Pipeline Architecture](./03-pipeline-architecture.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Streaming & CDC](./05-streaming-cdc.md) →**

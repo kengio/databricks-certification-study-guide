@@ -220,4 +220,4 @@ D) `databricks api post /api/2.0/sql/statements -d '{"statement": "SELECT * FROM
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
+**[← Previous: Mock Exam - Section 1: Data Processing](./01-data-processing.md) | [↑ Back to Full-Length Practice Exam](./README.md) | [Next: Mock Exam - Section 3: Data Modeling](./03-data-modeling.md) →**

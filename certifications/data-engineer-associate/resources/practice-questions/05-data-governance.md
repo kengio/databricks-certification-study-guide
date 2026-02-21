@@ -114,4 +114,4 @@
 
 ---
 
-[Back to Practice Questions](./README.md) | [Prev: Production Pipelines](04-production-pipelines.md)
+**[← Previous: Domain 4: Production Pipelines](./04-production-pipelines.md) | [↑ Back to DE Associate Practice Questions](./README.md)**

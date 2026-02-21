@@ -62,6 +62,7 @@ from databricks.sdk.service.serving import (
 client = WorkspaceClient()
 
 # Enable inference table logging on endpoint creation or update
+
 client.serving_endpoints.update_config(
     name="fraud-classifier-endpoint",
     config=EndpointCoreConfigInput(
@@ -149,6 +150,7 @@ from databricks.sdk.service.catalog import (
 client = WorkspaceClient()
 
 # Create an InferenceLog monitor on the scored table
+
 monitor = client.quality_monitors.create(
     table_name="ml_catalog.inference_logs.fraud_classifier_scored",
     assets_dir="/Shared/ml-monitoring/fraud-classifier",
@@ -328,10 +330,12 @@ Alert configuration steps:
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Model Monitoring and Observability to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Monitoring and Observability prior to deployment.
 
@@ -343,4 +347,4 @@ Alert configuration steps:
 
 ---
 
-**[← Back to Model Governance & MLOps](./README.md)**
+**[↑ Back to Model Governance & MLOps](./README.md) | [Next: Drift Detection and Remediation](./02-drift-detection-remediation.md) →**

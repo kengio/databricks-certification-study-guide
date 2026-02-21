@@ -21,7 +21,7 @@ flowchart LR
     DM --> Schema[Schema Management]
     DM --> SCD[SCD Patterns]
     DM --> Part[Partitioning]
-```text
+```
 
 ## Section Contents
 
@@ -56,7 +56,7 @@ flowchart LR
     end
 
     Bronze --> Silver --> Gold
-```text
+```
 
 ### Layer Characteristics
 
@@ -99,3 +99,7 @@ flowchart LR
 - [ ] Configure schema evolution for Auto Loader
 - [ ] Choose optimal partition columns
 - [ ] Use Delta constraints for data quality
+
+---
+
+**[← Back to Certification](../README.md)**

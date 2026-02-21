@@ -54,4 +54,4 @@ Progress to [02-Hyperparameter Optimization](../02-hyperparameter-optimization/R
 
 ---
 
-**[← Back to ML Professional](../README.md)**
+**[← Back to Certification](../README.md)**

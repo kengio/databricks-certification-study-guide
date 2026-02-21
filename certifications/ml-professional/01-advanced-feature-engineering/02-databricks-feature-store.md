@@ -55,9 +55,11 @@ flowchart TB
 from databricks.feature_store import FeatureStoreClient
 
 # Initialize client
+
 fs = FeatureStoreClient()
 
 # Create feature table
+
 fs.create_table(
     name="ml_team.user_features.user_spending",
     primary_keys=["user_id"],
@@ -69,6 +71,7 @@ fs.create_table(
 )
 
 # Write features to table
+
 from pyspark.sql.functions import col, sum, avg, count, datediff, current_date
 
 transaction_df = spark.read.table("bronze.transactions")
@@ -87,6 +90,7 @@ features_df = (
 )
 
 # Write to feature store table
+
 fs.write_table(
     name="ml_team.user_features.user_spending",
     df=features_df,
@@ -98,16 +102,19 @@ fs.write_table(
 
 ```python
 # Read feature table for training
+
 training_features = fs.read_table(
     name="ml_team.user_features.user_spending"
 )
 
 # Filter to specific time period
+
 training_df = training_features.filter(
     col("timestamp") <= "2025-01-01"
 )
 
 # Lookup specific features
+
 user_ids = spark.createDataFrame([("user_123",), ("user_456",)], ["user_id"])
 user_feature_values = fs.read_table(
     name="ml_team.user_features.user_spending",
@@ -116,12 +123,14 @@ user_feature_values = fs.read_table(
 
 # Online feature lookup (low latency)
 # Available through MLflow Model Serving
+
 ```
 
 ### 3. **Feature Versioning and Time Travel**
 
 ```python
 # Read feature table at specific timestamp (Delta Lake time travel)
+
 feature_table_v1 = spark.read.option(
     "versionAsOf", 0
 ).table("ml_team.user_features.user_spending")
@@ -131,11 +140,13 @@ feature_table_v2 = spark.read.option(
 ).table("ml_team.user_features.user_spending")
 
 # Get feature table history
+
 history = spark.sql("""
     DESCRIBE HISTORY ml_team.user_features.user_spending
 """)
 
 # Restore to previous version
+
 spark.sql("""
     RESTORE TABLE ml_team.user_features.user_spending
     TO VERSION AS OF 5
@@ -146,9 +157,11 @@ spark.sql("""
 
 ```python
 # Create training dataset with labeled data
+
 labels_df = spark.read.table("gold.user_churn_labels")
 
 # Join features with labels
+
 training_dataset_df = (
     fs.read_table("ml_team.user_features.user_spending")
     .join(labels_df, "user_id")
@@ -159,6 +172,7 @@ training_dataset_df = (
 )
 
 # Log training dataset to MLflow for reproducibility
+
 import mlflow
 
 mlflow.start_run()
@@ -178,6 +192,7 @@ mlflow.end_run()
 
 ```python
 # Daily scheduled job to compute and sync features
+
 def daily_feature_sync():
     """Scheduled batch feature computation"""
     
@@ -217,12 +232,14 @@ def daily_feature_sync():
     )
 
 # Schedule this job in Databricks Workflows
+
 ```
 
 ### Pattern 2: Real-time Feature Serving via REST Endpoint
 
 ```python
 # Deploy model with feature store lookups
+
 import mlflow.pyfunc
 
 class UserChurnModel(mlflow.pyfunc.PythonModel):
@@ -251,6 +268,7 @@ class UserChurnModel(mlflow.pyfunc.PythonModel):
         return predictions
 
 # Register to MLflow Model Registry
+
 mlflow.pyfunc.log_model(
     artifact_path="model",
     python_model=UserChurnModel(fs),
@@ -262,21 +280,25 @@ mlflow.pyfunc.log_model(
 
 ```python
 # Feature Store integration with MLflow Tracking
+
 import mlflow
 
 mlflow.start_run(run_name="model_with_features")
 
 # Log feature table versions
+
 mlflow.log_param("user_features_version", 1)
 mlflow.log_param("product_features_version", 3)
 
 # Create training dataset
+
 training_df = (
     fs.read_table("ml_team.user_features.user_spending")
     .join(fs.read_table("ml_team.product_features.popular"), "product_id")
 )
 
 # Train and evaluate model
+
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
@@ -291,6 +313,7 @@ mlflow.log_metric("accuracy", score)
 mlflow.sklearn.log_model(model, "random_forest")
 
 # Tag with feature versions
+
 mlflow.set_tag("features_locked", "true")
 
 mlflow.end_run()
@@ -302,6 +325,7 @@ mlflow.end_run()
 
 ```python
 # Add new feature column
+
 from pyspark.sql.types import StructField, DoubleType
 
 new_feature_schema = (
@@ -311,6 +335,7 @@ new_feature_schema = (
 )
 
 # Update table with new column
+
 new_features_df = (
     features_df
     .withColumn("new_feature", lit(0.0))
@@ -327,11 +352,13 @@ fs.write_table(
 
 ```python
 # Create composite features from multiple tables
+
 user_features = fs.read_table("ml_team.user_features.user_spending")
 product_features = fs.read_table("ml_team.product_features.popular")
 transaction_data = spark.read.table("bronze.transactions")
 
 # Complex join for training
+
 training_df = (
     transaction_data
     .join(user_features, "user_id")
@@ -350,6 +377,7 @@ training_df = (
 
 ```python
 # Track when features were last computed
+
 def check_feature_freshness():
     """Verify features are within SLA"""
     
@@ -375,9 +403,11 @@ def check_feature_freshness():
 
 ```python
 # Wrong: no primary key indexing
+
 fs.create_table(name="features", df=features_df)
 
 # Correct: specify primary key for lookups
+
 fs.create_table(
     name="features",
     primary_keys=["user_id"],
@@ -389,9 +419,11 @@ fs.create_table(
 
 ```python
 # Wrong: no update strategy
+
 fs.write_table(name="features", df=new_features, mode="overwrite")
 
 # Correct: merge for incremental updates
+
 fs.write_table(
     name="features",
     df=new_features,
@@ -440,10 +472,12 @@ fs.write_table(
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Databricks Feature Store to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Feature Store prior to deployment.
 
@@ -455,4 +489,4 @@ fs.write_table(
 
 ---
 
-**[← Back to Advanced Feature Engineering](./README.md)**
+**[← Previous: Feature Store Fundamentals](./01-feature-store-fundamentals.md) | [↑ Back to Advanced Feature Engineering](./README.md) | [Next: Advanced Feature Techniques](./03-advanced-feature-techniques.md) →**

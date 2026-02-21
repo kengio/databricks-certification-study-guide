@@ -34,7 +34,7 @@ pie title Exam Topic Distribution
     "Monitoring & Logging" : 10
     "Testing & Deployment" : 10
     "Other (Lakeflow, Perf)" : 5
-```text
+```
 
 ## Study Topics
 

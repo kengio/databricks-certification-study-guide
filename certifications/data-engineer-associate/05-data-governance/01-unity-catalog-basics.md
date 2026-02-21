@@ -42,7 +42,7 @@ flowchart TB
     Metastore --> Catalogs
     Cat1 --> Schemas
     Schemas --> Objects
-```text
+```
 
 ## Metastore
 
@@ -56,15 +56,18 @@ A **Metastore** is the root container for Unity Catalog within a Databricks regi
 ### Metastore Setup
 
 ```python
+
 # Workspace must be enabled for UC (admin task)
 # Check current metastore
+
 spark.sql("SELECT * FROM system.information_schema.metastores").show()
 
 # Each region has ONE metastore:
 # us-east-1: One metastore
 # eu-west-1: One metastore (separate)
 # us-west-2: One metastore (separate)
-```text
+
+```
 
 ## Three-Level Namespace
 
@@ -88,7 +91,7 @@ metastore/
 └── external/                      (Catalog)
     └── partner_data/              (Schema)
         └── partner_a_forecast     (Table)
-```text
+```
 
 ### Fully Qualified Names
 
@@ -100,7 +103,7 @@ SELECT * FROM external.partner_data.partner_a_forecast;
 
 -- No ambiguity (must specify all 3 levels inside UC warehouse)
 -- Hive metastore (legacy) used 2-level: schema.table
-```text
+```
 
 ## Creating Catalogs and Schemas
 
@@ -115,12 +118,13 @@ COMMENT "Staging and test data";
 
 CREATE CATALOG external
 COMMENT "External partner data";
-```text
+```
 
 ```python
 # Via Python
+
 spark.sql("CREATE CATALOG IF NOT EXISTS prod COMMENT 'Production catalog'")
-```text
+```
 
 ### Create Schema
 
@@ -133,7 +137,7 @@ COMMENT "Raw data ingestion layer";
 
 CREATE SCHEMA IF NOT EXISTS staging.experimental
 COMMENT "Experimental datasets";
-```text
+```
 
 ### Listing Catalogs and Schemas
 
@@ -147,7 +151,7 @@ SHOW SCHEMAS IN prod;
 -- Show details
 DESCRIBE CATALOG prod;
 DESCRIBE SCHEMA prod.analytics;
-```text
+```
 
 ## Objects in Unity Catalog
 
@@ -165,7 +169,7 @@ USING DELTA;
 
 -- Data stored in UC managed location
 -- Databricks fully manages lifecycle and access
-```text
+```
 
 ### External Tables (UC)
 
@@ -181,7 +185,7 @@ LOCATION 's3://partner-bucket/forecasts/';
 
 -- Data lives in partner bucket
 -- UC provides metadata and access control
-```text
+```
 
 ### Views
 
@@ -197,7 +201,7 @@ WHERE amount > 10000;
 
 -- Views are stored in UC
 -- Can be secured independently
-```text
+```
 
 ### Volumes
 
@@ -213,7 +217,7 @@ DBFS:
 
 -- Read from volume
 dbutils.fs.ls("/Volumes/prod/analytics/documents/")
-```text
+```
 
 ## External Locations
 
@@ -229,7 +233,7 @@ WITH (CREDENTIAL 'aws-role-arn-123');
 CREATE TABLE external.partner_data.sales
 USING DELTA
 LOCATION EXTERNAL LOCATION s3_partner_data;
-```text
+```
 
 ## UC vs Hive Metastore
 
@@ -249,7 +253,7 @@ Hive Metastore → Unity Catalog
 Legacy approach → Modern governance
 Limited security → Fine-grained control
 Scattered data → Centralized discovery
-```text
+```
 
 ## Creating Tables in UC
 
@@ -257,6 +261,7 @@ Scattered data → Centralized discovery
 
 ```python
 # Create UC table from DataFrame
+
 df = spark.read.csv("/mnt/landing/data.csv", header=True)
 
 df.write \
@@ -265,8 +270,9 @@ df.write \
     .saveAsTable("prod.raw.incoming_data")
 
 # Verify in UC
+
 spark.sql("SHOW TABLES IN prod.raw;").show()
-```text
+```
 
 ### SQL CREATE TABLE
 
@@ -293,22 +299,25 @@ GROUP BY DATE(date);
 CREATE TABLE external.data.raw_events
 USING DELTA
 LOCATION 'abfss://raw@storageacct.dfs.core.windows.net/events/';
-```text
+```
 
 ## Workspace Settings with UC
 
 ### Enable UC for Workspace
 
 ```python
+
 # Admin: Enable UC on workspace (one-time)
 # Settings > Catalog > Enable Unity Catalog
 
 # Set default catalog for sessions
+
 spark.sql("SET CATALOG prod")
 
 # Now queries default to prod catalog
+
 spark.sql("SELECT * FROM analytics.orders")  # Same as prod.analytics.orders
-```text
+```
 
 ### Catalog Navigation
 
@@ -319,7 +328,7 @@ SET SCHEMA analytics;
 
 -- Now can reference table directly
 SELECT * FROM orders;  -- Same as prod.analytics.orders
-```text
+```
 
 ## Naming and Convention
 
@@ -340,7 +349,7 @@ Columns: lowercase, snake_case, no spaces
 
 Views: descriptive, prefixed with v_
 - v_high_value_customers, v_monthly_revenue
-```text
+```
 
 ### Catalog Organization Patterns
 
@@ -360,7 +369,7 @@ Pattern 3: By Source
 ├── erp/           (SAP data)
 ├── external/      (Partner data)
 └── derived/       (Computed tables)
-```text
+```
 
 ## UC Objects and Types
 
@@ -387,7 +396,7 @@ CREATE EXTERNAL LOCATION location_name
 
 -- Metastore assignments
 CREATE METASTORE ASSIGNMENT catalog_name
-```text
+```
 
 ## Key Exam Concepts
 
@@ -402,10 +411,6 @@ CREATE METASTORE ASSIGNMENT catalog_name
 - **External Locations**: Cloud storage paths with credential binding
 - **UC vs Hive**: UC is modern, fine-grained access control
 
----
-
-**[← Back to Data Governance](README.md)**
-
 ## Use Cases
 
 - **Unity Catalog Basics Implementation**: Incorporating Unity Catalog Basics principles to build scalable and maintainable solutions in Databricks environments.
@@ -414,10 +419,15 @@ CREATE METASTORE ASSIGNMENT catalog_name
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Unity Catalog Basics do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Unity Catalog Basics to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Unity Catalog Basics to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Unity Catalog Basics prior to deployment.
 
+---
+
+**[↑ Back to Data Governance](./README.md) | [Next: Access Control and Permissions](./02-access-control-permissions.md) →**

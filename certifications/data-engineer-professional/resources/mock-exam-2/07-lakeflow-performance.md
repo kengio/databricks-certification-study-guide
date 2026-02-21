@@ -60,4 +60,4 @@ D) OPTIMIZE incrementally clusters only the files that need reorganization, avoi
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md)
+**[← Previous: Mock Exam 2 - Section 6: Testing & Deployment](./06-testing-deployment.md) | [↑ Back to Mock Exam 2 - Databricks Data Engineer Professional](./README.md)**

@@ -112,4 +112,4 @@ D) Run `databricks bundle deploy --force` to overwrite
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)
+**[← Previous: Mock Exam - Section 5: Monitoring & Logging](./05-monitoring-logging.md) | [↑ Back to Full-Length Practice Exam](./README.md) | [Next: Mock Exam - Sections 7 & 8: Lakeflow Pipelines & Performance](./07-lakeflow-performance.md) →**

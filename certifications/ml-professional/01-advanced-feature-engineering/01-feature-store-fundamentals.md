@@ -45,7 +45,7 @@ flowchart TB
     Store --> Consumption
     Meta -.->|tracks| Online
     Meta -.->|tracks| Offline
-```text
+```
 
 ## Core Concepts
 
@@ -69,6 +69,7 @@ flowchart TB
 
 ```python
 # Online vs. Offline Feature Serving Pattern
+
 from datetime import datetime, timedelta
 
 class FeatureStore:
@@ -126,6 +127,7 @@ class FeatureStore:
 
 ```python
 # Feature Definition with Lineage Tracking
+
 from dataclasses import dataclass
 from typing import List
 from enum import Enum
@@ -150,6 +152,7 @@ class FeatureDefinition:
     tags: List[str]
 
 # Lineage tracking
+
 feature_lineage = {
     "user_spending_7d": {
         "source": "transactions",
@@ -172,6 +175,7 @@ feature_lineage = {
 
 ```python
 # Entity-based feature computation
+
 def compute_user_features(spark, transaction_df, lookback_days=30):
     """Register user aggregation features"""
     from pyspark.sql.functions import col, sum, avg, count, max, min, datediff, current_date
@@ -200,6 +204,7 @@ def compute_user_features(spark, transaction_df, lookback_days=30):
 
 ```python
 # Sliding window features for time-series data
+
 def compute_time_windowed_features(spark, events_df):
     """Compute features across multiple time windows"""
     from pyspark.sql.functions import col, window, sum, avg, count
@@ -240,6 +245,7 @@ def compute_time_windowed_features(spark, events_df):
 
 ```python
 # User interaction features (online)
+
 user_behaviors = {
     "recent_views": {"store": "redis", "ttl": "24h", "latency": "<50ms"},
     "cart_items": {"store": "redis", "ttl": "1h", "latency": "<20ms"},
@@ -247,6 +253,7 @@ user_behaviors = {
 }
 
 # Historical features (offline)
+
 user_history = {
     "lifetime_value": {"store": "delta", "updated": "daily", "lookback": "all"},
     "purchase_frequency": {"store": "delta", "updated": "daily", "lookback": "90d"},
@@ -254,6 +261,7 @@ user_history = {
 }
 
 # Product features (online)
+
 product_popularity = {
     "view_count_24h": {"store": "redis", "updated": "hourly"},
     "purchase_rate_24h": {"store": "redis", "updated": "hourly"},
@@ -274,6 +282,7 @@ product_popularity = {
 
 ```python
 # Real-time risk features
+
 transaction_features = {
     "amount_vs_avg": "current_amount / avg_transaction_30d",
     "merchant_risk_score": "lookup from merchant_risk_table",
@@ -282,6 +291,7 @@ transaction_features = {
 }
 
 # Historical risk indicators
+
 account_features = {
     "avg_transaction_value_30d": "computed daily",
     "transaction_std_dev_30d": "computed daily",
@@ -305,6 +315,7 @@ Examples:
 
 ```python
 # Comprehensive feature metadata
+
 feature_metadata = {
     "name": "user_spending_7d",
     "entity_type": "user",
@@ -327,6 +338,7 @@ feature_metadata = {
 
 ```python
 # Monitor feature quality
+
 def validate_features(features_df, expectations):
     """Validate feature quality metrics"""
     validations = {
@@ -350,10 +362,12 @@ Problem: Using future information in features
 
 ```python
 # Wrong: includes future test data
+
 def compute_feature_wrong(df, training_date):
     return df.groupBy("user_id").agg(sum("amount"))  # All data!
 
 # Correct: only data available at training time
+
 def compute_feature_correct(df, training_date):
     return df.filter(col("date") <= training_date).groupby("user_id").agg(sum("amount"))
 ```
@@ -364,6 +378,7 @@ Problem: Different feature computation in train vs. serving
 
 ```python
 # Solution: Single source of truth
+
 feature_definition = """
 SELECT 
     user_id,
@@ -374,6 +389,7 @@ WHERE date >= current_date() - 7
 GROUP BY user_id
 """
 # Use same SQL for training batch and serving
+
 ```
 
 ## Key Exam Concepts
@@ -416,10 +432,12 @@ GROUP BY user_id
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Feature Store Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Store Fundamentals prior to deployment.
 
@@ -431,4 +449,4 @@ GROUP BY user_id
 
 ---
 
-**[← Back to Advanced Feature Engineering](./README.md)**
+**[↑ Back to Advanced Feature Engineering](./README.md) | [Next: Databricks Feature Store](./02-databricks-feature-store.md) →**

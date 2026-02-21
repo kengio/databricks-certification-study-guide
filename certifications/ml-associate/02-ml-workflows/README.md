@@ -23,7 +23,7 @@ flowchart TD
     Track --> Params["Parameters & Metrics"]
     Exp --> Iter["Iteration Cycles"]
     Flow --> Orchestration["Orchestration"]
-```text
+```
 
 ## Section Contents
 
@@ -53,4 +53,4 @@ Progress to [03-Feature Engineering](../03-feature-engineering/README.md) to lea
 
 ---
 
-**[← Back to ML Associate](../README.md)**
+**[← Back to Certification](../README.md)**

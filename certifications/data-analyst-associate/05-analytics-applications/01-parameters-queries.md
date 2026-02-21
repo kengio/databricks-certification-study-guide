@@ -31,7 +31,7 @@ AND order_date <= '{{ end_date }}'
 AND region = '{{ selected_region }}';
 
 -- Parameters: start_date, end_date, selected_region
-```text
+```
 
 ### When Parameters Are Used
 
@@ -48,7 +48,7 @@ Dashboard View (User Perspective):
     WHERE order_date >= '2024-01-01'
     AND order_date <= '2024-01-31'
     AND region = 'North'
-```text
+```
 
 ## Parameter Types
 
@@ -62,7 +62,7 @@ WHERE customer_name LIKE '%{{ search_name }}%';
 -- User enters: "alice"
 -- Query becomes:
 -- WHERE customer_name LIKE '%alice%'
-```text
+```
 
 **Configuration:**
 
@@ -73,7 +73,7 @@ Parameter: search_name
   Default: "" (empty)
   Placeholder: "Enter customer name"
   Validation: None
-```text
+```
 
 ### Number Parameter
 
@@ -86,7 +86,7 @@ AND amount <= {{ max_amount }};
 -- User enters: min_amount=100, max_amount=1000
 -- Query becomes:
 -- WHERE amount >= 100 AND amount <= 1000
-```text
+```
 
 **Configuration:**
 
@@ -104,7 +104,7 @@ Parameter: max_amount
   Default: 10000
   Minimum: 0
   Maximum: 1000000
-```text
+```
 
 ### Date Parameter
 
@@ -116,7 +116,7 @@ WHERE order_date BETWEEN '{{ start_date }}' AND '{{ end_date }}';
 -- User selects: 2024-01-01 to 2024-01-31
 -- Query becomes:
 -- WHERE order_date BETWEEN '2024-01-01' AND '2024-01-31'
-```text
+```
 
 **Configuration:**
 
@@ -132,7 +132,7 @@ Parameter: end_date
   Display: Date picker calendar
   Default: TODAY
   Format: YYYY-MM-DD
-```text
+```
 
 ### Dropdown List Parameter
 
@@ -148,7 +148,7 @@ ORDER BY sales DESC;
 
 -- Dropdown options: North, South, East, West, All
 -- User selects: "West"
-```text
+```
 
 **Configuration:**
 
@@ -164,7 +164,7 @@ Parameter: selected_regions
     - identifier: "All"
   Default: "All"
   Allow Multiple: Yes/No
-```text
+```
 
 ### Multi-select Parameter
 
@@ -176,7 +176,7 @@ WHERE status IN ({{ selected_statuses }});
 -- User selects: "completed", "pending"
 -- Query becomes:
 -- WHERE status IN ('completed', 'pending')
-```text
+```
 
 **Configuration:**
 
@@ -191,7 +191,7 @@ Parameter: selected_statuses
     - "failed"
   Default: ["completed"]
   Allow Multiple: Yes
-```text
+```
 
 ### Dynamic Dropdown (From Query)
 
@@ -201,7 +201,7 @@ SELECT DISTINCT region FROM orders
 ORDER BY region;
 
 -- Becomes dropdown options in dashboard parameter
-```text
+```
 
 **Configuration:**
 
@@ -213,7 +213,7 @@ Parameter: selected_region
   Value Column: region
   Label Column: region
   Default: First option
-```text
+```
 
 ## Parameter Best Practices
 
@@ -230,7 +230,7 @@ start_date default: CURRENT_DATE - 30
 end_date default: CURRENT_DATE
 
 -- Users see recent data without setting anything
-```text
+```
 
 ### 2. Validation & Constraints
 
@@ -250,7 +250,7 @@ Parameter Validation:
   selected_status:
     Type: Dropdown
     Required: Yes (must select something)
-```text
+```
 
 ### 3. Performance Optimization
 
@@ -268,7 +268,7 @@ SELECT c.* FROM customers c
 WHERE c.segment_id = (
     SELECT id FROM segments WHERE name = '{{ selected_segment }}'
 );
-```text
+```
 
 ## Advanced Parameter Patterns
 
@@ -288,7 +288,7 @@ WHERE region = '{{ selected_region }}'
 -- Example:
 -- User selects Region = "West"
 -- Then Store dropdown shows: "Seattle", "Portland", "LA", "San Diego"
-```text
+```
 
 ### Date Range Presets
 
@@ -307,7 +307,7 @@ Parameter: date_preset
     Last 30 days → start_date = TODAY - 30, end_date = TODAY
     Year to date → start_date = Jan 1, end_date = TODAY
     Custom → User enters both dates
-```text
+```
 
 ### Optional Parameters
 
@@ -324,7 +324,7 @@ AND (status LIKE '%{{ status_filter }}%' OR '{{ status_filter }}' = '')
 AND (amount >= COALESCE({{ min_amount }}, 0) OR {{ min_amount }} IS NULL);
 
 -- Allows users to leave blank for any/all
-```text
+```
 
 ## Parameter Configuration in Dashboards
 
@@ -350,7 +350,7 @@ Dashboard: Sales Performance
   Widget 3: Top Customers Table
     Query: Q3_top_customers
     Uses parameters: start_date, end_date, selected_region
-```text
+```
 
 ### Linking Parameters Between Widgets
 
@@ -366,7 +366,7 @@ Scenario: Multi-widget dashboard
     Chart 2: Region comparison
     Chart 3: Region trend
     Table: Region detail rows
-```text
+```
 
 ## URL Parameters
 
@@ -383,7 +383,7 @@ https://databricks.com/sql/dashboards/prod/sales
 // - Date range: Jan 1 - 31, 2024
 // - Region: West
 // - All charts filtered accordingly
-```text
+```
 
 ### Distributing Pre-filtered Links
 
@@ -403,7 +403,7 @@ Email to stakeholders:
     - Recipients see only their data
     - No need to manually filter
     - Can bookmark/favorite personalized link
-```text
+```
 
 ## Dynamic Segmentation
 
@@ -429,7 +429,7 @@ WHERE lifetime_value >= {{ min_lifetime_value }};
 -- min_lifetime_value default: $1000
 
 -- Users can adjust thresholds to see different segmentations
-```text
+```
 
 ## Parameter Validation in Queries
 
@@ -442,7 +442,7 @@ WHERE region = '{{ region }}'  -- String auto-quoted
 AND amount = {{ amount }}       -- Number auto-cast
 AND order_date = '{{ order_date }}'  -- Date auto-formatted
 LIMIT {{ row_limit }};          -- Integer auto-cast
-```text
+```
 
 ### Required vs Optional
 
@@ -456,7 +456,7 @@ WHERE region = '{{ region }}'
 -- Optional (allows null/empty)
 WHERE (region = '{{ region }}' OR '{{ region }}' = '')
 -- Allows users to leave empty for "all"
-```text
+```
 
 ## Testing Parameters
 
@@ -480,7 +480,7 @@ start_date = 2099-01-01, end_date = 2099-01-31
 -- Test 4: Blank parameter
 selected_region = ''
 -- Verify: Treats as "All" or returns error message
-```text
+```
 
 ## Key Exam Concepts
 
@@ -512,10 +512,6 @@ selected_region = ''
 
 - **A**: Use URL parameters: `?region=West&date=2024-01-01`
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Query Parameters & Dynamic Queries Implementation**: Incorporating Query Parameters & Dynamic Queries principles to build scalable and maintainable solutions in Databricks environments.
@@ -524,10 +520,15 @@ selected_region = ''
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Query Parameters & Dynamic Queries do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Query Parameters & Dynamic Queries to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Query Parameters & Dynamic Queries to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Query Parameters & Dynamic Queries prior to deployment.
 
+---
+
+**[↑ Back to Analytics Applications](./README.md) | [Next: Sharing & Collaboration](./02-sharing-collaboration.md) →**

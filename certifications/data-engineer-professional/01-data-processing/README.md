@@ -25,21 +25,21 @@ flowchart TD
     DP --> Dedup[Data Deduplication]
     DP --> Adv[Streaming Joins & Stateful Ops]
     DP --> Mon[Streaming Monitoring & Optimization]
-```text
+```
 
 ## Section Contents
 
 | File | Topic | Priority |
 | :--- | :--- | :--- |
-| [01-batch-etl-pipelines.md](01-batch-etl-pipelines.md) | ETL design patterns, DataFrame transformations, joins, aggregations | High |
+| [01-batch-etl-pipelines-part1.md](01-batch-etl-pipelines-part1.md) | ETL design patterns, DataFrame transformations, joins, aggregations | High |
 | [10-batch-etl-pipelines-part2.md](10-batch-etl-pipelines-part2.md) | Performance optimization, error handling, use cases, exam tips | High |
 | [02-incremental-processing.md](02-incremental-processing.md) | Incremental loads, checkpoint management | High |
-| [03-structured-streaming.md](03-structured-streaming.md) | Streaming fundamentals, triggers, output modes, watermarking | High |
+| [03-structured-streaming-part1.md](03-structured-streaming-part1.md) | Streaming fundamentals, triggers, output modes, watermarking | High |
 | [12-structured-streaming-part2.md](12-structured-streaming-part2.md) | Stream-static joins, stateful operations, state store, exam tips | High |
 | [04-auto-loader.md](04-auto-loader.md) | Schema inference, evolution, file notification | High |
-| [05-change-data-capture.md](05-change-data-capture.md) | Delta CDF, CDC patterns with DLT, SCD patterns | High |
+| [05-change-data-capture-part1.md](05-change-data-capture-part1.md) | Delta CDF, CDC patterns with DLT, SCD patterns | High |
 | [11-change-data-capture-part2.md](11-change-data-capture-part2.md) | CDC best practices, pipeline patterns, row tracking, exam tips | High |
-| [06-delta-lake-operations.md](06-delta-lake-operations.md) | MERGE, OPTIMIZE, VACUUM, ZORDER, time travel, table cloning | High |
+| [06-delta-lake-operations-part1.md](06-delta-lake-operations-part1.md) | MERGE, OPTIMIZE, VACUUM, ZORDER, time travel, table cloning | High |
 | [13-delta-lake-operations-part2.md](13-delta-lake-operations-part2.md) | Schema operations, table properties, Delta 3.0+ features, exam tips | High |
 | [07-data-deduplication.md](07-data-deduplication.md) | Deduplication strategies, idempotent writes | Medium |
 | [08-streaming-joins-stateful.md](08-streaming-joins-stateful.md) | Stream-stream joins, stateful ops, watermarking, deduplication | High |
@@ -89,3 +89,7 @@ flowchart TD
 - [ ] Set up streaming with watermarks and windows
 - [ ] Optimize Delta tables with ZORDER
 - [ ] Handle deduplication in both batch and streaming
+
+---
+
+**[← Back to Certification](../README.md)**

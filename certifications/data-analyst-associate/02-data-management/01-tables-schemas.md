@@ -36,7 +36,7 @@ flowchart TD
 
     Tables --> Format
     Format --> Location
-```text
+```
 
 ## Table Types
 
@@ -56,7 +56,7 @@ USING DELTA;
 
 -- Data stored in: /user/hive/warehouse/sales/
 -- Metadata stored in: Hive metastore
-```text
+```
 
 **Characteristics:**
 
@@ -89,7 +89,7 @@ SELECT * FROM customers;
 -- 4. Drop (removes both data and metadata)
 DROP TABLE customers;
 -- Data is permanently deleted from workspace location
-```text
+```
 
 ### 2. External Tables
 
@@ -107,7 +107,7 @@ LOCATION 's3://my-bucket/sales-data/';
 
 -- Metadata stored in: Databricks metastore
 -- Data stored in: s3://my-bucket/sales-data/
-```text
+```
 
 **Characteristics:**
 
@@ -132,7 +132,7 @@ CREATE EXTERNAL TABLE marketing_data (
 )
 USING PARQUET
 LOCATION '/mnt/data/marketing/campaigns/';
-```text
+```
 
 ### 3. Temporary Tables
 
@@ -155,7 +155,7 @@ SELECT AVG(amount_with_tax) FROM temp_sales;
 -- Automatically dropped when session ends
 -- Can also explicitly drop
 DROP TABLE temp_sales;
-```text
+```
 
 **Use cases:**
 
@@ -184,7 +184,7 @@ WITH DBPROPERTIES (
     environment = 'production',
     pii_level = 'high'
 );
-```text
+```
 
 ### Schema Organization Patterns
 
@@ -204,7 +204,7 @@ hive
     ├── budgets
     ├── actuals
     └── forecasts
-```text
+```
 
 **Pattern 2: By Layer (Medallion)**
 
@@ -222,7 +222,7 @@ warehouse
     ├── sales_summary
     ├── customer_segments
     └── monthly_revenue
-```text
+```
 
 **Pattern 3: By Team/Ownership**
 
@@ -237,7 +237,7 @@ analytics
 └── shared/
     ├── dim_date
     └── dim_customer
-```text
+```
 
 ### Schema Properties
 
@@ -252,7 +252,7 @@ SHOW TABLES IN sales_analytics;
 -- View table structure
 DESCRIBE TABLE sales_analytics.transactions;
 -- Output: Column names, types, nullable, comments
-```text
+```
 
 ## Table Design Best Practices
 
@@ -274,7 +274,7 @@ CREATE TABLE events (
     event_value DECIMAL(10, 2),      -- Decimal for money
     event_timestamp TIMESTAMP         -- Timestamp for dates
 );
-```text
+```
 
 **Type Selection Table:**
 
@@ -309,7 +309,7 @@ VALUES (1, 'Alice', 100.50, '2024-01-15');
 SELECT * FROM sales_partitioned
 WHERE transaction_date = '2024-01-15';
 -- Scans only 2024-01-15 partition
-```text
+```
 
 **Partitioning benefits:**
 
@@ -333,7 +333,7 @@ COMMENT 'Master customer dimension table';
 
 -- View comments
 DESCRIBE EXTENDED customers;
-```text
+```
 
 ## Delta Tables
 
@@ -355,7 +355,7 @@ CREATE TABLE delta_orders (
     id INT,
     amount DECIMAL(10, 2)
 );
-```text
+```
 
 ### Delta Features
 
@@ -386,7 +386,7 @@ SELECT * FROM orders TIMESTAMP AS OF '2024-01-15';
 SET spark.databricks.delta.schema.autoMerge.enabled = true;
 INSERT INTO orders (id, amount, discount)
 VALUES (3, 150, 0.1);  -- New column automatically added
-```text
+```
 
 ## Converting Between Table Types
 
@@ -403,7 +403,7 @@ CONVERT TO DELTA parquet_sales;
 -- Verify conversion
 DESCRIBE EXTENDED delta_sales;
 -- Should show "Provider: delta"
-```text
+```
 
 ### External to Managed
 
@@ -418,7 +418,7 @@ SELECT * FROM ext_data;
 
 -- Original external table can be dropped
 DROP TABLE ext_data;
-```text
+```
 
 ## Performance Considerations
 
@@ -436,7 +436,7 @@ WHERE status = 'active' AND date >= CURRENT_DATE - 7;
 SELECT * FROM partitioned_table
 WHERE partition_date >= CURRENT_DATE - 7
 AND status = 'active';
-```text
+```
 
 ### Optimization Table
 
@@ -475,10 +475,6 @@ AND status = 'active';
 
 - **A**: By date column (sale_date), assuming date-based queries are common
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Tables & Schemas Implementation**: Incorporating Tables & Schemas principles to build scalable and maintainable solutions in Databricks environments.
@@ -487,10 +483,15 @@ AND status = 'active';
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Tables & Schemas do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Tables & Schemas to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Tables & Schemas to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Tables & Schemas prior to deployment.
 
+---
+
+**[↑ Back to Data Management in Databricks](./README.md) | [Next: Unity Catalog](./02-unity-catalog.md) →**

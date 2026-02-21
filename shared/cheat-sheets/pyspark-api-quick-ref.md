@@ -23,7 +23,7 @@ df = spark.read.table("catalog.schema.table")
 
 # From streaming source
 stream = spark.readStream.format("cloudFiles").option("cloudFiles.format", "json").load("/path/")
-```text
+```
 
 ## Selections and Filtering
 
@@ -39,7 +39,7 @@ df.filter("age > 18 AND country = 'US'")
 df.where(col("status").isin(["active", "pending"]))
 df.where(col("name").isNotNull())
 df.dropna(subset=["id", "name"])
-```text
+```
 
 ## Transformations
 
@@ -55,7 +55,7 @@ df.drop("temp_col")
 df.dropDuplicates(["id", "event_type"])
 df.distinct()
 df.limit(100)
-```text
+```
 
 ## Aggregations
 
@@ -73,7 +73,7 @@ df.groupBy("category").agg(
 
 # Pivot
 df.groupBy("user_id").pivot("month").sum("amount")
-```text
+```
 
 ## Joins
 
@@ -84,7 +84,7 @@ df1.join(df2, ["id", "date"], "inner")             # Join on multiple columns
 df1.join(df2, "id", "left_anti")                   # Rows in df1 not in df2
 df1.join(df2, "id", "semi")                        # Rows in df1 that match df2
 df1.crossJoin(df2)                                 # Cartesian product
-```text
+```
 
 **Hint syntax:**
 
@@ -92,7 +92,7 @@ df1.crossJoin(df2)                                 # Cartesian product
 from pyspark.sql.functions import broadcast
 # Force broadcast of small table
 df1.join(broadcast(small_df), "id")
-```text
+```
 
 ## Window Functions
 
@@ -116,7 +116,7 @@ df.withColumn("running_total", sum("amount").over(
 df.withColumn("rolling_avg", avg("amount").over(
     Window.partitionBy("user_id").orderBy("event_date").rowsBetween(-6, 0)
 ))
-```text
+```
 
 ## String Functions
 
@@ -131,7 +131,7 @@ df.withColumn("parts", split(col("path"), "/"))
 df.withColumn("area_code", regexp_extract(col("phone"), r"^\((\d{3})\)", 1))
 df.withColumn("clean", regexp_replace(col("text"), r"[^a-zA-Z0-9]", ""))
 df.withColumn("first3", substring(col("name"), 1, 3))
-```text
+```
 
 ## Date/Time Functions
 
@@ -148,7 +148,7 @@ df.withColumn("year", year("ts"))
 df.withColumn("formatted", date_format("ts", "MM/dd/yyyy"))
 df.withColumn("days_diff", datediff("end_date", "start_date"))
 df.withColumn("month_trunc", date_trunc("month", "ts"))
-```text
+```
 
 ## Schema Operations
 
@@ -169,7 +169,7 @@ df.columns                               # List of column names
 
 # Cast
 df.withColumn("id", col("id").cast("long"))
-```text
+```
 
 ## Actions (Trigger Computation)
 
@@ -181,7 +181,7 @@ df.show(10, truncate=False)              # Print 10 rows
 df.take(5)                               # Return first 5 rows
 df.toPandas()                            # Convert to pandas (small data only)
 df.describe("amount", "age").show()      # Summary statistics
-```text
+```
 
 ## Writing Data
 
@@ -197,7 +197,7 @@ df.write.format("delta").partitionBy("date").mode("overwrite").save("/path/")
     .option("mergeSchema", "true")
     .mode("append")
     .save("/path/"))
-```text
+```
 
 ## Streaming Write
 
@@ -215,7 +215,7 @@ query.awaitTermination()
 query.stop()
 query.status
 query.lastProgress
-```text
+```
 
 ## UDFs
 
@@ -236,7 +236,7 @@ def score_to_percent(scores: pd.Series) -> pd.Series:
 
 df.withColumn("clean", clean_email(col("email")))
 df.withColumn("pct", score_to_percent(col("score")))
-```text
+```
 
 ## Key Performance Tips
 

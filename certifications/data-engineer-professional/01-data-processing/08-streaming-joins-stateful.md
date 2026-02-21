@@ -13,7 +13,7 @@ status: published
 
 This guide covers advanced Structured Streaming join patterns and stateful operations: stream-stream joins, stream-static joins, stateful aggregations, advanced watermarking, and streaming deduplication.
 
-> For streaming basics (triggers, output modes, sources, sinks, foreachBatch), see [Structured Streaming](03-structured-streaming.md).
+> For streaming basics (triggers, output modes, sources, sinks, foreachBatch), see [Structured Streaming](03-structured-streaming-part1.md).
 
 ## Stream-Stream Joins
 
@@ -45,7 +45,7 @@ flowchart LR
     RBuf -- "Match on key + time range" --> Output
 
     Output --> Cleanup[Watermark advances -> State cleanup]
-```text
+```
 
 ### Inner Stream-Stream Join
 
@@ -55,6 +55,7 @@ Both streams must define watermarks. A time range condition in the join predicat
 from pyspark.sql.functions import expr
 
 # Define watermarks on BOTH streams
+
 impressions = (
     spark.readStream
     .format("delta")
@@ -70,6 +71,7 @@ clicks = (
 )
 
 # Inner join with time range condition
+
 joined = impressions.join(
     clicks,
     expr("""
@@ -86,7 +88,7 @@ query = (
     .outputMode("append")
     .start("/output/impression_clicks")
 )
-```text
+```
 
 ```sql
 -- SQL equivalent for stream-stream inner join
@@ -102,15 +104,17 @@ JOIN STREAM(clicks) c
     ON i.ad_id = c.ad_id
     AND c.click_time >= i.impression_time
     AND c.click_time <= i.impression_time + INTERVAL 1 HOUR;
-```text
+```
 
 ### Outer Stream-Stream Joins
 
 Outer joins produce NULL-padded results when no match is found within the watermark window. The requirements differ by join type.
 
 ```python
+
 # Left outer join: RIGHT side must have watermark
 # Left rows emit with NULLs if no right match found after watermark
+
 left_outer_joined = impressions.join(
     clicks,
     expr("""
@@ -122,6 +126,7 @@ left_outer_joined = impressions.join(
 )
 
 # Right outer join: LEFT side must have watermark
+
 right_outer_joined = impressions.join(
     clicks,
     expr("""
@@ -131,7 +136,7 @@ right_outer_joined = impressions.join(
     """),
     "rightOuter"
 )
-```text
+```
 
 ### Stream-Stream Join Requirements
 
@@ -147,10 +152,12 @@ right_outer_joined = impressions.join(
 The time range condition in the join predicate controls how long buffered state is retained on each side.
 
 ```python
+
 # The time range condition determines state retention
 # Without it, state grows unboundedly even with watermarks
 
 # Example: clicks must occur within 1 hour after impression
+
 expr("""
     click_time >= impression_time AND
     click_time <= impression_time + INTERVAL 1 HOUR
@@ -160,7 +167,8 @@ expr("""
 #   - Impressions are buffered up to: watermark(click) + 1 hour
 #   - Clicks are buffered up to: watermark(impression) + 0
 #   - Wider range = more state retained = more memory
-```text
+
+```
 
 | Time Range Width | State Size | Late Match Tolerance | Use Case |
 | :--- | :--- | :--- | :--- |
@@ -205,15 +213,17 @@ flowchart LR
     S3 --> |Join| D
 
     D --> Note["Static table re-read<br>each micro-batch"]
-```text
+```
 
 ### Stream-Static Join Code
 
 ```python
 # Static dimension table (read as batch)
+
 dim_products = spark.table("catalog.schema.dim_products")
 
 # Streaming events
+
 event_stream = (
     spark.readStream
     .format("delta")
@@ -221,6 +231,7 @@ event_stream = (
 )
 
 # Stream-static join (no watermark needed on static side)
+
 enriched = event_stream.join(
     dim_products,
     event_stream.product_id == dim_products.product_id,
@@ -234,7 +245,7 @@ query = (
     .outputMode("append")
     .start("/output/enriched_sales")
 )
-```text
+```
 
 ```sql
 -- SQL stream-static join pattern
@@ -247,7 +258,7 @@ SELECT
 FROM STREAM(sales_events) e
 LEFT JOIN dim_products p
     ON e.product_id = p.product_id;
-```text
+```
 
 ### Stream-Static vs Stream-Stream Comparison
 
@@ -265,15 +276,20 @@ LEFT JOIN dim_products p
 The static DataFrame is re-read at the start of each micro-batch. If the underlying table is updated between batches, new micro-batches will see the updated data. However, there is no guarantee of consistency within a single micro-batch if the static table is being written to concurrently.
 
 ```python
+
 # Pattern: Force refresh of static table
 # Option 1: The default behavior re-reads automatically
+
 dim_table = spark.table("catalog.schema.dim_products")
 
 # Option 2: Cache control for large static tables
+
 dim_table = spark.table("catalog.schema.dim_products").cache()
+
 # WARNING: Cached tables are NOT re-read each batch
 # Only use cache if the static table rarely changes
-```text
+
+```
 
 ### Practice Question: Stream-Static Joins
 
@@ -307,7 +323,7 @@ flowchart TD
 
     MGS -.- Note1["Use for: session summary,<br>running totals, status tracking"]
     FMGS -.- Note2["Use for: alerts, anomaly detection,<br>session windowing with events"]
-```text
+```
 
 ### mapGroupsWithState Deep Dive
 
@@ -318,6 +334,7 @@ from pyspark.sql.streaming import GroupState, GroupStateTimeout
 from pyspark.sql.types import StructType, StructField, StringType, LongType, DoubleType
 
 # Define output schema
+
 output_schema = StructType([
     StructField("device_id", StringType()),
     StructField("event_count", LongType()),
@@ -360,6 +377,7 @@ def update_device_stats(key, events, state: GroupState):
     return (key[0], new_count, new_avg, last_time)
 
 # Apply mapGroupsWithState
+
 result = (
     sensor_stream
     .withWatermark("event_time", "10 minutes")
@@ -371,7 +389,7 @@ result = (
         timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
     )
 )
-```text
+```
 
 ### flatMapGroupsWithState Deep Dive
 
@@ -441,6 +459,7 @@ def detect_anomalies(
     return iter(alerts)
 
 # Apply flatMapGroupsWithState
+
 alerts = (
     sensor_stream
     .withWatermark("event_time", "10 minutes")
@@ -452,7 +471,7 @@ alerts = (
         timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
     )
 )
-```text
+```
 
 ### GroupState Timeout Types
 
@@ -463,17 +482,21 @@ alerts = (
 | `NoTimeout` | Never expires | No | Permanent state (use with caution) |
 
 ```python
+
 # Processing time timeout
 # State expires based on wall clock (system time)
+
 state.setTimeoutDuration("30 minutes")
 
 # Event time timeout
 # State expires when watermark passes the set timestamp
+
 state.setTimeoutTimestamp(event_time_ms + 3600000)  # 1 hour in ms
 
 # No timeout (dangerous - state grows forever)
 # Only appropriate when number of keys is bounded and small
-```text
+
+```
 
 ### When to Use Custom Stateful Operations vs Built-in
 
@@ -495,18 +518,21 @@ When a streaming query involves multiple operators that each define watermarks (
 
 ```python
 # Stream A with 10-minute watermark
+
 stream_a = (
     spark.readStream.format("delta").load("/data/stream_a")
     .withWatermark("event_time_a", "10 minutes")
 )
 
 # Stream B with 30-minute watermark
+
 stream_b = (
     spark.readStream.format("delta").load("/data/stream_b")
     .withWatermark("event_time_b", "30 minutes")
 )
 
 # Join produces a query with two watermarks
+
 joined = stream_a.join(
     stream_b,
     expr("""
@@ -515,7 +541,7 @@ joined = stream_a.join(
         event_time_b <= event_time_a + INTERVAL 5 MINUTES
     """)
 )
-```text
+```
 
 ### Global Watermark Policy
 
@@ -523,17 +549,19 @@ When multiple watermarks exist, Spark uses a global policy to determine the effe
 
 ```python
 # Set global watermark policy
+
 spark.conf.set(
     "spark.sql.streaming.multipleWatermarkPolicy",
     "min"  # default: uses the MINIMUM watermark
 )
 
 # Alternative: use the maximum watermark
+
 spark.conf.set(
     "spark.sql.streaming.multipleWatermarkPolicy",
     "max"
 )
-```text
+```
 
 | Policy | Behavior | Data Safety | State Size |
 | :--- | :--- | :--- | :--- |
@@ -552,7 +580,7 @@ flowchart TD
 
     Policy -->|min policy| MinResult["Effective Watermark: 09:45<br>(conservative, more state)"]
     Policy -->|max policy| MaxResult["Effective Watermark: 10:05<br>(aggressive, less state)"]
-```text
+```
 
 ### Watermark Propagation Through Operations
 
@@ -571,6 +599,7 @@ Watermarks propagate through transformations but have specific rules.
 Understanding exact boundary behavior is critical for exam questions.
 
 ```python
+
 # Watermark = max(event_time) - threshold
 # Example: threshold = 10 minutes, max event_time seen = 10:25
 # Watermark = 10:15
@@ -579,7 +608,8 @@ Understanding exact boundary behavior is critical for exam questions.
 #   event_time = 10:15 -> PROCESSED (not dropped)
 #   event_time = 10:14 -> DROPPED (strictly less than watermark)
 #   event_time = 10:16 -> PROCESSED
-```text
+
+```
 
 | Event Time | Watermark (10:15) | Result |
 | :--- | :--- | :--- |
@@ -595,12 +625,14 @@ Understanding exact boundary behavior is critical for exam questions.
 Watermark advancement triggers state cleanup for completed windows.
 
 ```python
+
 # Window: 10:00-10:10, Watermark delay: 10 minutes
 # When max event_time = 10:25 -> watermark = 10:15
 # Window 10:00-10:10 end (10:10) < watermark (10:15) -> state cleaned
 # Window 10:05-10:15 end (10:15) <= watermark (10:15) -> state cleaned
 # Window 10:10-10:20 end (10:20) > watermark (10:15) -> state retained
-```text
+
+```
 
 ### Practice Question: Watermark Policy
 
@@ -631,7 +663,7 @@ flowchart TD
         W1[Tracks keys only within<br>watermark window] --> W2[State bounded by<br>watermark duration]
         W2 --> W3[Automatically cleaned<br>when watermark advances]
     end
-```text
+```
 
 ### dropDuplicatesWithinWatermark
 
@@ -641,6 +673,7 @@ This method only deduplicates events that arrive within the watermark window of 
 from pyspark.sql.functions import col
 
 # Efficient: dedup only within watermark window
+
 deduped = (
     event_stream
     .withWatermark("event_time", "15 minutes")
@@ -654,7 +687,7 @@ query = (
     .outputMode("append")
     .start("/output/deduped_events")
 )
-```text
+```
 
 ```sql
 -- SQL streaming deduplication with watermark
@@ -663,7 +696,7 @@ SELECT *
 FROM STREAM(raw_transactions)
 -- Note: In DLT, deduplication is handled via APPLY CHANGES
 -- For standard SQL streaming, use Python API
-```text
+```
 
 ### Deduplication State Comparison
 
@@ -695,6 +728,7 @@ def idempotent_dedup_write(batch_df, batch_id):
     ).execute()
 
 # Streaming with foreachBatch for exactly-once dedup
+
 query = (
     event_stream
     .withWatermark("event_time", "10 minutes")
@@ -704,7 +738,7 @@ query = (
     .option("checkpointLocation", "/checkpoints/exact_once_dedup")
     .start()
 )
-```text
+```
 
 ### Practice Question: Streaming Deduplication
 
@@ -723,3 +757,7 @@ D) `foreachBatch` with MERGE on sensor_id
 ## Next
 
 Continue with [Streaming Monitoring & Optimization](./09-streaming-monitoring-optimization.md) for back-pressure management, streaming monitoring & troubleshooting, state store deep dive, practice questions, and exam tips.
+
+---
+
+**[← Previous: Data Deduplication](./07-data-deduplication.md) | [↑ Back to Data Processing](./README.md) | [Next: Streaming Monitoring & Optimization](./09-streaming-monitoring-optimization.md) →**

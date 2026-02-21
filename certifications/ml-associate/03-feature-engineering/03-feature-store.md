@@ -45,7 +45,7 @@ flowchart TB
 
     style FS fill:#e1f5ff
     style Consumers fill:#f3e5f5
-```text
+```
 
 ## Core Concepts
 
@@ -59,10 +59,12 @@ from databricks.feature_store import FeatureStoreClient
 fs_client = FeatureStoreClient()
 
 # Create feature table
+
 database_name = "ml_features"
 table_name = "customer_features"
 
 # Prepare feature data
+
 features_df = spark.read.table("silver.customers")\
     .select(
         "customer_id",
@@ -73,6 +75,7 @@ features_df = spark.read.table("silver.customers")\
     )
 
 # Write to feature store
+
 fs_client.create_table(
     name=f"{database_name}.{table_name}",
     primary_keys=["customer_id"],
@@ -85,7 +88,8 @@ fs_client.create_table(
 # - Training (reproducible features)
 # - Batch inference (same logic)
 # - Real-time serving (pre-computed values)
-```text
+
+```
 
 ### 2. **Feature Lookups**
 
@@ -97,6 +101,7 @@ from databricks.feature_store import FeatureStoreClient
 fs_client = FeatureStoreClient()
 
 # Define training data
+
 training_set = spark.read.table("raw.transactions")\
     .select(
         "transaction_id",
@@ -107,6 +112,7 @@ training_set = spark.read.table("raw.transactions")\
 
 # Lookup features from feature store
 # Look for matching customer_id
+
 with fs_client.create_training_set(
     df=training_set,
     label="label",
@@ -127,8 +133,9 @@ with fs_client.create_training_set(
     training_set_df = training_set_obj.load_df().toPandas()
 
 # Result: DataFrame with all features joined for training
+
 print(training_set_df.head())
-```text
+```
 
 ## Creating and Managing Features
 
@@ -142,6 +149,7 @@ from pyspark.sql import functions as F
 fs_client = FeatureStoreClient()
 
 # Step 1: Compute features from source data
+
 print("Computing features...")
 source_data = spark.read.table("silver.raw_transactions")
 
@@ -158,6 +166,7 @@ features = (source_data
 )
 
 # Step 2: Write to feature store
+
 print("Writing to feature store...")
 fs_client.write_table(
     name="ml_features.customer_transaction_features",
@@ -166,14 +175,16 @@ fs_client.write_table(
 )
 
 # Step 3: Update feature table description
+
 feature_table = fs_client.get_table("ml_features.customer_transaction_features")
 print(f"Features created: {feature_table.name}")
 print(f"Last updated: {feature_table.last_updated_timestamp}")
-```text
+```
 
 ### **Incremental Updates (Merge)**
 
 ```python
+
 # Update only new/changed records for efficiency
 # Instead of recomputing all features
 
@@ -185,7 +196,7 @@ fs_client.write_table(
     mode="merge",  # Only update changed records
     merge_exprs="new.customer_id = old.customer_id"
 )
-```text
+```
 
 ## Feature Discovery & Governance
 
@@ -197,6 +208,7 @@ from databricks.feature_store import FeatureStoreClient
 fs_client = FeatureStoreClient()
 
 # Search for features by name
+
 search_results = fs_client.search_tables(max_results=10)
 
 for table in search_results:
@@ -206,24 +218,28 @@ for table in search_results:
     print(f"  Last Updated: {table.last_updated_timestamp}")
 
 # Get specific table
+
 table = fs_client.get_table("ml_features.customer_features")
 print(f"\nTable: {table.name}")
 print(f"Primary Keys: {table.primary_keys}")
 print(f"Timestamp Keys: {table.timestamp_keys}")
-```text
+```
 
 ### **Feature Lineage**
 
 ```python
+
 # Track which models use which features
 
 # Example: Register model with feature lineage
+
 import mlflow
 from databricks.feature_store import FeatureStoreClient
 
 fs_client = FeatureStoreClient()
 
 # When logging model with feature store features
+
 with mlflow.start_run() as run:
     # Use FeatureStore for training
     with fs_client.create_training_set(...) as training_set:
@@ -245,18 +261,21 @@ with mlflow.start_run() as run:
 # - Which features were used
 # - Where features came from
 # - Model inputs match feature schema
-```text
+
+```
 
 ## Real-Time Feature Serving
 
 ### **Online Feature Store**
 
 ```python
+
 # For real-time predictions, features need fast lookup
 
 from databricks.feature_store import FeatureStoreClient
 
 # Publish feature table for serving
+
 fs_client.create_online_table(
     table_name="ml_features.customer_features",
     online_store="online_store_name",  # Requires online store setup
@@ -267,19 +286,23 @@ fs_client.create_online_table(
 # 1. Send customer_id to serving endpoint
 # 2. Online store looks up pre-computed features
 # 3. Return features for immediate inference
-```text
+
+```
 
 ### **Batch Inference with Features**
 
 ```python
+
 # Use feature store for consistent batch predictions
 
 fs_client = FeatureStoreClient()
 
 # Load scoring data
+
 scoring_data = spark.read.table("new_customers")
 
 # Create scoring set (similar to training set)
+
 with fs_client.create_training_set(
     df=scoring_data,
     feature_lookups=[
@@ -293,12 +316,14 @@ with fs_client.create_training_set(
     scoring_df = scoring_set.load_df()
 
 # Load model trained with same features
+
 import mlflow
 model = mlflow.sklearn.load_model("models:/my_model/production")
 
 # Predict using consistent features
+
 predictions = model.predict(scoring_df[feature_columns])
-```text
+```
 
 ## Complete ML Workflow with Feature Store
 
@@ -312,6 +337,7 @@ fs_client = FeatureStoreClient()
 # ============= FEATURE ENGINEERING =============
 
 # Compute customer features
+
 customer_features = (spark.read.table("raw.customers")
     .groupBy("customer_id")
     .agg(
@@ -322,6 +348,7 @@ customer_features = (spark.read.table("raw.customers")
 )
 
 # Write to feature store
+
 fs_client.write_table(
     "ml_features.customer_features",
     df=customer_features,
@@ -329,6 +356,7 @@ fs_client.write_table(
 )
 
 # Compute product features
+
 product_features = (spark.read.table("raw.products")
     .select(
         "product_id",
@@ -347,6 +375,7 @@ fs_client.write_table(
 # ============= TRAINING WITH FEATURE STORE =============
 
 # Create training set with feature lookups
+
 training_data = spark.read.table("raw.transactions").select(
     "transaction_id", "customer_id", "product_id", "purchase_amount"
 )
@@ -386,6 +415,7 @@ with fs_client.create_training_set(
 # ============= BATCH SCORING WITH FEATURES =============
 
 # Score new customers using same features
+
 new_transactions = spark.read.table("new_transactions")
 
 with fs_client.create_training_set(
@@ -405,12 +435,13 @@ with fs_client.create_training_set(
     predictions = model.predict(df_scored.drop("purchase_amount", axis=1))
 
 # Save predictions
+
 results = spark.createDataFrame(
     [(t_id, pred) for t_id, pred in zip(new_transactions.select("transaction_id"), predictions)],
     ["transaction_id", "predicted_amount"]
 )
 results.write.mode("overwrite").saveAsTable("predictions.purchase_amount_predictions")
-```text
+```
 
 ## Feature Store Best Practices
 
@@ -418,6 +449,7 @@ results.write.mode("overwrite").saveAsTable("predictions.purchase_amount_predict
 
 ```python
 # Clear, hierarchical naming
+
 naming_guidelines = {
     "database": "ml_features",  # or specific domain
     "table_pattern": "{domain}_{entity}_{feature_type}",
@@ -430,18 +462,20 @@ naming_guidelines = {
 }
 
 # Clear column names
+
 column_naming = {
     "raw": "raw_feature_name",
     "scaled": "feature_name_scaled",
     "encoded": "feature_name_encoded",
     "aggregated": "feature_name_sum_7d"  # Include aggregation window
 }
-```text
+```
 
 ### 2. **Documentation**
 
 ```python
 # Document features for discovery
+
 fs_client.create_table(
     name="ml_features.customer_features",
     df=features_df,
@@ -455,14 +489,16 @@ fs_client.create_table(
         "sla": "2_hours_lag"
     }
 )
-```text
+```
 
 ### 3. **Refresh Schedules**
 
 ```python
+
 # Automate feature computation
 
 # Use Databricks Jobs to schedule feature updates
+
 job_config = {
     "job_name": "customer_features_daily_refresh",
     "schedule": "0 2 * * *",  # 2 AM daily
@@ -472,7 +508,7 @@ job_config = {
         "timeout": 3600
     }
 }
-```text
+```
 
 ## Comparison: Feature Store vs Manual Feature Management
 
@@ -495,10 +531,12 @@ job_config = {
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Databricks Feature Store to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Feature Store prior to deployment.
 
@@ -533,3 +571,7 @@ job_config = {
 
 - [Databricks Feature Store](https://docs.databricks.com/machine-learning/feature-store/index.html)
 - [Feature Engineering Guide](https://docs.databricks.com/machine-learning/feature-engineering/index.html)
+
+---
+
+**[← Previous: Feature Engineering Techniques](./02-feature-engineering-techniques.md) | [↑ Back to Feature Engineering](./README.md)**

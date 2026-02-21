@@ -64,15 +64,18 @@ from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.catalog import CatalogInfo, SchemaInfo
 
 # Initialize workspace client
+
 ws = WorkspaceClient()
 
 # Create managed catalog for features
+
 catalog = ws.catalogs.create(
     name="ml_features",
     comment="Centralized feature store managed by ML team"
 )
 
 # Create schemas by team/domain
+
 schemas = {
     "user_features": "User demographic and behavioral features",
     "product_features": "Product catalog and engagement features",
@@ -87,9 +90,11 @@ for schema_name, description in schemas.items():
     )
 
 # Feature table with proper catalog structure
+
 feature_table = "ml_features.user_features.user_spending"
 
 # Create with documented schema
+
 feature_df_with_metadata = df.withMetadata(
     "user_id",
     {"description": "Unique user identifier", "tag": "PII"}
@@ -103,11 +108,13 @@ feature_df_with_metadata = df.withMetadata(
 
 ```python
 # RBAC for feature tables
+
 from databricks.sdk.service.sql import StatementManagementRequest, ExecuteStatementRequest
 
 ws = WorkspaceClient()
 
 # Grant permissions
+
 sql_statements = [
     # Feature table owner
     """GRANT ALL PRIVILEGES ON TABLE ml_features.user_features.user_spending 
@@ -140,6 +147,7 @@ for statement in sql_statements:
 
 ```python
 # Track feature lineage with OpenMetadata
+
 import json
 from datetime import datetime
 
@@ -182,6 +190,7 @@ lineage_metadata = {
 
 # Store lineage in external system (e.g., Apache Atlas, OpenMetadata)
 # For now, write to Delta table for tracking
+
 lineage_df = spark.createDataFrame([lineage_metadata])
 lineage_df.write.mode("append").delta("/metadata/feature_lineage")
 ```
@@ -263,6 +272,7 @@ class FeatureQualityFramework:
         return age_hours
 
 # Usage
+
 validator = FeatureQualityFramework(spark, ws)
 
 features_df = spark.read.table("ml_features.user_features.user_spending")
@@ -276,6 +286,7 @@ validator.validate_freshness("ml_features.user_features.user_spending", max_age_
 
 ```python
 # Feature quality monitoring dashboard SQL
+
 feature_quality_sql = """
 SELECT 
     table_name,
@@ -293,6 +304,7 @@ GROUP BY table_name, feature_name
 """
 
 # Drift detection SQL
+
 drift_detection_sql = """
 SELECT 
     feature_name,
@@ -323,6 +335,7 @@ WHERE date >= current_date() - 30
 
 ```python
 # Databricks Workflow for feature computation
+
 workflow_yaml = """
 name: daily_feature_computation
 tasks:
@@ -367,6 +380,7 @@ schedule:
 """
 
 # Deploy using Databricks SDK
+
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.jobs import Job, Task
 
@@ -392,6 +406,7 @@ job = ws.jobs.create(job_config)
 
 ```python
 # Streaming feature computation and serving
+
 spark_stream = (
     spark.readStream
     .format("kafka")
@@ -401,11 +416,13 @@ spark_stream = (
 )
 
 # Parse and compute features
+
 parsed_events = spark_stream.select(
     from_json(col("value").cast("string"), event_schema).alias("event")
 ).select("event.*")
 
 # Compute 5-minute window features
+
 windowed = (
     parsed_events
     .withWatermark("timestamp", "10 minutes")
@@ -421,6 +438,7 @@ windowed = (
 )
 
 # Write to Delta for batch and Redis for online serving
+
 def write_to_stores(df, batch_id):
     # Delta (batch)
     (
@@ -529,6 +547,7 @@ class DriftDetector:
 
 ```python
 # Log feature computation performance
+
 import time
 
 def log_feature_computation_metrics(table_name, computation_time_seconds, record_count):
@@ -546,12 +565,15 @@ def log_feature_computation_metrics(table_name, computation_time_seconds, record
     metrics_df.write.mode("append").delta("/logs/feature_computation_metrics")
 
 # Start timer
+
 start_time = time.time()
 
 # Compute features
+
 features = compute_features(...)
 
 # Log metrics
+
 elapsed = time.time() - start_time
 log_feature_computation_metrics(
     "ml_features.user_features.user_spending",
@@ -603,10 +625,12 @@ log_feature_computation_metrics(
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Feature Store Production Patterns to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Store Production Patterns prior to deployment.
 
@@ -618,4 +642,4 @@ log_feature_computation_metrics(
 
 ---
 
-**[← Back to Advanced Feature Engineering](./README.md)**
+**[← Previous: Advanced Feature Techniques](./03-advanced-feature-techniques.md) | [↑ Back to Advanced Feature Engineering](./README.md)**

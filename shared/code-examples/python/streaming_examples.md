@@ -33,7 +33,7 @@ query = (
 )
 
 query.stop()
-```text
+```
 
 ## Auto Loader (cloudFiles)
 
@@ -57,7 +57,7 @@ query = (
 )
 
 query.stop()
-```text
+```
 
 ## Auto Loader with Schema Evolution
 
@@ -77,7 +77,7 @@ auto_loader_evolve = (
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/path/to/landing/events/")
 )
-```text
+```
 
 ## Trigger Modes
 
@@ -115,7 +115,7 @@ query_once = (
 query_continuous.stop()              # stop() sends signal to halt continuous stream
 query_available.awaitTermination()   # awaitTermination() blocks until availableNow finishes
 query_once.awaitTermination()        # awaitTermination() blocks until trigger-once finishes
-```text
+```
 
 ## Watermarking (Late Data Handling)
 
@@ -143,7 +143,7 @@ query = (
 )
 
 query.stop()
-```text
+```
 
 ## Streaming with foreachBatch (Custom Logic)
 
@@ -172,7 +172,7 @@ query = (
 )
 
 query.stop()
-```text
+```
 
 ## Streaming from Change Data Feed
 
@@ -199,7 +199,7 @@ query = (
 )
 
 query.stop()
-```text
+```
 
 ## Monitoring Streams
 
@@ -212,4 +212,4 @@ for stream in spark.streams.active:
 # query.lastProgress     — latest micro-batch stats
 # query.recentProgress   — recent micro-batch stats
 # query.status           — current status
-```text
+```

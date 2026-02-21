@@ -220,4 +220,4 @@ D) Global init scripts can only be configured by metastore admins through Unity 
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
+**[← Previous: Mock Exam 2 - Section 1: Data Processing](./01-data-processing.md) | [↑ Back to Mock Exam 2 - Databricks Data Engineer Professional](./README.md) | [Next: Mock Exam 2 - Section 3: Data Modeling](./03-data-modeling.md) →**

@@ -112,4 +112,4 @@ D) Look at the warehouse's "Monitoring" tab to check if other concurrent queries
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
+**[← Previous: Mock Exam 2 - Section 4: Security & Governance](./04-security-governance.md) | [↑ Back to Mock Exam 2 - Databricks Data Engineer Professional](./README.md) | [Next: Mock Exam 2 - Section 6: Testing & Deployment](./06-testing-deployment.md) →**

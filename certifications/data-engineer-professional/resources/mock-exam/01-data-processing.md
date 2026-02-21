@@ -328,4 +328,4 @@ D) Use `foreachPartition()` instead for transactional guarantees
 
 ---
 
-[Back to Exam Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
+**[↑ Back to Full-Length Practice Exam](./README.md) | [Next: Mock Exam - Section 2: Databricks Tooling](./02-databricks-tooling.md) →**

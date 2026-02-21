@@ -13,7 +13,7 @@ status: published
 
 This part covers sync and state management, CI/CD integration, bundle templates, common patterns, common issues, and exam tips for Databricks Asset Bundles.
 
-> For bundle structure, resource definitions, variables, commands, target configuration, and artifact packaging, see [Part 1](./01-asset-bundles.md).
+> For bundle structure, resource definitions, variables, commands, target configuration, and artifact packaging, see [Part 1](./01-asset-bundles-part1.md).
 
 ## Sync and State Management
 
@@ -21,6 +21,7 @@ This part covers sync and state management, CI/CD integration, bundle templates,
 
 ```yaml
 # databricks.yml
+
 sync:
   include:
     - "src/**"
@@ -30,7 +31,7 @@ sync:
     - "*.pyc"
     - ".git/**"
     - "tests/**"
-```text
+```
 
 ### State Files
 
@@ -45,8 +46,9 @@ Bundle state is stored locally:
 │       └── terraform.tfstate
 
 # Add to .gitignore:
+
 .databricks/
-```text
+```
 
 ## Integration with CI/CD
 
@@ -54,6 +56,7 @@ Bundle state is stored locally:
 
 ```yaml
 # .github/workflows/deploy.yml
+
 name: Deploy Bundle
 
 on:
@@ -113,12 +116,13 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.PROD_DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.PROD_DATABRICKS_TOKEN }}
-```text
+```
 
 ### Azure DevOps Pipeline
 
 ```yaml
 # azure-pipelines.yml
+
 trigger:
   branches:
     include:
@@ -160,7 +164,7 @@ stages:
                   env:
                     DATABRICKS_HOST: $(PROD_HOST)
                     DATABRICKS_TOKEN: $(PROD_TOKEN)
-```text
+```
 
 ## Bundle Templates
 
@@ -168,17 +172,21 @@ stages:
 
 ```bash
 # List available templates
+
 databricks bundle init --help
 
 # Initialize from default template
+
 databricks bundle init
 
 # Initialize from specific template
+
 databricks bundle init default-python
 
 # Initialize from custom template URL
+
 databricks bundle init https://github.com/company/bundle-template
-```text
+```
 
 ### Custom Template Structure
 
@@ -192,7 +200,7 @@ my-template/
 │   └── src/
 │       └── notebooks/
 │           └── main.py.tmpl
-```text
+```
 
 ### Template Schema
 
@@ -211,7 +219,7 @@ my-template/
     }
   }
 }
-```text
+```
 
 ## Common Patterns
 
@@ -219,6 +227,7 @@ my-template/
 
 ```yaml
 # databricks.yml
+
 variables:
   environment:
     default: dev
@@ -243,22 +252,24 @@ targets:
       host: https://prod.cloud.databricks.com
     run_as:
       service_principal_name: prod-sp
-```text
+```
 
 ### Shared Resources Across Teams
 
 ```yaml
 # Include shared configurations
+
 include:
   - ./shared/common-clusters.yml
   - ./shared/notification-settings.yml
   - ./team-specific/*.yml
-```text
+```
 
 ### Parameterized Notebooks
 
 ```python
 # In notebook
+
 dbutils.widgets.text("catalog", "dev_catalog")
 dbutils.widgets.text("environment", "dev")
 
@@ -266,8 +277,9 @@ catalog = dbutils.widgets.get("catalog")
 environment = dbutils.widgets.get("environment")
 
 # Use in queries
+
 spark.sql(f"USE CATALOG {catalog}")
-```text
+```
 
 ## Use Cases
 
@@ -283,15 +295,18 @@ spark.sql(f"USE CATALOG {catalog}")
 **Common causes and fixes:**
 
 ```bash
+
 # Missing required variables
 # Error: variable 'db_password' is required but not set
 
 # Fix: Provide variable
+
 databricks bundle validate --var db_password=secret
 
 # Or set environment variable
+
 export BUNDLE_VAR_db_password=secret
-```text
+```
 
 ### 2. Permission Denied on Deploy
 
@@ -307,7 +322,7 @@ targets:
     permissions:
       - level: CAN_MANAGE
         group_name: data-engineers
-```text
+```
 
 ### 3. Resource Already Exists
 
@@ -317,12 +332,14 @@ targets:
 
 ```bash
 # Destroy and redeploy
+
 databricks bundle destroy -t dev
 databricks bundle deploy -t dev
 
 # Or modify to allow updates
 # Check for naming conflicts in development mode
-```text
+
+```
 
 ### 4. State File Conflicts
 
@@ -332,11 +349,13 @@ databricks bundle deploy -t dev
 
 ```bash
 # Remove local state (will recreate)
+
 rm -rf .databricks/bundle/dev/
 
 # Redeploy
+
 databricks bundle deploy -t dev
-```text
+```
 
 ### 5. Artifact Build Failure
 
@@ -346,16 +365,18 @@ databricks bundle deploy -t dev
 
 ```bash
 # Test build locally first
+
 cd src/python
 poetry build  # or python setup.py bdist_wheel
 
 # Check artifact configuration
+
 artifacts:
   my_package:
     type: whl
     path: ./src/python
     build: poetry build  # Ensure command is correct
-```text
+```
 
 ## Exam Tips
 
@@ -372,7 +393,7 @@ artifacts:
 
 ## Related Topics
 
-- [CI/CD Integration](02-cicd-integration.md) - Pipeline workflows
+- [CI/CD Integration](02-cicd-integration-part1.md) - Pipeline workflows
 - [Git Folders](03-git-folders.md) - Version control integration
 
 ## Official Documentation
@@ -381,3 +402,7 @@ artifacts:
 - [Bundle Configuration](https://docs.databricks.com/dev-tools/bundles/settings.html)
 - [Bundle Templates](https://docs.databricks.com/dev-tools/bundles/templates.html)
 - [CI/CD with Bundles](https://docs.databricks.com/dev-tools/bundles/ci-cd.html)
+
+---
+
+**[← Previous: Asset Bundles — Part 1](./01-asset-bundles-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: CI/CD Integration — Part 1 (Platforms & Configuration)](./02-cicd-integration-part1.md) →**

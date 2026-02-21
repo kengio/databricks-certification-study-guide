@@ -29,7 +29,7 @@ flowchart TB
     Analyzer --> Optimizer
     Optimizer --> Planner
     Planner --> Executor
-```text
+```
 
 ## Spark SQL vs DataFrames
 
@@ -47,6 +47,7 @@ flowchart TB
 
 ```python
 # Managed table (data stored in warehouse directory)
+
 spark.sql("""
 CREATE TABLE my_table (
     id INT,
@@ -57,6 +58,7 @@ USING DELTA
 """)
 
 # External table (data stored in external location)
+
 spark.sql("""
 CREATE TABLE my_external (
     id INT,
@@ -65,27 +67,30 @@ CREATE TABLE my_external (
 USING DELTA
 LOCATION '/mnt/data/my_table'
 """)
-```text
+```
 
 ### From DataFrame
 
 ```python
 # Create from existing data
+
 df.write.mode("overwrite").saveAsTable("my_table")  # Managed
 
 # Create external
+
 df.write \
     .mode("overwrite") \
     .option("path", "/mnt/data/external") \
     .saveAsTable("my_external_table")
 
 # From file
+
 spark.sql("""
 CREATE TABLE my_parquet
 USING PARQUET
 LOCATION '/mnt/data/input.parquet'
 """)
-```text
+```
 
 ## Queries and Aggregations
 
@@ -102,7 +107,7 @@ WHERE salary > 50000
 ORDER BY salary DESC
 LIMIT 10
 """).show()
-```text
+```
 
 ### Aggregations
 
@@ -118,7 +123,7 @@ FROM employees
 GROUP BY department
 HAVING COUNT(*) > 5
 """)
-```text
+```
 
 ### Window Functions
 
@@ -130,7 +135,7 @@ SELECT
     ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) as rank,
     SUM(salary) OVER (PARTITION BY department) as dept_total
 FROM employees
-```text
+```
 
 ## Views and Temporary Views
 
@@ -138,6 +143,7 @@ FROM employees
 
 ```python
 # Create view (stored in metastore)
+
 spark.sql("""
 CREATE VIEW high_earners AS
 SELECT name, salary
@@ -146,27 +152,31 @@ WHERE salary > 100000
 """)
 
 # Drop view
+
 spark.sql("DROP VIEW IF EXISTS high_earners")
-```text
+```
 
 ### Temporary Views
 
 ```python
 # Session-scoped (deleted when session ends)
+
 spark.sql("""
 CREATE TEMP VIEW temp_view AS
 SELECT * FROM employees LIMIT 100
 """)
 
 # Global temporary (accessible across sessions)
+
 spark.sql("""
 CREATE GLOBAL TEMP VIEW global_view AS
 SELECT * FROM large_table
 """)
 
 # Query global temp view
+
 spark.sql("SELECT * FROM global_temp.global_view")
-```text
+```
 
 ## Catalog Operations
 
@@ -174,27 +184,33 @@ spark.sql("SELECT * FROM global_temp.global_view")
 
 ```python
 # List databases
+
 spark.catalog.listDatabases()
 
 # List tables in database
+
 spark.catalog.listTables("default")
 
 # List columns
+
 spark.catalog.listColumns("my_table")
 
 # Check if table exists
+
 spark.catalog.tableExists("my_table")
-```text
+```
 
 ### Switching Context
 
 ```python
 # Set current database
+
 spark.sql("USE my_database")
 
 # Now queries reference my_database by default
+
 spark.sql("SELECT * FROM my_table")  # Uses my_database.my_table
-```text
+```
 
 ## Data Types
 
@@ -218,12 +234,13 @@ STRUCT<name STRING, age INT>
 
 -- Binary
 BINARY
-```text
+```
 
 ## Partitioning
 
 ```python
 # Create partitioned table
+
 spark.sql("""
 CREATE TABLE sales (
     id INT,
@@ -234,12 +251,13 @@ USING DELTA
 """)
 
 # Insert with partition
+
 spark.sql("""
 INSERT INTO sales
 PARTITION (year=2025, month=1)
 SELECT id, amount FROM new_sales
 """)
-```text
+```
 
 ## SQL vs Hive SQL Differences
 
@@ -258,10 +276,6 @@ SELECT id, amount FROM new_sales
 - **Catalog**: Metadata management
 - **SQL Optimization**: Catalyst optimizer benefits
 
----
-
-**[← Back to ETL with Spark SQL](README.md)**
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -270,10 +284,15 @@ SELECT id, amount FROM new_sales
 ## Common Issues & Errors
 
 ### 1. OOM Errors
+
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Spark SQL Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Spark SQL Fundamentals prior to deployment.
 
+---
+
+**[↑ Back to ETL with Spark SQL and Python](./README.md) | [Next: DataFrame Operations](./02-dataframe-operations.md) →**

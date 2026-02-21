@@ -20,7 +20,7 @@ flowchart TD
     DV[Dashboards & Visualization] --> Dashboards[Dashboard Creation]
     DV --> Viz[Visualizations & Charts]
     DV --> Alerts[Alerts & Monitoring]
-```text
+```
 
 ## Section Contents
 

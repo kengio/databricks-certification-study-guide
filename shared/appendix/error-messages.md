@@ -10,7 +10,7 @@ tags: [errors, troubleshooting, reference, data-engineering]
 
 ```text
 VACUUM cannot delete files more recent than 168 hours
-```text
+```
 
 **Cause**: Attempting to VACUUM with retention less than default 7 days.
 
@@ -23,13 +23,13 @@ VACUUM table_name RETAIN 168 HOURS;
 -- Option 2: Disable safety check (dangerous!)
 SET spark.databricks.delta.retentionDurationCheck.enabled = false;
 VACUUM table_name RETAIN 0 HOURS;
-```text
+```
 
 ### Schema Mismatch Error
 
 ```text
 A schema mismatch detected when writing to the Delta table
-```text
+```
 
 **Cause**: Incoming data schema doesn't match table schema.
 
@@ -41,13 +41,13 @@ df.write.option("mergeSchema", "true").format("delta").mode("append").save(path)
 
 # Option 2: Overwrite schema
 df.write.option("overwriteSchema", "true").format("delta").mode("overwrite").save(path)
-```text
+```
 
 ### Concurrent Write Conflict
 
 ```text
 ConcurrentAppendException: Files were added to the table by a concurrent update
-```text
+```
 
 **Cause**: Multiple writers modifying the same partition/files.
 
@@ -69,13 +69,13 @@ for attempt in range(max_retries):
         break
     except ConcurrentAppendException:
         time.sleep(2 ** attempt)
-```text
+```
 
 ### Time Travel Version Not Found
 
 ```text
 The requested version X does not exist
-```text
+```
 
 **Cause**: Version has been removed by VACUUM or doesn't exist.
 
@@ -87,7 +87,7 @@ DESCRIBE HISTORY table_name;
 
 -- Use available version
 SELECT * FROM table_name VERSION AS OF <available_version>;
-```text
+```
 
 ## Streaming Errors
 
@@ -95,7 +95,7 @@ SELECT * FROM table_name VERSION AS OF <available_version>;
 
 ```text
 The checkpoint of your query is incompatible with the current version
-```text
+```
 
 **Cause**: Query structure changed after checkpoint was created.
 
@@ -109,7 +109,7 @@ The checkpoint of your query is incompatible with the current version
 
 ```text
 checkpointLocation must be specified
-```text
+```
 
 **Solution**:
 
@@ -118,13 +118,13 @@ checkpointLocation must be specified
     .option("checkpointLocation", "/path/to/checkpoint")
     .format("delta")
     .start())
-```text
+```
 
 ### Watermark Required for State
 
 ```text
 Streaming aggregation requires watermark for state cleanup
-```text
+```
 
 **Solution**:
 
@@ -132,7 +132,7 @@ Streaming aggregation requires watermark for state cleanup
 (df.withWatermark("event_time", "10 minutes")
     .groupBy(window("event_time", "5 minutes"))
     .count())
-```text
+```
 
 ## Auto Loader Errors
 
@@ -140,7 +140,7 @@ Streaming aggregation requires watermark for state cleanup
 
 ```text
 'cloudFiles.schemaLocation' must be specified
-```text
+```
 
 **Solution**:
 
@@ -149,13 +149,13 @@ Streaming aggregation requires watermark for state cleanup
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/path/to/schema")
     .load("/data/path"))
-```text
+```
 
 ### Schema Evolution Rescue
 
 ```text
 Found new columns that cannot be added to schema
-```text
+```
 
 **Solution**:
 
@@ -166,7 +166,7 @@ Found new columns that cannot be added to schema
     .option("cloudFiles.schemaEvolutionMode", "rescue")
     .option("cloudFiles.schemaLocation", "/schema")
     .load("/data"))
-```text
+```
 
 ## Unity Catalog Errors
 
@@ -174,7 +174,7 @@ Found new columns that cannot be added to schema
 
 ```text
 User does not have privilege SELECT on table
-```text
+```
 
 **Solution**:
 
@@ -184,13 +184,13 @@ GRANT SELECT ON TABLE catalog.schema.table TO `user@email.com`;
 
 -- Check current grants
 SHOW GRANTS ON TABLE catalog.schema.table;
-```text
+```
 
 ### Catalog Not Found
 
 ```text
 Catalog 'catalog_name' not found
-```text
+```
 
 **Solution**:
 
@@ -203,20 +203,20 @@ CREATE CATALOG catalog_name;
 
 -- Use correct catalog
 USE CATALOG correct_catalog_name;
-```text
+```
 
 ### External Location Permission
 
 ```text
 User does not have permission to access external location
-```text
+```
 
 **Solution**:
 
 ```sql
 GRANT READ FILES ON EXTERNAL LOCATION location_name TO `user@email.com`;
 GRANT WRITE FILES ON EXTERNAL LOCATION location_name TO `user@email.com`;
-```text
+```
 
 ## Spark Errors
 
@@ -224,7 +224,7 @@ GRANT WRITE FILES ON EXTERNAL LOCATION location_name TO `user@email.com`;
 
 ```text
 java.lang.OutOfMemoryError: Java heap space
-```text
+```
 
 **Solutions**:
 
@@ -239,13 +239,13 @@ spark.conf.set("spark.sql.shuffle.partitions", 500)
 
 # Spill to disk
 spark.conf.set("spark.memory.fraction", 0.4)
-```text
+```
 
 ### Task Serialization Error
 
 ```text
 org.apache.spark.SparkException: Task not serializable
-```text
+```
 
 **Cause**: Non-serializable object used in transformation.
 
@@ -262,13 +262,13 @@ def process_row(row):
     return connection.query(row)
 
 df.map(process_row)
-```text
+```
 
 ### Shuffle Block Fetch Failure
 
 ```text
 FetchFailedException: Failed to fetch block
-```text
+```
 
 **Causes**: Network issues, executor failures, memory pressure.
 
@@ -281,7 +281,7 @@ spark.conf.set("spark.shuffle.io.retryWait", "30s")
 
 # Reduce shuffle block size
 spark.conf.set("spark.sql.shuffle.partitions", 1000)
-```text
+```
 
 ## DLT/Lakeflow Errors
 
@@ -289,7 +289,7 @@ spark.conf.set("spark.sql.shuffle.partitions", 1000)
 
 ```text
 Pipeline stopped due to expectation violation
-```text
+```
 
 **Cause**: Data failed `EXPECT...ON VIOLATION FAIL UPDATE` constraint.
 
@@ -303,7 +303,7 @@ Pipeline stopped due to expectation violation
 
 ```text
 Circular dependency detected in pipeline
-```text
+```
 
 **Solution**: Review and remove table dependencies that form cycles.
 

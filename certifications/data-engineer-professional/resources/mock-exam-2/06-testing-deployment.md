@@ -112,4 +112,4 @@ D) Navigate to the Databricks workspace UI, locate each deployed resource, and m
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)
+**[← Previous: Mock Exam 2 - Section 5: Monitoring & Logging](./05-monitoring-logging.md) | [↑ Back to Mock Exam 2 - Databricks Data Engineer Professional](./README.md) | [Next: Mock Exam 2 - Section 7: Lakeflow Pipelines & Performance](./07-lakeflow-performance.md) →**

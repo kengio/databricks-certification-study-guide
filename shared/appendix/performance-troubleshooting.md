@@ -30,7 +30,7 @@ flowchart TD
     Skew --> |Yes| HandleSkew[Handle Skew]
     Skew --> |No| SmallFiles{Small Files?}
     SmallFiles --> |Yes| Optimize[Run OPTIMIZE]
-```text
+```
 
 ## Slow Queries
 
@@ -47,7 +47,7 @@ SELECT * FROM my_table WHERE col = 'value';
 -- - Full table scans (Scan parquet)
 -- - Missing partition pruning
 -- - Large shuffles
-```text
+```
 
 **Common Causes and Solutions:**
 
@@ -69,7 +69,7 @@ DESCRIBE DETAIL my_table;
 
 -- Add Z-ORDER if not present
 OPTIMIZE my_table ZORDER BY (frequently_filtered_column);
-```text
+```
 
 ## High Shuffle Spill
 
@@ -84,7 +84,7 @@ print(spark.conf.get("spark.memory.fraction"))
 
 # Check shuffle partition count vs data size
 df.rdd.getNumPartitions()
-```text
+```
 
 **Solutions:**
 
@@ -97,7 +97,7 @@ spark.conf.set("spark.memory.fraction", "0.8")
 
 # Solution 3: Use larger cluster instance type
 # (Configure at cluster level)
-```text
+```
 
 ### Spill Tuning Reference
 
@@ -122,7 +122,7 @@ DESCRIBE DETAIL my_table;
 -- numFiles: High number (>1000 for small table)
 -- sizeInBytes: Compare with numFiles
 -- Average file size = sizeInBytes / numFiles
-```text
+```
 
 **Solutions:**
 
@@ -139,7 +139,7 @@ SET TBLPROPERTIES (
 
 -- Solution 3: Schedule regular OPTIMIZE
 -- Create job to run: OPTIMIZE my_table WHERE date >= current_date() - 7
-```text
+```
 
 ### File Size Guidelines
 
@@ -163,7 +163,7 @@ df.groupBy("join_key").count().orderBy(desc("count")).show(20)
 
 # Check task durations in Spark UI
 # Look for tasks taking 10x+ longer than median
-```text
+```
 
 **Solutions:**
 
@@ -185,7 +185,7 @@ from pyspark.sql.functions import concat, lit, rand
 df_salted = df.withColumn("join_key_salted",
     concat(col("join_key"), lit("_"), (rand() * 10).cast("int"))
 )
-```text
+```
 
 ### Skew Detection Quick Check
 
@@ -201,7 +201,7 @@ ORDER BY cnt DESC
 LIMIT 20;
 
 -- If top key has >10% of data, consider salting
-```text
+```
 
 ## Out of Memory (OOM) Errors
 
@@ -218,7 +218,7 @@ LIMIT 20;
 # 2. Collect() on large dataset
 # 3. State in streaming
 # 4. Too few partitions
-```text
+```
 
 **Solutions:**
 
@@ -238,7 +238,7 @@ df.write.format("delta").save(output_path)
 
 # Solution 4: Use disk-based operations
 spark.conf.set("spark.memory.fraction", "0.4")  # More spill room
-```text
+```
 
 ### OOM Prevention Checklist
 
@@ -273,7 +273,7 @@ spark.conf.set("spark.memory.fraction", "0.4")  # More spill room
 
 # Or use serverless for instant start
 spark.conf.set("spark.databricks.cluster.profile", "serverless")
-```text
+```
 
 ## Query Plan Analysis
 
@@ -283,7 +283,7 @@ spark.conf.set("spark.databricks.cluster.profile", "serverless")
 EXPLAIN EXTENDED SELECT * FROM orders o
 JOIN customers c ON o.customer_id = c.id
 WHERE o.order_date > '2024-01-01';
-```text
+```
 
 **Key Things to Look For:**
 
@@ -302,7 +302,7 @@ WHERE o.order_date > '2024-01-01';
 
 -- For notebooks, use Spark UI
 -- Jobs > Stages > Tasks > Event Timeline
-```text
+```
 
 ## System Tables for Diagnostics
 
@@ -320,7 +320,7 @@ WHERE start_time > current_timestamp() - INTERVAL 1 DAY
     AND total_duration_ms > 60000  -- > 1 minute
 ORDER BY total_duration_ms DESC
 LIMIT 20;
-```text
+```
 
 ### Cluster Utilization
 
@@ -334,7 +334,7 @@ SELECT
 FROM system.compute.cluster_metrics
 WHERE timestamp > current_timestamp() - INTERVAL 7 DAY
 GROUP BY cluster_id;
-```text
+```
 
 ## Quick Reference: First Steps
 
@@ -361,7 +361,7 @@ EXPLAIN COST <query>;
 
 -- File statistics
 SELECT * FROM table_name._delta_log;
-```text
+```
 
 ```python
 # Runtime diagnostics
@@ -372,4 +372,4 @@ df.explain(mode="extended")
 # Streaming diagnostics
 query.lastProgress
 query.status
-```text
+```

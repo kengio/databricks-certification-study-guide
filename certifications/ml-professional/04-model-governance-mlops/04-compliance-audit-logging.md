@@ -83,6 +83,7 @@ The event types most relevant to ML governance:
 
 ```python
 # Query audit logs for model promotion events over the last 30 days
+
 audit_query = """
 SELECT
     timestamp,
@@ -385,10 +386,12 @@ under GDPR Article 22.
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Compliance and Audit Logging do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compliance and Audit Logging to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Compliance and Audit Logging to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Compliance and Audit Logging prior to deployment.
 
@@ -425,4 +428,4 @@ Review the complete pre-exam checklist in the certification resources folder bef
 
 ---
 
-**[← Back to Model Governance & MLOps](./README.md)**
+**[← Previous: Governance Frameworks](./03-governance-frameworks.md) | [↑ Back to Model Governance & MLOps](./README.md)**

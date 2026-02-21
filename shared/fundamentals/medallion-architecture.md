@@ -44,7 +44,7 @@ flowchart TB
     Bronze -->|Cleansing, Validation| Silver
     Silver -->|Aggregation, Business Logic| Gold
     Gold --> Consumers
-```text
+```
 
 ## Layer Details
 
@@ -77,7 +77,7 @@ bronze_df = (raw_df.withColumn("_ingestion_timestamp", current_timestamp())
 (bronze_df.write.format("delta")
     .mode("append")
     .save("/mnt/bronze/orders"))
-```text
+```
 
 ```sql
 -- SQL: Create Bronze table
@@ -88,7 +88,7 @@ CREATE TABLE bronze.orders (
 )
 USING DELTA
 LOCATION '/mnt/bronze/orders';
-```text
+```
 
 ### Silver Layer (Cleansed)
 
@@ -134,7 +134,7 @@ silver_df = (bronze_df
     .mode("overwrite")
     .option("mergeSchema", "true")
     .save("/mnt/silver/orders"))
-```text
+```
 
 ```sql
 -- SQL: MERGE into Silver
@@ -152,7 +152,7 @@ USING (
 ON target.order_id = source.order_id
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ### Gold Layer (Curated)
 
@@ -199,7 +199,7 @@ gold_customer_metrics = (silver_orders
 (gold_customer_metrics.write.format("delta")
     .mode("overwrite")
     .save("/mnt/gold/customer_metrics"))
-```text
+```
 
 ```sql
 -- SQL: Create Gold aggregate table
@@ -212,7 +212,7 @@ SELECT
   AVG(amount) AS avg_order_value
 FROM silver.orders
 GROUP BY order_date;
-```text
+```
 
 ## Layer Comparison
 
@@ -233,7 +233,7 @@ GROUP BY order_date;
 bronze_<source>      → bronze_salesforce, bronze_sap
 silver_<domain>      → silver_sales, silver_customers
 gold_<use_case>      → gold_analytics, gold_ml_features
-```text
+```
 
 ### Table Naming
 
@@ -241,7 +241,7 @@ gold_<use_case>      → gold_analytics, gold_ml_features
 bronze.<source>_<entity>      → bronze.salesforce_accounts
 silver.<domain>_<entity>      → silver.sales_orders
 gold.<domain>_<aggregate>     → gold.sales_daily_summary
-```text
+```
 
 ## Unity Catalog Structure
 
@@ -264,7 +264,7 @@ flowchart TB
             pp[product_performance]
         end
     end
-```text
+```
 
 ## Best Practices
 

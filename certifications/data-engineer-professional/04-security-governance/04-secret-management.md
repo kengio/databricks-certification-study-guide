@@ -26,7 +26,7 @@ flowchart TB
     end
 
     Scope --> Backends
-```text
+```
 
 ## Secret Scope Types
 
@@ -42,14 +42,17 @@ flowchart TB
 
 ```bash
 # Create scope via CLI
+
 databricks secrets create-scope --scope my-scope
 
 # Create scope with initial manage principal
+
 databricks secrets create-scope --scope team-secrets --initial-manage-principal users
-```text
+```
 
 ```python
 # Via REST API
+
 import requests
 
 response = requests.post(
@@ -57,40 +60,48 @@ response = requests.post(
     headers={"Authorization": f"Bearer {token}"},
     json={"scope": "my-scope"}
 )
-```text
+```
 
 ### Managing Secrets
 
 ```bash
 # Add/update secret
+
 databricks secrets put --scope my-scope --key db-password --string-value "secret123"
 
 # Add secret from file
+
 databricks secrets put --scope my-scope --key ssh-key --binary-file ./id_rsa
 
 # List secrets in scope (shows keys only, not values)
+
 databricks secrets list --scope my-scope
 
 # Delete secret
+
 databricks secrets delete --scope my-scope --key db-password
 
 # Delete scope
+
 databricks secrets delete-scope --scope my-scope
-```text
+```
 
 ### Scope ACLs
 
 ```bash
 # List ACLs for scope
+
 databricks secrets list-acls --scope my-scope
 
 # Grant access
+
 databricks secrets put-acl --scope my-scope --principal user@company.com --permission READ
 databricks secrets put-acl --scope my-scope --principal data-engineers --permission WRITE
 
 # Revoke access
+
 databricks secrets delete-acl --scope my-scope --principal user@company.com
-```text
+```
 
 | Permission | Capabilities |
 | :--- | :--- |
@@ -110,6 +121,7 @@ databricks secrets delete-acl --scope my-scope --principal user@company.com
 
 ```bash
 # Via CLI
+
 databricks secrets create-scope \
     --scope azure-kv-scope \
     --scope-backend-type AZURE_KEYVAULT \
@@ -117,7 +129,8 @@ databricks secrets create-scope \
     --dns-name https://<vault-name>.vault.azure.net/
 
 # The scope automatically syncs with Key Vault
-```text
+
+```
 
 ### Key Vault Configuration
 
@@ -129,13 +142,14 @@ Azure Key Vault Setup:
    - Key Vault Secrets User role (read secrets)
    - Or configure Access Policies with Get secret permission
 4. Create scope in Databricks pointing to Key Vault
-```text
+```
 
 ## AWS Secrets Manager
 
 ### Integration Pattern
 
 ```python
+
 # AWS Secrets Manager integration via IAM role
 
 # Option 1: Instance profile with Secrets Manager access
@@ -154,19 +168,22 @@ def get_secret(secret_name, region_name="us-east-1"):
         return response["SecretBinary"]
 
 # Usage
+
 db_creds = get_secret("prod/database/credentials")
 password = db_creds["password"]
-```text
+```
 
 ### Databricks-backed for AWS Secrets
 
 ```bash
 # Create Databricks-backed scope (recommended for Databricks-native approach)
+
 databricks secrets create-scope --scope aws-creds
 
 # Store AWS credentials or other secrets
+
 databricks secrets put --scope aws-creds --key api-key
-```text
+```
 
 ## Accessing Secrets in Code
 
@@ -174,22 +191,26 @@ databricks secrets put --scope aws-creds --key api-key
 
 ```python
 # List available scopes
+
 scopes = dbutils.secrets.listScopes()
 for scope in scopes:
     print(scope.name)
 
 # List secrets in scope (names only)
+
 secrets = dbutils.secrets.list("my-scope")
 for secret in secrets:
     print(secret.key)
 
 # Get secret value
+
 password = dbutils.secrets.get(scope="my-scope", key="db-password")
 api_key = dbutils.secrets.get(scope="azure-kv", key="api-key")
 
 # Get secret as bytes (for binary secrets)
+
 ssh_key = dbutils.secrets.getBytes(scope="my-scope", key="ssh-key")
-```text
+```
 
 ### Secret Redaction
 
@@ -197,28 +218,33 @@ Secrets are automatically redacted in notebook output:
 
 ```python
 # Secret values are redacted
+
 password = dbutils.secrets.get("my-scope", "db-password")
 print(password)  # Output: [REDACTED]
 
 # Even in f-strings
+
 print(f"Password is: {password}")  # Output: Password is: [REDACTED]
 
 # In DataFrames
+
 df = spark.createDataFrame([(password,)], ["secret"])
 df.show()  # Shows [REDACTED]
-```text
+```
 
 ### When Redaction Doesn't Work
 
 ```python
 # Redaction doesn't work if you transform the secret
+
 password = dbutils.secrets.get("my-scope", "db-password")
 
 # These may expose the secret - AVOID!
+
 print(password[0:5])  # Partial string - NOT redacted
 print(list(password))  # Converted to list - NOT redacted
 print(password.encode())  # Encoded - NOT redacted
-```text
+```
 
 ## Common Use Cases
 
@@ -226,6 +252,7 @@ print(password.encode())  # Encoded - NOT redacted
 
 ```python
 # Get database credentials
+
 host = dbutils.secrets.get("db-scope", "host")
 port = dbutils.secrets.get("db-scope", "port")
 database = dbutils.secrets.get("db-scope", "database")
@@ -233,6 +260,7 @@ username = dbutils.secrets.get("db-scope", "username")
 password = dbutils.secrets.get("db-scope", "password")
 
 # JDBC connection
+
 jdbc_url = f"jdbc:postgresql://{host}:{port}/{database}"
 
 df = (spark.read
@@ -242,7 +270,7 @@ df = (spark.read
     .option("user", username)
     .option("password", password)
     .load())
-```text
+```
 
 ### API Authentication
 
@@ -250,17 +278,20 @@ df = (spark.read
 import requests
 
 # Get API key from secrets
+
 api_key = dbutils.secrets.get("api-scope", "external-api-key")
 
 # Use in API call
+
 headers = {"Authorization": f"Bearer {api_key}"}
 response = requests.get("https://api.example.com/data", headers=headers)
-```text
+```
 
 ### Cloud Storage Credentials
 
 ```python
 # Set Spark config with secrets
+
 storage_account = "mystorageaccount"
 access_key = dbutils.secrets.get("azure-scope", "storage-access-key")
 
@@ -270,20 +301,23 @@ spark.conf.set(
 )
 
 # Now can access storage
+
 df = spark.read.format("parquet").load(
     f"wasbs://container@{storage_account}.blob.core.windows.net/data/"
 )
-```text
+```
 
 ### Service Principal Credentials
 
 ```python
 # Azure service principal authentication
+
 client_id = dbutils.secrets.get("azure-scope", "sp-client-id")
 client_secret = dbutils.secrets.get("azure-scope", "sp-client-secret")
 tenant_id = dbutils.secrets.get("azure-scope", "tenant-id")
 
 # Configure for ADLS Gen2
+
 spark.conf.set("fs.azure.account.auth.type", "OAuth")
 spark.conf.set("fs.azure.account.oauth.provider.type",
     "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
@@ -291,21 +325,24 @@ spark.conf.set("fs.azure.account.oauth2.client.id", client_id)
 spark.conf.set("fs.azure.account.oauth2.client.secret", client_secret)
 spark.conf.set("fs.azure.account.oauth2.client.endpoint",
     f"https://login.microsoftonline.com/{tenant_id}/oauth2/token")
-```text
+```
 
 ## Secrets in Job Parameters
 
 ### Referencing Secrets in Jobs
 
 ```python
+
 # In job configuration, reference secrets
 # Notebook parameter: {{secrets/my-scope/db-password}}
 
 # In notebook, access via widget or directly
+
 password = dbutils.widgets.get("password")
 # or
+
 password = dbutils.secrets.get("my-scope", "db-password")
-```text
+```
 
 ### Job Configuration Example
 
@@ -323,7 +360,7 @@ password = dbutils.secrets.get("my-scope", "db-password")
     }
   }]
 }
-```text
+```
 
 ## Best Practices
 
@@ -337,19 +374,21 @@ Recommended scope structure:
 ├── api-keys               # External API keys
 ├── service-principals     # SP credentials
 └── team-secrets           # Team-specific secrets
-```text
+```
 
 ### Access Control Pattern
 
 ```bash
 # Production: Limited access
+
 databricks secrets put-acl --scope prod-database --principal etl-service-principal --permission READ
 databricks secrets put-acl --scope prod-database --principal platform-admins --permission MANAGE
 
 # Development: Broader access
+
 databricks secrets put-acl --scope dev-database --principal developers --permission READ
 databricks secrets put-acl --scope dev-database --principal developers --permission WRITE
-```text
+```
 
 ### Secret Rotation
 
@@ -367,7 +406,7 @@ def rotate_database_password(scope, key, new_password):
 
     # 4. Log rotation event
     print(f"Rotated secret {scope}/{key}")
-```text
+```
 
 ## Integration with Unity Catalog
 
@@ -383,6 +422,7 @@ def rotate_database_password(scope, key, new_password):
 ### When to Use Each
 
 ```python
+
 # Use secrets for:
 # - Database passwords
 # - API keys
@@ -395,8 +435,9 @@ password = dbutils.secrets.get("app-scope", "password")
 # - Governed data access
 
 # Storage access via UC (no secrets needed)
+
 df = spark.read.format("delta").load("/Volumes/catalog/schema/volume/data/")
-```text
+```
 
 ## Monitoring and Auditing
 
@@ -426,7 +467,7 @@ WHERE service_name = 'secrets'
     AND request_params.scope = 'prod-database'
     AND action_name = 'getSecret'
 GROUP BY user_identity.email;
-```text
+```
 
 ## Common Issues & Errors
 
@@ -436,14 +477,15 @@ GROUP BY user_identity.email;
 
 ```python
 # Error: Secret scope 'nonexistent' not found
-```text
+
+```
 
 **Fix:** Verify scope exists and user has access:
 
 ```bash
 databricks secrets list-scopes
 databricks secrets list-acls --scope my-scope
-```text
+```
 
 ### 2. Permission Denied
 
@@ -453,7 +495,7 @@ databricks secrets list-acls --scope my-scope
 
 ```bash
 databricks secrets put-acl --scope my-scope --principal user@company.com --permission READ
-```text
+```
 
 ### 3. Secret Not Found in Scope
 
@@ -461,15 +503,17 @@ databricks secrets put-acl --scope my-scope --principal user@company.com --permi
 
 ```python
 # Error: Secret 'missing-key' not found in scope 'my-scope'
-```text
+
+```
 
 **Fix:** Verify secret exists:
 
 ```bash
 databricks secrets list --scope my-scope
 # Add if missing
+
 databricks secrets put --scope my-scope --key missing-key
-```text
+```
 
 ### 4. Azure Key Vault Connection Failed
 
@@ -516,3 +560,7 @@ databricks secrets put --scope my-scope --key missing-key
 - [Secret Scopes](https://docs.databricks.com/security/secrets/secret-scopes.html)
 - [Azure Key Vault-backed Scopes](https://docs.databricks.com/security/secrets/secret-scopes.html#azure-key-vault-backed-scopes)
 - [Databricks CLI Secrets](https://docs.databricks.com/dev-tools/cli/secrets-cli.html)
+
+---
+
+**[← Previous: Data Sharing](./03-data-sharing.md) | [↑ Back to Security & Governance](./README.md) | [Next: Audit Logging, Data Lineage & Network Security](./05-audit-lineage-network-security.md) →**

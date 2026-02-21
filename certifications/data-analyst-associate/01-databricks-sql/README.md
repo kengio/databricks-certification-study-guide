@@ -19,7 +19,7 @@ flowchart TD
     SQL[Databricks SQL] --> WH[SQL Warehouses]
     SQL --> Editor[Query Editor]
     SQL --> Connectors[Connections & Connectors]
-```text
+```
 
 ## Section Contents
 

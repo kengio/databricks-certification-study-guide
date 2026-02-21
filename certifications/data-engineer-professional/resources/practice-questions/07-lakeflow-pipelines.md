@@ -112,4 +112,4 @@ D) Drop and recreate the pipeline
 
 ---
 
-[Back to Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md) | [Next: Performance Optimization](08-performance-optimization.md)
+**[← Previous: Practice Questions - Section 06: Testing & Deployment](./06-testing-deployment.md) | [↑ Back to Practice Questions](./README.md) | [Next: Practice Questions - Section 08: Performance Optimization](./08-performance-optimization.md) →**

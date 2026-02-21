@@ -12,11 +12,13 @@ This reference guide provides comprehensive information for senior devops.
 Detailed explanation of the pattern.
 
 **When to Use:**
+
 - Scenario 1
 - Scenario 2
 - Scenario 3
 
 **Implementation:**
+
 ```typescript
 // Example code implementation
 export class Example {

@@ -50,7 +50,7 @@ ALTER TABLE prod.gold.customers ALTER COLUMN ssn SET TAGS (
 
 -- Remove tags
 ALTER TABLE prod.gold.customers UNSET TAGS ('retention_days');
-```text
+```
 
 ### Querying Tags for Compliance
 
@@ -77,7 +77,7 @@ SELECT
 FROM system.information_schema.column_tags
 WHERE tag_name = 'sensitivity'
     AND tag_value IN ('high', 'critical');
-```text
+```
 
 ### PII Classification Patterns
 
@@ -94,7 +94,7 @@ flowchart TB
     Internal --> |"Employees only"| EmployeeAccess[Employee Groups]
     Confidential --> |"Need-to-know"| RoleAccess[Role-Based Access]
     Restricted --> |"Strict controls"| StrictAccess[Approved Users + Audit]
-```text
+```
 
 ```sql
 -- Implement classification hierarchy with tags
@@ -102,7 +102,7 @@ ALTER TABLE prod.public.product_catalog SET TAGS ('classification' = 'public');
 ALTER TABLE prod.internal.employee_directory SET TAGS ('classification' = 'internal');
 ALTER TABLE prod.sensitive.customer_pii SET TAGS ('classification' = 'confidential');
 ALTER TABLE prod.restricted.payment_cards SET TAGS ('classification' = 'restricted');
-```text
+```
 
 ### Sensitivity Labels for Columns
 
@@ -115,12 +115,13 @@ ALTER TABLE prod.gold.customers ALTER COLUMN phone SET TAGS ('pii_type' = 'phone
 ALTER TABLE prod.gold.customers ALTER COLUMN ssn SET TAGS ('pii_type' = 'government_id');
 ALTER TABLE prod.gold.customers ALTER COLUMN date_of_birth SET TAGS ('pii_type' = 'dob');
 ALTER TABLE prod.gold.customers ALTER COLUMN ip_address SET TAGS ('pii_type' = 'ip_address');
-```text
+```
 
 ### Automated Data Classification Approach
 
 ```python
 # Automated PII detection and tagging
+
 from pyspark.sql import functions as F
 
 PII_PATTERNS = {
@@ -155,9 +156,10 @@ def classify_columns(table_name, sample_size=1000):
     return results
 
 # Run classification
+
 detected = classify_columns("prod.gold.customers")
 print(f"Detected PII columns: {detected}")
-```text
+```
 
 ---
 
@@ -183,7 +185,7 @@ WHERE customer_id = 'CUST-12345';
 VACUUM prod.gold.customers RETAIN 0 HOURS;
 VACUUM prod.gold.orders RETAIN 0 HOURS;
 VACUUM prod.gold.interactions RETAIN 0 HOURS;
-```text
+```
 
 > [!success]- Why is VACUUM needed after DELETE?
 > **Delta Lake DELETE** creates new data files without the deleted rows but keeps the old files for time travel. **VACUUM** permanently removes old files from storage. Without VACUUM, the data subject's records still exist in older file versions.
@@ -196,7 +198,7 @@ SET spark.databricks.delta.retentionDurationCheck.enabled = true;
 
 -- WARNING: RETAIN 0 HOURS breaks time travel for all data in the table
 -- Best practice: schedule GDPR deletions and VACUUM with 7-day retention
-```text
+```
 
 ### GDPR Deletion Tracking
 
@@ -224,7 +226,7 @@ INSERT INTO prod.compliance.deletion_requests VALUES (
     'gdpr-service-principal',
     'deleted_pending_vacuum'
 );
-```text
+```
 
 ### CCPA Data Subject Requests
 
@@ -245,7 +247,7 @@ FROM prod.gold.interactions WHERE customer_id = 'CUST-12345';
 -- Export to a file for delivery to the data subject
 -- Write to a volume for secure access
 SELECT * FROM ccpa_export;
-```text
+```
 
 ### Data Retention Policies with Delta Lake
 
@@ -262,7 +264,7 @@ ALTER TABLE prod.gold.event_logs SET TBLPROPERTIES (
     'delta.logRetentionDuration' = 'interval 30 days',
     'delta.deletedFileRetentionDuration' = 'interval 7 days'
 );
-```text
+```
 
 ### Regulatory Compliance Architecture
 
@@ -297,7 +299,7 @@ flowchart TB
     Raw --> Classify --> Bronze --> Silver --> Gold
     Governance --> Processing
     Compliance --> Processing
-```text
+```
 
 ### Cross-Region Data Governance
 
@@ -318,7 +320,7 @@ CREATE VIEW prod.global.all_customers AS
 SELECT *, 'EU' AS data_region FROM eu_data.gold.customers
 UNION ALL
 SELECT *, 'US' AS data_region FROM us_data.gold.customers;
-```text
+```
 
 ---
 
@@ -341,7 +343,7 @@ flowchart TD
     style CatalogOwner fill:#cce5ff
     style SchemaOwner fill:#ccffcc
     style TableOwner fill:#ffe6cc
-```text
+```
 
 Key inheritance rules:
 
@@ -365,7 +367,7 @@ GRANT SELECT ON TABLE prod.gold.revenue TO `analysts`;
 -- Owner can do everything; privilege holders can only do what's granted
 -- Only one owner per object; many principals can have privileges
 -- Ownership is transferred; privileges are granted/revoked
-```text
+```
 
 | Capability | Owner | Privilege Holder |
 | :--- | :--- | :--- |
@@ -388,7 +390,7 @@ GRANT MANAGE ON SCHEMA prod.gold TO `governance-admins`;
 -- without being the schema owner
 
 -- MANAGE is powerful: treat it like owner-level access for permissions
-```text
+```
 
 ### External Location Permissions
 
@@ -407,7 +409,7 @@ GRANT WRITE FILES ON EXTERNAL LOCATION my_landing TO `data-engineers`;
 
 -- Grant ability to create external volumes
 GRANT CREATE EXTERNAL VOLUME ON EXTERNAL LOCATION my_landing TO `data-engineers`;
-```text
+```
 
 ### Storage Credential Security
 
@@ -430,7 +432,7 @@ SELECT *
 FROM system.access.audit
 WHERE action_name IN ('createStorageCredential', 'getStorageCredential')
     AND event_date >= current_date() - 30;
-```text
+```
 
 ### Service Principal Patterns for Data Access
 
@@ -457,7 +459,7 @@ flowchart LR
     ETL --> SP_ETL --> Full
     ML --> SP_ML --> ReadGold
     BI --> SP_BI --> ReadOnly
-```text
+```
 
 ```sql
 -- ETL service principal: broad write access
@@ -478,7 +480,7 @@ GRANT SELECT, MODIFY, CREATE TABLE ON SCHEMA prod.ml TO `sp-ml-training`;
 GRANT USE CATALOG ON CATALOG prod TO `sp-bi-reader`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `sp-bi-reader`;
 GRANT SELECT ON SCHEMA prod.gold TO `sp-bi-reader`;
-```text
+```
 
 ### Group-Based Access Best Practices
 
@@ -501,7 +503,7 @@ GRANT SELECT ON TABLE prod.gold.revenue TO `finance-analysts`;
 --   sales-team, marketing-team, finance-team
 -- Layer 3: Access-level groups (how much access)
 --   gold-readers, silver-writers, admin-access
-```text
+```
 
 ```sql
 -- Example: implementing layered group access
@@ -517,7 +519,7 @@ GRANT USE SCHEMA ON SCHEMA prod.silver TO `sales-engineers`;
 GRANT SELECT, MODIFY, CREATE TABLE ON SCHEMA prod.silver TO `sales-engineers`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `sales-engineers`;
 GRANT SELECT ON SCHEMA prod.gold TO `sales-engineers`;
-```text
+```
 
 ---
 
@@ -537,7 +539,7 @@ CREATE TABLE prod.silver.orders AS
 SELECT * FROM hive_metastore.default.orders;
 
 -- Run the pipeline again; lineage will now be captured
-```text
+```
 
 ### 2. Audit Logs Missing Events
 
@@ -556,7 +558,7 @@ SELECT DISTINCT action_name
 FROM system.access.audit
 WHERE service_name = 'unityCatalog'
     AND event_date >= current_date() - 1;
-```text
+```
 
 ### 3. Information Schema Returns Empty Results
 
@@ -571,7 +573,7 @@ WHERE service_name = 'unityCatalog'
 -- User must have USE CATALOG / USE SCHEMA to see objects
 GRANT USE CATALOG ON CATALOG prod TO `compliance-team`;
 GRANT USE SCHEMA ON SCHEMA prod.gold TO `compliance-team`;
-```text
+```
 
 ### 4. Tags Not Appearing
 
@@ -587,7 +589,7 @@ WHERE table_catalog = 'prod';
 -- Column tags
 SELECT * FROM system.information_schema.column_tags
 WHERE table_catalog = 'prod';
-```text
+```
 
 ### 5. VACUUM With RETAIN 0 HOURS Fails
 
@@ -600,7 +602,7 @@ WHERE table_catalog = 'prod';
 SET spark.databricks.delta.retentionDurationCheck.enabled = false;
 VACUUM prod.gold.customers RETAIN 0 HOURS;
 SET spark.databricks.delta.retentionDurationCheck.enabled = true;
-```text
+```
 
 ### 6. Permission Denied on External Location
 
@@ -614,7 +616,7 @@ SHOW GRANTS ON EXTERNAL LOCATION my_landing;
 
 -- Grant access
 GRANT CREATE EXTERNAL TABLE ON EXTERNAL LOCATION my_landing TO `data-engineers`;
-```text
+```
 
 ---
 
@@ -723,3 +725,7 @@ D) GRANT OPTION
 - [IP Access Lists](https://docs.databricks.com/security/network/ip-access-list.html)
 - [GDPR and Databricks](https://docs.databricks.com/security/privacy/gdpr-delta.html)
 - [VACUUM](https://docs.databricks.com/sql/language-manual/delta-vacuum.html)
+
+---
+
+**[← Previous: Audit Logging, Data Lineage & Network Security](./05-audit-lineage-network-security.md) | [↑ Back to Security & Governance](./README.md)**

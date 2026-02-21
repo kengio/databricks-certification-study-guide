@@ -328,4 +328,4 @@ D) Insert fact records with the unknown dimension key, place those records into 
 
 ---
 
-[Back to Exam Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
+**[↑ Back to Mock Exam 2 - Databricks Data Engineer Professional](./README.md) | [Next: Mock Exam 2 - Section 2: Databricks Tooling](./02-databricks-tooling.md) →**

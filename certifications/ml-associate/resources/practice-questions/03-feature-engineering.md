@@ -280,4 +280,4 @@ D) The Pipeline is converted to a single estimator before cross-validation begin
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: MLflow Deployment →](./04-mlflow-deployment.md)
+**[← Previous: Practice Questions — ML Workflows](./02-ml-workflows.md) | [↑ Back to Practice Questions — ML Associate](./README.md) | [Next: Practice Questions — MLflow Deployment](./04-mlflow-deployment.md) →**

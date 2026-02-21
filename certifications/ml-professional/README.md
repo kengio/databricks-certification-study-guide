@@ -31,7 +31,7 @@ pie title Exam Topic Distribution
     "Model Lifecycle" : 30
     "Model Deployment" : 25
     "Solution & Data Monitoring" : 15
-```text
+```
 
 ## Study Topics
 

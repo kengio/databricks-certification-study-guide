@@ -22,7 +22,7 @@ AS SELECT * FROM STREAM(source_table);
 CREATE OR REFRESH MATERIALIZED VIEW aggregated_sales
 AS SELECT region, SUM(amount) as total
 FROM sales GROUP BY region;
-```text
+```
 
 ```python
 import dlt
@@ -37,7 +37,7 @@ def raw_events():
 def aggregated_sales():
     return (spark.read.table("live.sales")
         .groupBy("region").agg({"amount": "sum"}))
-```text
+```
 
 ## DLT Decorator Options
 
@@ -52,7 +52,7 @@ def aggregated_sales():
 )
 def my_table():
     return df
-```text
+```
 
 ## Expectations (Data Quality)
 
@@ -71,7 +71,7 @@ def my_table():
 })
 def clean_events():
     return spark.readStream.table("live.raw_events")
-```text
+```
 
 ## APPLY CHANGES (CDC)
 
@@ -84,7 +84,7 @@ FROM STREAM(live.cdc_source)
 KEYS (id)
 SEQUENCE BY timestamp
 STORED AS SCD TYPE 1;
-```text
+```
 
 ```python
 import dlt
@@ -101,7 +101,7 @@ dlt.apply_changes(
     stored_as_scd_type=2,
     track_history_column_list=["name", "email", "status"]
 )
-```text
+```
 
 ### SCD Types
 
@@ -151,7 +151,7 @@ SELECT
 FROM event_log(TABLE(my_catalog.my_schema.__dlt_event_log))
 WHERE event_type = 'flow_progress'
   AND details:expectation IS NOT NULL;
-```text
+```
 
 ## Exam Quick Facts
 

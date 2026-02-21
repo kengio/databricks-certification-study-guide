@@ -16,22 +16,24 @@ AS SELECT * FROM STREAM(source_table);
 CREATE OR REFRESH MATERIALIZED VIEW aggregated_sales
 AS SELECT region, SUM(amount) as total
 FROM sales GROUP BY region;
-```text
+```
 
 ```python
 import dlt
 
 # Streaming table
+
 @dlt.table
 def raw_events():
     return spark.readStream.table("source_table")
 
 # Materialized view
+
 @dlt.table
 def aggregated_sales():
     return (spark.read.table("live.sales")
         .groupBy("region").agg(sum("amount").alias("total")))
-```text
+```
 
 ## DLT Decorator Options
 
@@ -47,7 +49,7 @@ def aggregated_sales():
 )
 def my_table():
     return df
-```text
+```
 
 | Parameter | Description |
 |-----------|-------------|
@@ -91,12 +93,13 @@ CREATE OR REFRESH STREAMING TABLE critical_events (
   CONSTRAINT valid_id EXPECT (id IS NOT NULL) ON VIOLATION FAIL UPDATE
 )
 AS SELECT * FROM STREAM(raw_events);
-```text
+```
 
 ### Python Examples
 
 ```python
 # Warn only
+
 @dlt.table
 @dlt.expect("valid_id", "id IS NOT NULL")
 @dlt.expect("positive_amount", "amount > 0")
@@ -104,18 +107,21 @@ def validated_events():
     return spark.readStream.table("live.raw_events")
 
 # Drop invalid rows
+
 @dlt.table
 @dlt.expect_or_drop("valid_id", "id IS NOT NULL")
 def clean_events():
     return spark.readStream.table("live.raw_events")
 
 # Fail pipeline
+
 @dlt.table
 @dlt.expect_or_fail("valid_id", "id IS NOT NULL")
 def critical_events():
     return spark.readStream.table("live.raw_events")
 
 # Multiple expectations
+
 @dlt.table
 @dlt.expect_all({
     "valid_id": "id IS NOT NULL",
@@ -125,6 +131,7 @@ def multi_validated():
     return spark.readStream.table("live.raw_events")
 
 # Multiple with drop
+
 @dlt.table
 @dlt.expect_all_or_drop({
     "valid_id": "id IS NOT NULL",
@@ -132,7 +139,7 @@ def multi_validated():
 })
 def multi_clean():
     return spark.readStream.table("live.raw_events")
-```text
+```
 
 ## APPLY CHANGES (CDC)
 
@@ -148,7 +155,7 @@ KEYS (id)
 SEQUENCE BY timestamp
 COLUMNS * EXCEPT (_commit_version, _commit_timestamp)
 STORED AS SCD TYPE 1;
-```text
+```
 
 ### Python Syntax
 
@@ -157,9 +164,11 @@ import dlt
 from pyspark.sql.functions import *
 
 # Create target table
+
 dlt.create_streaming_table("target")
 
 # Apply changes
+
 dlt.apply_changes(
     target="target",
     source="cdc_source",
@@ -167,7 +176,7 @@ dlt.apply_changes(
     sequence_by="timestamp",
     stored_as_scd_type=1  # or 2
 )
-```text
+```
 
 ### SCD Types
 
@@ -178,6 +187,7 @@ dlt.apply_changes(
 
 ```python
 # SCD Type 2 with history
+
 dlt.apply_changes(
     target="customers_history",
     source="customers_cdc",
@@ -186,7 +196,7 @@ dlt.apply_changes(
     stored_as_scd_type=2,
     track_history_column_list=["name", "email", "status"]
 )
-```text
+```
 
 ### APPLY CHANGES Options
 
@@ -216,7 +226,7 @@ dlt.apply_changes(
   "development": false,
   "channel": "CURRENT"
 }
-```text
+```
 
 | Setting | Description |
 |---------|-------------|
@@ -230,15 +240,17 @@ dlt.apply_changes(
 
 ```python
 # Reference another DLT table
+
 @dlt.table
 def silver_events():
     return spark.read.table("live.bronze_events")
 
 # Reference streaming table
+
 @dlt.table
 def silver_events_stream():
     return spark.readStream.table("live.bronze_events")
-```text
+```
 
 | Reference | Syntax | Use |
 |-----------|--------|-----|
@@ -257,7 +269,7 @@ SELECT
 FROM event_log(TABLE(my_catalog.my_schema.__dlt_event_log))
 WHERE event_type = 'flow_progress'
   AND details:expectation IS NOT NULL;
-```text
+```
 
 ## Common Exam Tips
 

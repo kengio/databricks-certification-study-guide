@@ -36,7 +36,7 @@ flowchart TB
     Classification --> Tags[Tags & Labels]
     Compliance --> GDPR[GDPR / CCPA]
     Permissions --> Inheritance[Permission Inheritance]
-```text
+```
 
 ---
 
@@ -70,7 +70,7 @@ flowchart LR
         L2["Table B --> Table C"]
         L3["Column-level mappings"]
     end
-```text
+```
 
 | Lineage Type | What Is Tracked | Automatically Captured? |
 | :--- | :--- | :--- |
@@ -90,6 +90,7 @@ Lineage is visualized in the Catalog Explorer UI under the **Lineage** tab for a
 import requests
 
 # Table lineage: get upstream and downstream tables
+
 response = requests.get(
     f"{workspace_url}/api/2.1/unity-catalog/lineage/table-lineage",
     headers={"Authorization": f"Bearer {token}"},
@@ -106,10 +107,11 @@ for table in upstream_tables:
 
 for table in downstream_tables:
     print(f"Downstream: {table['tableInfo']['name']}")
-```text
+```
 
 ```python
 # Column lineage: get column-level dependencies
+
 response = requests.get(
     f"{workspace_url}/api/2.1/unity-catalog/lineage/column-lineage",
     headers={"Authorization": f"Bearer {token}"},
@@ -121,7 +123,7 @@ response = requests.get(
 
 for col in response.json().get("upstream_cols", []):
     print(f"Source: {col['catalog']}.{col['schema']}.{col['table']}.{col['name']}")
-```text
+```
 
 ### Impact Analysis
 
@@ -148,8 +150,9 @@ def assess_impact(workspace_url, token, table_name):
                 print(f"    Notebook: {nb.get('notebook_path')}")
 
 # Usage
+
 assess_impact(workspace_url, token, "prod.silver.orders")
-```text
+```
 
 ### Cross-Workspace Lineage
 
@@ -174,7 +177,7 @@ GROUP BY o.order_date, c.region;
 -- In Catalog Explorer, the column "total_revenue" will show
 -- lineage back to prod.silver.orders.amount
 -- The column "region" will show lineage back to prod.silver.customers.region
-```text
+```
 
 ---
 
@@ -230,7 +233,7 @@ WHERE action_name IN ('getTable', 'selectFromTable', 'commandSubmit')
     )
     AND event_date >= current_date() - 30
 ORDER BY event_time DESC;
-```text
+```
 
 #### Which Users Created or Deleted Tables?
 
@@ -247,7 +250,7 @@ FROM system.access.audit
 WHERE action_name IN ('createTable', 'deleteTable', 'dropTable')
     AND event_date >= current_date() - 90
 ORDER BY event_time DESC;
-```text
+```
 
 #### Failed Access Attempts
 
@@ -269,7 +272,7 @@ WHERE response.status_code >= 400
 GROUP BY ALL
 HAVING failure_count >= 3
 ORDER BY failure_count DESC;
-```text
+```
 
 #### Permission Changes Over Time
 
@@ -288,7 +291,7 @@ FROM system.access.audit
 WHERE action_name IN ('grant', 'revoke', 'updatePermissions')
     AND event_date >= current_date() - 30
 ORDER BY event_time DESC;
-```text
+```
 
 ### Audit Log Retention and Archival
 
@@ -314,7 +317,7 @@ WHERE event_date = current_date() - 1
     AND event_date NOT IN (
         SELECT DISTINCT event_date FROM prod.compliance.audit_archive
     );
-```text
+```
 
 ### Creating Alerts on Audit Events
 
@@ -345,7 +348,7 @@ WHERE event_date >= current_date() - 1
 -- Set up a Databricks SQL Alert on this view
 -- Alert condition: COUNT(*) > 0
 -- Notification: email or Slack webhook
-```text
+```
 
 ---
 
@@ -390,7 +393,7 @@ SELECT
 FROM system.information_schema.schemata
 WHERE catalog_name = 'prod'
 ORDER BY schema_name;
-```text
+```
 
 ### Querying Tables and Columns
 
@@ -425,7 +428,7 @@ WHERE table_catalog = 'prod'
     AND table_schema = 'gold'
     AND table_name = 'customers'
 ORDER BY ordinal_position;
-```text
+```
 
 ### Querying Privileges for Compliance
 
@@ -467,7 +470,7 @@ LEFT JOIN system.information_schema.table_privileges p
     AND t.table_name = p.table_name
 WHERE p.grantee IS NULL
     AND t.table_catalog = 'prod';
-```text
+```
 
 ### Object Ownership Report
 
@@ -484,7 +487,7 @@ SELECT
 FROM system.information_schema.tables
 WHERE table_catalog = 'prod'
 ORDER BY table_owner, table_schema, table_name;
-```text
+```
 
 ### DESCRIBE and SHOW Commands
 
@@ -503,7 +506,7 @@ SHOW VIEWS IN prod.gold;
 SHOW FUNCTIONS IN prod.functions;
 SHOW GRANTS ON TABLE prod.gold.customers;
 SHOW GRANTS TO `data-analysts`;
-```text
+```
 
 ---
 
@@ -539,7 +542,7 @@ flowchart TB
     PrivateEP --> DataPlane
     DataPlane --> |Private Endpoint| Storage
     Clusters --> |No Public IP / SCC| ControlServices
-```text
+```
 
 ### Private Link / Private Endpoints
 
@@ -558,7 +561,7 @@ Private Link Setup (High-Level):
 3. Configure Databricks workspace to use private endpoints
 4. Disable public network access (optional but recommended)
 5. Validate connectivity from clusters to control plane
-```text
+```
 
 ### Secure Cluster Connectivity (SCC / No Public IP)
 
@@ -576,7 +579,7 @@ Enabling SCC:
 - AWS: Enable "No Public IP" in workspace deployment
 - Azure: Enabled by default on new workspaces
 - GCP: Enable secure cluster connectivity in workspace settings
-```text
+```
 
 ### IP Access Lists
 
@@ -584,9 +587,11 @@ IP access lists restrict which IP addresses can access the Databricks workspace 
 
 ```python
 # Configure IP access lists via REST API
+
 import requests
 
 # Add allowed IP range
+
 response = requests.post(
     f"{account_url}/api/2.0/ip-access-lists",
     headers={"Authorization": f"Bearer {token}"},
@@ -602,6 +607,7 @@ response = requests.post(
 )
 
 # Block specific IPs
+
 response = requests.post(
     f"{account_url}/api/2.0/ip-access-lists",
     headers={"Authorization": f"Bearer {token}"},
@@ -611,7 +617,7 @@ response = requests.post(
         "ip_addresses": ["198.51.100.0/24"]
     }
 )
-```text
+```
 
 ### VPC/VNet Peering Patterns
 
@@ -623,7 +629,7 @@ VPC Peering Setup:
 2. Update route tables in both VPCs
 3. Configure security groups/NSGs to allow traffic
 4. Validate connectivity (e.g., JDBC to on-prem database)
-```text
+```
 
 ### Comparison: Network Connectivity Options
 
@@ -657,16 +663,16 @@ VPC Peering Setup:
 
 ## Common Issues & Errors
 
-**1. Missing Audit Logs for Long-Term Compliance**
-- **Issue**: An auditor requests access logs from 2 years ago, but the system table doesn't have them because the default retention is only 365 days.
-- **Fix**: Create a scheduled job that incrementally copies `system.access.audit` records to your own Delta table for long-term archival.
+### 1. Missing Audit Logs for Long-Term Compliance
 
-**2. Lineage Blind Spots**
-- **Issue**: Data lineage is not showing up in the Catalog Explorer for a specific set of tables.
-- **Fix**: Tables stored in the legacy `hive_metastore` do not support automatic lineage capture. Migrate the tables to Unity Catalog to enable lineage.
+**Scenario:** An auditor requests access logs from 2 years ago, but the system table doesn't have them because the default retention is only 365 days.
+**Fix:** Create a scheduled job that incrementally copies `system.access.audit` records to your own Delta table for long-term archival.
+
+### 2. Lineage Blind Spots
+
+**Scenario:** Data lineage is not showing up in the Catalog Explorer for a specific set of tables.
+**Fix:** Tables stored in the legacy `hive_metastore` do not support automatic lineage capture. Migrate the tables to Unity Catalog to enable lineage.
 
 ---
 
-## Next
-
-Continue with [Data Classification, Compliance & Permissions](./06-classification-compliance-permissions.md) for data classification & tagging, GDPR/CCPA compliance patterns, advanced permission models, practice questions, and exam tips.
+**[← Previous: Secret Management](./04-secret-management.md) | [↑ Back to Security & Governance](./README.md) | [Next: Data Classification, Compliance & Permissions](./06-classification-compliance-permissions.md) →**

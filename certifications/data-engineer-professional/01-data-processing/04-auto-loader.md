@@ -30,7 +30,7 @@ flowchart LR
     subgraph Target
         Output --> Delta[Delta Table]
     end
-```text
+```
 
 ## Why Auto Loader?
 
@@ -46,6 +46,7 @@ flowchart LR
 
 ```python
 # Basic Auto Loader read
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -53,11 +54,12 @@ df = (spark.readStream
     .load("/path/to/files"))
 
 # Write to Delta
+
 query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/path/to/checkpoint")
     .start("/path/to/target"))
-```text
+```
 
 ### Supported File Formats
 
@@ -85,19 +87,20 @@ flowchart TD
     FN --> FN1[Cloud events trigger processing]
     FN --> FN2[Requires cloud setup]
     FN --> FN3[Faster, more efficient]
-```text
+```
 
 ### Directory Listing Mode (Default)
 
 ```python
 # Uses directory listing by default
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.useNotifications", "false")  # Default
     .option("cloudFiles.schemaLocation", "/schema")
     .load("/path/to/files"))
-```text
+```
 
 | Aspect | Directory Listing |
 | :--- | :--- |
@@ -111,13 +114,14 @@ df = (spark.readStream
 
 ```python
 # Use file notification mode
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.useNotifications", "true")
     .option("cloudFiles.schemaLocation", "/schema")
     .load("/path/to/files"))
-```text
+```
 
 | Aspect | File Notification |
 | :--- | :--- |
@@ -153,12 +157,13 @@ Auto Loader can automatically infer and track schema.
 
 ```python
 # Schema is stored and tracked at this location
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/path/to/schema")
     .load("/path/to/files"))
-```text
+```
 
 The schema location stores:
 
@@ -176,7 +181,7 @@ df = (spark.readStream
     .option("cloudFiles.inferColumnTypes", "true")  # Infer types (not just strings)
     .option("cloudFiles.schemaHints", "id INT, amount DOUBLE")  # Override specific columns
     .load("/path/to/files"))
-```text
+```
 
 | Option | Default | Description |
 | :--- | :--- | :--- |
@@ -189,6 +194,7 @@ df = (spark.readStream
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
 # Define schema explicitly
+
 schema = StructType([
     StructField("id", IntegerType(), True),
     StructField("name", StringType(), True),
@@ -200,7 +206,7 @@ df = (spark.readStream
     .option("cloudFiles.format", "json")
     .schema(schema)
     .load("/path/to/files"))
-```text
+```
 
 ## Schema Evolution Modes (Exam Critical)
 
@@ -215,7 +221,7 @@ flowchart TD
     Rescue --> R1[Put unexpected data in _rescued_data]
     Fail --> F1[Fail on new columns]
     None --> N1[Ignore schema changes]
-```text
+```
 
 ### Schema Evolution Options
 
@@ -226,7 +232,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaLocation", "/schema")
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/path/to/files"))
-```text
+```
 
 | Mode | Behavior | Use Case |
 |------|----------|----------|
@@ -239,13 +245,14 @@ df = (spark.readStream
 
 ```python
 # New columns are automatically added to the schema
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/schema")
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .load("/path/to/files"))
-```text
+```
 
 When a new field appears:
 
@@ -257,6 +264,7 @@ When a new field appears:
 
 ```python
 # Enable rescue column for unexpected data
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -265,7 +273,8 @@ df = (spark.readStream
     .load("/path/to/files"))
 
 # _rescued_data column contains JSON of unexpected fields
-```text
+
+```
 
 | Data Scenario | Rescued Column Contains |
 |---------------|-------------------------|
@@ -277,6 +286,7 @@ df = (spark.readStream
 
 ```python
 # Add new columns AND rescue corrupt data
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -284,7 +294,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
     .option("rescuedDataColumn", "_rescued_data")
     .load("/path/to/files"))
-```text
+```
 
 ## Key Configuration Options
 
@@ -302,7 +312,7 @@ df = (spark.readStream
     .option("cloudFiles.maxFilesPerTrigger", 1000)
     .option("cloudFiles.maxBytesPerTrigger", "10g")
     .load("/path/to/files"))
-```text
+```
 
 | Option | Default | Description |
 |--------|---------|-------------|
@@ -315,6 +325,7 @@ df = (spark.readStream
 
 ```python
 # JSON options
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -323,6 +334,7 @@ df = (spark.readStream
     .load("/path/to/files"))
 
 # CSV options
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "csv")
@@ -330,7 +342,7 @@ df = (spark.readStream
     .option("delimiter", ",")
     .option("inferSchema", "true")
     .load("/path/to/files"))
-```text
+```
 
 ## Handling Corrupt Records
 
@@ -343,7 +355,7 @@ df = (spark.readStream
     .option("cloudFiles.schemaLocation", "/schema")
     .option("badRecordsPath", "/path/to/bad_records")
     .load("/path/to/files"))
-```text
+```
 
 Bad records are written to the specified path with:
 
@@ -355,13 +367,14 @@ Bad records are written to the specified path with:
 
 ```python
 # Add column for unparseable records
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/schema")
     .option("columnNameOfCorruptRecord", "_corrupt_record")
     .load("/path/to/files"))
-```text
+```
 
 ## Auto Loader with Unity Catalog
 
@@ -371,6 +384,7 @@ Unity Catalog integration affects how Auto Loader handles credentials, locations
 
 ```python
 # Read with Auto Loader
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -378,22 +392,24 @@ df = (spark.readStream
     .load("/path/to/source/files"))
 
 # Write to Unity Catalog managed table
+
 query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .toTable("catalog.schema.table_name"))
-```text
+```
 
 ### Reading from Volumes
 
 ```python
 # Read from Unity Catalog Volume
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "parquet")
     .option("cloudFiles.schemaLocation", "/Volumes/catalog/schema/volume/schema")
     .load("/Volumes/catalog/schema/volume/data/"))
-```text
+```
 
 ### External Locations
 
@@ -401,6 +417,7 @@ Writing to external locations requires appropriate Unity Catalog permissions.
 
 ```python
 # Reading from external location (requires READ FILES permission)
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -408,11 +425,12 @@ df = (spark.readStream
     .load("abfss://container@storage/landing/orders/"))
 
 # Writing to external location (requires WRITE FILES permission)
+
 query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "abfss://container@storage/checkpoint/")
     .start("abfss://container@storage/bronze/orders/"))
-```text
+```
 
 ### UC Permissions for Auto Loader
 
@@ -428,6 +446,7 @@ query = (df.writeStream
 
 ```python
 # Read from one catalog, write to another
+
 source_df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -435,11 +454,12 @@ source_df = (spark.readStream
     .load("/Volumes/source_catalog/schema/vol/data/"))
 
 # Write to different catalog (requires permissions on both)
+
 query = (source_df.writeStream
     .format("delta")
     .option("checkpointLocation", "/Volumes/target_catalog/schema/vol/checkpoint/")
     .toTable("target_catalog.target_schema.target_table"))
-```text
+```
 
 ### Schema Evolution with UC
 
@@ -447,6 +467,7 @@ When using Unity Catalog, schema evolution respects table-level settings:
 
 ```python
 # UC tables may have schema enforcement
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -455,12 +476,13 @@ df = (spark.readStream
     .load("/source/"))
 
 # mergeSchema allows Auto Loader to add columns to UC table
+
 query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .option("mergeSchema", "true")  # Required for schema evolution
     .toTable("catalog.schema.table"))
-```text
+```
 
 ### Credential Management
 
@@ -472,12 +494,13 @@ Auto Loader uses Unity Catalog credentials automatically:
 
 ```python
 # No credential configuration needed - UC handles it
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/Volumes/catalog/schema/vol/schema")
     .load("/Volumes/catalog/schema/vol/data/"))  # UC credentials automatic
-```text
+```
 
 ## Common Patterns
 
@@ -485,6 +508,7 @@ df = (spark.readStream
 
 ```python
 # Ingest raw data to Bronze layer
+
 bronze_df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -494,22 +518,25 @@ bronze_df = (spark.readStream
     .load("/landing/orders/"))
 
 # Add metadata columns
+
 bronze_with_metadata = (bronze_df
     .withColumn("_ingestion_timestamp", current_timestamp())
     .withColumn("_source_file", input_file_name()))
 
 # Write to Bronze Delta table
+
 query = (bronze_with_metadata.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoints/bronze_orders")
     .option("mergeSchema", "true")
     .toTable("bronze.orders"))
-```text
+```
 
 ### Multi-Format Ingestion
 
 ```python
 # Function to create Auto Loader stream for different formats
+
 def create_ingestion_stream(format, source_path, schema_path):
     return (spark.readStream
         .format("cloudFiles")
@@ -519,15 +546,17 @@ def create_ingestion_stream(format, source_path, schema_path):
         .load(source_path))
 
 # Create streams for different sources
+
 json_stream = create_ingestion_stream("json", "/data/json/", "/schema/json/")
 csv_stream = create_ingestion_stream("csv", "/data/csv/", "/schema/csv/")
 parquet_stream = create_ingestion_stream("parquet", "/data/parquet/", "/schema/parquet/")
-```text
+```
 
 ### Scheduled Batch with availableNow
 
 ```python
 # Run as scheduled job
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -542,7 +571,7 @@ query = (df.writeStream
     .start("/target/path"))
 
 query.awaitTermination()
-```text
+```
 
 ## Performance Tuning
 
@@ -550,6 +579,7 @@ query.awaitTermination()
 
 ```python
 # Increase parallelism for large files
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -557,20 +587,22 @@ df = (spark.readStream
     .option("maxFilesPerTrigger", 10000)
     .option("spark.sql.files.maxPartitionBytes", "128mb")
     .load("/path/to/files"))
-```text
+```
 
 ### Memory Optimization
 
 ```python
 # For very large schemas or many files
+
 spark.conf.set("spark.databricks.cloudFiles.schemaInference.sampleSize.numFiles", 100)
 spark.conf.set("spark.databricks.cloudFiles.schemaInference.sampleSize.numBytes", "10mb")
-```text
+```
 
 ### Backlog Processing
 
 ```python
 # For processing large backlogs efficiently
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "parquet")
@@ -580,11 +612,12 @@ df = (spark.readStream
     .load("/path/to/files"))
 
 # Use availableNow to process all then stop
+
 query = (df.writeStream
     .trigger(availableNow=True)
     .option("checkpointLocation", "/checkpoint")
     .start("/target"))
-```text
+```
 
 ## SQL Interface
 
@@ -600,7 +633,7 @@ FROM STREAM read_files(
     format => 'json',
     schemaLocation => '/schema/orders'
 );
-```text
+```
 
 ## Troubleshooting
 
@@ -617,15 +650,17 @@ FROM STREAM read_files(
 
 ```python
 # Check Auto Loader metrics
+
 query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .start("/target"))
 
 # View progress
+
 print(query.lastProgress)
 print(query.status)
-```text
+```
 
 ## Use Cases
 
@@ -687,12 +722,16 @@ print(query.status)
 
 ## Related Topics
 
-- [Structured Streaming](03-structured-streaming.md) - Streaming fundamentals
+- [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals
 - [Incremental Processing](02-incremental-processing.md) - Incremental patterns
-- [Change Data Capture](05-change-data-capture.md) - CDC from files
+- [Change Data Capture](05-change-data-capture-part1.md) - CDC from files
 
 ## Official Documentation
 
 - [Auto Loader](https://docs.databricks.com/ingestion/auto-loader/index.html)
 - [Auto Loader Options](https://docs.databricks.com/ingestion/auto-loader/options.html)
 - [Schema Evolution](https://docs.databricks.com/ingestion/auto-loader/schema.html)
+
+---
+
+**[← Previous: Structured Streaming — Part 2](./03-structured-streaming-part2.md) | [↑ Back to Data Processing](./README.md) | [Next: Change Data Capture (CDC) — Part 1](./05-change-data-capture-part1.md) →**

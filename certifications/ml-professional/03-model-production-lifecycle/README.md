@@ -57,4 +57,4 @@ Progress to [04-Model Governance & MLOps](../04-model-governance-mlops/README.md
 
 ---
 
-**[← Back to ML Professional](../README.md)**
+**[← Back to Certification](../README.md)**

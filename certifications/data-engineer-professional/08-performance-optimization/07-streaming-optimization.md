@@ -22,7 +22,7 @@ flowchart TB
     end
 
     Tuning --> Goals
-```text
+```
 
 ## Trigger Interval Optimization
 
@@ -45,12 +45,13 @@ flowchart TD
     Q1 --> |No| Q2{Catch-up scenario?}
     Q2 --> |Yes| AN[availableNow]
     Q2 --> |One-time| Once[once]
-```text
+```
 
 ### Trigger Configuration
 
 ```python
 # Near real-time (high resource usage)
+
 query = (df.writeStream
     .trigger(processingTime="10 seconds")
     .format("delta")
@@ -58,6 +59,7 @@ query = (df.writeStream
     .start(output_path))
 
 # Balanced (recommended for most use cases)
+
 query = (df.writeStream
     .trigger(processingTime="1 minute")
     .format("delta")
@@ -65,12 +67,13 @@ query = (df.writeStream
     .start(output_path))
 
 # Catch-up mode (process all available, then stop)
+
 query = (df.writeStream
     .trigger(availableNow=True)
     .format("delta")
     .option("checkpointLocation", checkpoint_path)
     .start(output_path))
-```text
+```
 
 ### Trigger Interval Trade-offs
 
@@ -90,6 +93,7 @@ Watermarks tell Spark when to discard old state, preventing unbounded memory gro
 
 ```python
 # Define watermark for late data handling
+
 df_with_watermark = (df
     .withWatermark("event_time", "10 minutes")
     .groupBy(
@@ -97,7 +101,7 @@ df_with_watermark = (df
         "device_id"
     )
     .agg(avg("temperature").alias("avg_temp")))
-```text
+```
 
 ### Watermark Strategy
 
@@ -114,23 +118,25 @@ flowchart LR
         W[Watermark<br>10:00] --> |Late data accepted| Accept[Events > 10:00]
         W --> |Dropped| Drop[Events < 10:00]
     end
-```text
+```
 
 ### State Store Configuration
 
 ```python
 # Configure RocksDB state store for large state
+
 spark.conf.set(
     "spark.sql.streaming.stateStore.providerClass",
     "com.databricks.sql.streaming.state.RocksDBStateStoreProvider"
 )
 
 # Tune state store memory
+
 spark.conf.set(
     "spark.sql.streaming.stateStore.rocksdb.blockCacheSizeMB",
     "256"
 )
-```text
+```
 
 ### Stateful Operation Best Practices
 
@@ -147,11 +153,12 @@ spark.conf.set(
 
 ```python
 # Always specify checkpoint location
+
 query = (df.writeStream
     .option("checkpointLocation", "/mnt/checkpoints/my_stream")
     .format("delta")
     .start(output_path))
-```text
+```
 
 ### Checkpoint Best Practices
 
@@ -165,15 +172,18 @@ query = (df.writeStream
 ### Recovery and Restart
 
 ```python
+
 # Stream automatically recovers from checkpoint
 # If query logic changes, you may need to:
 
 # Option 1: Start fresh (loses exactly-once for transition)
+
 dbutils.fs.rm(checkpoint_path, recurse=True)
 
 # Option 2: Use checkpoint version compatibility
 # (only works for compatible changes)
-```text
+
+```
 
 ## File Sizing for Streaming
 
@@ -189,6 +199,7 @@ dbutils.fs.rm(checkpoint_path, recurse=True)
 
 ```python
 # Enable auto-optimize for streaming tables
+
 spark.conf.set(
     "spark.databricks.delta.optimizeWrite.enabled",
     "true"
@@ -199,6 +210,7 @@ spark.conf.set(
 )
 
 # Or set on table
+
 spark.sql("""
 ALTER TABLE streaming_output
 SET TBLPROPERTIES (
@@ -206,7 +218,7 @@ SET TBLPROPERTIES (
     'delta.autoOptimize.autoCompact' = 'true'
 )
 """)
-```text
+```
 
 ### Streaming File Management
 
@@ -228,7 +240,7 @@ flowchart TB
 
     Writes --> |optimizeWrite| OptWrite
     OptWrite --> |autoCompact| AC
-```text
+```
 
 ## Source-Specific Tuning
 
@@ -236,6 +248,7 @@ flowchart TB
 
 ```python
 # Control batch size from Kafka
+
 df = (spark.readStream
     .format("kafka")
     .option("kafka.bootstrap.servers", servers)
@@ -247,7 +260,7 @@ df = (spark.readStream
     # Fetch size tuning
     .option("kafka.fetch.max.bytes", 52428800)  # 50 MB
     .load())
-```text
+```
 
 ### Kafka Tuning Parameters
 
@@ -262,6 +275,7 @@ df = (spark.readStream
 
 ```python
 # Optimized Auto Loader configuration
+
 df = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "json")
@@ -272,7 +286,7 @@ df = (spark.readStream
     # Use notifications for faster discovery
     .option("cloudFiles.useNotifications", "true")
     .load(input_path))
-```text
+```
 
 ### Auto Loader Parameters
 
@@ -289,26 +303,30 @@ df = (spark.readStream
 
 ```python
 # Kafka: Limit offsets per trigger
+
 .option("maxOffsetsPerTrigger", 50000)
 
 # Auto Loader: Limit files and bytes
+
 .option("cloudFiles.maxFilesPerTrigger", 100)
 .option("cloudFiles.maxBytesPerTrigger", "1g")
 
 # Rate source (testing): Control rate
+
 .option("rowsPerSecond", 1000)
-```text
+```
 
 ### Detecting Backpressure
 
 ```python
 # Check streaming query progress
+
 for q in spark.streams.active:
     print(f"Query: {q.name}")
     print(f"  Input rows: {q.lastProgress['numInputRows']}")
     print(f"  Processing rate: {q.lastProgress['processedRowsPerSecond']}")
     print(f"  Batch duration: {q.lastProgress['batchDuration']}")
-```text
+```
 
 ### Backpressure Indicators
 
@@ -324,17 +342,20 @@ for q in spark.streams.active:
 
 ```python
 # Access streaming query metrics
+
 query = df.writeStream.start()
 
 # Get latest progress
+
 progress = query.lastProgress
 
 # Key metrics
+
 print(f"Input rows: {progress['numInputRows']}")
 print(f"Input rate: {progress['inputRowsPerSecond']}")
 print(f"Process rate: {progress['processedRowsPerSecond']}")
 print(f"Batch duration: {progress['batchDuration']} ms")
-```text
+```
 
 ### Streaming Metrics Dashboard
 
@@ -387,3 +408,7 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 | Max state store size | Monitor, no fixed limit |
 | Kafka `maxOffsetsPerTrigger` | 10K-1M depending on message size |
 | Auto Loader `maxFilesPerTrigger` | 100-10K depending on file size |
+
+---
+
+**[← Previous: Photon, Diagnostics & Query Optimization — Part 2](./06-photon-diagnostics-optimization-part2.md) | [↑ Back to Performance Optimization](./README.md)**

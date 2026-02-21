@@ -308,4 +308,4 @@ A critical Silver-layer streaming job has been failing silently for 3 hours — 
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Performance Optimization](04-performance-optimization.md) | [Next: Governance & Security](06-governance-security.md)
+**[← Previous: Interview Questions — Performance Optimization](./04-performance-optimization.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Governance & Security](./06-governance-security.md) →**

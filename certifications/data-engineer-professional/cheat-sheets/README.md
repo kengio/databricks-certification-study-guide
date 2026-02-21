@@ -20,3 +20,7 @@ See also the [shared cheat sheets](../../../shared/cheat-sheets/README.md) for c
 - [Spark Configurations](../../../shared/cheat-sheets/spark-configurations.md)
 - [SQL Functions](../../../shared/cheat-sheets/sql-functions.md)
 - [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
+
+---
+
+**[← Back to Certification](../README.md)**

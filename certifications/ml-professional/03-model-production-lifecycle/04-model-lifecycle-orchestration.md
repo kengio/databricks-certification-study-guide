@@ -270,6 +270,7 @@ the production pipeline is triggered to train the final version in prod from the
 
 ```yaml
 # .github/workflows/ml-deploy.yml (simplified)
+
 name: ML Pipeline Deploy
 
 on:
@@ -445,10 +446,12 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Model Lifecycle Orchestration to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Lifecycle Orchestration prior to deployment.
 
@@ -461,4 +464,4 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 
 ---
 
-**[← Back to Model Production Lifecycle](./README.md)**
+**[← Previous: A/B Testing and Canary Deployments](./03-ab-testing-canary.md) | [↑ Back to Model Production Lifecycle](./README.md)**

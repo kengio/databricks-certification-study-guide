@@ -38,12 +38,14 @@ flowchart TD
 
 ```python
 # Databricks-integrated Bayesian optimization
+
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials, space_eval
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import mlflow
 
 # Define search space
+
 space = {
     'max_depth': hp.choice('max_depth', range(3, 20)),
     'min_samples_split': hp.choice('min_samples_split', range(2, 20)),
@@ -53,6 +55,7 @@ space = {
 }
 
 # Objective function (minimize negative accuracy)
+
 def objective(params):
     """Objective function for Bayesian optimization"""
     
@@ -80,6 +83,7 @@ def objective(params):
         return {'loss': -accuracy, 'status': STATUS_OK}
 
 # Run Bayesian optimization with Tree-structured Parzen Estimator
+
 trials = Trials()
 best_hyperparams = fmin(
     fn=objective,
@@ -92,6 +96,7 @@ best_hyperparams = fmin(
 )
 
 # Get best parameters
+
 print(f"Best hyperparameters: {best_hyperparams}")
 best_params = space_eval(space, best_hyperparams)
 ```
@@ -104,6 +109,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, Matern, ConstantKernel
 
 # Surrogate model: Gaussian Process
+
 kernel = ConstantKernel(1.0) * Matern(length_scale=1.0, nu=2.5)
 
 gp = GaussianProcessRegressor(
@@ -116,12 +122,14 @@ gp = GaussianProcessRegressor(
 
 # Train on observed hyperparameter-performance pairs
 # X: hyperparameters, y: validation scores
+
 X_observed = np.array([...])  # Historical observations
 y_observed = np.array([...])  # Performance values
 
 gp.fit(X_observed, y_observed)
 
 # Predict mean and uncertainty at new points
+
 X_new = np.array([...])  # Candidate hyperparameters
 y_pred, sigma = gp.predict(X_new, return_std=True)
 
@@ -176,6 +184,7 @@ class AcquisitionFunctions:
         return entropy
 
 # Comparison
+
 print("Expected Improvement: Balances local improvement with reduction of uncertainty")
 print("Upper Confidence Bound: Principled trade-off between exploitation and exploration")
 print("Probability of Improvement: Greedy, focuses on likely improvement")
@@ -184,6 +193,7 @@ print("Probability of Improvement: Greedy, focuses on likely improvement")
 ## 3. Tree-structured Parzen Estimator (TPE)
 
 ```python
+
 # TPE is the default in Hyperopt
 # How it works:
 
@@ -200,9 +210,11 @@ TPE Advantages:
 """
 
 # TPE implementation
+
 from hyperopt import hp, fmin, tpe, Trials, space_eval
 
 # TPE-specific tuning
+
 best = fmin(
     fn=objective,
     space=space,
@@ -242,6 +254,7 @@ from hyperopt import hp, fmin, tpe, Trials, SparkTrials
 import mlflow
 
 # Use SparkTrials for distributed evaluation
+
 spark_trials = SparkTrials(parallelism=16)  # 16 parallel workers
 
 space = {
@@ -264,6 +277,7 @@ def objective_distributed(params):
         return {'loss': -score, 'status': STATUS_OK}
 
 # Distributed Bayesian optimization
+
 best = fmin(
     fn=objective_distributed,
     space=space,
@@ -280,6 +294,7 @@ print(f"Best hyperparameters: {space_eval(space, best)}")
 
 ```python
 # Combine multiple algorithms for robust optimization
+
 from hyperopt import atpe, rand
 
 def advanced_bayesian_tuning(train_data, val_data, param_space, max_evals=100):
@@ -313,6 +328,7 @@ def advanced_bayesian_tuning(train_data, val_data, param_space, max_evals=100):
     return best, results_df, convergence
 
 # Stopping Criteria
+
 def should_stop_optimization(trials_df, patience=10):
     """Check if optimization should stop"""
     
@@ -338,6 +354,7 @@ from sklearn.metrics import roc_auc_score
 import mlflow
 
 # Define XGBoost hyperparameter space
+
 xgb_space = {
     'n_estimators': hp.choice('n_estimators', range(50, 500, 50)),
     'max_depth': hp.choice('max_depth', range(3, 15)),
@@ -376,6 +393,7 @@ def xgb_objective(params):
         return {'loss': -auc_score, 'status': 'ok'}
 
 # Run optimization
+
 trials = Trials()
 best_params = fmin(
     fn=xgb_objective,
@@ -387,6 +405,7 @@ best_params = fmin(
 )
 
 # Get best configuration
+
 best_config = space_eval(xgb_space, best_params)
 print(f"Best XGBoost config: {best_config}")
 ```
@@ -432,10 +451,12 @@ print(f"Best XGBoost config: {best_config}")
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Bayesian Optimization do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Bayesian Optimization to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Bayesian Optimization to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Bayesian Optimization prior to deployment.
 
@@ -447,4 +468,4 @@ print(f"Best XGBoost config: {best_config}")
 
 ---
 
-**[← Back to Hyperparameter Optimization](./README.md)**
+**[← Previous: Hyperparameter Tuning Fundamentals](./01-tuning-fundamentals.md) | [↑ Back to Hyperparameter Optimization](./README.md) | [Next: Distributed Hyperparameter Tuning](./03-distributed-tuning.md) →**

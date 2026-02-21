@@ -12,7 +12,7 @@ status: published
 
 This part covers triggers and scheduling, compute configuration, notifications, job parameters, error handling, monitoring, common issues, and exam tips for Lakeflow Jobs (Databricks Workflows).
 
-> For job components, configuration, task dependencies, task values, and for-each loops, see [Part 1](./04-lakeflow-jobs.md).
+> For job components, configuration, task dependencies, task values, and for-each loops, see [Part 1](./04-lakeflow-jobs-part1.md).
 
 ## Triggers and Scheduling
 
@@ -23,7 +23,7 @@ schedule:
   quartz_cron_expression: "0 0 6 * * ?"  # Daily at 6 AM
   timezone_id: "America/New_York"
   pause_status: UNPAUSED
-```text
+```
 
 ### Common Cron Expressions
 
@@ -44,7 +44,7 @@ trigger:
     url: "s3://bucket/landing/data/"
     min_time_between_triggers_seconds: 60
     wait_after_last_change_seconds: 30
-```text
+```
 
 ### Continuous Trigger
 
@@ -53,7 +53,7 @@ trigger:
   periodic:
     interval: 1
     unit: HOURS
-```text
+```
 
 ## Compute Configuration
 
@@ -91,7 +91,7 @@ job_clusters:
         max_workers: 10
       spark_conf:
         spark.databricks.adaptive.autoOptimizeShuffle.enabled: "true"
-```text
+```
 
 ### Serverless Compute
 
@@ -102,7 +102,7 @@ tasks:
       notebook_path: ../notebooks/process.py
     # Uses serverless compute (no cluster config)
     environment_key: default  # Or custom environment
-```text
+```
 
 ## Notifications
 
@@ -120,7 +120,7 @@ email_notifications:
   on_duration_warning_threshold_exceeded:
     - team@company.com
   no_alert_for_skipped_runs: true
-```text
+```
 
 ### Webhook Notifications
 
@@ -133,18 +133,19 @@ webhook_notifications:
   on_failure:
     - id: ${var.pagerduty_webhook_id}
     - id: ${var.slack_webhook_id}
-```text
+```
 
 ### Duration Warning
 
 ```yaml
 # Warn if job exceeds expected duration
+
 health:
   rules:
     - metric: RUN_DURATION_SECONDS
       op: GREATER_THAN
       value: 1800  # 30 minutes
-```text
+```
 
 ## Job Parameters
 
@@ -152,15 +153,17 @@ health:
 
 ```python
 # In notebook
+
 dbutils.widgets.text("date", "2024-01-15")
 dbutils.widgets.dropdown("environment", "dev", ["dev", "staging", "prod"])
 dbutils.widgets.text("source_path", "/mnt/landing/")
 
 # Get values
+
 date = dbutils.widgets.get("date")
 env = dbutils.widgets.get("environment")
 source = dbutils.widgets.get("source_path")
-```text
+```
 
 ### Job-Level Parameters
 
@@ -178,20 +181,22 @@ tasks:
       base_parameters:
         date: "{{job.parameters.date}}"
         environment: "{{job.parameters.environment}}"
-```text
+```
 
 ### Dynamic Parameters
 
 ```bash
 # Run job with parameters via CLI
+
 databricks jobs run-now --job-id 12345 \
     --notebook-params '{"date": "2024-01-20", "mode": "full"}'
 
 # Via API
+
 curl -X POST "$WORKSPACE_URL/api/2.1/jobs/run-now" \
     -H "Authorization: Bearer $TOKEN" \
     -d '{"job_id": 12345, "notebook_params": {"date": "2024-01-20"}}'
-```text
+```
 
 ## Error Handling
 
@@ -207,7 +212,7 @@ tasks:
     min_retry_interval_millis: 60000  # 1 minute
     retry_on_timeout: true
     timeout_seconds: 600
-```text
+```
 
 ### Failure Handling Task
 
@@ -223,7 +228,7 @@ tasks:
     run_if: AT_LEAST_ONE_FAILED
     notebook_task:
       notebook_path: ../notebooks/failure_handler.py
-```text
+```
 
 ## Monitoring and Logging
 
@@ -235,15 +240,17 @@ from databricks.sdk import WorkspaceClient
 w = WorkspaceClient()
 
 # Get job runs
+
 runs = w.jobs.list_runs(job_id=12345, limit=10)
 for run in runs:
     print(f"Run {run.run_id}: {run.state.result_state}")
 
 # Get specific run details
+
 run = w.jobs.get_run(run_id=67890)
 print(f"Duration: {run.run_duration / 1000} seconds")
 print(f"State: {run.state.life_cycle_state}")
-```text
+```
 
 ### System Tables for Job Monitoring
 
@@ -272,7 +279,7 @@ SELECT
 FROM system.lakeflow.job_task_run_timeline
 WHERE job_id = 12345
 ORDER BY start_time DESC;
-```text
+```
 
 ## Use Cases
 
@@ -293,7 +300,7 @@ tasks:
     notebook_task:
       notebook_path: ../notebooks/heavy_processing.py
     timeout_seconds: 7200  # 2 hours
-```text
+```
 
 ### 2. Cluster Start Failure
 
@@ -309,7 +316,7 @@ job_clusters:
       # Use smaller instance if quota issues
       node_type_id: "Standard_DS2_v2"
       num_workers: 1
-```text
+```
 
 ### 3. Task Value Not Found
 
@@ -319,15 +326,17 @@ job_clusters:
 
 ```python
 # Upstream task - verify this sets the value
+
 dbutils.jobs.taskValues.set(key="result", value="success")
 
 # Downstream task - use exact task key
+
 value = dbutils.jobs.taskValues.get(
     taskKey="upstream_task_key",  # Must match exactly
     key="result",
     default="unknown"
 )
-```text
+```
 
 ### 4. Circular Dependencies
 
@@ -337,6 +346,7 @@ value = dbutils.jobs.taskValues.get(
 
 ```yaml
 # Wrong - circular
+
 tasks:
   - task_key: a
     depends_on: [{task_key: b}]
@@ -344,11 +354,12 @@ tasks:
     depends_on: [{task_key: a}]
 
 # Correct - acyclic
+
 tasks:
   - task_key: a
   - task_key: b
     depends_on: [{task_key: a}]
-```text
+```
 
 ## Exam Tips
 
@@ -375,3 +386,7 @@ tasks:
 - [Jobs API](https://docs.databricks.com/api/workspace/jobs)
 - [Task Dependencies](https://docs.databricks.com/workflows/jobs/how-to/use-task-dependencies.html)
 - [Task Values](https://docs.databricks.com/workflows/jobs/how-to/share-task-values.html)
+
+---
+
+**[← Previous: Lakeflow Jobs — Part 1](./04-lakeflow-jobs-part1.md) | [↑ Back to Lakeflow Pipelines](./README.md)**

@@ -37,7 +37,7 @@ flowchart TB
 
     Trigger --> Job
     Job --> Execution
-```text
+```
 
 ## Job Components
 
@@ -64,7 +64,7 @@ flowchart LR
         Notify[Notifications]
         Params[Parameters]
     end
-```text
+```
 
 ### Task Types
 
@@ -86,6 +86,7 @@ flowchart LR
 
 ```yaml
 # resources/jobs.yml
+
 resources:
   jobs:
     daily_etl_pipeline:
@@ -170,7 +171,7 @@ resources:
       # Retry and timeout
       max_concurrent_runs: 1
       timeout_seconds: 3600
-```text
+```
 
 ### Python Job Definition (SDK)
 
@@ -184,6 +185,7 @@ from databricks.sdk.service.jobs import (
 w = WorkspaceClient()
 
 # Create job
+
 job = w.jobs.create(
     name="ETL Pipeline",
     tasks=[
@@ -229,7 +231,7 @@ job = w.jobs.create(
 )
 
 print(f"Created job: {job.job_id}")
-```text
+```
 
 ## Task Dependencies
 
@@ -249,7 +251,7 @@ tasks:
     depends_on:
       - task_key: step_2
     # Runs after step_2
-```text
+```
 
 ### Parallel Execution
 
@@ -270,7 +272,7 @@ tasks:
       - task_key: ingest_customers
       - task_key: ingest_products
     # Waits for all three to complete
-```text
+```
 
 ### DAG Visualization
 
@@ -284,35 +286,40 @@ flowchart TD
     E --> G[Archive]
     F --> H[Publish]
     G --> H
-```text
+```
 
 ## Task Values (Inter-Task Communication)
 
 ### Setting Task Values
 
 ```python
+
 # In a notebook task
 # Set a value to be used by downstream tasks
 
 # Using dbutils
+
 dbutils.jobs.taskValues.set(key="record_count", value=10000)
 dbutils.jobs.taskValues.set(key="output_path", value="/mnt/output/2024-01-15/")
 dbutils.jobs.taskValues.set(key="status", value="success")
 
 # Set complex values (JSON serializable)
+
 dbutils.jobs.taskValues.set(
     key="metrics",
     value={"rows": 10000, "errors": 5, "duration": 120}
 )
-```text
+```
 
 ### Getting Task Values
 
 ```python
+
 # In a downstream notebook task
 # Get value from upstream task
 
 # Specify the task key that set the value
+
 record_count = dbutils.jobs.taskValues.get(
     taskKey="ingest_data",
     key="record_count",
@@ -326,13 +333,14 @@ output_path = dbutils.jobs.taskValues.get(
 )
 
 # Get complex value
+
 metrics = dbutils.jobs.taskValues.get(
     taskKey="ingest_data",
     key="metrics",
     default={}
 )
 print(f"Processed {metrics.get('rows', 0)} rows")
-```text
+```
 
 ### Task Values in SQL Tasks
 
@@ -342,7 +350,7 @@ print(f"Processed {metrics.get('rows', 0)} rows")
 
 SELECT COUNT(*) FROM ${output_table}
 WHERE processed_date = '${date}'
-```text
+```
 
 ## Conditional Execution
 
@@ -376,7 +384,7 @@ tasks:
         outcome: "false"
     notebook_task:
       notebook_path: ../notebooks/quarantine.py
-```text
+```
 
 ### Run If Dependencies
 
@@ -406,7 +414,7 @@ tasks:
     run_if: ALL_DONE
     notebook_task:
       notebook_path: ../notebooks/cleanup.py
-```text
+```
 
 ## For Each Task (Loops)
 
@@ -430,33 +438,42 @@ tasks:
           notebook_path: ../notebooks/process_table.py
           base_parameters:
             table_name: "{{input}}"
-```text
+```
 
 ### Notebook Returning Loop Input
 
 ```python
 # get_table_list.py
+
 tables = ["orders", "customers", "products", "inventory"]
 
 # Set as task value for for_each
+
 dbutils.jobs.taskValues.set(
     key="table_list",
     value=tables
 )
-```text
+```
 
 ### Processing Each Item
 
 ```python
+
 # process_table.py
 # Get the current iteration value
+
 table_name = dbutils.widgets.get("table_name")
 
 # Process this table
+
 df = spark.table(f"bronze.{table_name}")
 df.write.format("delta").mode("overwrite").saveAsTable(f"silver.{table_name}")
 
 print(f"Processed table: {table_name}")
-```text
+```
 
 > **Continue reading:** [Part 2 — Triggers, Compute, Notifications, Parameters, Error Handling & Exam Tips](./05-lakeflow-jobs-part2.md)
+
+---
+
+**[← Previous: APPLY CHANGES API](./03-apply-changes-api.md) | [↑ Back to Lakeflow Pipelines](./README.md) | [Next: Lakeflow Jobs — Part 2](./04-lakeflow-jobs-part2.md) →**

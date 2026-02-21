@@ -21,7 +21,7 @@ flowchart LR
     DT --> API[REST API]
     DT --> Compute[Compute Options]
     DT --> Storage[DBFS & Mounts]
-```text
+```
 
 ## Section Contents
 
@@ -29,7 +29,7 @@ flowchart LR
 | :--- | :--- | :--- |
 | [01-workspace-and-notebooks.md](01-workspace-and-notebooks.md) | Notebook features, widgets, magic commands | High |
 | [02-databricks-cli.md](02-databricks-cli.md) | CLI commands, authentication, workspace management | Medium |
-| [03-rest-api.md](03-rest-api.md) | Jobs API 2.1, Clusters API, DBFS API, Workspace API, Secrets API | High |
+| [03-rest-api-part1.md](03-rest-api-part1.md) | Jobs API 2.1, Clusters API, DBFS API, Workspace API, Secrets API | High |
 | [06-rest-api-part2.md](06-rest-api-part2.md) | Permissions API, SQL Statements, error handling, rate limits, use cases | High |
 | [04-databricks-compute.md](04-databricks-compute.md) | Cluster types, serverless, pools | High |
 | [05-dbfs-and-mounts.md](05-dbfs-and-mounts.md) | DBFS operations, cloud storage mounts | Medium |
@@ -77,7 +77,7 @@ flowchart TD
     Jobs --> Create[create]
     Jobs --> Run["run-now"]
     Jobs --> List[list]
-```text
+```
 
 ## Exam Tips
 
@@ -94,3 +94,7 @@ flowchart TD
 - [ ] Use widgets for parameterized notebooks
 - [ ] Mount cloud storage securely
 - [ ] Manage workspace with CLI
+
+---
+
+**[← Back to Certification](../README.md)**

@@ -31,7 +31,7 @@ flowchart TB
     end
 
     DeltaLake --> Features
-```text
+```
 
 ## Delta Lake Architecture
 
@@ -48,7 +48,7 @@ delta_table/
 ├── part-00000-xxx.snappy.parquet
 ├── part-00001-xxx.snappy.parquet
 └── part-00002-xxx.snappy.parquet
-```text
+```
 
 ### Transaction Log
 
@@ -65,7 +65,7 @@ flowchart LR
     J1 --> |Modify| State1[Version 1 State]
     J2 --> |Delete| State2[Version 2 State]
     CP --> |Snapshot| State10[Version 10 State]
-```text
+```
 
 | Component | Purpose |
 | :--- | :--- |
@@ -116,15 +116,17 @@ TBLPROPERTIES (
     'delta.logRetentionDuration' = 'interval 30 days',
     'delta.deletedFileRetentionDuration' = 'interval 7 days'
 );
-```text
+```
 
 ### DataFrame API
 
 ```python
 # Create Delta table from DataFrame
+
 df.write.format("delta").saveAsTable("main.default.customers")
 
 # Create with options
+
 (df.write
     .format("delta")
     .mode("overwrite")
@@ -133,11 +135,12 @@ df.write.format("delta").saveAsTable("main.default.customers")
     .saveAsTable("main.default.orders"))
 
 # Save to path (external table)
+
 (df.write
     .format("delta")
     .mode("overwrite")
     .save("/Volumes/main/default/data/customers"))
-```text
+```
 
 ## ACID Transactions
 
@@ -155,17 +158,21 @@ Delta Lake provides full ACID transaction support.
 ### Transaction Isolation
 
 ```python
+
 # Serializable isolation level (default)
 # Concurrent writes are handled with optimistic concurrency
 
 # Writer 1
+
 df1.write.format("delta").mode("append").save("/path/to/table")
 
 # Writer 2 (concurrent)
+
 df2.write.format("delta").mode("append").save("/path/to/table")
 
 # Both succeed if no conflicts, or one retries
-```text
+
+```
 
 ### Conflict Resolution
 
@@ -181,7 +188,7 @@ sequenceDiagram
     W2->>Log: Write version 6 (conflict!)
     W2->>Log: Retry: Read version 6
     W2->>Log: Write version 7 ✓
-```text
+```
 
 ## Time Travel
 
@@ -199,21 +206,23 @@ SELECT * FROM main.default.customers TIMESTAMP AS OF '2024-01-15 10:00:00';
 -- Using @ syntax
 SELECT * FROM main.default.customers@v5;
 SELECT * FROM main.default.customers@20240115100000;
-```text
+```
 
 ### DataFrame Time Travel
 
 ```python
 # Read specific version
+
 df = (spark.read.format("delta")
     .option("versionAsOf", 5)
     .load("/path/to/table"))
 
 # Read specific timestamp
+
 df = (spark.read.format("delta")
     .option("timestampAsOf", "2024-01-15 10:00:00")
     .load("/path/to/table"))
-```text
+```
 
 ### View Table History
 
@@ -223,7 +232,7 @@ DESCRIBE HISTORY main.default.customers;
 
 -- View recent history
 DESCRIBE HISTORY main.default.customers LIMIT 10;
-```text
+```
 
 ```python
 from delta.tables import DeltaTable
@@ -231,7 +240,7 @@ from delta.tables import DeltaTable
 delta_table = DeltaTable.forName(spark, "main.default.customers")
 history_df = delta_table.history()
 history_df.show()
-```text
+```
 
 ### History Output Columns
 
@@ -252,15 +261,17 @@ RESTORE TABLE main.default.customers TO VERSION AS OF 5;
 
 -- Restore to specific timestamp
 RESTORE TABLE main.default.customers TO TIMESTAMP AS OF '2024-01-15 10:00:00';
-```text
+```
 
 ```python
 # Restore using DeltaTable
+
 delta_table = DeltaTable.forName(spark, "main.default.customers")
 delta_table.restoreToVersion(5)
 # or
+
 delta_table.restoreToTimestamp("2024-01-15 10:00:00")
-```text
+```
 
 ## Table Cloning
 
@@ -276,15 +287,16 @@ SHALLOW CLONE main.default.customers;
 -- Clone specific version
 CREATE TABLE main.default.customers_snapshot
 SHALLOW CLONE main.default.customers VERSION AS OF 10;
-```text
+```
 
 ```python
 from delta.tables import DeltaTable
 
 # Shallow clone
+
 (DeltaTable.forName(spark, "main.default.customers")
     .clone("/path/to/clone", isShallow=True))
-```text
+```
 
 ### Deep Clone
 
@@ -299,13 +311,14 @@ DEEP CLONE main.default.customers;
 CREATE TABLE main.default.customers_archive
 DEEP CLONE main.default.customers
 LOCATION 's3://archive-bucket/customers/';
-```text
+```
 
 ```python
 # Deep clone
+
 (DeltaTable.forName(spark, "main.default.customers")
     .clone("/path/to/clone", isShallow=False))
-```text
+```
 
 ### Clone Comparison
 
@@ -329,7 +342,7 @@ flowchart TB
         D1[Clone Metadata] --> DD1[Copied Data Files]
         D2[Original Metadata] --> DD2[Original Data Files]
     end
-```text
+```
 
 ## Delta Table Properties
 
@@ -347,7 +360,7 @@ SHOW TBLPROPERTIES main.default.customers;
 
 -- Remove property
 ALTER TABLE main.default.customers UNSET TBLPROPERTIES ('delta.autoOptimize.optimizeWrite');
-```text
+```
 
 ### Key Properties Reference
 
@@ -386,7 +399,7 @@ PARTITION (order_date = '2024-01-15')
 SELECT order_id, customer_id, amount
 FROM staging.orders
 WHERE order_date = '2024-01-15';
-```text
+```
 
 ### UPDATE
 
@@ -403,7 +416,7 @@ WHERE customer_id IN (
     SELECT customer_id FROM main.default.orders
     WHERE total_amount > 10000
 );
-```text
+```
 
 ### DELETE
 
@@ -417,7 +430,7 @@ DELETE FROM main.default.customers
 WHERE customer_id IN (
     SELECT customer_id FROM main.default.inactive_customers
 );
-```text
+```
 
 ### MERGE (Upsert)
 
@@ -433,7 +446,7 @@ WHEN MATCHED THEN UPDATE SET
     target.updated_at = current_timestamp()
 WHEN NOT MATCHED THEN INSERT (customer_id, name, email, created_at)
 VALUES (source.customer_id, source.name, source.email, current_timestamp());
-```text
+```
 
 ```python
 from delta.tables import DeltaTable
@@ -458,7 +471,7 @@ delta_table = DeltaTable.forName(spark, "main.default.customers")
         "created_at": "current_timestamp()"
     })
     .execute())
-```text
+```
 
 ## Table Maintenance
 
@@ -480,7 +493,7 @@ ZORDER BY (customer_id);
 -- Optimize with multiple ZORDER columns
 OPTIMIZE main.default.events
 ZORDER BY (event_type, user_id);
-```text
+```
 
 ### VACUUM
 
@@ -495,7 +508,7 @@ VACUUM main.default.customers RETAIN 168 HOURS;  -- 7 days
 
 -- Dry run (shows files that would be deleted)
 VACUUM main.default.customers DRY RUN;
-```text
+```
 
 ```python
 from delta.tables import DeltaTable
@@ -503,12 +516,14 @@ from delta.tables import DeltaTable
 delta_table = DeltaTable.forName(spark, "main.default.customers")
 
 # Vacuum with 7 days retention
+
 delta_table.vacuum(168)  # hours
 
 # Vacuum with retention less than default (requires override)
+
 spark.conf.set("spark.databricks.delta.retentionDurationCheck.enabled", "false")
 delta_table.vacuum(0)  # Be careful - breaks time travel!
-```text
+```
 
 ### Maintenance Best Practices
 
@@ -533,7 +548,7 @@ CREATE TABLE main.default.customers (
 
 -- Alter existing column
 ALTER TABLE main.default.customers ALTER COLUMN email SET NOT NULL;
-```text
+```
 
 ### CHECK Constraints
 
@@ -554,7 +569,7 @@ ALTER TABLE main.default.customers DROP CONSTRAINT valid_email;
 
 -- Show constraints
 DESCRIBE DETAIL main.default.customers;
-```text
+```
 
 ### Primary Key and Foreign Key (Informational)
 
@@ -567,7 +582,7 @@ ADD CONSTRAINT pk_customers PRIMARY KEY (customer_id);
 ALTER TABLE main.default.orders
 ADD CONSTRAINT fk_orders_customers
 FOREIGN KEY (customer_id) REFERENCES main.default.customers(customer_id);
-```text
+```
 
 **Note:** Primary key and foreign key constraints are informational only in Delta Lake. They're used by query optimizers but not enforced on write.
 
@@ -592,7 +607,7 @@ VALUES ('ORD001', '2024-01-15', 99.99, 5);
 -- Query includes generated values
 SELECT * FROM main.default.orders;
 -- order_year = 2024, order_month = 1, total = 499.95
-```text
+```
 
 ## Identity Columns
 
@@ -618,7 +633,7 @@ CREATE TABLE main.default.customers (
 
 -- Can insert specific ID
 INSERT INTO main.default.customers (customer_id, name) VALUES (999, 'Manual ID');
-```text
+```
 
 ## Column Mapping
 
@@ -637,7 +652,7 @@ ALTER TABLE main.default.customers RENAME COLUMN name TO full_name;
 
 -- Can drop columns
 ALTER TABLE main.default.customers DROP COLUMN temp_column;
-```text
+```
 
 | Mode | Description |
 |------|-------------|
@@ -665,20 +680,22 @@ CREATE TABLE main.default.validated_orders (
     CONSTRAINT valid_status CHECK (status IN ('pending', 'processing', 'shipped', 'delivered'))
 )
 USING DELTA;
-```text
+```
 
 ### Audit and Compliance
 
 ```python
 # Query for audit trail
+
 history = spark.sql("DESCRIBE HISTORY main.default.sensitive_data")
 
 # Find who made changes
+
 changes = history.filter(
     (col("operation") == "UPDATE") &
     (col("timestamp") >= "2024-01-01")
 ).select("version", "timestamp", "userIdentity", "operationMetrics")
-```text
+```
 
 ## Common Issues & Errors
 
@@ -692,7 +709,7 @@ changes = history.filter(
 ALTER TABLE main.default.customers SET TBLPROPERTIES (
     'delta.logRetentionDuration' = 'interval 60 days'
 );
-```text
+```
 
 ### 2. VACUUM Breaks Time Travel
 
@@ -702,12 +719,14 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 
 ```python
 # Safe vacuum (respects retention)
+
 delta_table.vacuum()  # Uses default 168 hours
 
 # Never do this in production:
 # spark.conf.set("spark.databricks.delta.retentionDurationCheck.enabled", "false")
 # delta_table.vacuum(0)
-```text
+
+```
 
 ### 3. Shallow Clone Source Modified
 
@@ -722,7 +741,7 @@ delta_table.vacuum()  # Uses default 168 hours
 ```sql
 -- Error: CHECK constraint valid_amount violated
 INSERT INTO orders VALUES ('ORD001', 1, -50);
-```text
+```
 
 **Fix:** Validate data before write or handle constraint errors.
 
@@ -751,3 +770,7 @@ INSERT INTO orders VALUES ('ORD001', 1, -50);
 - [Databricks Delta Lake Guide](https://docs.databricks.com/delta/index.html)
 - [Delta Lake Table Properties](https://docs.databricks.com/delta/table-properties.html)
 - [Delta Lake Constraints](https://docs.databricks.com/tables/constraints.html)
+
+---
+
+**[← Previous: Medallion Architecture](./01-medallion-architecture.md) | [↑ Back to Data Modeling](./README.md) | [Next: Schema Management](./03-schema-management.md) →**

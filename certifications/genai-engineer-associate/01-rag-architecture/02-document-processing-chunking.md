@@ -117,11 +117,13 @@ loader = PyPDFLoader("/Volumes/main/docs/policies/policy_v2.pdf")
 pages = loader.load()
 
 # Each page Document has metadata automatically
+
 for page in pages:
     print(page.metadata)
     # {'source': '/Volumes/main/docs/...', 'page': 0}
 
 # Add custom metadata
+
 for page in pages:
     page.metadata["document_type"] = "policy"
     page.metadata["department"] = "hr"
@@ -149,6 +151,7 @@ chunks_schema = StructType([
 ])
 
 # Create Delta table with Change Data Feed for Vector Search sync
+
 spark.sql("""
     CREATE TABLE IF NOT EXISTS catalog.schema.document_chunks (
         chunk_id     STRING NOT NULL,
@@ -361,8 +364,6 @@ D) Add more metadata fields to improve filtering accuracy
 > splitting (C) does not help with boundary context. Metadata (D) improves filtering
 > but does not affect chunking boundaries.
 
-[← Back to Topic](./README.md)
-
 ## Use Cases
 
 - **Document Processing & Chunking Implementation**: Incorporating Document Processing & Chunking principles to build scalable and maintainable solutions in Databricks environments.
@@ -371,10 +372,15 @@ D) Add more metadata fields to improve filtering accuracy
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Document Processing & Chunking do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Document Processing & Chunking to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Document Processing & Chunking to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Document Processing & Chunking prior to deployment.
 
+---
+
+**[← Previous: RAG Design Patterns](./01-rag-design-patterns.md) | [↑ Back to RAG Architecture](./README.md) | [Next: Retrieval & Augmentation Strategies](./03-retrieval-augmentation-strategies.md) →**

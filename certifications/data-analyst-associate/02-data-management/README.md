@@ -20,7 +20,7 @@ flowchart TD
     DM[Data Management] --> Tables[Tables & Schemas]
     DM --> UC[Unity Catalog]
     DM --> Access[Access Control]
-```text
+```
 
 ## Section Contents
 

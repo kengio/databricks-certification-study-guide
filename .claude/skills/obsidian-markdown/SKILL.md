@@ -10,6 +10,7 @@ This skill enables Claude Code to create and edit valid Obsidian Flavored Markdo
 ## Overview
 
 Obsidian uses a combination of Markdown flavors:
+
 - [CommonMark](https://commonmark.org/)
 - [GitHub Flavored Markdown](https://github.github.com/gfm/)
 - [LaTeX](https://www.latex-project.org/) for math

@@ -112,4 +112,4 @@ D) Configure storage firewall rules to restrict egress to only approved storage 
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
+**[← Previous: Mock Exam 2 - Section 3: Data Modeling](./03-data-modeling.md) | [↑ Back to Mock Exam 2 - Databricks Data Engineer Professional](./README.md) | [Next: Mock Exam 2 - Section 5: Monitoring & Logging](./05-monitoring-logging.md) →**

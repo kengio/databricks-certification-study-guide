@@ -39,7 +39,7 @@ flowchart TD
     UC --> Workspaces
     Metadata --> Storage
     Governance --> Workspaces
-```text
+```
 
 ## Three-Level Namespace
 
@@ -61,7 +61,7 @@ Catalog: analytics
   ├─ Schema: reports
   │  └─ View: executive_dashboard
   └─ Schema: experiments
-```text
+```
 
 ### Before Unity Catalog (Legacy)
 
@@ -69,7 +69,7 @@ Catalog: analytics
 
 ```text
 hive.schema.table
-```text
+```
 
 All data isolated per workspace, no cross-workspace visibility.
 
@@ -79,7 +79,7 @@ All data isolated per workspace, no cross-workspace visibility.
 
 ```text
 catalog.schema.table
-```text
+```
 
 Example: `main.sales.orders` is accessible across all workspaces.
 
@@ -103,7 +103,7 @@ WITH DBPROPERTIES (
 -- View catalogs
 SHOW CATALOGS;
 -- Output: production, analytics, main (default)
-```text
+```
 
 ### Set Default Catalog
 
@@ -117,7 +117,7 @@ CREATE TABLE my_table (...);
 
 SELECT * FROM my_table;
 -- Queries: production.default.my_table
-```text
+```
 
 ## Catalog Organization Patterns
 
@@ -138,7 +138,7 @@ production
 ├── schema: bronze
 ├── schema: silver
 └── schema: gold
-```text
+```
 
 ### Pattern 2: By Business Domain
 
@@ -148,7 +148,7 @@ main
 ├── marketing: campaigns, leads, segments
 ├── finance: budgets, actuals, forecasts
 └── operations: employees, assets, events
-```text
+```
 
 ### Pattern 3: Hybrid (Environment + Domain)
 
@@ -161,7 +161,7 @@ prod_analytics
 dev_analytics
 ├── sales_dev: test_orders, experiment_segments
 └── marketing_dev: test_campaigns
-```text
+```
 
 ## Data Objects in Unity Catalog
 
@@ -182,7 +182,7 @@ SELECT * FROM production.sales.orders;
 -- Using default catalog
 USE CATALOG production;
 SELECT * FROM sales.orders;  -- Shorter form
-```text
+```
 
 ### Views
 
@@ -198,7 +198,7 @@ GROUP BY DATE_TRUNC('month', order_date);
 
 -- Query view
 SELECT * FROM production.sales.monthly_summary;
-```text
+```
 
 ### External Location
 
@@ -214,7 +214,7 @@ WITH (CREDENTIAL storage_credential_name);
 CREATE EXTERNAL TABLE production.raw.events
 USING PARQUET
 LOCATION 's3://company-data-lake/analytics/events/';
-```text
+```
 
 ### Volumes
 
@@ -229,7 +229,7 @@ CREATE VOLUME production.shared.data_files;
 
 -- Mount in Python
 dbutils.fs.ls("/Volumes/production/shared/data_files")
-```text
+```
 
 ## Fully Qualified Names
 
@@ -251,7 +251,7 @@ SELECT * FROM orders;
 
 -- But still need full path for other catalogs
 SELECT * FROM analytics.reports.summary;
-```text
+```
 
 ## Unity Catalog Governance
 
@@ -266,7 +266,7 @@ TO `sales_team@company.com`;
 
 GRANT SELECT, MODIFY ON TABLE production.sales.orders
 TO `data_engineer@company.com`;
-```text
+```
 
 ### Permission Hierarchy
 
@@ -279,7 +279,7 @@ Workspace (highest)
 │   │   └── Volume
 │   └── External Location
 └── Function
-```text
+```
 
 **Permission inheritance**: Catalog permissions flow to schemas and tables
 
@@ -295,7 +295,7 @@ SHOW TABLES IN production.sales;
 
 -- Object details
 DESCRIBE TABLE production.sales.orders;
-```text
+```
 
 ## Data Lineage & Auditing
 
@@ -309,7 +309,7 @@ AND table_schema = 'sales';
 
 -- Shows upstream dependencies (what tables feed this table)
 -- Shows downstream dependencies (what consumes this table)
-```text
+```
 
 ### Audit Logs
 
@@ -325,7 +325,7 @@ FROM system.audit_logs
 WHERE catalog_name = 'production'
 AND timestamp >= CURRENT_TIMESTAMP - INTERVAL 7 DAYS
 ORDER BY timestamp DESC;
-```text
+```
 
 ## Migration to Unity Catalog
 
@@ -353,7 +353,7 @@ Phase 4: Update Applications
   - Update query paths (3-level names)
   - Test with new credentials
   - Gradual rollout by workload
-```text
+```
 
 ### Migration Example
 
@@ -373,7 +373,7 @@ WHERE sale_date >= '2020-01-01';
 -- Verify data integrity
 SELECT COUNT(*) FROM production.sales.orders;
 SELECT COUNT(*) FROM hive.default.sales;
-```text
+```
 
 ## Cross-workspace Collaboration
 
@@ -388,7 +388,7 @@ WHERE status = 'active';
 -- In workspace 2 (same account)
 SELECT * FROM production.shared.customer_gold;
 -- Access shared data from different workspace!
-```text
+```
 
 ## Best Practices
 
@@ -401,7 +401,7 @@ prod_analytics.silver.cleaned_events
 prod_analytics.gold.event_summary
 
 -- Not: prod_analytics.schema_1.tbl_123
-```text
+```
 
 ### 2. Documentation
 
@@ -418,7 +418,7 @@ CREATE TABLE production.sales.orders (
     customer_id INT COMMENT 'FK to customers table',
     amount DECIMAL(10, 2) COMMENT 'Order total in USD'
 );
-```text
+```
 
 ### 3. Access Control
 
@@ -430,7 +430,7 @@ GRANT SELECT ON CATALOG production TO `analyst@company.com`;
 GRANT SELECT, MODIFY ON TABLE production.sales.orders
 TO `engineer@company.com`;
 -- Modify only needed table, not entire catalog
-```text
+```
 
 ### 4. Version Control
 
@@ -438,7 +438,7 @@ TO `engineer@company.com`;
 -- Track catalog schema in version control
 -- Save DDL scripts: schemas/production/sales/create_tables.sql
 -- Enables reproducibility and disaster recovery
-```text
+```
 
 ## Key Exam Concepts
 
@@ -469,10 +469,6 @@ TO `engineer@company.com`;
 
 - **A**: RBAC (Role-Based Access Control) with hierarchical inheritance
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Unity Catalog Implementation**: Incorporating Unity Catalog principles to build scalable and maintainable solutions in Databricks environments.
@@ -481,10 +477,15 @@ TO `engineer@company.com`;
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Unity Catalog do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Unity Catalog to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Unity Catalog to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Unity Catalog prior to deployment.
 
+---
+
+**[← Previous: Tables & Schemas](./01-tables-schemas.md) | [↑ Back to Data Management in Databricks](./README.md) | [Next: Access Control & Security](./03-access-control.md) →**

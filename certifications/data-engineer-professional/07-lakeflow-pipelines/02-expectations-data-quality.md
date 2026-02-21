@@ -37,7 +37,7 @@ flowchart TB
     Keep --> Metrics
     Drop --> Metrics
     Metrics --> EventLog
-```text
+```
 
 ## Expectation Types
 
@@ -66,7 +66,7 @@ EXPECT OR FAIL:
 - Critical business rules
 - Schema enforcement
 - Data integrity that must be preserved
-```text
+```
 
 ## SQL Syntax
 
@@ -94,7 +94,7 @@ CREATE OR REFRESH STREAMING TABLE silver_customers (
         -- Invalid emails logged but kept
 )
 AS SELECT * FROM STREAM(LIVE.bronze_customers);
-```text
+```
 
 ### EXPECT OR DROP ROW
 
@@ -124,7 +124,7 @@ CREATE OR REFRESH STREAMING TABLE silver_orders (
         ON VIOLATION DROP ROW
 )
 AS SELECT * FROM STREAM(LIVE.bronze_orders);
-```text
+```
 
 ### EXPECT OR FAIL UPDATE
 
@@ -152,7 +152,7 @@ AS SELECT
     SUM(amount) AS total_amount
 FROM LIVE.silver_orders
 GROUP BY DATE(order_date);
-```text
+```
 
 ## Python Syntax
 
@@ -171,7 +171,7 @@ def silver_orders():
         dlt.read_stream("bronze_orders")
         .select("order_id", "customer_id", "amount", "order_date")
     )
-```text
+```
 
 ### @dlt.expect_or_drop
 
@@ -185,7 +185,7 @@ def silver_events():
         dlt.read_stream("bronze_events")
         .select("event_id", "event_time", "user_id", "event_type")
     )
-```text
+```
 
 ### @dlt.expect_or_fail
 
@@ -195,12 +195,13 @@ def silver_events():
 @dlt.expect_or_fail("valid_checksum", "checksum = calculated_checksum")
 def silver_critical():
     return dlt.read_stream("bronze_critical")
-```text
+```
 
 ### Multiple Expectations with expect_all
 
 ```python
 # Define expectations as dictionary
+
 order_expectations = {
     "valid_order_id": "order_id IS NOT NULL",
     "valid_customer": "customer_id IS NOT NULL",
@@ -214,17 +215,19 @@ def silver_orders():
     return dlt.read_stream("bronze_orders")
 
 # Drop on any violation
+
 @dlt.table(name="silver_orders_strict")
 @dlt.expect_all_or_drop(order_expectations)
 def silver_orders_strict():
     return dlt.read_stream("bronze_orders")
 
 # Fail on any violation
+
 @dlt.table(name="silver_orders_critical")
 @dlt.expect_all_or_fail(order_expectations)
 def silver_orders_critical():
     return dlt.read_stream("bronze_orders")
-```text
+```
 
 ## Quarantine Pattern
 
@@ -238,7 +241,7 @@ flowchart LR
     Quarantine --> Review[Manual Review]
     Review --> Repair[Repair & Reprocess]
     Repair --> Silver
-```text
+```
 
 ### SQL Implementation
 
@@ -272,12 +275,13 @@ WHERE NOT (
     AND amount > 0
     AND order_date IS NOT NULL
 );
-```text
+```
 
 ### Python Implementation
 
 ```python
 # Define validation condition
+
 VALID_ORDER_CONDITION = """
     order_id IS NOT NULL
     AND amount > 0
@@ -303,7 +307,7 @@ def quarantine_orders():
             .otherwise("Unknown")
         )
     )
-```text
+```
 
 ## Complex Expectations
 
@@ -326,7 +330,7 @@ CREATE OR REFRESH STREAMING TABLE silver_orders (
         EXPECT (amount < 10000 OR approval_code IS NOT NULL)
 )
 AS SELECT * FROM STREAM(LIVE.bronze_orders);
-```text
+```
 
 ### Cross-Column Validations
 
@@ -338,7 +342,7 @@ AS SELECT * FROM STREAM(LIVE.bronze_orders);
 @dlt.expect("valid_dimensions", "length * width * height <= 10000")
 def silver_shipments():
     return dlt.read_stream("bronze_shipments")
-```text
+```
 
 ### Aggregate Expectations
 
@@ -356,7 +360,7 @@ AS SELECT
     AVG(amount) AS avg_amount
 FROM LIVE.silver_orders
 GROUP BY order_date;
-```text
+```
 
 ## Monitoring Expectations
 
@@ -380,7 +384,7 @@ FROM event_log(TABLE(my_pipeline))
 WHERE event_type = 'flow_progress'
     AND details:expectation IS NOT NULL
 ORDER BY timestamp DESC;
-```text
+```
 
 ### Tracking Quality Over Time
 
@@ -402,15 +406,17 @@ WHERE event_type = 'flow_progress'
     AND details:expectation IS NOT NULL
 GROUP BY DATE(timestamp), details:flow_name, details:expectation:name
 ORDER BY date DESC, failure_rate_pct DESC;
-```text
+```
 
 ### Alert on Quality Issues
 
 ```python
 # In a separate monitoring notebook/job
+
 from pyspark.sql.functions import col
 
 # Query event log
+
 event_log_df = spark.sql("""
     SELECT *
     FROM event_log(TABLE(my_pipeline))
@@ -420,6 +426,7 @@ event_log_df = spark.sql("""
 """)
 
 # Check for high failure rates
+
 quality_issues = event_log_df.filter(
     (col("details:expectation:failed_records") /
      (col("details:expectation:passed_records") +
@@ -429,7 +436,7 @@ quality_issues = event_log_df.filter(
 if quality_issues.count() > 0:
     # Send alert
     send_alert("Data quality issues detected", quality_issues.collect())
-```text
+```
 
 ## Best Practices
 
@@ -444,7 +451,7 @@ CONSTRAINT future_ship_date EXPECT (ship_date >= order_date)
 -- Bad: Generic names
 CONSTRAINT c1 EXPECT (email RLIKE '...')
 CONSTRAINT check EXPECT (amount > 0)
-```text
+```
 
 ### Layered Quality Checks
 
@@ -463,12 +470,13 @@ Gold Layer:
 - Aggregate validations
 - Use FAIL for critical metrics
 - Ensure completeness
-```text
+```
 
 ### Documentation
 
 ```python
 # Document expectation purpose
+
 @dlt.table(
     name="silver_orders",
     comment="Validated orders with quality constraints"
@@ -485,7 +493,7 @@ Gold Layer:
 )
 def silver_orders():
     return dlt.read_stream("bronze_orders")
-```text
+```
 
 ## Use Cases
 
@@ -513,7 +521,7 @@ CONSTRAINT valid_type EXPECT (type IN ('A', 'B', 'C'))
 
 -- Correct: Handle case
 CONSTRAINT valid_type EXPECT (UPPER(type) IN ('A', 'B', 'C'))
-```text
+```
 
 ### 2. Expectation Not Logging
 
@@ -523,17 +531,19 @@ CONSTRAINT valid_type EXPECT (UPPER(type) IN ('A', 'B', 'C'))
 
 ```python
 # Views don't log expectations
+
 @dlt.view(name="temp_view")  # No expectation logging
 @dlt.expect("test", "col IS NOT NULL")
 def temp_view():
     return ...
 
 # Tables do log expectations
+
 @dlt.table(name="actual_table")  # Expectations logged
 @dlt.expect("test", "col IS NOT NULL")
 def actual_table():
     return ...
-```text
+```
 
 ### 3. Null Handling
 
@@ -547,7 +557,7 @@ CONSTRAINT valid_amount EXPECT (amount > 0)
 
 -- This catches NULLs
 CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
-```text
+```
 
 ### 4. Performance Impact
 
@@ -557,14 +567,17 @@ CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 
 ```python
 # Avoid: Complex regex on every row
+
 @dlt.expect("valid_json", "payload RLIKE '..complex regex..'")
 
 # Better: Simpler validation
+
 @dlt.expect("has_payload", "payload IS NOT NULL AND LENGTH(payload) > 0")
 
 # Or validate JSON parse
+
 @dlt.expect("valid_json", "TRY(from_json(payload, schema)) IS NOT NULL")
-```text
+```
 
 ## Comparison with Other Quality Tools
 
@@ -601,3 +614,7 @@ CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 - [Expectation Metrics](https://docs.databricks.com/delta-live-tables/observability.html)
 - [SQL Reference - Expectations](https://docs.databricks.com/delta-live-tables/sql-ref.html#expectations)
 - [Python Reference - Expectations](https://docs.databricks.com/delta-live-tables/python-ref.html#expectations)
+
+---
+
+**[← Previous: Declarative Pipelines](./01-declarative-pipelines.md) | [↑ Back to Lakeflow Pipelines](./README.md) | [Next: APPLY CHANGES API](./03-apply-changes-api.md) →**

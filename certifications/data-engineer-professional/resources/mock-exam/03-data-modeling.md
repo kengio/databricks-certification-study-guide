@@ -166,4 +166,4 @@ D) SCD Type 6 (hybrid) with Type 1, 2, and 3 elements
 
 ---
 
-[Back to Exam Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
+**[← Previous: Mock Exam - Section 2: Databricks Tooling](./02-databricks-tooling.md) | [↑ Back to Full-Length Practice Exam](./README.md) | [Next: Mock Exam - Section 4: Security & Governance](./04-security-governance.md) →**

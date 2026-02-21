@@ -111,6 +111,7 @@ from databricks.vector_search.client import VectorSearchClient
 vsc = VectorSearchClient()
 
 # Step 1: Create new "green" index with the new embedding model
+
 green_index = vsc.create_delta_sync_index(
     endpoint_name="rag_endpoint",
     index_name="catalog.schema.docs_index_v2",    # new name
@@ -123,6 +124,7 @@ green_index = vsc.create_delta_sync_index(
 green_index.sync()
 
 # Step 2: Wait for green index to be online
+
 import time
 while True:
     state = green_index.describe()["status"]["detailed_state"]
@@ -131,6 +133,7 @@ while True:
     time.sleep(15)
 
 # Step 3: Run smoke tests against green index
+
 test_results = green_index.similarity_search(
     query_text="test query",
     columns=["content"],
@@ -140,6 +143,7 @@ assert len(test_results.get("result", {}).get("data_array", [])) > 0
 
 # Step 4: Cut over — update application to use new index name
 # (update environment variable, config file, or MLflow model parameter)
+
 print("Cutover to catalog.schema.docs_index_v2 — update application config")
 
 # Step 5: After validation, delete old index
@@ -147,6 +151,7 @@ print("Cutover to catalog.schema.docs_index_v2 — update application config")
 #     endpoint_name="rag_endpoint",
 #     index_name="catalog.schema.docs_index_v1"
 # )
+
 ```
 
 ## Monitoring Vector Search
@@ -204,6 +209,7 @@ of the index). Filters that match most of the index provide little performance b
 
 ```python
 # Good: highly selective filter — reduces search space significantly
+
 results = index.similarity_search(
     query_text="expense reimbursement",
     num_results=5,
@@ -211,6 +217,7 @@ results = index.similarity_search(
 )
 
 # Less effective: low selectivity — nearly the whole index is searched
+
 results = index.similarity_search(
     query_text="configuration guide",
     num_results=5,
@@ -239,6 +246,7 @@ def get_query_embedding(query: str) -> list[float]:
 query_vector = get_query_embedding("How does Delta Lake handle ACID transactions?")
 
 # Use pre-computed vector for multiple filtered searches
+
 for department in ["engineering", "legal", "finance"]:
     results = index.similarity_search(
         query_vector=query_vector,           # skip embedding
@@ -386,8 +394,6 @@ D) The `num_results` parameter is too low to include the new documents
 > stale results. `num_results` (D) controls retrieval count, not which documents are
 > indexed.
 
-[← Back to Topic](./README.md)
-
 ## Use Cases
 
 - **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
@@ -396,10 +402,15 @@ D) The `num_results` parameter is too low to include the new documents
 ## Common Issues & Errors
 
 ### 1. High Latency Responses
+
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Vector Search in Production to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Vector Search in Production prior to deployment.
 
+---
+
+**[← Previous: Databricks Vector Search](./02-databricks-vector-search.md) | [↑ Back to Vector Search & Embeddings](./README.md)**

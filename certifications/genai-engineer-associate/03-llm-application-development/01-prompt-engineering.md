@@ -118,6 +118,7 @@ response = client.predict(
     },
 )
 # Expected: "technical"
+
 ```
 
 **When to use few-shot**:
@@ -346,8 +347,6 @@ Answer:"""
 > while `mlflow.log_artifact()` saves the full prompt text. This enables diff-comparison in the
 > MLflow UI. Delta tables add complexity without UI integration; log_metric is for numeric values.
 
-[← Back to LLM Application Development](./README.md)
-
 ## Use Cases
 
 - **Prompt Engineering Implementation**: Incorporating Prompt Engineering principles to build scalable and maintainable solutions in Databricks environments.
@@ -356,10 +355,15 @@ Answer:"""
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Prompt Engineering do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Prompt Engineering to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Prompt Engineering to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Prompt Engineering prior to deployment.
 
+---
+
+**[↑ Back to LLM Application Development](./README.md) | [Next: LLM Chains & Agents](./02-chains-agents.md) →**

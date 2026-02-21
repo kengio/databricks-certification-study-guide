@@ -44,7 +44,7 @@ flowchart TB
     Artifact --> S3
     DB --> Browser
     S3 --> Browser
-```text
+```
 
 ## Core Concepts
 
@@ -52,41 +52,49 @@ flowchart TB
 
 ```python
 # Initialize MLflow
+
 import mlflow
 import mlflow.sklearn
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, auc_score
 
 # Start a run
+
 mlflow.start_run(run_name="rf_baseline")
 
 # Log parameters (hyperparameters)
+
 mlflow.log_param("n_estimators", 100)
 mlflow.log_param("max_depth", 10)
 mlflow.log_param("min_samples_split", 2)
 
 # Log metrics (performance measurements)
+
 mlflow.log_metric("accuracy", 0.92)
 mlflow.log_metric("auc", 0.95)
 mlflow.log_metric("precision", 0.91)
 mlflow.log_metric("recall", 0.93)
 
 # Log model
+
 model = RandomForestClassifier(n_estimators=100, max_depth=10)
 model.fit(X_train, y_train)
 mlflow.sklearn.log_model(model, "model")
 
 # End run
+
 mlflow.end_run()
-```text
+```
 
 ### 2. **Logging Parameters**
 
 ```python
 # Log single parameter
+
 mlflow.log_param("learning_rate", 0.01)
 
 # Log multiple parameters
+
 params = {
     "optimizer": "adam",
     "batch_size": 32,
@@ -95,15 +103,17 @@ params = {
     "l2_reg": 0.001
 }
 mlflow.log_params(params)
-```text
+```
 
 ### 3. **Logging Metrics**
 
 ```python
 # Single metric
+
 mlflow.log_metric("loss", 0.456)
 
 # Multiple metrics
+
 metrics = {
     "train_accuracy": 0.89,
     "val_accuracy": 0.87,
@@ -114,13 +124,14 @@ metrics = {
 mlflow.log_metrics(metrics)
 
 # Track metric over time (epochs)
+
 for epoch in range(1, 101):
     train_loss = train_model(epoch)
     val_loss = validate_model(epoch)
 
     mlflow.log_metric("train_loss", train_loss, step=epoch)
     mlflow.log_metric("val_loss", val_loss, step=epoch)
-```text
+```
 
 ### 4. **Logging Artifacts**
 
@@ -130,55 +141,64 @@ import matplotlib.pyplot as plt
 import pickle
 
 # Log text files
+
 with open("training_log.txt", "w") as f:
     f.write("Training completed successfully")
 mlflow.log_artifact("training_log.txt")
 
 # Log plots
+
 fig, ax = plt.subplots()
 ax.plot([1, 2, 3], [1, 4, 9])
 plt.savefig("learning_curve.png")
 mlflow.log_artifact("learning_curve.png")
 
 # Log model data
+
 model_dict = {"model": model, "scaler": scaler}
 with open("artifacts.pkl", "wb") as f:
     pickle.dump(model_dict, f)
 mlflow.log_artifact("artifacts.pkl")
 
 # Log entire directory
+
 mlflow.log_artifact("config/")
-```text
+```
 
 ## MLflow Tracking UI
 
 ### **Viewing Experiments**
 
 ```python
+
 # Access MLflow UI
 # Databricks: Workspace → Experiments
 # Local: http://localhost:5000 after running mlflow ui
 
 # Create experiment
+
 mlflow.set_experiment("/Users/user@company.com/churn_model")
 
 # Get experiment ID
+
 exp = mlflow.get_experiment_by_name("/Users/user@company.com/churn_model")
 print(f"Experiment ID: {exp.experiment_id}")
 
 # List all runs in experiment
+
 from mlflow.tracking import MlflowClient
 client = MlflowClient()
 runs = client.search_runs(exp.experiment_id)
 for run in runs:
     print(f"Run: {run.info.run_name}, Status: {run.info.status}")
-```text
+```
 
 ## Databricks Integration
 
 ### **Automatic Tracking**
 
 ```python
+
 # Databricks automatically creates:/Experiments/Users/{user_email}/notebook_name
 # Each notebook cell execution creates a run
 
@@ -186,23 +206,27 @@ for run in runs:
 import mlflow
 
 # Automatically associated with notebook experiment
+
 mlflow.log_param("model_type", "gradient_boosting")
 mlflow.log_metric("accuracy", 0.95)
 
 # Check active experiment
+
 active_exp = mlflow.get_experiment_by_name(
     f"/Users/{<user_email>}/notebook_name"
 )
 print(f"Active experiment: {active_exp.name}")
-```text
+```
 
 ### **Unity Catalog Integration**
 
 ```python
 # Store models in Unity Catalog
+
 mlflow.set_registry_uri("databricks-uc")
 
 # Log model to UC
+
 mlflow.sklearn.log_model(
     model,
     artifact_path="model",
@@ -210,10 +234,11 @@ mlflow.sklearn.log_model(
 )
 
 # Load from UC
+
 model = mlflow.sklearn.load_model(
     "models:/catalog.schema.model_name/stageName"
 )
-```text
+```
 
 ## Advanced Tracking Features
 
@@ -221,19 +246,21 @@ model = mlflow.sklearn.load_model(
 
 ```python
 # Tag runs for organization
+
 mlflow.set_tag("project", "customer_churn")
 mlflow.set_tag("team", "data_science")
 mlflow.set_tag("environment", "production")
 mlflow.set_tag("algorithm_type", "tree_based")
 
 # Set multiple tags
+
 tags = {
     "experiment_type": "hyperparameter_tuning",
     "baseline": "yes",
     "model_complexity": "high"
 }
 mlflow.set_tags(tags)
-```text
+```
 
 ### 2. **Run Management**
 
@@ -243,27 +270,33 @@ from mlflow.tracking import MlflowClient
 client = MlflowClient()
 
 # Get current run
+
 active_run = mlflow.active_run()
 run_id = active_run.info.run_id
 
 # Update run metadata
+
 client.set_tag(run_id, "status", "production_ready")
 
 # Get run details
+
 run = client.get_run(run_id)
 print(f"Duration: {run.info.end_time - run.info.start_time} ms")
 
 # Delete run
+
 client.delete_run(run_id)
 
 # Restore run
+
 client.restore_run(run_id)
-```text
+```
 
 ### 3. **Searching Experiments**
 
 ```python
 # Search runs by metrics
+
 top_runs = client.search_runs(
     experiment_ids=["1"],
     filter_string="metrics.accuracy > 0.90 and params.model_type = 'rf'",
@@ -273,7 +306,7 @@ top_runs = client.search_runs(
 
 for run in top_runs:
     print(f"{run.info.run_name}: {run.data.metrics['accuracy']}")
-```text
+```
 
 ## Logging Models
 
@@ -286,28 +319,33 @@ import mlflow.xgboost
 import mlflow.lightgbm
 
 # Scikit-learn
+
 from sklearn.ensemble import RandomForestClassifier
 model = RandomForestClassifier()
 mlflow.sklearn.log_model(model, "sklearn_model")
 
 # Spark ML
+
 from pyspark.ml import Pipeline
 pipeline = Pipeline(stages=[...])
 mlflow.spark.log_model(pipeline, "spark_model")
 
 # XGBoost
+
 import xgboost as xgb
 xgb_model = xgb.XGBClassifier()
 mlflow.xgboost.log_model(xgb_model, "xgb_model")
 
 # LightGBM
+
 import lightgbm as lgb
 lgb_model = lgb.LGBMClassifier()
 mlflow.lightgbm.log_model(lgb_model, "lgb_model")
 
 # Generic log_model for custom frameworks
+
 mlflow.log_model(custom_model, "custom_model")
-```text
+```
 
 ## Real-World Example
 
@@ -325,17 +363,21 @@ import pandas as pd
 import json
 
 # Load data
+
 df = spark.read.table("ml_catalog.data.customer_data").toPandas()
 
 # Split data
+
 X = df.drop("churn", axis=1)
 y = df["churn"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # Create experiment
+
 mlflow.set_experiment("/Users/user@company.com/churn_model_v2")
 
 # Hyperparameters to test
+
 hyperparameters = [
     {"n_estimators": 50, "max_depth": 5},
     {"n_estimators": 100, "max_depth": 10},
@@ -395,7 +437,7 @@ for params in hyperparameters:
         mlflow.set_tag("best_model", best_run_id == mlflow.active_run().info.run_id)
 
 print(f"Best run: {best_run_id} with F1: {best_f1}")
-```text
+```
 
 ## Comparison: MLflow vs Alternatives
 
@@ -417,10 +459,12 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting MLflow Tracking to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for MLflow Tracking prior to deployment.
 
@@ -454,3 +498,7 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 
 - [MLflow Tracking](https://mlflow.org/docs/latest/tracking.html)
 - [MLflow on Databricks](https://docs.databricks.com/mlflow/index.html)
+
+---
+
+**[↑ Back to ML Workflows](./README.md) | [Next: Experiments & Runs](./02-experiments-runs.md) →**

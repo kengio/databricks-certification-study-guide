@@ -28,7 +28,7 @@ flowchart TB
 
     SQL --> SQLWarehouse[SQL Warehouses]
     SQL --> ServerlessSQL[Serverless SQL]
-```text
+```
 
 ## Compute Types Comparison
 
@@ -53,7 +53,7 @@ flowchart LR
     AP --> Persistent["Persistent until terminated"]
     AP --> Languages["Python, SQL, Scala, R"]
     AP --> Notebooks["Notebook execution"]
-```text
+```
 
 | Feature | Behavior |
 | :--- | :--- |
@@ -67,6 +67,7 @@ flowchart LR
 
 ```python
 # Via SDK
+
 from databricks.sdk import WorkspaceClient
 
 w = WorkspaceClient()
@@ -88,28 +89,30 @@ cluster = w.clusters.create(
 ).result()
 
 print(f"Cluster ID: {cluster.cluster_id}")
-```text
+```
 
 ```sql
 -- Via SQL (for serverless SQL or existing cluster)
 -- Clusters are typically created via UI or API, not SQL
-```text
+```
 
 ### Auto-Termination
 
 ```python
 # Configure auto-termination
+
 w.clusters.edit(
     cluster_id="xxx",
     autotermination_minutes=30  # Terminate after 30 mins idle
 )
 
 # Disable auto-termination (not recommended for cost)
+
 w.clusters.edit(
     cluster_id="xxx",
     autotermination_minutes=0  # Never auto-terminate
 )
-```text
+```
 
 | Setting | Behavior |
 | :--- | :--- |
@@ -129,7 +132,7 @@ flowchart LR
     JC --> Isolated["Isolated execution"]
     JC --> Auto["Auto-terminated"]
     JC --> Cost["Lower cost"]
-```text
+```
 
 | Feature | Behavior |
 | :--- | :--- |
@@ -166,12 +169,13 @@ job = w.jobs.create(
         )
     ]
 )
-```text
+```
 
 ### Job Cluster vs Existing Cluster
 
 ```python
 # Using job cluster (recommended for production)
+
 task_with_new_cluster = Task(
     task_key="task1",
     new_cluster={
@@ -183,12 +187,13 @@ task_with_new_cluster = Task(
 )
 
 # Using existing all-purpose cluster (for development)
+
 task_with_existing_cluster = Task(
     task_key="task1",
     existing_cluster_id="1234-567890-abc",
     notebook_task=NotebookTask(notebook_path="/Jobs/task1")
 )
-```text
+```
 
 | Approach | Pros | Cons |
 | :--- | :--- | :--- |
@@ -218,7 +223,7 @@ sequenceDiagram
     end
     Job->>Job: Run workload
     Job->>Pool: Return instances to pool
-```text
+```
 
 ### Pool Configuration
 
@@ -237,12 +242,13 @@ pool = w.instance_pools.create(
 )
 
 print(f"Pool ID: {pool.instance_pool_id}")
-```text
+```
 
 ### Using Pools with Clusters
 
 ```python
 # All-purpose cluster using pool
+
 cluster = w.clusters.create(
     cluster_name="dev-cluster",
     spark_version="14.3.x-scala2.12",
@@ -252,6 +258,7 @@ cluster = w.clusters.create(
 )
 
 # Job cluster using pool
+
 job = w.jobs.create(
     name="Pooled Job",
     tasks=[Task(
@@ -265,7 +272,7 @@ job = w.jobs.create(
         notebook_task=NotebookTask(notebook_path="/Jobs/task1")
     )]
 )
-```text
+```
 
 ### Pool Best Practices
 
@@ -287,7 +294,7 @@ flowchart LR
     User[User] --> Notebook[Notebook]
     Notebook --> Serverless[Serverless Compute]
     Serverless --> |Instant| Execution[Code Execution]
-```text
+```
 
 | Feature | Behavior |
 | :--- | :--- |
@@ -300,9 +307,11 @@ flowchart LR
 ### Enabling Serverless
 
 ```python
+
 # Serverless is enabled at workspace level
 # Attach notebook to "Serverless" compute option in UI
-```text
+
+```
 
 ### Serverless Limitations
 
@@ -331,7 +340,7 @@ flowchart TB
     Pro --> P2["Query federation"]
     Serverless --> S1["Instant startup"]
     Serverless --> S2["Auto-scaling"]
-```text
+```
 
 | Type | Features | Best For |
 | :--- | :--- | :--- |
@@ -359,7 +368,7 @@ warehouse = w.warehouses.create(
 ).result()
 
 print(f"Warehouse ID: {warehouse.id}")
-```text
+```
 
 ### Warehouse Sizing
 
@@ -376,13 +385,14 @@ print(f"Warehouse ID: {warehouse.id}")
 
 ```python
 # Configure scaling
+
 warehouse = w.warehouses.edit(
     id="warehouse-id",
     min_num_clusters=1,   # Minimum clusters running
     max_num_clusters=10,  # Maximum concurrent clusters
     auto_stop_mins=15     # Stop after 15 mins idle
 )
-```text
+```
 
 ```mermaid
 flowchart LR
@@ -390,7 +400,7 @@ flowchart LR
     Scale --> |High load| ScaleUp[Add clusters]
     Scale --> |Low load| ScaleDown[Remove clusters]
     Scale --> |No queries| Stop[Auto-stop]
-```text
+```
 
 ## Photon Engine
 
@@ -409,6 +419,7 @@ Photon is Databricks' native vectorized query engine for accelerated SQL and Dat
 
 ```python
 # On clusters
+
 cluster = w.clusters.create(
     cluster_name="photon-cluster",
     spark_version="14.3.x-photon-scala2.12",  # Use Photon runtime
@@ -417,12 +428,13 @@ cluster = w.clusters.create(
 )
 
 # On SQL warehouses (enabled by default)
+
 warehouse = w.warehouses.create(
     name="photon-warehouse",
     enable_photon=True,  # Enable Photon
     # ...
 )
-```text
+```
 
 ### Photon Limitations
 
@@ -464,7 +476,7 @@ Cluster policies enforce configuration standards and cost controls.
     "value": "data-engineering"
   }
 }
-```text
+```
 
 ### Policy Types
 
@@ -493,18 +505,19 @@ policy = w.cluster_policies.create(
         "autotermination_minutes": {"type": "fixed", "value": 60}
     })
 )
-```text
+```
 
 ### Using Policies
 
 ```python
 # Create cluster with policy
+
 cluster = w.clusters.create(
     cluster_name="policy-cluster",
     policy_id="policy-123",  # Apply policy
     num_workers=4  # Must comply with policy
 )
-```text
+```
 
 ## Autoscaling
 
@@ -512,6 +525,7 @@ cluster = w.clusters.create(
 
 ```python
 # Enable autoscaling
+
 cluster = w.clusters.create(
     cluster_name="autoscale-cluster",
     spark_version="14.3.x-scala2.12",
@@ -521,7 +535,7 @@ cluster = w.clusters.create(
         "max_workers": 10
     }
 )
-```text
+```
 
 ### Autoscaling Behavior
 
@@ -534,7 +548,7 @@ flowchart TD
 
     ScaleUp --> |Max reached| Cap[At max_workers]
     ScaleDown --> |Min reached| Floor[At min_workers]
-```text
+```
 
 | Metric | Scale Up Trigger | Scale Down Trigger |
 | :--- | :--- | :--- |
@@ -546,6 +560,7 @@ flowchart TD
 
 ```python
 # Enhanced autoscaling (Databricks-specific)
+
 cluster = w.clusters.create(
     cluster_name="optimized-autoscale",
     spark_version="14.3.x-scala2.12",
@@ -558,7 +573,7 @@ cluster = w.clusters.create(
         "spark.databricks.cluster.scaling.optimized.enabled": "true"
     }
 )
-```text
+```
 
 ## Spot Instances
 
@@ -568,6 +583,7 @@ Use spot/preemptible instances for cost savings.
 
 ```python
 # AWS spot instances
+
 cluster = w.clusters.create(
     cluster_name="spot-cluster",
     spark_version="14.3.x-scala2.12",
@@ -581,6 +597,7 @@ cluster = w.clusters.create(
 )
 
 # Azure spot instances
+
 cluster = w.clusters.create(
     cluster_name="spot-cluster",
     spark_version="14.3.x-scala2.12",
@@ -592,7 +609,7 @@ cluster = w.clusters.create(
         "spot_bid_max_price": -1  # Use current price
     }
 )
-```text
+```
 
 ### Spot Availability Options
 
@@ -632,7 +649,7 @@ w.permissions.set(
         )
     ]
 )
-```text
+```
 
 ## Use Cases
 
@@ -659,7 +676,7 @@ flowchart TD
     Automated --> Frequent{Frequent runs?}
     Frequent --> |Yes| Pool[Job Cluster + Pool]
     Frequent --> |No| JobCluster[Job Cluster]
-```text
+```
 
 ## Common Issues & Errors
 
@@ -677,10 +694,11 @@ flowchart TD
 
 ```python
 # Increase driver memory
+
 spark_conf = {
     "spark.driver.memory": "8g"
 }
-```text
+```
 
 ### 3. Spot Instance Interruption
 
@@ -693,7 +711,7 @@ aws_attributes = {
     "first_on_demand": 2,  # Keep driver + 1 worker on-demand
     "availability": "SPOT_WITH_FALLBACK"
 }
-```text
+```
 
 ### 4. Policy Violation
 
@@ -706,24 +724,6 @@ aws_attributes = {
 **Scenario:** Cannot create cluster due to cloud quota.
 
 **Fix:** Request quota increase from cloud provider or terminate unused resources.
-
-## Use Cases
-
-- **Job Clusters**: Executing automated, isolated production pipelines safely and cost-effectively, since Job clusters terminate when the run finishes.
-- **All-Purpose Clusters**: Facilitating interactive data exploration, complex ad-hoc querying, and collaborative notebook development among data science/engineering teams.
-- **Serverless Compute**: Handling unpredictable workloads requiring instant startup without the overhead of capacity planning or infrastructure management (e.g., Serverless SQL or DLT).
-
-## Common Issues & Errors
-
-**1. Cluster Startup Failures**
-- **Error**: `Cloud Provider Launch Failure` or `Quota Exceeded`.
-- **Issue**: The underlying cloud provider (AWS/Azure/GCP) lacks sufficient specific instance types or vCPU quota in the requested region.
-- **Fix**: Request a quota increase from the cloud provider or switch the cluster configuration to use a different, more available instance family.
-
-**2. Driver OOM (Out of Memory)**
-- **Error**: `java.lang.OutOfMemoryError: Java heap space` on the driver node.
-- **Issue**: Collecting too much distributed data back to the single driver node (e.g., calling `.collect()` or converting a massive Spark DataFrame to Pandas).
-- **Fix**: Increase the driver node instance size, or rewrite the code to keep operations distributed across the worker nodes.
 
 ## Exam Tips
 
@@ -751,3 +751,7 @@ aws_attributes = {
 - [Instance Pools](https://docs.databricks.com/clusters/instance-pools/index.html)
 - [SQL Warehouses](https://docs.databricks.com/sql/admin/sql-endpoints.html)
 - [Photon](https://docs.databricks.com/runtime/photon.html)
+
+---
+
+**[← Previous: Databricks REST API — Part 2 (Permissions, SQL, Error Handling & Use Cases)](./03-rest-api-part2.md) | [↑ Back to Databricks Tooling](./README.md) | [Next: DBFS and Mounts](./05-dbfs-and-mounts.md) →**

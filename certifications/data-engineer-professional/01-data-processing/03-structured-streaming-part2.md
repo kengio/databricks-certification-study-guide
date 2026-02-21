@@ -12,7 +12,7 @@ status: published
 
 This part covers stream-static joins, stateful operations, state store management, query management, checkpoints, use cases, and exam tips for Structured Streaming.
 
-> For streaming fundamentals, sources, sinks, triggers, output modes, watermarking, and windowed aggregations, see [Part 1](./03-structured-streaming.md).
+> For streaming fundamentals, sources, sinks, triggers, output modes, watermarking, and windowed aggregations, see [Part 1](./03-structured-streaming-part1.md).
 
 ## Stream-Static Joins
 
@@ -20,18 +20,21 @@ Join a streaming DataFrame with a static (batch) DataFrame.
 
 ```python
 # Static dimension table
+
 dim_products = spark.table("catalog.schema.dim_products")
 
 # Stream of events
+
 events_stream = spark.readStream.format("delta").load("/events")
 
 # Join stream with static
+
 enriched = events_stream.join(
     dim_products,
     events_stream.product_id == dim_products.id,
     "left"
 )
-```text
+```
 
 **Important**: The static DataFrame is read once at query start. Changes to the static table won't be reflected until the streaming query is restarted.
 
@@ -63,7 +66,7 @@ result = (df
         outputMode="update",
         timeoutConf=GroupStateTimeout.ProcessingTimeTimeout
     ))
-```text
+```
 
 ### flatMapGroupsWithState
 
@@ -77,7 +80,7 @@ def emit_alerts(key, events, state: GroupState):
         if event.value > threshold:
             alerts.append(Alert(key, event.value, event.timestamp))
     return iter(alerts)
-```text
+```
 
 ## State Store Management
 
@@ -87,15 +90,18 @@ Understanding state management is critical for production streaming applications
 
 ```python
 # Default: HDFS-based state store
+
 spark.conf.get("spark.sql.streaming.stateStore.providerClass")
+
 # org.apache.spark.sql.execution.streaming.state.HDFSBackedStateStoreProvider
 
 # RocksDB state store (better for large state)
+
 spark.conf.set(
     "spark.sql.streaming.stateStore.providerClass",
     "org.apache.spark.sql.execution.streaming.state.RocksDBStateStoreProvider"
 )
-```text
+```
 
 | Backend | Best For | Memory Usage |
 |---------|----------|--------------|
@@ -111,17 +117,20 @@ spark.conf.set(
 
 ```python
 # RocksDB configuration
+
 spark.conf.set("spark.sql.streaming.stateStore.rocksdb.compactOnCommit", "true")
 spark.conf.set("spark.sql.streaming.stateStore.rocksdb.changelogCheckpointing.enabled", "true")
-```text
+```
 
 ### State Monitoring
 
 ```python
 # Monitor state via query progress
+
 progress = query.lastProgress
 
 # State metrics are in stateOperators
+
 if progress and "stateOperators" in progress:
     for op in progress["stateOperators"]:
         print(f"Operator: {op.get('operatorName')}")
@@ -129,7 +138,7 @@ if progress and "stateOperators" in progress:
         print(f"  numRowsUpdated: {op.get('numRowsUpdated')}")  # Rows updated this batch
         print(f"  memoryUsedBytes: {op.get('memoryUsedBytes')}")  # Memory usage
         print(f"  numRowsDroppedByWatermark: {op.get('numRowsDroppedByWatermark')}")
-```text
+```
 
 ### Key State Metrics
 
@@ -146,6 +155,7 @@ if progress and "stateOperators" in progress:
 from pyspark.sql.streaming import GroupStateTimeout
 
 # Processing time timeout - based on clock time
+
 result = df.groupByKey(...).mapGroupsWithState(
     func,
     outputMode="update",
@@ -153,6 +163,7 @@ result = df.groupByKey(...).mapGroupsWithState(
 )
 
 # Event time timeout - based on watermark
+
 result = (df.withWatermark("timestamp", "1 hour")
     .groupByKey(...).mapGroupsWithState(
         func,
@@ -161,12 +172,13 @@ result = (df.withWatermark("timestamp", "1 hour")
     ))
 
 # No timeout - state never expires (dangerous!)
+
 result = df.groupByKey(...).mapGroupsWithState(
     func,
     outputMode="update",
     timeoutConf=GroupStateTimeout.NoTimeout  # State grows forever!
 )
-```text
+```
 
 | Timeout Type | Behavior | Use Case |
 |--------------|----------|----------|
@@ -178,34 +190,39 @@ result = df.groupByKey(...).mapGroupsWithState(
 
 ```python
 # 1. Use watermarks for automatic cleanup
+
 (df.withWatermark("event_time", "1 hour")
     .groupBy(window("event_time", "10 minutes"))
     .count())  # State cleaned after watermark passes window
 
 # 2. Set timeout in mapGroupsWithState
+
 def update_with_timeout(key, events, state):
     if state.hasTimedOut:
         state.remove()  # Clean up expired state
         return None
     # ... process events
     state.setTimeoutDuration("30 minutes")  # Reset timeout
-```text
+```
 
 ### Debugging State Issues
 
 ```python
 # Check checkpoint directory for state size
+
 dbutils.fs.ls("/checkpoint/state/0/")
 
 # View state schema
+
 spark.read.format("delta").load("/checkpoint/state/0/").printSchema()
 
 # Monitor state growth over time
+
 progress_history = query.recentProgress
 for p in progress_history:
     if p and "stateOperators" in p:
         print(f"Batch {p['batchId']}: {p['stateOperators'][0].get('numRowsTotal')} rows")
-```text
+```
 
 ## Query Management
 
@@ -213,62 +230,75 @@ for p in progress_history:
 
 ```python
 # Start with path
+
 query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .start("/output/path"))
 
 # Start with table
+
 query = (df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .toTable("catalog.schema.table"))
 
 # Named query
+
 query = (df.writeStream
     .queryName("my_streaming_query")
     .format("delta")
     .start("/output/path"))
-```text
+```
 
 ### Monitoring Queries
 
 ```python
 # Get active queries
+
 spark.streams.active
 
 # Query status
+
 query.status
 
 # Last progress
+
 query.lastProgress
 
 # Recent progress
+
 query.recentProgress
 
 # Check if running
+
 query.isActive
 
 # Exception (if failed)
+
 query.exception()
-```text
+```
 
 ### Stopping Queries
 
 ```python
 # Wait for termination
+
 query.awaitTermination()
 
 # Wait with timeout
+
 query.awaitTermination(timeout=3600)  # 1 hour
 
 # Stop query
+
 query.stop()
 
 # Stop all queries
+
 for q in spark.streams.active:
     q.stop()
-```text
+```
 
 ## Checkpoints
 
@@ -278,7 +308,7 @@ Checkpoints store query progress for fault tolerance.
 query = (df.writeStream
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```text
+```
 
 ### Checkpoint Contents
 
@@ -367,3 +397,7 @@ query = (df.writeStream
 - [Structured Streaming Guide](https://docs.databricks.com/structured-streaming/index.html)
 - [Streaming Triggers](https://docs.databricks.com/structured-streaming/triggers.html)
 - [Watermarks](https://docs.databricks.com/structured-streaming/watermarks.html)
+
+---
+
+**[← Previous: Structured Streaming — Part 1](./03-structured-streaming-part1.md) | [↑ Back to Data Processing](./README.md) | [Next: Auto Loader](./04-auto-loader.md) →**

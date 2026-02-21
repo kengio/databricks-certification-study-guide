@@ -33,7 +33,7 @@ flowchart TB
     Running --> Failed
     Running --> Timeout
     Scheduled -.->|If prev running| Skipped
-```text
+```
 
 ### Run Status Meanings
 
@@ -51,15 +51,19 @@ flowchart TB
 
 ```python
 # Via Databricks CLI
+
 databricks jobs list --job-id 123
 
 # View specific run
+
 databricks jobs get-run --run-id 456789
 
 # List all runs for a job
+
 databricks jobs list-runs --job-id 123 --limit 20
 
 # Via Python API
+
 import requests
 
 response = requests.get(
@@ -70,7 +74,7 @@ response = requests.get(
 
 run_details = response.json()
 print(run_details["state"])  # SUCCESS/FAILED/etc
-```text
+```
 
 ## Logs and Debugging
 
@@ -85,6 +89,7 @@ print(run_details["state"])  # SUCCESS/FAILED/etc
 
 ```python
 # logging module in Python
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -93,9 +98,10 @@ logger.warning("Found duplicate rows")
 logger.error("Failed to connect to database")
 
 # print statements (also logged)
+
 print("INFO: Step 1 complete")
 print("ERROR: Step 2 failed")
-```text
+```
 
 ### SQL Query Logs
 
@@ -110,7 +116,7 @@ FROM system.query_history
 WHERE execution_date > CURRENT_DATE - 1
 ORDER BY execution_time_ms DESC
 LIMIT 10
-```text
+```
 
 ### Driver and Worker Logs
 
@@ -129,6 +135,7 @@ LIMIT 10
 ### Common Log Patterns
 
 ```python
+
 # Python job log patterns
 
 # Successful start
@@ -146,11 +153,13 @@ LIMIT 10
 
 # Success
 # [INFO] Pipeline completed successfully
-```text
+
+```
 
 ### Debugging Failed Jobs
 
 ```python
+
 # Add debug output to notebook/script
 
 from datetime import datetime
@@ -177,7 +186,7 @@ try:
 except Exception as e:
     debug_log(f"ERROR: {str(e)}")
     raise
-```text
+```
 
 ## Alerts and Notifications
 
@@ -190,7 +199,7 @@ except Exception as e:
     "on_failure": ["user@company.com", "ops@company.com"]
   }
 }
-```text
+```
 
 ### Slack Integration
 
@@ -218,11 +227,12 @@ Then configure job:
     ]
   }
 }
-```text
+```
 
 ### Custom Alerts via Notebooks
 
 ```python
+
 # Send custom alert from notebook
 
 import requests
@@ -249,7 +259,7 @@ except Exception as e:
         os.environ.get("SLACK_WEBHOOK")
     )
     raise
-```text
+```
 
 ## Performance Metrics
 
@@ -257,6 +267,7 @@ except Exception as e:
 
 ```python
 # Access from API
+
 import requests
 
 response = requests.get(
@@ -273,9 +284,10 @@ print(f"Created Time: {run_info['start_time']}")
 print(f"Run Duration: {run_info['end_time'] - run_info['start_time']} ms")
 
 # Check task-specific metrics
+
 for task in run_info['tasks']:
     print(f"Task {task['task_key']}: {task['state']}")
-```text
+```
 
 ### Cluster Metrics
 
@@ -290,6 +302,7 @@ During job execution, monitor:
 
 ```python
 # Track within notebook
+
 from datetime import datetime
 
 start = datetime.now()
@@ -302,11 +315,12 @@ duration = (end - start).total_seconds()
 print(f"Job executed in {duration:.2f} seconds")
 
 # Log for monitoring
+
 spark.createDataFrame([
     (duration, datetime.now())
 ], ["execution_seconds", "run_time"]
 ).write.mode("append").save("/mnt/metrics/job_duration")
-```text
+```
 
 ## Troubleshooting Common Issues
 
@@ -327,7 +341,7 @@ spark.createDataFrame([
 {
   "timeout_seconds": 7200  // Increase from 3600
 }
-```text
+```
 
 ### Issue 2: Out of Memory
 
@@ -344,9 +358,10 @@ spark.createDataFrame([
 
 ```python
 # Repartition to use more workers
+
 df = spark.read.delta("/mnt/data/large") \
     .repartition(1000)  # Spread across workers
-```text
+```
 
 ### Issue 3: Max Concurrent Runs Skipped
 
@@ -365,7 +380,7 @@ df = spark.read.delta("/mnt/data/large") \
   "max_concurrent_runs": 1,
   "timeout_seconds": 3600
 }
-```text
+```
 
 ### Issue 4: Cluster Launch Failure
 
@@ -393,6 +408,7 @@ df = spark.read.delta("/mnt/data/large") \
 
 ```python
 # Add validation in notebook
+
 row_count_before = spark.read.delta("/mnt/data/raw").count()
 row_count_after = spark.read.delta("/mnt/data/clean").count()
 
@@ -403,11 +419,12 @@ if row_count_after > row_count_before * 2:
     raise ValueError("Output has suspiciously high row count!")
 
 print(f"Validation passed: {row_count_after} rows processed")
-```text
+```
 
 ## Monitoring Dashboard Pattern
 
 ```python
+
 # Create metrics table to track job health over time
 
 job_metrics = spark.createDataFrame([
@@ -434,6 +451,7 @@ job_metrics.write \
     .save("/mnt/metrics/job_runs")
 
 # Analyze trends
+
 spark.sql("""
 SELECT
     DATE(run_date) as date,
@@ -446,7 +464,7 @@ WHERE job_id = 123
 GROUP BY DATE(run_date)
 ORDER BY date DESC
 """).show()
-```text
+```
 
 ## Audit and Compliance
 
@@ -454,6 +472,7 @@ ORDER BY date DESC
 
 ```python
 # Log execution metadata
+
 from pyspark.sql.functions import lit, current_timestamp, current_user
 
 spark.sql("""
@@ -462,12 +481,13 @@ SELECT
     current_timestamp() as execution_time,
     'daily_pipeline' as job_name
 """).write.mode("append").save("/mnt/audit/executions")
-```text
+```
 
 ### Job Run API for Integration
 
 ```python
 # Query job runs programmatically
+
 response = requests.get(
     "https://databricks-instance.cloud.databricks.com/api/2.1/jobs/list-runs",
     headers={"Authorization": f"Bearer {pat_token}"},
@@ -478,7 +498,7 @@ runs = response.json()["runs"]
 
 for run in runs:
     print(f"Run {run['run_id']}: {run['state']} - {run['start_time']}")
-```text
+```
 
 ## Key Exam Concepts
 
@@ -493,10 +513,6 @@ for run in runs:
 - **Skipped Runs**: Previous run still executing
 - **Audit Trail**: Track user, time, status via metrics tables
 
----
-
-**[← Back to Workflows](README.md)**
-
 ## Use Cases
 
 - **Job Monitoring Implementation**: Incorporating Job Monitoring principles to build scalable and maintainable solutions in Databricks environments.
@@ -505,10 +521,15 @@ for run in runs:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Job Monitoring do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Job Monitoring to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Job Monitoring to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Job Monitoring prior to deployment.
 
+---
+
+**[← Previous: Scheduling and Triggers](./02-scheduling-triggers.md) | [↑ Back to Workflows and Orchestration](./README.md)**

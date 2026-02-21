@@ -59,4 +59,4 @@ Complete practice questions and mock exams to solidify your knowledge.
 
 ---
 
-**[← Back to ML Professional](../README.md)**
+**[← Back to Certification](../README.md)**

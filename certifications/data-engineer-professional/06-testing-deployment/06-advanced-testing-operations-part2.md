@@ -14,7 +14,7 @@ status: published
 
 This file covers deployment validation, automated rollback, GitOps patterns, and common troubleshooting scenarios.
 
-> For property-based testing, DLT testing, streaming tests, and integration patterns, see [Part 1](./06-advanced-testing-operations.md).
+> For property-based testing, DLT testing, streaming tests, and integration patterns, see [Part 1](./06-advanced-testing-operations-part1.md).
 
 ## Deployment Validation
 
@@ -22,6 +22,7 @@ This file covers deployment validation, automated rollback, GitOps patterns, and
 
 ```python
 # scripts/post_deploy_checks.py
+
 """Post-deployment validation suite."""
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.sql import StatementState
@@ -141,7 +142,7 @@ class PostDeploymentValidator:
                     for row in response.result.data_array
                 ]
         return []
-```text
+```
 
 ```bash
 #!/bin/bash
@@ -155,12 +156,15 @@ ENVIRONMENT=$1
 echo "Running post-deployment validation for ${ENVIRONMENT}..."
 
 # Wait for any triggered jobs to start
+
 sleep 30
 
 # Run validation notebook
+
 databricks bundle run post_deploy_checks -t "${ENVIRONMENT}"
 
 # Check exit status
+
 if [ $? -ne 0 ]; then
     echo "Post-deployment validation FAILED"
     echo "Initiating rollback..."
@@ -169,12 +173,13 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Post-deployment validation PASSED"
-```text
+```
 
 ### Automated Rollback Triggers
 
 ```yaml
 # .github/workflows/deploy-with-rollback.yml
+
 name: Deploy with Auto-Rollback
 
 on:
@@ -232,7 +237,7 @@ jobs:
             Rolled back to: ${{ steps.pre-deploy.outputs.commit_before }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-```text
+```
 
 ## GitOps for Databricks
 
@@ -249,6 +254,7 @@ jobs:
 
 ```text
 # Mono-repo structure
+
 databricks-platform/
 ├── CODEOWNERS
 ├── .github/workflows/
@@ -273,10 +279,11 @@ databricks-platform/
 └── infrastructure/           # Terraform/IaC
     ├── workspaces/
     └── unity-catalog/
-```text
+```
 
 ```yaml
 # .github/workflows/cd.yml - Path-filtered deployment for mono-repo
+
 name: Deploy
 
 on:
@@ -331,7 +338,7 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.PROD_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.PROD_TOKEN }}
-```text
+```
 
 ### Branch Strategy Comparison
 
@@ -354,7 +361,7 @@ flowchart LR
         Develop --> Release
         Release --> Main2
     end
-```text
+```
 
 | Strategy | Best For | Pros | Cons |
 | :--- | :--- | :--- | :--- |
@@ -370,9 +377,11 @@ flowchart LR
 ```markdown
 <!-- .github/PULL_REQUEST_TEMPLATE.md -->
 ## Description
+
 <!-- What does this change do? Why is it needed? -->
 
 ## Type of Change
+
 - [ ] New pipeline / data source
 - [ ] Pipeline modification
 - [ ] Bug fix
@@ -381,44 +390,52 @@ flowchart LR
 - [ ] Performance optimization
 
 ## Impact Assessment
+
 - [ ] **Tables affected:** <!-- list tables -->
 - [ ] **Downstream consumers:** <!-- who reads these tables? -->
 - [ ] **Schema changes:** <!-- any column additions/removals? -->
 - [ ] **Backfill required:** <!-- does historical data need reprocessing? -->
 
 ## Testing
+
 - [ ] Unit tests pass locally
 - [ ] Integration tests pass in staging
 - [ ] Data quality checks verified
 - [ ] Tested with production-scale data sample
 
 ## Deployment Notes
+
 - [ ] No manual steps required
 - [ ] Requires schema migration (attached migration file)
 - [ ] Requires configuration change in target environment
 - [ ] Requires backfill job after deployment
 
 ## Rollback Plan
+
 <!-- How would you roll back this change if something goes wrong? -->
-```text
+```
 
 ```text
+
 # CODEOWNERS - Enforce reviews by area
 # .github/CODEOWNERS
 
 # Data platform team reviews shared infrastructure
+
 /shared/                    @data-platform-team
 /infrastructure/            @data-platform-team
 
 # Team-specific code ownership
+
 /projects/ingestion/        @ingestion-team
 /projects/analytics/        @analytics-team
 /projects/ml-features/      @ml-team
 
 # CI/CD changes require platform team review
+
 /.github/                   @data-platform-team
 **/databricks.yml           @data-platform-team
-```text
+```
 
 ## Practice Questions
 
@@ -491,6 +508,7 @@ D) Skip unit tests and use Great Expectations for all validation
 **Fix:** Verify the federation policy configuration:
 
 ```bash
+
 # Check the subject claim matches exactly
 # Format: repo:<org>/<repo>:ref:refs/heads/<branch>
 # Common mistake: missing the 'ref:' prefix or wrong branch name
@@ -502,10 +520,11 @@ D) Skip unit tests and use Great Expectations for all validation
 # repo:my-org/my-repo:environment:production
 
 # Verify in workflow with:
+
 - name: Debug OIDC
   run: |
     echo "Subject: repo:${{ github.repository }}:ref:${{ github.ref }}"
-```text
+```
 
 ### 2. Multi-Project Bundle Include Path Resolution
 
@@ -514,12 +533,14 @@ D) Skip unit tests and use Great Expectations for all validation
 **Fix:** Include paths are relative to the bundle root (location of databricks.yml):
 
 ```yaml
+
 # If databricks.yml is in projects/ingestion/
 # And shared files are in ../../shared/
+
 include:
   - ../../shared/common-clusters.yml    # Relative to databricks.yml
   - resources/*.yml                      # Relative to databricks.yml
-```text
+```
 
 ### 3. Coverage Drops Below Threshold
 
@@ -529,6 +550,7 @@ include:
 
 ```text
 # .coveragerc
+
 [run]
 omit =
     src/notebooks/*          # Notebook wrappers not unit-testable
@@ -541,7 +563,7 @@ exclude_lines =
     # Databricks-specific lines that cannot run locally
     dbutils.widgets
     display\(
-```text
+```
 
 ### 4. Integration Test Schema Collisions
 
@@ -558,7 +580,7 @@ def test_schema(db_spark):
     db_spark.sql(f"CREATE SCHEMA {schema}")
     yield schema
     db_spark.sql(f"DROP SCHEMA {schema} CASCADE")
-```text
+```
 
 ### 5. Blue/Green View Switch Fails
 
@@ -573,7 +595,7 @@ GRANT USAGE ON SCHEMA prod_catalog.prod_blue TO `prod-deploy-sp`;
 GRANT SELECT ON SCHEMA prod_catalog.prod_blue TO `prod-deploy-sp`;
 GRANT USAGE ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
-```text
+```
 
 ### 6. Canary Deployment Timeout
 
@@ -583,6 +605,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 
 ```yaml
 # Split canary into deploy + async monitor
+
 - name: Deploy canary
   run: |
     databricks bundle deploy -t prod-canary
@@ -594,7 +617,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 - name: Check canary health
   run: |
     databricks bundle run canary_health_check -t prod-canary
-```text
+```
 
 ### 7. Artifact Build Fails in CI
 
@@ -614,24 +637,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
     cd libs/etl-core
     poetry install
     poetry build
-```text
-
-## Use Cases
-
-- **Automated Rollbacks**: Configuring a GitHub Actions workflow that automatically checks out the previous Git commit and redeploys the Databricks Asset Bundle if post-deployment smoke tests fail.
-- **GitOps Mono-Repo Management**: Utilizing path-filtered CI/CD triggers to independently deploy separate data engineering team projects stored within the same organizational Databricks repository.
-
-## Common Issues & Errors
-
-**1. Post-Deployment Validation Failures**
-- **Error**: Health checks like `row_count` fail immediately after deploying a new pipeline.
-- **Issue**: The newly deployed pipeline hasn't received or processed its initial data stream yet.
-- **Fix**: Introduce a wait time before validation executes, or structure the deployment pipeline to trigger validation sequentially only after the first job run completes successfully.
-
-**2. Path-Filtered CI/CD Missing Changes**
-- **Error**: An update to a shared utility library is not deployed to production.
-- **Issue**: The path filter in the CI/CD pipeline (e.g., `.github/workflows/cd.yml`) was only watching the team-specific project folders and was not configured to trigger on changes to the `shared/` directory.
-- **Fix**: Add the shared library paths to the CI/CD trigger filters for all dependent projects.
+```
 
 ## Exam Tips
 
@@ -648,11 +654,11 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 
 ## Related Topics
 
-- [Asset Bundles](01-asset-bundles.md) - DAB fundamentals, structure, and targets
-- [CI/CD Integration](02-cicd-integration.md) - GitHub Actions, Azure DevOps basics
+- [Asset Bundles](01-asset-bundles-part1.md) - DAB fundamentals, structure, and targets
+- [CI/CD Integration](02-cicd-integration-part1.md) - GitHub Actions, Azure DevOps basics
 - [Git Folders](03-git-folders.md) - Git integration and branching strategies
-- [Unit Testing](04-unit-testing.md) - pytest, Nutter, and basic testing patterns
-- [Part 1 — Advanced Testing Strategies](./06-advanced-testing-operations.md)
+- [Unit Testing](04-unit-testing-part1.md) - pytest, Nutter, and basic testing patterns
+- [Part 1 — Advanced Testing Strategies](./06-advanced-testing-operations-part1.md)
 
 ## Official Documentation
 
@@ -663,3 +669,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 - [Delta Lake Time Travel](https://docs.databricks.com/delta/history.html)
 - [Great Expectations with Databricks](https://docs.databricks.com/integrations/great-expectations.html)
 - [DLT Pipeline Testing](https://docs.databricks.com/delta-live-tables/testing.html)
+
+---
+
+**[← Previous: Advanced Testing & Operations — Part 1](./06-advanced-testing-operations-part1.md) | [↑ Back to Testing & Deployment](./README.md)**

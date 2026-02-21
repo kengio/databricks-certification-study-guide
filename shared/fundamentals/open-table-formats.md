@@ -54,7 +54,7 @@ iceberg_table/
 │   └── snap-xxx.avro         # Manifest lists
 ├── data/
 │   └── *.parquet             # Data files
-```text
+```
 
 ### Iceberg Key Features
 
@@ -72,7 +72,7 @@ PARTITIONED BY (days(event_time));
 
 -- Later, change to hourly partitioning (no rewrite needed)
 ALTER TABLE events ADD PARTITION FIELD hours(event_time);
-```text
+```
 
 **Schema Evolution**
 
@@ -85,7 +85,7 @@ ALTER TABLE events RENAME COLUMN user_id TO customer_id;
 
 -- Reorder columns
 ALTER TABLE events ALTER COLUMN customer_id FIRST;
-```text
+```
 
 **Hidden Partitioning**
 
@@ -95,7 +95,7 @@ Users query data without knowing partition structure:
 -- Iceberg automatically prunes partitions
 SELECT * FROM events
 WHERE event_time BETWEEN '2025-01-01' AND '2025-01-31';
-```text
+```
 
 ### Reading Iceberg on Databricks
 
@@ -107,12 +107,12 @@ SELECT * FROM iceberg.`s3://bucket/path/to/iceberg_table`;
 CREATE TABLE iceberg_events
 USING ICEBERG
 LOCATION 's3://bucket/iceberg_table';
-```text
+```
 
 ```python
 # Python
 df = spark.read.format("iceberg").load("s3://bucket/iceberg_table")
-```text
+```
 
 ### Iceberg Use Cases
 
@@ -142,7 +142,7 @@ hudi_table/
 ├── partition=value/
 │   ├── *.parquet             # Base files
 │   └── *.log                 # Log files (MoR only)
-```text
+```
 
 ### Hudi Table Types
 
@@ -175,7 +175,7 @@ df = (spark.read.format("hudi")
     .option("hoodie.datasource.query.type", "incremental")
     .option("hoodie.datasource.read.begin.instanttime", "20250101000000")
     .load("/path/to/hudi_table"))
-```text
+```
 
 **Record Keys and Precombine**
 
@@ -188,19 +188,19 @@ df = (spark.read.format("hudi")
     .option("hoodie.datasource.write.operation", "upsert")
     .mode("append")
     .save("/path/to/hudi_table"))
-```text
+```
 
 ### Reading Hudi on Databricks
 
 ```sql
 -- Read Hudi tables
 SELECT * FROM hudi.`s3://bucket/path/to/hudi_table`;
-```text
+```
 
 ```python
 # Python
 df = spark.read.format("hudi").load("s3://bucket/hudi_table")
-```text
+```
 
 ### Hudi Use Cases
 
@@ -224,7 +224,7 @@ flowchart LR
     DeltaTable -->|Iceberg Metadata| Snowflake["Snowflake"]
     DeltaTable -->|Iceberg Metadata| Trino["Trino/Presto"]
     DeltaTable -->|Hudi Metadata| HudiTools["Hudi Tools"]
-```text
+```
 
 Benefits:
 
@@ -253,7 +253,7 @@ SET TBLPROPERTIES ('delta.universalFormat.enabledFormats' = 'iceberg,hudi');
 
 -- Check UniForm status
 DESCRIBE EXTENDED my_table;
-```text
+```
 
 ### Requirements
 
@@ -276,7 +276,7 @@ SET TBLPROPERTIES (
     'delta.minReaderVersion' = '2',
     'delta.minWriterVersion' = '5'
 );
-```text
+```
 
 ### Trade-offs
 
@@ -297,14 +297,14 @@ CREATE ICEBERG TABLE my_snowflake_table
   CATALOG = 'my_iceberg_catalog'
   EXTERNAL_VOLUME = 'my_volume'
   CATALOG_TABLE_NAME = 'my_table';
-```text
+```
 
 From Trino (Iceberg):
 
 ```sql
 -- Query Delta table as Iceberg
 SELECT * FROM iceberg.my_catalog.my_table;
-```text
+```
 
 ## When to Use Each Format
 
@@ -333,7 +333,7 @@ flowchart TD
     Q2 -->|No| Q5{"Streaming CDC<br/>primary use case?"}
     Q5 -->|Yes| Hudi
     Q5 -->|No| Delta
-```text
+```
 
 ## Common Exam Topics
 

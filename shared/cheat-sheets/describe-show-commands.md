@@ -26,7 +26,7 @@ Quick reference for inspecting metadata in Databricks SQL.
 DESCRIBE TABLE catalog.schema.orders;
 -- or
 DESCRIBE catalog.schema.orders;
-```text
+```
 
 **Example output:**
 
@@ -38,7 +38,7 @@ customer_id     BIGINT       FK to customers
 order_date      DATE         Date of order
 amount          DECIMAL(10,2) Order total
 status          STRING       Order status
-```text
+```
 
 ### DESCRIBE EXTENDED
 
@@ -48,7 +48,7 @@ status          STRING       Order status
 DESCRIBE EXTENDED catalog.schema.orders;
 -- or
 DESCRIBE TABLE EXTENDED catalog.schema.orders;
-```text
+```
 
 **Example output:**
 
@@ -70,7 +70,7 @@ Type                        MANAGED
 Location                    dbfs:/user/hive/warehouse/sales.db/orders
 Provider                    delta
 Table Properties            [delta.enableChangeDataFeed=true]
-```text
+```
 
 ### DESCRIBE HISTORY
 
@@ -81,7 +81,7 @@ DESCRIBE HISTORY catalog.schema.orders;
 
 -- Limit results
 DESCRIBE HISTORY catalog.schema.orders LIMIT 10;
-```text
+```
 
 **Example output:**
 
@@ -93,7 +93,7 @@ version  timestamp            userId           userName        operation  operat
 3        2025-01-13 09:00:00  user@company.com user@company.com OPTIMIZE  {zOrderBy -> [customer_id]}
 2        2025-01-12 08:00:00  user@company.com user@company.com WRITE     {mode -> Append}
 1        2025-01-11 07:00:00  user@company.com user@company.com CREATE    {}
-```text
+```
 
 **Key columns:**
 
@@ -111,7 +111,7 @@ version  timestamp            userId           userName        operation  operat
 
 ```sql
 DESCRIBE DETAIL catalog.schema.orders;
-```text
+```
 
 **Example output:**
 
@@ -119,7 +119,7 @@ DESCRIBE DETAIL catalog.schema.orders;
 format  id                                    name    location                              partitionColumns  numFiles  sizeInBytes  properties
 ------  ------------------------------------  ------  ------------------------------------  ----------------  --------  -----------  ----------
 delta   abc123-def456-...                     orders  dbfs:/user/hive/warehouse/.../orders  [order_date]           42   1073741824  {delta...}
-```text
+```
 
 **Key columns:**
 
@@ -136,7 +136,7 @@ delta   abc123-def456-...                     orders  dbfs:/user/hive/warehouse/
 SELECT numFiles, sizeInBytes/1024/1024/1024 AS size_gb
 FROM (DESCRIBE DETAIL catalog.schema.orders);
 -- If numFiles is high and size_gb is small, run OPTIMIZE
-```text
+```
 
 ## SHOW Commands
 
@@ -146,7 +146,7 @@ FROM (DESCRIBE DETAIL catalog.schema.orders);
 
 ```sql
 SHOW CATALOGS;
-```text
+```
 
 **Example output:**
 
@@ -157,7 +157,7 @@ hive_metastore
 main
 dev
 prod
-```text
+```
 
 ### SHOW SCHEMAS / SHOW DATABASES
 
@@ -167,7 +167,7 @@ prod
 SHOW SCHEMAS;                    -- Current catalog
 SHOW SCHEMAS IN main;            -- Specific catalog
 SHOW DATABASES IN main;          -- Same as SHOW SCHEMAS
-```text
+```
 
 **Example output:**
 
@@ -178,7 +178,7 @@ default
 bronze
 silver
 gold
-```text
+```
 
 ### SHOW TABLES
 
@@ -188,7 +188,7 @@ gold
 SHOW TABLES;                           -- Current schema
 SHOW TABLES IN main.silver;            -- Specific schema
 SHOW TABLES IN main.silver LIKE '*orders*';  -- Filter by pattern
-```text
+```
 
 **Example output:**
 
@@ -198,7 +198,7 @@ database    tableName       isTemporary
 silver      orders          false
 silver      orders_history  false
 silver      customers       false
-```text
+```
 
 ### SHOW VIEWS
 
@@ -207,7 +207,7 @@ silver      customers       false
 ```sql
 SHOW VIEWS IN main.gold;
 SHOW VIEWS IN main.gold LIKE '*summary*';
-```text
+```
 
 **Example output:**
 
@@ -216,7 +216,7 @@ database    viewName            isTemporary
 ----------  ------------------  -----------
 gold        daily_summary       false
 gold        monthly_summary     false
-```text
+```
 
 ### SHOW COLUMNS
 
@@ -225,7 +225,7 @@ gold        monthly_summary     false
 ```sql
 SHOW COLUMNS IN catalog.schema.orders;
 SHOW COLUMNS IN catalog.schema.orders LIKE '*id*';
-```text
+```
 
 **Example output:**
 
@@ -237,7 +237,7 @@ customer_id
 order_date
 amount
 status
-```text
+```
 
 ### SHOW CREATE TABLE
 
@@ -245,7 +245,7 @@ status
 
 ```sql
 SHOW CREATE TABLE catalog.schema.orders;
-```text
+```
 
 **Example output:**
 
@@ -267,7 +267,7 @@ TBLPROPERTIES (
   'delta.minReaderVersion' = '1',
   'delta.minWriterVersion' = '2'
 )
-```text
+```
 
 ### SHOW TBLPROPERTIES
 
@@ -278,7 +278,7 @@ SHOW TBLPROPERTIES catalog.schema.orders;
 
 -- Specific property
 SHOW TBLPROPERTIES catalog.schema.orders ('delta.enableChangeDataFeed');
-```text
+```
 
 **Example output:**
 
@@ -289,7 +289,7 @@ delta.enableChangeDataFeed       true
 delta.minReaderVersion           1
 delta.minWriterVersion           2
 delta.autoOptimize.optimizeWrite true
-```text
+```
 
 ### SHOW GRANTS
 
@@ -307,7 +307,7 @@ SHOW GRANTS ON CATALOG main;
 
 -- Grants on a schema
 SHOW GRANTS ON SCHEMA main.silver;
-```text
+```
 
 **Example output:**
 
@@ -317,7 +317,7 @@ principal           action_type  object_type  object_name
 user@company.com    SELECT       TABLE        main.silver.orders
 user@company.com    MODIFY       TABLE        main.silver.orders
 data_engineers      ALL_PRIVILEGES TABLE      main.silver.orders
-```text
+```
 
 ### SHOW VOLUMES
 
@@ -325,7 +325,7 @@ data_engineers      ALL_PRIVILEGES TABLE      main.silver.orders
 
 ```sql
 SHOW VOLUMES IN main.default;
-```text
+```
 
 **Example output:**
 
@@ -334,7 +334,7 @@ database    volumeName    volumeType
 ----------  ------------  ----------
 default     raw_files     MANAGED
 default     external_data EXTERNAL
-```text
+```
 
 ## Decision Guide
 
@@ -364,7 +364,7 @@ DESCRIBE HISTORY my_table LIMIT 5;
 
 -- Table properties
 SHOW TBLPROPERTIES my_table;
-```text
+```
 
 ### Time Travel Workflow
 
@@ -377,7 +377,7 @@ SELECT * FROM my_table VERSION AS OF 3;
 
 -- 3. Or restore to that version
 RESTORE TABLE my_table TO VERSION AS OF 3;
-```text
+```
 
 ### Permission Audit
 
@@ -390,7 +390,7 @@ SHOW GRANTS TO `user@company.com`;
 
 -- Check schema permissions
 SHOW GRANTS ON SCHEMA catalog.schema;
-```text
+```
 
 ## Related Topics
 

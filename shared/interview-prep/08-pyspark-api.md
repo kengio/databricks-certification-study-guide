@@ -464,4 +464,4 @@ Write a query to keep only the most recent record per `customer_id` from a `cust
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: File Formats & Spark Internals](07-file-formats-spark.md) | [Next: Python for Production Data Engineering](09-python-code-quality.md)
+**[← Previous: Interview Questions — File Formats & Spark Internals](./07-file-formats-spark.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Python for Production Data Engineering](./09-python-code-quality.md) →**

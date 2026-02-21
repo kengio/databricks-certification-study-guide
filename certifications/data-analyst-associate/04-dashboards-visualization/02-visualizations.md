@@ -33,7 +33,7 @@ flowchart TD
     HS --> HSE["✓ Best for: Distribution shape<br/>✓ Use: Customer age ranges"]
     SC --> SCE["✓ Best for: Relationship analysis<br/>✓ Use: Price vs demand"]
     TB --> TBE["✓ Best for: Detailed data<br/>✓ Use: Exact numbers"]
-```text
+```
 
 ## Core Chart Types
 
@@ -47,7 +47,7 @@ SELECT region, SUM(amount) as revenue
 FROM orders
 GROUP BY region
 ORDER BY revenue DESC;
-```text
+```
 
 **Visualization Settings:**
 
@@ -59,7 +59,7 @@ Sort: Descending
 Colors: Single color or gradient
 Show Values: On bars or hover
 Stacked: No (comparison)
-```text
+```
 
 **Variants:**
 
@@ -68,7 +68,7 @@ Vertical Column Chart: Good for limited categories
 Horizontal Bar Chart: Better for long labels (>20 chars)
 Stacked Bar: Show totals + breakdown
 Clustered Bar: Compare multiple series
-```text
+```
 
 **Best Practices:**
 
@@ -89,7 +89,7 @@ SELECT
 FROM orders
 GROUP BY DATE_TRUNC('week', order_date)
 ORDER BY week;
-```text
+```
 
 **Visualization Settings:**
 
@@ -102,7 +102,7 @@ Markers: Dots at data points
 Zoom: Enable for time-series
 Multiple Series: Support for overlays
 Forecast: Optional trend line
-```text
+```
 
 **Best Practices:**
 
@@ -125,7 +125,7 @@ SELECT
 FROM orders
 GROUP BY company_name
 ORDER BY orders DESC;
-```text
+```
 
 **Visualization Settings:**
 
@@ -136,7 +136,7 @@ Labels: company_name + market_share_pct
 Colors: Distinct colors or palette
 Donut Style: Optional center cutout
 Legend: Show company names
-```text
+```
 
 **When to Use:**
 
@@ -162,7 +162,7 @@ SELECT
 FROM products
 WHERE category = 'electronics'
 ORDER BY price;
-```text
+```
 
 **Visualization Settings:**
 
@@ -174,7 +174,7 @@ Bubble Size: Optional third metric
 Color: Optional category
 Trend Line: Linear regression fit
 Correlation Coefficient: Show R²
-```text
+```
 
 **Interpretation:**
 
@@ -189,7 +189,7 @@ R² Value:
   0.7-0.9: Strong correlation
   0.3-0.7: Moderate correlation
   <0.3: Weak or no correlation
-```text
+```
 
 ### Area Chart
 
@@ -204,7 +204,7 @@ SELECT
 FROM orders
 GROUP BY month, region
 ORDER BY month, region;
-```text
+```
 
 **Visualization Settings:**
 
@@ -216,7 +216,7 @@ Series: Separate area per region
 Legend: Region names with colors
 Stack: Stacked (cumulative) or grouped
 Fill: Semi-transparent for visibility
-```text
+```
 
 **Use Cases:**
 
@@ -235,7 +235,7 @@ SELECT
     1000000 as monthly_target
 FROM orders
 WHERE month = MONTH(CURRENT_DATE);
-```text
+```
 
 **Gauge Configuration:**
 
@@ -249,7 +249,7 @@ Thresholds:
   Yellow: 500000-799999 (50-80%)
   Green: 800000-1000000 (80-100%)
 Show: Percentage (62.5%)
-```text
+```
 
 ### Table
 
@@ -266,7 +266,7 @@ SELECT
 FROM orders
 ORDER BY order_date DESC
 LIMIT 1000;
-```text
+```
 
 **Table Configuration:**
 
@@ -282,7 +282,7 @@ Sorting: User-clickable headers
 Filtering: Quick filter per column
 Pagination: 25 rows per page
 Export: CSV, JSON download
-```text
+```
 
 **When to Use:**
 
@@ -311,7 +311,7 @@ Best Practices:
   - Colorblind-friendly: Blue, orange, green
   - Avoid: Red-green combo alone
   - Use ColorBrewer for palettes
-```text
+```
 
 ### Labels & Legends
 
@@ -326,7 +326,7 @@ Good Practice:
   - Descriptive axis titles
   - Format values: $100K not $100000
   - Include units: "Hours" not bare numbers
-```text
+```
 
 ### Data Formatting
 
@@ -343,7 +343,7 @@ GROUP BY region;
 -- Formatted output:
 -- region | revenue   | orders_k | share_pct
 -- North  | $2500000  | 123.5    | 25.0%
-```text
+```
 
 ## Multi-series Visualizations
 
@@ -358,7 +358,7 @@ SELECT
 FROM orders
 GROUP BY DATE_TRUNC('week', order_date)
 ORDER BY week;
-```text
+```
 
 **Dual Axis Configuration:**
 
@@ -369,7 +369,7 @@ Secondary Y-axis: order_count (units, line)
 X-axis: week (time)
 Display: Both metrics visible
 Scale: Independent axes for clarity
-```text
+```
 
 ### Side-by-side Comparison
 
@@ -390,7 +390,7 @@ SELECT
     SUM(amount) as revenue
 FROM orders
 WHERE YEAR(order_date) = 2023;
-```text
+```
 
 ## Visualization Best Practices
 
@@ -408,7 +408,7 @@ WHERE YEAR(order_date) = 2023;
   2. Use confusing aggregations
   3. Misalign scales
   4. Use 3D or non-standard projections
-```text
+```
 
 ### Accessibility
 
@@ -426,7 +426,7 @@ Text:
 Alternative:
   - Provide data table option
   - Include text description
-```text
+```
 
 ## Key Exam Concepts
 
@@ -459,10 +459,6 @@ Alternative:
 
 - **A**: Strength of linear relationship (0=none, 1=perfect)
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Visualizations & Chart Types Implementation**: Incorporating Visualizations & Chart Types principles to build scalable and maintainable solutions in Databricks environments.
@@ -471,10 +467,15 @@ Alternative:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Visualizations & Chart Types do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Visualizations & Chart Types to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Visualizations & Chart Types to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Visualizations & Chart Types prior to deployment.
 
+---
+
+**[← Previous: Dashboards & Dashboard Design](./01-dashboards.md) | [↑ Back to Dashboards & Visualization](./README.md) | [Next: Alerts & Scheduling](./03-alerts-scheduling.md) →**

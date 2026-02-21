@@ -30,7 +30,7 @@ flowchart TD
     Trigger -->|No| Wait["Wait until next check"]
     Notification --> Actions
     Wait --> Query
-```text
+```
 
 ## Creating Alerts
 
@@ -48,7 +48,7 @@ Evaluation Frequency:
   Hourly: Standard monitoring
   Daily: Batch/overnight checks
   Weekly: Trend analysis
-```text
+```
 
 ### Basic Alert Setup
 
@@ -64,7 +64,7 @@ AND created_at >= CURRENT_TIMESTAMP - INTERVAL 1 HOUR;
 -- Condition: Result > 100
 -- Frequency: Every 5 minutes
 -- Action: Send to Slack channel #alerts
-```text
+```
 
 ### Alert Templates
 
@@ -78,7 +78,7 @@ WHERE order_date = CURRENT_DATE
 AND status = 'completed';
 
 -- Alert: IF daily_revenue < 100000 THEN notify
-```text
+```
 
 **Template 2: Anomaly Detection**
 
@@ -99,7 +99,7 @@ ORDER BY signup_date DESC
 LIMIT 1;
 
 -- Alert logic: IF new_signups > avg_30d_baseline + 3*stddev THEN alert
-```text
+```
 
 **Template 3: Comparison Alert**
 
@@ -117,7 +117,7 @@ FROM (
 );
 
 -- Alert: IF pct_change < -10% (>10% drop) THEN notify
-```text
+```
 
 ## Alert Destinations
 
@@ -136,7 +136,7 @@ Slack Alert Setup:
      Channel: #databricks-alerts
      Message: "Revenue alert: ${result} < $100k"
      Include: Query, timestamp, action link
-```text
+```
 
 **Slack Message Example:**
 
@@ -151,7 +151,7 @@ Query: Failed Transaction Count
 Last check: 2024-02-20 14:35 UTC
 
 [View Dashboard] [Investigate] [Acknowledge]
-```text
+```
 
 ### Email Alerts
 
@@ -169,7 +169,7 @@ Email Configuration:
     Context: Historical comparison
     Action: Link to dashboard/query
     Timestamp: When detected
-```text
+```
 
 ### Webhook (Custom Integration)
 
@@ -191,7 +191,7 @@ Webhook Alert:
     - Jira (issue creation)
     - ServiceNow (ticketing)
     - Custom APIs
-```text
+```
 
 ## Alert Management
 
@@ -211,7 +211,7 @@ Alert Dashboard:
     Mute: Suppress for 1hr / 1 day / 1 week
     Disable: Turn off temporarily
     Delete: Remove alert permanently
-```text
+```
 
 ### Alert Fatigue Prevention
 
@@ -228,7 +228,7 @@ Best Practices:
     Static thresholds (don't adapt)
     No context (what action to take?)
     Always-on alerts (alerts to alerts)
-```text
+```
 
 ### Alert History & Logging
 
@@ -245,7 +245,7 @@ SELECT
 FROM system.alert_history
 WHERE trigger_timestamp >= CURRENT_TIMESTAMP - INTERVAL 30 DAYS
 ORDER BY trigger_timestamp DESC;
-```text
+```
 
 ## Query Scheduling
 
@@ -266,7 +266,7 @@ Schedule Query:
     - Update materialized view
     - Trigger downstream job
     - No action (run only)
-```text
+```
 
 ### Scheduling Patterns
 
@@ -276,7 +276,7 @@ Schedule Query:
 Schedule: "0 9 * * *"  # Every day at 9 AM
 Query: Daily sales summary
 Action: Email to executives
-```text
+```
 
 **Weekly Analysis**
 
@@ -284,7 +284,7 @@ Action: Email to executives
 Schedule: "0 8 * * 1"  # Every Monday at 8 AM
 Query: Weekly trends & anomalies
 Action: Save to table / Email
-```text
+```
 
 **Monthly Refresh**
 
@@ -292,7 +292,7 @@ Action: Save to table / Email
 Schedule: "0 0 1 * *"  # First day of month
 Query: Month-end close procedures
 Action: Update reporting tables
-```text
+```
 
 **Hourly Monitoring**
 
@@ -300,7 +300,7 @@ Action: Update reporting tables
 Schedule: "0 * * * *"  # Every hour
 Query: System health check
 Action: Alert if issues detected
-```text
+```
 
 ## Materialized Views (Scheduled Computation)
 
@@ -323,7 +323,7 @@ ALTER MATERIALIZED VIEW daily_sales
 SET TBLPROPERTIES (
     'materialized_view_refresh_schedule' = '0 0 * * *'  -- Daily at midnight
 );
-```text
+```
 
 ### Refresh Materialized View
 
@@ -337,7 +337,7 @@ WHERE order_day >= CURRENT_DATE - 30;
 
 -- Materialized views are pre-computed, so queries are instant
 -- vs re-computing from raw data every time
-```text
+```
 
 ## Scheduled Report Distribution
 
@@ -361,7 +361,7 @@ Recipients:
   To: team@company.com, manager@company.com
   CC: analytics@company.com
   Subject: "{{ report_name }} - {{ date }}"
-```text
+```
 
 ### Create Scheduled Job
 
@@ -385,7 +385,7 @@ Export:
   Format: CSV
   Destination: S3 bucket for archive
   Email: Results to stakeholders
-```text
+```
 
 ## Alert + Scheduling Workflows
 
@@ -412,7 +412,7 @@ Workflow: Weekly Performance Review
      - Email report to executives
      - Post alert to Slack if triggered
      - Archive results
-```text
+```
 
 ### Escalation Alert Chain
 
@@ -428,7 +428,7 @@ Alert Escalation:
     ✅ Condition clears (auto-resolve)
     ✅ Manual acknowledgement
     ✅ Escalate if not acknowledged (15 min)
-```text
+```
 
 ## Key Exam Concepts
 
@@ -460,10 +460,6 @@ Alert Escalation:
 
 - **A**: Materialized view keeps data pre-computed and indexed; queries are instant
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Alerts & Scheduling Implementation**: Incorporating Alerts & Scheduling principles to build scalable and maintainable solutions in Databricks environments.
@@ -472,10 +468,15 @@ Alert Escalation:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Alerts & Scheduling do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Alerts & Scheduling to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Alerts & Scheduling to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Alerts & Scheduling prior to deployment.
 
+---
+
+**[← Previous: Visualizations & Chart Types](./02-visualizations.md) | [↑ Back to Dashboards & Visualization](./README.md)**

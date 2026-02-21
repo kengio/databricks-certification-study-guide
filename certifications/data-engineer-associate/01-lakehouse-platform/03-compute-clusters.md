@@ -35,7 +35,7 @@ flowchart TD
     W1 --> Storage
     W2 --> Storage
     W3 --> Storage
-```text
+```
 
 ## Cluster Types
 
@@ -54,7 +54,7 @@ Typical Config:
   - Min workers: 2
   - Max workers: 8
   - Timeout: 30 minutes no activity
-```text
+```
 
 **Cost**: $0.40-$1.00 per DBU per hour (depends on region)
 
@@ -73,7 +73,7 @@ Typical Config:
   - Min workers: 1
   - Max workers: 10
   - Auto-terminate: When job finishes
-```text
+```
 
 **Cost**: Lower per-DBU cost (optimized pricing)
 
@@ -91,7 +91,7 @@ Typical Config:
   - Warehouse size: Small (2 clusters), Medium (4), Large (8)
   - Auto-scaling: Enabled by default
   - Spot instances: Enabled for cost savings
-```text
+```
 
 **Cost**: $2-$4 per DBU per hour (premium for always-on)
 
@@ -116,11 +116,12 @@ General Purpose (i3/m5):      Most data engineering tasks
 Memory Optimized (r7/z1):     Large in-memory datasets
 Compute Optimized (c5/c6):    Complex transformations
 Spot Instances:               Cost savings (can be interrupted)
-```text
+```
 
 ### Databricks Runtime (DBR)
 
 ```python
+
 # DBR includes:
 # - Apache Spark with optimizations
 # - Python, R, Scala, SQL pre-installed
@@ -128,11 +129,12 @@ Spot Instances:               Cost savings (can be interrupted)
 # - High-level APIs
 
 # Available flavors:
+
 DBR Base              # Spark only
 DBR for ML           # Spark + ML libraries
 DBR SQL               # Optimized for SQL queries
 DBR for Serverless   # Auto-managed
-```text
+```
 
 ## Cluster Lifecycle
 
@@ -151,13 +153,14 @@ stateDiagram-v2
         Idle cluster incurs
         ongoing charges
     end note
-```text
+```
 
 ## Scaling Strategies
 
 ### Vertical Scaling (Node Type)
 
 ```python
+
 # Larger nodes = more memory/CPU per worker
 # Pros: Simpler, fewer network copies
 # Cons: More expensive, slower scaling
@@ -165,11 +168,12 @@ stateDiagram-v2
 Small:   i3.xlarge    (4 vCPU, 30.5 GB RAM)
 Medium:  i3.2xlarge   (8 vCPU, 61 GB RAM)
 Large:   i3.4xlarge   (16 vCPU, 122 GB RAM)
-```text
+```
 
 ### Horizontal Scaling (Worker Count)
 
 ```python
+
 # More workers = distributed processing
 # Pros: Faster scaling, handles growing data
 # Cons: More network I/O, coordination overhead
@@ -177,20 +181,23 @@ Large:   i3.4xlarge   (16 vCPU, 122 GB RAM)
 Min Workers:  1-2  (development)
 Target:       3-8  (typical workload)
 Max Workers:  10+  (peak load)
-```text
+```
 
 ### Dynamic Scaling (Databricks Managed)
 
 ```python
 # Cluster auto-scales based on pending workload
+
 dbfs.conf.set("spark.databricks.cluster.profile", "singleNode")
 
 # Configuration in cluster settings:
+
 Auto-scaling: Enabled
 Min workers: 2
 Max workers: 8
 # Scales up/down automatically based on task queue
-```text
+
+```
 
 ## Cost Optimization
 
@@ -204,7 +211,7 @@ Max workers: 8
 Monthly Bill = (Nodes × Hours × DBU Rate) + Storage
              = (3 nodes × 730 hours × $0.40) + Storage
              = $876 + Storage
-```text
+```
 
 ### Cost Reduction Tactics
 
@@ -214,7 +221,7 @@ Monthly Bill = (Nodes × Hours × DBU Rate) + Storage
    Enable Spot: Cluster will use cheaper interruptible VMs
    Trade-off: Can be terminated without warning
    Use for: Non-critical jobs with checkpointing
-   ```text
+   ```
 
 2. **Right-sizing** (-30-40%)
 
@@ -222,7 +229,7 @@ Monthly Bill = (Nodes × Hours × DBU Rate) + Storage
    # Profile actual usage
    # Don't over-provision
    # Use smaller nodes, scale horizontally
-   ```text
+   ```
 
 3. **Auto-termination** (-20-50%)
 
@@ -230,7 +237,7 @@ Monthly Bill = (Nodes × Hours × DBU Rate) + Storage
    # Set 15 min timeout for dev clusters
    # Prevents forgotten clusters running 24/7
    # Job clusters auto-terminate (no cost waste)
-   ```text
+   ```
 
 4. **Shared Clusters**
 
@@ -238,7 +245,7 @@ Monthly Bill = (Nodes × Hours × DBU Rate) + Storage
    # All-purpose cluster for team
    # Shares costs across users
    # Higher utilization
-   ```text
+   ```
 
 ## Monitoring & Troubleshooting
 
@@ -246,12 +253,13 @@ Monthly Bill = (Nodes × Hours × DBU Rate) + Storage
 
 ```python
 # Available in Cluster Details UI:
+
 CPU Utilization      # % of compute used
 Memory Usage         # RAM in use
 Disk I/O             # Read/Write speed
 Network I/O          # Communication overhead
 Task Execution Time  # Job performance
-```text
+```
 
 ### Common Issues & Solutions
 
@@ -267,24 +275,28 @@ Task Execution Time  # Job performance
 
 ```python
 # Access cluster logs
+
 dbutils.fs.ls("/mnt/logs/cluster-logs/")
 
 # Monitor in real-time
 # Spark UI: Available during job execution
 # Driver logs: Check for errors
 # Worker logs: Troubleshoot data processing issues
-```text
+
+```
 
 ## Cluster as a Service (Premium Feature)
 
 ```python
+
 # Databricks manages cluster lifecycle
 # Features:
+
 - Auto-scaling based on workload
 - Automatic updates and patches
 - Serverless SQL queries
 - No manual cluster management
-```text
+```
 
 ## Key Exam Concepts
 
@@ -295,10 +307,6 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 - **Best Practice**: Right-size clusters, use auto-terminate
 - **Spot Instances**: Cost savings with trade-offs
 
----
-
-**[← Back to Lakehouse Platform](README.md)**
-
 ## Use Cases
 
 - **Compute and Clusters Implementation**: Incorporating Compute and Clusters principles to build scalable and maintainable solutions in Databricks environments.
@@ -307,10 +315,15 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Compute and Clusters do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compute and Clusters to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Compute and Clusters to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Compute and Clusters prior to deployment.
 
+---
+
+**[← Previous: Databricks Workspace](./02-databricks-workspace.md) | [↑ Back to Databricks Lakehouse Platform](./README.md)**

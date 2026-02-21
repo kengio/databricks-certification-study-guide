@@ -20,7 +20,7 @@ flowchart TD
     DL --> TT[Time Travel]
     DL --> Schema[Schema Management]
     DL --> Opt[Optimization]
-```text
+```
 
 ## Section Contents
 

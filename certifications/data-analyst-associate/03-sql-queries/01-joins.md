@@ -24,7 +24,7 @@ flowchart TD
     Joins --> Full["FULL OUTER JOIN<br/>All rows"]
     Joins --> Cross["CROSS JOIN<br/>Cartesian product"]
     Joins --> Semi["SEMI/ANTI"]
-```text
+```
 
 ## INNER JOIN
 
@@ -46,7 +46,7 @@ SELECT
     c.customer_name
 FROM orders o, customers c
 WHERE o.customer_id = c.customer_id;
-```text
+```
 
 **Visual:**
 
@@ -57,7 +57,7 @@ Orders:           Customers:           Result:
 3 → Charlie
 4 → (null)
                   INNER JOIN keeps only matching rows
-```text
+```
 
 **Performance considerations:**
 
@@ -86,7 +86,7 @@ SELECT
 FROM customers c
 LEFT JOIN orders o ON c.customer_id = o.customer_id
 WHERE o.order_id IS NULL;  -- NULL indicates no match
-```text
+```
 
 **Visual:**
 
@@ -97,7 +97,7 @@ Customers:        Orders:              Result:
 3 Charlie  →      (none)               3 Charlie → NULL
 4 Diana    →                           4 Diana → NULL
                   LEFT JOIN keeps all customers
-```text
+```
 
 ## RIGHT JOIN (RIGHT OUTER JOIN)
 
@@ -117,7 +117,7 @@ SELECT
     d.department_name
 FROM departments d
 LEFT JOIN employees e ON e.dept_id = d.dept_id;
-```text
+```
 
 **Modern SQL best practice:**
 
@@ -147,7 +147,7 @@ SELECT
 FROM customers c
 FULL OUTER JOIN orders o ON c.customer_id = o.customer_id
 WHERE c.customer_id IS NULL OR o.order_id IS NULL;
-```text
+```
 
 **Visual:**
 
@@ -158,7 +158,7 @@ Customers:        Orders:              Result:
 3 Charlie  →      3 → $150             3 Charlie → $150
 4 Diana           5 → $300             4 Diana → NULL
                                        NULL → 5 $300
-```text
+```
 
 ## CROSS JOIN
 
@@ -186,7 +186,7 @@ FROM colors c, sizes s;
 -- red/S, red/M, red/L, red/XL,
 -- blue/S, blue/M, blue/L, blue/XL,
 -- green/S, green/M, green/L, green/XL
-```text
+```
 
 **Use cases:**
 
@@ -200,7 +200,7 @@ SELECT d.*, p.*
 FROM (SELECT DATE('2024-01-01') + INTERVAL (n) DAY as date_value
       FROM RANGE(365)) d
 CROSS JOIN products p;
-```text
+```
 
 ## SEMI JOIN & ANTI JOIN
 
@@ -226,7 +226,7 @@ WHERE EXISTS (
     SELECT 1 FROM orders o
     WHERE o.customer_id = c.customer_id
 );
-```text
+```
 
 **Performance:** SEMI JOIN is optimized for this use case, often faster than IN/EXISTS
 
@@ -252,7 +252,7 @@ WHERE NOT EXISTS (
     SELECT 1 FROM orders o
     WHERE o.customer_id = c.customer_id
 );
-```text
+```
 
 ## Multi-table Joins
 
@@ -273,7 +273,7 @@ WHERE o.order_date >= CURRENT_DATE - 30;
 -- Execution is left-to-right:
 -- 1. orders JOIN customers
 -- 2. Result JOIN invoices
-```text
+```
 
 ### Join Chain with Multiple Conditions
 
@@ -294,7 +294,7 @@ JOIN salary_bands s
 LEFT JOIN bonuses b
     ON e.employee_id = b.employee_id
     AND b.year = YEAR(CURRENT_DATE);
-```text
+```
 
 ## Join Conditions
 
@@ -305,7 +305,7 @@ LEFT JOIN bonuses b
 SELECT *
 FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id;
-```text
+```
 
 ### Multi-column Join (Composite Key)
 
@@ -316,7 +316,7 @@ FROM employment_history eh
 JOIN salary_history sh ON
     eh.company_id = sh.company_id
     AND eh.employee_id = sh.employee_id;
-```text
+```
 
 ### Join on Expression
 
@@ -334,7 +334,7 @@ SELECT *
 FROM orders o
 JOIN shipping_zones sz ON
     o.delivery_zip BETWEEN sz.min_zip AND sz.max_zip;
-```text
+```
 
 ## Join Performance Optimization
 
@@ -348,7 +348,7 @@ CREATE INDEX idx_customers_id ON customers(customer_id);
 -- Verify join uses indexes
 EXPLAIN SELECT * FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id;
-```text
+```
 
 ### Execution Plan
 
@@ -364,7 +364,7 @@ Join [customer_id#1 = customer_id#100]
 -- 1. Filter before join: WHERE clauses before JOIN
 -- 2. Project columns: SELECT only needed columns
 -- 3. Join on primary keys: More optimizable
-```text
+```
 
 ### Join Order Matters
 
@@ -380,7 +380,7 @@ SELECT *
 FROM huge_transactions t
 WHERE t.status = 'completed'  -- Reduce size first
 JOIN small_reference r ON t.id = r.id;  -- Then join
-```text
+```
 
 ## Common Join Patterns
 
@@ -392,7 +392,7 @@ SELECT c.*
 FROM customers c
 LEFT JOIN orders o ON c.customer_id = o.customer_id
 WHERE o.order_id IS NULL;
-```text
+```
 
 ### Deduplication with Join
 
@@ -406,7 +406,7 @@ JOIN (
     GROUP BY customer_id
 ) latest ON o1.customer_id = latest.customer_id
     AND o1.order_date = latest.latest_date;
-```text
+```
 
 ### Data Reconciliation
 
@@ -422,7 +422,7 @@ SELECT
     END as status
 FROM source s
 FULL OUTER JOIN target t ON s.id = t.id;
-```text
+```
 
 ## Key Exam Concepts
 
@@ -454,10 +454,6 @@ FULL OUTER JOIN target t ON s.id = t.id;
 
 - **A**: AND in ON clause: ON table1.col1 = table2.col1 AND table1.col2 = table2.col2
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -466,10 +462,15 @@ FULL OUTER JOIN target t ON s.id = t.id;
 ## Common Issues & Errors
 
 ### 1. OOM Errors
+
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Joins & Multi-table Operations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Joins & Multi-table Operations prior to deployment.
 
+---
+
+**[↑ Back to Advanced SQL Queries](./README.md) | [Next: Aggregations & Grouping](./02-aggregations-grouping.md) →**

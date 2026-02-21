@@ -12,7 +12,7 @@ status: published
 
 This part covers CDC best practices, pipeline patterns, row tracking, multi-hop CDC propagation, external CDC integration, monitoring, use cases, and exam tips.
 
-> For CDC fundamentals, Delta CDF, APPLY CHANGES, and SCD patterns, see [Part 1](./05-change-data-capture.md).
+> For CDC fundamentals, Delta CDF, APPLY CHANGES, and SCD patterns, see [Part 1](./05-change-data-capture-part1.md).
 
 ## CDC Best Practices
 
@@ -45,26 +45,28 @@ def process_cdc_idempotent(changes_df, target_table):
     ).whenNotMatchedInsertAll(
         condition="s._change_type IN ('insert', 'update_postimage')"
     ).execute()
-```text
+```
 
 ### Handling Out-of-Order Events
 
 ```python
 # Use sequence column to handle out-of-order
+
 window = Window.partitionBy("order_id").orderBy(col("event_timestamp").desc())
 
 ordered_changes = (changes_df
     .withColumn("rn", row_number().over(window))
     .filter(col("rn") == 1)
     .drop("rn"))
-```text
+```
 
 ### Deduplication Before Apply
 
 ```python
 # Remove duplicates before applying CDC
+
 deduped = changes_df.dropDuplicates(["id", "_commit_version"])
-```text
+```
 
 ## CDC Pipeline Patterns
 
@@ -85,16 +87,18 @@ flowchart LR
         S1 -->|Read CDF| CDC2[CDC Stream]
         CDC2 -->|Aggregate| G1[orders_daily_summary]
     end
-```text
+```
 
 ```python
 # Bronze table - CDF enabled
+
 spark.sql("""
     ALTER TABLE bronze.orders
     SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
 """)
 
 # Stream Bronze CDC to Silver
+
 bronze_cdf = (spark.readStream.format("delta")
     .option("readChangeFeed", "true")
     .table("bronze.orders"))
@@ -112,7 +116,7 @@ query = (bronze_cdf.writeStream
     .foreachBatch(apply_to_silver)
     .option("checkpointLocation", "/checkpoint/bronze_to_silver")
     .start())
-```text
+```
 
 ## Row Tracking
 
@@ -131,7 +135,7 @@ TBLPROPERTIES ('delta.enableRowTracking' = 'true');
 -- Enable on existing table (backfills existing rows)
 ALTER TABLE table_name
 SET TBLPROPERTIES ('delta.enableRowTracking' = 'true');
-```text
+```
 
 ### Row Tracking Columns
 
@@ -144,9 +148,10 @@ Row tracking adds hidden system columns:
 
 ```python
 # Access row tracking columns
+
 df = spark.table("table_name")
 df.select("*", "_metadata.row_id", "_metadata.row_commit_version").show()
-```text
+```
 
 ### Row Tracking Use Cases
 
@@ -157,11 +162,13 @@ df.select("*", "_metadata.row_id", "_metadata.row_commit_version").show()
 
 ```python
 # Find rows modified in specific version
+
 df.filter(col("_metadata.row_commit_version") == 5).show()
 
 # Detect potential duplicates
+
 df.groupBy("_metadata.row_id").count().filter(col("count") > 1).show()
-```text
+```
 
 ## Multi-Hop CDC Propagation
 
@@ -187,18 +194,20 @@ flowchart LR
         SV -->|CDF Stream| G1[daily_summary]
         SV -->|CDF Stream| G2[customer_metrics]
     end
-```text
+```
 
 ### Implementation
 
 ```python
 # Bronze: Raw CDC ingestion with CDF
+
 bronze_table = spark.sql("""
     ALTER TABLE bronze.orders
     SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
 """)
 
 # Silver: Stream from Bronze CDF
+
 bronze_changes = (spark.readStream.format("delta")
     .option("readChangeFeed", "true")
     .table("bronze.orders"))
@@ -226,11 +235,13 @@ query = (bronze_changes.writeStream
     .start())
 
 # Gold: Stream from Silver CDF
+
 silver_changes = (spark.readStream.format("delta")
     .option("readChangeFeed", "true")
     .table("silver.orders"))
 
 # Aggregate to Gold
+
 gold_query = (silver_changes
     .filter(col("_change_type").isin("insert", "update_postimage"))
     .groupBy(to_date("order_date").alias("date"))
@@ -243,7 +254,7 @@ gold_query = (silver_changes
     .outputMode("complete")
     .option("checkpointLocation", "/checkpoint/silver_to_gold")
     .toTable("gold.daily_summary"))
-```text
+```
 
 ### CDC Amplification
 
@@ -270,6 +281,7 @@ Integrating with external CDC tools like Debezium.
 
 ```python
 # Debezium CDC format from Kafka
+
 debezium_df = (spark.readStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "broker:9092")
@@ -277,6 +289,7 @@ debezium_df = (spark.readStream
     .load())
 
 # Parse Debezium envelope
+
 from pyspark.sql.functions import from_json, col
 
 debezium_schema = StructType([
@@ -292,6 +305,7 @@ parsed = (debezium_df
     .select("data.*"))
 
 # Map Debezium ops to Delta operations
+
 def debezium_to_delta(df):
     return df.withColumn(
         "_change_type",
@@ -304,12 +318,13 @@ def debezium_to_delta(df):
         col("_change_type"),
         col("ts_ms").alias("_source_ts")
     )
-```text
+```
 
 ### Custom CDC Format Parsing
 
 ```python
 # Generic CDC format with operation column
+
 def parse_custom_cdc(df, op_column="operation"):
     """Convert custom CDC format to standard change types."""
     op_mapping = {
@@ -327,7 +342,7 @@ def parse_custom_cdc(df, op_column="operation"):
              create_map([lit(k), lit(v) for k, v in op_mapping.items()])[upper(col(op_column))])
         .otherwise("unknown")
     )
-```text
+```
 
 ## Monitoring CDC
 
@@ -335,6 +350,7 @@ def parse_custom_cdc(df, op_column="operation"):
 
 ```python
 # Monitor CDC processing lag
+
 lag_df = spark.sql("""
     SELECT
         source_table,
@@ -345,7 +361,7 @@ lag_df = spark.sql("""
         current_timestamp() - last_processed_timestamp as time_lag
     FROM cdc_monitoring.processing_status
 """)
-```text
+```
 
 ### CDC Metrics
 
@@ -361,7 +377,7 @@ CREATE TABLE cdc_monitoring.metrics (
     processing_time_ms LONG,
     timestamp TIMESTAMP
 ) USING DELTA;
-```text
+```
 
 ## Use Cases
 
@@ -424,8 +440,8 @@ CREATE TABLE cdc_monitoring.metrics (
 
 ## Related Topics
 
-- [Delta Lake Operations](06-delta-lake-operations.md) - MERGE patterns
-- [Structured Streaming](03-structured-streaming.md) - Streaming CDC
+- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE patterns
+- [Structured Streaming](03-structured-streaming-part1.md) - Streaming CDC
 - [Data Deduplication](07-data-deduplication.md) - Dedup before CDC apply
 - [Lakeflow Pipelines](../07-lakeflow-pipelines/README.md) - APPLY CHANGES API
 
@@ -434,3 +450,7 @@ CREATE TABLE cdc_monitoring.metrics (
 - [Change Data Feed](https://docs.databricks.com/delta/delta-change-data-feed.html)
 - [APPLY CHANGES API](https://docs.databricks.com/delta-live-tables/cdc.html)
 - [SCD in Lakeflow](https://docs.databricks.com/delta-live-tables/cdc.html#scd)
+
+---
+
+**[← Previous: Change Data Capture (CDC) — Part 1](./05-change-data-capture-part1.md) | [↑ Back to Data Processing](./README.md) | [Next: Delta Lake Operations — Part 1](./06-delta-lake-operations-part1.md) →**

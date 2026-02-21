@@ -25,7 +25,7 @@ SELECT * FROM VALUES
     (7, 'Grace',   'Sales',       82000,  '2023-07-01'),
     (8, 'Henry',   'Engineering', 105000, '2021-04-10')
 AS t(id, name, department, salary, hire_date);
-```text
+```
 
 ## ROW_NUMBER — Unique Sequential Numbering
 
@@ -51,7 +51,7 @@ SELECT * FROM (
     FROM sales
 )
 WHERE rn = 1;
-```text
+```
 
 ## RANK and DENSE_RANK — Handle Ties Differently
 
@@ -66,7 +66,7 @@ SELECT
     DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rank,
     ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num
 FROM sales;
-```text
+```
 
 ## LAG and LEAD — Access Previous/Next Rows
 
@@ -90,7 +90,7 @@ SELECT
         ORDER BY hire_date
     ) AS next_hire
 FROM sales;
-```text
+```
 
 ## Running Aggregates
 
@@ -127,7 +127,7 @@ SELECT
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
     ) AS employee_count
 FROM sales;
-```text
+```
 
 ## NTILE — Divide Rows into Buckets
 
@@ -138,7 +138,7 @@ SELECT
     salary,
     NTILE(4) OVER (ORDER BY salary) AS salary_quartile
 FROM sales;
-```text
+```
 
 ## FIRST_VALUE and LAST_VALUE
 
@@ -155,7 +155,7 @@ SELECT
         PARTITION BY department ORDER BY salary ASC
     ) AS min_salary
 FROM sales;
-```text
+```
 
 ## PERCENT_RANK and CUME_DIST
 
@@ -167,7 +167,7 @@ SELECT
     PERCENT_RANK() OVER (ORDER BY salary) AS pct_rank,
     CUME_DIST()    OVER (ORDER BY salary) AS cume_dist
 FROM sales;
-```text
+```
 
 ## Window Frame Specifications
 
@@ -192,4 +192,4 @@ SELECT
         RANGE BETWEEN 10000 PRECEDING AND 10000 FOLLOWING
     ) AS similar_salary_count
 FROM sales;
-```text
+```

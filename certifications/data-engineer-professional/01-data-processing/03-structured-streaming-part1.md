@@ -35,7 +35,7 @@ flowchart LR
         Stateful --> D3[Console]
         Stateful --> D4[foreachBatch]
     end
-```text
+```
 
 ## Streaming Fundamentals
 
@@ -54,22 +54,25 @@ Databricks uses **micro-batch processing** by default, providing exactly-once se
 
 ```python
 # Read stream from Delta
+
 stream_df = (spark.readStream
     .format("delta")
     .load("/path/to/source"))
 
 # Apply transformations
+
 transformed = (stream_df
     .filter(col("status") == "active")
     .select("id", "name", "amount"))
 
 # Write stream to Delta
+
 query = (transformed.writeStream
     .format("delta")
     .outputMode("append")
     .option("checkpointLocation", "/path/to/checkpoint")
     .start("/path/to/target"))
-```text
+```
 
 ## Streaming Sources
 
@@ -77,16 +80,19 @@ query = (transformed.writeStream
 
 ```python
 # Basic Delta stream
+
 df = spark.readStream.format("delta").load("/path/to/table")
 df = spark.readStream.table("catalog.schema.table_name")
 
 # Start from specific version
+
 df = (spark.readStream
     .format("delta")
     .option("startingVersion", 10)
     .load("/path/to/table"))
 
 # Start from timestamp
+
 df = (spark.readStream
     .format("delta")
     .option("startingTimestamp", "2024-01-01")
@@ -94,11 +100,12 @@ df = (spark.readStream
 
 # Handle schema changes
 # Skip updates/deletes
+
 df = (spark.readStream
     .format("delta")
     .option("ignoreChanges", "true")
     .load("/path/to/table"))
-```text
+```
 
 | Option | Behavior |
 | :--- | :--- |
@@ -121,11 +128,12 @@ df = (spark.readStream
 
 # Kafka schema: key, value, topic, partition, offset, timestamp
 # Value is binary - parse as needed
+
 parsed = df.select(
     col("key").cast("string"),
     from_json(col("value").cast("string"), schema).alias("data")
 ).select("key", "data.*")
-```text
+```
 
 | Option | Values |
 | :--- | :--- |
@@ -141,7 +149,7 @@ df = (spark.readStream
     .option("cloudFiles.format", "json")
     .option("cloudFiles.schemaLocation", "/path/to/schema")
     .load("/path/to/files"))
-```text
+```
 
 See [Auto Loader](04-auto-loader.md) for detailed coverage.
 
@@ -149,12 +157,14 @@ See [Auto Loader](04-auto-loader.md) for detailed coverage.
 
 ```python
 # Generate test data
+
 df = (spark.readStream
     .format("rate")
     .option("rowsPerSecond", 100)
     .load())
 # Schema: timestamp, value (Long)
-```text
+
+```
 
 ## Streaming Sinks
 
@@ -168,12 +178,13 @@ query = (df.writeStream
     .start("/path/to/table"))
 
 # Write to table
+
 query = (df.writeStream
     .format("delta")
     .outputMode("append")
     .option("checkpointLocation", "/path/to/checkpoint")
     .toTable("catalog.schema.table_name"))
-```text
+```
 
 ### Kafka Sink
 
@@ -185,7 +196,7 @@ query = (df.selectExpr("CAST(id AS STRING) AS key", "to_json(struct(*)) AS value
     .option("topic", "output_topic")
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```text
+```
 
 ### Console Sink (Debugging)
 
@@ -195,7 +206,7 @@ query = (df.writeStream
     .outputMode("append")
     .option("truncate", False)
     .start())
-```text
+```
 
 ### foreachBatch Sink
 
@@ -211,7 +222,7 @@ query = (df.writeStream
     .foreachBatch(process_batch)
     .option("checkpointLocation", "/path/to/checkpoint")
     .start())
-```text
+```
 
 ## Trigger Types (Exam Critical)
 
@@ -228,7 +239,7 @@ flowchart TD
     Once -.- O1[Single batch, then stop]
     AN -.- AN1[All available data, then stop]
     Cont -.- C1[Low-latency experimental]
-```text
+```
 
 ### Trigger Comparison
 
@@ -244,15 +255,17 @@ flowchart TD
 
 ```python
 # DEPRECATED: once=True - processes ONE batch only
+
 query = (df.writeStream
     .trigger(once=True)
     .start())
 
 # RECOMMENDED: availableNow=True - processes ALL available data
+
 query = (df.writeStream
     .trigger(availableNow=True)
     .start())
-```text
+```
 
 | Aspect | once=True | availableNow=True |
 |--------|-----------|-------------------|
@@ -267,20 +280,23 @@ query = (df.writeStream
 from pyspark.sql.streaming import Trigger
 
 # Processing time trigger
+
 query = (df.writeStream
     .trigger(processingTime="10 seconds")
     .start())
 
 # Available now trigger (batch-style streaming)
+
 query = (df.writeStream
     .trigger(availableNow=True)
     .start())
 
 # Continuous trigger (experimental)
+
 query = (df.writeStream
     .trigger(continuous="1 second")
     .start())
-```text
+```
 
 ## Output Modes (Exam Critical)
 
@@ -298,7 +314,7 @@ flowchart TD
 
     Update -.- U1[Only changed rows]
     Update -.- U2[For stateful operations]
-```text
+```
 
 | Mode | Output | Use Case | Restrictions |
 |------|--------|----------|--------------|
@@ -336,7 +352,7 @@ sequenceDiagram
 
     Events->>State: Event time: 9:56
     Note over State: 9:56 > 9:55 = PROCESSED
-```text
+```
 
 ### Watermark Syntax
 
@@ -344,17 +360,19 @@ sequenceDiagram
 from pyspark.sql.functions import window
 
 # Define watermark
+
 df_with_watermark = (df
     .withWatermark("event_time", "10 minutes"))
 
 # Windowed aggregation with watermark
+
 result = (df_with_watermark
     .groupBy(
         window("event_time", "5 minutes"),
         "device_id"
     )
     .agg(avg("temperature").alias("avg_temp")))
-```text
+```
 
 ### Watermark Behavior
 
@@ -370,11 +388,13 @@ result = (df_with_watermark
 
 ```python
 # Short delay: Less memory, drops more late data
+
 df.withWatermark("event_time", "1 minute")
 
 # Long delay: More memory, accepts more late data
+
 df.withWatermark("event_time", "1 hour")
-```text
+```
 
 | Delay | Memory Usage | Late Data Tolerance |
 |-------|--------------|---------------------|
@@ -391,13 +411,14 @@ Non-overlapping, fixed-size windows.
 from pyspark.sql.functions import window
 
 # 5-minute tumbling windows
+
 (df.withWatermark("event_time", "10 minutes")
     .groupBy(
         window("event_time", "5 minutes"),
         "device_id"
     )
     .agg(count("*").alias("event_count")))
-```text
+```
 
 ```mermaid
 gantt
@@ -408,7 +429,7 @@ gantt
     Window 1 :w1, 00:00, 5m
     Window 2 :w2, 00:05, 5m
     Window 3 :w3, 00:10, 5m
-```text
+```
 
 ### Sliding Windows
 
@@ -416,13 +437,14 @@ Overlapping windows with a slide interval.
 
 ```python
 # 10-minute windows, sliding every 5 minutes
+
 (df.withWatermark("event_time", "10 minutes")
     .groupBy(
         window("event_time", "10 minutes", "5 minutes"),
         "device_id"
     )
     .agg(avg("value").alias("avg_value")))
-```text
+```
 
 ```mermaid
 gantt
@@ -433,7 +455,7 @@ gantt
     Window 1 :w1, 00:00, 10m
     Window 2 :w2, 00:05, 10m
     Window 3 :w3, 00:10, 10m
-```text
+```
 
 ### Session Windows
 
@@ -443,13 +465,14 @@ Dynamic windows based on activity gaps.
 from pyspark.sql.functions import session_window
 
 # Session windows with 5-minute gap
+
 (df.withWatermark("event_time", "10 minutes")
     .groupBy(
         session_window("event_time", "5 minutes"),
         "user_id"
     )
     .agg(count("*").alias("events_in_session")))
-```text
+```
 
 | Window Type | Size | Overlap | Use Case |
 |-------------|------|---------|----------|
@@ -463,6 +486,7 @@ from pyspark.sql.functions import session_window
 
 ```python
 # Both streams need watermarks
+
 impressions = (impressions_df
     .withWatermark("impression_time", "2 hours"))
 
@@ -470,13 +494,14 @@ clicks = (clicks_df
     .withWatermark("click_time", "3 hours"))
 
 # Join with time range condition
+
 joined = impressions.join(
     clicks,
     (impressions.ad_id == clicks.ad_id) &
     (clicks.click_time >= impressions.impression_time) &
     (clicks.click_time <= impressions.impression_time + expr("INTERVAL 1 HOUR"))
 )
-```text
+```
 
 ```mermaid
 sequenceDiagram
@@ -494,7 +519,7 @@ sequenceDiagram
     Note over Out: Match found, emit join result
 
     Note over L,R: After watermarks pass, state cleaned
-```text
+```
 
 ### Stream-Stream Join Requirements
 
@@ -506,3 +531,7 @@ sequenceDiagram
 | Full Outer | Both sides | Both buffered |
 
 > **Continue reading:** [Part 2 — Stream-Static Joins, Stateful Operations, State Store Management, Query Management & Exam Tips](./12-structured-streaming-part2.md)
+
+---
+
+**[← Previous: Incremental Processing](./02-incremental-processing.md) | [↑ Back to Data Processing](./README.md) | [Next: Structured Streaming — Part 2](./03-structured-streaming-part2.md) →**

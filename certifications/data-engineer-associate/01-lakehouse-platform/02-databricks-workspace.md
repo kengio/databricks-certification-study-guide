@@ -38,7 +38,7 @@ flowchart TB
             C2["Prod Cluster"]
         end
     end
-```text
+```
 
 ## Workspace Organization
 
@@ -67,7 +67,7 @@ Workspace Root/
         ├── /dev/                # Personal development
         ├── /experiments/        # Ad-hoc analysis
         └── /dashboards/         # Personal dashboards
-```text
+```
 
 ## Notebooks
 
@@ -90,26 +90,30 @@ Notebooks are the primary development tool in Databricks.
 %scala   # Switch to Scala
 %md      # Markdown formatting
 %sh      # Shell commands
-```text
+```
 
 ### Key Notebook Capabilities
 
 ```python
 # Display formatted output
+
 display(df)  # Better than df.show()
 
 # Databricks widgets for interactive dashboards
+
 dbutils.widgets.text("param_name", "default_value")
 dbutils.widgets.dropdown("env", "dev", ["dev", "prod"])
 
 # Access parameters in code
+
 env = dbutils.widgets.get("env")
 
 # File system operations
+
 dbutils.fs.ls("/mnt/data/")  # List files
 dbutils.fs.mv("/path/src", "/path/dst")  # Move files
 dbutils.fs.cp("/path/src", "/path/dst", True)  # Copy recursively
-```text
+```
 
 ## Repos (Git Integration)
 
@@ -129,21 +133,23 @@ flowchart LR
     Stage --> Commit
     Commit --> Push
     Push --> GitHub
-```text
+```
 
 ### Common Operations
 
 ```python
+
 # Git clone into Databricks
 # UI: Workspace > Repos > Create Repo > GitHub URL
 
 # Common git operations in workspace terminal
+
 git status
 git add <file>
 git commit -m "message"
 git push origin main
 git pull origin main
-```text
+```
 
 ### Branching Strategy for Data Engineering
 
@@ -154,7 +160,7 @@ main (production)
 │   └── feature/optimization
 ├── staging
 └── hotfix/urgent-fix
-```text
+```
 
 ## Clusters
 
@@ -172,21 +178,23 @@ Clusters provide the compute for running notebooks and jobs.
 
 ```python
 # Faster startup for personal
+
 Cluster config:
 - Single worker node
 - Pre-installed libraries
 - Shared with no one
-```text
+```
 
 ### Shared Multi-Workspace Cluster
 
 ```python
 # For team collaboration
+
 Cluster config:
 - Multiple workers
 - Shared libraries
 - Audit logging enabled
-```text
+```
 
 ## Collaboration Features
 
@@ -197,7 +205,7 @@ Alice opens notebook → Bob opens same notebook
 → Both see cursor positions
 → Edits appear in real-time
 → Auto-merge compatible changes
-```text
+```
 
 ### Comments and Discussion
 
@@ -206,7 +214,7 @@ Alice opens notebook → Bob opens same notebook
 Click on cell → Comments icon → Add comment
 @mention team members for notifications
 Resolve comments when addressed
-```text
+```
 
 ### Notebook Sharing
 
@@ -224,7 +232,7 @@ Admins can control:
 - Workspace features (notebooks, clusters, jobs)
 - Data access via UC (Unity Catalog)
 - External connectivity
-```text
+```
 
 ### Multi-Factor Authentication (MFA)
 
@@ -232,7 +240,7 @@ Admins can control:
 Admin console → Security
 → Enforce MFA for all users
 → Support SCIM provisioning
-```text
+```
 
 ### Audit Logs
 
@@ -243,7 +251,7 @@ Captures:
 - Login/logout activities
 - Resource creation/deletion
 - Settings changes
-```text
+```
 
 ## Common Workspace Tasks
 
@@ -262,10 +270,6 @@ Captures:
 - **Repos**: Git integration for production code
 - **Multi-language support**: SQL + Python in same notebook
 
----
-
-**[← Back to Lakehouse Platform](README.md)**
-
 ## Use Cases
 
 - **Databricks Workspace Implementation**: Incorporating Databricks Workspace principles to build scalable and maintainable solutions in Databricks environments.
@@ -274,10 +278,15 @@ Captures:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Databricks Workspace do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks Workspace to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Databricks Workspace to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Workspace prior to deployment.
 
+---
+
+**[← Previous: Lakehouse Architecture](./01-lakehouse-architecture.md) | [↑ Back to Databricks Lakehouse Platform](./README.md) | [Next: Compute and Clusters](./03-compute-clusters.md) →**

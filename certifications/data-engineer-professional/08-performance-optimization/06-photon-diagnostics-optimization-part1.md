@@ -27,7 +27,7 @@ Photon is Databricks' native vectorized query engine:
 - Operates on batches of data (vectorized execution)
 - Replaces Spark's Whole-Stage Code Generation for supported operations
 - Compatible with Spark APIs (no code changes needed)
-```text
+```
 
 ```mermaid
 flowchart LR
@@ -47,7 +47,7 @@ flowchart LR
     Query --> PhotonEngine
     PhotonEngine --> Faster["2-8x Faster"]
     Traditional --> Baseline[Baseline]
-```text
+```
 
 ### Operations Photon Accelerates
 
@@ -76,7 +76,7 @@ Photon does NOT accelerate these (falls back to Spark JVM):
 
 Important: Fallback is automatic and transparent. The query
 still runs; it just uses Spark for those specific operators.
-```text
+```
 
 ### Verifying Photon Is Being Used
 
@@ -101,21 +101,25 @@ Key differences:
 - "Photon" prefix on operators (PhotonScan, PhotonGroupingAgg, etc.)
 - Spark UI shows Photon operators in green
 - Query profile tab labels Photon-executed nodes
-```text
+```
 
 ```python
 # Check if Photon is enabled on current cluster
+
 spark.conf.get("spark.databricks.photon.enabled")
+
 # Returns "true" if Photon is active
 
 # Run a query and verify Photon usage
+
 df = (spark.table("orders")
     .groupBy("customer_id")
     .agg(sum("amount").alias("total")))
 
 df.explain(mode="formatted")
 # Look for "Photon" prefix in operator names
-```text
+
+```
 
 ### Photon-Compatible Cluster Types
 
@@ -134,7 +138,7 @@ Runtime selection:
 SQL Warehouses:
   - Classic SQL Warehouse: Photon enabled by default
   - Serverless SQL Warehouse: Photon enabled by default
-```text
+```
 
 ### Cost Implications
 
@@ -159,7 +163,7 @@ Best ROI scenarios:
   - Large join operations
   - String-heavy processing
   - SQL analytics dashboards
-```text
+```
 
 ### When Photon Provides the Most Benefit
 
@@ -178,7 +182,7 @@ LOW benefit:
   - Streaming with minimal transformations
   - Workloads on non-Parquet formats
   - Simple pass-through pipelines
-```text
+```
 
 ## Memory and Spill Diagnostics
 
@@ -204,7 +208,7 @@ flowchart TB
     end
 
     note1["Execution and Storage share<br>the Unified pool dynamically.<br>Execution can evict Storage<br>but not vice versa."]
-```text
+```
 
 ### Identifying Spill in Spark UI
 
@@ -226,7 +230,7 @@ Where to find spill metrics:
 4. SQL tab -> Query plan:
    - Sort or HashAggregate nodes may show spill metrics
    - Look for "spill size" in operator statistics
-```text
+```
 
 ### Spill Metrics Explained
 
@@ -244,12 +248,13 @@ Spill severity levels:
 - Spill (Disk) < 1 GB: Moderate impact
 - Spill (Disk) > 1 GB: Severe impact - needs immediate attention
 - Spill (Disk) > 10 GB: Critical - query may fail or run extremely slowly
-```text
+```
 
 ### Solving Spill Problems
 
 ```python
 # Solution 1: Increase partitions (reduce data per partition)
+
 spark.conf.set("spark.sql.shuffle.partitions", "2000")  # Was 200
 
 # Solution 2: Increase executor memory
@@ -258,19 +263,22 @@ spark.conf.set("spark.sql.shuffle.partitions", "2000")  # Was 200
 # spark.executor.memoryOverhead = 4g
 
 # Solution 3: Use broadcast joins to avoid shuffle
+
 from pyspark.sql.functions import broadcast
 result = large_df.join(broadcast(small_df), "key")
 
 # Solution 4: Filter data earlier in the pipeline
+
 df = (spark.table("orders")
     .filter(col("order_date") >= "2024-01-01")  # Reduce data FIRST
     .groupBy("customer_id")
     .agg(sum("amount")))
 
 # Solution 5: Increase memory fraction for execution
+
 spark.conf.set("spark.memory.fraction", "0.8")  # More for execution
 spark.conf.set("spark.memory.storageFraction", "0.3")  # Less for cache
-```text
+```
 
 ```sql
 -- SQL: Check if a specific query spills
@@ -288,7 +296,7 @@ SELECT /*+ BROADCAST(regions) */
 FROM orders o
 JOIN regions r ON o.region_id = r.id
 GROUP BY o.customer_id, r.region_name;
-```text
+```
 
 ### Garbage Collection Tuning
 
@@ -306,7 +314,7 @@ Common GC settings for Spark:
 
 Note: On Databricks, GC is pre-tuned. Adjust only if
 monitoring shows GC is a bottleneck.
-```text
+```
 
 ## Spark UI Deep Dive
 
@@ -335,7 +343,7 @@ flowchart TB
     end
 
     note["Job = triggered by an action (collect, save, count)<br>Stage = separated by shuffles<br>Task = one partition processed on one core"]
-```text
+```
 
 ### Spark UI Tabs
 
@@ -364,7 +372,7 @@ The SQL tab is the most important for query analysis:
    - scan time
    - bytes read
    - spill metrics
-```text
+```
 
 ### Reading the DAG Visualization
 
@@ -401,7 +409,7 @@ Key observations:
 - Exchange nodes indicate shuffles (expensive)
 - Partial -> Final aggregation pattern is normal (map-side combine)
 - Files skipped indicates effective data skipping
-```text
+```
 
 ### Task Metrics to Watch
 
@@ -432,6 +440,10 @@ Solutions:
 2. Salt the skewed key
 3. Pre-filter/pre-aggregate to reduce skew
 4. Use broadcast join if one side is small enough
-```text
+```
 
 > **Continue reading:** [Part 2 — Query Optimization Strategies, Common Issues & Exam Tips](./08-photon-diagnostics-optimization-part2.md)
+
+---
+
+**[← Previous: EXPLAIN Plans & Adaptive Query Execution](./05-explain-plans-aqe.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Photon, Diagnostics & Query Optimization — Part 2](./06-photon-diagnostics-optimization-part2.md) →**

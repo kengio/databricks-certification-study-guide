@@ -112,4 +112,4 @@ D) Don't partition, use Z-ORDER on `customer_id`
 
 ---
 
-[Back to Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
+**[← Previous: Practice Questions - Section 02: Databricks Tooling](./02-databricks-tooling.md) | [↑ Back to Practice Questions](./README.md) | [Next: Practice Questions - Section 04: Security & Governance](./04-security-governance.md) →**

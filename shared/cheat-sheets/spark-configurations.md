@@ -15,12 +15,12 @@ spark.conf.get("spark.sql.shuffle.partitions")
 
 # In cluster config (spark_conf)
 spark.sql.shuffle.partitions 200
-```text
+```
 
 ```sql
 -- SQL
 SET spark.sql.shuffle.partitions = 200;
-```text
+```
 
 ## Shuffle & Partitioning
 
@@ -37,7 +37,7 @@ spark.conf.set("spark.sql.shuffle.partitions", 50)
 
 # Increase for large data
 spark.conf.set("spark.sql.shuffle.partitions", 500)
-```text
+```
 
 ## Adaptive Query Execution (AQE)
 
@@ -57,7 +57,7 @@ spark.conf.set("spark.sql.adaptive.enabled", "true")
 
 # Aggressive partition coalescing
 spark.conf.set("spark.sql.adaptive.coalescePartitions.minPartitionSize", "4MB")
-```text
+```
 
 ## Broadcast Join
 
@@ -71,13 +71,13 @@ spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "50MB")
 
 # Disable auto broadcast
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
-```text
+```
 
 ```python
 # Force broadcast hint
 from pyspark.sql.functions import broadcast
 df1.join(broadcast(df2), "key")
-```text
+```
 
 ## Delta Lake Configurations
 
@@ -95,7 +95,7 @@ spark.conf.set("spark.databricks.delta.autoCompact.enabled", "true")
 
 # Enable schema evolution
 spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
-```text
+```
 
 ## File Sizes
 
@@ -117,7 +117,7 @@ spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
 ```python
 # These are typically set at cluster level, not runtime
 # spark.conf.set("spark.executor.memory", "4g")  # Won't work at runtime
-```text
+```
 
 ## Caching
 
@@ -135,7 +135,7 @@ df.unpersist()
 
 # Check if cached
 df.is_cached
-```text
+```
 
 ## Photon
 
@@ -152,28 +152,28 @@ Photon is enabled at the cluster level, not via spark.conf.
 ```python
 spark.conf.set("spark.sql.shuffle.partitions", 8)
 spark.conf.set("spark.sql.adaptive.coalescePartitions.minPartitionSize", "64MB")
-```text
+```
 
 ### Large Data (> 100GB)
 
 ```python
 spark.conf.set("spark.sql.shuffle.partitions", 2000)
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")  # Disable broadcast
-```text
+```
 
 ### Streaming Optimization
 
 ```python
 spark.conf.set("spark.databricks.delta.optimizeWrite.enabled", "true")
 spark.conf.set("spark.databricks.delta.optimizeWrite.fileSize", "128MB")
-```text
+```
 
 ### Skewed Data
 
 ```python
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes", "128MB")
-```text
+```
 
 ## Viewing Current Settings
 
@@ -186,4 +186,4 @@ spark.conf.get("spark.sql.shuffle.partitions")
 
 # SQL catalog configurations
 spark.sql("SET").show(truncate=False)
-```text
+```

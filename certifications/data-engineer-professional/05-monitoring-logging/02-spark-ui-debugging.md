@@ -29,7 +29,7 @@ flowchart TB
         ExecutorsTab[Executors]
         SQLTab[SQL/DataFrame]
     end
-```text
+```
 
 ## Spark Execution Hierarchy
 
@@ -48,7 +48,7 @@ flowchart TD
     Stage1 --> T1[Task 1.1]
     Stage1 --> T2[Task 1.2]
     Stage1 --> T3[Task 1.3]
-```text
+```
 
 | Level | Created By | Characteristics |
 | :--- | :--- | :--- |
@@ -92,7 +92,7 @@ Signs of Problems:
 - Failed stages/tasks
 - Many retried tasks
 - Significant time spent in specific stages
-```text
+```
 
 ## Stages Tab
 
@@ -121,7 +121,7 @@ flowchart LR
     Join --> Aggregate["HashAggregate"]
     Aggregate --> Exchange3["Exchange"]
     Exchange3 --> FinalAgg["HashAggregate"]
-```text
+```
 
 ### Stage Metrics to Monitor
 
@@ -143,7 +143,7 @@ Key Metrics:
 └── Spill
     ├── Spill (Memory) - data spilled to memory
     └── Spill (Disk) - data spilled to disk
-```text
+```
 
 ## Tasks Tab
 
@@ -174,7 +174,7 @@ Task 1: ██░░░░░░░░ 2s
 Task 2: ██░░░░░░░░ 2s
 Task 3: ██░░░░░░░░ 2s
 Task 4: ██████████████████████████████ 60s  ← Straggler
-```text
+```
 
 ## Executors Tab
 
@@ -205,7 +205,7 @@ Unhealthy Executor:
 ├── Disk Used: 10 GB ← Spilling to disk
 ├── Failed Tasks: 5 ← Task failures
 └── Active Tasks: 1 ← Underutilized
-```text
+```
 
 ## SQL/DataFrame Tab
 
@@ -230,7 +230,7 @@ The SQL tab shows:
             :  +- *(2) Scan parquet [order_id, customer_id, amount]
             +- BroadcastExchange HashedRelationBroadcastMode
                +- *(3) Scan parquet [order_id]
-```text
+```
 
 ### Plan Components
 
@@ -264,19 +264,22 @@ Min Duration: 2s
 Median: 4s
 75th percentile: 5s
 Max Duration: 180s  ← Significant skew!
-```text
+```
 
 **Solutions:**
 
 ```python
 # Enable AQE skew handling
+
 spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 
 # Salting technique for severe skew
+
 from pyspark.sql.functions import col, concat, lit, rand
 
 # Add salt to skewed key
+
 df_salted = df.withColumn(
     "salted_key",
     concat(col("skewed_key"), lit("_"), (rand() * 10).cast("int"))
@@ -284,7 +287,8 @@ df_salted = df.withColumn(
 
 # Join with salted keys
 # Then remove salt after join
-```text
+
+```
 
 ### 2. Shuffle Spill
 
@@ -299,20 +303,23 @@ df_salted = df.withColumn(
 ```text
 Shuffle Spill (Memory): 10 GB
 Shuffle Spill (Disk): 5 GB  ← Problem!
-```text
+```
 
 **Solutions:**
 
 ```python
 # Increase memory fraction for execution
+
 spark.conf.set("spark.memory.fraction", "0.8")
 
 # Increase shuffle partitions
+
 spark.conf.set("spark.sql.shuffle.partitions", "400")
 
 # Use more/larger executors
 # Cluster configuration change
-```text
+
+```
 
 ### 3. Small File Problem
 
@@ -328,20 +335,23 @@ spark.conf.set("spark.sql.shuffle.partitions", "400")
 Stage 1: 10000 tasks  ← Too many small tasks
 Input: 1 GB
 Average task input: 100 KB  ← Very small
-```text
+```
 
 **Solutions:**
 
 ```python
 # Coalesce before writing
+
 df.coalesce(100).write.format("delta").save("/path")
 
 # Repartition for better distribution
+
 df.repartition(100).write.format("delta").save("/path")
 
 # Use OPTIMIZE on Delta tables
+
 spark.sql("OPTIMIZE my_table")
-```text
+```
 
 ### 4. Broadcast Join Failure
 
@@ -357,7 +367,7 @@ spark.sql("OPTIMIZE my_table")
 Expected: BroadcastHashJoin
 Actual: SortMergeJoin
 Shuffle Read: 50 GB  ← Large shuffle
-```text
+```
 
 **Solutions:**
 
@@ -365,11 +375,13 @@ Shuffle Read: 50 GB  ← Large shuffle
 from pyspark.sql.functions import broadcast
 
 # Force broadcast
+
 result = large_df.join(broadcast(small_df), "key")
 
 # Increase broadcast threshold (default 10MB)
+
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "100MB")
-```text
+```
 
 ### 5. Excessive GC
 
@@ -383,11 +395,12 @@ spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "100MB")
 
 ```text
 Executor 1 GC Time: 45% of total  ← Too high!
-```text
+```
 
 **Solutions:**
 
 ```python
+
 # Increase executor memory
 # --executor-memory 16g
 
@@ -395,11 +408,13 @@ Executor 1 GC Time: 45% of total  ← Too high!
 # --conf spark.executor.extraJavaOptions="-XX:+UseG1GC -XX:G1HeapRegionSize=16m"
 
 # Reduce data cached in memory
+
 df.unpersist()
 
 # Use Kryo serialization
+
 spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-```text
+```
 
 ### 6. OOM (Out of Memory)
 
@@ -412,11 +427,13 @@ spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
 **Solutions:**
 
 ```python
+
 # Increase driver/executor memory
 # --driver-memory 8g
 # --executor-memory 16g
 
 # Increase memory overhead
+
 spark.conf.set("spark.executor.memoryOverhead", "2g")
 
 # Avoid collecting large results to driver
@@ -424,8 +441,9 @@ spark.conf.set("spark.executor.memoryOverhead", "2g")
 # Good: df.write.save() or df.take(100)
 
 # Increase partitions to reduce per-partition memory
+
 spark.conf.set("spark.sql.shuffle.partitions", "400")
-```text
+```
 
 ## Interpreting Metrics
 
@@ -451,7 +469,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "400")
 □ Examine query plan for unexpected operations
 □ Verify broadcast joins are working
 □ Check partition counts and sizes
-```text
+```
 
 ## Accessing Spark UI
 
@@ -459,12 +477,14 @@ spark.conf.set("spark.sql.shuffle.partitions", "400")
 
 ```python
 # Get Spark UI URL
+
 spark.sparkContext.uiWebUrl
 
 # In Databricks notebooks
 # Click "View" next to cluster name
 # Or use driver logs link
-```text
+
+```
 
 ### After Job Completion
 
@@ -477,7 +497,7 @@ Databricks:
 Spark History Server:
 1. Navigate to history server URL
 2. Select completed application
-```text
+```
 
 ## Use Cases
 
@@ -495,7 +515,7 @@ Spark History Server:
    - Check input sizes
    - Review error messages
 5. Apply appropriate fix
-```text
+```
 
 ### Optimizing Joins
 
@@ -510,7 +530,7 @@ Spark History Server:
    - Increase threshold
 4. Check shuffle metrics
 5. Look for skew in join keys
-```text
+```
 
 ## Exam Tips
 
@@ -536,3 +556,7 @@ Spark History Server:
 - [Spark Web UI](https://spark.apache.org/docs/latest/web-ui.html)
 - [Monitoring Spark Applications](https://docs.databricks.com/clusters/debugging-spark-ui.html)
 - [Performance Tuning](https://spark.apache.org/docs/latest/sql-performance-tuning.html)
+
+---
+
+**[← Previous: System Tables](./01-system-tables.md) | [↑ Back to Monitoring & Logging](./README.md) | [Next: Lakeflow Event Logs](./03-lakeflow-event-logs.md) →**

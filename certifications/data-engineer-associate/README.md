@@ -32,7 +32,7 @@ pie title Exam Topic Distribution
     "Incremental Data Processing" : 22
     "Production Pipelines" : 16
     "Data Governance" : 9
-```text
+```
 
 ## Study Topics
 

@@ -34,7 +34,7 @@ flowchart LR
     LeftDF --> Types
     RightDF --> Types
     Types --> Result
-```text
+```
 
 ## SQL Joins Syntax
 
@@ -50,7 +50,7 @@ FROM employees l
 INNER JOIN departments r
     ON l.department_id = r.id
 WHERE l.salary > 50000
-```text
+```
 
 ```python
 df_inner = employees.join(
@@ -60,12 +60,13 @@ df_inner = employees.join(
 )
 
 # Or specify both join keys
+
 df_inner = employees.join(
     departments,
     ["department_id"],
     how="inner"
 )
-```text
+```
 
 ### Left Outer Join
 
@@ -77,7 +78,7 @@ SELECT
 FROM employees l
 LEFT OUTER JOIN departments r
     ON l.department_id = r.id
-```text
+```
 
 ```python
 df_left = employees.join(
@@ -85,7 +86,7 @@ df_left = employees.join(
     employees.department_id == departments.id,
     how="left"
 )
-```text
+```
 
 ### Right Outer Join
 
@@ -97,7 +98,7 @@ SELECT
 FROM employees l
 RIGHT OUTER JOIN departments r
     ON l.department_id = r.id
-```text
+```
 
 ```python
 df_right = employees.join(
@@ -105,7 +106,7 @@ df_right = employees.join(
     employees.department_id == departments.id,
     how="right"
 )
-```text
+```
 
 ### Full Outer Join
 
@@ -117,7 +118,7 @@ SELECT
 FROM employees l
 FULL OUTER JOIN departments r
     ON l.department_id = r.id
-```text
+```
 
 ```python
 df_full = employees.join(
@@ -125,7 +126,7 @@ df_full = employees.join(
     employees.department_id == departments.id,
     how="outer"
 )
-```text
+```
 
 ### Cross Join
 
@@ -136,14 +137,14 @@ SELECT
     r.option
 FROM employees l
 CROSS JOIN product_options r
-```text
+```
 
 ```python
 df_cross = employees.join(
     options,
     how="cross"
 )
-```text
+```
 
 ### Semi Join (Filtering Join)
 
@@ -156,7 +157,7 @@ WHERE EXISTS (
     WHERE l.department_id = r.id
     AND r.budget > 100000
 )
-```text
+```
 
 ```python
 df_semi = employees.join(
@@ -164,7 +165,7 @@ df_semi = employees.join(
     employees.department_id == departments.id,
     how="semi"
 )
-```text
+```
 
 ### Anti Join (Anti-Filter)
 
@@ -176,7 +177,7 @@ WHERE NOT EXISTS (
     SELECT 1 FROM blacklist r
     WHERE l.id = r.employee_id
 )
-```text
+```
 
 ```python
 df_anti = employees.join(
@@ -184,7 +185,7 @@ df_anti = employees.join(
     employees.id == blacklist.employee_id,
     how="anti"
 )
-```text
+```
 
 ## Join Comparison
 
@@ -212,7 +213,7 @@ SELECT
     SUM(salary) as total_salary
 FROM employees
 GROUP BY department
-```text
+```
 
 ```python
 df_agg = (employees
@@ -225,7 +226,7 @@ df_agg = (employees
         F.sum("salary").alias("total_salary")
     )
 )
-```text
+```
 
 ### Multiple Grouping Columns
 
@@ -238,7 +239,7 @@ df_multi_group = (employees
         F.stddev("salary").alias("salary_stddev")
     )
 )
-```text
+```
 
 ### HAVING Clause (Filter After GROUP BY)
 
@@ -250,7 +251,7 @@ SELECT
 FROM employees
 GROUP BY department
 HAVING COUNT(*) > 10 AND AVG(salary) > 80000
-```text
+```
 
 ```python
 df_having = (employees
@@ -261,7 +262,7 @@ df_having = (employees
     )
     .filter((F.col("emp_count") > 10) & (F.col("avg_salary") > 80000))
 )
-```text
+```
 
 ## Aggregation Functions
 
@@ -295,12 +296,13 @@ df_complex = (employees
         F.collect_list("name").alias("employee_names")
     )
 )
-```text
+```
 
 ### Conditional Aggregation
 
 ```python
 # Count by condition
+
 df_conditional = (employees
     .groupBy("department")
     .agg(
@@ -310,7 +312,7 @@ df_conditional = (employees
             .alias("regular_earners")
     )
 )
-```text
+```
 
 ## Join Performance Considerations
 
@@ -318,6 +320,7 @@ df_conditional = (employees
 
 ```python
 # Spark auto-broadcasts tables < 10MB, but can force:
+
 from pyspark.sql.functions import broadcast
 
 df_result = large_df.join(
@@ -325,24 +328,27 @@ df_result = large_df.join(
     large_df.key == small_df.key,
     how="inner"
 )
-```text
+```
 
 ### Bucketing for Joins
 
 ```python
 # Pre-bucket large table for faster joins
+
 employees.write \
     .bucketBy(10, "department_id") \
     .mode("overwrite") \
     .saveAsTable("employees_bucketed")
 
 # Subsequent joins on department_id will be faster
-```text
+
+```
 
 ### Salting for Skewed Joins
 
 ```python
 # Add random salt to skewed join keys
+
 import pyspark.sql.functions as F
 
 SALT_BUCKETS = 10
@@ -361,7 +367,7 @@ result = (employees_salt.join(
     (employees_salt.salt == departments_salt.salt),
     "inner"
 ).drop("salt"))
-```text
+```
 
 ## Window Functions with Aggregations
 
@@ -373,7 +379,7 @@ SELECT
     AVG(salary) OVER (PARTITION BY department) as dept_avg,
     RANK() OVER (PARTITION BY department ORDER BY salary DESC) as salary_rank
 FROM employees
-```text
+```
 
 ```python
 from pyspark.sql.window import Window
@@ -385,7 +391,7 @@ df_window = employees.withColumn(
 ).withColumn(
     "salary_rank", F.rank().over(window)
 )
-```text
+```
 
 ## Common Join Issues
 
@@ -407,10 +413,6 @@ df_window = employees.withColumn(
 - **Join Optimization**: Broadcast small tables, bucket large tables
 - **Anti-Join**: Returns unmatched rows from left table
 
----
-
-**[← Back to ETL with Spark SQL](README.md)**
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -419,10 +421,15 @@ df_window = employees.withColumn(
 ## Common Issues & Errors
 
 ### 1. OOM Errors
+
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Joins and Aggregations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Joins and Aggregations prior to deployment.
 
+---
+
+**[← Previous: DataFrame Operations](./02-dataframe-operations.md) | [↑ Back to ETL with Spark SQL and Python](./README.md) | [Next: Advanced Transformations](./04-advanced-transformations.md) →**

@@ -93,9 +93,11 @@ with mlflow.start_run():
     )
 
 print(results.metrics)
+
 # {'exact_match/v1': 0.0, 'token_count/v1': 42.3, ...}
 
 # Per-row results
+
 print(results.tables["eval_results_table"])
 ```
 
@@ -172,6 +174,7 @@ from ragas.metrics import faithfulness, answer_relevancy, context_precision, con
 from datasets import Dataset
 
 # RAGAS expects specific column names
+
 ragas_data = Dataset.from_dict({
     "question": eval_data["inputs"].tolist(),
     "answer": predictions,           # Model outputs collected separately
@@ -207,6 +210,7 @@ BASELINE_RUN_ID = "abc123"
 THRESHOLD_FAITHFULNESS = 0.85
 
 # Evaluate new chain
+
 with mlflow.start_run(run_name="chain-v2-eval") as run:
     results = mlflow.evaluate(
         model="runs:/<new_run_id>/rag_chain",
@@ -218,6 +222,7 @@ with mlflow.start_run(run_name="chain-v2-eval") as run:
     new_faithfulness = results.metrics["faithfulness/v1/mean"]
 
 # Compare against baseline
+
 baseline = mlflow.get_run(BASELINE_RUN_ID)
 baseline_faithfulness = baseline.data.metrics.get("faithfulness/v1/mean", 0)
 
@@ -353,8 +358,6 @@ quality assessment.
 > fine-tuning. Automated evaluation uses `mlflow.evaluate()`. MLflow UI handles metric
 > visualisation. Model Serving (not Review App) handles production REST traffic.
 
-[← Back to LLM Application Development](./README.md)
-
 ## Use Cases
 
 - **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
@@ -363,10 +366,15 @@ quality assessment.
 ## Common Issues & Errors
 
 ### 1. High Latency Responses
+
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Evaluating LLM Applications to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Evaluating LLM Applications prior to deployment.
 
+---
+
+**[← Previous: LLM Chains & Agents](./02-chains-agents.md) | [↑ Back to LLM Application Development](./README.md)**

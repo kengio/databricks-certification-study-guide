@@ -31,7 +31,7 @@ flowchart LR
     Share --> Recipient
     Recipient --> |Credentials| Client
     Client --> Query
-```text
+```
 
 ## Delta Sharing Architecture
 
@@ -61,7 +61,7 @@ flowchart TB
     CrossPlatform --> PowerBI[Power BI]
     Governed --> Audit[Audit Logs]
     Governed --> Revoke[Revoke Access]
-```text
+```
 
 ## Creating Shares
 
@@ -80,7 +80,7 @@ SHOW SHARES;
 
 -- Describe share
 DESCRIBE SHARE customer_data_share;
-```text
+```
 
 ### Adding Tables to Shares
 
@@ -112,7 +112,7 @@ WITH PARTITION (region = 'US');
 -- Remove table from share
 ALTER SHARE customer_data_share
 REMOVE TABLE prod.gold.orders;
-```text
+```
 
 ### Share with History (Change Data Feed)
 
@@ -125,7 +125,7 @@ WITH HISTORY;
 -- Recipients can query changes
 -- SELECT * FROM customers_shared VERSION AS OF 5;
 -- SELECT * FROM table_changes('customers_shared', 1, 5);
-```text
+```
 
 ## Managing Recipients
 
@@ -144,7 +144,7 @@ USING ID 'azure:eastus:abc12345-1234-1234-1234-123456789012';
 -- Create recipient for non-Databricks (open sharing)
 CREATE RECIPIENT external_partner;
 -- This generates a credential file for download
-```text
+```
 
 ### Sharing Credentials
 
@@ -155,7 +155,7 @@ DESCRIBE RECIPIENT external_partner;
 
 -- Rotate recipient token
 ALTER RECIPIENT external_partner ROTATE TOKEN;
-```text
+```
 
 ### Granting Share Access
 
@@ -172,7 +172,7 @@ SHOW GRANTS TO RECIPIENT partner_analytics;
 
 -- Revoke access
 REVOKE SELECT ON SHARE customer_data_share FROM RECIPIENT partner_analytics;
-```text
+```
 
 ### Viewing Recipients
 
@@ -185,7 +185,7 @@ DESCRIBE RECIPIENT partner_analytics;
 
 -- Show shares granted to recipient
 SHOW GRANTS TO RECIPIENT partner_analytics;
-```text
+```
 
 ## Consuming Shared Data
 
@@ -201,31 +201,37 @@ SELECT * FROM shared_customer_data.default.customers;
 
 -- List shared catalogs
 SHOW CATALOGS;
-```text
+```
 
 ### Using Credentials File (Open Sharing)
 
 ```python
+
 # Install delta-sharing library
 # pip install delta-sharing
 
 import delta_sharing
 
 # Load the credential file
+
 profile_path = "/path/to/config.share"
 
 # List available shares
+
 shares = delta_sharing.list_shares(profile_path)
 
 # List tables in share
+
 tables = delta_sharing.list_all_tables(profile_path)
 
 # Load table as pandas DataFrame
+
 df = delta_sharing.load_as_pandas(f"{profile_path}#share_name.schema_name.table_name")
 
 # Load as Spark DataFrame
+
 df = delta_sharing.load_as_spark(f"{profile_path}#share_name.schema_name.table_name")
-```text
+```
 
 ### Credential File Format
 
@@ -235,7 +241,7 @@ df = delta_sharing.load_as_spark(f"{profile_path}#share_name.schema_name.table_n
   "endpoint": "https://sharing.databricks.com/delta-sharing/",
   "bearerToken": "xxxxxxxxxxxxxxxx"
 }
-```text
+```
 
 ### Power BI Integration
 
@@ -245,7 +251,7 @@ df = delta_sharing.load_as_spark(f"{profile_path}#share_name.schema_name.table_n
    - Get Data → Delta Sharing
    - Provide credential file path
    - Select tables to import
-```text
+```
 
 ## Sharing Patterns
 
@@ -265,7 +271,7 @@ sequenceDiagram
     Recipient->>Recipient: Download credentials
     Recipient->>Share: Query shared data
     Provider->>Provider: Monitor via audit logs
-```text
+```
 
 ```sql
 -- Provider setup
@@ -283,7 +289,7 @@ GRANT SELECT ON SHARE partner_exchange TO RECIPIENT partner_company;
 
 -- Get activation link
 DESCRIBE RECIPIENT partner_company;
-```text
+```
 
 ### Internal Team Sharing
 
@@ -299,7 +305,7 @@ CREATE RECIPIENT data_science_ws
 USING ID 'databricks:workspace:12345';
 
 GRANT SELECT ON SHARE team_shared_data TO RECIPIENT data_science_ws;
-```text
+```
 
 ### Filtered Sharing (Multi-Tenant)
 
@@ -318,7 +324,7 @@ WITH PARTITION (country IN ('DE', 'FR', 'GB'));
 -- Different recipients for each region
 GRANT SELECT ON SHARE us_customer_data TO RECIPIENT us_partner;
 GRANT SELECT ON SHARE eu_customer_data TO RECIPIENT eu_partner;
-```text
+```
 
 ## Share Governance
 
@@ -347,7 +353,7 @@ SELECT
 FROM system.access.audit
 WHERE action_name = 'deltaSharingQueryTable'
 ORDER BY event_time DESC;
-```text
+```
 
 ### Managing Share Lifecycle
 
@@ -364,7 +370,7 @@ DROP RECIPIENT partner_analytics;
 
 -- Drop share (removes all recipient access)
 DROP SHARE customer_data_share;
-```text
+```
 
 ### Share Versioning
 
@@ -380,7 +386,7 @@ SELECT * FROM shared_catalog.schema.customers VERSION AS OF 10;
 
 -- Query changes between versions
 SELECT * FROM table_changes('shared_catalog.schema.customers', 5, 10);
-```text
+```
 
 ## Marketplace (Databricks Marketplace)
 
@@ -392,7 +398,7 @@ SELECT * FROM table_changes('shared_catalog.schema.customers', 5, 10);
 -- 2. Create listing in Marketplace
 -- 3. Set listing visibility (public/private)
 -- 4. Add documentation and terms
-```text
+```
 
 ### Consuming from Marketplace
 
@@ -402,7 +408,7 @@ SELECT * FROM table_changes('shared_catalog.schema.customers', 5, 10);
 
 -- Query marketplace data
 SELECT * FROM marketplace_catalog.schema.table_name;
-```text
+```
 
 ## Cross-Cloud Sharing
 
@@ -423,7 +429,7 @@ flowchart LR
     AWSData --> AWSShare
     AWSShare --> |Delta Sharing Protocol| AzureRecipient
     AzureRecipient --> AzureCatalog
-```text
+```
 
 ```sql
 -- AWS provider creates share
@@ -439,7 +445,7 @@ GRANT SELECT ON SHARE cross_cloud_data TO RECIPIENT azure_team;
 -- Azure consumer creates catalog
 CREATE CATALOG aws_shared_data
 USING SHARE aws_account.cross_cloud_data;
-```text
+```
 
 ## Security Considerations
 
@@ -472,7 +478,7 @@ ADD TABLE prod.gold.sharable_customers;
 
 -- Regular access review
 SHOW GRANTS TO RECIPIENT partner_analytics;
-```text
+```
 
 ## Use Cases
 
@@ -490,7 +496,7 @@ ALTER SHARE premium_tier ADD TABLE prod.gold.detailed_metrics WITH HISTORY;
 -- Different pricing per tier
 GRANT SELECT ON SHARE basic_tier TO RECIPIENT customer_basic;
 GRANT SELECT ON SHARE premium_tier TO RECIPIENT customer_premium;
-```text
+```
 
 ### Regulatory Reporting
 
@@ -507,7 +513,7 @@ WITH PARTITION (quarter = '2024-Q1');
 
 CREATE RECIPIENT federal_regulator;
 GRANT SELECT ON SHARE regulatory_reports TO RECIPIENT federal_regulator;
-```text
+```
 
 ## Common Issues & Errors
 
@@ -526,7 +532,7 @@ SHOW GRANTS TO RECIPIENT partner_analytics;
 
 -- Re-grant if needed
 GRANT SELECT ON SHARE customer_data_share TO RECIPIENT partner_analytics;
-```text
+```
 
 ### 2. Table Not Visible in Share
 
@@ -543,7 +549,7 @@ SHOW ALL IN SHARE customer_data_share;
 
 -- Re-add table if needed
 ALTER SHARE customer_data_share ADD TABLE prod.gold.customers;
-```text
+```
 
 ### 3. Credential File Expired
 
@@ -555,7 +561,7 @@ ALTER SHARE customer_data_share ADD TABLE prod.gold.customers;
 ALTER RECIPIENT external_partner ROTATE TOKEN;
 -- Send new activation link to recipient
 DESCRIBE RECIPIENT external_partner;
-```text
+```
 
 ### 4. Partition Filter Not Working
 
@@ -572,7 +578,7 @@ ALTER SHARE regional_data REMOVE TABLE prod.gold.sales;
 ALTER SHARE regional_data
 ADD TABLE prod.gold.sales
 WITH PARTITION (region = 'US');
-```text
+```
 
 ## Exam Tips
 
@@ -599,3 +605,7 @@ WITH PARTITION (region = 'US');
 - [Create and Manage Shares](https://docs.databricks.com/data-sharing/create-share.html)
 - [Create and Manage Recipients](https://docs.databricks.com/data-sharing/create-recipient.html)
 - [Delta Sharing Protocol](https://github.com/delta-io/delta-sharing)
+
+---
+
+**[← Previous: Access Control](./02-access-control.md) | [↑ Back to Security & Governance](./README.md) | [Next: Secret Management](./04-secret-management.md) →**

@@ -98,6 +98,7 @@ response = client.predict(
 
 # Response format (OpenAI-compatible)
 # response["data"] is a list of {"object": "embedding", "embedding": [...], "index": 0}
+
 embeddings = [item["embedding"] for item in response["data"]]
 print(f"Number of embeddings: {len(embeddings)}")
 print(f"Dimensions per embedding: {len(embeddings[0])}")  # 1024 for GTE-Large
@@ -204,9 +205,11 @@ def embed_udf(text_series: pd.Series) -> pd.Series:
 
 
 # Apply to a Spark DataFrame
+
 df_with_embeddings = df.withColumn("embedding", embed_udf(col("content")))
 
 # Write to Delta for Vector Search ingestion
+
 (df_with_embeddings
  .write
  .format("delta")
@@ -314,8 +317,6 @@ D) Any model — architecture does not affect retrieval quality
 > Sequence-to-sequence (C) is designed for translation/summarization, not retrieval.
 > Architecture matters significantly for retrieval quality (D is wrong).
 
-[← Back to Topic](./README.md)
-
 ## Use Cases
 
 - **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
@@ -324,10 +325,15 @@ D) Any model — architecture does not affect retrieval quality
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Embedding Models to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Embedding Models prior to deployment.
 
+---
+
+**[↑ Back to Vector Search & Embeddings](./README.md) | [Next: Databricks Vector Search](./02-databricks-vector-search.md) →**

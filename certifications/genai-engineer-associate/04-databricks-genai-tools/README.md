@@ -59,4 +59,4 @@ After completing this topic, review the resources section:
 - [Practice Questions](../resources/practice-questions/README.md)
 - [Exam Tips](../resources/exam-tips.md)
 
-[← Back to GenAI Engineer Associate](../README.md)
+[← Back to Certification](../README.md)

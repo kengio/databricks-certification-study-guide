@@ -22,6 +22,7 @@ from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType, IntegerType
 
 # Simple Python UDF
+
 def categorize_salary(salary):
     if salary < 50000:
         return "Entry"
@@ -31,13 +32,15 @@ def categorize_salary(salary):
         return "Senior"
 
 # Register UDF
+
 categorize_udf = udf(categorize_salary, StringType())
 
 # Use in DataFrame
+
 df_categorized = (employees
     .withColumn("level", categorize_udf(col("salary")))
 )
-```text
+```
 
 ### Pandas UDFs (Vectorized)
 
@@ -59,15 +62,17 @@ def categorize_salary_pandas(salary_series: pd.Series) -> pd.Series:
 df_categorized = (employees
     .withColumn("level", categorize_salary_pandas(col("salary")))
 )
-```text
+```
 
 ### SQL UDFs
 
 ```python
 # Register as SQL function
+
 spark.udf.register("categorize_salary_sql", categorize_salary, StringType())
 
 # Use in SQL
+
 result = spark.sql("""
     SELECT
         id,
@@ -76,7 +81,7 @@ result = spark.sql("""
         categorize_salary_sql(salary) as level
     FROM employees
 """)
-```text
+```
 
 ### Scala UDFs
 
@@ -86,7 +91,7 @@ spark.udf.registerJavaFunction(
     "com.example.MyFunctions.processData",
     StringType()
 )
-```text
+```
 
 ## Window Functions
 
@@ -100,7 +105,7 @@ flowchart LR
     Data --> Window
     Window --> Compute
     Compute --> Result
-```text
+```
 
 ### Window Function Syntax
 
@@ -122,7 +127,7 @@ SELECT
     LAG(salary) OVER (ORDER BY hire_date) as prev_salary,
     LEAD(salary) OVER (ORDER BY hire_date) as next_salary
 FROM employees
-```text
+```
 
 ### Window Functions in Python
 
@@ -131,6 +136,7 @@ from pyspark.sql.window import Window
 from pyspark.sql.functions import row_number, rank, dense_rank, lag, lead, avg
 
 # Define window
+
 window_dept = Window.partitionBy("department").orderBy(F.desc("salary"))
 
 df_windowed = (employees
@@ -139,7 +145,7 @@ df_windowed = (employees
     .withColumn("dense_rank", dense_rank().over(window_dept))
     .withColumn("dept_avg", avg("salary").over(Window.partitionBy("department")))
 )
-```text
+```
 
 ### Common Window Functions
 
@@ -162,12 +168,14 @@ df_windowed = (employees
 from pyspark.sql.functions import array, concat, array_contains
 
 # Create arrays
+
 df_array = employees.select(
     col("name"),
     array(col("first_name"), col("last_name")).alias("name_parts")
 )
 
 # Array operations
+
 df_array = employees.select(
     col("skills"),
     array_contains(col("skills"), "Python").alias("knows_python"),
@@ -175,16 +183,18 @@ df_array = employees.select(
 )
 
 # Explode array into rows
+
 df_exploded = (employees
     .selectExpr("name", "explode(skills) as skill")
 )
 
 # Collect array from GROUP BY
+
 df_collected = (employees
     .groupBy("department")
     .agg(F.collect_list("name").alias("employees"))
 )
-```text
+```
 
 ### Maps
 
@@ -192,6 +202,7 @@ df_collected = (employees
 from pyspark.sql.functions import create_map, map_keys, map_values
 
 # Create map
+
 df_map = employees.select(
     col("name"),
     create_map(
@@ -201,16 +212,18 @@ df_map = employees.select(
 )
 
 # Access map values
+
 df_accessed = (employees
     .withColumn("dept", col("info")["department"])
     .withColumn("sal", col("info")["salary"])
 )
 
 # Explode map into key-value rows
+
 df_exploded = (employees
     .selectExpr("name", "explode(info) as (key, value)")
 )
-```text
+```
 
 ### Structs
 
@@ -218,6 +231,7 @@ df_exploded = (employees
 from pyspark.sql.functions import struct, col
 
 # Create struct
+
 df_struct = employees.select(
     col("name"),
     struct(
@@ -228,11 +242,12 @@ df_struct = employees.select(
 )
 
 # Access struct fields
+
 df_accessed = (employees
     .withColumn("emp_name", col("employee_info.full_name"))
     .withColumn("emp_sal", col("employee_info.annual_salary"))
 )
-```text
+```
 
 ## String Operations
 
@@ -248,7 +263,7 @@ df_strings = employees.select(
     concat(col("first_name"), lit(" "), col("last_name")).alias("full_name"),
     length(col("name")).alias("name_length")
 )
-```text
+```
 
 ## Date and Timestamp Operations
 
@@ -265,7 +280,7 @@ df_dates = employees.select(
     date_add(col("hire_date"), 365).alias("one_year_anniversary"),
     from_unixtime(col("timestamp_ms") / 1000).alias("readable_timestamp")
 )
-```text
+```
 
 ## Conditional Logic
 
@@ -273,6 +288,7 @@ df_dates = employees.select(
 from pyspark.sql.functions import when, otherwise, case, coalesce
 
 # Simple when/otherwise
+
 df_conditional = (employees
     .withColumn("bonus_eligible",
         when(col("salary") > 100000, True).otherwise(False)
@@ -280,6 +296,7 @@ df_conditional = (employees
 )
 
 # Multiple conditions
+
 df_bonus = (employees
     .withColumn("bonus_pct",
         when(col("salary") >= 150000, 0.20)
@@ -290,23 +307,26 @@ df_bonus = (employees
 )
 
 # Coalesce (first non-null value)
+
 df_coalesce = (employees
     .withColumn("contact",
         coalesce(col("email"), col("phone"), lit("No contact"))
     )
 )
-```text
+```
 
 ## Flattening nested structures
 
 ```python
 # Unnest array column
+
 df_unnested = (employees
     .select("id", "name", F.explode("addresses").alias("address"))
     .select("id", "name", "address.street", "address.city")
 )
 
 # Flatten struct
+
 df_flattened = (employees
     .select(
         "id",
@@ -315,7 +335,7 @@ df_flattened = (employees
         col("contact_info.phone").alias("phone")
     )
 )
-```text
+```
 
 ## Pivot Operations
 
@@ -328,7 +348,7 @@ PIVOT (
     SUM(salary)
     FOR department IN ('Engineering' as eng, 'Sales' as sales, 'HR' as hr)
 )
-```text
+```
 
 ```python
 df_pivoted = (employees
@@ -336,7 +356,7 @@ df_pivoted = (employees
     .pivot("department", ["Engineering", "Sales", "HR"])
     .agg(F.sum("salary"))
 )
-```text
+```
 
 ## Null Handling
 
@@ -344,6 +364,7 @@ df_pivoted = (employees
 from pyspark.sql.functions import isnan, isnull, fillna, dropna
 
 # Check for nulls
+
 df_nulls = employees.select(
     col("name"),
     isnull(col("email")).alias("email_missing"),
@@ -351,9 +372,11 @@ df_nulls = employees.select(
 )
 
 # Drop nulls
+
 df_clean = employees.dropna(subset=["email"])
 
 # Fill nulls with value
+
 df_filled = (employees
     .fillna({
         "email": "unknown@company.com",
@@ -362,6 +385,7 @@ df_filled = (employees
 )
 
 # Fill nulls with forward fill
+
 window_fill = Window.orderBy(col("hire_date"))
 df_forward_filled = employees.withColumn(
     "salary",
@@ -369,7 +393,7 @@ df_forward_filled = employees.withColumn(
         window_fill.rowsBetween(Window.unboundedPreceding, 0)
     )
 )
-```text
+```
 
 ## Performance Considerations
 
@@ -377,6 +401,7 @@ df_forward_filled = employees.withColumn(
 
 ```python
 # Broadcast for small reference tables
+
 from pyspark.sql.functions import broadcast
 
 result = large_df.join(
@@ -385,23 +410,27 @@ result = large_df.join(
 )
 
 # Shuffle for large-to-large joins
+
 result = df1.join(df2, df1.key == df2.key)
-```text
+```
 
 ### Caching Strategy
 
 ```python
 # Cache frequently used DataFrames
+
 df_cleaned = df.filter(col("sales") > 100)
 df_cleaned.cache()
 
 # Use it multiple times
+
 result1 = df_cleaned.select("name", "sales")
 result2 = df_cleaned.filter(col("sales") > 500)
 
 # Remove from cache
+
 df_cleaned.unpersist()
-```text
+```
 
 ## UDF vs Built-in Functions
 
@@ -423,10 +452,6 @@ df_cleaned.unpersist()
 - **Optimization**: Use broadcast for small tables, avoid UDFs when possible
 - **Pivot**: Transform data from rows to columns
 
----
-
-**[← Back to ETL with Spark SQL](README.md)**
-
 ## Use Cases
 
 - **Advanced Transformations Implementation**: Incorporating Advanced Transformations principles to build scalable and maintainable solutions in Databricks environments.
@@ -435,10 +460,15 @@ df_cleaned.unpersist()
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Advanced Transformations do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Advanced Transformations to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Advanced Transformations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Advanced Transformations prior to deployment.
 
+---
+
+**[← Previous: Joins and Aggregations](./03-joins-aggregations.md) | [↑ Back to ETL with Spark SQL and Python](./README.md)**

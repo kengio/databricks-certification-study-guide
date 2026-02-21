@@ -31,7 +31,7 @@ flowchart TD
 
     WF --> Offset["Offset"]
     Offset --> O1["LAG/LEAD<br/>Previous/Next"]
-```text
+```
 
 ## Basic Window Clause
 
@@ -54,7 +54,7 @@ SELECT
     salary,
     ROW_NUMBER() OVER (ORDER BY salary DESC) as salary_rank
 FROM employees;
-```text
+```
 
 ## Ranking Functions
 
@@ -76,7 +76,7 @@ FROM employees;
 -- emp2, Bob, $95k, 2
 -- emp3, Charlie, $95k, 3 ← Note: Both get unique rows
 -- emp4, Diana, $90k, 4
-```text
+```
 
 **Pattern: Top N in each category**
 
@@ -92,7 +92,7 @@ FROM (
     FROM employees
 )
 WHERE rank_in_dept <= 3;  -- Top 3 per department
-```text
+```
 
 ### RANK
 
@@ -112,7 +112,7 @@ FROM employees;
 -- emp2, Bob, $95k, 2
 -- emp3, Charlie, $95k, 2 ← Tie gets same rank
 -- emp4, Diana, $90k, 4  ← Next rank skips
-```text
+```
 
 ### DENSE_RANK
 
@@ -132,7 +132,7 @@ FROM employees;
 -- emp2, Bob, $95k, 2
 -- emp3, Charlie, $95k, 2 ← Tie
 -- emp4, Diana, $90k, 3  ← No gap
-```text
+```
 
 ### Ranking Comparison
 
@@ -162,7 +162,7 @@ ORDER BY sale_date;
 -- 2024-01-01: $100k, $100k
 -- 2024-01-02: $110k, $210k
 -- 2024-01-03: $95k, $305k
-```text
+```
 
 ### Moving Average
 
@@ -179,7 +179,7 @@ FROM daily_sales
 ORDER BY sale_date;
 
 -- Window includes 7 days: 6 before + current row
-```text
+```
 
 ### Partitioned Aggregates
 
@@ -195,7 +195,7 @@ SELECT
 FROM products;
 
 -- Shows each product vs its category average
-```text
+```
 
 ## Offset Functions
 
@@ -219,7 +219,7 @@ ORDER BY month;
 -- 2024-01: $100k, NULL,       NULL,      NULL
 -- 2024-02: $110k, $100k,      $10k,      10.00%
 -- 2024-03: $95k,  $110k,      -$15k,     -13.64%
-```text
+```
 
 ### LEAD - Next Row
 
@@ -232,7 +232,7 @@ SELECT
 FROM monthly_sales;
 
 -- Useful for: forecasting, planning, finding drops
-```text
+```
 
 ### Custom Offset
 
@@ -253,7 +253,7 @@ SELECT
     LAG(revenue, 1, 0) OVER (ORDER BY month) as prev_revenue
 FROM monthly_sales;
 -- If no previous row, use 0 instead of NULL
-```text
+```
 
 ## Window Frame Specification
 
@@ -277,7 +277,7 @@ SELECT
     -- Last 7 calendar days
     SUM(revenue) OVER (ORDER BY date RANGE BETWEEN INTERVAL 6 DAY PRECEDING AND CURRENT ROW)
 FROM sales;
-```text
+```
 
 ### Frame Boundaries
 
@@ -291,7 +291,7 @@ SUM(...) OVER (PARTITION BY category)
 
 -- Last 3 and next 3 rows
 AVG(...) OVER (ORDER BY date ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING)
-```text
+```
 
 ## FIRST_VALUE & LAST_VALUE
 
@@ -318,7 +318,7 @@ ORDER BY month, sale_date;
 
 -- Note: LAST_VALUE needs UNBOUNDED FOLLOWING
 -- Otherwise defaults to CURRENT ROW, missing future rows
-```text
+```
 
 ## Partitioning Strategy
 
@@ -332,7 +332,7 @@ SELECT
     salary,
     RANK() OVER (ORDER BY salary DESC) as overall_rank
 FROM employees;
-```text
+```
 
 ### Multiple Partitions
 
@@ -355,7 +355,7 @@ ORDER BY department, rank_in_department;
 -- Sales, emp2, Bob, $95k, 2
 -- Finance, emp3, Charlie, $110k, 1
 -- Finance, emp4, Diana, $105k, 2
-```text
+```
 
 ### Multiple Window Definitions
 
@@ -376,7 +376,7 @@ SELECT
     SUM(revenue) OVER (ORDER BY region, branch) as cumulative_revenue
 FROM sales
 ORDER BY region, branch;
-```text
+```
 
 ## Complex Analytics Examples
 
@@ -401,7 +401,7 @@ SELECT
 FROM customer_activity
 GROUP BY signup_cohort, days_since_signup
 ORDER BY signup_cohort, days_since_signup;
-```text
+```
 
 ### Session Analysis
 
@@ -437,7 +437,7 @@ SELECT
         SUM(is_session_start) OVER (PARTITION BY user_id ORDER BY event_timestamp)
     ) as events_in_session
 FROM events_with_gaps;
-```text
+```
 
 ## Key Exam Concepts
 
@@ -469,10 +469,6 @@ FROM events_with_gaps;
 
 - **A**: No, but can include multiple columns: PARTITION BY col1, col2
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Window Functions & Analytics Implementation**: Incorporating Window Functions & Analytics principles to build scalable and maintainable solutions in Databricks environments.
@@ -481,10 +477,15 @@ FROM events_with_gaps;
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Window Functions & Analytics do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Window Functions & Analytics to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Window Functions & Analytics to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Window Functions & Analytics prior to deployment.
 
+---
+
+**[← Previous: Aggregations & Grouping](./02-aggregations-grouping.md) | [↑ Back to Advanced SQL Queries](./README.md)**

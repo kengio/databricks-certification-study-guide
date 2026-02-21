@@ -32,7 +32,7 @@ flowchart LR
     subgraph Load
         Clean --> Write[Write to Delta]
     end
-```text
+```
 
 ## ETL vs ELT
 
@@ -62,7 +62,7 @@ flowchart LR
     Gold -.- G1[Business aggregates]
     Gold -.- G2[Ready for BI]
     Gold -.- G3[Optimized for queries]
-```text
+```
 
 ## Reading Data
 
@@ -70,9 +70,11 @@ flowchart LR
 
 ```python
 # Read Parquet
+
 df = spark.read.format("parquet").load("/path/to/files")
 
 # Read CSV with options
+
 df = (spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
@@ -80,14 +82,16 @@ df = (spark.read.format("csv")
     .load("/path/to/files/*.csv"))
 
 # Read JSON
+
 df = (spark.read.format("json")
     .option("multiLine", "true")
     .load("/path/to/files"))
 
 # Read Delta
+
 df = spark.read.format("delta").load("/path/to/delta")
 df = spark.table("catalog.schema.table_name")
-```text
+```
 
 ### Read Options by Format
 
@@ -104,6 +108,7 @@ df = spark.table("catalog.schema.table_name")
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType
 
 # Define schema explicitly (recommended for production)
+
 schema = StructType([
     StructField("id", IntegerType(), nullable=False),
     StructField("name", StringType(), nullable=True),
@@ -113,12 +118,13 @@ schema = StructType([
 df = (spark.read.format("json")
     .schema(schema)
     .load("/path/to/files"))
-```text
+```
 
 ### Handling Corrupt Records
 
 ```python
 # Mode options for corrupt records
+
 df = (spark.read.format("json")
     # Default: nulls for corrupt fields
     .option("mode", "PERMISSIVE")
@@ -126,15 +132,17 @@ df = (spark.read.format("json")
     .load("/path/to/files"))
 
 # DROPMALFORMED: Skip corrupt records
+
 df = (spark.read.format("csv")
     .option("mode", "DROPMALFORMED")
     .load("/path/to/files"))
 
 # FAILFAST: Fail immediately on corrupt record
+
 df = (spark.read.format("csv")
     .option("mode", "FAILFAST")
     .load("/path/to/files"))
-```text
+```
 
 | Mode | Behavior |
 | :--- | :--- |
@@ -150,14 +158,17 @@ df = (spark.read.format("csv")
 from pyspark.sql.functions import col, lit, when, coalesce, concat, upper
 
 # Select columns
+
 df.select("col1", "col2")
 df.select(col("col1"), col("col2").alias("renamed"))
 
 # Add new column
+
 df.withColumn("new_col", lit("constant"))
 df.withColumn("full_name", concat(col("first"), lit(" "), col("last")))
 
 # Conditional column
+
 df.withColumn("status",
     when(col("amount") > 100, "high")
     .when(col("amount") > 50, "medium")
@@ -165,29 +176,34 @@ df.withColumn("status",
 )
 
 # Handle nulls
+
 df.withColumn("value", coalesce(col("primary"), col("backup"), lit(0)))
-```text
+```
 
 ### Filter Operations
 
 ```python
 # Basic filter
+
 df.filter(col("status") == "active")
 df.filter("status = 'active'")  # SQL expression
 
 # Multiple conditions
+
 df.filter((col("amount") > 100) & (col("status") == "active"))
 df.filter((col("region") == "US") | (col("region") == "CA"))
 
 # Null handling
+
 df.filter(col("email").isNotNull())
 df.filter(col("phone").isNull())
 
 # String operations
+
 df.filter(col("name").like("%Smith%"))
 df.filter(col("name").rlike("^[A-Z].*"))  # Regex
 df.filter(col("email").contains("@company.com"))
-```text
+```
 
 ### Type Casting
 
@@ -195,13 +211,15 @@ df.filter(col("email").contains("@company.com"))
 from pyspark.sql.functions import col, to_date, to_timestamp
 
 # Cast types
+
 df.withColumn("amount", col("amount").cast("double"))
 df.withColumn("id", col("id").cast("integer"))
 
 # Date/timestamp conversions
+
 df.withColumn("date", to_date(col("date_string"), "yyyy-MM-dd"))
 df.withColumn("timestamp", to_timestamp(col("ts_string"), "yyyy-MM-dd HH:mm:ss"))
-```text
+```
 
 ### SQL Expressions
 
@@ -209,9 +227,10 @@ df.withColumn("timestamp", to_timestamp(col("ts_string"), "yyyy-MM-dd HH:mm:ss")
 from pyspark.sql.functions import expr
 
 # Use SQL expressions in DataFrame API
+
 df.withColumn("discount_price", expr("price * (1 - discount_rate)"))
 df.selectExpr("*", "price * quantity AS total")
-```text
+```
 
 ## Join Operations
 
@@ -233,43 +252,52 @@ flowchart TD
         F1[Left: 1,2,3] --- F2[Right: 2,3,4]
         F2 --> FR[Result: 1,2,3,4]
     end
-```text
+```
 
 ```python
 # Inner join (default)
+
 df1.join(df2, df1.id == df2.id, "inner")
 
 # Left join
+
 df1.join(df2, df1.id == df2.id, "left")
 
 # Right join
+
 df1.join(df2, df1.id == df2.id, "right")
 
 # Full outer join
+
 df1.join(df2, df1.id == df2.id, "full")
 
 # Left anti join (rows in left not in right)
+
 df1.join(df2, df1.id == df2.id, "left_anti")
 
 # Left semi join (rows in left that have match in right)
+
 df1.join(df2, df1.id == df2.id, "left_semi")
 
 # Cross join
+
 df1.crossJoin(df2)
-```text
+```
 
 ### Join on Multiple Columns
 
 ```python
 # Multiple join conditions
+
 df1.join(df2,
     (df1.id == df2.id) & (df1.date == df2.date),
     "inner"
 )
 
 # Same column names (simpler syntax)
+
 df1.join(df2, ["id", "date"], "inner")
-```text
+```
 
 ### Join Strategies
 
@@ -280,7 +308,7 @@ flowchart TD
     Size -->|No| Keys{Keys sortable?}
     Keys -->|Yes| SortMerge[Sort-Merge Join]
     Keys -->|No| ShuffleHash[Shuffle Hash Join]
-```text
+```
 
 | Strategy | When Used | Performance |
 |----------|-----------|-------------|
@@ -294,9 +322,11 @@ flowchart TD
 from pyspark.sql.functions import broadcast
 
 # Force broadcast join
+
 df1.join(broadcast(df2), "id")
 
 # SQL hints
+
 spark.sql("""
     SELECT /*+ BROADCAST(small_table) */ *
     FROM large_table
@@ -304,28 +334,33 @@ spark.sql("""
 """)
 
 # Merge hint (sort-merge join)
+
 spark.sql("""
     SELECT /*+ MERGE(df2) */ *
     FROM df1 JOIN df2 ON df1.id = df2.id
 """)
 
 # Shuffle hash hint
+
 spark.sql("""
     SELECT /*+ SHUFFLE_HASH(df2) */ *
     FROM df1 JOIN df2 ON df1.id = df2.id
 """)
-```text
+```
 
 ### Broadcast Threshold
 
 ```python
+
 # Default broadcast threshold is 10MB
 # Increase for larger dimension tables
+
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "50MB")
 
 # Disable auto broadcast
+
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
-```text
+```
 
 ## Aggregations
 
@@ -335,41 +370,47 @@ spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
 from pyspark.sql.functions import count, sum, avg, min, max, countDistinct
 
 # Single aggregation
+
 df.agg(count("*").alias("total"))
 
 # Multiple aggregations
+
 df.agg(
     count("*").alias("total_rows"),
     sum("amount").alias("total_amount"),
     avg("amount").alias("avg_amount"),
     countDistinct("customer_id").alias("unique_customers")
 )
-```text
+```
 
 ### Group By
 
 ```python
 # Group by single column
+
 df.groupBy("region").agg(
     count("*").alias("order_count"),
     sum("amount").alias("total_amount")
 )
 
 # Group by multiple columns
+
 df.groupBy("region", "product_category").agg(
     sum("amount").alias("total")
 )
-```text
+```
 
 ### Pivot
 
 ```python
 # Pivot table
+
 df.groupBy("region").pivot("year").agg(sum("amount"))
 
 # Pivot with specific values (more efficient)
+
 df.groupBy("region").pivot("year", [2022, 2023, 2024]).agg(sum("amount"))
-```text
+```
 
 ## Window Functions
 
@@ -382,26 +423,31 @@ from pyspark.sql.window import Window
 from pyspark.sql.functions import row_number, rank, dense_rank, lead, lag, sum
 
 # Basic window
+
 window = Window.partitionBy("customer_id").orderBy("order_date")
 
 # Window with frame
+
 window_frame = (Window.partitionBy("customer_id")
     .orderBy("order_date")
     .rowsBetween(Window.unboundedPreceding, Window.currentRow))
-```text
+```
 
 ### Ranking Functions
 
 ```python
 # Row number (unique rank)
+
 df.withColumn("row_num", row_number().over(window))
 
 # Rank (gaps for ties)
+
 df.withColumn("rank", rank().over(window))
 
 # Dense rank (no gaps for ties)
+
 df.withColumn("dense_rank", dense_rank().over(window))
-```text
+```
 
 | Function | Ties Handling | Example: [100, 100, 90] |
 |----------|---------------|------------------------|
@@ -413,36 +459,41 @@ df.withColumn("dense_rank", dense_rank().over(window))
 
 ```python
 # Next value
+
 df.withColumn("next_order_date", lead("order_date", 1).over(window))
 
 # Previous value
+
 df.withColumn("prev_amount", lag("amount", 1).over(window))
 
 # With default value
+
 df.withColumn("prev_amount", lag("amount", 1, 0).over(window))
-```text
+```
 
 ### Running Totals
 
 ```python
 # Cumulative sum
+
 window_running = (Window.partitionBy("customer_id")
     .orderBy("order_date")
     .rowsBetween(Window.unboundedPreceding, Window.currentRow))
 
 df.withColumn("running_total", sum("amount").over(window_running))
-```text
+```
 
 ### Deduplication with Window Functions
 
 ```python
 # Keep latest record per customer
+
 window = Window.partitionBy("customer_id").orderBy(col("updated_at").desc())
 
 (df.withColumn("rn", row_number().over(window))
     .filter(col("rn") == 1)
     .drop("rn"))
-```text
+```
 
 ## Writing Data
 
@@ -450,17 +501,21 @@ window = Window.partitionBy("customer_id").orderBy(col("updated_at").desc())
 
 ```python
 # Append - add to existing data
+
 df.write.format("delta").mode("append").save("/path/to/table")
 
 # Overwrite - replace all data
+
 df.write.format("delta").mode("overwrite").save("/path/to/table")
 
 # Error (default) - fail if data exists
+
 df.write.format("delta").mode("error").save("/path/to/table")
 
 # Ignore - skip if data exists
+
 df.write.format("delta").mode("ignore").save("/path/to/table")
-```text
+```
 
 | Mode | Behavior |
 |------|----------|
@@ -473,42 +528,48 @@ df.write.format("delta").mode("ignore").save("/path/to/table")
 
 ```python
 # Write to managed table
+
 df.write.format("delta").saveAsTable("catalog.schema.table_name")
 
 # Write to table (append)
+
 df.write.format("delta").mode("append").saveAsTable("catalog.schema.table_name")
 
 # Insert into existing table
+
 df.write.insertInto("catalog.schema.table_name")
-```text
+```
 
 ### Partitioning
 
 ```python
 # Write with partitioning
+
 (df.write.format("delta")
     .partitionBy("year", "month")
     .mode("overwrite")
     .save("/path/to/table"))
 
 # Overwrite specific partitions
+
 (df.write.format("delta")
     .mode("overwrite")
     .option("replaceWhere", "year = 2024 AND month = 1")
     .save("/path/to/table"))
-```text
+```
 
 ### Dynamic Partition Overwrite
 
 ```python
 # Only overwrite partitions that have data in the DataFrame
+
 spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
 
 (df.write.format("delta")
     .mode("overwrite")
     .partitionBy("date")
     .save("/path/to/table"))
-```text
+```
 
 ## SQL Batch Operations
 
@@ -522,7 +583,7 @@ SELECT * FROM source_table WHERE status = 'active';
 -- Create or replace
 CREATE OR REPLACE TABLE catalog.schema.new_table AS
 SELECT * FROM source_table;
-```text
+```
 
 ### INSERT Operations
 
@@ -541,7 +602,7 @@ SELECT * FROM source_table;
 -- Insert overwrite partition
 INSERT OVERWRITE table_name PARTITION (date = '2024-01-01')
 SELECT id, name FROM source_table WHERE date = '2024-01-01';
-```text
+```
 
 ## User-Defined Functions (UDFs)
 
@@ -552,6 +613,7 @@ from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType
 
 # Define UDF
+
 @udf(returnType=StringType())
 def format_phone(phone):
     if phone and len(phone) == 10:
@@ -559,8 +621,9 @@ def format_phone(phone):
     return phone
 
 # Use UDF
+
 df.withColumn("formatted_phone", format_phone(col("phone")))
-```text
+```
 
 ### Pandas UDFs (Vectorized)
 
@@ -569,12 +632,13 @@ from pyspark.sql.functions import pandas_udf
 import pandas as pd
 
 # Scalar Pandas UDF (much faster than regular UDFs)
+
 @pandas_udf("double")
 def calculate_discount(amount: pd.Series, rate: pd.Series) -> pd.Series:
     return amount * (1 - rate)
 
 df.withColumn("discounted", calculate_discount(col("amount"), col("rate")))
-```text
+```
 
 | UDF Type | Performance | Use Case |
 |----------|-------------|----------|
@@ -585,3 +649,7 @@ df.withColumn("discounted", calculate_discount(col("amount"), col("rate")))
 **Best Practice**: Always prefer built-in Spark functions over UDFs when possible.
 
 > **Continue reading:** [Part 2 — Performance Optimization, Error Handling, Use Cases & Exam Tips](./10-batch-etl-pipelines-part2.md)
+
+---
+
+**[↑ Back to Data Processing](./README.md) | [Next: Batch ETL Pipelines — Part 2](./01-batch-etl-pipelines-part2.md) →**

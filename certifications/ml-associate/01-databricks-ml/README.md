@@ -23,7 +23,7 @@ flowchart TD
     WS --> Collab["Collaboration"]
     Compute --> Config["Configuration"]
     AutoML --> Features["Feature Support"]
-```text
+```
 
 ## Section Contents
 
@@ -52,4 +52,4 @@ Progress to [02-ML Workflows](../02-ml-workflows/README.md) to learn about exper
 
 ---
 
-**[← Back to ML Associate](../README.md)**
+**[← Back to Certification](../README.md)**

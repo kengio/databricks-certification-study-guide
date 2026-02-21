@@ -13,7 +13,7 @@ flowchart LR
     PO --> QP[EXPLAIN Plans & AQE]
     PO --> PH[Photon & Diagnostics]
     PO --> SO[Streaming Optimization]
-```text
+```
 
 ## Section Contents
 
@@ -24,7 +24,7 @@ flowchart LR
 | [03-spark-tuning.md](03-spark-tuning.md) | Configurations, AQE, shuffle optimization | High |
 | [04-cost-optimization.md](04-cost-optimization.md) | Spot instances, autoscaling, job clusters | Medium |
 | [05-explain-plans-aqe.md](05-explain-plans-aqe.md) | EXPLAIN plans, AQE deep dive, runtime optimization | High |
-| [06-photon-diagnostics-optimization.md](06-photon-diagnostics-optimization.md) | Photon acceleration, memory diagnostics, Spark UI analysis | High |
+| [06-photon-diagnostics-optimization-part1.md](06-photon-diagnostics-optimization-part1.md) | Photon acceleration, memory diagnostics, Spark UI analysis | High |
 | [08-photon-diagnostics-optimization-part2.md](08-photon-diagnostics-optimization-part2.md) | Query optimization strategies, common issues, exam tips, practice questions | High |
 | [07-streaming-optimization.md](07-streaming-optimization.md) | Streaming-specific performance tuning | Medium |
 
@@ -44,7 +44,7 @@ flowchart TD
     end
 
     Problem --> |OPTIMIZE| Solution
-```text
+```
 
 ### Optimal File Sizes
 
@@ -82,7 +82,7 @@ flowchart LR
     AQE --> SJO[Skew Join Optimization]
     AQE --> BC[Broadcast Hash Join]
     AQE --> RP[Runtime Plan Changes]
-```text
+```
 
 ## Cost Optimization Strategies
 
@@ -107,7 +107,7 @@ flowchart TD
     AllPurpose --> Pool{High Frequency?}
     Pool --> |Yes| UsePool[Use Instance Pool]
     Pool --> |No| NoPool[Standard Cluster]
-```text
+```
 
 ## Exam Tips
 
@@ -133,3 +133,7 @@ flowchart TD
 - [ ] Tune shuffle partitions based on data size
 - [ ] Compare costs: job cluster vs all-purpose
 - [ ] Enable and verify Photon benefits
+
+---
+
+**[← Back to Certification](../README.md)**

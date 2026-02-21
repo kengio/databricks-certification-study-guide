@@ -44,7 +44,7 @@ flowchart TB
     RealTime --> APIServe --> StreamingInfer --> API_Response
 
     style Endpoints fill:#e1f5ff
-```text
+```
 
 ## Batch Serving
 
@@ -56,20 +56,25 @@ import mlflow
 from pyspark.sql import functions as F
 
 # Load production model from registry
+
 model_uri = "models:/customer_churn_model/Production"
 model = mlflow.sklearn.load_model(model_uri)
 
 # Load new data for scoring
+
 new_customers = spark.read.table("raw.new_customers")
 
 # Convert to Pandas for inference
+
 new_customers_pdf = new_customers.toPandas()
 
 # Make predictions
+
 predictions = model.predict(new_customers_pdf[feature_columns])
 probabilities = model.predict_proba(new_customers_pdf[feature_columns])[:, 1]
 
 # Create results DataFrame
+
 results_df = spark.createDataFrame(
     [(cust_id, pred, prob)
      for cust_id, pred, prob in zip(
@@ -80,10 +85,11 @@ results_df = spark.createDataFrame(
 )
 
 # Save results
+
 results_df.write.mode("overwrite").saveAsTable("predictions.daily_churn_scores")
 
 print(f"Scored {results_df.count()} customers")
-```text
+```
 
 ### **Batch Job Scheduling**
 
@@ -94,6 +100,7 @@ from databricks.sdk.service.jobs import Task, Source, SparkPythonTask
 client = WorkspaceClient()
 
 # Create job for batch inference
+
 job_config = {
     "name": "daily_churn_scoring",
     "tasks": [
@@ -120,7 +127,7 @@ job_config = {
 
 job = client.jobs.create(**job_config)
 print(f"Created job: {job.job_id}")
-```text
+```
 
 ### **Distributed Inference with Pandas UDF**
 
@@ -130,6 +137,7 @@ import pandas as pd
 import mlflow
 
 # Use pandas_udf for distributed inference
+
 @pandas_udf("double")
 def predict_churn_udf(batch_df: pd.DataFrame) -> pd.Series:
     # Load model once per partition
@@ -141,14 +149,16 @@ def predict_churn_udf(batch_df: pd.DataFrame) -> pd.Series:
     return pd.Series(predictions)
 
 # Apply across distributed data
+
 scoring_df = (spark.read.table("raw.customers")
     .repartition(100)  # Parallelize
     .withColumn("churn_score", predict_churn_udf(F.struct([F.col(c) for c in feature_columns])))
 )
 
 # Write results
+
 scoring_df.write.mode("overwrite").saveAsTable("predictions.churn_scores")
-```text
+```
 
 ## Real-Time Serving
 
@@ -161,6 +171,7 @@ from databricks.sdk.service.serving import EndpointCoreConfigInput, ServedModelI
 client = WorkspaceClient()
 
 # Create serving endpoint
+
 endpoint_config = EndpointCoreConfigInput(
     name="churn-model-endpoint",
     served_models=[
@@ -175,7 +186,7 @@ endpoint_config = EndpointCoreConfigInput(
 
 endpoint = client.serving_endpoints.create(endpoint_config)
 print(f"Endpoint created: {endpoint.name}")
-```text
+```
 
 ### **Making Real-Time Predictions**
 
@@ -184,9 +195,11 @@ import requests
 import json
 
 # Get endpoint URL
+
 endpoint_url = "https://databricks-instance.cloud.databricks.com/serving/endpoints/churn-model-endpoint"
 
 # Prepare input
+
 input_data = {
     "dataframe_split": {
         "columns": ["age", "tenure", "monthly_charge", "total_charges"],
@@ -199,10 +212,12 @@ input_data = {
 }
 
 # Get API token
+
 import os
 api_token = os.environ.get("DATABRICKS_TOKEN")
 
 # Make prediction request
+
 headers = {
     "Authorization": f"Bearer {api_token}",
     "Content-Type": "application/json"
@@ -215,9 +230,10 @@ response = requests.post(
 )
 
 # Parse response
+
 predictions = response.json()
 print(f"Predictions: {predictions}")
-```text
+```
 
 ### **Scaling Endpoints**
 
@@ -229,6 +245,7 @@ client = WorkspaceClient()
 # Update endpoint configuration for different workloads
 
 # For low traffic (development)
+
 config_small = {
     "served_models": [{
         "model_name": "customer_churn_model",
@@ -239,6 +256,7 @@ config_small = {
 }
 
 # For high traffic (production)
+
 config_large = {
     "served_models": [{
         "model_name": "customer_churn_model",
@@ -249,8 +267,9 @@ config_large = {
 }
 
 # Update endpoint
+
 client.serving_endpoints.update("churn-model-endpoint", config_large)
-```text
+```
 
 ## Deployment Strategies
 
@@ -268,18 +287,20 @@ flowchart LR
     Test -->|Pass| LB2["Switch"]
     LB2 --> |0%| Blue2["Blue (Old)<br/>v5"]
     LB2 --> |100%| Green2["Green (New)<br/>v6"]
-```text
+```
 
 **Implementation:**
 
 ```python
 # Gradually shift traffic to new version
+
 versions_traffic = {
     "5": 100,  # Current production
     "6": 0     # New version
 }
 
 # Update models served
+
 served_models = [
     {
         "model_name": "customer_churn_model",
@@ -290,6 +311,7 @@ served_models = [
 ]
 
 # After validation passes, shift traffic
+
 served_models = [
     {
         "model_name": "customer_churn_model",
@@ -298,11 +320,12 @@ served_models = [
         "traffic_config": {"routes": [{"traffic_percentage": 100}]}
     }
 ]
-```text
+```
 
 ### 2. **Canary Deployment**
 
 ```python
+
 # Route small % of traffic to new version for testing
 
 canary_config = {
@@ -327,11 +350,13 @@ canary_config = {
 #   - Increase v6 to 50%
 #   - Then 100%
 #   - Retire v5
-```text
+
+```
 
 ### 3. **Shadow Deployment**
 
 ```python
+
 # Run new model alongside current without affecting users
 
 shadow_config = {
@@ -356,7 +381,8 @@ shadow_config = {
 # Compare predictions offline:
 # Does v6 prediction match v5 closely?
 # Compare latency, error rates, etc.
-```text
+
+```
 
 ## Production Deployment Checklist
 
@@ -391,7 +417,7 @@ deployment_checklist = {
         "✓ Owner/contact info specified"
     ]
 }
-```text
+```
 
 ## Complete Deployment Example
 
@@ -406,9 +432,11 @@ client = WorkspaceClient()
 mlflow_client = MlflowClient()
 
 # ========== STEP 1: VALIDATE MODEL ==========
+
 print("Step 1: Validating model...")
 
 # Get candidate model from staging
+
 staging_models = mlflow_client.get_latest_versions(
     "customer_churn_model",
     stages=["Staging"]
@@ -431,11 +459,13 @@ else:
 print(f"✓ Model v{version} validated")
 
 # ========== STEP 2: CREATE SERVING ENDPOINT ==========
+
 print(f"\nStep 2: Creating serving endpoint for v{version}...")
 
 endpoint_name = "customer-churn-production"
 
 # Check if endpoint exists
+
 try:
     existing = client.serving_endpoints.get(endpoint_name)
     print(f"Endpoint exists: {endpoint_name}")
@@ -457,6 +487,7 @@ except:
     print(f"✓ Endpoint created: {endpoint_name}")
 
 # ========== STEP 3: PROMOTE TO PRODUCTION ==========
+
 print(f"\nStep 3: Promoting v{version} to Production...")
 
 mlflow_client.transition_model_version_stage(
@@ -468,9 +499,11 @@ mlflow_client.transition_model_version_stage(
 print(f"✓ v{version} is now in Production")
 
 # ========== STEP 4: TEST ENDPOINT ==========
+
 print(f"\nStep 4: Testing endpoint...")
 
 # Sample request
+
 test_input = {
     "dataframe_split": {
         "columns": ["age", "tenure", "monthly_charge", "total_charges"],
@@ -497,6 +530,7 @@ else:
     print(f"✗ Endpoint test failed: {response.text}")
 
 # ========== STEP 5: ENABLE MONITORING ==========
+
 print(f"\nStep 5: Enabling monitoring...")
 
 # Configure drift detection
@@ -505,13 +539,14 @@ print(f"\nStep 5: Enabling monitoring...")
 
 print("✓ Monitoring enabled")
 print(f"\n✓✓✓ MODEL v{version} SUCCESSFULLY DEPLOYED ✓✓✓")
-```text
+```
 
 ## Monitoring Deployments
 
 ### **Prediction Logging**
 
 ```python
+
 # Log all predictions for monitoring
 
 def log_prediction(customer_id, input_features, prediction, probability):
@@ -521,37 +556,43 @@ def log_prediction(customer_id, input_features, prediction, probability):
     ], schema).write.mode("append").saveAsTable("monitoring.predictions")
 
 # Monitor metrics over time
+
 from pyspark.sql.window import Window
 
 logs = spark.read.table("monitoring.predictions")
 
 # Check prediction distribution drift
+
 logs.groupBy("date", "prediction").count().show()
 
 # Check prediction latency
+
 logs.selectExpr("(timestamp - request_time) as latency")
-```text
+```
 
 ### **Performance Monitoring**
 
 ```python
+
 # Compare predictions with actual labels
 
 predictions = spark.read.table("monitoring.predictions")
 actuals = spark.read.table("gold.actual_churn")
 
 # Join and compute metrics
+
 comparison = (predictions
     .join(actuals, "customer_id")
     .withColumn("correct", F.col("prediction") == F.col("actual_churn"))
 )
 
 # Rolling accuracy
+
 accuracy = comparison.filter(F.datediff(F.current_date(), F.col("date")) <= 30)\
     .agg(F.mean("correct").alias("accuracy"))
 
 print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
-```text
+```
 
 ## Comparison: Serving Options
 
@@ -570,10 +611,12 @@ print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Model Deployment & Serving to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Deployment & Serving prior to deployment.
 
@@ -607,3 +650,7 @@ print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
 
 - [Model Serving](https://docs.databricks.com/machine-learning/model-serving/index.html)
 - [Deployment Best Practices](https://docs.databricks.com/machine-learning/model-serving/score-sql-reference.html)
+
+---
+
+**[← Previous: Model Registry](./01-model-registry.md) | [↑ Back to MLflow Deployment](./README.md)**

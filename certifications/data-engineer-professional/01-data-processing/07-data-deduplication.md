@@ -29,7 +29,7 @@ flowchart TD
         S1 & S2 & S3 & S4 --> D3[Post-load]
         S1 & S2 & S3 & S4 --> D4[Continuous streaming]
     end
-```text
+```
 
 ## Why Duplicates Occur
 
@@ -55,7 +55,7 @@ flowchart TD
     DuringLoad --> D1[MERGE / dropDuplicates]
     PostLoad --> P1[Periodic cleanup jobs]
     Streaming --> S1[Watermark-based dedup]
-```text
+```
 
 | Strategy | When | Pros | Cons |
 | :--- | :--- | :--- | :--- |
@@ -70,14 +70,17 @@ flowchart TD
 
 ```python
 # Remove exact duplicates (all columns)
+
 df_deduped = df.dropDuplicates()
 
 # Remove duplicates based on specific columns
+
 df_deduped = df.dropDuplicates(["order_id"])
 
 # Remove duplicates on multiple columns
+
 df_deduped = df.dropDuplicates(["customer_id", "order_date", "product_id"])
-```text
+```
 
 ### Keep First vs Keep Last
 
@@ -88,6 +91,7 @@ from pyspark.sql.window import Window
 from pyspark.sql.functions import row_number, col
 
 # Keep the LATEST record per key
+
 window = Window.partitionBy("order_id").orderBy(col("updated_at").desc())
 
 df_latest = (df
@@ -96,13 +100,14 @@ df_latest = (df
     .drop("rn"))
 
 # Keep the FIRST record per key
+
 window = Window.partitionBy("order_id").orderBy(col("created_at").asc())
 
 df_first = (df
     .withColumn("rn", row_number().over(window))
     .filter(col("rn") == 1)
     .drop("rn"))
-```text
+```
 
 ### SQL Deduplication
 
@@ -128,7 +133,7 @@ SELECT
     FIRST(name) as name
 FROM customers
 GROUP BY customer_id;
-```text
+```
 
 ### rank() vs row_number() vs dense_rank()
 
@@ -140,7 +145,7 @@ window = Window.partitionBy("customer_id").orderBy(col("amount").desc())
 (df.withColumn("row_num", row_number().over(window))
     .withColumn("rank", rank().over(window))
     .withColumn("dense_rank", dense_rank().over(window)))
-```text
+```
 
 | Function | Ties Handling | Values for [100, 100, 90] |
 | :--- | :--- | :--- |
@@ -162,7 +167,7 @@ MERGE INTO target AS t
 USING source AS s
 ON t.id = s.id
 WHEN NOT MATCHED THEN INSERT *;
-```text
+```
 
 ### MERGE with Duplicate Source
 
@@ -172,12 +177,15 @@ When source has duplicates, deduplicate before MERGE:
 from delta.tables import DeltaTable
 
 # Source may have duplicates
+
 source_df = spark.table("staging.orders")
 
 # Deduplicate source first
+
 source_deduped = source_df.dropDuplicates(["order_id"])
 
 # Then MERGE
+
 target = DeltaTable.forName(spark, "target.orders")
 
 target.alias("t").merge(
@@ -186,7 +194,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```text
+```
 
 ### Handling Multiple Matches in MERGE
 
@@ -194,12 +202,14 @@ If MERGE finds multiple matching rows in source, it fails. Always deduplicate so
 
 ```python
 # This will fail if source has duplicate order_ids
+
 target.merge(source, "t.order_id = s.order_id")  # Error!
 
 # Fix: Deduplicate source
+
 source_deduped = source.dropDuplicates(["order_id"])
 target.merge(source_deduped, "t.order_id = s.order_id")  # Works
-```text
+```
 
 ## Streaming Deduplication
 
@@ -207,6 +217,7 @@ target.merge(source_deduped, "t.order_id = s.order_id")  # Works
 
 ```python
 # Basic streaming deduplication
+
 stream_df = spark.readStream.format("delta").load("/source")
 
 deduped_stream = stream_df.dropDuplicates(["id"])
@@ -215,7 +226,7 @@ query = (deduped_stream.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .start("/target"))
-```text
+```
 
 ### Watermark Requirement (Exam Important)
 
@@ -225,6 +236,7 @@ For streaming deduplication with unbounded state, you **must** use watermarks:
 from pyspark.sql.functions import col
 
 # Streaming dedup WITH watermark - required for production
+
 stream_df = spark.readStream.format("delta").load("/source")
 
 deduped_stream = (stream_df
@@ -235,7 +247,7 @@ query = (deduped_stream.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoint")
     .start("/target"))
-```text
+```
 
 **Why watermarks are required:**
 
@@ -249,10 +261,11 @@ More efficient streaming dedup that only checks within watermark window:
 
 ```python
 # Only deduplicate within the watermark window
+
 deduped_stream = (stream_df
     .withWatermark("event_time", "10 minutes")
     .dropDuplicatesWithinWatermark(["id"]))
-```text
+```
 
 | Method | State Size | Duplicate Detection |
 |--------|------------|---------------------|
@@ -265,10 +278,11 @@ deduped_stream = (stream_df
 from pyspark.sql.functions import window
 
 # Deduplicate within time windows
+
 deduped = (stream_df
     .withWatermark("event_time", "1 hour")
     .dropDuplicates(["id", window("event_time", "1 hour")]))
-```text
+```
 
 ## Idempotent Writes (Exam Critical)
 
@@ -297,7 +311,7 @@ def idempotent_write(batch_df, batch_id):
     ).whenMatchedUpdateAll(
     ).whenNotMatchedInsertAll(
     ).execute()
-```text
+```
 
 ### foreachBatch Idempotent Pattern
 
@@ -319,11 +333,12 @@ def process_batch_idempotent(batch_df, batch_id):
     ).execute()
 
 # Apply to streaming
+
 query = (stream_df.writeStream
     .foreachBatch(process_batch_idempotent)
     .option("checkpointLocation", "/checkpoint")
     .start())
-```text
+```
 
 ### Transaction ID Pattern
 
@@ -348,7 +363,7 @@ def process_with_txn_tracking(batch_df, batch_id):
     spark.sql(f"""
         INSERT INTO processing_log VALUES ({batch_id}, current_timestamp())
     """)
-```text
+```
 
 ## Deduplication in Medallion Architecture
 
@@ -365,7 +380,7 @@ flowchart LR
     subgraph Gold
         S --> G[Aggregations<br>naturally handle dupes]
     end
-```text
+```
 
 ### Bronze Layer
 
@@ -373,12 +388,13 @@ Accept duplicates, add lineage:
 
 ```python
 # Bronze: Append all data, track source
+
 bronze_df = (raw_df
     .withColumn("_ingestion_time", current_timestamp())
     .withColumn("_source_file", input_file_name()))
 
 bronze_df.write.format("delta").mode("append").save("/bronze/orders")
-```text
+```
 
 ### Silver Layer
 
@@ -386,9 +402,11 @@ Primary deduplication:
 
 ```python
 # Silver: Deduplicate from Bronze
+
 bronze_df = spark.read.format("delta").load("/bronze/orders")
 
 # Deduplicate - keep latest per order_id
+
 window = Window.partitionBy("order_id").orderBy(col("_ingestion_time").desc())
 
 silver_df = (bronze_df
@@ -397,6 +415,7 @@ silver_df = (bronze_df
     .drop("rn", "_source_file"))
 
 # MERGE to Silver
+
 target = DeltaTable.forPath(spark, "/silver/orders")
 target.alias("t").merge(
     silver_df.alias("s"),
@@ -404,7 +423,7 @@ target.alias("t").merge(
 ).whenMatchedUpdateAll(
 ).whenNotMatchedInsertAll(
 ).execute()
-```text
+```
 
 ### Gold Layer
 
@@ -412,6 +431,7 @@ Aggregations naturally deduplicate:
 
 ```python
 # Gold: Aggregations handle duplicates naturally
+
 gold_df = spark.sql("""
     SELECT
         date,
@@ -420,7 +440,7 @@ gold_df = spark.sql("""
     FROM silver.orders
     GROUP BY date
 """)
-```text
+```
 
 ## Performance Considerations
 
@@ -428,36 +448,42 @@ gold_df = spark.sql("""
 
 ```python
 # Good: Use minimal unique key
+
 df.dropDuplicates(["order_id"])
 
 # Avoid: Using all columns when key exists
+
 df.dropDuplicates()  # Slower, hashes all columns
-```text
+```
 
 ### Partition Alignment
 
 ```python
 # Efficient: Dedup within partitions
+
 (df.repartition("date")
     .dropDuplicates(["order_id"]))
 
 # Better for skewed data: Salt the key
+
 from pyspark.sql.functions import concat, lit, floor, rand
 
 (df.withColumn("salt", floor(rand() * 10))
     .repartition("salt")
     .dropDuplicates(["order_id"]))
-```text
+```
 
 ### Memory for Streaming State
 
 ```python
 # Monitor state size
+
 query.lastProgress["stateOperators"]
 
 # Configure state checkpointing
+
 spark.conf.set("spark.sql.streaming.stateStore.stateSchemaCheck", "true")
-```text
+```
 
 ## Monitoring Duplicates
 
@@ -465,6 +491,7 @@ spark.conf.set("spark.sql.streaming.stateStore.stateSchemaCheck", "true")
 
 ```python
 # Find duplicate counts
+
 duplicate_counts = (df.groupBy("order_id")
     .count()
     .filter(col("count") > 1))
@@ -474,7 +501,7 @@ total_duplicates = duplicate_counts.agg(
 ).collect()[0][0]
 
 print(f"Total duplicate records: {total_duplicates}")
-```text
+```
 
 ### Duplicate Detection Query
 
@@ -488,19 +515,20 @@ FROM orders
 GROUP BY order_id
 HAVING COUNT(*) > 1
 ORDER BY occurrence_count DESC;
-```text
+```
 
 ### Data Quality Metrics
 
 ```python
 # Calculate dedup metrics
+
 total_records = df.count()
 unique_records = df.dropDuplicates(["id"]).count()
 duplicate_records = total_records - unique_records
 duplicate_rate = duplicate_records / total_records * 100
 
 print(f"Duplicate rate: {duplicate_rate:.2f}%")
-```text
+```
 
 ## Use Cases
 
@@ -565,7 +593,7 @@ CREATE TABLE orders (
 -- Inserts automatically get unique order_id
 INSERT INTO orders (customer_id, order_date, amount)
 VALUES (100, '2024-01-15', 99.99);
-```text
+```
 
 Identity columns provide:
 
@@ -585,7 +613,7 @@ SET TBLPROPERTIES ('delta.enableRowTracking' = 'true');
 -- Query includes hidden _metadata columns for lineage
 SELECT *, _metadata.row_id, _metadata.row_commit_version
 FROM orders;
-```text
+```
 
 Use Row Tracking to:
 
@@ -607,13 +635,17 @@ Use Row Tracking to:
 
 ## Related Topics
 
-- [Batch ETL Pipelines](01-batch-etl-pipelines.md) - Window functions
-- [Structured Streaming](03-structured-streaming.md) - Streaming and watermarks
-- [Delta Lake Operations](06-delta-lake-operations.md) - MERGE patterns
-- [Change Data Capture](05-change-data-capture.md) - Dedup before CDC apply
+- [Batch ETL Pipelines](01-batch-etl-pipelines-part1.md) - Window functions
+- [Structured Streaming](03-structured-streaming-part1.md) - Streaming and watermarks
+- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE patterns
+- [Change Data Capture](05-change-data-capture-part1.md) - Dedup before CDC apply
 
 ## Official Documentation
 
 - [Streaming Deduplication](https://docs.databricks.com/structured-streaming/dedup.html)
 - [Delta Lake MERGE](https://docs.databricks.com/delta/merge.html)
 - [Watermarks](https://docs.databricks.com/structured-streaming/watermarks.html)
+
+---
+
+**[← Previous: Delta Lake Operations — Part 2](./06-delta-lake-operations-part2.md) | [↑ Back to Data Processing](./README.md) | [Next: Streaming Joins & Stateful Operations](./08-streaming-joins-stateful.md) →**

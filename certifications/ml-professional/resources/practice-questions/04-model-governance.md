@@ -251,4 +251,4 @@ D) SHAP values from the model
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Back to Resources](../README.md)
+**[← Previous: "Practice Questions - Model Production Lifecycle"](./03-model-lifecycle.md) | [↑ Back to ML Professional Practice Questions](./README.md)**

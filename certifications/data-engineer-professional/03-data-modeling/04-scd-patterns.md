@@ -25,7 +25,7 @@ flowchart TB
     Type1 --> T1D["No history"]
     Type2 --> T2D["Full history"]
     Type3 --> T3D["Limited history"]
-```text
+```
 
 ## SCD Type Comparison
 
@@ -53,7 +53,7 @@ CREATE TABLE dim_customer (
     updated_at TIMESTAMP
 )
 USING DELTA;
-```text
+```
 
 ### Type 1 Implementation
 
@@ -74,7 +74,7 @@ WHEN NOT MATCHED THEN INSERT (
     source.customer_id, source.name, source.email,
     source.city, source.tier, current_timestamp()
 );
-```text
+```
 
 ```python
 from delta.tables import DeltaTable
@@ -95,7 +95,7 @@ delta_table = DeltaTable.forName(spark, "dim_customer")
     })
     .whenNotMatchedInsertAll()
     .execute())
-```text
+```
 
 ### Type 1 - Before and After
 
@@ -113,7 +113,7 @@ After (Type 1):
 | 1           | John Doe | Boston     | Silver |
 
 History of "New York" is LOST
-```text
+```
 
 ### When to Use Type 1
 
@@ -145,7 +145,7 @@ USING DELTA;
 
 -- Add index on business key + is_current for performance
 -- CREATE INDEX idx_customer_current ON dim_customer_type2(customer_id, is_current);
-```text
+```
 
 ### Type 2 Implementation with MERGE
 
@@ -199,7 +199,7 @@ WHERE d.customer_id IS NULL  -- New customers
    OR s.email != d.email
    OR s.city != d.city
    OR s.tier != d.tier;
-```text
+```
 
 ### Type 2 - Single MERGE Pattern
 
@@ -270,7 +270,7 @@ def scd_type2_merge(spark, source_df, target_table, business_key, tracked_column
         FROM staged
         WHERE merge_action IN ('INSERT', 'UPDATE')
     """)
-```text
+```
 
 ### Type 2 - Before and After
 
@@ -289,7 +289,7 @@ After (Type 2):
 | 2  | 1           | Boston   | true       | 2024-01-15| 9999-12-31 |
 
 Full history is PRESERVED
-```text
+```
 
 ### Querying Type 2 Dimensions
 
@@ -318,7 +318,7 @@ FROM fact_orders f
 JOIN dim_customer_type2 d
     ON f.customer_id = d.customer_id
     AND f.order_date BETWEEN d.effective_date AND d.end_date;
-```text
+```
 
 ## SCD Type 3: Previous Value
 
@@ -340,7 +340,7 @@ CREATE TABLE dim_customer_type3 (
     updated_at TIMESTAMP
 )
 USING DELTA;
-```text
+```
 
 ### Type 3 Implementation
 
@@ -364,7 +364,7 @@ WHEN NOT MATCHED THEN INSERT (
     source.customer_id, source.name, source.email,
     source.city, source.tier, current_timestamp()
 );
-```text
+```
 
 ### Type 3 - Before and After
 
@@ -382,7 +382,7 @@ After (Type 3):
 | 1           | Boston       | New York      | 2024-01-15       |
 
 Only ONE previous value is tracked
-```text
+```
 
 ## SCD Type 4: Mini-Dimension
 
@@ -422,7 +422,7 @@ CREATE TABLE fact_orders (
     amount DECIMAL(18,2)
 )
 USING DELTA;
-```text
+```
 
 ### Type 4 - Diagram
 
@@ -433,7 +433,7 @@ flowchart LR
 
     DimCustomer --> |customer_id| Slow[Slow attributes: name, email]
     MiniDim --> |profile_key| Rapid[Rapid attributes: tier, points]
-```text
+```
 
 ## SCD Type 6: Hybrid (1 + 2 + 3)
 
@@ -459,7 +459,7 @@ CREATE TABLE dim_customer_type6 (
     updated_at TIMESTAMP
 )
 USING DELTA;
-```text
+```
 
 ### Type 6 Implementation
 
@@ -510,7 +510,7 @@ WHERE s.city != d.current_city
     FROM dim_customer_type6
     WHERE customer_id = s.customer_id
   );
-```text
+```
 
 ## DLT APPLY CHANGES for SCD Type 2
 
@@ -520,6 +520,7 @@ Delta Live Tables provides built-in SCD Type 2 support.
 import dlt
 
 # Source data
+
 @dlt.view
 def customers_cdc():
     return (spark.readStream.format("cloudFiles")
@@ -527,6 +528,7 @@ def customers_cdc():
         .load("/landing/customers_cdc/"))
 
 # SCD Type 2 with APPLY CHANGES
+
 dlt.create_streaming_table("dim_customer_scd2")
 
 dlt.apply_changes(
@@ -542,7 +544,8 @@ dlt.apply_changes(
 # - __START_AT: Effective date
 # - __END_AT: End date
 # - All source columns
-```text
+
+```
 
 ### DLT SCD Type 1
 
@@ -556,7 +559,7 @@ dlt.apply_changes(
     sequence_by=col("updated_at"),
     stored_as_scd_type=1  # Type 1: Overwrite
 )
-```text
+```
 
 ## Handling Deletes in SCD
 
@@ -573,7 +576,7 @@ WHEN MATCHED THEN UPDATE SET
     target.end_date = current_date() - 1,
     target.is_deleted = true,
     target.deleted_at = current_timestamp();
-```text
+```
 
 ### DLT with Deletes
 
@@ -587,7 +590,7 @@ dlt.apply_changes(
     apply_as_deletes=expr("operation = 'DELETE'"),
     apply_as_truncates=expr("operation = 'TRUNCATE'")
 )
-```text
+```
 
 ## Performance Considerations
 
@@ -603,7 +606,7 @@ ZORDER BY (customer_id, is_current);
 -- Or use liquid clustering
 ALTER TABLE dim_customer_type2
 CLUSTER BY (customer_id, is_current);
-```text
+```
 
 ### Partitioning Type 2 Tables
 
@@ -622,7 +625,7 @@ CREATE TABLE dim_customer_type2 (
 )
 USING DELTA
 PARTITIONED BY (effective_year);
-```text
+```
 
 ## Use Cases
 
@@ -667,7 +670,7 @@ SET is_current = false, end_date = current_date() - 1
 WHERE surrogate_key IN (
     SELECT surrogate_key FROM ranked WHERE rn > 1
 );
-```text
+```
 
 ### 2. Incorrect End Dates
 
@@ -684,7 +687,7 @@ JOIN dim_customer_type2 t2
     AND t1.end_date + 1 != t2.effective_date
     AND t1.is_current = false
     AND t2.surrogate_key > t1.surrogate_key;
-```text
+```
 
 ### 3. Performance Issues on Large Type 2 Tables
 
@@ -694,12 +697,14 @@ JOIN dim_customer_type2 t2
 
 ```python
 # Filter early on is_current
+
 current_df = spark.table("dim_customer_type2").filter("is_current = true")
 
 # Use broadcast for small dimensions
+
 from pyspark.sql.functions import broadcast
 result = fact_df.join(broadcast(current_df), "customer_id")
-```text
+```
 
 ## Exam Tips
 
@@ -725,3 +730,7 @@ result = fact_df.join(broadcast(current_df), "customer_id")
 - [Delta Lake MERGE](https://docs.databricks.com/delta/merge.html)
 - [DLT APPLY CHANGES](https://docs.databricks.com/delta-live-tables/cdc.html)
 - [Slowly Changing Dimensions](https://docs.databricks.com/delta-live-tables/slowly-changing-dimensions.html)
+
+---
+
+**[← Previous: Schema Management](./03-schema-management.md) | [↑ Back to Data Modeling](./README.md) | [Next: Partitioning Strategies](./05-partitioning-strategies.md) →**

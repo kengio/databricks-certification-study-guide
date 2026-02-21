@@ -40,7 +40,7 @@ flowchart TB
 
     AdvancedCI --> AdvancedCD
     AdvancedCD --> GitOps
-```text
+```
 
 ## Advanced Asset Bundle Patterns
 
@@ -72,12 +72,13 @@ databricks-platform/
 └── ci/
     ├── deploy-all.sh
     └── validate-all.sh
-```text
+```
 
 ### Bundle Inheritance with Includes
 
 ```yaml
 # projects/ingestion/databricks.yml
+
 bundle:
   name: ingestion-pipelines
 
@@ -96,10 +97,11 @@ variables:
     default: dev_catalog
   owner_team:
     default: data-engineering
-```text
+```
 
 ```yaml
 # shared/common-clusters.yml
+
 resources:
   jobs:
     _shared_job_template:
@@ -123,7 +125,7 @@ resources:
             autoscale:
               min_workers: 2
               max_workers: 16
-```text
+```
 
 ### Custom Variable Interpolation
 
@@ -142,6 +144,7 @@ Databricks Asset Bundles support several variable interpolation patterns.
 
 ```yaml
 # Advanced variable interpolation examples
+
 variables:
   environment:
     default: dev
@@ -184,12 +187,13 @@ resources:
               # Reference the job's own ID
               orchestrator_job_id: ${resources.jobs.orchestrator_job.id}
               workspace_host: ${workspace.host}
-```text
+```
 
 ### Resource Permissions in databricks.yml
 
 ```yaml
 # Granular permissions for deployed resources
+
 resources:
   jobs:
     production_etl:
@@ -214,12 +218,13 @@ resources:
           group_name: data-engineers
         - level: CAN_MANAGE
           service_principal_name: prod-etl-sp
-```text
+```
 
 ### Artifact Management
 
 ```yaml
 # databricks.yml - Multiple artifact types
+
 artifacts:
   # Python wheel from Poetry project
   etl_core:
@@ -250,12 +255,13 @@ resources:
             # External PyPI dependencies
             - pypi:
                 package: great-expectations==0.18.0
-```text
+```
 
 ### Complex Target Configurations with Overrides
 
 ```yaml
 # databricks.yml
+
 targets:
   dev:
     mode: development
@@ -316,7 +322,7 @@ targets:
               - data-engineering-leads@company.com
             on_success:
               - data-engineering-metrics@company.com
-```text
+```
 
 ## Advanced CI/CD Pipeline Patterns
 
@@ -358,12 +364,13 @@ flowchart LR
     Approval --> DeployProd
     DeployProd --> Smoke
     Smoke --> Monitor
-```text
+```
 
 ### Multi-Environment Promotion Strategy
 
 ```yaml
 # .github/workflows/full-pipeline.yml
+
 name: Full CI/CD Pipeline
 
 on:
@@ -489,7 +496,7 @@ jobs:
           slack-message: "Production deployment succeeded for ${{ github.sha }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-```text
+```
 
 ### Blue/Green Deployment for Data Pipelines
 
@@ -513,10 +520,11 @@ flowchart TB
     GreenJob --> GreenTable
     View -->|Points to active| BlueTable
     View -.->|Switch after validation| GreenTable
-```text
+```
 
 ```yaml
 # Blue/green bundle targets
+
 targets:
   prod-blue:
     mode: production
@@ -535,10 +543,11 @@ targets:
       target_schema: prod_green
     run_as:
       service_principal_name: prod-sp
-```text
+```
 
 ```python
 # scripts/blue_green_switch.py
+
 """Blue/green switch script for data pipelines."""
 import sys
 from databricks.sdk import WorkspaceClient
@@ -563,12 +572,13 @@ def switch_active_slot(catalog: str, current_slot: str):
 
 if __name__ == "__main__":
     switch_active_slot(sys.argv[1], sys.argv[2])
-```text
+```
 
 ### Canary Deployment Pattern
 
 ```python
 # scripts/canary_deploy.py
+
 """Canary deployment for Databricks jobs."""
 import time
 from databricks.sdk import WorkspaceClient
@@ -619,6 +629,10 @@ def get_job_id(client, job_name):
     for job in jobs:
         return job.job_id
     raise ValueError(f"Job not found: {job_name}")
-```text
+```
 
 > **Continue reading:** [Part 2 — Rollback, Feature Flags & OIDC](./09-bundle-deployment-strategies-part2.md)
+
+---
+
+**[← Previous: Unit Testing — Part 2](./04-unit-testing-part2.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Bundle Deployment Strategies — Part 2 (Rollback, Feature Flags & OIDC)](./05-bundle-deployment-strategies-part2.md) →**

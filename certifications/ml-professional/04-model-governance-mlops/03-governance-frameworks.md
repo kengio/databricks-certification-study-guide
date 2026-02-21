@@ -60,9 +60,11 @@ workspace registry, which has no lineage, no SQL GRANT support, and no cross-wor
 import mlflow
 
 # Required: point MLflow to Unity Catalog registry
+
 mlflow.set_registry_uri("databricks-uc")
 
 # Register model — three-part name lands in UC namespace
+
 with mlflow.start_run() as run:
     mlflow.sklearn.log_model(
         sk_model=model,
@@ -118,6 +120,7 @@ version, explicitly log the dataset as an MLflow input:
 import mlflow
 
 # Attach the training dataset as an explicit MLflow lineage input
+
 dataset = mlflow.data.from_spark(
     df=training_df,
     table_name="ml_catalog.features.fraud_features",
@@ -152,6 +155,7 @@ import mlflow
 fe = FeatureEngineeringClient()
 
 # Build training set with lookups — automatically links feature table to model
+
 training_set = fe.create_training_set(
     df=label_df,                    # DataFrame with label column and join keys
     feature_lookups=[
@@ -173,6 +177,7 @@ training_df = training_set.load_df()
 model = train_model(training_df)
 
 # Log model through FeatureEngineeringClient — captures feature table linkage
+
 fe.log_model(
     model=model,
     artifact_path="model",
@@ -199,9 +204,11 @@ from mlflow import MlflowClient
 client = MlflowClient(registry_uri="databricks-uc")
 
 # Set the model-level description — applies to all versions, visible in UC Explorer
+
 client.update_registered_model(
     name="ml_catalog.fraud_models.fraud_classifier",
     description="""
+
 ## Fraud Classifier
 
 **Intended Use**: Real-time fraud detection for credit card transactions at point of sale.
@@ -220,6 +227,7 @@ variance detected (see version tags for per-version test results).
 )
 
 # Set version-level tags — structured metadata for programmatic filtering and audits
+
 client.set_model_version_tag(
     name="ml_catalog.fraud_models.fraud_classifier",
     version="3",
@@ -387,10 +395,12 @@ A typical promotion workflow:
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Governance Frameworks do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Governance Frameworks to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Governance Frameworks to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Governance Frameworks prior to deployment.
 
@@ -404,4 +414,4 @@ A typical promotion workflow:
 
 ---
 
-**[← Back to Model Governance & MLOps](./README.md)**
+**[← Previous: Drift Detection and Remediation](./02-drift-detection-remediation.md) | [↑ Back to Model Governance & MLOps](./README.md) | [Next: Compliance and Audit Logging](./04-compliance-audit-logging.md) →**

@@ -310,4 +310,4 @@ D) You must manually checkpoint the Delta table before each training run to enab
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: Hyperparameter Optimization](02-hyperparameter-optimization.md)
+**[↑ Back to ML Professional Practice Questions](./README.md) | [Next: "Practice Questions - Hyperparameter Optimization"](./02-hyperparameter-optimization.md) →**

@@ -44,7 +44,7 @@ flowchart TB
 
     style Driver fill:#e1f5ff
     style Workers fill:#f3e5f5
-```text
+```
 
 ## Cluster Types
 
@@ -54,6 +54,7 @@ Used for interactive development and shared workloads.
 
 ```python
 # Create all-purpose cluster via API
+
 cluster_config = {
     "cluster_name": "ml-dev-cluster",
     "spark_version": "14.3.x-scala2.12",
@@ -75,7 +76,8 @@ cluster_config = {
 # - Long-running sessions
 # - Supports all Spark workloads
 # - Good for development
-```text
+
+```
 
 **Use Cases:**
 
@@ -90,6 +92,7 @@ Dedicated clusters for scheduled jobs, automatically terminated after job comple
 
 ```python
 # Job cluster configuration
+
 job_config = {
     "name": "model_training_job",
     "new_cluster": {
@@ -113,7 +116,8 @@ job_config = {
 # - Isolated environments
 # - Consistent infrastructure
 # - Better for production jobs
-```text
+
+```
 
 **Use Cases:**
 
@@ -137,7 +141,7 @@ SELECT * FROM ml_catalog.models.predictions
 WHERE prediction_date = CURRENT_DATE()
 ORDER BY confidence DESC
 LIMIT 100;
-```text
+```
 
 **Characteristics:**
 
@@ -180,7 +184,7 @@ ml_cluster_config = {
         "spark.databricks.delta.optimizeWrite.enabled": "true"
     }
 }
-```text
+```
 
 ## Instance Types for ML
 
@@ -205,6 +209,7 @@ ml_cluster_config = {
 
 ```python
 # Install custom libraries on cluster startup
+
 init_script = """
 #!/bin/bash
 /databricks/python/bin/pip install --upgrade xgboost lightgbm
@@ -212,6 +217,7 @@ init_script = """
 """
 
 # Configuration
+
 init_config = {
     "init_scripts": [{
         "dbfs": {
@@ -219,7 +225,7 @@ init_config = {
         }
     }]
 }
-```text
+```
 
 ### **Auto-Termination**
 
@@ -233,7 +239,7 @@ cluster_config = {
         }
     }
 }
-```text
+```
 
 ## Scaling Strategy for ML
 
@@ -241,12 +247,14 @@ cluster_config = {
 
 ```python
 # MANUAL SCALING
+
 manual_config = {
     "num_workers": 8,  # Fixed
     "autoscale": None
 }
 
 # AUTOSCALING
+
 auto_config = {
     "autoscale": {
         "min_workers": 2,
@@ -266,7 +274,8 @@ auto_config = {
 # - Variable workload sizes
 # - Handle traffic spikes
 # - Optimize cost with SPOT instances
-```text
+
+```
 
 ## Performance Tuning Parameters
 
@@ -292,7 +301,7 @@ spark_configs = {
     # ML-specific
     "spark.databricks.ml.autolog.enabled": "true",  # Enable MLflow autologging
 }
-```text
+```
 
 ## Cost Optimization Strategies
 
@@ -306,11 +315,12 @@ flowchart TD
     style Dev fill:#c8e6c9
     style Test fill:#fff9c4
     style Prod fill:#ffccbc
-```text
+```
 
 ### **Cost Calculation**
 
 ```python
+
 # Cost = DBU/hour × hours used × node count
 # Example:
 # - Cluster: 4 workers @ i3.xlarge (8 DBU/hour each)
@@ -322,7 +332,7 @@ def calculate_cluster_cost(num_workers, hours, price_per_dbu):
     dbu_per_worker = 8  # i3.xlarge
     total_dbu = num_workers * dbu_per_worker * hours
     return total_dbu * price_per_dbu
-```text
+```
 
 ## Real-World Example: ML Training Cluster
 
@@ -331,9 +341,11 @@ def calculate_cluster_cost(num_workers, hours, price_per_dbu):
 from databricks_.sdk import WorkspaceClient
 
 # Initialize client
+
 w = WorkspaceClient()
 
 # Create optimized ML training cluster
+
 cluster_create_request = {
     "cluster_name": "ml_training_prod",
     "spark_version": "14.3.x-ml-scala2.12",
@@ -364,9 +376,10 @@ cluster_create_request = {
 }
 
 # Create cluster
+
 cluster = w.clusters.create(**cluster_create_request)
 print(f"Created cluster: {cluster.cluster_id}")
-```text
+```
 
 ## Comparison: Cluster Types for ML
 
@@ -388,10 +401,12 @@ print(f"Created cluster: {cluster.cluster_id}")
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Compute Clusters for ML do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compute Clusters for ML to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Compute Clusters for ML to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Compute Clusters for ML prior to deployment.
 
@@ -425,3 +440,7 @@ print(f"Created cluster: {cluster.cluster_id}")
 
 - [Compute Configuration](https://docs.databricks.com/compute/configure.html)
 - [Cluster Best Practices](https://docs.databricks.com/compute/clusters-manage.html)
+
+---
+
+**[← Previous: Databricks ML Workspace & Notebooks](./01-databricks-ml-workspace.md) | [↑ Back to Databricks ML](./README.md) | [Next: Databricks AutoML](./03-databricks-automl.md) →**

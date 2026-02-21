@@ -12,7 +12,7 @@ status: published
 
 This part covers performance optimization techniques (Photon, DPP, AQE, partition pruning), error handling patterns, use cases, and exam tips for batch ETL pipelines.
 
-> For DataFrame transformations, joins, aggregations, window functions, and write operations, see [Part 1](./01-batch-etl-pipelines.md).
+> For DataFrame transformations, joins, aggregations, window functions, and write operations, see [Part 1](./01-batch-etl-pipelines-part1.md).
 
 ## Performance Optimization
 
@@ -21,10 +21,12 @@ This part covers performance optimization techniques (Photon, DPP, AQE, partitio
 Photon is Databricks' native vectorized query engine written in C++ for faster SQL and DataFrame operations.
 
 ```python
+
 # Photon is enabled at cluster level, not via code
 # Check if Photon is active
+
 spark.conf.get("spark.databricks.photon.enabled")
-```text
+```
 
 | Workload | Photon Benefit |
 |----------|----------------|
@@ -58,15 +60,17 @@ FROM fact_sales f
 JOIN dim_date d ON f.date_key = d.date_key
 WHERE d.year = 2024;
 -- Spark pushes year=2024 filter to fact_sales scan
-```text
+```
 
 ```python
 # Check DPP configuration
+
 spark.conf.get("spark.sql.optimizer.dynamicPartitionPruning.enabled")  # true by default
 
 # Disable if causing issues (rare)
+
 spark.conf.set("spark.sql.optimizer.dynamicPartitionPruning.enabled", "false")
-```text
+```
 
 | Condition | DPP Applied? |
 |-----------|--------------|
@@ -81,13 +85,15 @@ AQE optimizes queries at runtime based on actual data statistics.
 
 ```python
 # AQE is enabled by default in Databricks
+
 spark.conf.get("spark.sql.adaptive.enabled")  # true
 
 # Key AQE features
+
 spark.conf.get("spark.sql.adaptive.coalescePartitions.enabled")  # Reduce partitions
 spark.conf.get("spark.sql.adaptive.skewJoin.enabled")  # Handle skew
 spark.conf.get("spark.sql.adaptive.localShuffleReader.enabled")  # Optimize shuffles
-```text
+```
 
 | AQE Feature | Behavior |
 |-------------|----------|
@@ -98,11 +104,13 @@ spark.conf.get("spark.sql.adaptive.localShuffleReader.enabled")  # Optimize shuf
 
 ```python
 # Configure shuffle partitions (AQE adjusts automatically)
+
 spark.conf.set("spark.sql.shuffle.partitions", "auto")  # Let AQE decide
 
 # Or set initial value that AQE can reduce
+
 spark.conf.set("spark.sql.shuffle.partitions", "200")
-```text
+```
 
 ### Broadcast Join Optimization
 
@@ -110,36 +118,42 @@ spark.conf.set("spark.sql.shuffle.partitions", "200")
 from pyspark.sql.functions import broadcast
 
 # Force broadcast for small tables
+
 result = large_df.join(broadcast(small_df), "key")
 
 # Check/set broadcast threshold (default 10MB)
+
 spark.conf.get("spark.sql.autoBroadcastJoinThreshold")  # 10485760 (10MB)
 
 # Increase for larger dimension tables
+
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "50MB")
 
 # Disable auto broadcast (force sort-merge)
+
 spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
-```text
+```
 
 ```sql
 -- SQL broadcast hint
 SELECT /*+ BROADCAST(dim_product) */ *
 FROM fact_sales f
 JOIN dim_product p ON f.product_id = p.product_id;
-```text
+```
 
 ### Partition Pruning Best Practices
 
 ```python
 # Good: Filter on partition column - triggers partition pruning
+
 df = spark.read.format("delta").load("/path/to/table")
 filtered = df.filter(col("date") == "2024-01-15")  # Only reads one partition
 
 # Bad: Filter after load without pushdown
+
 df = spark.read.format("delta").load("/path/to/table")
 filtered = df.filter(col("date").cast("string") == "2024-01-15")  # May scan all partitions
-```text
+```
 
 | Pattern | Partition Pruning? |
 |---------|-------------------|
@@ -163,24 +177,27 @@ except AnalysisException as e:
 except Exception as e:
     print(f"Processing error: {e}")
     raise
-```text
+```
 
 ### Data Quality Checks
 
 ```python
 # Assert row count
+
 row_count = df.count()
 assert row_count > 0, "DataFrame is empty"
 
 # Check for nulls in critical columns
+
 null_count = df.filter(col("id").isNull()).count()
 assert null_count == 0, f"Found {null_count} null IDs"
 
 # Validate schema
+
 expected_columns = {"id", "name", "amount"}
 actual_columns = set(df.columns)
 assert expected_columns.issubset(actual_columns), "Missing required columns"
-```text
+```
 
 ## Use Cases
 
@@ -290,7 +307,7 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 ## Related Topics
 
-- [Delta Lake Operations](06-delta-lake-operations.md) - MERGE for upserts
+- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE for upserts
 - [Data Deduplication](07-data-deduplication.md) - Dedup strategies
 - [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md)
 
@@ -299,3 +316,7 @@ Understanding when to apply specific techniques is crucial for the exam and real
 - [Spark SQL Guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)
 - [Databricks DataFrame Guide](https://docs.databricks.com/spark/latest/dataframes-datasets/index.html)
 - [Delta Lake Write Operations](https://docs.databricks.com/delta/delta-batch.html)
+
+---
+
+**[← Previous: Batch ETL Pipelines — Part 1](./01-batch-etl-pipelines-part1.md) | [↑ Back to Data Processing](./README.md) | [Next: Incremental Processing](./02-incremental-processing.md) →**

@@ -33,7 +33,7 @@ flowchart TB
     Query --> History[history]
     Lineage --> TableLineage[table_lineage]
     Lineage --> ColumnLineage[column_lineage]
-```text
+```
 
 ## System Table Categories
 
@@ -58,7 +58,7 @@ System tables must be enabled by an account admin:
 -- Check available system tables
 SHOW TABLES IN system.access;
 SHOW TABLES IN system.billing;
-```text
+```
 
 ## Audit Logs (system.access.audit)
 
@@ -131,7 +131,7 @@ FROM system.access.audit
 WHERE response.status_code >= 400
     AND event_date >= current_date() - 1
 ORDER BY event_time DESC;
-```text
+```
 
 ### Service Names and Action Types
 
@@ -155,7 +155,7 @@ WHERE event_date >= current_date() - 7
 GROUP BY service_name, action_name
 ORDER BY event_count DESC
 LIMIT 50;
-```text
+```
 
 ## Billing Usage (system.billing.usage)
 
@@ -233,7 +233,7 @@ WHERE usage_date >= current_date() - 7
 GROUP BY workspace_id, sku_name, custom_tags['cluster_id']
 ORDER BY total_dbus DESC
 LIMIT 20;
-```text
+```
 
 ### SKU Names
 
@@ -286,7 +286,7 @@ FROM system.compute.clusters
 WHERE start_time >= current_date() - 7
 GROUP BY date_trunc('hour', start_time)
 ORDER BY hour DESC;
-```text
+```
 
 ### SQL Warehouse Events
 
@@ -310,7 +310,7 @@ SELECT
 FROM system.compute.warehouse_events
 WHERE event_time >= current_date() - 7
 GROUP BY warehouse_id;
-```text
+```
 
 ## Query History (system.query.history)
 
@@ -393,7 +393,7 @@ FROM system.query.history
 WHERE start_time >= current_date() - 1
 ORDER BY total_task_duration_ms DESC
 LIMIT 20;
-```text
+```
 
 ## Lineage Tables
 
@@ -427,7 +427,7 @@ SELECT
 FROM system.lineage.table_lineage
 WHERE source_table_catalog = 'prod'
 ORDER BY source_table_full_name, target_table_full_name;
-```text
+```
 
 ### Column Lineage
 
@@ -440,7 +440,7 @@ SELECT
     target_column_name
 FROM system.lineage.column_lineage
 WHERE target_table_full_name = 'prod.gold.customer_metrics';
-```text
+```
 
 ## Information Schema
 
@@ -480,7 +480,7 @@ FROM system.information_schema.columns
 WHERE table_catalog = 'prod'
     AND table_schema = 'gold'
     AND table_name = 'customers';
-```text
+```
 
 ## Building Dashboards
 
@@ -499,7 +499,7 @@ SELECT
 FROM system.billing.usage
 WHERE usage_date >= current_date() - 30
 GROUP BY usage_date, workspace_id;
-```text
+```
 
 ### Security Dashboard
 
@@ -516,7 +516,7 @@ SELECT
 FROM system.access.audit
 WHERE event_date >= current_date() - 7
 GROUP BY event_date, service_name, action_name;
-```text
+```
 
 ## Use Cases
 
@@ -541,7 +541,7 @@ GROUP BY event_date, service_name, action_name;
 ```sql
 GRANT SELECT ON SCHEMA system.billing TO `cost-analysts`;
 GRANT SELECT ON TABLE system.access.audit TO `security-team`;
-```text
+```
 
 ### 3. Query Performance
 
@@ -555,7 +555,7 @@ WHERE event_date >= current_date() - 7
 
 -- Bad: Scans all data
 WHERE event_time >= current_timestamp() - INTERVAL 7 DAYS
-```text
+```
 
 ## Exam Tips
 
@@ -582,3 +582,7 @@ WHERE event_time >= current_timestamp() - INTERVAL 7 DAYS
 - [Audit Logs](https://docs.databricks.com/administration-guide/account-settings/audit-logs.html)
 - [Billing Tables](https://docs.databricks.com/administration-guide/system-tables/billing.html)
 - [Query History](https://docs.databricks.com/administration-guide/system-tables/query-history.html)
+
+---
+
+**[↑ Back to Monitoring & Logging](./README.md) | [Next: Spark UI Debugging](./02-spark-ui-debugging.md) →**

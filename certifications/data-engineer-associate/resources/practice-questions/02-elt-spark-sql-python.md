@@ -38,7 +38,7 @@ SELECT id
       ,lastName
 FROM customerLocations
 WHERE country = 'FRANCE';
-```text
+```
 
 Which line of code correctly fills in the blank to add a table property indicating PII?
 
@@ -109,7 +109,7 @@ review_period = check_review_period()
 
 _____
     run_final_block()
-```text
+```
 
 What control flow statement should be used to complete the blank?
 
@@ -227,7 +227,7 @@ What control flow statement should be used to complete the blank?
 SELECT store_id,
        _____ AS exp_employees
 FROM stores
-```text
+```
 
 Which code correctly completes the blank using the FILTER higher-order function?
 
@@ -245,7 +245,7 @@ Which code correctly completes the blank using the FILTER higher-order function?
 ```python
 table_name = "sales"
 result = _____(f"SELECT * FROM {table_name}")
-```text
+```
 
 Which method completes the blank?
 
@@ -262,7 +262,7 @@ Which method completes the blank?
 
 ```sql
 CREATE DATABASE IF NOT EXISTS customer360;
-```text
+```
 
 Where will the `customer360` database be situated?
 
@@ -327,7 +327,7 @@ Where will the `customer360` database be situated?
 
 ```sql
 SELECT name, count(*) FROM people GROUP BY 2
-```text
+```
 
 > [!success]- Answer
 > `GROUP BY` using a numeric ordinal position is not valid in Spark SQL.
@@ -336,4 +336,4 @@ SELECT name, count(*) FROM people GROUP BY 2
 
 ---
 
-[Back to Practice Questions](./README.md) | [Prev: Lakehouse Platform](01-lakehouse-platform.md) | [Next: Incremental Processing](03-incremental-processing.md)
+**[← Previous: Domain 1: Databricks Lakehouse Platform](./01-lakehouse-platform.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 3: Incremental Data Processing](./03-incremental-processing.md) →**

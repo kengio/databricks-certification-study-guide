@@ -180,6 +180,7 @@ faster than post-filtering and narrows the search to the relevant document subse
 
 ```python
 # Single field filter
+
 results = index.similarity_search(
     query_text="how do I configure Auto Loader?",
     columns=["content", "source"],
@@ -188,6 +189,7 @@ results = index.similarity_search(
 )
 
 # Multiple field filter (AND logic)
+
 results = index.similarity_search(
     query_text="expense reimbursement limit",
     columns=["content", "source", "document_date"],
@@ -199,6 +201,7 @@ results = index.similarity_search(
 )
 
 # Range filter for dates (using string comparison)
+
 results = index.similarity_search(
     query_text="latest security guidelines",
     columns=["content", "document_date"],
@@ -433,8 +436,6 @@ D) Increase max_tokens so the LLM has room to fully explain its reasoning
 > increases hallucination risk. Increasing max_tokens (D) allows longer responses but
 > has no effect on whether the response stays grounded in context.
 
-[← Back to Topic](./README.md)
-
 ## Use Cases
 
 - **Retrieval & Augmentation Strategies Implementation**: Incorporating Retrieval & Augmentation Strategies principles to build scalable and maintainable solutions in Databricks environments.
@@ -443,10 +444,15 @@ D) Increase max_tokens so the LLM has room to fully explain its reasoning
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Retrieval & Augmentation Strategies do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Retrieval & Augmentation Strategies to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Retrieval & Augmentation Strategies to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Retrieval & Augmentation Strategies prior to deployment.
 
+---
+
+**[← Previous: Document Processing & Chunking](./02-document-processing-chunking.md) | [↑ Back to RAG Architecture](./README.md)**

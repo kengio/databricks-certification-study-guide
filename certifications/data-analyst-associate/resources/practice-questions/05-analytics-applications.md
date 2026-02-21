@@ -151,4 +151,4 @@ D) The same SQL warehouse is used
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Back to Resources](../README.md)
+**[← Previous: Dashboards & Visualization Practice Questions](./04-dashboards-visualization.md) | [↑ Back to Data Analyst Associate Practice Questions](./README.md)**

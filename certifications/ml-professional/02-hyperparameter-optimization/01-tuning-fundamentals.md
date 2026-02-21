@@ -39,6 +39,7 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.feature import VectorAssembler
 
 # Define parameter grid
+
 param_grid = (
     ParamGridBuilder()
     .addGrid(lr.regParam, [0.01, 0.1, 1.0])
@@ -48,6 +49,7 @@ param_grid = (
 )
 
 # Grid search with cross-validation
+
 lr = LogisticRegression()
 evaluator = BinaryClassificationEvaluator(metricName="areaUnderROC")
 
@@ -63,6 +65,7 @@ cv = CrossValidator(
 cv_model = cv.fit(training_data)
 
 # Get best parameters
+
 best_params = cv_model.getEstimatorParamMaps()[
     np.argmax(cv_model.avgMetrics)
 ]
@@ -79,6 +82,7 @@ print(f"Best RegParam: {best_params[lr.regParam]}")
 
 ```python
 # How many combinations?
+
 params_per_dim = [5, 5, 5, 5, 5]  # 5-dimensional space
 total_combinations = 1
 for p in params_per_dim:
@@ -86,6 +90,7 @@ for p in params_per_dim:
 
 print(f"Total combinations: {total_combinations}")  # 3,125 combinations!
 # At 5 minutes per evaluation = 260 hours
+
 ```
 
 ## 2. Random Search
@@ -95,6 +100,7 @@ import random
 from pyspark.ml.tuning import TrainValidationSplit
 
 # Define parameter ranges (not grid)
+
 param_grid_random = (
     ParamGridBuilder()
     .addGrid(lr.regParam, np.logspace(-4, 1, 50))  # 50 random values
@@ -104,10 +110,12 @@ param_grid_random = (
 )
 
 # Randomly sample from grid
+
 random.seed(42)
 sampled_grid = random.sample(param_grid_random, min(50, len(param_grid_random)))
 
 # Evaluation with random search
+
 cv = CrossValidator(
     estimator=lr,
     estimatorParamMaps=sampled_grid,
@@ -122,6 +130,7 @@ model = cv.fit(training_data)
 ### Random Search Benefits
 
 ```python
+
 # Empirically, random search finds better hyperparameters than grid
 # in high-dimensional spaces (> 10 dimensions)
 
@@ -147,6 +156,7 @@ from pyspark.ml.evaluation import (
 )
 
 # Binary Classification
+
 bc_evaluator = BinaryClassificationEvaluator(
     labelCol="label",
     rawPredictionCol="rawPrediction",
@@ -154,6 +164,7 @@ bc_evaluator = BinaryClassificationEvaluator(
 )
 
 # Multiclass Classification
+
 mc_evaluator = MulticlassClassificationEvaluator(
     labelCol="label",
     predictionCol="prediction",
@@ -161,6 +172,7 @@ mc_evaluator = MulticlassClassificationEvaluator(
 )
 
 # Regression
+
 reg_evaluator = RegressionEvaluator(
     labelCol="label",
     predictionCol="prediction",
@@ -168,6 +180,7 @@ reg_evaluator = RegressionEvaluator(
 )
 
 # Custom objective function
+
 def custom_objective(predictions_df):
     """Business-specific objective function"""
     
@@ -197,6 +210,7 @@ def custom_objective(predictions_df):
 
 ```python
 # Random Forest hyperparameters
+
 rf_params = {
     "numTrees": {
         "description": "Number of decision trees",
@@ -221,6 +235,7 @@ rf_params = {
 }
 
 # Gradient Boosting parameters
+
 gb_params = {
     "learningRate": {
         "description": "Step size for gradient descent",
@@ -245,9 +260,12 @@ gb_params = {
 }
 
 # Learning rate impact visualization
+
 lr_values = [0.001, 0.01, 0.1, 0.5]
+
 # Learning rate too small: slow convergence
 # Learning rate too large: overshooting, divergence
+
 ```
 
 ## Cross-Validation Strategies
@@ -256,6 +274,7 @@ lr_values = [0.001, 0.01, 0.1, 0.5]
 from pyspark.ml.tuning import CrossValidator, TrainValidationSplit
 
 # k-Fold Cross-Validation (k=5 recommended)
+
 cv = CrossValidator(
     estimator=pipeline,
     estimatorParamMaps=param_grid,
@@ -266,6 +285,7 @@ cv = CrossValidator(
 )
 
 # Train-Validation Split (faster, less thorough)
+
 tvs = TrainValidationSplit(
     estimator=pipeline,
     estimatorParamMaps=param_grid,
@@ -276,6 +296,7 @@ tvs = TrainValidationSplit(
 )
 
 # K-Fold with stratification for imbalanced data
+
 from pyspark.sql.functions import col
 from pyspark.ml.feature import Bucketizer
 
@@ -358,11 +379,13 @@ def hyperparameter_tuning_workflow(train_df, test_df, pipeline, param_configs):
 
 ```python
 # Wrong: using test set for tuning
+
 cv.fit(train_df)
 final_model.fit(train_df + validation_df)  # Leaking info
 final_model.evaluate(test_df)
 
 # Correct: hold-out test set
+
 cv.fit(train_df)  # Tuning uses train + cross-validation
 final_model.fit(train_df + validation_df)  # Train on all except test
 final_model.evaluate(test_df)  # Evaluate only once
@@ -372,13 +395,16 @@ final_model.evaluate(test_df)  # Evaluate only once
 
 ```python
 # Wrong: different preprocessing in tuning vs. final model
+
 scaler = StandardScaler()
 scaler.fit(train_df)  # Fit on train only
 
 # Scale differently during tuning
+
 train_scaled = scaler.transform(train_df)
 
 # Correct: include preprocessing in pipeline
+
 pipeline = Pipeline(stages=[
     VectorAssembler(...),
     StandardScaler(...),
@@ -386,6 +412,7 @@ pipeline = Pipeline(stages=[
 ])
 
 # Tuning and final model both use pipeline
+
 ```
 
 ## Key Exam Concepts
@@ -429,10 +456,12 @@ pipeline = Pipeline(stages=[
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Hyperparameter Tuning Fundamentals do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Hyperparameter Tuning Fundamentals to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Hyperparameter Tuning Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Hyperparameter Tuning Fundamentals prior to deployment.
 
@@ -444,4 +473,4 @@ pipeline = Pipeline(stages=[
 
 ---
 
-**[← Back to Hyperparameter Optimization](./README.md)**
+**[↑ Back to Hyperparameter Optimization](./README.md) | [Next: Bayesian Optimization](./02-bayesian-optimization.md) →**

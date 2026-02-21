@@ -50,7 +50,7 @@ graph TD
     DEA --> MLA
     GAIA[GenAI Engineer Associate]
     MLA --> GAIA
-```text
+```
 
 See [Learning Paths](learning-paths/README.md) for detailed progression guides.
 
@@ -91,7 +91,7 @@ databricks-certification-study-guide/
 │   └── interview-prep/
 ├── learning-paths/           # Certification progression guides
 └── images/                   # Shared images and diagrams
-```text
+```
 
 ## Official Resources
 

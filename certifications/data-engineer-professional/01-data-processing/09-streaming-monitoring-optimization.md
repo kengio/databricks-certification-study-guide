@@ -24,6 +24,7 @@ Control how much data each micro-batch processes to prevent overwhelming downstr
 
 ```python
 # Delta / Auto Loader rate limiting
+
 stream = (
     spark.readStream
     .format("cloudFiles")
@@ -37,6 +38,7 @@ stream = (
 )
 
 # Kafka rate limiting
+
 kafka_stream = (
     spark.readStream
     .format("kafka")
@@ -50,6 +52,7 @@ kafka_stream = (
 )
 
 # Delta table source rate limiting
+
 delta_stream = (
     spark.readStream
     .format("delta")
@@ -57,7 +60,7 @@ delta_stream = (
     .option("maxBytesPerTrigger", "5g")
     .load("/data/source_table")
 )
-```text
+```
 
 ### Rate Limiting Parameters by Source
 
@@ -75,6 +78,7 @@ Back-pressure occurs when processing takes longer than the trigger interval, cau
 
 ```python
 # Monitor back-pressure indicators
+
 def check_backpressure(query):
     progress = query.lastProgress
     if progress is None:
@@ -97,7 +101,7 @@ def check_backpressure(query):
 
     if trigger_ms > 0 and batch_duration > trigger_ms:
         print("WARNING: Batch duration exceeds trigger interval!")
-```text
+```
 
 ### Back-Pressure Indicators
 
@@ -143,8 +147,9 @@ class BackpressureListener(StreamingQueryListener):
             print(f"Exception: {event.exception}")
 
 # Register the listener
+
 spark.streams.addListener(BackpressureListener())
-```text
+```
 
 ## Streaming Monitoring and Troubleshooting
 
@@ -154,6 +159,7 @@ The `recentProgress` attribute returns the last 100 progress reports, enabling t
 
 ```python
 # Analyze recent progress for trends
+
 progress_list = query.recentProgress
 
 if progress_list:
@@ -184,7 +190,7 @@ if progress_list:
             f"proc={process_rate:.0f}/s"
             f"{state_info}"
         )
-```text
+```
 
 ### Key Progress Metrics Reference
 
@@ -223,16 +229,19 @@ flowchart TD
 
     Source --> SR1["Kafka broker down<br>Fix: Retry with failOnDataLoss=false"]
     Source --> SR2["File source empty<br>Fix: Check path, permissions"]
-```text
+```
 
 ### Checkpoint Corruption Recovery
 
 ```python
 # Step 1: Check checkpoint contents
+
 dbutils.fs.ls("/checkpoints/my_query/")
+
 # Expected: commits/, offsets/, sources/, state/, metadata
 
 # Step 2: Check for corrupted state
+
 try:
     state_df = spark.read.format("statestore").load(
         "/checkpoints/my_query/state/0"
@@ -248,17 +257,20 @@ except Exception as e:
 
 # Option B: Start fresh (loses exactly-once guarantee during transition)
 # Use only if checkpoint is unrecoverable
+
 dbutils.fs.rm("/checkpoints/my_query/", recurse=True)
+
 # Restart query with same checkpoint path
 
 # Option C: Start from specific offset (Kafka)
+
 query = (
     df.writeStream
     .format("delta")
     .option("checkpointLocation", "/checkpoints/my_query_v2/")
     .start("/output/table")
 )
-```text
+```
 
 ### Checkpoint Compatibility Rules
 
@@ -278,6 +290,7 @@ query = (
 
 ```python
 # Production monitoring script
+
 def streaming_health_check():
     """Run periodic health checks on all active streams."""
     for query in spark.streams.active:
@@ -315,7 +328,7 @@ def streaming_health_check():
             print(f"ERROR [{name}]: {exc}")
 
 streaming_health_check()
-```text
+```
 
 ## State Store Deep Dive
 
@@ -339,18 +352,20 @@ flowchart TD
 
     Decision{State Size?} -->|< 100 MB| HDFS
     Decision -->|> 100 MB| RocksDB
-```text
+```
 
 ### RocksDB Configuration
 
 ```python
 # Enable RocksDB state store
+
 spark.conf.set(
     "spark.sql.streaming.stateStore.providerClass",
     "com.databricks.sql.streaming.state.RocksDBStateStoreProvider"
 )
 
 # RocksDB tuning options
+
 spark.conf.set(
     "spark.sql.streaming.stateStore.rocksdb.compactOnCommit", "true"
 )
@@ -362,7 +377,8 @@ spark.conf.set(
 # Changelog checkpointing: reduces checkpoint time by writing
 # only changes (deltas) instead of full snapshots
 # Recommended for large state stores
-```text
+
+```
 
 ### State Store Selection Guide
 
@@ -449,7 +465,7 @@ spark.conf.set(
 
 ## Related Topics
 
-- [Structured Streaming](03-structured-streaming.md) - Streaming fundamentals, triggers, output modes, basic watermarking
+- [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals, triggers, output modes, basic watermarking
 - [Auto Loader](04-auto-loader.md) - File ingestion with schema inference and evolution
 - [Performance Optimization](../08-performance-optimization/03-spark-tuning.md) - Spark tuning for streaming workloads
 - [Data Deduplication](07-data-deduplication.md) - Batch and streaming dedup patterns
@@ -464,3 +480,7 @@ spark.conf.set(
 - [Streaming Deduplication](https://docs.databricks.com/structured-streaming/dedup.html)
 - [StreamingQueryListener](https://docs.databricks.com/structured-streaming/streaming-query-listener.html)
 - [Structured Streaming Guide](https://docs.databricks.com/structured-streaming/index.html)
+
+---
+
+**[← Previous: Streaming Joins & Stateful Operations](./08-streaming-joins-stateful.md) | [↑ Back to Data Processing](./README.md)**

@@ -57,7 +57,7 @@ flowchart LR
     end
 
     Sources --> Engine --> Sinks
-```text
+```
 
 ## Key Concepts
 
@@ -90,7 +90,7 @@ query = (
     .start("/output/path")
 )
 query.awaitTermination()
-```text
+```
 
 ### Output Modes
 
@@ -120,7 +120,7 @@ query = (
     .queryName("event_counts")
     .start()
 )
-```text
+```
 
 ### Watermarks and Late Data
 
@@ -143,7 +143,7 @@ query = (
     .format("delta")
     .start("/gold/windowed_counts")
 )
-```text
+```
 
 **Key rule:** In `append` output mode, results for a window are emitted only after the watermark passes the window's end time plus the watermark delay.
 
@@ -161,7 +161,7 @@ query = (
     .option("checkpointLocation", "/checkpoints/my_query")
     .start("/output/events")
 )
-```text
+```
 
 **Rules:**
 
@@ -195,7 +195,7 @@ df = (
     .option("cloudFiles.schemaLocation", "/checkpoints/schema")
     .load("/landing/raw/events/")
 )
-```text
+```
 
 ### Kafka
 
@@ -222,7 +222,7 @@ schema = StructType([
 parsed = df.select(
     from_json(col("value").cast("string"), schema).alias("data")
 ).select("data.*")
-```text
+```
 
 ### Delta Table as Source
 
@@ -236,7 +236,7 @@ df = (
 
 # Or using table name
 df = spark.readStream.table("bronze.events")
-```text
+```
 
 ## Streaming Joins
 
@@ -250,7 +250,7 @@ users_df = spark.read.table("dim.users")
 
 # Enrich streaming events with user data
 enriched = events_stream.join(users_df, "user_id", "left")
-```text
+```
 
 ### Stream-Stream Join
 
@@ -274,7 +274,7 @@ matched = impressions.join(
     (impressions.impression_time >= clicks.click_time - expr("INTERVAL 1 HOUR")),
     "leftOuter"
 )
-```text
+```
 
 ## Use Cases
 

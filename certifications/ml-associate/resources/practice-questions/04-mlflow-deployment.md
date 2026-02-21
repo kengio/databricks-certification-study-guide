@@ -182,4 +182,4 @@ D) A CSV file uploaded to DBFS and referenced by path
 
 ---
 
-[← Back to Practice Questions](./README.md)
+**[← Previous: Practice Questions — Feature Engineering](./03-feature-engineering.md) | [↑ Back to Practice Questions — ML Associate](./README.md)**

@@ -169,4 +169,4 @@
 
 ---
 
-[Back to Practice Questions](./README.md) | [Prev: Incremental Processing](03-incremental-processing.md) | [Next: Data Governance](05-data-governance.md)
+**[← Previous: Domain 3: Incremental Data Processing](./03-incremental-processing.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 5: Data Governance](./05-data-governance.md) →**

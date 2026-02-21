@@ -39,7 +39,7 @@ flowchart TD
     Schema --> Object
     Object --> Row
     Object --> Column
-```text
+```
 
 ## Authentication Methods
 
@@ -49,20 +49,23 @@ Most common for programmatic access:
 
 ```bash
 # Generate PAT (Account Settings → User Settings → Personal Access Tokens)
+
 dapi1234567890abcdefghijklmnopqrstu
 
 # Use in API calls
+
 curl -X GET https://dbc-abc123.cloud.databricks.com/api/2.1/catalogs \
   -H "Authorization: Bearer dapi1234567890abcdefghijklmnopqrstu"
 
 # Use in connections
+
 connection = sql.connect(
     server_hostname="dbc-abc123.cloud.databricks.com",
     http_path="/sql/1.0/warehouses/abc123",
     auth_type="pat",
     token="dapi1234567890abcdefghijklmnopqrstu"
 )
-```text
+```
 
 **Security:**
 
@@ -88,7 +91,7 @@ Workflow:
   3. User authenticates
   4. Authority redirected back to Databricks
   5. Session created with enterprise identity
-```text
+```
 
 ### 3. Service Principals (M2M)
 
@@ -96,6 +99,7 @@ For automation and service-to-service authentication:
 
 ```python
 # Service Principal Authentication
+
 connection = sql.connect(
     server_hostname="dbc-abc123.cloud.databricks.com",
     http_path="/sql/1.0/warehouses/abc123",
@@ -106,6 +110,7 @@ connection = sql.connect(
 )
 
 # In automated pipeline (e.g., Airflow)
+
 @task
 def query_databricks():
     with sql.connect(...service_principal_auth...) as conn:
@@ -113,7 +118,7 @@ def query_databricks():
         cursor.execute("SELECT * FROM prod.sales.orders")
         results = cursor.fetchall()
     return results
-```text
+```
 
 ## Workspace-Level Permissions
 
@@ -135,7 +140,7 @@ def query_databricks():
 -- • Can manage workspace settings, users, policies
 -- • Can create and modify SQL warehouses
 -- • Access to all workspace resources
-```text
+```
 
 ### Managing Workspace Access
 
@@ -150,7 +155,7 @@ Workspace Settings:
     → Create custom groups
     → Assign members
     → Assign roles as group
-```text
+```
 
 ## Catalog-Level Permissions
 
@@ -170,7 +175,7 @@ TO `engineer@company.com`;
 -- Grant with admin grant option (can grant to others)
 GRANT SELECT ON CATALOG production
 TO `admin@company.com` WITH GRANT OPTION;
-```text
+```
 
 ### Privilege Types
 
@@ -192,7 +197,7 @@ GRANT SELECT ON CATALOG prod
 │  ├─ All views in schema
 │  └─ All external locations
 └─ Flows to all future schemas
-```text
+```
 
 ## Schema-Level Permissions
 
@@ -208,7 +213,7 @@ TO `engineer@company.com`;
 -- View permissions on object
 SHOW GRANTS ON SCHEMA production.sales;
 -- Output: principal, privilege, created_by, etc.
-```text
+```
 
 ## Table-Level Permissions
 
@@ -229,7 +234,7 @@ FROM `contractor@company.com`;
 
 -- View table permissions
 SHOW GRANTS ON TABLE production.sales.orders;
-```text
+```
 
 ### View Permissions
 
@@ -252,7 +257,7 @@ FROM production.sales.orders;
 -- Admin sees actual amount
 SELECT * FROM production.sales.orders_masked;
 -- Depending on user: NULL or actual value
-```text
+```
 
 ## Row-Level Security (Dynamic Views)
 
@@ -276,7 +281,7 @@ WHERE region IN (
 -- Midwest analyst sees only Midwest orders
 SELECT * FROM production.sales.orders_user_filtered;
 -- Returns ~50k rows for Midwest
-```text
+```
 
 ### Implementation Pattern
 
@@ -308,7 +313,7 @@ FROM `analyst@company.com`;
 
 GRANT SELECT ON VIEW production.sales.orders_regional
 TO `analyst@company.com`;
-```text
+```
 
 ## Column-Level Security (Data Masking)
 
@@ -338,7 +343,7 @@ FROM production.sales.customers;
 -- Finance team sees full email/phone
 -- Other users see masked values
 SELECT * FROM production.sales.customers_masked;
-```text
+```
 
 ### Masking Strategy
 
@@ -363,7 +368,7 @@ CASE
     THEN ssn
     ELSE CONCATENATE('***-**-', SUBSTRING(ssn, 8, 4))
 END as ssn
-```text
+```
 
 ## Current User Functions
 
@@ -385,7 +390,7 @@ SELECT current_schema();
 -- Check group membership (advanced)
 SELECT * FROM system.principals
 WHERE user_name = current_user();
-```text
+```
 
 ## Best Practices
 
@@ -399,7 +404,7 @@ GRANT ALL PRIVILEGES ON CATALOG production TO `user@company.com`;
 GRANT SELECT ON SCHEMA production.sales TO `user@company.com`;
 GRANT SELECT ON VIEW production.reports.daily_summary
 TO `user@company.com`;
-```text
+```
 
 ### 2. Use Groups
 
@@ -414,7 +419,7 @@ ALTER GROUP analysts ADD MEMBER `bob@company.com`;
 -- Grant permission to group
 GRANT SELECT ON CATALOG production TO `analysts`;
 -- Automatically applies to all group members
-```text
+```
 
 ### 3. Audit Regularly
 
@@ -433,7 +438,7 @@ FROM system.audit_logs
 WHERE action IN ('GRANT', 'REVOKE')
 ORDER BY timestamp DESC
 LIMIT 100;
-```text
+```
 
 ### 4. Secure PII
 
@@ -449,7 +454,7 @@ CREATE TABLE production.meta.pii_columns (
 
 -- Create masked views for public access
 -- Keep unmasked tables for authorized use only
-```text
+```
 
 ## Key Exam Concepts
 
@@ -480,10 +485,6 @@ CREATE TABLE production.meta.pii_columns (
 
 - **A**: No, use dynamic views that filter based on current_user()
 
----
-
-**[← Back to Topic](./README.md)**
-
 ## Use Cases
 
 - **Access Control & Security Implementation**: Incorporating Access Control & Security principles to build scalable and maintainable solutions in Databricks environments.
@@ -492,10 +493,15 @@ CREATE TABLE production.meta.pii_columns (
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Access Control & Security do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Access Control & Security to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Access Control & Security to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control & Security prior to deployment.
 
+---
+
+**[← Previous: Unity Catalog](./02-unity-catalog.md) | [↑ Back to Data Management in Databricks](./README.md)**

@@ -59,6 +59,7 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 import mlflow
 
 # XGBoost on Spark (distributed training)
+
 xgb_classifier = XGBoostClassifier(
     featuresCol="features",
     labelCol="label",
@@ -70,6 +71,7 @@ xgb_classifier = XGBoostClassifier(
 )
 
 # Define distributed parameter grid
+
 param_grid = (
     ParamGridBuilder()
     .addGrid(xgb_classifier.max_depth, [3, 5, 7, 9])
@@ -83,6 +85,7 @@ param_grid = (
 print(f"Total parameter combinations: {len(param_grid)}")
 
 # Cross-validation with parallelism
+
 evaluator = BinaryClassificationEvaluator(metricName="areaUnderROC")
 
 cv = CrossValidator(
@@ -95,12 +98,15 @@ cv = CrossValidator(
 )
 
 # Start MLflow tracking
+
 mlflow.start_run(run_name="xgboost_distributed_tuning")
 
 # Fit with distributed computing
+
 cv_model = cv.fit(train_df)
 
 # Log results
+
 mlflow.log_param("total_combinations", len(param_grid))
 mlflow.log_metric("best_cv_score", max(cv_model.avgMetrics))
 mlflow.log_param("num_folds", 5)
@@ -109,6 +115,7 @@ mlflow.log_param("parallelism", 8)
 mlflow.end_run()
 
 # Get best model
+
 best_model = cv_model.bestModel
 print(f"Best ROC-AUC: {max(cv_model.avgMetrics):.4f}")
 ```
@@ -121,6 +128,7 @@ from pyspark.ml import PipelineModel
 import mlflow
 
 # Define search space for distributed optimization
+
 space = {
     'max_depth': hp.choice('max_depth', range(3, 15)),
     'learning_rate': hp.loguniform('learning_rate', -5, 0),
@@ -171,12 +179,14 @@ def objective_spark(params):
         return {'loss': -auc, 'status': 'ok'}
 
 # Distributed trials
+
 spark_trials = SparkTrials(
     parallelism=16,  # Number of parallel workers
     timeout=3600  # Timeout per trial in seconds
 )
 
 # Run distributed optimization
+
 best = fmin(
     fn=objective_spark,
     space=space,
@@ -194,6 +204,7 @@ print(f"Best parameters: {best_params}")
 
 ```python
 # PBT: Evolutionary approach with migration
+
 from datetime import datetime
 import random
 
@@ -311,6 +322,7 @@ def training_function(config):
         tune.report(score=score, epoch=epoch)
 
 # Define search space
+
 config = {
     "learning_rate": tune.loguniform(1e-4, 1e-1),
     "batch_size": tune.choice([32, 64, 128, 256]),
@@ -318,6 +330,7 @@ config = {
 }
 
 # Ray Tune with PBT scheduler
+
 pbt_scheduler = PopulationBasedTraining(
     time_attr="epoch",
     perturbation_interval=2,
@@ -392,6 +405,7 @@ def create_optuna_study():
     return study, objective
 
 # Run distributed optimization
+
 study, objective = create_optuna_study()
 
 study.optimize(
@@ -409,6 +423,7 @@ print(f"Best params: {study.best_params}")
 
 ```python
 # Memory and computation estimation
+
 def estimate_tuning_resources(param_space, max_evals, model_training_time_sec):
     """Estimate resources needed for tuning"""
     
@@ -435,6 +450,7 @@ def estimate_tuning_resources(param_space, max_evals, model_training_time_sec):
     return actual_time
 
 # Communication overhead
+
 def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
     """Communication cost in distributed tuning"""
     
@@ -492,10 +508,12 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Distributed Hyperparameter Tuning do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Distributed Hyperparameter Tuning to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Distributed Hyperparameter Tuning to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Distributed Hyperparameter Tuning prior to deployment.
 
@@ -507,4 +525,4 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 
 ---
 
-**[← Back to Hyperparameter Optimization](./README.md)**
+**[← Previous: Bayesian Optimization](./02-bayesian-optimization.md) | [↑ Back to Hyperparameter Optimization](./README.md)**

@@ -86,9 +86,11 @@ Switch the registry URI before any registration or loading call:
 import mlflow
 
 # Point MLflow client to Unity Catalog registry
+
 mlflow.set_registry_uri("databricks-uc")
 
 # Register directly during training — model lands in UC namespace
+
 with mlflow.start_run() as run:
     mlflow.sklearn.log_model(
         sk_model=model,
@@ -126,6 +128,7 @@ from mlflow import MlflowClient
 client = MlflowClient(registry_uri="databricks-uc")
 
 # List all registered versions for a model
+
 versions = client.search_model_versions(
     "name='ml_catalog.fraud_models.fraud_classifier'"
 )
@@ -133,6 +136,7 @@ for v in versions:
     print(f"Version {v.version}: run_id={v.run_id}, tags={v.tags}")
 
 # Add a human-readable description to a specific version
+
 client.update_model_version(
     name="ml_catalog.fraud_models.fraud_classifier",
     version="3",
@@ -140,6 +144,7 @@ client.update_model_version(
 )
 
 # Attach structured metadata that code and dashboards can filter on
+
 client.set_model_version_tag(
     name="ml_catalog.fraud_models.fraud_classifier",
     version="3",
@@ -167,6 +172,7 @@ Standard alias vocabulary (team convention, not enforced by MLflow):
 
 ```python
 # Promote version 3 to champion — single API call, no code deployment needed
+
 client.set_registered_model_alias(
     name="ml_catalog.fraud_models.fraud_classifier",
     alias="champion",
@@ -174,11 +180,13 @@ client.set_registered_model_alias(
 )
 
 # Application code references the alias — version number never appears in app code
+
 model = mlflow.pyfunc.load_model(
     "models:/ml_catalog.fraud_models.fraud_classifier@champion"
 )
 
 # Point challenger at the new experimental version
+
 client.set_registered_model_alias(
     name="ml_catalog.fraud_models.fraud_classifier",
     alias="challenger",
@@ -186,6 +194,7 @@ client.set_registered_model_alias(
 )
 
 # Remove alias when A/B test concludes and challenger is either promoted or discarded
+
 client.delete_registered_model_alias(
     name="ml_catalog.fraud_models.fraud_classifier",
     alias="challenger"
@@ -204,6 +213,7 @@ to know both.
 
 ```python
 # Transition a version to Production stage (workspace registry only)
+
 client.transition_model_version_stage(
     name="fraud_classifier",
     version="3",
@@ -212,6 +222,7 @@ client.transition_model_version_stage(
 )
 
 # Load by stage name — note the capital P
+
 model = mlflow.pyfunc.load_model("models:/fraud_classifier/Production")
 ```
 
@@ -233,9 +244,11 @@ conform.
 from mlflow.models.signature import infer_signature
 
 # Infer input schema from training features and output schema from predictions
+
 signature = infer_signature(X_train, model.predict(X_train))
 
 # Log model with signature and an input example for debugging
+
 mlflow.sklearn.log_model(
     sk_model=model,
     artifact_path="model",
@@ -260,6 +273,7 @@ final artifact accepts raw inputs.
 
 ```python
 # Filter versions by tag — useful for audits and automated promotion pipelines
+
 results = client.search_model_versions(
     filter_string=(
         "name='ml_catalog.fraud_models.fraud_classifier' "
@@ -268,6 +282,7 @@ results = client.search_model_versions(
 )
 
 # Retrieve the champion version and pull its training metrics for comparison
+
 alias_mv = client.get_model_version_by_alias(
     name="ml_catalog.fraud_models.fraud_classifier",
     alias="champion"
@@ -277,6 +292,7 @@ champion_auc = run.data.metrics["auc"]
 print(f"Champion AUC: {champion_auc:.4f}")
 
 # Compare to challenger before deciding to promote
+
 challenger_mv = client.get_model_version_by_alias(
     name="ml_catalog.fraud_models.fraud_classifier",
     alias="challenger"
@@ -408,10 +424,12 @@ service principals.
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Model Versioning and Registry to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Versioning and Registry prior to deployment.
 
@@ -423,4 +441,4 @@ service principals.
 
 ---
 
-**[← Back to Model Production Lifecycle](./README.md)**
+**[↑ Back to Model Production Lifecycle](./README.md) | [Next: Model Serving and Deployment](./02-model-serving-deployment.md) →**

@@ -63,4 +63,4 @@ flowchart TB
 After completing this section, continue to
 [02 — Vector Search & Embeddings](../02-vector-search-embeddings/README.md).
 
-[← Back to GenAI Engineer Associate](../README.md)
+[← Back to Certification](../README.md)

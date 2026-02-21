@@ -28,7 +28,7 @@ flowchart TB
     Definition --> |Pipeline structure| Graph[Dataset dependencies]
     Progress --> |Execution metrics| Metrics[Rows, duration, status]
     Quality --> |Expectations| Expectations[Pass/fail counts]
-```text
+```
 
 ## Event Log Location
 
@@ -44,7 +44,7 @@ ORDER BY timestamp DESC;
 SELECT *
 FROM delta.`/pipelines/<pipeline-id>/system/events`
 ORDER BY timestamp DESC;
-```text
+```
 
 ### Event Log Schema
 
@@ -76,7 +76,7 @@ SELECT
 FROM event_log(TABLE(my_table))
 WHERE event_type = 'flow_definition'
 ORDER BY timestamp DESC;
-```text
+```
 
 ### flow_progress
 
@@ -92,7 +92,7 @@ SELECT
 FROM event_log(TABLE(my_table))
 WHERE event_type = 'flow_progress'
 ORDER BY timestamp DESC;
-```text
+```
 
 ### Metrics in flow_progress
 
@@ -119,7 +119,7 @@ FROM event_log(TABLE(my_table))
 WHERE event_type = 'flow_progress'
     AND details:expectations IS NOT NULL
 ORDER BY timestamp DESC;
-```text
+```
 
 ### maintenance_actions
 
@@ -135,7 +135,7 @@ SELECT
 FROM event_log(TABLE(my_table))
 WHERE event_type = 'maintenance_actions'
 ORDER BY timestamp DESC;
-```text
+```
 
 ### user_action
 
@@ -149,7 +149,7 @@ SELECT
 FROM event_log(TABLE(my_table))
 WHERE event_type = 'user_action'
 ORDER BY timestamp DESC;
-```text
+```
 
 ## Common Monitoring Queries
 
@@ -167,7 +167,7 @@ WHERE timestamp >= current_timestamp() - INTERVAL 24 HOURS
     AND event_type = 'flow_progress'
 GROUP BY DATE_TRUNC('hour', timestamp)
 ORDER BY hour DESC;
-```text
+```
 
 ### Dataset Processing Metrics
 
@@ -184,7 +184,7 @@ WHERE event_type = 'flow_progress'
     AND timestamp >= current_timestamp() - INTERVAL 7 DAYS
 GROUP BY details:flow_progress.data_quality.dataset
 ORDER BY total_rows DESC;
-```text
+```
 
 ### Data Quality Monitoring
 
@@ -207,7 +207,7 @@ WHERE event_type = 'flow_progress'
     AND timestamp >= current_timestamp() - INTERVAL 24 HOURS
 GROUP BY details:expectations.dataset, details:expectations.name
 ORDER BY pass_rate ASC;
-```text
+```
 
 ### Error Analysis
 
@@ -224,7 +224,7 @@ WHERE event_type = 'flow_progress'
     AND (details:flow_progress.status = 'FAILED' OR error IS NOT NULL)
 ORDER BY timestamp DESC
 LIMIT 50;
-```text
+```
 
 ### Streaming Lag Monitoring
 
@@ -240,7 +240,7 @@ WHERE event_type = 'flow_progress'
     AND details:flow_progress.metrics.seconds_of_backlog IS NOT NULL
     AND timestamp >= current_timestamp() - INTERVAL 1 HOUR
 ORDER BY timestamp DESC;
-```text
+```
 
 ## Building Monitoring Dashboards
 
@@ -259,7 +259,7 @@ SELECT
 FROM event_log(TABLE(my_table))
 WHERE timestamp >= current_timestamp() - INTERVAL 7 DAYS
 GROUP BY DATE_TRUNC('hour', timestamp), origin.pipeline_id;
-```text
+```
 
 ### Data Quality Trends
 
@@ -277,7 +277,7 @@ WHERE event_type = 'flow_progress'
     AND details:expectations IS NOT NULL
     AND timestamp >= current_timestamp() - INTERVAL 30 DAYS
 GROUP BY DATE(timestamp), details:expectations.dataset, details:expectations.name;
-```text
+```
 
 ## Alerting Patterns
 
@@ -285,9 +285,11 @@ GROUP BY DATE(timestamp), details:expectations.dataset, details:expectations.nam
 
 ```python
 # Databricks notebook scheduled job
+
 from pyspark.sql.functions import col, sum as spark_sum
 
 # Query recent quality failures
+
 failures_df = spark.sql("""
     SELECT
         details:expectations.dataset AS dataset,
@@ -306,12 +308,13 @@ if failures_df.count() > 0:
     failures = failures_df.collect()
     alert_message = f"Data quality failures detected: {len(failures)} expectations failed"
     # send_alert(alert_message)
-```text
+```
 
 ### Alert on Processing Delays
 
 ```python
 # Check for streaming lag
+
 lag_df = spark.sql("""
     SELECT
         details:flow_progress.data_quality.dataset AS dataset,
@@ -327,7 +330,7 @@ lag_df = spark.sql("""
 if lag_df.count() > 0:
     # Alert on significant backlog (> 5 minutes)
     pass
-```text
+```
 
 ## Event Log Retention
 
@@ -335,19 +338,20 @@ if lag_df.count() > 0:
 
 ```python
 # DLT pipeline configuration
+
 {
     "configuration": {
         "pipelines.eventLog.retentionDays": "30"
     }
 }
-```text
+```
 
 ### Manual Cleanup
 
 ```sql
 -- Event logs are Delta tables, can use VACUUM
 VACUUM delta.`/pipelines/<pipeline-id>/system/events` RETAIN 168 HOURS;
-```text
+```
 
 ## Troubleshooting Common Issues
 
@@ -375,7 +379,7 @@ FROM event_log(TABLE(my_table))
 WHERE event_type = 'flow_progress'
     AND details:flow_progress.status IN ('PENDING', 'RUNNING')
 ORDER BY timestamp DESC;
-```text
+```
 
 ### Data Quality Investigation
 
@@ -391,7 +395,7 @@ WHERE event_type = 'flow_progress'
     AND details:expectations IS NOT NULL
     AND CAST(details:expectations.failed_records AS BIGINT) > 0
 ORDER BY timestamp DESC;
-```text
+```
 
 ### Pipeline Dependency Analysis
 
@@ -404,7 +408,7 @@ SELECT
 FROM event_log(TABLE(my_table))
 WHERE event_type = 'flow_definition'
 ORDER BY details:flow_definition.name;
-```text
+```
 
 ## Integration with External Monitoring
 
@@ -412,6 +416,7 @@ ORDER BY details:flow_definition.name;
 
 ```python
 # Export event logs to external monitoring
+
 event_log_df = spark.sql("""
     SELECT
         timestamp,
@@ -424,13 +429,15 @@ event_log_df = spark.sql("""
 """)
 
 # Write to external sink
+
 (event_log_df.write
     .format("json")
     .mode("append")
     .save("/Volumes/monitoring/dlt_events/"))
 
 # Or stream to Kafka/Event Hub for real-time monitoring
-```text
+
+```
 
 ### Metrics to External Dashboard
 
@@ -445,7 +452,7 @@ SELECT
 FROM event_log(TABLE(my_table))
 WHERE event_type = 'flow_progress'
     AND timestamp >= current_timestamp() - INTERVAL 5 MINUTES;
-```text
+```
 
 ## Use Cases
 
@@ -464,7 +471,7 @@ WHERE event_type = 'flow_progress'
 ```sql
 -- Check pipeline storage location directly
 SELECT * FROM delta.`/pipelines/<pipeline-id>/system/events` LIMIT 10;
-```text
+```
 
 ### 2. Missing Expectation Results
 
@@ -476,7 +483,7 @@ SELECT * FROM delta.`/pipelines/<pipeline-id>/system/events` LIMIT 10;
 @dlt.expect("valid_id", "id IS NOT NULL")  # Must be defined
 def my_table():
     return ...
-```text
+```
 
 ### 3. Stale Metrics
 
@@ -489,7 +496,7 @@ SELECT
     MAX(timestamp) AS last_event
 FROM event_log(TABLE(my_table))
 WHERE event_type = 'flow_progress';
-```text
+```
 
 ## Exam Tips
 
@@ -515,3 +522,7 @@ WHERE event_type = 'flow_progress';
 - [DLT Event Logs](https://docs.databricks.com/delta-live-tables/observability.html)
 - [Monitoring DLT Pipelines](https://docs.databricks.com/delta-live-tables/monitoring.html)
 - [Event Log Schema](https://docs.databricks.com/delta-live-tables/observability.html#event-log-schema)
+
+---
+
+**[← Previous: Spark UI Debugging](./02-spark-ui-debugging.md) | [↑ Back to Monitoring & Logging](./README.md) | [Next: Query Profiler](./04-query-profiler.md) →**

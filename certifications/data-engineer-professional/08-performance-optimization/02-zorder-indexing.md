@@ -26,7 +26,7 @@ flowchart TB
     Query --> With
     Without --> Scan[Scan All Files]
     With --> Skip[Skip 3 Files]
-```text
+```
 
 ## Data Skipping Concepts
 
@@ -43,7 +43,7 @@ Query execution:
 2. Check file statistics
 3. Skip files that can't match
 4. Read only relevant files
-```text
+```
 
 ### Statistics Collection
 
@@ -57,7 +57,7 @@ ALTER TABLE catalog.schema.orders
 SET TBLPROPERTIES (
     'delta.dataSkippingNumIndexedCols' = '50'
 );
-```text
+```
 
 ### Statistics Limitations
 
@@ -86,7 +86,7 @@ ZORDER BY (customer_id, order_date);
 OPTIMIZE catalog.schema.orders
 WHERE order_date >= '2024-01-01'
 ZORDER BY (customer_id);
-```text
+```
 
 ### How Z-ORDER Works
 
@@ -110,7 +110,7 @@ flowchart TD
 
     Data --> ZOrder
     ZOrder --> Result
-```text
+```
 
 ### Z-ORDER Column Selection
 
@@ -126,7 +126,7 @@ Bad columns for Z-ORDER:
 2. Already partition columns
 3. Rarely used in filters
 4. Columns with complex types
-```text
+```
 
 ### Column Order Matters
 
@@ -140,7 +140,7 @@ ZORDER BY (
 
 -- First column gets best clustering
 -- Diminishing returns after ~4 columns
-```text
+```
 
 ## Z-ORDER vs Partitioning
 
@@ -166,7 +166,7 @@ flowchart TD
     ZOrder --> Both
     Both -->|Yes| Combine[Partition + Z-ORDER]
     Both -->|No| Done[Done]
-```text
+```
 
 ### Combined Strategy
 
@@ -185,7 +185,7 @@ PARTITIONED BY (order_date);
 OPTIMIZE orders
 WHERE order_date >= '2024-01-01'
 ZORDER BY (customer_id, product_id);
-```text
+```
 
 ## Liquid Clustering
 
@@ -197,7 +197,7 @@ Liquid Clustering is the evolution of Z-ORDER:
 - Incremental clustering (only new data)
 - Better handling of streaming
 - More flexible column changes
-```text
+```
 
 ### Enabling Liquid Clustering
 
@@ -214,7 +214,7 @@ CLUSTER BY (customer_id, order_date);
 -- Convert existing table to liquid clustering
 ALTER TABLE catalog.schema.orders
 CLUSTER BY (customer_id, order_date);
-```text
+```
 
 ### Liquid vs Z-ORDER
 
@@ -240,7 +240,7 @@ CLUSTER BY NONE;
 
 -- Trigger clustering manually (optional)
 OPTIMIZE catalog.schema.orders;
-```text
+```
 
 ### Liquid Clustering Best Practices
 
@@ -257,7 +257,7 @@ Migration from Partitioning:
 3. Create new table with CLUSTER BY
 4. Migrate data
 5. Verify query performance
-```text
+```
 
 ## Bloom Filters
 
@@ -269,7 +269,7 @@ Bloom filters provide:
 - Effective for equality predicates
 - Works with high-cardinality columns
 - False positives possible, no false negatives
-```text
+```
 
 ### Enabling Bloom Filters
 
@@ -287,7 +287,7 @@ SET TBLPROPERTIES (
     'delta.bloomFilter.fpp' = '0.01',  -- False positive probability
     'delta.bloomFilter.numBits' = '1048576'  -- Bits per filter
 );
-```text
+```
 
 ### Bloom Filter Use Cases
 
@@ -296,7 +296,7 @@ SET TBLPROPERTIES (
 SELECT * FROM orders WHERE order_id = 'abc-123-def';
 
 -- Bloom filter helps skip files that definitely don't contain the value
-```text
+```
 
 ### Bloom Filter vs Z-ORDER
 
@@ -321,7 +321,7 @@ SELECT * FROM orders WHERE customer_id = 12345;
 -- Check Spark UI for:
 -- "files read" vs "files total"
 -- "rows read" vs "rows total"
-```text
+```
 
 ### Analyzing Query Plans
 
@@ -334,18 +334,20 @@ SELECT * FROM orders WHERE customer_id = 12345;
 -- "DataFilters" in FileScan
 -- Partition pruning
 -- File skipping metrics
-```text
+```
 
 ### Performance Metrics
 
 ```python
 # Programmatic access to metrics
+
 df = spark.sql("SELECT * FROM orders WHERE customer_id = 12345")
 df.collect()
 
 # Get execution metrics
+
 metrics = spark.sparkContext.statusTracker.getExecutorInfos()
-```text
+```
 
 ## OPTIMIZE Strategies
 
@@ -353,6 +355,7 @@ metrics = spark.sparkContext.statusTracker.getExecutorInfos()
 
 ```python
 # Daily optimization job
+
 from datetime import datetime, timedelta
 
 def optimize_tables():
@@ -368,7 +371,7 @@ def optimize_tables():
             WHERE _commit_timestamp >= current_timestamp() - INTERVAL 1 DAY
             ZORDER BY ({', '.join(zorder_cols)})
         """)
-```text
+```
 
 ### Incremental Z-ORDER
 
@@ -377,7 +380,7 @@ def optimize_tables():
 OPTIMIZE catalog.schema.orders
 WHERE order_date >= date_sub(current_date(), 7)
 ZORDER BY (customer_id);
-```text
+```
 
 ### Full Table Z-ORDER
 
@@ -388,7 +391,7 @@ ZORDER BY (customer_id, product_id);
 
 -- Warning: Can be expensive for large tables
 -- Consider running during low-usage periods
-```text
+```
 
 ## Migration Patterns
 
@@ -403,7 +406,7 @@ AS SELECT * FROM catalog.schema.orders;
 -- Step 2: Verify query performance
 -- Step 3: Update references
 -- Step 4: Drop old table after validation
-```text
+```
 
 ### From Z-ORDER to Liquid Clustering
 
@@ -415,7 +418,7 @@ CLUSTER BY (customer_id, order_date);
 -- Future writes will be clustered
 -- Run OPTIMIZE to cluster historical data
 OPTIMIZE catalog.schema.orders;
-```text
+```
 
 ## Common Issues & Errors
 
@@ -434,7 +437,7 @@ SELECT * FROM orders WHERE customer_id = 123;
 
 -- This query doesn't benefit (different column):
 SELECT * FROM orders WHERE product_id = 456;
-```text
+```
 
 ### 2. Too Many Z-ORDER Columns
 
@@ -448,7 +451,7 @@ OPTIMIZE orders ZORDER BY (a, b, c, d, e, f);
 
 -- Better: Focus on most important
 OPTIMIZE orders ZORDER BY (a, b, c);
-```text
+```
 
 ### 3. Z-ORDER on Low-Cardinality Column
 
@@ -463,7 +466,7 @@ OPTIMIZE orders ZORDER BY (status);  -- Only 5 values
 -- Better: Partition by low-cardinality, Z-ORDER by high
 CREATE TABLE orders PARTITIONED BY (status);
 OPTIMIZE orders ZORDER BY (customer_id);
-```text
+```
 
 ### 4. Liquid Clustering Not Working
 
@@ -477,7 +480,7 @@ DESCRIBE DETAIL catalog.schema.orders;
 
 -- Manually trigger clustering
 OPTIMIZE catalog.schema.orders;
-```text
+```
 
 ## Exam Tips
 
@@ -504,3 +507,7 @@ OPTIMIZE catalog.schema.orders;
 - [Liquid Clustering](https://docs.databricks.com/delta/clustering.html)
 - [Bloom Filters](https://docs.databricks.com/delta/optimizations/bloom-filters.html)
 - [Data Skipping](https://docs.databricks.com/delta/optimizations/file-mgmt.html)
+
+---
+
+**[← Previous: File Sizing and Compaction](./01-file-sizing.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Spark Tuning](./03-spark-tuning.md) →**

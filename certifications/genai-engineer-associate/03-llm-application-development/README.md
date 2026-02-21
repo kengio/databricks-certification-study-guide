@@ -49,4 +49,4 @@ After completing this topic, continue to:
 
 - [04 — Databricks GenAI Tools](../04-databricks-genai-tools/README.md)
 
-[← Back to GenAI Engineer Associate](../README.md)
+[← Back to Certification](../README.md)

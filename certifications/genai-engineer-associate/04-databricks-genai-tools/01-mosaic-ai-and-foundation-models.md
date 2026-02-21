@@ -72,6 +72,7 @@ import mlflow.deployments
 client = mlflow.deployments.get_deploy_client("databricks")
 
 # Chat completion
+
 response = client.predict(
     endpoint="databricks-meta-llama-3-1-70b-instruct",
     inputs={
@@ -86,6 +87,7 @@ response = client.predict(
 answer = response["choices"][0]["message"]["content"]
 
 # Embedding
+
 embed_response = client.predict(
     endpoint="databricks-gte-large-en",
     inputs={"input": ["Delta Lake is an open-source storage layer."]},
@@ -115,6 +117,7 @@ from mlflow.deployments import get_deploy_client
 client = get_deploy_client("databricks")
 
 # Query an OpenAI GPT-4 endpoint routed through AI Gateway
+
 response = client.predict(
     endpoint="my-openai-gpt4-endpoint",   # External model endpoint name
     inputs={
@@ -147,6 +150,7 @@ as REST endpoints:
 
 ```python
 # After logging a custom model with MLflow:
+
 import mlflow
 
 with mlflow.start_run():
@@ -157,6 +161,7 @@ with mlflow.start_run():
     )
 
 # Register in Unity Catalog
+
 mlflow.register_model(
     model_uri="runs:/<run_id>/custom_llm",
     name="catalog.schema.my_fine_tuned_llm",
@@ -251,8 +256,6 @@ Fine-tuning workflow:
 > rule requires using the same model for both index creation and query time. The system does
 > not auto-re-embed, does not raise an explicit error, and query quality degrades silently.
 
-[← Back to Databricks GenAI Tools](./README.md)
-
 ## Use Cases
 
 - **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
@@ -261,10 +264,15 @@ Fine-tuning workflow:
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Mosaic AI & Foundation Models to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Mosaic AI & Foundation Models prior to deployment.
 
+---
+
+**[↑ Back to Databricks GenAI Tools](./README.md) | [Next: MLflow for GenAI](./02-mlflow-for-genai.md) →**

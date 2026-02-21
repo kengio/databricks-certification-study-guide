@@ -541,4 +541,4 @@ A Spark job processing a 2TB DataFrame is running slowly. You open the Spark UI 
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Governance & Security](06-governance-security.md) | [Next: PySpark API Deep Dive](08-pyspark-api.md)
+**[← Previous: Interview Questions — Governance & Security](./06-governance-security.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — PySpark API Deep Dive](./08-pyspark-api.md) →**

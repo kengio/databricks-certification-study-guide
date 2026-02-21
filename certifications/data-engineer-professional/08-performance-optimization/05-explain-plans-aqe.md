@@ -37,7 +37,7 @@ flowchart TB
 
     Analysis --> Outcome
     Acceleration --> Outcome
-```text
+```
 
 ## Reading EXPLAIN Plans
 
@@ -81,29 +81,34 @@ SELECT customer_id, SUM(amount) AS total
 FROM orders
 WHERE order_date >= '2024-01-01'
 GROUP BY customer_id;
-```text
+```
 
 ### Using EXPLAIN in Python
 
 ```python
 # DataFrame explain
+
 df = (spark.table("orders")
     .filter(col("order_date") >= "2024-01-01")
     .groupBy("customer_id")
     .agg(sum("amount").alias("total")))
 
 # Simple physical plan
+
 df.explain()
 
 # Extended plan (all stages)
+
 df.explain(mode="extended")
 
 # Formatted output
+
 df.explain(mode="formatted")
 
 # Cost-based plan
+
 df.explain(mode="cost")
-```text
+```
 
 ### Plan Structure (Extended)
 
@@ -119,7 +124,7 @@ df.explain(mode="cost")
 
 == Physical Plan ==
   Actual execution strategy chosen by the planner
-```text
+```
 
 ### Key Operators in Physical Plans
 
@@ -159,7 +164,7 @@ flowchart TB
     TransformOps --> JoinOps
     AggOps --> ShuffleOps
     JoinOps --> ShuffleOps
-```text
+```
 
 ### Join Operator Selection
 
@@ -186,7 +191,7 @@ Physical plans are read from BOTTOM to TOP:
 Read order: FileScan -> Filter -> Project -> Partial Agg -> Shuffle -> Final Agg
 
 The asterisk (*) with a number indicates a whole-stage code generation stage.
-```text
+```
 
 ### Identifying Partition Pruning
 
@@ -203,7 +208,7 @@ FileScan parquet default.orders[customer_id,amount,order_date]
 
 PartitionFilters: Spark reads ONLY matching partitions (skips others entirely)
 DataFilters: Applied after reading data from files
-```text
+```
 
 ### Identifying Predicate Pushdown
 
@@ -221,7 +226,7 @@ FileScan parquet default.events[event_id,event_type,user_id,timestamp]
 PushedFilters: Filter pushed to the data source (Parquet/Delta reader)
   - Filters rows during scan (before data enters Spark)
   - Reduces I/O significantly
-```text
+```
 
 ### Data Skipping Indicators
 
@@ -238,19 +243,22 @@ Key indicators:
 - numFilesSkipped: Files skipped due to min/max stats
 - numFilesRead: Files actually scanned
 - High skip ratio = effective data skipping
-```text
+```
 
 ```python
 # Verify data skipping with metrics
+
 df = spark.read.format("delta").load("/data/orders")
 filtered = df.filter(col("amount") >= 1000)
 
 # Check the plan for PushedFilters
+
 filtered.explain(mode="formatted")
 
 # Collect statistics to improve data skipping
+
 spark.sql("ANALYZE TABLE orders COMPUTE STATISTICS FOR COLUMNS amount, order_date")
-```text
+```
 
 ## Adaptive Query Execution (AQE) Deep Dive
 
@@ -274,7 +282,7 @@ flowchart LR
     Stage1 --> Stats
     Stats --> Reoptimize
     Reoptimize --> Stage2
-```text
+```
 
 ```text
 AQE operates at shuffle boundaries:
@@ -287,29 +295,33 @@ This is why AQE can:
 - Convert SortMergeJoin to BroadcastHashJoin if one side is small
 - Coalesce small partitions after shuffle
 - Split skewed partitions for better load balancing
-```text
+```
 
 ### AQE Key Configurations
 
 ```python
 # Core AQE settings
+
 spark.conf.set("spark.sql.adaptive.enabled", "true")
 
 # Coalescing partitions
+
 spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
 spark.conf.set("spark.sql.adaptive.coalescePartitions.minPartitionSize", "64MB")
 spark.conf.set("spark.sql.adaptive.coalescePartitions.initialPartitionNum", "200")
 spark.conf.set("spark.sql.adaptive.advisoryPartitionSizeInBytes", "128MB")
 
 # Skew join
+
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionFactor", "5")
 spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes", "256MB")
 
 # Dynamic join strategy
+
 spark.conf.set("spark.sql.adaptive.autoBroadcastJoinThreshold", "10MB")
 spark.conf.set("spark.sql.adaptive.localShuffleReader.enabled", "true")
-```text
+```
 
 ### CustomShuffleReaderExec
 
@@ -331,7 +343,7 @@ Look for:
 - "coalesced" = partitions were merged
 - "skewed" = skewed partitions were split
 - "local" = local shuffle reader optimization applied
-```text
+```
 
 ### AQE Skew Join Optimization
 
@@ -349,11 +361,13 @@ Plan indicator:
   SortMergeJoin [id], Inner
   :- SortMergeJoin-SkewedPartition [id]     <-- Skew handling active
   :  :- ...
-```text
+```
 
 ```python
+
 # Simulate and observe AQE skew handling
 # Create a skewed dataset
+
 skewed_df = spark.range(1000000).withColumn(
     "key",
     when(col("id") < 900000, lit("hot_key"))  # 90% goes to one key
@@ -365,9 +379,10 @@ other_df = spark.range(100).withColumn(
 ).withColumn("value", lit("data"))
 
 # Join - AQE will detect and handle skew
+
 result = skewed_df.join(other_df, "key")
 result.explain(mode="formatted")  # Look for skew indicators
-```text
+```
 
 ### AQE Coalescing Behavior
 
@@ -385,24 +400,28 @@ After coalescing:
   Partition 3: [5 + ...] = ...
 
 Result: 200 partitions -> ~15 partitions (actual data-dependent)
-```text
+```
 
 ### Verifying AQE Is Working
 
 ```python
 # Method 1: Check the final plan after execution
+
 df = (spark.table("orders")
     .join(spark.table("customers"), "customer_id")
     .groupBy("region")
     .agg(sum("amount")))
 
 # Force execution
+
 df.collect()
 
 # Now check the executed plan (shows AQE changes)
+
 df.explain(mode="formatted")
 # Look for: AdaptiveSparkPlan, CustomShuffleReaderExec, isFinalPlan=true
-```text
+
+```
 
 ```sql
 -- Method 2: Check AQE status in SQL
@@ -412,7 +431,7 @@ SET spark.sql.adaptive.enabled;
 -- Run query and check Spark UI SQL tab
 -- The plan will show "AdaptiveSparkPlan isFinalPlan=true"
 -- Compare initial vs final plan to see AQE changes
-```text
+```
 
 ## Use Cases
 
@@ -422,13 +441,19 @@ SET spark.sql.adaptive.enabled;
 ## Common Issues & Errors
 
 ### 1. Hard-to-Read Physical Plans
+
 **Scenario:** Raw `EXPLAIN` output is dense and difficult to interpret.
 **Fix:** Always use `EXPLAIN FORMATTED` in SQL or `.explain(mode="formatted")` in Python to get a structured, easier-to-read layout.
 
 ### 2. Missing Statistics Leading to Bad Plans
+
 **Scenario:** Optimizer chooses slow operations (e.g., SortMergeJoin over BroadcastHashJoin) for small tables.
 **Fix:** Run `ANALYZE TABLE <name> COMPUTE STATISTICS` so Catalyst has accurate file and row counts to inform Cost-Based Optimization.
 
 ## Next
 
-Continue with [Photon, Diagnostics & Query Optimization](./06-photon-diagnostics-optimization.md) for Photon acceleration, memory and spill diagnostics, Spark UI deep dive, query optimization strategies, practice questions, and exam tips.
+Continue with [Photon, Diagnostics & Query Optimization](./06-photon-diagnostics-optimization-part1.md) for Photon acceleration, memory and spill diagnostics, Spark UI deep dive, query optimization strategies, practice questions, and exam tips.
+
+---
+
+**[← Previous: Cost Optimization](./04-cost-optimization.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Photon, Diagnostics & Query Optimization — Part 1](./06-photon-diagnostics-optimization-part1.md) →**

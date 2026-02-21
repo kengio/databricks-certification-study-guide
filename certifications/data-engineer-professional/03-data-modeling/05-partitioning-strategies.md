@@ -23,7 +23,7 @@ flowchart TB
     Traditional --> Hive[Hive-style partitions]
     ZOrder --> DataSkipping[Data skipping optimization]
     Liquid --> Automatic[Automatic clustering]
-```text
+```
 
 ## Traditional Partitioning
 
@@ -38,7 +38,7 @@ flowchart TB
     Part1 --> Files1["part-00000.parquet<br>part-00001.parquet"]
     Part2 --> Files2["part-00000.parquet<br>part-00001.parquet"]
     Part3 --> Files3["part-00000.parquet"]
-```text
+```
 
 ### Directory Structure
 
@@ -53,7 +53,7 @@ delta_table/
 │   └── part-00001-xxx.snappy.parquet
 └── date=2024-01-03/
     └── part-00000-xxx.snappy.parquet
-```text
+```
 
 ### Creating Partitioned Tables
 
@@ -79,10 +79,11 @@ CREATE TABLE main.default.events (
 )
 USING DELTA
 PARTITIONED BY (event_date, region);
-```text
+```
 
 ```python
 # DataFrame API: Write with partitioning
+
 (df.write
     .format("delta")
     .partitionBy("order_date")
@@ -90,12 +91,13 @@ PARTITIONED BY (event_date, region);
     .saveAsTable("main.default.orders"))
 
 # Multiple partition columns
+
 (df.write
     .format("delta")
     .partitionBy("event_date", "region")
     .mode("overwrite")
     .saveAsTable("main.default.events"))
-```text
+```
 
 ## Partition Pruning
 
@@ -110,7 +112,7 @@ flowchart LR
     Prune --> |Skip| P2["2024-01-14 ❌"]
     Prune --> |Read| P3["2024-01-15 ✓"]
     Prune --> |Skip| P4["2024-01-16 ❌"]
-```text
+```
 
 ### Effective Pruning Patterns
 
@@ -129,7 +131,7 @@ SELECT * FROM orders WHERE YEAR(order_date) = 2024;
 
 -- Expression on partition column - NO PRUNING ✗
 SELECT * FROM orders WHERE order_date + INTERVAL 1 DAY = '2024-01-16';
-```text
+```
 
 ### Pruning Patterns Summary
 
@@ -167,7 +169,7 @@ flowchart TD
 
     Distribution --> |Yes| GoodPartition[Good partition candidate]
     Distribution --> |No, skewed| Consider[Consider but monitor]
-```text
+```
 
 ### Good Partition Column Examples
 
@@ -183,7 +185,7 @@ PARTITIONED BY (region)
 -- Category/type
 PARTITIONED BY (product_category)
 PARTITIONED BY (event_type)
-```text
+```
 
 ### Bad Partition Column Examples
 
@@ -195,7 +197,7 @@ PARTITIONED BY (event_timestamp) -- Avoid
 
 -- Rarely filtered
 PARTITIONED BY (internal_flag)  -- Avoid if not queried
-```text
+```
 
 ## Generated Partition Columns
 
@@ -222,10 +224,11 @@ CREATE TABLE main.default.orders (
 )
 USING DELTA
 PARTITIONED BY (order_year, order_month);
-```text
+```
 
 ```python
 # Add partition column before writing
+
 from pyspark.sql.functions import year, month, to_date
 
 df_with_partition = (df
@@ -236,7 +239,7 @@ df_with_partition = (df
     .format("delta")
     .partitionBy("order_year", "order_month")
     .saveAsTable("main.default.orders"))
-```text
+```
 
 ## Dynamic Partition Overwrite
 
@@ -244,9 +247,11 @@ Overwrite only partitions present in the DataFrame.
 
 ```python
 # Enable dynamic partition overwrite
+
 spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
 
 # Only overwrites partitions in the DataFrame
+
 (df.write
     .format("delta")
     .mode("overwrite")
@@ -254,12 +259,13 @@ spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
     .saveAsTable("main.default.orders"))
 
 # Using replaceWhere for explicit partition overwrite
+
 (df.write
     .format("delta")
     .mode("overwrite")
     .option("replaceWhere", "order_date >= '2024-01-01' AND order_date < '2024-02-01'")
     .saveAsTable("main.default.orders"))
-```text
+```
 
 ```sql
 -- SQL equivalent
@@ -273,7 +279,7 @@ PARTITION (order_date = '2024-01-15')
 SELECT order_id, customer_id, amount
 FROM staging_orders
 WHERE order_date = '2024-01-15';
-```text
+```
 
 ## Z-ORDER Optimization
 
@@ -296,7 +302,7 @@ flowchart TB
     end
 
     Before --> |OPTIMIZE ZORDER| After
-```text
+```
 
 ### Z-ORDER Syntax
 
@@ -313,7 +319,7 @@ ZORDER BY (user_id, event_type);
 OPTIMIZE main.default.orders
 WHERE order_date >= '2024-01-01'
 ZORDER BY (customer_id);
-```text
+```
 
 ### Z-ORDER Best Practices
 
@@ -339,7 +345,7 @@ OPTIMIZE orders ZORDER BY (status);  -- Only a few distinct values
 -- Table partitioned by order_date
 -- Z-ORDER by customer_id for customer-based queries
 OPTIMIZE orders WHERE order_date = '2024-01-15' ZORDER BY (customer_id);
-```text
+```
 
 ## Liquid Clustering
 
@@ -379,7 +385,7 @@ CLUSTER BY NONE;
 -- Change clustering columns (easy with liquid clustering!)
 ALTER TABLE main.default.orders
 CLUSTER BY (region, order_date);
-```text
+```
 
 ### Liquid Clustering with Auto-Compaction
 
@@ -389,7 +395,7 @@ ALTER TABLE main.default.orders SET TBLPROPERTIES (
     'delta.autoOptimize.optimizeWrite' = 'true',
     'delta.autoOptimize.autoCompact' = 'true'
 );
-```text
+```
 
 ### Triggering Clustering
 
@@ -401,7 +407,7 @@ OPTIMIZE main.default.orders;
 -- 1. Writes when auto-optimize is enabled
 -- 2. OPTIMIZE commands
 -- 3. Background maintenance (Databricks-managed)
-```text
+```
 
 ### When to Use Liquid Clustering
 
@@ -441,7 +447,7 @@ flowchart TD
     New --> |No, existing| Migrate{Can migrate?}
     Migrate --> |Yes| UseLiquid
     Migrate --> |No| UseZOrder[Use Z-ORDER on<br>existing partitions]
-```text
+```
 
 ## Small File Problem
 
@@ -452,7 +458,7 @@ flowchart LR
     Streaming[Streaming Writes] --> Many["1000s of small files<br>(1-10 MB each)"]
     Many --> Slow[Slow queries]
     Many --> Metadata[Metadata overhead]
-```text
+```
 
 ### Solutions
 
@@ -468,10 +474,11 @@ OPTIMIZE main.default.orders;
 
 -- Solution 3: Repartition before write
 -- (manual control over file count)
-```text
+```
 
 ```python
 # Control file size with repartition
+
 (df.repartition(10)
     .write
     .format("delta")
@@ -479,8 +486,9 @@ OPTIMIZE main.default.orders;
     .saveAsTable("main.default.orders"))
 
 # Target file size
+
 spark.conf.set("spark.databricks.delta.optimizeWrite.fileSize", "128mb")
-```text
+```
 
 ### Target File Sizes
 
@@ -498,10 +506,12 @@ spark.conf.set("spark.databricks.delta.optimizeWrite.fileSize", "128mb")
 Traditional partitioning cannot be changed without recreating the table:
 
 ```python
+
 # Cannot change partition columns directly
 # Must recreate table
 
 # Step 1: Create new table with desired partitioning
+
 spark.sql("""
     CREATE TABLE main.default.orders_new
     USING DELTA
@@ -513,12 +523,14 @@ spark.sql("""
 """)
 
 # Step 2: Rename tables
+
 spark.sql("ALTER TABLE main.default.orders RENAME TO main.default.orders_old")
 spark.sql("ALTER TABLE main.default.orders_new RENAME TO main.default.orders")
 
 # Step 3: Drop old table (after validation)
 # spark.sql("DROP TABLE main.default.orders_old")
-```text
+
+```
 
 ### Liquid Clustering Evolution
 
@@ -529,7 +541,7 @@ CLUSTER BY (region, order_month);
 
 -- Previous clustering columns are changed
 -- Existing data will be re-clustered on next OPTIMIZE
-```text
+```
 
 ## Use Cases
 
@@ -548,7 +560,7 @@ PARTITIONED BY (reading_date);
 
 -- Queries filter by date range and device
 OPTIMIZE sensor_data ZORDER BY (device_id);
-```text
+```
 
 ### E-commerce Orders
 
@@ -565,7 +577,7 @@ USING DELTA
 CLUSTER BY (order_date, customer_id, region);
 
 -- Supports queries by date, customer, or region
-```text
+```
 
 ### Log Analytics
 
@@ -586,7 +598,7 @@ TBLPROPERTIES (
 );
 
 OPTIMIZE application_logs ZORDER BY (service_name, log_level);
-```text
+```
 
 ## Common Issues & Errors
 
@@ -603,7 +615,7 @@ PARTITIONED BY (event_date)
 
 -- Or use liquid clustering
 CLUSTER BY (event_timestamp)
-```text
+```
 
 ### 2. Partition Pruning Not Working
 
@@ -617,7 +629,7 @@ SELECT * FROM orders WHERE YEAR(order_date) = 2024;
 
 -- Does prune
 SELECT * FROM orders WHERE order_date >= '2024-01-01' AND order_date < '2025-01-01';
-```text
+```
 
 ### 3. Skewed Partitions
 
@@ -627,9 +639,10 @@ SELECT * FROM orders WHERE order_date >= '2024-01-01' AND order_date < '2025-01-
 
 ```python
 # Adaptive write for skewed data
+
 spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
-```text
+```
 
 ### 4. Z-ORDER Not Effective
 
@@ -643,7 +656,7 @@ DESCRIBE HISTORY main.default.orders;
 
 -- Ensure Z-ORDER columns match query filters
 OPTIMIZE orders ZORDER BY (customer_id);  -- If filtering by customer
-```text
+```
 
 ## Exam Tips
 
@@ -670,3 +683,7 @@ OPTIMIZE orders ZORDER BY (customer_id);  -- If filtering by customer
 - [Z-Ordering](https://docs.databricks.com/delta/optimizations/file-mgmt.html#z-ordering-multi-dimensional-clustering)
 - [Liquid Clustering](https://docs.databricks.com/delta/clustering.html)
 - [Auto Optimize](https://docs.databricks.com/delta/optimizations/auto-optimize.html)
+
+---
+
+**[← Previous: SCD Patterns](./04-scd-patterns.md) | [↑ Back to Data Modeling](./README.md)**

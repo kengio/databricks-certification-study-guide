@@ -238,4 +238,4 @@ D) Set both `delta.autoOptimize.optimizeWrite` and `delta.autoOptimize.autoCompa
 
 ---
 
-[Back to Overview](./README.md) | [Previous: Lakeflow Pipelines](07-lakeflow-pipelines.md)
+**[← Previous: Practice Questions - Section 07: Lakeflow Pipelines](./07-lakeflow-pipelines.md) | [↑ Back to Practice Questions](./README.md)**

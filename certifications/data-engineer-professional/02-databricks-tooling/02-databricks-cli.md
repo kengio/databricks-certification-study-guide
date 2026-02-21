@@ -29,7 +29,7 @@ flowchart TB
     Commands --> DBFS[fs]
     Commands --> Secrets[secrets]
     Commands --> Bundle[bundle]
-```text
+```
 
 ## Installation
 
@@ -37,28 +37,34 @@ flowchart TB
 
 ```bash
 # macOS with Homebrew
+
 brew tap databricks/tap
 brew install databricks
 
 # Linux/macOS with curl
+
 curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
 # Windows with winget
+
 winget install Databricks.DatabricksCLI
 
 # Python pip (legacy CLI v0.x - not recommended)
+
 pip install databricks-cli
-```text
+```
 
 ### Verify Installation
 
 ```bash
 # Check version
+
 databricks --version
 
 # Show help
+
 databricks --help
-```text
+```
 
 ### CLI Versions
 
@@ -80,18 +86,20 @@ flowchart LR
     PAT --> Config["~/.databrickscfg"]
     OAuth --> Browser["Browser flow"]
     SP --> Secret["Client secret"]
-```text
+```
 
 ### Personal Access Token (PAT)
 
 ```bash
 # Configure with PAT
+
 databricks configure --token
 
 # Enter workspace URL and token when prompted
 # Databricks Host: https://adb-1234567890.12.azuredatabricks.net
 # Personal Access Token: dapi1234567890abcdef
-```text
+
+```
 
 ### Configuration File
 
@@ -99,6 +107,7 @@ The CLI stores credentials in `~/.databrickscfg`:
 
 ```ini
 # ~/.databrickscfg
+
 [DEFAULT]
 host = https://adb-1234567890.12.azuredatabricks.net
 token = dapi1234567890abcdef
@@ -110,22 +119,25 @@ token = dapi0987654321fedcba
 [development]
 host = https://adb-1111111111.11.azuredatabricks.net
 token = dapi1111111111aaaaaa
-```text
+```
 
 ### Using Profiles
 
 ```bash
 # Use specific profile
+
 databricks workspace list --profile production
 
 # Set default profile via environment variable
+
 export DATABRICKS_CONFIG_PROFILE=production
 databricks workspace list
 
 # Override with environment variables
+
 export DATABRICKS_HOST=https://adb-xxx.azuredatabricks.net
 export DATABRICKS_TOKEN=dapi123456789
-```text
+```
 
 ### OAuth Authentication (M2M)
 
@@ -133,13 +145,15 @@ For service principals and automated workflows:
 
 ```bash
 # Configure OAuth with service principal
+
 databricks configure --oauth
 
 # Environment variables for service principal
+
 export DATABRICKS_HOST=https://adb-xxx.azuredatabricks.net
 export DATABRICKS_CLIENT_ID=your-client-id
 export DATABRICKS_CLIENT_SECRET=your-client-secret
-```text
+```
 
 ### Authentication Precedence
 
@@ -156,40 +170,49 @@ export DATABRICKS_CLIENT_SECRET=your-client-secret
 
 ```bash
 # List root workspace
+
 databricks workspace list /
 
 # List user folder
+
 databricks workspace list /Users/user@company.com/
 
 # List with details (long format)
+
 databricks workspace list / --output json
-```text
+```
 
 ### Export Notebooks
 
 ```bash
 # Export single notebook as source
+
 databricks workspace export /Users/user/notebook ./local/notebook.py --format SOURCE
 
 # Export as DBC archive
+
 databricks workspace export /Users/user/notebook ./local/notebook.dbc --format DBC
 
 # Export entire folder recursively
+
 databricks workspace export-dir /Users/user/project/ ./local/project/ --overwrite
-```text
+```
 
 ### Import Notebooks
 
 ```bash
 # Import Python notebook
+
 databricks workspace import ./local/notebook.py /Users/user/notebook --language PYTHON
 
 # Import SQL notebook
+
 databricks workspace import ./local/query.sql /Users/user/query --language SQL
 
 # Import folder recursively
+
 databricks workspace import-dir ./local/project/ /Users/user/project/ --overwrite
-```text
+```
 
 ### Workspace Export Formats
 
@@ -204,17 +227,19 @@ databricks workspace import-dir ./local/project/ /Users/user/project/ --overwrit
 
 ```bash
 # Delete notebook
+
 databricks workspace delete /Users/user/old_notebook
 
 # Delete folder recursively
+
 databricks workspace delete /Users/user/old_folder --recursive
-```text
+```
 
 ### Create Directory
 
 ```bash
 databricks workspace mkdirs /Users/user/new_project/notebooks
-```text
+```
 
 ## File System (DBFS) Commands
 
@@ -222,56 +247,67 @@ databricks workspace mkdirs /Users/user/new_project/notebooks
 
 ```bash
 # List DBFS root
+
 databricks fs ls dbfs:/
 
 # List with details
+
 databricks fs ls dbfs:/data/bronze/ --long
 
 # Output as JSON
+
 databricks fs ls dbfs:/data/ --output json
-```text
+```
 
 ### Copy Files
 
 ```bash
 # Upload local file to DBFS
+
 databricks fs cp ./local/data.csv dbfs:/data/input/data.csv
 
 # Upload directory recursively
+
 databricks fs cp ./local/folder/ dbfs:/data/folder/ --recursive --overwrite
 
 # Download from DBFS
+
 databricks fs cp dbfs:/data/output.csv ./local/output.csv
 
 # Download directory
+
 databricks fs cp dbfs:/data/results/ ./local/results/ --recursive
-```text
+```
 
 ### Move and Delete
 
 ```bash
 # Move/rename file
+
 databricks fs mv dbfs:/old/path.csv dbfs:/new/path.csv
 
 # Delete file
+
 databricks fs rm dbfs:/data/temp.csv
 
 # Delete directory recursively
+
 databricks fs rm dbfs:/data/temp_folder/ --recursive
-```text
+```
 
 ### Create Directory
 
 ```bash
 databricks fs mkdirs dbfs:/data/new_folder/
-```text
+```
 
 ### View File Contents
 
 ```bash
 # View file (first 64KB)
+
 databricks fs cat dbfs:/data/sample.txt
-```text
+```
 
 ## Jobs Commands
 
@@ -279,32 +315,39 @@ databricks fs cat dbfs:/data/sample.txt
 
 ```bash
 # List all jobs
+
 databricks jobs list
 
 # List with pagination
+
 databricks jobs list --limit 50 --offset 0
 
 # Output as JSON
+
 databricks jobs list --output json
-```text
+```
 
 ### Get Job Details
 
 ```bash
 # Get job by ID
+
 databricks jobs get --job-id 123456
 
 # Get job by name
+
 databricks jobs get --job-id $(databricks jobs list --output json | jq -r '.jobs[] | select(.settings.name=="my-job") | .job_id')
-```text
+```
 
 ### Create Job
 
 ```bash
 # Create job from JSON file
+
 databricks jobs create --json-file job_config.json
 
 # Create job from inline JSON
+
 databricks jobs create --json '{
   "name": "My ETL Job",
   "tasks": [{
@@ -315,7 +358,7 @@ databricks jobs create --json '{
     "existing_cluster_id": "1234-567890-abcdef"
   }]
 }'
-```text
+```
 
 ### Job Configuration Example
 
@@ -354,49 +397,59 @@ databricks jobs create --json '{
     "on_failure": ["team@company.com"]
   }
 }
-```text
+```
 
 ### Run Job
 
 ```bash
 # Run job immediately
+
 databricks jobs run-now --job-id 123456
 
 # Run with parameter overrides
+
 databricks jobs run-now --job-id 123456 --notebook-params '{"date": "2024-01-15"}'
 
 # Submit one-time run (no saved job)
+
 databricks jobs submit --json-file run_config.json
-```text
+```
 
 ### Manage Job Runs
 
 ```bash
 # List runs for a job
+
 databricks runs list --job-id 123456
 
 # Get run details
+
 databricks runs get --run-id 789012
 
 # Cancel run
+
 databricks runs cancel --run-id 789012
 
 # Get run output
+
 databricks runs get-output --run-id 789012
-```text
+```
 
 ### Update and Delete Jobs
 
 ```bash
 # Update job (reset entire config)
+
 databricks jobs reset --job-id 123456 --json-file updated_config.json
 
 # Update job (partial update)
+
 databricks jobs update --job-id 123456 --json '{"name": "New Job Name"}'
 
 # Delete job
+
 databricks jobs delete --job-id 123456
-```text
+```
 
 ## Cluster Commands
 
@@ -404,35 +457,43 @@ databricks jobs delete --job-id 123456
 
 ```bash
 # List all clusters
+
 databricks clusters list
 
 # Output as JSON
+
 databricks clusters list --output json
-```text
+```
 
 ### Cluster Operations
 
 ```bash
 # Get cluster details
+
 databricks clusters get --cluster-id 1234-567890-abcdef
 
 # Start cluster
+
 databricks clusters start --cluster-id 1234-567890-abcdef
 
 # Restart cluster
+
 databricks clusters restart --cluster-id 1234-567890-abcdef
 
 # Terminate cluster
+
 databricks clusters delete --cluster-id 1234-567890-abcdef
 
 # Permanently delete cluster
+
 databricks clusters permanent-delete --cluster-id 1234-567890-abcdef
-```text
+```
 
 ### Create Cluster
 
 ```bash
 # Create cluster from JSON
+
 databricks clusters create --json '{
   "cluster_name": "my-cluster",
   "spark_version": "14.3.x-scala2.12",
@@ -440,18 +501,19 @@ databricks clusters create --json '{
   "num_workers": 2,
   "autotermination_minutes": 60
 }'
-```text
+```
 
 ### Edit Cluster
 
 ```bash
 # Edit existing cluster
+
 databricks clusters edit --json '{
   "cluster_id": "1234-567890-abcdef",
   "num_workers": 4,
   "autotermination_minutes": 120
 }'
-```text
+```
 
 ## Secrets Commands
 
@@ -459,46 +521,57 @@ databricks clusters edit --json '{
 
 ```bash
 # List all secret scopes
+
 databricks secrets list-scopes
 
 # Create Databricks-backed scope
+
 databricks secrets create-scope --scope my-scope
 
 # Create scope with specific ACL
+
 databricks secrets create-scope --scope my-scope --initial-manage-principal users
 
 # Delete scope
+
 databricks secrets delete-scope --scope my-scope
-```text
+```
 
 ### Manage Secrets
 
 ```bash
 # List secrets in scope (names only, not values)
+
 databricks secrets list --scope my-scope
 
 # Create/update secret
+
 databricks secrets put --scope my-scope --key db-password --string-value "secret123"
 
 # Create secret from file
+
 databricks secrets put --scope my-scope --key ssh-key --binary-file ./id_rsa
 
 # Delete secret
+
 databricks secrets delete --scope my-scope --key db-password
-```text
+```
 
 ### Secret ACLs
 
 ```bash
 # List ACLs for scope
+
 databricks secrets list-acls --scope my-scope
 
 # Grant access
+
 databricks secrets put-acl --scope my-scope --principal user@company.com --permission READ
 
 # Revoke access
+
 databricks secrets delete-acl --scope my-scope --principal user@company.com
-```text
+```
 
 | Permission | Capabilities |
 |------------|--------------|
@@ -514,30 +587,37 @@ Databricks Asset Bundles (DAB) enable infrastructure-as-code for Databricks reso
 
 ```bash
 # Create new bundle from template
+
 databricks bundle init
 
 # Initialize in existing directory
+
 databricks bundle init --template default-python ./my-project
-```text
+```
 
 ### Bundle Workflow
 
 ```bash
 # Validate bundle configuration
+
 databricks bundle validate
 
 # Deploy to target environment
+
 databricks bundle deploy
 
 # Deploy to specific target
+
 databricks bundle deploy --target production
 
 # Run a resource from bundle
+
 databricks bundle run my-job
 
 # Destroy deployed resources
+
 databricks bundle destroy
-```text
+```
 
 ### Bundle Configuration (databricks.yml)
 
@@ -574,7 +654,7 @@ targets:
           schedule:
             quartz_cron_expression: "0 0 8 * * ?"
             timezone_id: "America/New_York"
-```text
+```
 
 ### Bundle Commands Summary
 
@@ -593,29 +673,34 @@ targets:
 
 ```bash
 # List catalogs
+
 databricks unity-catalog catalogs list
 
 # List schemas in catalog
+
 databricks unity-catalog schemas list --catalog-name main
 
 # List tables in schema
+
 databricks unity-catalog tables list --catalog-name main --schema-name default
-```text
+```
 
 ### Manage Permissions
 
 ```bash
 # Get table permissions
+
 databricks unity-catalog permissions tables get --full-name main.default.my_table
 
 # Grant permissions
+
 databricks unity-catalog permissions tables update --full-name main.default.my_table --json '{
   "changes": [{
     "principal": "user@company.com",
     "add": ["SELECT", "MODIFY"]
   }]
 }'
-```text
+```
 
 ## Output Formats
 
@@ -623,18 +708,21 @@ databricks unity-catalog permissions tables update --full-name main.default.my_t
 
 ```bash
 # Get JSON output for parsing
+
 databricks jobs list --output json | jq '.jobs[].settings.name'
 
 # Pretty print JSON
+
 databricks clusters get --cluster-id xxx --output json | jq '.'
-```text
+```
 
 ### Table Output (Default)
 
 ```bash
 # Default table format
+
 databricks jobs list
-```text
+```
 
 ## Common Patterns
 
@@ -647,21 +735,26 @@ databricks jobs list
 set -e
 
 # Configure authentication
+
 export DATABRICKS_HOST=${{ secrets.DATABRICKS_HOST }}
 export DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}
 
 # Validate bundle
+
 databricks bundle validate
 
 # Deploy to staging
+
 databricks bundle deploy --target staging
 
 # Run tests
+
 databricks bundle run integration-tests --target staging
 
 # Deploy to production (manual approval required)
+
 databricks bundle deploy --target production
-```text
+```
 
 ### Backup Workspace
 
@@ -673,13 +766,15 @@ BACKUP_DIR="./backup/$(date +%Y%m%d)"
 mkdir -p $BACKUP_DIR
 
 # Export shared notebooks
+
 databricks workspace export-dir /Shared/ $BACKUP_DIR/Shared/ --overwrite
 
 # Export user notebooks
+
 for user in $(databricks workspace list /Users/ --output json | jq -r '.[].path'); do
     databricks workspace export-dir "$user" "$BACKUP_DIR$user" --overwrite
 done
-```text
+```
 
 ### Migrate Jobs Between Workspaces
 
@@ -688,14 +783,17 @@ done
 # Export job from source, import to target
 
 # Export from source
+
 DATABRICKS_CONFIG_PROFILE=source databricks jobs get --job-id 123 --output json > job.json
 
 # Remove job_id and created_time for import
+
 jq 'del(.job_id, .created_time)' job.json > job_clean.json
 
 # Import to target
+
 DATABRICKS_CONFIG_PROFILE=target databricks jobs create --json-file job_clean.json
-```text
+```
 
 ## Common Issues & Errors
 
@@ -705,13 +803,14 @@ DATABRICKS_CONFIG_PROFILE=target databricks jobs create --json-file job_clean.js
 
 ```bash
 # Error: INVALID_PARAMETER_VALUE: Invalid access token
-```text
+
+```
 
 **Fix:** Regenerate PAT and reconfigure:
 
 ```bash
 databricks configure --token
-```text
+```
 
 ### 2. Profile Not Found
 
@@ -719,7 +818,8 @@ databricks configure --token
 
 ```bash
 # Error: cannot find profile "nonexistent" in ~/.databrickscfg
-```text
+
+```
 
 **Fix:** Check profile name matches config file or create profile.
 
@@ -729,7 +829,8 @@ databricks configure --token
 
 ```bash
 # Error: PERMISSION_DENIED: User does not have permission
-```text
+
+```
 
 **Fix:** Request appropriate workspace permissions from admin.
 
@@ -739,7 +840,8 @@ databricks configure --token
 
 ```bash
 # Error: RESOURCE_DOES_NOT_EXIST: Cluster xxx does not exist
-```text
+
+```
 
 **Fix:** Verify cluster ID with `databricks clusters list`.
 
@@ -749,7 +851,8 @@ databricks configure --token
 
 ```bash
 # Error: 429 Too Many Requests
-```text
+
+```
 
 **Fix:** Add delays between requests or batch operations.
 
@@ -758,18 +861,6 @@ databricks configure --token
 - **CI/CD Automation**: Integrating Databricks Asset Bundles (DABs) deployment into GitHub Actions or Azure DevOps pipelines.
 - **Bulk Operations**: Managing hundreds of secrets, creating cluster policies, or syncing workspace directories automatically.
 - **Local IDE Integration**: Interacting with the remote Databricks workspace directly from a local terminal or IDE.
-
-## Common Issues & Errors
-
-**1. Authentication Failures**
-- **Error**: `Error: 401 Unauthorized` or `Error: DEFAULT profile not configured`.
-- **Issue**: Missing or expired Personal Access Token (PAT), or incorrect `.databrickscfg` configuration.
-- **Fix**: Verify token validity and use `databricks auth login` or check `~/.databrickscfg` for the correct profile configuration.
-
-**2. Asset Bundle Target Missing**
-- **Error**: `Error: target ... not found in databricks.yml`.
-- **Issue**: Running an environment-specific command without defining the target.
-- **Fix**: Ensure the `targets` block in `databricks.yml` explicitly defines the environment being referenced.
 
 ## Exam Tips
 
@@ -786,7 +877,7 @@ databricks configure --token
 
 ## Related Topics
 
-- [REST API](03-rest-api.md) - Programmatic API access
+- [REST API](03-rest-api-part1.md) - Programmatic API access
 - [Asset Bundles](../06-testing-deployment/01-asset-bundles.md) - Infrastructure as code
 - [CI/CD Integration](../06-testing-deployment/02-cicd-integration.md) - Pipeline automation
 
@@ -795,3 +886,7 @@ databricks configure --token
 - [Databricks CLI Reference](https://docs.databricks.com/dev-tools/cli/index.html)
 - [CLI Authentication](https://docs.databricks.com/dev-tools/cli/authentication.html)
 - [Databricks Asset Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
+
+---
+
+**[← Previous: Workspace and Notebooks](./01-workspace-and-notebooks.md) | [↑ Back to Databricks Tooling](./README.md) | [Next: REST API — Part 1 (Jobs, Clusters, DBFS & Workspace APIs)](./03-rest-api-part1.md) →**

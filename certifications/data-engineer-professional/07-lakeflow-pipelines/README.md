@@ -10,7 +10,7 @@ flowchart LR
     LF --> DQ[Data Quality/Expectations]
     LF --> AC[APPLY CHANGES API]
     LF --> Jobs[Lakeflow Jobs]
-```text
+```
 
 ## Section Contents
 
@@ -19,7 +19,7 @@ flowchart LR
 | [01-declarative-pipelines.md](01-declarative-pipelines.md) | DLT syntax, materialized views, streaming tables | High |
 | [02-expectations-data-quality.md](02-expectations-data-quality.md) | expect, expect_or_drop, expect_or_fail | High |
 | [03-apply-changes-api.md](03-apply-changes-api.md) | CDC with APPLY CHANGES, SCD handling | High |
-| [04-lakeflow-jobs.md](04-lakeflow-jobs.md) | Job components, task dependencies, task values, for-each loops | Medium |
+| [04-lakeflow-jobs-part1.md](04-lakeflow-jobs-part1.md) | Job components, task dependencies, task values, for-each loops | Medium |
 | [05-lakeflow-jobs-part2.md](05-lakeflow-jobs-part2.md) | Triggers, compute, notifications, parameters, error handling, exam tips | Medium |
 
 ## Pipeline Architecture
@@ -55,7 +55,7 @@ flowchart TD
     SV1 --> G1
     SV2 --> G2
     SV1 --> G2
-```text
+```
 
 ## Table Types
 
@@ -88,7 +88,7 @@ CONSTRAINT valid_email
 CONSTRAINT valid_id
   EXPECT (id IS NOT NULL)
   ON VIOLATION FAIL UPDATE
-```text
+```
 
 ## APPLY CHANGES (CDC)
 
@@ -102,7 +102,7 @@ sequenceDiagram
     DLT->>DLT: Order by sequence
     DLT->>DLT: Apply SCD logic
     DLT->>Target: Upsert changes
-```text
+```
 
 ### CDC Operation Types
 
@@ -127,3 +127,7 @@ sequenceDiagram
 - [ ] Configure CDC with APPLY CHANGES
 - [ ] Monitor pipeline with event logs
 - [ ] Handle schema evolution in streaming tables
+
+---
+
+**[← Back to Certification](../README.md)**

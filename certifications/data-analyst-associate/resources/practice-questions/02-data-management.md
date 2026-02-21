@@ -216,4 +216,4 @@ D) `default.reporting.revenue`
 
 ---
 
-[← Back to Practice Questions](./README.md) | [Next: SQL Queries](03-sql-queries.md)
+**[← Previous: Databricks SQL Practice Questions](./01-databricks-sql.md) | [↑ Back to Data Analyst Associate Practice Questions](./README.md) | [Next: SQL Queries Practice Questions](./03-sql-queries.md) →**

@@ -11,7 +11,7 @@ status: published
 
 # Bundle Deployment Strategies — Part 2: Rollback, Feature Flags & OIDC
 
-> For advanced bundle patterns, CI/CD pipeline DAGs, blue/green, and canary deployments, see [Part 1](./05-bundle-deployment-strategies.md).
+> For advanced bundle patterns, CI/CD pipeline DAGs, blue/green, and canary deployments, see [Part 1](./05-bundle-deployment-strategies-part1.md).
 
 This part covers rollback strategies, feature flags in data pipelines, schema migration patterns, and OIDC federation for secure CI/CD authentication.
 
@@ -30,7 +30,7 @@ flowchart TD
     BundleRollback --> Verify[Verify Rollback]
     DataRollback --> Verify
     ConfigRollback --> Verify
-```text
+```
 
 ```bash
 #!/bin/bash
@@ -44,16 +44,19 @@ PREVIOUS_COMMIT=${2:-HEAD~1}
 echo "Rolling back ${ENVIRONMENT} to commit ${PREVIOUS_COMMIT}"
 
 # Checkout previous known-good version
+
 git checkout "${PREVIOUS_COMMIT}"
 
 # Deploy the previous version
+
 databricks bundle deploy -t "${ENVIRONMENT}"
 
 # Verify deployment health
+
 databricks bundle run smoke_test_job -t "${ENVIRONMENT}"
 
 echo "Rollback to ${PREVIOUS_COMMIT} completed successfully"
-```text
+```
 
 ```sql
 -- Data rollback using Delta Time Travel
@@ -68,12 +71,13 @@ RESTORE TABLE prod_catalog.gold.daily_metrics TO VERSION AS OF 42;
 -- Or restore to a timestamp
 RESTORE TABLE prod_catalog.gold.daily_metrics
 TO TIMESTAMP AS OF '2025-12-01T00:00:00Z';
-```text
+```
 
 ### Feature Flags in Data Pipelines
 
 ```python
 # src/feature_flags.py
+
 """Feature flag management for data pipelines."""
 from databricks.sdk import WorkspaceClient
 
@@ -97,13 +101,14 @@ class FeatureFlags:
         return False
 
 # Usage in pipeline notebooks
+
 flags = FeatureFlags(catalog="prod_catalog")
 
 if flags.is_enabled("use_new_transform_v2", environment="prod"):
     df = apply_transform_v2(df)
 else:
     df = apply_transform_v1(df)
-```text
+```
 
 ```sql
 -- Feature flags table schema
@@ -124,12 +129,13 @@ INSERT INTO config.feature_flags VALUES
   ('use_new_transform_v2', 'staging', true, 'New transform logic', 'user@co.com', current_timestamp()),
   ('use_new_transform_v2', 'prod', false, 'New transform logic', 'user@co.com', current_timestamp()),
   ('enable_streaming_ingest', 'prod', true, 'Switch to streaming', 'user@co.com', current_timestamp());
-```text
+```
 
 ### Schema Migration Patterns with Unity Catalog
 
 ```python
 # src/migrations/schema_manager.py
+
 """Schema migration management for CI/CD pipelines."""
 
 class SchemaMigrator:
@@ -188,7 +194,7 @@ class SchemaMigrator:
                     sql = f.read()
                 migrations.append((version, description, sql))
         return migrations
-```text
+```
 
 ```text
 migrations/
@@ -196,12 +202,12 @@ migrations/
 ├── 002_add_user_agent_column.sql
 ├── 003_create_silver_sessions.sql
 └── 004_add_gold_daily_metrics.sql
-```text
+```
 
 ```sql
 -- migrations/002_add_user_agent_column.sql
 ALTER TABLE bronze.events ADD COLUMN user_agent STRING;
-```text
+```
 
 ## OIDC Federation Deep Dive
 
@@ -223,10 +229,11 @@ sequenceDiagram
     SP->>DB: Grant access
     DB->>GH: Access Token
     GH->>DB: Deploy bundle
-```text
+```
 
 ```yaml
 # .github/workflows/oidc-deploy.yml
+
 name: Deploy with OIDC
 
 on:
@@ -253,9 +260,10 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_SP_CLIENT_ID }}
           # Token exchange happens via OIDC - no client secret needed
-```text
+```
 
 ```bash
+
 # Configure Databricks service principal for OIDC
 # In Databricks Account Console:
 # 1. Create service principal
@@ -265,6 +273,7 @@ jobs:
 #    - Audiences: https://accounts.cloud.databricks.com
 
 # Azure AD federation for GitHub Actions
+
 az ad app federated-credential create \
     --id <app-object-id> \
     --parameters '{
@@ -273,7 +282,7 @@ az ad app federated-credential create \
         "subject": "repo:my-org/my-repo:ref:refs/heads/main",
         "audiences": ["api://AzureADTokenExchange"]
     }'
-```text
+```
 
 ### Security Best Practices for CI/CD Credentials
 
@@ -288,6 +297,7 @@ az ad app federated-credential create \
 | Separate SPs per environment | Different SPs for dev/staging/prod | Medium |
 
 ```yaml
+
 # Environment protection rules in GitHub
 # Settings → Environments → production
 # - Required reviewers: 2 approvers
@@ -301,7 +311,8 @@ az ad app federated-credential create \
 # - Require status checks to pass
 # - Require CODEOWNERS review
 # - No force pushes
-```text
+
+```
 
 ## Exam Tips
 
@@ -318,10 +329,10 @@ az ad app federated-credential create \
 
 ## Related Topics
 
-- [CI/CD Integration](./02-cicd-integration.md) - Platform-specific CI/CD configuration
+- [CI/CD Integration](./02-cicd-integration-part1.md) - Platform-specific CI/CD configuration
 - [CI/CD Integration Part 2](./08-cicd-integration-part2.md) - Testing and secret management patterns
-- [Asset Bundles](./01-asset-bundles.md) - Core DAB configuration reference
-- [Advanced Testing & Operations](./06-advanced-testing-operations.md) - Property-based and DLT testing
+- [Asset Bundles](./01-asset-bundles-part1.md) - Core DAB configuration reference
+- [Advanced Testing & Operations](./06-advanced-testing-operations-part1.md) - Property-based and DLT testing
 
 ## Official Documentation
 
@@ -329,3 +340,7 @@ az ad app federated-credential create \
 - [Bundle Configuration Reference](https://docs.databricks.com/dev-tools/bundles/settings.html)
 - [OIDC Federation](https://docs.databricks.com/dev-tools/authentication-oidc.html)
 - [Delta Time Travel](https://docs.databricks.com/delta/history.html)
+
+---
+
+**[← Previous: Bundle Deployment Strategies — Part 1 (Bundle Patterns & CI/CD Pipelines)](./05-bundle-deployment-strategies-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Advanced Testing & Operations — Part 1](./06-advanced-testing-operations-part1.md) →**

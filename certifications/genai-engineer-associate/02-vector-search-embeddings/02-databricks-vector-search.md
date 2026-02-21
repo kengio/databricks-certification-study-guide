@@ -44,12 +44,14 @@ from databricks.vector_search.client import VectorSearchClient
 vsc = VectorSearchClient()
 
 # Create a new endpoint
+
 vsc.create_endpoint(
     name="my_endpoint",
     endpoint_type="STANDARD"
 )
 
 # Check endpoint status
+
 endpoint = vsc.get_endpoint(name="my_endpoint")
 print(endpoint["endpoint_status"]["state"])  # "ONLINE" when ready
 ```
@@ -111,6 +113,7 @@ index = vsc.create_direct_vector_access_index(
 )
 
 # Push data directly to the index
+
 index.upsert(
     [
         {
@@ -151,15 +154,18 @@ This distinction is heavily tested on the exam.
 
 ```python
 # Get existing index
+
 index = vsc.get_index(
     endpoint_name="my_endpoint",
     index_name="catalog.schema.my_index"
 )
 
 # Trigger sync (for TRIGGERED pipeline_type)
+
 index.sync()
 
 # Wait for sync to complete
+
 import time
 while True:
     status = index.describe()["status"]["detailed_state"]
@@ -184,8 +190,10 @@ results = index.similarity_search(
 )
 
 # Response structure
+
 data_array = results.get("result", {}).get("data_array", [])
 # Each row: [col1_value, col2_value, col3_value, score]
+
 for row in data_array:
     content, source, chunk_id, score = row
     print(f"Score: {score:.4f} | Source: {source}")
@@ -231,6 +239,7 @@ GRANT SELECT ON TABLE catalog.schema.my_index TO `sp-rag-app`;
 
 ```python
 # List all indexes on an endpoint
+
 indexes = vsc.list_indexes(endpoint_name="my_endpoint")
 for idx in indexes:
     print(f"{idx['name']} — {idx['index_type']} — {idx['status']['detailed_state']}")
@@ -244,18 +253,21 @@ from databricks.vector_search.client import VectorSearchClient
 vsc = VectorSearchClient()
 
 # Step 1: Ensure source table has CDF enabled
+
 spark.sql("""
     ALTER TABLE catalog.schema.document_chunks
     SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
 """)
 
 # Step 2: Create endpoint (skip if already exists)
+
 try:
     vsc.create_endpoint(name="rag_endpoint", endpoint_type="STANDARD")
 except Exception:
     pass  # Endpoint already exists
 
 # Step 3: Create Delta Sync index
+
 index = vsc.create_delta_sync_index(
     endpoint_name="rag_endpoint",
     index_name="catalog.schema.doc_chunks_index",
@@ -267,6 +279,7 @@ index = vsc.create_delta_sync_index(
 )
 
 # Step 4: Trigger initial sync and wait
+
 index.sync()
 print("Initial sync triggered. Waiting for completion...")
 
@@ -280,6 +293,7 @@ while True:
     time.sleep(15)
 
 # Step 5: Query the index
+
 results = index.similarity_search(
     query_text="How do I configure Auto Loader?",
     columns=["content", "source"],
@@ -352,8 +366,6 @@ D) Update the `embedding_model_endpoint_name` field in the index configuration
 > (D) — that is a Delta Sync index concept. CDF (C) is irrelevant to Direct Vector
 > Access indexes.
 
-[← Back to Topic](./README.md)
-
 ## Use Cases
 
 - **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
@@ -362,10 +374,15 @@ D) Update the `embedding_model_endpoint_name` field in the index configuration
 ## Common Issues & Errors
 
 ### 1. High Latency Responses
+
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Databricks Vector Search to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Vector Search prior to deployment.
 
+---
+
+**[← Previous: Embedding Models](./01-embeddings-models.md) | [↑ Back to Vector Search & Embeddings](./README.md) | [Next: Vector Search in Production](./03-vector-search-production.md) →**

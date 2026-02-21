@@ -23,7 +23,7 @@ flowchart TD
     Registry --> Stages["Model Stages<br/>Versioning"]
     Serving --> Batch["Batch Serving"]
     Serving --> RealTime["Real-Time API"]
-```text
+```
 
 ## Section Contents
 
@@ -48,4 +48,4 @@ flowchart TD
 
 ---
 
-**[← Back to ML Associate](../README.md)**
+**[← Back to Certification](../README.md)**

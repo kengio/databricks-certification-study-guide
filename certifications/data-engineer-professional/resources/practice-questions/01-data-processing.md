@@ -238,4 +238,4 @@ D) Redis-backed state store for distributed state management
 
 ---
 
-[Back to Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
+**[↑ Back to Practice Questions](./README.md) | [Next: Practice Questions - Section 02: Databricks Tooling](./02-databricks-tooling.md) →**

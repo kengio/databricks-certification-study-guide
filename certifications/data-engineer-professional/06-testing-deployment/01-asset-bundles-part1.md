@@ -37,7 +37,7 @@ flowchart TB
 
     Development --> Bundle
     Bundle --> Targets
-```text
+```
 
 ## Bundle Structure
 
@@ -63,20 +63,23 @@ my-databricks-project/
 │   └── integration/           # Integration tests
 ├── fixtures/                  # Test data
 └── .databricks/               # Generated state files (gitignore)
-```text
+```
 
 ### Core Configuration File
 
 ```yaml
 # databricks.yml
+
 bundle:
   name: my-etl-project
 
 # Include additional configuration files
+
 include:
   - resources/*.yml
 
 # Variables for parameterization
+
 variables:
   environment:
     description: "Deployment environment"
@@ -86,10 +89,12 @@ variables:
     default: dev_catalog
 
 # Workspace configuration
+
 workspace:
   host: https://adb-1234567890.1.azuredatabricks.net
 
 # Artifact locations
+
 artifacts:
   default:
     type: whl
@@ -97,6 +102,7 @@ artifacts:
     build: poetry build
 
 # Deployment targets
+
 targets:
   dev:
     mode: development
@@ -123,7 +129,7 @@ targets:
       root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
     run_as:
       service_principal_name: etl-service-principal
-```text
+```
 
 ## Resource Definitions
 
@@ -131,6 +137,7 @@ targets:
 
 ```yaml
 # resources/jobs.yml
+
 resources:
   jobs:
     etl_daily_job:
@@ -182,12 +189,13 @@ resources:
             num_workers: 2
             spark_conf:
               spark.databricks.delta.preview.enabled: "true"
-```text
+```
 
 ### DLT Pipeline Configuration
 
 ```yaml
 # resources/pipelines.yml
+
 resources:
   pipelines:
     streaming_pipeline:
@@ -216,12 +224,13 @@ resources:
           alerts:
             - on-update-failure
             - on-flow-failure
-```text
+```
 
 ### Cluster Configuration
 
 ```yaml
 # resources/clusters.yml
+
 resources:
   clusters:
     shared_analytics:
@@ -235,7 +244,7 @@ resources:
         spark.databricks.cluster.profile: serverless
       custom_tags:
         environment: ${var.environment}
-```text
+```
 
 ## Variables and Substitutions
 
@@ -243,6 +252,7 @@ resources:
 
 ```yaml
 # databricks.yml
+
 variables:
   # Simple variable with default
   environment:
@@ -256,7 +266,7 @@ variables:
   instance_pool_id:
     lookup:
       instance_pool: etl-pool
-```text
+```
 
 ### Built-in Variables
 
@@ -272,6 +282,7 @@ variables:
 
 ```yaml
 # Using variables in configurations
+
 resources:
   jobs:
     my_job:
@@ -286,7 +297,7 @@ resources:
               catalog: ${var.catalog}
               # Use bundle metadata
               bundle_name: ${bundle.name}
-```text
+```
 
 ## Bundle Commands
 
@@ -294,34 +305,43 @@ resources:
 
 ```bash
 # Initialize new bundle from template
+
 databricks bundle init
 
 # Validate bundle configuration
+
 databricks bundle validate
 
 # Deploy bundle to target
+
 databricks bundle deploy
 
 # Deploy to specific target
+
 databricks bundle deploy -t prod
 
 # Run a job defined in bundle
+
 databricks bundle run etl_daily_job
 
 # Run with parameters
+
 databricks bundle run etl_daily_job --params '{"date": "2024-01-15"}'
 
 # Destroy deployed resources
+
 databricks bundle destroy
 
 # Show bundle summary
+
 databricks bundle summary
-```text
+```
 
 ### Development Mode
 
 ```bash
 # Deploy in development mode (personal copy)
+
 databricks bundle deploy -t dev
 
 # Development mode characteristics:
@@ -329,23 +349,28 @@ databricks bundle deploy -t dev
 # - Pauses job schedules
 # - Sets pipelines to development mode
 # - Uses personal workspace path
-```text
+
+```
 
 ### Validation and Debugging
 
 ```bash
 # Validate configuration
+
 databricks bundle validate
 
 # Validate specific target
+
 databricks bundle validate -t prod
 
 # Show resolved configuration
+
 databricks bundle validate --output json
 
 # Debug deployment issues
+
 databricks bundle deploy --debug
-```text
+```
 
 ## Target Configuration
 
@@ -366,7 +391,7 @@ targets:
     # - Uses exact resource names
     # - Enables schedules
     # - Requires run_as for identity
-```text
+```
 
 ### Environment-Specific Overrides
 
@@ -394,7 +419,7 @@ targets:
               new_cluster:
                 num_workers: 8
                 driver_node_type_id: "Standard_DS5_v2"
-```text
+```
 
 ### Service Principal Authentication
 
@@ -408,7 +433,7 @@ targets:
     # Or use service principal ID
     # run_as:
     #   service_principal_id: "00000000-0000-0000-0000-000000000000"
-```text
+```
 
 ## Artifacts and Libraries
 
@@ -416,6 +441,7 @@ targets:
 
 ```yaml
 # databricks.yml
+
 artifacts:
   etl_package:
     type: whl
@@ -424,6 +450,7 @@ artifacts:
     # Or: build: python setup.py bdist_wheel
 
 # Reference in job
+
 resources:
   jobs:
     my_job:
@@ -434,7 +461,7 @@ resources:
             entry_point: main
           libraries:
             - whl: ../artifacts/etl_package/*.whl
-```text
+```
 
 ### JAR Artifacts
 
@@ -452,6 +479,10 @@ resources:
         - task_key: main
           libraries:
             - jar: ../artifacts/spark_extensions/*.jar
-```text
+```
 
 > **Continue reading:** [Part 2 — Sync, CI/CD Integration, Bundle Templates, Common Patterns & Exam Tips](./10-asset-bundles-part2.md)
+
+---
+
+**[↑ Back to Testing & Deployment](./README.md) | [Next: Asset Bundles — Part 2](./01-asset-bundles-part2.md) →**

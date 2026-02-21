@@ -55,7 +55,7 @@ flowchart TB
     style Prod fill:#c8e6c9
     style Stage fill:#fff9c4
     style Serving fill:#ffccbc
-```text
+```
 
 ## Core Concepts
 
@@ -66,14 +66,17 @@ import mlflow
 from mlflow.tracking import MlflowClient
 
 # After training, register model from run
+
 client = MlflowClient()
 run_id = "abc123"
 model_uri = f"runs:/{run_id}/model"
 
 # Register model
+
 registered_model = client.create_registered_model("customer_churn_model")
 
 # Create version from run
+
 model_version = client.create_model_version(
     name="customer_churn_model",
     source=model_uri,
@@ -82,7 +85,7 @@ model_version = client.create_model_version(
 )
 
 print(f"Registered model version: {model_version.version}")
-```text
+```
 
 ### 2. **Model Versions**
 
@@ -94,6 +97,7 @@ from mlflow.tracking import MlflowClient
 client = MlflowClient()
 
 # Get all versions of a model
+
 versions = client.search_model_versions("customer_churn_model")
 
 for v in versions:
@@ -105,10 +109,11 @@ for v in versions:
     print()
 
 # Version metadata
+
 mv = client.get_model_version("customer_churn_model", "3")
 print(f"Version 3 tags: {mv.tags}")
 print(f"Version 3 metrics: {mv.metrics}")
-```text
+```
 
 ### 3. **Model Stages**
 
@@ -120,6 +125,7 @@ from mlflow.tracking import MlflowClient
 client = MlflowClient()
 
 # Stage values
+
 STAGES = {
     "None": "New model, not yet in workflow",
     "Staging": "In testing/validation phase",
@@ -128,6 +134,7 @@ STAGES = {
 }
 
 # Transition model to next stage
+
 client.transition_model_version_stage(
     name="customer_churn_model",
     version="3",
@@ -135,6 +142,7 @@ client.transition_model_version_stage(
 )
 
 # Later, after testing passes
+
 client.transition_model_version_stage(
     name="customer_churn_model",
     version="3",
@@ -142,12 +150,13 @@ client.transition_model_version_stage(
 )
 
 # Archive old version
+
 client.transition_model_version_stage(
     name="customer_churn_model",
     version="1",
     stage="Archived"
 )
-```text
+```
 
 ## Model Registry Workflow
 
@@ -163,6 +172,7 @@ model_name = "customer_churn_model"
 
 # ========== STEP 1: DEVELOPMENT ==========
 # Train model and log to MLflow
+
 print("Step 1: Development")
 
 with mlflow.start_run(run_name="rf_model_v3"):
@@ -175,6 +185,7 @@ with mlflow.start_run(run_name="rf_model_v3"):
 
 # ========== STEP 2: REGISTER ==========
 # Register model to registry
+
 print("\nStep 2: Register Model")
 
 model_uri = f"runs:/{run_id}/model"
@@ -191,6 +202,7 @@ print(f"Registered {model_name} version {mv.version}")
 
 # ========== STEP 3: STAGE TO STAGING ==========
 # Move to staging for testing
+
 print("\nStep 3: Stage for Testing")
 
 client.transition_model_version_stage(
@@ -204,6 +216,7 @@ print(f"Version {mv.version} moved to Staging")
 
 # ========== STEP 4: RUN TESTS ==========
 # Automated tests in staging
+
 print("\nStep 4: Validate in Staging")
 
 import subprocess
@@ -220,6 +233,7 @@ else:
     promote_to_production = False
 
 # ========== STEP 5: PROMOTE TO PRODUCTION ==========
+
 if promote_to_production:
     print("\nStep 5: Promote to Production")
 
@@ -247,13 +261,14 @@ if promote_to_production:
     print(f"✓ Version {mv.version} is now in Production!")
 
 # ========== STEP 6: LOAD AND SERVE ==========
+
 print("\nStep 6: Load Production Model")
 
 prod_model_uri = f"models:/{model_name}/Production"
 model = mlflow.sklearn.load_model(prod_model_uri)
 
 print(f"Loaded production model: {prod_model_uri}")
-```text
+```
 
 ## Managing Model Versions
 
@@ -265,12 +280,14 @@ from mlflow.tracking import MlflowClient
 client = MlflowClient()
 
 # Get model with specific stage
+
 prod_versions = client.get_latest_versions(
     "customer_churn_model",
     stages=["Production"]
 )
 
 # Check if version exists in stage
+
 if prod_versions:
     prod_mv = prod_versions[0]
     print(f"Production model: v{prod_mv.version}")
@@ -278,12 +295,13 @@ else:
     print("No production model!")
 
 # Clear stage (move to None)
+
 client.transition_model_version_stage(
     name="customer_churn_model",
     version="2",
     stage="Archived"
 )
-```text
+```
 
 ### **Adding Metadata**
 
@@ -293,6 +311,7 @@ from mlflow.tracking import MlflowClient
 client = MlflowClient()
 
 # Add tags to version
+
 client.set_model_version_tag(
     name="customer_churn_model",
     version="3",
@@ -315,12 +334,13 @@ client.set_model_version_tag(
 )
 
 # Add descriptions
+
 client.update_model_version(
     name="customer_churn_model",
     version="3",
     description="High-performance RF model with 92% AUC, trained on 6M+ records"
 )
-```text
+```
 
 ## Loading Models from Registry
 
@@ -330,18 +350,21 @@ client.update_model_version(
 import mlflow
 
 # Load latest production model
+
 model = mlflow.sklearn.load_model(
     "models:/customer_churn_model/Production"
 )
 
 # Load specific version
+
 model_v2 = mlflow.sklearn.load_model(
     "models:/customer_churn_model/2"
 )
 
 # Make predictions
+
 predictions = model.predict(X_test)
-```text
+```
 
 ### **Programmatic Lookup**
 
@@ -352,13 +375,14 @@ import mlflow
 client = MlflowClient()
 
 # Get latest production version
+
 prod_versions = client.get_latest_versions("customer_churn_model", stages=["Production"])
 if prod_versions:
     version = prod_versions[0].version
     model_uri = f"models:/customer_churn_model/{version}"
     model = mlflow.sklearn.load_model(model_uri)
     print(f"Loaded version {version}")
-```text
+```
 
 ## Model Registry with Unity Catalog
 
@@ -368,9 +392,11 @@ if prod_versions:
 import mlflow
 
 # Register model in Unity Catalog
+
 mlflow.set_registry_uri("databricks-uc")
 
 # Log model (automatically goes to UC)
+
 with mlflow.start_run():
     mlflow.sklearn.log_model(
         model,
@@ -379,10 +405,11 @@ with mlflow.start_run():
     )
 
 # Load from UC
+
 model = mlflow.sklearn.load_model(
     "models:/ml_models.models.churn_predictor/Production"
 )
-```text
+```
 
 ## Advanced Registry Features
 
@@ -409,12 +436,14 @@ client.set_registered_model_alias(
 )
 
 # Load by alias
+
 champion = mlflow.sklearn.load_model("models:/customer_churn_model@champion")
-```text
+```
 
 ### 2. **Automatic Stage Transitions**
 
 ```python
+
 # Setup policies for automatic transitions
 # (Example from MLflow documentation)
 
@@ -430,7 +459,7 @@ promotion_criteria = {
         "test_duration_days": 7
     }
 }
-```text
+```
 
 ## Best Practices for Model Registry
 
@@ -438,6 +467,7 @@ promotion_criteria = {
 
 ```python
 # Clear, semantic names
+
 good_names = [
     "customer_churn_classifier",
     "revenue_forecaster",
@@ -446,6 +476,7 @@ good_names = [
 ]
 
 # Avoid generic names
+
 bad_names = [
     "model1",
     "test_model",
@@ -455,12 +486,14 @@ bad_names = [
 
 # Model name = consistent across versions
 # Versions = different runs/iterations
-```text
+
+```
 
 ### 2. **Versioning Strategy**
 
 ```python
 # Track what changed between versions
+
 version_notes = {
     "1": "Baseline logistic regression",
     "2": "Added feature interactions",
@@ -470,16 +503,18 @@ version_notes = {
 }
 
 # Add to description
+
 client.update_model_version(
     name="customer_churn_model",
     version="5",
     description="XGBoost with GPU acceleration, AUC: 95%. Improvement: reduced inference time by 60%"
 )
-```text
+```
 
 ### 3. **Stage Transition Approval**
 
 ```python
+
 # Implement approval workflow
 
 def request_production_promotion(model_name, version):
@@ -506,7 +541,7 @@ def approve_promotion(model_name, version):
         print(f"✓ {model_name} v{version} promoted to Production")
     else:
         print("✗ Not enough approvals")
-```text
+```
 
 ## Comparison: Model Registry vs Manual Model Management
 
@@ -532,6 +567,7 @@ client = MlflowClient()
 # Company ML-Ops workflow
 
 # 1. Data scientist trains and registers model
+
 print("=== Data Scientist ===")
 with mlflow.start_run(run_name="monthly_retraining"):
     # ... training code ...
@@ -546,6 +582,7 @@ mv = client.create_model_version(
 print(f"Registered v{mv.version}")
 
 # 2. ML-Ops promotes to staging
+
 print("\n=== ML-Ops Engineer ===")
 client.transition_model_version_stage(
     "production_churn_model", mv.version, "Staging"
@@ -553,8 +590,10 @@ client.transition_model_version_stage(
 print(f"v{mv.version} moved to Staging for testing")
 
 # 3. Automated tests run
+
 print("\n=== CI/CD Pipeline ===")
 # Run integration tests, performance benchmarks, etc.
+
 tests_pass = run_validation_tests(mv.version)
 
 if tests_pass:
@@ -565,7 +604,7 @@ if tests_pass:
     print(f"✓ v{mv.version} promoted to Production")
 else:
     print(f"✗ v{mv.version} failed tests, staying in Staging")
-```text
+```
 
 ## Use Cases
 
@@ -575,10 +614,12 @@ else:
 ## Common Issues & Errors
 
 ### 1. Artifact Access Denied
+
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Model Registry to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Registry prior to deployment.
 
@@ -613,3 +654,7 @@ else:
 
 - [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
 - [Model Management](https://docs.databricks.com/mlflow/model-registry/index.html)
+
+---
+
+**[↑ Back to MLflow Deployment](./README.md) | [Next: Model Deployment & Serving](./02-model-deployment-serving.md) →**

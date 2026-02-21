@@ -38,7 +38,7 @@ flowchart TB
 
     JobDef --> Execution
     Execution --> Monitoring
-```text
+```
 
 A job packages together:
 
@@ -64,19 +64,24 @@ A job packages together:
 ### Notebook Task Example
 
 ```python
+
 # When job references this notebook: /Users/name/my_pipeline
 
 # It receives parameters
+
 dbutils.widgets.get("env")  # "prod"
 dbutils.widgets.get("date")  # "2025-01-15"
 
 # Main logic
+
 import pyspark.sql.functions as F
 
 # Read data
+
 df = spark.read.delta(f"/mnt/data/raw/{dbutils.widgets.get('date')}")
 
 # Process
+
 df_processed = (df
     .filter(F.col("value") > 0)
     .groupBy("category")
@@ -84,17 +89,19 @@ df_processed = (df
 )
 
 # Write results
+
 df_processed.write \
     .format("delta") \
     .mode("overwrite") \
     .save(f"/mnt/data/processed/{dbutils.widgets.get('date')}")
 
 print("Pipeline complete!")
-```text
+```
 
 ### Python Script Task Example
 
 ```python
+
 # save as /Users/name/etl_job.py
 
 import argparse
@@ -123,7 +130,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-```text
+```
 
 ## Creating Jobs via UI
 
@@ -174,7 +181,7 @@ if __name__ == "__main__":
     "timezone_id": "America/Los_Angeles"
   }
 }
-```text
+```
 
 ### Create Job via API
 
@@ -183,10 +190,11 @@ curl -X POST \
   https://databricks-instance.cloud.databricks.com/api/2.1/jobs/create \
   -H "Authorization: Bearer <PAT>" \
   -d @job_config.json
-```text
+```
 
 ```python
 # Python request
+
 import requests
 import json
 
@@ -212,7 +220,7 @@ response = requests.post(
 
 job_id = response.json()["job_id"]
 print(f"Created job: {job_id}")
-```text
+```
 
 ## Job Parameters
 
@@ -220,6 +228,7 @@ print(f"Created job: {job_id}")
 
 ```python
 # Static parameters
+
 {
     "base_parameters": {
         "environment": "prod",
@@ -228,6 +237,7 @@ print(f"Created job: {job_id}")
 }
 
 # Dynamic parameters (macros)
+
 {
     "base_parameters": {
         "run_date": "{{job.start_date}}",
@@ -235,7 +245,7 @@ print(f"Created job: {job_id}")
         "task_run_id": "{{task.run_id}}"
     }
 }
-```text
+```
 
 ### Parameter Macros Available
 
@@ -251,16 +261,18 @@ print(f"Created job: {job_id}")
 
 ```python
 # Notebook with dbutils
+
 env = dbutils.widgets.get("environment")
 run_date = dbutils.widgets.get("run_date")
 
 # Python script with argparse
+
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--environment")
 parser.add_argument("--run_date")
 args = parser.parse_args()
-```text
+```
 
 ## Multi-Task Jobs
 
@@ -295,7 +307,7 @@ args = parser.parse_args()
     }
   ]
 }
-```text
+```
 
 ### Parallel Tasks
 
@@ -323,7 +335,7 @@ args = parser.parse_args()
     }
   ]
 }
-```text
+```
 
 ## Cluster Options
 
@@ -335,7 +347,7 @@ args = parser.parse_args()
   "notebook_task": {"notebook_path": "/path/to/notebook"},
   "existing_cluster_id": "cluster-123"
 }
-```text
+```
 
 Pros: Faster startup (cluster already running)
 Cons: Manual cluster management, cost if not shared
@@ -355,7 +367,7 @@ Cons: Manual cluster management, cost if not shared
     }
   }
 }
-```text
+```
 
 Pros: Automatic cluster creation/cleanup, cost-efficient
 Cons: Startup latency (3-5 minutes)
@@ -370,7 +382,7 @@ Cons: Startup latency (3-5 minutes)
   "max_retries": 2,
   "min_retry_interval_millis": 60000
 }
-```text
+```
 
 ### Resource Limits
 
@@ -384,7 +396,7 @@ Cons: Startup latency (3-5 minutes)
     }
   ]
 }
-```text
+```
 
 ### Alerts and Notifications
 
@@ -402,7 +414,7 @@ Cons: Startup latency (3-5 minutes)
     ]
   }
 }
-```text
+```
 
 ## Job Lifecycle
 
@@ -422,7 +434,7 @@ flowchart LR
     Failed --> Retry
     Retry --> Running
     Success -.->|Next run| Scheduled
-```text
+```
 
 ## Common Job Patterns
 
@@ -443,7 +455,7 @@ flowchart LR
     }
   ]
 }
-```text
+```
 
 ### Pattern 2: Incremental Load
 
@@ -465,7 +477,7 @@ flowchart LR
     }
   ]
 }
-```text
+```
 
 ## Key Exam Concepts
 
@@ -480,10 +492,6 @@ flowchart LR
 - **Job Cluster**: Auto-created, cost-efficient (slower startup)
 - **Existing Cluster**: Pre-running, faster (manual management)
 
----
-
-**[← Back to Workflows](README.md)**
-
 ## Use Cases
 
 - **Databricks Jobs Implementation**: Incorporating Databricks Jobs principles to build scalable and maintainable solutions in Databricks environments.
@@ -492,10 +500,15 @@ flowchart LR
 ## Common Issues & Errors
 
 ### 1. Configuration Oversights
+
 **Scenario:** The default settings for Databricks Jobs do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks Jobs to handle production-scale workloads.
 
 ### 2. Integration Bottlenecks
+
 **Scenario:** Connecting Databricks Jobs to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Jobs prior to deployment.
 
+---
+
+**[↑ Back to Workflows and Orchestration](./README.md) | [Next: Scheduling and Triggers](./02-scheduling-triggers.md) →**

@@ -136,4 +136,4 @@
 
 ---
 
-[Back to Practice Questions](./README.md) | [Next: ELT with Spark SQL and Python](02-elt-spark-sql-python.md)
+**[↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 2: ELT with Spark SQL and Python](./02-elt-spark-sql-python.md) →**
