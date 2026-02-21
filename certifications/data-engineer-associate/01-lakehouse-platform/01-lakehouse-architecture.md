@@ -224,8 +224,8 @@ Unity Catalog provides a unified governance solution:
 
 spark.sql("SELECT * FROM main.default.my_table")
 
-#          ^     ^       ^
-#      catalog schema  table
+#                        ^    ^       ^
+#                  catalog schema  table
 
 ```
 
