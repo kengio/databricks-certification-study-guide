@@ -455,6 +455,11 @@ def optimized_table():
     return dlt.read_stream("source")
 ```text
 
+## Use Cases
+
+- **Optimizing Write-Heavy Micro-batch Streaming**: Enabling `optimizeWrite` and `autoCompact` on a Delta table for a high-volume event stream to systematically bin-pack output files, keeping Delta scan latencies low downstream.
+- **Cost Reduction via Manual Compaction**: Scheduling a weekly `OPTIMIZE` command via a Databricks Job to consolidate thousands of small 5MB JSON files ingested daily into ideal 1GB Parquet files, reducing object storage GET request costs by a factor of 200.
+
 ## Common Issues & Errors
 
 ### 1. OPTIMIZE Takes Too Long

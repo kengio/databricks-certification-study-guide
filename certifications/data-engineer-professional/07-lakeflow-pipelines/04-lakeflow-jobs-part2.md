@@ -274,6 +274,11 @@ WHERE job_id = 12345
 ORDER BY start_time DESC;
 ```text
 
+## Use Cases
+
+- **Cross-Workspace Data Promotion**: Configuring a multi-task job that sequentially triggers an ingestion pipeline, executes a suite of PyTest validation code, and conditionally alerts stakeholders via Slack if any task fails using the `AT_LEAST_ONE_FAILED` condition.
+- **Scheduled Feature Engineering**: Running a parameterized machine learning feature extraction notebook on a cron schedule using an isolated, cost-effective job cluster to process recent interactions before model retraining occurs.
+
 ## Common Issues & Errors
 
 ### 1. Task Timeout

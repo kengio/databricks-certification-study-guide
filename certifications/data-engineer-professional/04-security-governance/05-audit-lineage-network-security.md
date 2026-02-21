@@ -649,6 +649,22 @@ VPC Peering Setup:
 | Audit logging | Required | Required | Required |
 | VPC isolation | Required | Required | Recommended |
 
+## Use Cases
+
+- **Forensic Investigation**: Using `system.access.audit` to determine exactly who deleted a critical table, transferred ownership, or changed permissions on a sensitive dataset.
+- **Automated Compliance Reporting**: Querying the `system.information_schema.table_privileges` daily to ensure no unauthorized users have been granted `MODIFY` access to production tables.
+- **Secure Enterprise Connectivity**: Implementing Secure Cluster Connectivity (SCC) and Private Link to ensure all data processing traffic remains on the cloud provider's private backbone, satisfying strict InfoSec requirements.
+
+## Common Issues & Errors
+
+**1. Missing Audit Logs for Long-Term Compliance**
+- **Issue**: An auditor requests access logs from 2 years ago, but the system table doesn't have them because the default retention is only 365 days.
+- **Fix**: Create a scheduled job that incrementally copies `system.access.audit` records to your own Delta table for long-term archival.
+
+**2. Lineage Blind Spots**
+- **Issue**: Data lineage is not showing up in the Catalog Explorer for a specific set of tables.
+- **Fix**: Tables stored in the legacy `hive_metastore` do not support automatic lineage capture. Migrate the tables to Unity Catalog to enable lineage.
+
 ---
 
 ## Next

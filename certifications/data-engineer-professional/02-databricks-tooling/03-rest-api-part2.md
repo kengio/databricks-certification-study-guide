@@ -272,6 +272,24 @@ if cluster.state != "RUNNING":
     # Wait for startup...
 ```text
 
+## Use Cases
+
+- **Enterprise Orchestration**: Integrating Databricks with external schedulers like Apache Airflow or Control-M to trigger jobs programmatically.
+- **Automated Provisioning**: Writing scripts to automatically create clusters, set workspace permissions, or pre-configure secret scopes for new project environments.
+- **Custom Telemetry**: Extracting granular cluster events, billing data, or usage logs systematically for custom reporting dashboards.
+
+## Common Issues & Errors
+
+**1. Authentication and Authorization Failures**
+- **Error**: `401 Unauthorized` or `403 Forbidden`.
+- **Issue**: Token has expired, was revoked, or the principal lacks the required workspace or object-level permissions.
+- **Fix**: Use Service Principals instead of user tokens for automated API calls, and ensure the principal is granted necessary permissions via ACLs.
+
+**2. Rate Limiting**
+- **Error**: `429 Too Many Requests`.
+- **Issue**: Making too many API requests in a short period, hitting workspace-level API rate limits.
+- **Fix**: Implement exponential backoff and retry logic in API wrapper scripts, or batch operations where supported.
+
 ## Exam Tips
 
 1. **API versions** - Jobs API is 2.1, most others are 2.0

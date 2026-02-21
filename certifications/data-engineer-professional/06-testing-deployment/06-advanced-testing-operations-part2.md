@@ -616,6 +616,23 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
     poetry build
 ```text
 
+## Use Cases
+
+- **Automated Rollbacks**: Configuring a GitHub Actions workflow that automatically checks out the previous Git commit and redeploys the Databricks Asset Bundle if post-deployment smoke tests fail.
+- **GitOps Mono-Repo Management**: Utilizing path-filtered CI/CD triggers to independently deploy separate data engineering team projects stored within the same organizational Databricks repository.
+
+## Common Issues & Errors
+
+**1. Post-Deployment Validation Failures**
+- **Error**: Health checks like `row_count` fail immediately after deploying a new pipeline.
+- **Issue**: The newly deployed pipeline hasn't received or processed its initial data stream yet.
+- **Fix**: Introduce a wait time before validation executes, or structure the deployment pipeline to trigger validation sequentially only after the first job run completes successfully.
+
+**2. Path-Filtered CI/CD Missing Changes**
+- **Error**: An update to a shared utility library is not deployed to production.
+- **Issue**: The path filter in the CI/CD pipeline (e.g., `.github/workflows/cd.yml`) was only watching the team-specific project folders and was not configured to trigger on changes to the `shared/` directory.
+- **Fix**: Add the shared library paths to the CI/CD trigger filters for all dependent projects.
+
 ## Exam Tips
 
 1. **OIDC federation** - Understand that OIDC eliminates stored secrets by using short-lived JWT tokens exchanged between the CI provider and Databricks

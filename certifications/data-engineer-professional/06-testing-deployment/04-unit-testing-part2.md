@@ -330,6 +330,11 @@ class TestTransformations:
         # ... test logic
 ```text
 
+## Use Cases
+
+- **Ensuring Transformation Correctness**: Writing PyTest tests with Chispa to verify that a complex custom PySpark aggregation function outputs the exact expected DataFrame before the code allows for merging.
+- **Validating Delta Lake Operations**: Using an isolated local temporary directory to test that a PySpark `MERGE` statement correctly applies updates and inserts without accidentally mutating real development tables.
+
 ## Common Issues & Errors
 
 ### 1. SparkSession Not Available

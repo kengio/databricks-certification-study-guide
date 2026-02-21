@@ -682,6 +682,12 @@ D) GRANT OPTION
 
 ---
 
+## Use Cases
+
+- **GDPR 'Right to be Forgotten' Fulfillment**: Automating the deletion of specific customer IDs across all Gold tables and immediately running `VACUUM` with 0 retention to permanently purge the files.
+- **Automated PII Tagging**: Running a daily script that scans new tables for patterns (like emails or SSNs) and automatically applies Unity Catalog tags to classify their sensitivity for governance tracking.
+- **Service Principal Pipelines**: Using service principals with minimal privileges inherited from a group to securely run automated ETL jobs without relying on an individual's personal access token.
+
 ## Exam Tips
 
 1. **Lineage is automatic** -- Unity Catalog captures table and column lineage for all queries against UC-managed tables (not hive_metastore)

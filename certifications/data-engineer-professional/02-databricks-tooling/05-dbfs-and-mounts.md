@@ -581,6 +581,24 @@ SHOW VOLUMES IN main.default;
 DESCRIBE VOLUME main.default.my_volume;
 ```text
 
+## Use Cases
+
+- **Legacy Workload Migration**: Running older Spark workloads that heavily rely on DBFS mount points before they can be refactored to use Unity Catalog external locations.
+- **Quick File Sharing**: Uploading small configuration files, mock JSON data, or ML artifacts directly to DBFS via the UI to temporarily test logic.
+- **Cluster Initialization**: Storing global init scripts or custom library wheel files that clusters need to access securely during startup.
+
+## Common Issues & Errors
+
+**1. Stale Mount Credentials**
+- **Error**: `java.nio.file.AccessDeniedException`.
+- **Issue**: A DBFS mount was created using a secret (like a storage account key or service principal secret) that has since expired or changed.
+- **Fix**: Unmount and remount the storage with updated credentials, or better, migrate the storage access model to Unity Catalog external locations.
+
+**2. Insecure Data Storage in DBFS Root**
+- **Error**: Unauthorized users accessing sensitive data.
+- **Issue**: DBFS root is accessible by default to all users in the workspace who have cluster creation/attachment privileges.
+- **Fix**: Never store production data or PII in the DBFS root. Use Unity Catalog to enforce fine-grained access control on data.
+
 ## Exam Tips
 
 1. **DBFS paths** - `dbfs:/` for Spark, `/dbfs/` for Python file APIs

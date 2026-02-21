@@ -487,6 +487,11 @@ jobs:
           instance_pool_id: ${pool_id}
 ```text
 
+## Use Cases
+
+- **Separating Development from Production**: Providing data engineers with autoterminating All-Purpose clusters for interactive notebook development while running their scheduled daily ETL pipelines on cheaper automated Job clusters, yielding massive DBU savings.
+- **Spot Instance Fallback for Batch Workloads**: Configuring a large data reprocessing job to execute on a cluster using cloud Spot instances for its workers with a fallback to On-Demand, significantly reducing costs without sacrificing reliability if Spot capacity drops.
+
 ## Common Issues & Errors
 
 ### 1. Clusters Running Idle

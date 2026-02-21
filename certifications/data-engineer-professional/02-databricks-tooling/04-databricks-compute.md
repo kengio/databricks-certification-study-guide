@@ -707,6 +707,24 @@ aws_attributes = {
 
 **Fix:** Request quota increase from cloud provider or terminate unused resources.
 
+## Use Cases
+
+- **Job Clusters**: Executing automated, isolated production pipelines safely and cost-effectively, since Job clusters terminate when the run finishes.
+- **All-Purpose Clusters**: Facilitating interactive data exploration, complex ad-hoc querying, and collaborative notebook development among data science/engineering teams.
+- **Serverless Compute**: Handling unpredictable workloads requiring instant startup without the overhead of capacity planning or infrastructure management (e.g., Serverless SQL or DLT).
+
+## Common Issues & Errors
+
+**1. Cluster Startup Failures**
+- **Error**: `Cloud Provider Launch Failure` or `Quota Exceeded`.
+- **Issue**: The underlying cloud provider (AWS/Azure/GCP) lacks sufficient specific instance types or vCPU quota in the requested region.
+- **Fix**: Request a quota increase from the cloud provider or switch the cluster configuration to use a different, more available instance family.
+
+**2. Driver OOM (Out of Memory)**
+- **Error**: `java.lang.OutOfMemoryError: Java heap space` on the driver node.
+- **Issue**: Collecting too much distributed data back to the single driver node (e.g., calling `.collect()` or converting a massive Spark DataFrame to Pandas).
+- **Fix**: Increase the driver node instance size, or rewrite the code to keep operations distributed across the worker nodes.
+
 ## Exam Tips
 
 1. **Job vs All-Purpose** - Job clusters are isolated and cost-effective for production

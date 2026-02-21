@@ -236,6 +236,11 @@ variables:
       Build: $(Build.BuildNumber)
 ```text
 
+## Use Cases
+
+- **Automated Pull Request Validation**: Triggering a GitHub Actions workflow on every PR that deploys a temporary bundle to a staging workspace, runs integration tests, and reports the result back to GitHub.
+- **Secure Production Deployment**: Configuring an Azure DevOps pipeline to use a service principal (with Azure Key Vault secrets) to deploy a Databricks job to production only when code is merged to the `main` branch.
+
 ## Common Issues & Errors
 
 ### 1. Authentication Failures

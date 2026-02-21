@@ -518,6 +518,12 @@ WHERE event_date >= current_date() - 7
 GROUP BY event_date, service_name, action_name;
 ```text
 
+## Use Cases
+
+- **Cost Allocation Chargebacks**: Using `system.billing.usage` combined with custom workspace or cluster tags to automatically generate monthly chargeback reports for different engineering departments based on their specific DBU consumption.
+- **Security Incident Auditing**: Querying `system.access.audit` to forensically trace exactly when a user's permissions were escalated or to identify the origin IP address of repeated failed login attempts.
+- **Impact Analysis via Lineage**: Utilizing `system.lineage.table_lineage` to programmatically build a dependency graph that alerts downstream data consumers whenever an upstream Bronze table is scheduled for deprecation or schema changes.
+
 ## Common Issues & Errors
 
 ### 1. System Tables Not Enabled

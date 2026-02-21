@@ -603,6 +603,11 @@ Full Refresh:
 - Use when: Schema changes, backfill, recovery
 ```text
 
+## Use Cases
+
+- **Clickstream Data Aggregation**: Using a Continuous Streaming Table to incrementally ingest raw user interaction logs from cloud storage, followed by a Materialized View to automatically recalculate daily active users and interaction summaries.
+- **Schema Evolution for JSON Events**: Leveraging Auto Loader's `rescue` mode within a declarative pipeline to gracefully handle unexpected new columns added by front-end applications to a JSON event stream, without failing the processing job.
+
 ## Common Issues & Errors
 
 ### 1. Streaming Table Not Processing

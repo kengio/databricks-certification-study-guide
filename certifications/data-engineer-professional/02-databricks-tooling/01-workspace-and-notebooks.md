@@ -698,6 +698,24 @@ value = dbutils.jobs.taskValues.get(
 )
 ```text
 
+## Use Cases
+
+- **Interactive Development**: Data exploration and initial pipeline drafting using variables, widgets, and multi-language support.
+- **Workflow Orchestration**: Parameterizing notebooks via widgets and passing data via task values in a Job cluster.
+- **Collaboration**: Co-authoring code, leaving comments, and viewing revision history directly in the Workspace.
+
+## Common Issues & Errors
+
+**1. Widget Value Not Updating**
+- **Error**: Values read from `dbutils.widgets.get()` seem stale or missing.
+- **Issue**: Using a widget before defining it, or job parameters not matching widget names.
+- **Fix**: Ensure `dbutils.widgets.text()` is called before `dbutils.widgets.get()`, and verify parameter keys in Job definitions match exactly.
+
+**2. %run vs dbutils.notebook.run Isolation Context**
+- **Error**: Variables from another notebook are undefined.
+- **Issue**: Expecting isolated execution from `%run` or shared context from `dbutils.notebook.run`.
+- **Fix**: Remember `%run` executes in the *same* context (sharing variables), whereas `dbutils.notebook.run` executes in an *isolated* context and only returns a single string.
+
 ## Exam Tips
 
 1. **%run vs dbutils.notebook.run** - Know the differences: shared context vs isolated, return values, timeouts

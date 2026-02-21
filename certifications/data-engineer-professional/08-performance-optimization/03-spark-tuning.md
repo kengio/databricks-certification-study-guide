@@ -475,6 +475,11 @@ UNCACHE TABLE orders;
 CACHE TABLE orders SELECT * FROM orders WHERE date >= '2024-01-01';
 ```text
 
+## Use Cases
+
+- **Skew Join Mitigation via AQE**: Ensuring Adaptive Query Execution's `skewJoin` property is enabled to automatically identify and split massive keys during a heavy fact-to-dimension join, stopping straggler tasks from destroying cluster utilization.
+- **Interactive Query Acceleration**: Turning on the Photon native vectorized engine for a Databricks SQL Warehouse to aggressively accelerate heavily grouped hash aggregations and string manipulation filters for BI analysts without altering any underlying SQL.
+
 ## Common Issues & Errors
 
 ### 1. Shuffle Spill to Disk

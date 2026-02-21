@@ -494,9 +494,12 @@ flowchart TB
     Deploy --> Prod
 ```text
 
-## Troubleshooting
+## Use Cases
 
-### Common Issues
+- **Collaborative Notebook Development**: Multiple data scientists working in their own personal Git Folders, cloning a shared GitHub repository, developing in isolated branches, and using the Databricks UI to commit and push changes.
+- **Lightweight Code Execution**: Using `%run` or Python `import` statements to execute modular utility scripts stored in the Git Folder repository without the overhead of building and deploying a Python wheel.
+
+## Common Issues & Errors
 
 #### 1. Authentication Failed
 

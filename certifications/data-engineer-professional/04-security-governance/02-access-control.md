@@ -503,6 +503,24 @@ GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
 
 **Fix:** Optimize filter function, ensure mapping tables are small and indexed.
 
+## Use Cases
+
+- **Multi-Tenant Data Platforms**: Isolating department data using declarative row-level filters (e.g., Sales can only see their designated region's rows) without duplicating data into multiple tables.
+- **Regulatory Compliance**: Hiding PII columns like emails or SSNs from standard analysts using column masking, while still allowing compliance officers to view the unmasked data.
+- **Delegated Administration**: Using the `MANAGE` privilege to allow team leads to manage access to their own schemas without granting them full ownership rights.
+
+## Common Issues & Errors
+
+**1. View Security Bypass**
+- **Error**: Users are still able to query sensitive data using the underlying table instead of the secure dynamic view.
+- **Issue**: The users were granted `SELECT` access to both the view and the underlying table.
+- **Fix**: Ensure underlying table access is revoked (`REVOKE SELECT ON TABLE ...`), and users are only granted access to the view.
+
+**2. Function Execution Errors in Masking**
+- **Error**: Queries on a masked table or view fail with a permission error.
+- **Issue**: The masking function is being called, but the person querying the view does not have `EXECUTE` permission on the function.
+- **Fix**: Grant `EXECUTE ON FUNCTION ...` to the necessary users or groups.
+
 ## Exam Tips
 
 1. **Privilege hierarchy** - Need USE CATALOG → USE SCHEMA → table privilege

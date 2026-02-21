@@ -353,6 +353,11 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 3. **State information**: Memory usage, state size
 4. **Input rate graph**: Throughput over time
 
+## Use Cases
+
+- **Catch-up Processing Post-Outage**: Utilizing the `availableNow()` trigger in a Structured Streaming query to swiftly power through a backlog of millions of queued Kafka events left after a maintenance window, cleanly spinning down the cluster when complete.
+- **Handling Out-of-Order Sensor Data**: Configuring a generous 24-hour watermark on an IoT sensor stateful aggregation stream using RocksDB, allowing delayed telemetry records to be gracefully incorporated into yesterday's daily averages without running out of JVM heap space.
+
 ## Exam Tips
 
 1. **Trigger selection**: Match trigger interval to latency requirements

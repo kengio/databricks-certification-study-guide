@@ -160,6 +160,11 @@ Tip: Use EXISTS instead of IN for large subqueries:
   WHERE EXISTS (SELECT 1 FROM customers c WHERE c.id = o.customer_id AND c.region = 'US')
 ```text
 
+## Use Cases
+
+- **Cost-Based Optimizer Enhancement**: Running `ANALYZE TABLE COMPUTE STATISTICS FOR COLUMNS` on a multi-terabyte fact table so the Catalyst optimizer can exploit column histograms to accurately estimate filter selectivity and choose a broadcast join over a costly sort-merge.
+- **Predicate Pushdown Verification**: Using `EXPLAIN FORMATTED` to definitively prove that a newly added filter on a massive Delta table is successfully populating the `PushedFilters` array, drastically reducing the volume of data pulled from object storage into Spark memory.
+
 ## Common Issues and Errors
 
 ### 1. Query Plan Shows CartesianProduct

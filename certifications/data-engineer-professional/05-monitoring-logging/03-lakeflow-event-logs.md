@@ -447,6 +447,12 @@ WHERE event_type = 'flow_progress'
     AND timestamp >= current_timestamp() - INTERVAL 5 MINUTES;
 ```text
 
+## Use Cases
+
+- **Data Quality Alerting**: Querying the `data_quality` events in the log to trigger a PagerDuty or Slack alert if the expectation pass rate for a critical Gold dataset drops below a required 99% threshold.
+- **Pipeline SLA Monitoring**: Tracking `flow_progress` events to measure the `seconds_of_processing` trends over time, ensuring the overall pipeline consistently meets its required delivery SLAs.
+- **Streaming Backlog Analysis**: Using the `seconds_of_backlog` metric to monitor streaming ingestion health and proactively scale up the underlying compute cluster when event consumption falls too far behind production.
+
 ## Common Issues & Errors
 
 ### 1. Event Log Not Found

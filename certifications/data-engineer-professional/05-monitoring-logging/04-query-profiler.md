@@ -405,6 +405,12 @@ SELECT * FROM large_table WHERE ...;
 SELECT col1, col2, col3 FROM large_table WHERE ...;
 ```text
 
+## Use Cases
+
+- **Join Strategy Verification**: Checking the read physical execution plan to confirm that joining a massive fact table with a small dimension table is correctly utilizing an efficient `BroadcastHashJoin` rather than a costly `SortMergeJoin`, adding SQL broadcast hints if the optimizer missed it.
+- **Partition Pruning Validation**: Inspecting the `FileScan` node of a query plan to ensure `PartitionFilters` are actively pruning underlying storage directories, guaranteeing the query isn't accidentally doing a full table scan on a multi-terabyte historical dataset.
+- **Identifying Processing Skew**: Using the query profiler metrics within the Databricks SQL UI to visually spot individual tasks that take disproportionately longer to complete than their peers, indicating underlying data skew that might require bucketing strategies or explicit AQE tuning.
+
 ## Common Issues & Errors
 
 ### 1. No Partition Pruning

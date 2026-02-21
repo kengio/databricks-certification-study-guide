@@ -487,6 +487,11 @@ def silver_orders():
     return dlt.read_stream("bronze_orders")
 ```text
 
+## Use Cases
+
+- **Quarantine Pattern for Invalid Orders**: Defining an `EXPECT OR DROP` condition to siphon out orders missing a crucial `customer_id` into a separate quarantine table, keeping the main Silver table mathematically viable while allowing manual review of issues.
+- **Business Constraint Enforcement**: Imposing an `EXPECT OR FAIL UPDATE` constraint on a Gold-level financial reporting table to instantly halt the pipeline if total account balances ever drop below zero, preventing anomalous reports from reaching stakeholders.
+
 ## Common Issues & Errors
 
 ### 1. Expectation Always Fails

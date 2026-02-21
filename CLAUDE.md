@@ -52,6 +52,7 @@ databricks-certification-study-guide/
 
 - **Target size per file: 300–600 lines** — keeps files scannable in Obsidian without excessive scrolling
 - **Hard limit: ~800 lines (~20–25 KB)** — files beyond this should be split into focused sub-topics
+  - **Exception**: Mock exam `questions.md` files are exempt from this limit to preserve the continuous testing experience. Do not split `mock-exam/questions.md` files.
 - **When to split**: when a file contains two or more conceptually distinct sub-topics that can each stand alone (e.g., "joins & state" vs "monitoring & tuning")
 - **How to split**:
   1. Part 1 keeps the original file number with name: `NN-topic-name.md`

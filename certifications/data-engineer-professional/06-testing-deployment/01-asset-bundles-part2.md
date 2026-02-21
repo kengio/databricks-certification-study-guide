@@ -269,6 +269,11 @@ environment = dbutils.widgets.get("environment")
 spark.sql(f"USE CATALOG {catalog}")
 ```text
 
+## Use Cases
+
+- **Environment Promotion**: Defining `dev`, `staging`, and `prod` targets in `databricks.yml` to deploy the exact same pipeline configuration across different workspaces with environment-specific variables.
+- **Infrastructure as Code**: Managing job schedules, cluster definitions, and DLT pipeline configurations alongside the Python code in a single version-controlled repository.
+
 ## Common Issues & Errors
 
 ### 1. Bundle Validation Fails

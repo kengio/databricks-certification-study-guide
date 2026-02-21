@@ -414,6 +414,21 @@ SET spark.sql.adaptive.enabled;
 -- Compare initial vs final plan to see AQE changes
 ```text
 
+## Use Cases
+
+- **Query Bottleneck Identification**: Using `EXPLAIN FORMATTED` to dissect a sluggish aggregation pipeline and discovering a `SortMergeJoin` without partition pruning, prompting the engineer to add date filters and drastically speed up the query.
+- **Adaptive Skew Handling Validation**: Reviewing the Spark physical plan to confirm the presence of `CustomShuffleReaderExec` with "skewed" partitions, proving that AQE successfully detected and split a massively skewed client ID during a critical data join.
+
+## Common Issues & Errors
+
+### 1. Hard-to-Read Physical Plans
+**Scenario:** Raw `EXPLAIN` output is dense and difficult to interpret.
+**Fix:** Always use `EXPLAIN FORMATTED` in SQL or `.explain(mode="formatted")` in Python to get a structured, easier-to-read layout.
+
+### 2. Missing Statistics Leading to Bad Plans
+**Scenario:** Optimizer chooses slow operations (e.g., SortMergeJoin over BroadcastHashJoin) for small tables.
+**Fix:** Run `ANALYZE TABLE <name> COMPUTE STATISTICS` so Catalyst has accurate file and row counts to inform Cost-Based Optimization.
+
 ## Next
 
 Continue with [Photon, Diagnostics & Query Optimization](./06-photon-diagnostics-optimization.md) for Photon acceleration, memory and spill diagnostics, Spark UI deep dive, query optimization strategies, practice questions, and exam tips.

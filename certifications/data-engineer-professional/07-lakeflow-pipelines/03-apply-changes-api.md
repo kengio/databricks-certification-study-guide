@@ -531,6 +531,11 @@ for config in tables_config:
     )
 ```text
 
+## Use Cases
+
+- **E-commerce Ordering System Sync**: Applying an SCD Type 1 CDC stream from an upstream OLTP database to a Databricks Silver table, instantly updating product quantity on hand and overwriting outdated prices based on the `operation_timestamp`.
+- **Audit Trail for Employee Records**: Using SCD Type 2 with the `track_history_column_list` option to securely retain a historical log of employees' salary and department changes over time, while silently ignoring minor profile picture updates.
+
 ## Common Issues & Errors
 
 ### 1. Sequence Key Not Unique

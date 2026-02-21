@@ -753,6 +753,24 @@ databricks configure --token
 
 **Fix:** Add delays between requests or batch operations.
 
+## Use Cases
+
+- **CI/CD Automation**: Integrating Databricks Asset Bundles (DABs) deployment into GitHub Actions or Azure DevOps pipelines.
+- **Bulk Operations**: Managing hundreds of secrets, creating cluster policies, or syncing workspace directories automatically.
+- **Local IDE Integration**: Interacting with the remote Databricks workspace directly from a local terminal or IDE.
+
+## Common Issues & Errors
+
+**1. Authentication Failures**
+- **Error**: `Error: 401 Unauthorized` or `Error: DEFAULT profile not configured`.
+- **Issue**: Missing or expired Personal Access Token (PAT), or incorrect `.databrickscfg` configuration.
+- **Fix**: Verify token validity and use `databricks auth login` or check `~/.databrickscfg` for the correct profile configuration.
+
+**2. Asset Bundle Target Missing**
+- **Error**: `Error: target ... not found in databricks.yml`.
+- **Issue**: Running an environment-specific command without defining the target.
+- **Fix**: Ensure the `targets` block in `databricks.yml` explicitly defines the environment being referenced.
+
 ## Exam Tips
 
 1. **Authentication order** - Environment variables > profile flag > config file
