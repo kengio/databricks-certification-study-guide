@@ -29,7 +29,7 @@ D) Store all 10 million pages in the LLM system prompt using a 1M-token context 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks Vector Search and Foundation Model APIs keep all data and inference within the Databricks environment, satisfying data residency requirements. Using the OpenAI API sends data to an external system, violating residency constraints. A third-party vector database similarly sends data externally. A 1M-token context is insufficient for 10 million pages, and including all data in every prompt is cost-prohibitive and impractical.
+> Databricks Vector Search and Foundation Model APIs keep all data and inference within the Databricks environment, satisfying data residency requirements. The OpenAI API, third-party vector databases, and 1M-token context approaches all either violate residency constraints or are computationally infeasible at 10 million pages.
 
 ---
 
@@ -61,7 +61,7 @@ D) The embedding model is mismatched to the query domain
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> When retrieval precision is low (60% of retrieved chunks are irrelevant), the LLM must work with noisy context. While it may occasionally extract correct answers from the noise during testing, production reliability suffers significantly. Non-relevant context increases hallucination risk and reduces faithfulness. This is a serious production risk. Cost and storage are secondary concerns; low precision is a correctness and reliability problem.
+> When 60% of retrieved chunks are irrelevant, the LLM works with noisy context and may occasionally produce correct answers from the noise in testing — but production reliability suffers significantly. Non-relevant context increases hallucination risk. Low precision is primarily a correctness problem, not a cost or storage issue.
 
 ---
 
@@ -93,7 +93,7 @@ D) Fine-tune the LLM to always include citations by training on examples with ci
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Citation generation requires: (1) storing source metadata alongside embeddings in the vector index, (2) returning that metadata with retrieval results, (3) including it in the LLM prompt, and (4) instructing the LLM to cite the source in its answer. More model parameters do not automatically produce citations. Fine-tuning can help with citation format but does not provide the source metadata without the infrastructure. Temperature affects randomness, not citation behavior.
+> Citation generation requires: (1) storing source metadata with embeddings, (2) returning it with results, (3) including it in the LLM prompt, and (4) instructing the LLM to cite sources. Larger models do not auto-cite; fine-tuning helps format but not sourcing; temperature affects randomness, not citations.
 
 ---
 
@@ -141,7 +141,7 @@ D) Use a larger embedding model to better distinguish documents from different y
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Metadata pre-filtering is the correct approach. Store `year` and `company` fields alongside embeddings during indexing, then pass `filters={"year": 2023, "company": "ACME"}` in the similarity search call. This efficiently restricts the candidate set before computing similarity. Instructing the LLM to filter is unreliable (it receives and processes all retrieved chunks). Separate indexes per year adds operational complexity. Embedding model size does not improve temporal discrimination.
+> Metadata pre-filtering is correct: store `year` and `company` fields alongside embeddings, then filter in the similarity search call. LLM-side filtering is unreliable, separate per-year indexes add operational overhead, and embedding model size does not help temporal discrimination.
 
 ---
 
@@ -157,7 +157,7 @@ D) The vector index needs to be rebuilt with a smaller dimensionality
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> When retrieval is good (correct answer is in the retrieved chunks) but answers are still wrong, the problem is in the generation step. Common causes include: overly long/noisy context that buries the answer, poor prompt instructions, or an LLM that struggles to extract precise information from context. The fix is prompt engineering improvement (e.g., instructing the LLM to extract the specific answer) or context compression. Embedding calibration, overlap, and index dimensionality are retrieval-side concerns.
+> When retrieval is confirmed good (answer is in retrieved chunks) but generation is wrong, the problem is in the generation step. Common causes: noisy context burying the answer, or poor prompt instructions. The fix is prompt engineering or context compression — not retrieval-side changes.
 
 ---
 
@@ -287,7 +287,7 @@ results = vsc.similarity_search("product_search_idx", "wireless noise-canceling 
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> The correct Databricks Vector Search SDK pattern is: (1) get the index object with `vsc.get_index(endpoint_name, index_name)`, (2) call `index.similarity_search(query_text=..., columns=[...], num_results=...)`. Option B uses a non-existent `vsc.search()` method. Option C calls `vsc.get_index()` without an endpoint parameter and uses a non-existent `.query()` method. Option D calls a non-existent `vsc.similarity_search()` method.
+> The correct SDK pattern is: (1) `vsc.get_index(endpoint_name, index_name)`, (2) `index.similarity_search(query_text=..., columns=[...], num_results=...)`. Option B (`vsc.search()`), C (missing endpoint param, `.query()`), and D (`vsc.similarity_search()`) use non-existent SDK methods.
 
 ---
 
@@ -335,7 +335,7 @@ D) `filters=[("rating", ">=", 4), ("verified_purchase", "=", True)]`
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks Vector Search uses MongoDB-style filter operators for numeric comparisons: `{"field": {"$gte": value}}` for "greater than or equal to." Boolean values use Python `True`/`False`. Multiple conditions are combined as separate keys in the filter dictionary. SQL-style filter strings, string-encoded operators (`">=4"`), and list-of-tuples formats are not valid Databricks Vector Search SDK filter formats.
+> Databricks Vector Search uses MongoDB-style filter operators: `{"field": {"$gte": value}}` for numeric comparisons. Boolean values use Python `True`/`False`. Multiple conditions are separate keys in the filter dictionary. SQL strings and list-of-tuples formats are not valid SDK filter formats.
 
 ---
 
@@ -415,7 +415,7 @@ D) The `num_results` parameter directly controls the number of similarity comput
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> ANN (approximate nearest neighbor) algorithms like HNSW search a graph structure. To return more results, the algorithm must explore more nodes and edges in the graph, increasing computation. This is not purely a I/O-bound operation (reading Delta tables). CPU core count affects throughput at a fixed `num_results`, not the scaling relationship between `num_results` and latency. ANN algorithms do not perform exhaustive similarity computation for all documents regardless of k.
+> ANN algorithms like HNSW search a graph structure. Returning more results requires exploring more nodes and edges, increasing computation proportionally. CPU core count affects throughput at fixed `num_results`, not this scaling relationship. ANN does not perform exhaustive computation over all documents regardless of k.
 
 ---
 
@@ -447,7 +447,7 @@ D) Continuous mode only processes incremental additions; truncation requires swi
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> A `CONTINUOUS` Delta Sync Index uses Delta Lake's change data feed to track all operations — inserts, updates, and deletes. A truncate-and-reload operation generates deletion records for all old rows and insertion records for all new rows. The sync will process both, resulting in an index that matches the new table state. This may take time depending on data volume, but the process is automatic.
+> A `CONTINUOUS` Delta Sync Index uses Delta Lake's change data feed to track all operations (inserts, updates, deletes). A truncate-and-reload generates deletion records for old rows and insertion records for new rows. The sync processes both automatically, resulting in an index matching the new table state.
 
 ---
 
@@ -467,7 +467,7 @@ D) Reduce the system prompt to only the most critical instruction
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> LLMs exhibit a "recency bias" — content near the end of the context (closer to the generation point) tends to have more influence on the output format. Moving few-shot examples closer to the user's input increases their influence on the response format. Adding more examples (50) increases context but doesn't address position-based influence. Zero-shot removes the demonstrations entirely. Reducing to one instruction removes format guidance.
+> LLMs exhibit recency bias — content near the end of the context has more influence on output format. Moving examples closer to the user's input increases formatting adherence. Adding more examples increases context but doesn't fix position-based influence. Zero-shot removes demonstrations entirely.
 
 ---
 
@@ -611,7 +611,7 @@ D) The embedding model re-indexes the conversation history automatically
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> `ConversationSummaryMemory` progressively compresses conversation history into condensed summaries. Specific details, numbers, and precise wording from early turns (like turn 3) are often lost in summarization. The LLM may recall the general topic but cannot accurately reproduce exact details. This is a known trade-off of summary-based memory. For applications requiring precise recall of specific details, `ConversationBufferMemory` or a vector-based memory retrieval approach may be more appropriate.
+> `ConversationSummaryMemory` compresses history into summaries. Specific details and precise wording from early turns (like turn 3) are often lost. The LLM may recall the general topic but not exact facts. For precise recall, `ConversationBufferMemory` or vector-based memory is more appropriate.
 
 ---
 
