@@ -1,0 +1,56 @@
+---
+title: Mock Exam 2 — GenAI Engineer Associate
+type: mock-exam
+tags: [genai-engineer-associate, mock-exam]
+status: published
+---
+
+# Mock Exam 2 — Databricks GenAI Engineer Associate
+
+A second full-length practice exam with different questions than Mock Exam 1.
+
+## Exam Instructions
+
+| Detail | Value |
+|---|---|
+| Total Questions | 45 |
+| Time Limit | 90 minutes |
+| Passing Score | 70% (32 or more correct) |
+| Format | Multiple choice, single correct answer |
+| Language | Python only |
+
+## Domain Distribution
+
+| Domain | Weight | Questions in This Exam |
+|---|---|---|
+| Design RAG Solutions | 30% | 14 |
+| Vector Search & Embeddings | 25% | 11 |
+| LLM Application Development | 30% | 13 |
+| Databricks GenAI Tools | 15% | 7 |
+
+## How to Take This Exam
+
+1. Complete Mock Exam 1 first and review your weak areas
+2. Set a 90-minute timer before opening [questions.md](./questions.md)
+3. Answer all questions without referring to notes or documentation
+4. Compare your score to Mock Exam 1 to measure progress
+5. For any incorrect answers, review the explanation and study the relevant topic
+
+## Scoring Guide
+
+| Score | Result | Action |
+|---|---|---|
+| 36–45 (80–100%) | Excellent — ready to sit the exam | Schedule your exam |
+| 32–35 (71–79%) | Passing — but review weak areas | Review remaining weak topics |
+| 28–31 (62–70%) | Close — focused study needed | Study weak domains, retry in 1 week |
+| Below 28 (< 62%) | Not ready — comprehensive review needed | Review all study material before retrying |
+
+## Tips for Taking Mock Exams
+
+- If you scored lower here than on Mock Exam 1, focus review on the domains where you dropped
+- Use the domain distribution table above to identify which questions cover each domain
+- Aim for 80%+ before scheduling the real exam
+
+---
+
+[Start the Exam →](./questions.md) | [← Mock Exam 1](../mock-exam/README.md) | [← Back to Resources](../README.md)
