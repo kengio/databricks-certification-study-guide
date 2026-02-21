@@ -375,3 +375,19 @@ testing:
 ---
 
 **[← Back to Topic](./README.md)**
+
+## Use Cases
+
+- **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
+- **Optimized SQL Warehouses Workflows**: Using the advanced capabilities of SQL Warehouses to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. OOM Errors
+**Scenario:** Data skew causes an executor to run out of memory.
+**Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting SQL Warehouses to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for SQL Warehouses prior to deployment.
+

@@ -451,6 +451,21 @@ mlflow.spark.log_model(fitted_pipeline, "pipeline")
 fitted_pipeline.save("/mnt/production/churn_pipeline")
 ```text
 
+## Use Cases
+
+- **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
+- **Optimized Spark ML Pipelines Workflows**: Using the advanced capabilities of Spark ML Pipelines to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. OOM Errors
+**Scenario:** Data skew causes an executor to run out of memory.
+**Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Spark ML Pipelines to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Spark ML Pipelines prior to deployment.
+
 ## Exam Tips
 
 - ✅ Understand Transformer vs Estimator distinction

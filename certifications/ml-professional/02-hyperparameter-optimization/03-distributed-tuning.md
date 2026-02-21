@@ -484,6 +484,21 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 >
 > - PBT naturally parallelizable
 
+## Use Cases
+
+- **Distributed Hyperparameter Tuning Implementation**: Incorporating Distributed Hyperparameter Tuning principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized Distributed Hyperparameter Tuning Workflows**: Using the advanced capabilities of Distributed Hyperparameter Tuning to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for Distributed Hyperparameter Tuning do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for Distributed Hyperparameter Tuning to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Distributed Hyperparameter Tuning to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Distributed Hyperparameter Tuning prior to deployment.
+
 ## Related Topics
 
 - [Tuning Fundamentals](01-tuning-fundamentals.md)

@@ -320,6 +320,21 @@ Alert configuration steps:
 >
 > When ground truth is delayed, monitoring the distribution of model predictions (output distribution drift) serves as a leading indicator. If the model begins producing a very different distribution of scores — for example, flagging 40% of transactions as fraudulent when the historical average is 2% — something has changed upstream. This does not prove concept drift but is a strong signal to investigate before labels arrive. Option C is invalid because training labels describe training data, not production data.
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Model Monitoring and Observability Workflows**: Using the advanced capabilities of Model Monitoring and Observability to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Model Monitoring and Observability to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Monitoring and Observability prior to deployment.
+
 ## Related Topics
 
 - [Drift Detection & Remediation](02-drift-detection-remediation.md)

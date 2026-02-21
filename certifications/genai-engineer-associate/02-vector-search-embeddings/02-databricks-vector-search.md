@@ -353,3 +353,19 @@ D) Update the `embedding_model_endpoint_name` field in the index configuration
 > Access indexes.
 
 [← Back to Topic](./README.md)
+
+## Use Cases
+
+- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
+- **Optimized Databricks Vector Search Workflows**: Using the advanced capabilities of Databricks Vector Search to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. High Latency Responses
+**Scenario:** LLM endpoints take too long to return generated text.
+**Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Databricks Vector Search to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Vector Search prior to deployment.
+

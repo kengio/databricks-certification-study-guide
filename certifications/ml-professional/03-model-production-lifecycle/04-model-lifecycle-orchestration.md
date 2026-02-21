@@ -437,6 +437,21 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 > production incidents. Without it, you cannot determine which version of the training code
 > produced any given model version.
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Model Lifecycle Orchestration Workflows**: Using the advanced capabilities of Model Lifecycle Orchestration to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Model Lifecycle Orchestration to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Lifecycle Orchestration prior to deployment.
+
 ## Related Topics
 
 - [Model Versioning & Registry](01-model-versioning-registry.md)

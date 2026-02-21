@@ -322,3 +322,19 @@ sample_df = df.sampleBy("category", fractions={
 ---
 
 **[← Back to ETL with Spark SQL](README.md)**
+
+## Use Cases
+
+- **DataFrame Operations Implementation**: Incorporating DataFrame Operations principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized DataFrame Operations Workflows**: Using the advanced capabilities of DataFrame Operations to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for DataFrame Operations do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for DataFrame Operations to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting DataFrame Operations to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for DataFrame Operations prior to deployment.
+

@@ -387,3 +387,19 @@ D) The `num_results` parameter is too low to include the new documents
 > indexed.
 
 [← Back to Topic](./README.md)
+
+## Use Cases
+
+- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
+- **Optimized Vector Search in Production Workflows**: Using the advanced capabilities of Vector Search in Production to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. High Latency Responses
+**Scenario:** LLM endpoints take too long to return generated text.
+**Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Vector Search in Production to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Vector Search in Production prior to deployment.
+

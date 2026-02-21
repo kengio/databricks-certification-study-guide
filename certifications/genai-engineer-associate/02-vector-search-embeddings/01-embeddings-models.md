@@ -315,3 +315,19 @@ D) Any model — architecture does not affect retrieval quality
 > Architecture matters significantly for retrieval quality (D is wrong).
 
 [← Back to Topic](./README.md)
+
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Embedding Models Workflows**: Using the advanced capabilities of Embedding Models to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Embedding Models to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Embedding Models prior to deployment.
+

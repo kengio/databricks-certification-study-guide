@@ -512,6 +512,21 @@ query = (
 >
 > - Creates two continuous features that capture periodicity
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Advanced Feature Techniques Workflows**: Using the advanced capabilities of Advanced Feature Techniques to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Advanced Feature Techniques to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Advanced Feature Techniques prior to deployment.
+
 ## Related Topics
 
 - [Feature Store Fundamentals](01-feature-store-fundamentals.md)

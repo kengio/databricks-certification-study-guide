@@ -434,6 +434,21 @@ Not all drift is the model's fault. Before retraining, rule out infrastructure c
 >
 > When ground truth labels are delayed, prediction drift — changes in the distribution of model output scores — serves as a leading indicator. If the model suddenly predicts fraud for 40% of transactions when the historical rate is 2%, something has changed. This does not confirm concept drift (it could be legitimate data drift), but it triggers investigation before labels confirm the root cause. Option B is incorrect because training labels describe training-time data, not production outcomes, and mixing them would produce a meaningless accuracy estimate.
 
+## Use Cases
+
+- **Drift Detection and Remediation Implementation**: Incorporating Drift Detection and Remediation principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized Drift Detection and Remediation Workflows**: Using the advanced capabilities of Drift Detection and Remediation to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for Drift Detection and Remediation do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for Drift Detection and Remediation to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Drift Detection and Remediation to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Drift Detection and Remediation prior to deployment.
+
 ## Related Topics
 
 - [Model Monitoring & Observability](01-model-monitoring-observability.md)

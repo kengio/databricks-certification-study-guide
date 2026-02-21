@@ -433,6 +433,21 @@ unfairly skew latency comparisons.
 > Options C and D use keys (`"records"`, `"data"`) that are not recognized by the pyfunc serving
 > handler and will return a 400 error.
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Model Serving and Deployment Workflows**: Using the advanced capabilities of Model Serving and Deployment to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Model Serving and Deployment to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Serving and Deployment prior to deployment.
+
 ## Related Topics
 
 - [Model Versioning & Registry](01-model-versioning-registry.md)

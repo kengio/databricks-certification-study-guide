@@ -458,3 +458,19 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 ---
 
 **[← Back to Data Governance](README.md)**
+
+## Use Cases
+
+- **Access Control and Permissions Implementation**: Incorporating Access Control and Permissions principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized Access Control and Permissions Workflows**: Using the advanced capabilities of Access Control and Permissions to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for Access Control and Permissions do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for Access Control and Permissions to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Access Control and Permissions to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control and Permissions prior to deployment.
+

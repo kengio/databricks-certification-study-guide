@@ -484,6 +484,21 @@ df_engineered.select("customer_id", "scaledFeatures", "label")\
     .saveAsTable("ml_ready.customer_features")
 ```text
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Feature Engineering Techniques Workflows**: Using the advanced capabilities of Feature Engineering Techniques to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Feature Engineering Techniques to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Engineering Techniques prior to deployment.
+
 ## Exam Tips
 
 - ✅ Understand when to impute vs drop missing values

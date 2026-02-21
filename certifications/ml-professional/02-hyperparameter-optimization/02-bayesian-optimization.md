@@ -424,6 +424,21 @@ print(f"Best XGBoost config: {best_config}")
 >
 > - Upper Confidence Bound balances both explicitly
 
+## Use Cases
+
+- **Bayesian Optimization Implementation**: Incorporating Bayesian Optimization principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized Bayesian Optimization Workflows**: Using the advanced capabilities of Bayesian Optimization to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for Bayesian Optimization do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for Bayesian Optimization to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Bayesian Optimization to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Bayesian Optimization prior to deployment.
+
 ## Related Topics
 
 - [Tuning Fundamentals](01-tuning-fundamentals.md)

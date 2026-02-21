@@ -562,6 +562,21 @@ print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
 | **Embedded** | <100ms | Low | Low | Application code |
 | **Stream Processing** | Seconds | High | Medium | Real-time events |
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Model Deployment & Serving Workflows**: Using the advanced capabilities of Model Deployment & Serving to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Model Deployment & Serving to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Deployment & Serving prior to deployment.
+
 ## Exam Tips
 
 - ✅ Understand batch vs real-time serving trade-offs

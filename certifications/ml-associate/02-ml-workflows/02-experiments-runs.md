@@ -389,6 +389,21 @@ client.delete_experiment(old_exp.experiment_id)
 | **Experiment per Data Version** | Data pipeline changes | Reproducibility focus | Hard to compare models |
 | **Hybrid (Recommended)** | Everything | Flexible & organized | Requires discipline |
 
+## Use Cases
+
+- **Experiments & Runs Implementation**: Incorporating Experiments & Runs principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized Experiments & Runs Workflows**: Using the advanced capabilities of Experiments & Runs to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for Experiments & Runs do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for Experiments & Runs to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Experiments & Runs to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Experiments & Runs prior to deployment.
+
 ## Exam Tips
 
 - ✅ Understand hierarchy: Backend → Experiments → Runs

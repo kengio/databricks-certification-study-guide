@@ -458,3 +458,19 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 > documents (D) is not a standard pattern and does not address recall.
 
 [← Back to Topic](./README.md)
+
+## Use Cases
+
+- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
+- **Optimized RAG Design Patterns Workflows**: Using the advanced capabilities of RAG Design Patterns to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. High Latency Responses
+**Scenario:** LLM endpoints take too long to return generated text.
+**Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting RAG Design Patterns to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for RAG Design Patterns prior to deployment.
+

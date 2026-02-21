@@ -409,6 +409,21 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 | **Cost** | Free (open source) | Paid | Paid | Free |
 | **Databricks Native** | ✓ | ✗ | ✗ | ✗ |
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized MLflow Tracking Workflows**: Using the advanced capabilities of MLflow Tracking to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting MLflow Tracking to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for MLflow Tracking prior to deployment.
+
 ## Exam Tips
 
 - ✅ Understand log_param vs log_metric differences

@@ -374,6 +374,21 @@ champion version and remove the old served model from the endpoint configuration
 > keep the registry and the endpoint in sync. It is also good practice to set a
 > `previous_champion` alias on the old version as a rollback handle before overwriting `champion`.
 
+## Use Cases
+
+- **A/B Testing and Canary Deployments Implementation**: Incorporating A/B Testing and Canary Deployments principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized A/B Testing and Canary Deployments Workflows**: Using the advanced capabilities of A/B Testing and Canary Deployments to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for A/B Testing and Canary Deployments do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for A/B Testing and Canary Deployments to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting A/B Testing and Canary Deployments to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for A/B Testing and Canary Deployments prior to deployment.
+
 ## Related Topics
 
 - [Model Serving & Deployment](02-model-serving-deployment.md)

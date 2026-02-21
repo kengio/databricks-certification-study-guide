@@ -400,6 +400,21 @@ service principals.
 > Dots in the name format `catalog.schema.model` are only interpreted correctly when the UC
 > registry URI is active. Options A, C, and D are all incorrect.
 
+## Use Cases
+
+- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
+- **Optimized Model Versioning and Registry Workflows**: Using the advanced capabilities of Model Versioning and Registry to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Artifact Access Denied
+**Scenario:** Models fail to load from MLflow registry during serving.
+**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Model Versioning and Registry to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Versioning and Registry prior to deployment.
+
 ## Related Topics
 
 - [Model Serving & Deployment](02-model-serving-deployment.md)

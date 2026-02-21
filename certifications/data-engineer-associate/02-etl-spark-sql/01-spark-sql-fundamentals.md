@@ -261,3 +261,19 @@ SELECT id, amount FROM new_sales
 ---
 
 **[← Back to ETL with Spark SQL](README.md)**
+
+## Use Cases
+
+- **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
+- **Optimized Spark SQL Fundamentals Workflows**: Using the advanced capabilities of Spark SQL Fundamentals to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. OOM Errors
+**Scenario:** Data skew causes an executor to run out of memory.
+**Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Spark SQL Fundamentals to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Spark SQL Fundamentals prior to deployment.
+

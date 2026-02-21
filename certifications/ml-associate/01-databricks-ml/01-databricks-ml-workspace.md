@@ -295,6 +295,21 @@ display(df.limit(10))
 df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 ```text
 
+## Use Cases
+
+- **Databricks ML Workspace & Notebooks Implementation**: Incorporating Databricks ML Workspace & Notebooks principles to build scalable and maintainable solutions in Databricks environments.
+- **Optimized Databricks ML Workspace & Notebooks Workflows**: Using the advanced capabilities of Databricks ML Workspace & Notebooks to automate processes and reduce manual operational overhead.
+
+## Common Issues & Errors
+
+### 1. Configuration Oversights
+**Scenario:** The default settings for Databricks ML Workspace & Notebooks do not scale well with sudden spikes in data volume.
+**Fix:** Explicitly define and tune the configuration parameters for Databricks ML Workspace & Notebooks to handle production-scale workloads.
+
+### 2. Integration Bottlenecks
+**Scenario:** Connecting Databricks ML Workspace & Notebooks to other downstream components results in unexpected failures.
+**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks ML Workspace & Notebooks prior to deployment.
+
 ## Exam Tips
 
 - ✅ Understand workspace hierarchy: workspace → folders → notebooks
