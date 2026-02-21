@@ -1,9 +1,5 @@
 # Mock Exam 2 - Section 7: Lakeflow Pipelines & Performance (Questions 58-60)
 
-[Back to Exam Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md)
-
----
-
 ## Lakeflow Pipelines & Performance
 
 ### Question 58

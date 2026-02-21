@@ -1,9 +1,5 @@
 # Practice Questions - Section 03: Data Modeling (15%)
 
-[Back to Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
-
----
-
 ## Question 3.1: Medallion Architecture
 
 **Scenario**: A data architect is designing a lakehouse. Raw JSON data needs to be ingested, cleaned, and then aggregated.

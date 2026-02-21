@@ -1,9 +1,5 @@
 # Practice Questions - Section 08: Performance Optimization (5%)
 
-[Back to Overview](./README.md) | [Previous: Lakeflow Pipelines](07-lakeflow-pipelines.md)
-
----
-
 ## Question 8.1: OPTIMIZE and ZORDER
 
 **Scenario**: A table frequently filters on `region` and `date` columns. Small files are causing performance issues.

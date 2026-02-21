@@ -1,9 +1,5 @@
 # Mock Exam - Section 4: Security & Governance (Questions 40-45)
 
-[Back to Exam Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
-
----
-
 ## Question 40
 
 **Scenario**: A data engineering team needs to grant a group of analysts SELECT access to all tables in a schema, including tables that will be created in the future.

@@ -1,9 +1,5 @@
 # Mock Exam 2 - Section 3: Data Modeling (Questions 31-39)
 
-[Back to Exam Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
-
----
-
 ## Question 31
 
 **Scenario**: A logistics company ingests GPS telemetry data from delivery trucks into a Bronze table. The data arrives as raw JSON with minimal structure issues. The analytics team needs a Gold table that provides real-time aggregated metrics such as average speed per route and delivery time percentiles. The Silver layer would only perform minor formatting (e.g., timestamp parsing) with no significant cleansing or joins required.

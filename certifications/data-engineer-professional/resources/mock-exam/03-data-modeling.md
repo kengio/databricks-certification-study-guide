@@ -1,9 +1,5 @@
 # Mock Exam - Section 3: Data Modeling (Questions 31-39)
 
-[Back to Exam Overview](./README.md) | [Previous: Databricks Tooling](02-databricks-tooling.md) | [Next: Security & Governance](04-security-governance.md)
-
----
-
 ## Question 31
 
 **Scenario**: A retail company is implementing the medallion architecture. Raw point-of-sale data arrives as JSON files with nested structures containing transaction details and line items.

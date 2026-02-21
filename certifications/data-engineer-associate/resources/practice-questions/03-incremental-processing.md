@@ -1,9 +1,5 @@
 # Domain 3: Incremental Data Processing
 
-[Back to Practice Questions](./README.md) | [Prev: ELT with Spark SQL and Python](02-elt-spark-sql-python.md) | [Next: Production Pipelines](04-production-pipelines.md)
-
----
-
 ## Question 1: COPY INTO Idempotency
 
 **Question**: Every day, a data engineer runs a command to transfer the previous day's sales data into a `transactions` table. Today, after running the command, the record count remains unchanged. Why were no new records copied?

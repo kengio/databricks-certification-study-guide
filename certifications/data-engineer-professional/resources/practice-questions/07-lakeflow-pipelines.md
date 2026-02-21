@@ -1,9 +1,5 @@
 # Practice Questions - Section 07: Lakeflow Pipelines (5%)
 
-[Back to Overview](./README.md) | [Previous: Testing & Deployment](06-testing-deployment.md) | [Next: Performance Optimization](08-performance-optimization.md)
-
----
-
 ## Question 7.1: Streaming Table vs Materialized View
 
 **Scenario**: A DLT pipeline needs a table that aggregates daily sales totals from a streaming source.

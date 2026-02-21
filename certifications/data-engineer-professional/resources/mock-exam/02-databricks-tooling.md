@@ -1,9 +1,5 @@
 # Mock Exam - Section 2: Databricks Tooling (Questions 19-30)
 
-[Back to Exam Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
-
----
-
 ## Question 19
 
 **Scenario**: A data engineer is creating a notebook that should accept runtime parameters for the environment (dev, staging, prod) and a date range. The notebook will be called both interactively during development and by a scheduled job.

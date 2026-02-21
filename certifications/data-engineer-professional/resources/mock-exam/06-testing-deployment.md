@@ -1,9 +1,5 @@
 # Mock Exam - Section 6: Testing & Deployment (Questions 52-57)
 
-[Back to Exam Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)
-
----
-
 ## Question 52
 
 **Scenario**: A data engineering team is setting up Databricks Asset Bundles (DAB) for their project. They need separate configurations for development, staging, and production environments.

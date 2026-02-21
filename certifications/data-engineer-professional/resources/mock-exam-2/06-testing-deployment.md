@@ -1,9 +1,5 @@
 # Mock Exam 2 - Section 6: Testing & Deployment (Questions 52-57)
 
-[Back to Exam Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow & Performance](07-lakeflow-performance.md)
-
----
-
 ## Question 52
 
 **Scenario**: A data engineering team maintains a `databricks.yml` bundle configuration. The root-level resources section defines a job with `max_concurrent_runs: 1` and a cluster with `num_workers: 2`. The `targets.production` section redefines the same job with `max_concurrent_runs: 4` but does not specify `num_workers`.

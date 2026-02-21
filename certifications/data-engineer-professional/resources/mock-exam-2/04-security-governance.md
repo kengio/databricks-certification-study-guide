@@ -1,9 +1,5 @@
 # Mock Exam 2 - Section 4: Security & Governance (Questions 40-45)
 
-[Back to Exam Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
-
----
-
 ## Question 40
 
 **Scenario**: Your organization recently purchased a second Databricks workspace for a newly acquired subsidiary. The platform team attaches this new workspace to the existing Unity Catalog metastore that the parent company already uses. Before the attachment, the subsidiary's workspace relied on a legacy Hive metastore with several hundred tables.

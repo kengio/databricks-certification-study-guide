@@ -1,9 +1,5 @@
 # Mock Exam 2 - Section 5: Monitoring & Logging (Questions 46-51)
 
-[Back to Exam Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
-
----
-
 ## Question 46
 
 **Scenario**: A production Spark job processing customer transaction data is intermittently failing with `java.lang.OutOfMemoryError: Java heap space` on executor nodes. The data engineer opens the Spark UI to investigate and notices that the job has multiple `.cache()` calls on large DataFrames that persist across several stages. The Storage tab shows several cached RDDs consuming the majority of available executor memory.

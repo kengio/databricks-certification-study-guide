@@ -1,9 +1,5 @@
 # Domain 1: Databricks Lakehouse Platform
 
-[Back to Practice Questions](./README.md) | [Next: ELT with Spark SQL and Python](02-elt-spark-sql-python.md)
-
----
-
 ## Question 1: Lakehouse as a Unified Source of Truth
 
 **Question**: A leader in data organization is frustrated because the reports from the data analysis team differ from those of the data engineering team. How might a data lakehouse resolve this issue?

@@ -1,9 +1,5 @@
 # Domain 5: Data Governance
 
-[Back to Practice Questions](./README.md) | [Prev: Production Pipelines](04-production-pipelines.md)
-
----
-
 ## Question 1: Git Operations Outside Databricks Repos
 
 **Question**: Which Git operations need to be completed outside of Databricks Repos?

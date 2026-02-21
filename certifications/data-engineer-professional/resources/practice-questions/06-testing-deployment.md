@@ -1,9 +1,5 @@
 # Practice Questions - Section 06: Testing & Deployment (10%)
 
-[Back to Overview](./README.md) | [Previous: Monitoring & Logging](05-monitoring-logging.md) | [Next: Lakeflow Pipelines](07-lakeflow-pipelines.md)
-
----
-
 ## Question 6.1: Databricks Asset Bundles
 
 **Scenario**: A team needs to deploy the same pipeline to dev, staging, and production environments.

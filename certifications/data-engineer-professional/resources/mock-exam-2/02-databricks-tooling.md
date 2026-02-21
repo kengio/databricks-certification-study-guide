@@ -1,9 +1,5 @@
 # Mock Exam 2 - Section 2: Databricks Tooling (Questions 19-30)
 
-[Back to Exam Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
-
----
-
 ## Question 19
 
 **Scenario**: A data engineering team builds a notebook that generates reports for different business units. The notebook must allow users to select a business unit from a predefined list when running interactively, and the same notebook must accept the business unit as a parameter when triggered by a scheduled job. The engineer uses `dbutils.widgets.dropdown("business_unit", "finance", ["finance", "marketing", "operations", "engineering"])` to create the parameter.

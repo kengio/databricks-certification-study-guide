@@ -1,9 +1,5 @@
 # Mock Exam - Section 1: Data Processing (Questions 1-18)
 
-[Back to Exam Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
-
----
-
 ## Question 1
 
 **Scenario**: A data engineering team is building an ingestion pipeline that reads JSON files from cloud storage. The source system occasionally adds new fields to the JSON schema without notice. The team needs to automatically capture all fields while maintaining schema consistency in the Delta table.

@@ -1,9 +1,5 @@
 # Mock Exam - Section 5: Monitoring & Logging (Questions 46-51)
 
-[Back to Exam Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
-
----
-
 ## Question 46
 
 **Scenario**: A cost analyst needs to identify which jobs consumed the most DBUs last month to optimize spending.

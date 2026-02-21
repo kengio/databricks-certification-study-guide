@@ -1,9 +1,5 @@
 # Practice Questions - Section 01: Data Processing (30%)
 
-[Back to Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
-
----
-
 ## Question 1.1: Auto Loader Schema Evolution
 
 **Scenario**: A data engineering team ingests JSON files from cloud storage using Auto Loader. New fields are occasionally added to the source data.

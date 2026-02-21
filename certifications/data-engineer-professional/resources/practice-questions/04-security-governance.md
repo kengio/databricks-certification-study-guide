@@ -1,9 +1,5 @@
 # Practice Questions - Section 04: Security & Governance (10%)
 
-[Back to Overview](./README.md) | [Previous: Data Modeling](03-data-modeling.md) | [Next: Monitoring & Logging](05-monitoring-logging.md)
-
----
-
 ## Question 4.1: Unity Catalog Permission Inheritance
 
 **Scenario**: A user is granted SELECT on a schema in Unity Catalog.

@@ -1,9 +1,5 @@
 # Mock Exam 2 - Section 1: Data Processing (Questions 1-18)
 
-[Back to Exam Overview](./README.md) | [Next: Databricks Tooling](02-databricks-tooling.md)
-
----
-
 ## Question 1
 
 **Scenario**: A data engineering team ingests millions of small JSON files per day from a cloud storage landing zone. The files are uploaded by thousands of IoT devices. Using Auto Loader with directory listing mode, the pipeline takes over 40 minutes just to discover new files before any processing begins.

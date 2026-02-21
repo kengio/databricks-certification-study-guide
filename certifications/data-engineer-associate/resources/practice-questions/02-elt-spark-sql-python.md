@@ -1,9 +1,5 @@
 # Domain 2: ELT with Spark SQL and Python
 
-[Back to Practice Questions](./README.md) | [Prev: Lakehouse Platform](01-lakehouse-platform.md) | [Next: Incremental Processing](03-incremental-processing.md)
-
----
-
 ## Question 1: DELETE Syntax
 
 **Question**: Which code block will delete rows from the Delta table `my_table` where the `age` column value exceeds 25?

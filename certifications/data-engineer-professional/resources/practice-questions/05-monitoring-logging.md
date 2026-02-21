@@ -1,9 +1,5 @@
 # Practice Questions - Section 05: Monitoring & Logging (10%)
 
-[Back to Overview](./README.md) | [Previous: Security & Governance](04-security-governance.md) | [Next: Testing & Deployment](06-testing-deployment.md)
-
----
-
 ## Question 5.1: System Tables
 
 **Scenario**: A data engineer needs to track compute costs by team over the past month.

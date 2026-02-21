@@ -1,9 +1,5 @@
 # Practice Questions - Section 02: Databricks Tooling (20%)
 
-[Back to Overview](./README.md) | [Previous: Data Processing](01-data-processing.md) | [Next: Data Modeling](03-data-modeling.md)
-
----
-
 ## Question 2.1: dbutils.widgets
 
 **Scenario**: A notebook needs to accept a date parameter that defaults to yesterday's date when not provided.
