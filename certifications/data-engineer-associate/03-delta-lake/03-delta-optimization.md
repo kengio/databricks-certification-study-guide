@@ -434,7 +434,7 @@ print("Optimization complete!")
 spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **OPTIMIZE**: Compact small files into larger ones for faster scans
 - **Z-order**: Index columns for better query performance on filters

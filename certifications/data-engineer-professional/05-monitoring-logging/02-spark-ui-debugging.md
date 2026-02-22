@@ -545,11 +545,22 @@ Spark History Server:
 9. **Straggler tasks** - Often indicate data skew
 10. **Driver vs Executor OOM** - Different causes and solutions
 
+## Key Takeaways
+
+- **Job-Stage-Task hierarchy**: Each Spark action creates a Job; shuffle boundaries create Stage splits; each partition creates one Task.
+- **Exchange = Shuffle**: Every `Exchange` node in a physical plan represents a full network shuffle and is a primary performance cost.
+- **Skew detection**: A straggler task with a much longer duration than its peers and a much larger input size indicates data skew in that partition.
+- **Spill is a red flag**: Any non-zero `Spill (Disk)` in stage details indicates memory pressure and usually requires increasing partitions or executor memory.
+- **GC overhead threshold**: GC time above 10% of total executor time indicates memory pressure; above 20% is critical and likely causes instability.
+- **AQE helps at runtime**: Adaptive Query Execution can automatically handle skew joins, coalesce small shuffle partitions, and switch join strategies based on actual data sizes.
+- **Broadcast vs SortMergeJoin**: `BroadcastHashJoin` eliminates the shuffle for the small side; `SortMergeJoin` requires a shuffle on both sides — always prefer broadcast for small tables.
+- **OOM types differ**: Driver OOM is caused by collecting too much data (avoid `df.collect()`); Executor OOM requires increasing `spark.executor.memoryOverhead` or reducing per-partition data.
+
 ## Related Topics
 
 - [Query Profiler](04-query-profiler.md) - Query plan analysis
 - [Performance Optimization](../08-performance-optimization/03-spark-tuning.md) - Tuning strategies
-- [Structured Streaming](../01-data-processing/03-structured-streaming.md) - Streaming UI
+- [Structured Streaming](../01-data-processing/03-structured-streaming-part1.md) - Streaming UI
 
 ## Official Documentation
 

@@ -476,7 +476,7 @@ Ports required:
   - 32000-32010: Driver communication (JDBC/ODBC)
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **JDBC**: Java applications and tools like Tableau, Qlik
 - **ODBC**: Legacy tools, Excel, Power BI, SQL Server

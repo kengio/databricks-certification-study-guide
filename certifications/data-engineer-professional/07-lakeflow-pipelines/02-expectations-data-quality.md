@@ -39,7 +39,7 @@ flowchart TB
     Metrics --> EventLog
 ```
 
-![DLT Data Quality Metrics](../../../../../images/databricks-ui/dlt/dlt_data_quality_metrics.png)
+![DLT Data Quality Metrics](../../../images/databricks-ui/dlt/dlt_data_quality_metrics.png)
 
 *DLT pipeline graph showing expectation pass, fail, and drop row counts per table.*
 
@@ -605,6 +605,17 @@ CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 8. **Constraint names** - Appear in event log and error messages
 9. **Aggregate expectations** - Use on materialized views for summary validation
 10. **Layered approach** - Light validation in bronze, strict in silver/gold
+
+## Key Takeaways
+
+- **Three expectation actions**: `EXPECT` (warn and keep), `ON VIOLATION DROP ROW` (drop and log), `ON VIOLATION FAIL UPDATE` (halt the pipeline) — choose based on the criticality of the business rule.
+- **Python decorators**: `@dlt.expect()`, `@dlt.expect_or_drop()`, and `@dlt.expect_or_fail()` are the Python equivalents; `@dlt.expect_all()`, `@dlt.expect_all_or_drop()`, and `@dlt.expect_all_or_fail()` accept a dictionary of constraints.
+- **Expectations are logged**: Pass and fail counts for each constraint are recorded in the pipeline event log inside `flow_progress` events — views do NOT log expectation metrics, only tables do.
+- **NULL handling trap**: In SQL, `NULL > 0` evaluates to `NULL` (not `false`), so `EXPECT (amount > 0)` silently passes for NULL amounts; always check `IS NOT NULL AND amount > 0`.
+- **Quarantine pattern**: Use `EXPECT OR DROP` on the main Silver table and a complementary filter (`WHERE NOT (condition)`) on a quarantine table to capture rejected records for review.
+- **Layered quality approach**: Apply minimal expectations in Bronze (schema only), strict drop/fail rules in Silver (required fields and business rules), and aggregate completeness checks in Gold.
+- **Constraint names in event log**: The constraint name (e.g., `valid_order_id`) appears in both the event log and error messages — use descriptive names for easier monitoring and alerting.
+- **Aggregate expectations on MVs**: Expectations can be applied to Materialized Views to enforce summary-level rules like "order count must be > 0" for each date partition.
 
 ## Related Topics
 

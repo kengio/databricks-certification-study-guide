@@ -398,7 +398,7 @@ CREATE EXTERNAL LOCATION location_name
 CREATE METASTORE ASSIGNMENT catalog_name
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Unity Catalog**: Centralized governance across Databricks platform
 - **Metastore**: Root container (per region, per organization)

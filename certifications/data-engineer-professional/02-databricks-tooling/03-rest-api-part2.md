@@ -295,11 +295,22 @@ if cluster.state != "RUNNING":
 9. **Error codes** - RESOURCE_DOES_NOT_EXIST, INVALID_PARAMETER_VALUE common
 10. **SDK vs REST** - SDK handles pagination, retries automatically
 
+## Key Takeaways
+
+- **Jobs API version**: the Jobs API is v2.1; most other APIs (clusters, workspace, DBFS, permissions) are v2.0
+- **`run-now` vs `submit`**: `POST /api/2.1/jobs/run-now` triggers an existing persistent job; `POST /api/2.1/jobs/runs/submit` creates a one-time run that does not persist as a job
+- **Job run lifecycle**: PENDING → RUNNING → TERMINATED; result states are SUCCESS, FAILED, TIMEDOUT, or CANCELED
+- **Authentication header**: `Authorization: Bearer <token>`; tokens must start with `dapi` for Personal Access Tokens
+- **HTTP status codes**: 400 (bad request / invalid parameters), 401 (unauthorized), 403 (forbidden / permission denied), 404 (resource not found), 429 (rate limited)
+- **Rate limiting**: default is ~100 requests/minute; handle 429 responses with exponential backoff; the SDK handles retries automatically
+- **Databricks SDK for Python** (`WorkspaceClient`) wraps REST calls and handles pagination, retries, and authentication automatically — preferred over raw `curl` for scripting
+- **Permission levels differ by resource**: Jobs use CAN_VIEW / CAN_MANAGE_RUN / IS_OWNER; clusters use CAN_ATTACH_TO / CAN_RESTART / CAN_MANAGE; notebooks use CAN_READ / CAN_RUN / CAN_EDIT / CAN_MANAGE
+
 ## Related Topics
 
 - [Databricks CLI — Part 1](02-databricks-cli-part1.md) - CLI wraps REST API
-- [CI/CD Integration](../06-testing-deployment/02-cicd-integration.md) - API in pipelines
-- [Asset Bundles](../06-testing-deployment/01-asset-bundles.md) - IaC for Databricks
+- [CI/CD Integration](../06-testing-deployment/02-cicd-integration-part1.md) - API in pipelines
+- [Asset Bundles](../06-testing-deployment/01-asset-bundles-part1.md) - IaC for Databricks
 
 ## Official Documentation
 

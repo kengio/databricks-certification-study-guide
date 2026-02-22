@@ -461,6 +461,16 @@ unfairly skew latency comparisons.
 **Scenario:** Connecting Model Serving and Deployment to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Serving and Deployment prior to deployment.
 
+## Key Takeaways
+
+- **Three deployment modes**: REST endpoint (<500 ms, real-time), batch `spark_udf` (distributed, minutes, high throughput), streaming UDF (seconds, continuous)
+- **Scale-to-zero cold start**: `scale_to_zero_enabled=True` saves idle cost but introduces 60–120 s latency on first post-idle request — disable for latency-sensitive endpoints
+- **`spark_udf` vs `load_model().predict()`**: `spark_udf()` runs on executors (distributed); `.predict()` runs on the driver — use `.predict()` only on small DataFrames
+- **Payload formats**: `dataframe_records` (list of row dicts) or `dataframe_split` (column names + rows array) — not `"inputs"` or `"records"`
+- **Custom pyfunc**: `load_context()` called once at load time for initialization; `predict()` receives and returns a pandas DataFrame or Series
+- **Workload sizes**: SMALL (4 vCPUs / 16 GB), MEDIUM (8/32), LARGE (16/64)
+- **Endpoint states to recognize**: READY, UPDATING (old config still serves), FAILED (model load error), NOT_READY (first provision)
+
 ## Related Topics
 
 - [Model Versioning & Registry](01-model-versioning-registry.md)

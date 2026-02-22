@@ -444,7 +444,7 @@ Dashboards/
     └── Supply Chain
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Dashboard**: Collection of visualizations with interactivity
 - **Widgets**: Individual components (KPI, chart, table, text)

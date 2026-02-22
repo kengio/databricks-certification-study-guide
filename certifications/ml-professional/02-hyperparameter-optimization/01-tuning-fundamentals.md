@@ -415,7 +415,7 @@ pipeline = Pipeline(stages=[
 
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - Grid Search exhaustive but slow for high dimensions
 - Random Search more efficient in high-dimensional spaces
@@ -469,7 +469,6 @@ pipeline = Pipeline(stages=[
 
 - [Bayesian Optimization](02-bayesian-optimization.md)
 - [Distributed Tuning](03-distributed-tuning.md)
-- [AutoML Strategies](04-automl-strategies.md)
 
 ---
 

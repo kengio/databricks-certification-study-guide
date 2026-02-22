@@ -409,6 +409,17 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 | Kafka `maxOffsetsPerTrigger` | 10K-1M depending on message size |
 | Auto Loader `maxFilesPerTrigger` | 100-10K depending on file size |
 
+## Key Takeaways
+
+- **Trigger selection governs latency and cost**: `processingTime("10 seconds")` gives near real-time latency at higher cost; `availableNow()` processes all backlog then stops, ideal for catch-up after outages.
+- **Watermarks prevent unbounded state**: Any stateful operation (`groupBy` with window, `dropDuplicates`, stream-stream join) must use `withWatermark()` to bound how long late data is accepted and state is retained.
+- **RocksDB for large state**: Switch to `RocksDBStateStoreProvider` for stateful streaming queries with large state (millions of keys) to avoid JVM heap pressure from the default in-memory state store.
+- **Never delete checkpoints**: Deleting a checkpoint breaks exactly-once semantics and forces reprocessing from the beginning — only delete deliberately when changing incompatible query logic.
+- **Auto Loader notification mode**: Set `cloudFiles.useNotifications = true` for directories with many files (> 10,000) to use cloud event notifications instead of periodic full directory listings for file discovery.
+- **maxOffsetsPerTrigger for Kafka**: Control micro-batch size and prevent consumer lag from overloading executors by setting `maxOffsetsPerTrigger`; similarly use `cloudFiles.maxBytesPerTrigger` for Auto Loader.
+- **128 MB streaming file target**: Enable `delta.autoOptimize.optimizeWrite = true` and `delta.autoOptimize.autoCompact = true` on streaming output Delta tables to prevent accumulation of tiny micro-batch files.
+- **Backpressure detection**: If `batchDuration` consistently exceeds the trigger interval or `processedRowsPerSecond` falls below `inputRowsPerSecond`, the stream has a backpressure problem requiring source rate limiting or cluster scaling.
+
 ---
 
 **[← Previous: Photon, Diagnostics & Query Optimization — Part 2](./06-photon-diagnostics-optimization-part2.md) | [↑ Back to Performance Optimization](./README.md)**

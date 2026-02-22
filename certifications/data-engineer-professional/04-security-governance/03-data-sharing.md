@@ -593,6 +593,17 @@ WITH PARTITION (region = 'US');
 9. **Token rotation** - ALTER RECIPIENT ... ROTATE TOKEN
 10. **Cross-cloud** - Works across AWS, Azure, GCP
 
+## Key Takeaways
+
+- **Delta Sharing is an open protocol**: data never moves — the consumer reads directly from the provider's storage via a REST API using a bearer token; no data duplication occurs
+- **Share components**: a Share is a named collection of tables/schemas; a Recipient is an entity authorized to access a share; access is granted with `GRANT SELECT ON SHARE <share> TO RECIPIENT <recipient>`
+- **Recipient types**: Databricks-to-Databricks sharing uses a cloud identifier (`USING ID`); open sharing for non-Databricks clients generates a credential `.share` JSON file with a bearer token
+- **Partition filtering in shares**: `ALTER SHARE ... ADD TABLE ... WITH PARTITION (col = 'value')` restricts the recipient to only seeing the matching partition — used for multi-tenant or regional data isolation
+- **History sharing**: `ALTER SHARE ... ADD TABLE ... WITH HISTORY` lets recipients query historical versions and change data feed (`VERSION AS OF`, `table_changes()`)
+- **Consumer workflow (Databricks-to-Databricks)**: consumer creates a catalog from the share with `CREATE CATALOG ... USING SHARE provider.share_name` and then queries it like any other catalog
+- **Token rotation**: `ALTER RECIPIENT ... ROTATE TOKEN` regenerates the bearer token for open sharing recipients; useful for security rotation without removing and recreating the recipient
+- **Audit trail**: sharing activity is logged in `system.access.audit` with `action_name LIKE '%Share%'` and `action_name = 'deltaSharingQueryTable'` for recipient query tracking
+
 ## Related Topics
 
 - [Unity Catalog](01-unity-catalog.md) - Governance foundation

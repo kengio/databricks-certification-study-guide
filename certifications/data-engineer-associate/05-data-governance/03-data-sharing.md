@@ -481,7 +481,7 @@ GROUP BY recipient_name, share_name, object_accessed
 ORDER BY query_count DESC;
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Delta Sharing**: Protocol for sharing without copying data
 - **Provider**: Databricks workspace that creates shares

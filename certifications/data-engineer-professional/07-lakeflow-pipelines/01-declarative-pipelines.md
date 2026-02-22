@@ -29,7 +29,7 @@ flowchart TB
     Execute --> Output
 ```
 
-![DLT Pipeline DAG View](../../../../../images/databricks-ui/dlt/dlt_pipeline_graph.png)
+![DLT Pipeline DAG View](../../../images/databricks-ui/dlt/dlt_pipeline_graph.png)
 
 *DLT pipeline DAG showing Bronze → Silver → Gold data flow between tables.*
 
@@ -394,11 +394,11 @@ def mv_from_jdbc():
 
 ## Pipeline Configuration
 
-![DLT Pipeline Settings](../../../../../images/databricks-ui/dlt/dlt_pipeline_settings.png)
+![DLT Pipeline Settings](../../../images/databricks-ui/dlt/dlt_pipeline_settings.png)
 
 *DLT pipeline settings panel showing target schema, development mode, and trigger type.*
 
-![DLT Cluster Autoscale](../../../../../images/databricks-ui/dlt/dlt_cluster_autoscale.png)
+![DLT Cluster Autoscale](../../../images/databricks-ui/dlt/dlt_cluster_autoscale.png)
 
 *DLT pipeline cluster settings showing enhanced autoscaling configuration.*
 
@@ -718,6 +718,17 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 8. **Full refresh** - Clears checkpoints and reprocesses all data
 9. **dlt.read() vs dlt.read_stream()** - Batch vs streaming reads
 10. **Pipeline configuration** - Stored in databricks.yml or pipeline settings
+
+## Key Takeaways
+
+- **Three table types**: Streaming Tables process data incrementally and maintain checkpoints; Materialized Views fully recompute on each run; Views are temporary and store nothing.
+- **LIVE keyword**: Reference other DLT tables using the `LIVE.table_name` prefix in SQL; without it the reference resolves to an external table instead of the pipeline dataset.
+- **STREAM function in SQL**: Use `STREAM(LIVE.table_name)` to read from an upstream Streaming Table as a streaming source in SQL syntax.
+- **Auto Loader integration**: Use `cloud_files()` in SQL or `spark.readStream.format("cloudFiles")` in Python for incremental file ingestion into Bronze Streaming Tables.
+- **Continuous vs Triggered**: Continuous mode (`continuous: true`) keeps the cluster always running for near real-time latency; Triggered mode (`continuous: false`) processes available data in a batch and terminates.
+- **Development mode**: Setting `development: true` uses a single-node cluster, stops the pipeline on errors for easier debugging, and outputs to a dev-specific target schema.
+- **Full refresh**: Running with `--full-refresh` clears all checkpoints and state, forcing complete reprocessing from source — required after schema changes or data corruption.
+- **Schema evolution modes**: `addNewColumns` (default), `rescue` (puts unknowns in `_rescued_data`), `failOnNewColumns`, and `none` control how Auto Loader handles source schema changes.
 
 ## Related Topics
 

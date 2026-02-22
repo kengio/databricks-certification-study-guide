@@ -500,7 +500,7 @@ for run in runs:
     print(f"Run {run['run_id']}: {run['state']} - {run['start_time']}")
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Run Status**: PENDING, RUNNING, SUCCESS, FAILED, TIMEOUT, SKIPPED
 - **Logs**: Access via UI or API; contain execution details

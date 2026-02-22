@@ -273,6 +273,16 @@ Fine-tuning workflow:
 **Scenario:** Connecting Mosaic AI & Foundation Models to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Mosaic AI & Foundation Models prior to deployment.
 
+## Key Takeaways
+
+- **Foundation Model API**: Databricks-hosted LLMs and embedding models — no cluster provisioning; uses OpenAI-compatible API
+- **Pay-per-token**: variable, usage-based pricing — suitable for development and unpredictable traffic workloads
+- **Provisioned throughput**: reserved tokens-per-minute capacity with guaranteed SLA — required for production latency commitments
+- **AI Gateway (External Models)**: proxies requests to OpenAI, Anthropic, Cohere through a single Databricks-managed endpoint with unified auth, rate limiting, and logging
+- **`mlflow.deployments.get_deploy_client("databricks")`**: client for calling Foundation Model API endpoints programmatically
+- **Open-source models on Databricks**: Llama, DBRX, Mixtral available as Foundation Model API endpoints — no GPU cluster needed
+- **Switching between pay-per-token and provisioned**: change only the endpoint name in your code — the API interface is identical
+
 ---
 
 **[↑ Back to Databricks GenAI Tools](./README.md) | [Next: MLflow for GenAI](./02-mlflow-for-genai.md) →**

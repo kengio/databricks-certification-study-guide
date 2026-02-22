@@ -16,7 +16,7 @@ This part covers triggers and scheduling, compute configuration, notifications, 
 
 ## Triggers and Scheduling
 
-![Workflow Trigger Schedule](../../../../../images/databricks-ui/workflows/workflow_trigger_schedule.png)
+![Workflow Trigger Schedule](../../../images/databricks-ui/workflows/workflow_trigger_schedule.png)
 
 *Databricks Job trigger schedule configuration showing cron, continuous, and file-arrival options.*
 
@@ -236,7 +236,7 @@ tasks:
 
 ## Monitoring and Logging
 
-![Workflow Run Matrix](../../../../../images/databricks-ui/workflows/workflow_run_matrix.png)
+![Workflow Run Matrix](../../../images/databricks-ui/workflows/workflow_run_matrix.png)
 
 *Job run matrix showing historical success and failure status across multiple executions.*
 
@@ -382,11 +382,22 @@ tasks:
 9. **For each** - Parallel processing of array items from upstream task values
 10. **Notifications** - Email and webhook notifications on start, success, and failure
 
+## Key Takeaways
+
+- **Task execution order**: Tasks with no `depends_on` entries run in parallel; `depends_on` enforces sequential execution and the dependency graph must be a DAG (no cycles allowed).
+- **Run conditions**: `ALL_SUCCESS` (default) runs only if all upstream tasks succeed; `AT_LEAST_ONE_FAILED` creates a failure-handler task; `ALL_DONE` runs regardless of upstream outcome.
+- **Task values for inter-task data**: Use `dbutils.jobs.taskValues.set(key, value)` in upstream tasks and `dbutils.jobs.taskValues.get(taskKey, key)` in downstream tasks to share computed values within a run.
+- **Job clusters are cost-effective**: Job clusters are created fresh per run and terminated on completion, costing ~60% less than keeping an All-Purpose cluster running 24/7.
+- **Quartz cron format**: Databricks uses 7-field Quartz cron (includes seconds field); `?` means "no specific value" and is used in day-of-month or day-of-week when the other is specified.
+- **File arrival trigger**: The `file_arrival` trigger starts a job when new files are detected at a cloud storage path, eliminating the need for polling-based scheduling.
+- **Retry configuration**: Set `max_retries` and `min_retry_interval_millis` per task to handle transient failures; `retry_on_timeout: true` retries tasks that exceed `timeout_seconds`.
+- **system.lakeflow tables**: Query `system.lakeflow.job_run_timeline` and `job_task_run_timeline` for programmatic job run history, duration metrics, and result states.
+
 ## Related Topics
 
 - [Declarative Pipelines](./01-declarative-pipelines.md) - DLT pipeline task type
-- [Asset Bundles](../06-testing-deployment/01-asset-bundles.md) - Job deployment via DABs
-- [CI/CD Integration](../06-testing-deployment/02-cicd-integration.md) - Automated deployment
+- [Asset Bundles](../06-testing-deployment/01-asset-bundles-part1.md) - Job deployment via DABs
+- [CI/CD Integration](../06-testing-deployment/02-cicd-integration-part1.md) - Automated deployment
 
 ## Official Documentation
 

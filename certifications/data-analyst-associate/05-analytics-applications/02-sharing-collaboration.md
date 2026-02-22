@@ -453,7 +453,7 @@ Subscribe to Alerts:
   - Query results posted
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Permission levels**: Owner (full), Editor (edit), Viewer (read-only)
 - **Sharing methods**: Direct (users/groups), URL link, email

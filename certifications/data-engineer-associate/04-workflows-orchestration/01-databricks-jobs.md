@@ -483,7 +483,7 @@ flowchart LR
 }
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Job**: Container for scheduled/triggered workloads
 - **Task**: Individual unit of work (notebook, Python, SQL, etc.)

@@ -476,6 +476,16 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 **Scenario:** Connecting RAG Design Patterns to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for RAG Design Patterns prior to deployment.
 
+## Key Takeaways
+
+- **RAG vs fine-tuning**: RAG retrieves knowledge at inference time (weights unchanged, always fresh); fine-tuning bakes knowledge into weights (expensive to update, becomes stale)
+- **HyDE**: generates a hypothetical answer and embeds it to bridge the embedding gap between short queries and long document chunks
+- **Multi-query RAG**: generates multiple query variants, retrieves from each, deduplicates results — improves recall at the cost of latency
+- **Re-ranking**: a cross-encoder re-scores the retrieved candidate set to select the most semantically relevant final chunks
+- **Agentic RAG**: LLM decides whether to call the retrieval tool; tool result is appended as a `tool` role message before the second LLM call
+- **RAG suits**: frequently updated data, large knowledge bases, privacy constraints, auditability requirements
+- **Fine-tuning suits**: changing tone/style, stable knowledge domains, strict latency needs
+
 ---
 
 **[↑ Back to RAG Architecture](./README.md) | [Next: Document Processing & Chunking](./02-document-processing-chunking.md) →**

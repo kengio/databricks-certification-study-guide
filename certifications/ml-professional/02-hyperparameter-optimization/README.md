@@ -33,7 +33,6 @@ flowchart TD
 | [01-tuning-fundamentals.md](01-tuning-fundamentals.md) | Search strategies, trade-offs, objectives | High |
 | [02-bayesian-optimization.md](02-bayesian-optimization.md) | Bayesian methods, acquisition functions, TPE | High |
 | [03-distributed-tuning.md](03-distributed-tuning.md) | Distributed hyperparameter search and XGBoost | High |
-| [04-automl-strategies.md](04-automl-strategies.md) | AutoML, Optuna, hyperband, early stopping | High |
 
 ## Key Concepts
 

@@ -456,7 +456,7 @@ CREATE TABLE production.meta.pii_columns (
 -- Keep unmasked tables for authorized use only
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Authentication**: PAT (programmatic), SSO (enterprise), Service Principals (automation)
 - **Workspace permissions**: User, Advanced User, Admin roles

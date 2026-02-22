@@ -411,6 +411,16 @@ D) The `num_results` parameter is too low to include the new documents
 **Scenario:** Connecting Vector Search in Production to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Vector Search in Production prior to deployment.
 
+## Key Takeaways
+
+- **HNSW algorithm**: Hierarchical Navigable Small World for ANN; `ef_construction` controls index build quality; `ef_search` controls query-time recall vs latency
+- **Higher `ef_search`**: improves recall (returns more accurate nearest neighbors) at the cost of higher query latency
+- **Blue-green re-indexing**: build a new index alongside the live one; redirect traffic only after the new index is fully validated
+- **Monitor QPS and P99 latency**: track via Databricks monitoring dashboards to detect endpoint saturation
+- **Private endpoints**: use Databricks private endpoints or VPC peering to prevent public internet exposure
+- **Metadata filters are pre-search**: applied before vector similarity computation — efficient way to narrow the candidate set
+- **`num_results` tuning**: balance between recall (higher value) and context window cost/LLM latency (lower value)
+
 ---
 
 **[← Previous: Databricks Vector Search](./02-databricks-vector-search.md) | [↑ Back to Vector Search & Embeddings](./README.md)**

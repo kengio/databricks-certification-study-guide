@@ -424,7 +424,7 @@ FROM source s
 FULL OUTER JOIN target t ON s.id = t.id;
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **INNER JOIN**: Only matching rows from both tables
 - **LEFT JOIN**: All left rows + matching right rows

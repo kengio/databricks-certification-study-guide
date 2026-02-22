@@ -458,7 +458,7 @@ Alternative:
 9. **Formatting** - Labels, axis titles, and legends are essential for exam questions about readability
 10. **Time series** - Line charts require a properly ordered time axis; bar charts can misrepresent time sequences
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Bar chart**: Compare categories
 - **Line chart**: Trend over time
@@ -493,7 +493,7 @@ Alternative:
 
 - [Dashboards & Dashboard Design](./01-dashboards.md) - Building dashboards with visualizations
 - [Alerts & Scheduling](./03-alerts-scheduling.md) - Triggering alerts from query results
-- [SQL Query Optimization](../../02-sql-queries/README.md) - Writing efficient queries for charts
+- [SQL Query Optimization](../03-sql-queries/README.md) - Writing efficient queries for charts
 
 ## Official Documentation
 

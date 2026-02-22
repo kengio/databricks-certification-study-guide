@@ -222,7 +222,7 @@ JOIN customers c ON o.customer_id = c.customer_id;
 
 ### SQL Warehouse Query Profile
 
-![SQL Editor Query Profile](../../../../../images/databricks-ui/sql/sql_editor_query_profile.png)
+![SQL Editor Query Profile](../../../images/databricks-ui/sql/sql_editor_query_profile.png)
 
 *Query Profile in the Databricks SQL editor visualizing per-stage execution details.*
 
@@ -491,11 +491,22 @@ SELECT * FROM t1 JOIN t2 ON t1.id = t2.id WHERE t1.x > t2.y;
 9. **WholeStageCodegen** - * prefix means codegen enabled (good)
 10. **Filter early** - Push filters before joins/aggregations
 
+## Key Takeaways
+
+- **EXPLAIN variants**: `EXPLAIN` shows only the physical plan; `EXPLAIN EXTENDED` shows all four plan stages; `EXPLAIN FORMATTED` gives a structured, readable output; `EXPLAIN COST` shows optimizer statistics.
+- **Exchange = Shuffle**: Every `Exchange` node in a query plan is a full network shuffle — reducing Exchange nodes is the highest-impact query optimization.
+- **PartitionFilters vs DataFilters**: `PartitionFilters` in the `FileScan` node means partition directories are pruned (skipped entirely); `DataFilters` are applied after reading data from files.
+- **Predicate pushdown**: `PushedFilters` in the `FileScan` node means predicates are pushed into the Parquet/Delta reader to filter rows during the scan, before data enters Spark memory.
+- **Join cost ranking**: `BroadcastHashJoin` (best) < `SortMergeJoin` < `ShuffledHashJoin` < `BroadcastNestedLoopJoin` < `CartesianProduct` (worst).
+- **WholeStageCodegen**: An asterisk (`*`) prefix on a plan operator means WholeStageCodegen is active, which fuses multiple operators into a single compiled function for better performance.
+- **AQE at runtime**: Adaptive Query Execution re-optimizes the remaining plan after each shuffle stage using actual runtime statistics, enabling dynamic join strategy switching and partition coalescing.
+- **ANALYZE TABLE**: Running `ANALYZE TABLE ... COMPUTE STATISTICS FOR COLUMNS` gives the Cost-Based Optimizer accurate row counts and column histograms, enabling better join ordering and broadcast decisions.
+
 ## Related Topics
 
 - [Spark UI Debugging](02-spark-ui-debugging.md) - Runtime analysis
 - [Performance Optimization](../08-performance-optimization/03-spark-tuning.md) - Tuning strategies
-- [Delta Lake Operations](../01-data-processing/06-delta-lake-operations.md) - Data skipping
+- [Delta Lake Operations](../01-data-processing/06-delta-lake-operations-part1.md) - Data skipping
 
 ## Official Documentation
 

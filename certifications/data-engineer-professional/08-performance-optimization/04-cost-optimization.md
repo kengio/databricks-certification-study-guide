@@ -570,11 +570,22 @@ dev_cluster:
 9. **Spot configuration** - Driver on-demand, workers spot
 10. **Schedule optimization** - Run during off-peak hours
 
+## Key Takeaways
+
+- **Job clusters are ~60% cheaper**: Automated Job clusters charge a lower DBU rate than All-Purpose clusters and terminate automatically after each run — always use them for scheduled production workloads.
+- **Spot instances save up to 90%**: Use `SPOT_WITH_FALLBACK` for worker nodes and keep the driver node On-Demand to balance cost savings with reliability against spot interruptions.
+- **system.billing.usage for cost analysis**: Query `system.billing.usage` joined with `system.billing.list_prices` to calculate actual estimated costs per workspace, SKU, or custom tag.
+- **Auto-termination for dev clusters**: Set `autotermination_minutes: 30` on All-Purpose clusters used for development to prevent idle clusters from accumulating costs overnight.
+- **Instance pools reduce startup**: Pre-provisioned instance pools eliminate the cold-start delay for job clusters while keeping instances warm, reducing startup time from minutes to seconds.
+- **Serverless trade-off**: Serverless compute has a higher per-DBU rate but charges only for actual execution time with zero cluster management — cost-effective for highly variable or infrequent workloads.
+- **Right-sizing process**: Check Spark UI executor utilization; if executors are consistently below 50% utilized, reduce worker count or switch to a smaller instance type.
+- **Custom tags for chargebacks**: Apply `custom_tags` to clusters and workspaces so `system.billing.usage` can be queried by team or project for automated departmental chargeback reports.
+
 ## Related Topics
 
 - [Databricks Compute](../02-databricks-tooling/04-databricks-compute.md) - Cluster types
 - [System Tables](../05-monitoring-logging/01-system-tables.md) - Usage monitoring
-- [Asset Bundles](../06-testing-deployment/01-asset-bundles.md) - Job configuration
+- [Asset Bundles](../06-testing-deployment/01-asset-bundles-part1.md) - Job configuration
 
 ## Official Documentation
 

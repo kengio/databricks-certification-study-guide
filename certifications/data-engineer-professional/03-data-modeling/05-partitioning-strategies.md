@@ -671,6 +671,17 @@ OPTIMIZE orders ZORDER BY (customer_id);  -- If filtering by customer
 9. **File size target** - 128 MB - 1 GB for most workloads
 10. **Partition evolution** - Traditional requires rebuild, liquid uses ALTER
 
+## Key Takeaways
+
+- **Partition pruning conditions**: equality (`=`), range (`<`, `>`, `BETWEEN`), and `IN` filters on the partition column enable pruning; applying a function to the column (e.g., `YEAR(date)`) defeats pruning entirely
+- **Partition column cardinality**: low to medium cardinality (hundreds to ~10,000 distinct values) is ideal; high-cardinality columns (user_id, transaction_id, timestamp) create millions of small files and hurt performance
+- **Z-ORDER mechanics**: `OPTIMIZE ... ZORDER BY (col)` co-locates rows with similar values in the same files; this enables Delta data skipping using per-file min/max statistics; effectiveness diminishes beyond 4 columns
+- **Liquid clustering vs partitioning**: Liquid Clustering (`CLUSTER BY`) replaces partitioning + Z-ORDER; clustering columns can be changed with a simple `ALTER TABLE ... CLUSTER BY` without rebuilding the table
+- **Dynamic partition overwrite**: `spark.sql.sources.partitionOverwriteMode = dynamic` causes `mode("overwrite")` to replace only the partitions present in the DataFrame, leaving other partitions untouched
+- **replaceWhere**: `.option("replaceWhere", "<condition>")` on a write restricts the overwrite to matching partitions; a more explicit alternative to dynamic partition overwrite
+- **Small file problem**: streaming and frequent small writes create many small files; solutions are `optimizeWrite=true` (coalesce on write), `autoCompact=true` (compact after write), periodic `OPTIMIZE`, or switching to Liquid Clustering
+- **Target file size**: 128 MB–1 GB for most workloads; streaming targets 64–128 MB; files outside this range degrade either metadata overhead (too small) or read parallelism (too large)
+
 ## Related Topics
 
 - [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - OPTIMIZE and VACUUM

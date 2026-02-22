@@ -349,7 +349,7 @@ testing:
   cost: Minimal
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **SQL Warehouses**: Serverless, managed compute for SQL analytics
 - **Three types**: Pro (default), Classic (legacy), Serverless

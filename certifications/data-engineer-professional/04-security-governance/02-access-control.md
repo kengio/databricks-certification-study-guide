@@ -522,6 +522,17 @@ GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
 9. **Service principals** - Use for automated pipelines
 10. **Masking functions** - Reusable column masking logic
 
+## Key Takeaways
+
+- **Privilege access chain**: a user needs `USE CATALOG` → `USE SCHEMA` → table privilege (e.g., `SELECT`) to query a table; granting `SELECT` without `USE CATALOG`/`USE SCHEMA` results in a permission denied error
+- **Dynamic views for RLS**: create a view with a `WHERE` clause using `current_user()` or `is_account_group_member()`; grant `SELECT` on the view and revoke direct access to the underlying table
+- **current_user() vs is_account_group_member()**: `current_user()` returns the user's email for per-user filtering; `is_account_group_member('group')` checks group membership for role-based filtering inside views and masking functions
+- **Declarative row/column filters**: `ALTER TABLE ... SET ROW FILTER <function> ON (<col>)` and `ALTER TABLE ... ALTER COLUMN <col> SET MASK <function>` attach filters directly to the table — cannot be bypassed by querying the table directly (unlike views)
+- **Column masking patterns**: use `REGEXP_REPLACE`, `CONCAT`, `LEFT`, `RIGHT`, and `NULL` to reveal only last-4-digits, initials, or nothing depending on group membership
+- **MANAGE privilege**: grants the ability to grant/revoke permissions on an object without being the owner; more powerful than data privileges for governance delegation
+- **Audit log table**: `system.access.audit` records all UC access events; filter by `service_name = 'unityCatalog'`, `action_name`, and `event_date` for compliance queries
+- **Schema-level grants**: `GRANT SELECT ON SCHEMA prod.gold TO analysts` applies to all current tables in the schema, not automatically to future tables created after the grant
+
 ## Related Topics
 
 - [Unity Catalog](01-unity-catalog.md) - Governance foundation

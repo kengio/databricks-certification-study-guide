@@ -447,7 +447,7 @@ AND status = 'active';
 | Many columns | Project needed columns only |
 | Duplicates | Add primary key constraint (when possible) |
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Managed tables**: Databricks manages data and metadata; drop removes all
 - **External tables**: Databricks manages metadata; data stays in cloud storage

@@ -439,7 +439,7 @@ SELECT
 FROM events_with_gaps;
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Window function**: Calculation across related rows (no grouping)
 - **PARTITION BY**: Defines groups for window scope

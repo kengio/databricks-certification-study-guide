@@ -705,6 +705,17 @@ D) GRANT OPTION
 
 ---
 
+## Key Takeaways
+
+- **Tag syntax**: table tags use `ALTER TABLE ... SET TAGS ('key' = 'value')`; column tags use `ALTER TABLE ... ALTER COLUMN <col> SET TAGS ('key' = 'value')`; tags are queried via `system.information_schema.table_tags` and `system.information_schema.column_tags`
+- **GDPR right-to-be-forgotten**: `DELETE` alone is not sufficient — Delta Lake keeps old data files for time travel; `VACUUM` must also be run to permanently remove deleted files from storage; `RETAIN 0 HOURS` requires disabling the retention safety check
+- **CCPA data subject requests**: export all records for a data subject using `UNION ALL` across tables filtered by `customer_id`, then deliver to the consumer; deletion follows the same DELETE + VACUUM pattern as GDPR
+- **MANAGE permission**: allows a principal to grant/revoke privileges on an object without being the owner; it is more powerful than data-access privileges for governance delegation
+- **Ownership vs privileges**: owners have full implicit control (SELECT, MODIFY, DROP, ALTER, GRANT, transfer ownership); privilege holders are limited to the specific operations granted to them; only owners can drop objects
+- **GRANT does not auto-cascade to future tables**: granting `SELECT ON SCHEMA prod.gold TO analysts` covers current tables but NOT tables created in the future — future grants must be applied explicitly or at creation time
+- **Group-based access best practice**: always grant to groups rather than individual users; use layered group strategies (role groups + team groups + access-level groups) synced from an identity provider via SCIM
+- **Lineage only works for UC-managed tables**: hive_metastore tables do not generate automatic lineage; migration to Unity Catalog is required to enable lineage tracking
+
 ## Related Topics
 
 - [Unity Catalog](01-unity-catalog.md) - UC basics, hierarchy, metastore, permissions

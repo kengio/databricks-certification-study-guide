@@ -730,6 +730,17 @@ GRANT USE CATALOG ON CATALOG prod TO `data-team`;
 9. **Information schema** - Query metadata via `system.information_schema`
 10. **Lineage** - Automatic, visible in Catalog Explorer
 
+## Key Takeaways
+
+- **Three-level namespace**: every Unity Catalog object is referenced as `catalog.schema.object`; the metastore is one level above the catalog and is scoped to one per cloud region per account
+- **Managed vs external tables**: managed tables store data in the UC-controlled location and `DROP TABLE` deletes the data; external tables store data at a user-specified `LOCATION` and `DROP TABLE` keeps the data
+- **Permission hierarchy**: to access a table, a user must have `USE CATALOG` on the catalog, `USE SCHEMA` on the schema, and then the relevant privilege (e.g., `SELECT`) on the table — missing any level causes permission denied
+- **Volume types**: managed volumes store files in the UC-managed location; external volumes point to a user-controlled cloud path; both are accessed via `/Volumes/<catalog>/<schema>/<volume>/` paths
+- **Storage credentials and external locations**: a storage credential holds the cloud authentication (IAM role / managed identity); an external location maps a cloud storage URL to a credential; external tables and volumes require a matching external location
+- **Dynamic views for row/column security**: `current_user()` and `is_account_group_member()` in view `WHERE` / `CASE` clauses enforce user-specific data access without modifying the underlying table
+- **Ownership model**: every UC object has exactly one owner with full control (grant, alter, drop, transfer); ownership is different from privileges and can be transferred with `ALTER ... SET OWNER TO`
+- **Information schema**: `system.information_schema.tables`, `.columns`, `.table_privileges`, `.schemata` provide SQL-standard metadata and are permission-filtered (users only see what they have access to)
+
 ## Related Topics
 
 - [Access Control](02-access-control.md) - Row/column level security

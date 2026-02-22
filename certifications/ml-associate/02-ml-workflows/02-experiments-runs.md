@@ -35,7 +35,7 @@ flowchart TD
 
 ## Experiment Management
 
-![MLflow Experiment Runs](../../../../../images/databricks-ui/mlflow/mlflow_experiment_runs.png)
+![MLflow Experiment Runs](../../../images/databricks-ui/mlflow/mlflow_experiment_runs.png)
 
 *MLflow Experiments UI listing runs with logged metrics and parameters.*
 
@@ -115,7 +115,7 @@ mlflow.set_experiment(exp_name)
 
 ## Run Management
 
-![MLflow Run Details](../../../../../images/databricks-ui/mlflow/mlflow_run_details.png)
+![MLflow Run Details](../../../images/databricks-ui/mlflow/mlflow_run_details.png)
 
 *MLflow Run detail view showing logged parameters, metrics, and artifacts.*
 

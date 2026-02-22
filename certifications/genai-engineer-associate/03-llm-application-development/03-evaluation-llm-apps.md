@@ -375,6 +375,16 @@ quality assessment.
 **Scenario:** Connecting Evaluating LLM Applications to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Evaluating LLM Applications prior to deployment.
 
+## Key Takeaways
+
+- **Four RAG metrics**: Faithfulness (answer grounded in context?), Answer Relevance (answer addresses the question?), Context Precision (retrieved chunks relevant?), Context Recall (all needed info retrieved?)
+- **`mlflow.evaluate()`**: runs model inference on an eval dataset and computes metrics in one call; results stored in MLflow tracking for comparison
+- **LLM-as-judge**: use a powerful LLM to score free-form responses where deterministic metrics cannot assess quality
+- **Faithfulness vs hallucination**: low faithfulness = the model makes claims not supported by retrieved context (hallucination)
+- **Databricks Review App**: human annotation interface deployed with `agents.deploy()` — captures per-prediction thumbs up/down and text feedback
+- **Online evaluation**: schedule periodic `mlflow.evaluate()` runs on inference table samples to track faithfulness and latency in production
+- **Eval dataset**: a set of questions with expected ground-truth answers — required for context recall and answer relevance metrics
+
 ---
 
 **[← Previous: LLM Chains & Agents](./02-chains-agents.md) | [↑ Back to LLM Application Development](./README.md)**

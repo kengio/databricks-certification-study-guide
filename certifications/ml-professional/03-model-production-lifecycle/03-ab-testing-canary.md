@@ -393,6 +393,16 @@ champion version and remove the old served model from the endpoint configuration
 **Scenario:** Connecting A/B Testing and Canary Deployments to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for A/B Testing and Canary Deployments prior to deployment.
 
+## Key Takeaways
+
+- **Three strategies**: Shadow (0% traffic, offline comparison only), Canary (5–25%, gradual live rollout), A/B test (50/50 split, statistical comparison)
+- **Inference tables**: Must enable BEFORE the test starts — historical requests cannot be backfilled after the fact
+- **`scale_to_zero=False` during tests**: Cold-start latency unfairly inflates challenger latency measurements and biases comparisons
+- **Statistical significance**: Two-sample t-test; need hundreds-to-thousands of samples per variant — never declare a winner from fewer than ~100 samples
+- **Promoting the winner**: Update the `champion` alias in the Model Registry AND update the endpoint traffic config to 100%
+- **Rollback safety**: Set `previous_champion` alias on the old version BEFORE overwriting `champion`
+- **Statistical vs business significance**: A p < 0.05 result with a 0.001 AUC improvement may not justify the rollout cost
+
 ## Related Topics
 
 - [Model Serving & Deployment](02-model-serving-deployment.md)

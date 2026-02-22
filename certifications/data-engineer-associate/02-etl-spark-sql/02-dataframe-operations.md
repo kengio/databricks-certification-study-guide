@@ -346,7 +346,7 @@ sample_df = df.sampleBy("category", fractions={
 | `distinct` | High | Use carefully on large datasets |
 | `take` | Low | Use before show/collect |
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **DataFrame**: Distributed, immutable collection of rows with schema
 - **Lazy Evaluation**: Transformations don't execute until action called

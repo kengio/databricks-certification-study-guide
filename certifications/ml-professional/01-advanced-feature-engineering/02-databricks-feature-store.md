@@ -431,7 +431,7 @@ fs.write_table(
 )
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - Databricks Feature Store built on Delta Lake with online/offline support
 - Primary keys enable efficient lookups and updates

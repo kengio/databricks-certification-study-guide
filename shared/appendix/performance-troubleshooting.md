@@ -373,3 +373,105 @@ df.explain(mode="extended")
 query.lastProgress
 query.status
 ```
+
+## Vector Search Performance
+
+### Symptom: High Query Latency on Vector Index
+
+**Diagnostic Steps:**
+
+```python
+from databricks.vector_search.client import VectorSearchClient
+
+vsc = VectorSearchClient()
+index = vsc.get_index(endpoint_name="my_endpoint", index_name="catalog.schema.index")
+
+# Run a test query and time it
+import time
+start = time.time()
+results = index.similarity_search(
+    query_text="test query",
+    columns=["id", "content"],
+    num_results=10,
+)
+print(f"Latency: {(time.time() - start) * 1000:.1f}ms")
+```
+
+**Solutions:**
+
+| Cause | Solution |
+| ----- | -------- |
+| Low `ef_search` | Increase `ef_search` (trade recall for speed or vice versa) |
+| Too many results | Reduce `num_results`; re-rank top-K afterward |
+| No metadata pre-filter | Add `filters` to restrict search space before ANN |
+| Undersized endpoint | Scale endpoint compute or upgrade instance type |
+
+### Symptom: Stale Results After Source Table Update
+
+**Cause**: Delta Sync index has not yet processed new CDF entries.
+
+**Solution**:
+
+```python
+# Check sync status
+index.describe()  # Look at 'status' and 'sync_status' fields
+
+# For time-critical use cases, switch to Direct Access index
+# and push updates explicitly
+```
+
+## Model Serving and LLM Endpoint Performance
+
+### Symptom: High p99 Latency on Serving Endpoint
+
+**Diagnostic Steps:**
+
+```sql
+-- Query inference table for latency distribution
+SELECT
+    percentile_cont(0.50) WITHIN GROUP (ORDER BY execution_time_ms) AS p50,
+    percentile_cont(0.95) WITHIN GROUP (ORDER BY execution_time_ms) AS p95,
+    percentile_cont(0.99) WITHIN GROUP (ORDER BY execution_time_ms) AS p99,
+    COUNT(*) AS request_count
+FROM ml_catalog.inference_logs.my_model_payload
+WHERE date(from_unixtime(timestamp_ms / 1000)) >= current_date() - 7;
+```
+
+**Solutions:**
+
+| Cause | Solution |
+| ----- | -------- |
+| Scale-to-zero cold start | Set `scale_to_zero_enabled=False` for latency-sensitive endpoints |
+| Undersized workload | Change `workload_size` from SMALL to MEDIUM or LARGE |
+| Variable demand | Use provisioned throughput for guaranteed QPS |
+| Large payload | Reduce input feature count or compress request body |
+
+### Symptom: High Error Rate on Model Endpoint
+
+```sql
+-- Check error rate by model variant
+SELECT
+    served_model_name,
+    COUNT(*) AS total,
+    SUM(CASE WHEN status_code != 200 THEN 1 ELSE 0 END) AS errors,
+    ROUND(SUM(CASE WHEN status_code != 200 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS error_pct
+FROM ml_catalog.inference_logs.my_model_payload
+GROUP BY served_model_name;
+```
+
+**Common causes**: wrong payload format, signature mismatch, OOM on executor, dependency version conflict.
+
+## Quick Reference: First Steps (Extended)
+
+| Symptom | First Diagnostic | Quick Fix |
+| ------- | ---------------- | --------- |
+| Slow query | `EXPLAIN EXTENDED` | Add Z-ORDER |
+| High spill | Spark UI > Stages | Increase partitions |
+| Small files | `DESCRIBE DETAIL` | Run OPTIMIZE |
+| Skewed join | Group by join key | Enable AQE skew handling |
+| OOM | Check broadcast size | Disable broadcast |
+| Slow startup | Event logs | Use instance pool |
+| Streaming lag | Query progress | Increase trigger interval |
+| Vector search latency | Time query | Tune `ef_search`, add pre-filter |
+| Serving high p99 | Inference table percentiles | Disable scale-to-zero |
+| Serving errors | Inference table error_pct | Verify payload format and signature |

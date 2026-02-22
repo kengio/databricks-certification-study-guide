@@ -458,6 +458,16 @@ Not all drift is the model's fault. Before retraining, rule out infrastructure c
 **Scenario:** Connecting Drift Detection and Remediation to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Drift Detection and Remediation prior to deployment.
 
+## Key Takeaways
+
+- **Four drift types**: Data drift (feature distribution), concept drift (input-output relationship), prediction drift (output distribution), label drift (target variable distribution)
+- **Detectable without labels**: Data drift and prediction drift — observable immediately from features and model outputs
+- **Requires labels**: Concept drift — needs ground truth, which often arrives with a delay of hours to days
+- **Prediction drift as proxy**: Use prediction distribution shift as an early warning signal while waiting for labels to confirm concept drift
+- **PSI thresholds**: Population Stability Index >0.2 = significant drift requiring action; >0.1 = moderate drift worth monitoring
+- **KS test**: Kolmogorov-Smirnov test for continuous feature distribution shifts — p-value < 0.05 indicates significant drift
+- **Remediation options**: Retrain on recent data, adjust training window, roll back to previous champion, or investigate upstream pipeline for root cause
+
 ## Related Topics
 
 - [Model Monitoring & Observability](01-model-monitoring-observability.md)

@@ -455,6 +455,16 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 **Scenario:** Connecting Model Lifecycle Orchestration to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Lifecycle Orchestration prior to deployment.
 
+## Key Takeaways
+
+- **Multi-task Job = DAG**: Tasks declare `depends_on`; default `run_if: ALL_SUCCESS` means the pipeline halts automatically when any gate fails
+- **Evaluation gate**: Loads champion (`@champion`) and challenger (by version) on a held-out dataset; raises an exception if challenger does not meet the improvement threshold — blocks all downstream tasks
+- **Three retraining triggers**: Scheduled (cron, simplest), drift-triggered (monitoring webhook → Jobs REST API `run-now`), data-volume triggered (label accumulation threshold)
+- **Service principal tokens**: Use SPs for all CI/CD automation — personal tokens break if the employee leaves
+- **Job clusters over all-purpose**: Fresh environment per run, no library conflicts, cost-efficient; all-purpose clusters accumulate state
+- **Tag runs with git SHA**: `mlflow.set_tag("git_sha", ...)` links every model version to the exact code commit that trained it
+- **Parameterize catalog/schema**: Pass as job parameters, not hardcoded, so the same job definition works in dev/staging/prod
+
 ## Related Topics
 
 - [Model Versioning & Registry](01-model-versioning-registry.md)

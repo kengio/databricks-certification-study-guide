@@ -298,7 +298,7 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 - No manual cluster management
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **All-Purpose vs Job Clusters**: Purpose, cost, multi-user support
 - **Node Types**: Impact on performance and cost

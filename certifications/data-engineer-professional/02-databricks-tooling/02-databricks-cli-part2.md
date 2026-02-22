@@ -436,11 +436,22 @@ databricks configure --token
 9. **JSON output** - Use `--output json` for scripting and automation
 10. **Cluster states** - Know PENDING, RUNNING, TERMINATED, ERROR states
 
+## Key Takeaways
+
+- **Authentication precedence**: environment variables (`DATABRICKS_HOST`, `DATABRICKS_TOKEN`) override profile flag (`--profile`), which overrides the default profile in `~/.databrickscfg`
+- **Databricks Asset Bundle (DAB) workflow**: `bundle validate` → `bundle deploy --target <env>` → `bundle run <resource>`; `databricks.yml` defines resources, targets, and workspace settings
+- **`jobs run-now`** triggers an existing job by ID; **`jobs submit`** creates a one-time run without a persistent job definition
+- **Secret scope management**: `databricks secrets create-scope` creates the scope; `databricks secrets put --scope ... --key ... --string-value ...` adds or updates a secret; values can never be retrieved via CLI, only key names are listed
+- **DBFS paths** in CLI commands require the `dbfs:/` prefix (e.g., `databricks fs ls dbfs:/data/`)
+- **Output format**: default is human-readable table; `--output json` enables scripting with tools like `jq`
+- **Cluster lifecycle states**: PENDING → RUNNING → TERMINATED (or ERROR); use `databricks clusters list --output json` to check state programmatically
+- **Bundle `mode: development`** applies a prefix to deployed resource names to prevent collision with production resources; `mode: production` deploys without prefix
+
 ## Related Topics
 
 - [REST API — Part 1](./03-rest-api-part1.md) - Programmatic API access
-- [Asset Bundles](../06-testing-deployment/01-asset-bundles.md) - Infrastructure as code
-- [CI/CD Integration](../06-testing-deployment/02-cicd-integration.md) - Pipeline automation
+- [Asset Bundles](../06-testing-deployment/01-asset-bundles-part1.md) - Infrastructure as code
+- [CI/CD Integration](../06-testing-deployment/02-cicd-integration-part1.md) - Pipeline automation
 
 ## Official Documentation
 

@@ -56,7 +56,6 @@ databricks-certification-study-guide/
 │   │
 │   ├── data-engineer-professional/
 │   │   ├── README.md
-│   │   ├── prd.md
 │   │   ├── 01-data-processing/
 │   │   │   ├── README.md
 │   │   │   ├── 01-batch-etl-pipelines-part1.md
@@ -407,7 +406,7 @@ databricks-certification-study-guide/
 - **How to split** (e.g. `03-topic.md` → `03-topic-part1.md` + `03-topic-part2.md`):
   1. Both parts keep the same number prefix; append `-part1` / `-part2`
   2. Each part gets its own YAML frontmatter and a 1–2 sentence intro
-  3. All terminal sections (Use Cases, Common Issues, Best Practices, Exam Tips, Key Exam Concepts / Key Takeaways, Related Topics, Official Docs) go in **Part 2 only**; Part 1 ends with a single forward link to Part 2
+  3. All terminal sections (Use Cases, Common Issues, Best Practices, Exam Tips, Key Takeaways, Related Topics, Official Docs) go in **Part 2 only**; Part 1 ends with a single forward link to Part 2
   4. Update the topic `README.md` index table to list both files
   5. Delete the original; search the repo and fix all links pointing to the old filename
 
@@ -472,9 +471,7 @@ All topic `.md` files end with terminal sections in this exact order:
 2. `## Common Issues & Errors`
 3. `## Best Practices` *(optional — include when the topic has clear do/don't guidance)*
 4. `## Exam Tips`
-5. `## Key Exam Concepts` *(DE Associate, DA Associate, ML Professional, GenAI Associate — bullet-point must-know facts)*
-   — **or** — `## Key Takeaways` *(ML Associate only — same purpose)*
-   — *Data Engineer Professional files omit this section*
+5. `## Key Takeaways` *(all certifications — bullet-point must-know facts)*
 6. `## Related Topics`
 7. `## Official Documentation`
 8. `---` separator + navigation link (always the **very last element**)

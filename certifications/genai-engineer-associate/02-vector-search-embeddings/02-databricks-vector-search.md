@@ -383,6 +383,16 @@ D) Update the `embedding_model_endpoint_name` field in the index configuration
 **Scenario:** Connecting Databricks Vector Search to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Vector Search prior to deployment.
 
+## Key Takeaways
+
+- **Two index types**: Delta Sync (auto-syncs from Delta table with CDF enabled; Databricks handles embedding internally) vs Direct Vector Access (API-based upsert/delete; caller provides embeddings)
+- **CDF required for Delta Sync**: the source Delta table must have Change Data Feed enabled (`delta.enableChangeDataFeed = true`)
+- **Endpoint hosts indexes**: one endpoint can serve multiple indexes sharing its compute — create one endpoint per production use case
+- **`similarity_search(query_text, num_results, filters)`**: filters narrow the candidate pool before ANN search runs
+- **UC governance**: vector search indexes inherit permissions from the source Delta table — GRANT on the source controls who can query the index
+- **Index rebuild required**: when the embedding model changes, re-embed and rebuild the entire index
+- **Direct Access for external embeddings**: use when your embedding model is not available through Databricks Foundation Models
+
 ---
 
 **[← Previous: Embedding Models](./01-embeddings-models.md) | [↑ Back to Vector Search & Embeddings](./README.md) | [Next: Vector Search in Production](./03-vector-search-production.md) →**

@@ -548,6 +548,17 @@ databricks secrets put --scope my-scope --key missing-key
 9. **Audit logs** - system.access.audit for secret access tracking
 10. **UC vs Secrets** - UC for storage credentials, secrets for app credentials
 
+## Key Takeaways
+
+- **Secret scope types**: Databricks-backed scopes store secrets in Databricks internal storage (managed via CLI/API); Azure Key Vault-backed scopes proxy to Azure Key Vault (requires resource ID + DNS name); secret values can never be retrieved via CLI or SQL — only key names are listed
+- **dbutils.secrets API**: `dbutils.secrets.listScopes()`, `.list(scope)`, `.get(scope, key)`, `.getBytes(scope, key)` — always call `.get()` in code, never hardcode credentials
+- **Automatic redaction**: secret values retrieved via `dbutils.secrets.get()` are automatically displayed as `[REDACTED]` in notebook output; transformations on the secret string (slicing, encoding, joining to list) bypass redaction and may expose the value
+- **Scope ACL permissions**: `READ` (get values), `WRITE` (create/update secrets + READ), `MANAGE` (full control including ACLs); created with `databricks secrets put-acl`
+- **Scope creation**: scopes can only be created via the Databricks CLI (`databricks secrets create-scope`) or REST API — not via SQL
+- **Job secret references**: secrets can be injected as job task parameters using `{{secrets/scope/key}}` syntax in the job configuration JSON
+- **Secrets vs Unity Catalog credentials**: use Databricks secrets for application credentials (passwords, API keys); use UC storage credentials for cloud storage access paths — these are separate systems with different management
+- **Audit trail**: secret access is logged in `system.access.audit` with `service_name = 'secrets'` and `action_name = 'getSecret'`; monitor for unusual patterns
+
 ## Related Topics
 
 - [Unity Catalog](01-unity-catalog.md) - Storage credentials

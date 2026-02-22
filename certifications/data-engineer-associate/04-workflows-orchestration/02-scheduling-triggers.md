@@ -431,7 +431,7 @@ When DST changes occur:
 - Check your scheduled time before/after DST transition
 - Document timezone explicitly in job config
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Cron Syntax**: `minute hour day month day_of_week`
 - **Quartz Format**: Requires seconds field (7 fields)

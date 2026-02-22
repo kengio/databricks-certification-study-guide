@@ -192,7 +192,7 @@ print(ENVIRONMENT)  # "production"
 
 ## Widgets
 
-![SQL Dashboard Parameters](../../../../../images/databricks-ui/sql/sql_dashboard_parameters.png)
+![SQL Dashboard Parameters](../../../images/databricks-ui/sql/sql_dashboard_parameters.png)
 
 *Databricks SQL dashboard with dynamic parameters for interactive filtering.*
 
@@ -767,6 +767,17 @@ value = dbutils.jobs.taskValues.get(
 8. **Notebook permissions** - Can Read, Can Run, Can Edit, Can Manage hierarchy
 9. **%pip vs dbutils.library** - Prefer `%pip` for package installation
 10. **Parallel notebooks** - Use ThreadPoolExecutor with dbutils.notebook.run
+
+## Key Takeaways
+
+- **`%run` vs `dbutils.notebook.run`**: `%run` executes in the same context (variables shared, no return value, no timeout); `dbutils.notebook.run` executes in an isolated context with a configurable timeout and a string return value
+- **Widget types**: `text` (free-form), `dropdown` (fixed list, single select), `combobox` (editable dropdown), `multiselect` (comma-separated result); in job runs, job parameters override widget defaults
+- **`dbutils.jobs.taskValues`**: set values in upstream tasks with `taskValues.set(key, value)` and retrieve them in downstream tasks with `taskValues.get(taskKey="task_name", key="key", default=...)`; only works in job context, not interactive
+- **Secret scopes**: Databricks-backed (managed internally) vs Azure Key Vault-backed (enterprise); secret values are always redacted in notebook output; `dbutils.secrets.list()` returns key names only, never values
+- **Workspace paths**: `/Workspace/...` for notebooks and code files; `dbfs:/...` (Spark) or `/dbfs/...` (Python) for data files; `/Volumes/catalog/schema/volume/` for Unity Catalog governed files
+- **Magic commands**: `%sql` / `%python` / `%scala` for language switching; `%fs` for DBFS operations; `%pip` for package installation (preferred over `dbutils.library`); `%sh` for shell commands
+- **Parallel notebook execution**: use `ThreadPoolExecutor` with `dbutils.notebook.run` to run independent child notebooks concurrently, then aggregate results
+- **Notebook permissions hierarchy**: No Permission < Can Read < Can Run < Can Edit < Can Manage
 
 ## Related Topics
 

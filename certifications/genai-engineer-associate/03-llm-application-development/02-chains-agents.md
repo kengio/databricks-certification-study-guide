@@ -361,6 +361,16 @@ Model Serving using `agents.deploy()`.
 **Scenario:** Connecting LLM Chains & Agents to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for LLM Chains & Agents prior to deployment.
 
+## Key Takeaways
+
+- **LCEL chain**: uses the `|` pipe operator to compose `Runnable` components into a fixed-path pipeline
+- **Chains vs agents**: chains have a predetermined execution path; agents dynamically decide which tools to invoke and when
+- **ReAct loop**: Think (plan) → Act (tool call with JSON args) → Observe (tool result as `tool` role message) → repeat until done
+- **Tool calling**: LLM returns structured JSON tool call; app executes tool; result is appended as a `tool` role message; LLM is called again
+- **`ChatDatabricks` connector**: LangChain class that connects to Databricks Foundation Model API or a custom model serving endpoint
+- **`mlflow.langchain.autolog()`**: enables automatic MLflow traces for all LangChain calls with a single line
+- **Tool result message role**: after executing a tool, append the result with role `"tool"` — not `"user"` or `"assistant"`
+
 ---
 
 **[← Previous: Prompt Engineering](./01-prompt-engineering.md) | [↑ Back to LLM Application Development](./README.md) | [Next: Evaluating LLM Applications](./03-evaluation-llm-apps.md) →**

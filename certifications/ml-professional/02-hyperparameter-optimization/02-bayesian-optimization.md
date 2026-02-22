@@ -410,7 +410,7 @@ best_config = space_eval(xgb_space, best_params)
 print(f"Best XGBoost config: {best_config}")
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - Bayesian Optimization uses probabilistic surrogate model
 - Tree-structured Parzen Estimator (TPE) efficient for high dimensions
@@ -464,7 +464,6 @@ print(f"Best XGBoost config: {best_config}")
 
 - [Tuning Fundamentals](01-tuning-fundamentals.md)
 - [Distributed Tuning](03-distributed-tuning.md)
-- [AutoML Strategies](04-automl-strategies.md)
 
 ---
 

@@ -30,16 +30,16 @@ flowchart LR
 | File | Topic | Priority |
 | :--- | :--- | :--- |
 | [01-asset-bundles-part1.md](01-asset-bundles-part1.md) | DAB structure, configuration, variables, bundle commands | High |
-| [10-asset-bundles-part2.md](10-asset-bundles-part2.md) | Sync and state, CI/CD integration, bundle templates, exam tips | High |
+| [01-asset-bundles-part2.md](01-asset-bundles-part2.md) | Sync and state, CI/CD integration, bundle templates, exam tips | High |
 | [02-cicd-integration-part1.md](02-cicd-integration-part1.md) | GitHub Actions, Azure DevOps, GitLab, Jenkins — platform config | High |
-| [08-cicd-integration-part2.md](08-cicd-integration-part2.md) | Testing strategies, secrets, deployment patterns, monitoring | High |
+| [02-cicd-integration-part2.md](02-cicd-integration-part2.md) | Testing strategies, secrets, deployment patterns, monitoring | High |
 | [03-git-folders.md](03-git-folders.md) | Git integration, notebook versioning | Medium |
 | [04-unit-testing-part1.md](04-unit-testing-part1.md) | Testing pyramid, pytest, chispa, mocking, nutter framework | Medium |
-| [11-unit-testing-part2.md](11-unit-testing-part2.md) | Testing patterns, CI/CD integration, best practices, exam tips | Medium |
+| [04-unit-testing-part2.md](04-unit-testing-part2.md) | Testing patterns, CI/CD integration, best practices, exam tips | Medium |
 | [05-bundle-deployment-strategies-part1.md](05-bundle-deployment-strategies-part1.md) | Advanced bundle patterns, CI/CD pipeline DAGs, blue/green, canary | High |
-| [09-bundle-deployment-strategies-part2.md](09-bundle-deployment-strategies-part2.md) | Rollback strategies, feature flags, schema migration, OIDC federation | High |
+| [05-bundle-deployment-strategies-part2.md](05-bundle-deployment-strategies-part2.md) | Rollback strategies, feature flags, schema migration, OIDC federation | High |
 | [06-advanced-testing-operations-part1.md](06-advanced-testing-operations-part1.md) | Property-based testing, DLT testing, streaming tests, integration patterns | High |
-| [07-advanced-testing-operations-part2.md](07-advanced-testing-operations-part2.md) | Deployment validation, rollback, GitOps, practice questions, exam tips | High |
+| [06-advanced-testing-operations-part2.md](06-advanced-testing-operations-part2.md) | Deployment validation, rollback, GitOps, practice questions, exam tips | High |
 
 ## Databricks Asset Bundles (DAB)
 

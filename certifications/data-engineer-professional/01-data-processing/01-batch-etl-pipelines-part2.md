@@ -305,6 +305,17 @@ Understanding when to apply specific techniques is crucial for the exam and real
 - Use `replaceWhere` for efficient partition overwrites
 - Always handle null values explicitly
 
+## Key Takeaways
+
+- **Photon** accelerates SQL joins, aggregations, filters, and scans but provides no speedup for Python/Scala UDFs
+- **AQE** (`spark.sql.adaptive.enabled=true` by default) handles skew joins, coalesces small partitions, and switches join strategies at runtime based on actual data statistics
+- **DPP** automatically pushes partition filters from a dimension table to a fact table during joins, requiring the join to be on a partition column
+- **Broadcast join** threshold default is 10 MB (`spark.sql.autoBroadcastJoinThreshold`); use `broadcast()` hint or increase the threshold for larger dimension tables
+- **Partition pruning** only works when filtering directly on a partition column; applying functions (e.g., `year(col("date"))`) prevents pruning
+- **Dynamic Partition Overwrite** (`.option("partitionOverwriteMode","dynamic")`) rewrites only touched partitions, preserving untouched partitions in the same table
+- **Corrupt record modes**: `PERMISSIVE` (default, stores bad records in `_corrupt_record`), `DROPMALFORMED`, `FAILFAST`
+- **Pandas UDFs** (vectorized) outperform standard Python row-at-a-time UDFs and are the recommended choice when custom logic is unavoidable
+
 ## Related Topics
 
 - [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE for upserts

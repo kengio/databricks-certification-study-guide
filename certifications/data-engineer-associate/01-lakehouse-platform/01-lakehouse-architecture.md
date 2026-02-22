@@ -251,6 +251,16 @@ spark.sql("SELECT * FROM main.default.my_table")
 
 **Fix:** Run `REFRESH TABLE <table_name>` or use Delta Lake (which handles metadata automatically) instead of plain Parquet/CSV tables.
 
+## Key Takeaways
+
+- **Lakehouse combines**: ACID transactions and strong governance of a data warehouse with the low cost and schema flexibility of a data lake
+- **Delta Lake**: Powers the Lakehouse — Parquet files plus a transaction log; enables ACID, time travel, and MERGE/UPDATE/DELETE
+- **Medallion layers**: Bronze (raw ingestion, append-only) → Silver (cleansed, deduplicated, schema-enforced) → Gold (business aggregates, BI/ML-ready)
+- **Schema enforcement**: Default behavior; prevents bad data writes. Enable evolution with `.option("mergeSchema", "true")`
+- **Time travel**: Query by version (`versionAsOf`) or timestamp (`timestampAsOf`) — no external tool needed
+- **Unity Catalog namespace**: Three levels — `catalog.schema.table`; provides column-level security, lineage, and auditing
+- **ACID via MVCC**: Multi-version concurrency control lets concurrent readers and writers operate without locks
+
 ---
 
 **[↑ Back to Databricks Lakehouse Platform](./README.md) | [Next: Databricks Workspace](./02-databricks-workspace.md) →**

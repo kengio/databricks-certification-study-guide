@@ -633,6 +633,17 @@ Use Row Tracking to:
 - Use Identity Columns for auto-generated surrogate keys
 - Enable Row Tracking to audit deduplication results
 
+## Key Takeaways
+
+- **`row_number()`** is the correct window function for deduplication because it guarantees exactly one row per key regardless of ties; `rank()` and `dense_rank()` can produce multiple rows per key when values are tied
+- **Streaming deduplication requires watermarks** to bound state size; using `dropDuplicates` without a watermark causes unbounded state growth and eventual OOM
+- **`dropDuplicatesWithinWatermark`** is more memory-efficient than `dropDuplicates` because it tracks only keys within the watermark window rather than all keys ever seen
+- **MERGE is inherently idempotent**: running the same source data through a MERGE operation multiple times always produces the same target state, making it the safe write pattern for reprocessing
+- **Deduplicate source before MERGE**: if the source DataFrame contains duplicate keys, MERGE throws a `DeltaUnsupportedOperationException`; always call `dropDuplicates(["key"])` on the source first
+- **Medallion architecture pattern**: Bronze layer accepts duplicates with lineage metadata; Silver is the primary deduplication layer using `row_number()` or MERGE; Gold aggregations naturally handle any remaining duplicates
+- **`foreachBatch` + MERGE** is the standard idempotent streaming write pattern, combining within-batch dedup (`dropDuplicates`) with cross-batch dedup via MERGE
+- **Identity Columns** (`GENERATED ALWAYS AS IDENTITY`) provide system-managed surrogate keys that are guaranteed unique, eliminating application-level key collision concerns
+
 ## Related Topics
 
 - [Batch ETL Pipelines](01-batch-etl-pipelines-part1.md) - Window functions

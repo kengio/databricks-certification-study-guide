@@ -268,7 +268,7 @@ SELECT id, amount FROM new_sales
 | **Compliance** | ANSI SQL | Hive dialect |
 | **Execution** | Spark engine | Hive + MapReduce |
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Managed vs External**: Data location and lifecycle
 - **Temporary Views**: Session-scoped, auto-deleted

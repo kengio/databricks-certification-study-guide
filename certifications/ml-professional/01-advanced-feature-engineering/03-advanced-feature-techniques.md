@@ -511,7 +511,7 @@ query = (
 )
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - Feature selection reduces dimensionality and improves model interpretability
 - Scaling and normalization essential before distance-based algorithms

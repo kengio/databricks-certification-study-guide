@@ -429,7 +429,7 @@ LEFT JOIN order_counts oc ON c.customer_id = oc.customer_id
 GROUP BY c.region;
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **COUNT(*)**: All rows; **COUNT(col)**: Non-NULL; **COUNT(DISTINCT)**: Unique
 - **GROUP BY**: Aggregates rows by specified column(s)

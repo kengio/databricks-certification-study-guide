@@ -398,7 +398,7 @@ Each JSON file represents one committed transaction, enabling:
 - Isolation (multi-version concurrency)
 - Durability (permanent record)
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Delta Lake**: Storage layer adding ACID, governance, and performance to data lakes
 - **Managed Tables**: Data in warehouse directory, deleted with table

@@ -402,7 +402,7 @@ df_window = employees.withColumn(
 | Skewed data | One join key value has many rows | Apply salting technique |
 | Duplicates | Multiple matches on both sides | Use semi-join or apply deduplication |
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Inner Join**: Only matching rows from both tables
 - **Left Join**: All rows from left table, matching rows from right

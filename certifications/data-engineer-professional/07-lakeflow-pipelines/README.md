@@ -20,7 +20,7 @@ flowchart LR
 | [02-expectations-data-quality.md](02-expectations-data-quality.md) | expect, expect_or_drop, expect_or_fail | High |
 | [03-apply-changes-api.md](03-apply-changes-api.md) | CDC with APPLY CHANGES, SCD handling | High |
 | [04-lakeflow-jobs-part1.md](04-lakeflow-jobs-part1.md) | Job components, task dependencies, task values, for-each loops | Medium |
-| [05-lakeflow-jobs-part2.md](05-lakeflow-jobs-part2.md) | Triggers, compute, notifications, parameters, error handling, exam tips | Medium |
+| [04-lakeflow-jobs-part2.md](04-lakeflow-jobs-part2.md) | Triggers, compute, notifications, parameters, error handling, exam tips | Medium |
 
 ## Pipeline Architecture
 

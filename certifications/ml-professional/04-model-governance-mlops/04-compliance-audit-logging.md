@@ -418,6 +418,17 @@ consolidate before the exam:
 
 Review the complete pre-exam checklist in the certification resources folder before your exam date.
 
+## Key Takeaways
+
+- **SR 11-7**: US Federal Reserve framework for model risk management — requires challenger validation, independent review, and documentation (not GDPR or EU AI Act)
+- **GDPR Article 22**: Right to explanation for automated decisions — satisfied with SHAP local (per-prediction) explanations stored alongside predictions
+- **Disparate impact ratio**: `min_group_rate / max_group_rate`; threshold is **0.8** (four-fifths rule) — below triggers mandatory fairness investigation
+- **SHAP explainers**: `TreeExplainer` for tree-based models (fast); `KernelExplainer` for model-agnostic use (slow); `summary_plot` = global, `shap_values[i]` = local
+- **Inference tables**: the correct audit control proving what a model predicted for a specific individual at a specific timestamp
+- **Column masking / row filters**: UC controls for PII protection in feature tables — applied at query time, cannot be bypassed by end users
+- **`system.access.audit`**: UC audit log table capturing all `actionName` events (model registration, alias assignment, permission changes)
+- **GDPR right to erasure**: requires deleting training data rows plus VACUUM to remove old Parquet files from Delta storage
+
 ## Related Topics
 
 - [Governance Frameworks](03-governance-frameworks.md)

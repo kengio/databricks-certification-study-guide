@@ -643,6 +643,17 @@ DESCRIBE VOLUME main.default.my_volume;
 9. **refreshMounts()** - Needed after external mount changes
 10. **Direct access** - Requires explicit credential configuration
 
+## Key Takeaways
+
+- **DBFS path formats**: use `dbfs:/...` with Spark APIs (`spark.read`, `df.write`); use `/dbfs/...` with Python file I/O (`open()`); never mix these — using `/dbfs/` with Spark or `dbfs:/` with Python file APIs causes errors
+- **Mount points are legacy**: `dbutils.fs.mount()` is deprecated for new workloads; Unity Catalog Volumes (`/Volumes/catalog/schema/volume/`) are the recommended replacement with full governance and audit logging
+- **Volume types**: Managed volumes are stored in Databricks-controlled storage and auto-cleaned on drop; External volumes point to user-owned cloud storage and are not cleaned on drop
+- **Volume path format**: `/Volumes/<catalog>/<schema>/<volume>/path` — works for both Spark APIs and Python file I/O
+- **FileStore** (`dbfs:/FileStore/`) is a special DBFS location accessible via HTTP URL (`/files/...`); use it for images and small files to embed in notebooks
+- **Cloud storage protocols**: prefer `s3a://` (AWS), `abfss://` (Azure ADLS Gen2 with SSL), `gs://` (GCP); avoid legacy `s3://`, `wasb://`, `abfs://`
+- **DBFS root key directories**: `/user/hive/warehouse/` (Hive metastore tables), `/FileStore/` (web-accessible files), `/mlflow/` (MLflow artifacts), `/tmp/` (auto-cleaned temp files)
+- **Credential precedence** for cloud storage access: Unity Catalog external location credentials > cluster instance profile / managed identity > Spark configuration > mount configuration
+
 ## Related Topics
 
 - [Unity Catalog](../04-security-governance/01-unity-catalog.md) - Governance for volumes

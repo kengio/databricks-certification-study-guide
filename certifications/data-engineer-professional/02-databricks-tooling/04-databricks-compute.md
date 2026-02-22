@@ -350,7 +350,7 @@ flowchart TB
 
 ### Creating SQL Warehouse
 
-![SQL Warehouse Creation](../../../../../images/databricks-ui/sql/sql_warehouse_creation.png)
+![SQL Warehouse Creation](../../../images/databricks-ui/sql/sql_warehouse_creation.png)
 
 *SQL Warehouse creation form showing cluster size, auto-stop, and scaling settings.*
 
@@ -741,6 +741,17 @@ aws_attributes = {
 8. **Cluster permissions** - Can Attach To < Can Restart < Can Manage
 9. **Policies** - fixed, allowlist, range, unlimited types
 10. **SQL Warehouse sizes** - Know Small = 8 DBU/hour baseline
+
+## Key Takeaways
+
+- **Job clusters vs all-purpose clusters**: job clusters are created per run, isolated, and auto-terminated — lower cost and recommended for production; all-purpose clusters persist and are shared across users — better for interactive development
+- **Instance pools** keep a set of pre-provisioned idle instances that reduce cluster startup from minutes to seconds; clusters reference a pool via `instance_pool_id`
+- **Serverless compute** starts in seconds and supports Python and SQL only; Scala and R are not supported, and low-level RDD operations and custom JARs are unavailable
+- **Photon** accelerates SQL queries and DataFrame operations (joins, aggregations, scans, filters) via vectorized C++ execution but does not accelerate Python or Scala UDFs
+- **Auto-termination default is 120 minutes**; setting `autotermination_minutes=0` disables it (not recommended for cost management)
+- **Cluster policy types**: `fixed` (enforced value), `allowlist` (must be in list), `blocklist` (must not be in list), `range` (min/max), `unlimited` (unrestricted)
+- **SQL Warehouse types**: Classic (standard), Pro (query federation, enhanced security), Serverless (instant startup, auto-scale, no management overhead)
+- **Spot instance availability**: `SPOT` (all spot, higher interruption risk), `SPOT_WITH_FALLBACK` (spot preferred with on-demand fallback), `ON_DEMAND` (no interruption, highest cost)
 
 ## Related Topics
 

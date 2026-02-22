@@ -168,5 +168,5 @@ WHERE event_type = 'flow_progress'
 ## Related Topics
 
 - [Lakeflow Pipelines (DE Pro)](../../certifications/data-engineer-professional/07-lakeflow-pipelines/README.md)
-- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture.md)
+- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture-part1.md)
 - [Streaming Fundamentals](../fundamentals/streaming-fundamentals.md)

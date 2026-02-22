@@ -404,6 +404,15 @@ A typical promotion workflow:
 **Scenario:** Connecting Governance Frameworks to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Governance Frameworks prior to deployment.
 
+## Key Takeaways
+
+- **Four governance pillars**: Access control (who can do what), lineage tracking (where did the model come from), model documentation (what does it do), lifecycle management (controlled promotion)
+- **UC is the exam answer for governance**: GRANT/REVOKE on model objects; three-level namespace ties models into the same system as tables and volumes
+- **Privilege levels**: `USE SCHEMA` (navigate), `EXECUTE` (load/serve), `MODIFY` (register versions, set aliases), `ALL PRIVILEGES` (full control)
+- **MODIFY covers both registration and alias changes**: UC does not separate these at the privilege level — separation of duties is enforced through process controls (branch protection, CI approvals)
+- **Model cards**: Document purpose, training data, evaluation results, bias assessment, and limitations — required for regulated ML use cases
+- **UC lineage**: Automatically tracks which Delta tables and feature tables were used to train each registered model version
+
 ## Related Topics
 
 - [Compliance & Audit Logging](04-compliance-audit-logging.md)

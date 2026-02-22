@@ -262,7 +262,7 @@ Captures:
 5. **Clone notebook**: Right-click > `Clone`
 6. **Publish notebook**: Share as HTML dashboard
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Workspace isolation**: Each workspace is independent
 - **Three-level permissions**: Admin, User, Viewer roles

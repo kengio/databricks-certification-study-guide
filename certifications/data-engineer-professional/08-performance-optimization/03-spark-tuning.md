@@ -616,6 +616,17 @@ spark.conf.set("spark.memory.offHeap.size", "4g")
 9. **Column pruning** - Only read needed columns
 10. **Cache** - Use for repeated access, unpersist when done
 
+## Key Takeaways
+
+- **AQE is on by default**: Adaptive Query Execution (`spark.sql.adaptive.enabled = true`) is enabled by default in Databricks and automatically handles partition coalescing, skew joins, and dynamic join strategy switching.
+- **shuffle.partitions rule of thumb**: Target ~128 MB per shuffle partition; divide total shuffle data size by 128 MB to determine the right `spark.sql.shuffle.partitions` value.
+- **Broadcast threshold**: The default broadcast threshold is 10 MB (`spark.sql.autoBroadcastJoinThreshold`); increase it or use `broadcast()` hints to force broadcast for tables up to a few hundred MB.
+- **Coalesce vs Repartition**: `coalesce(n)` reduces partitions without a shuffle; `repartition(n)` triggers a full shuffle but evenly distributes data — use coalesce to reduce, repartition to increase or rebalance.
+- **Photon acceleration**: Photon is Databricks' native C++ vectorized engine providing 2–8x speedups for aggregations, joins, and filters — enabled by selecting a Photon-compatible cluster runtime, no code changes required.
+- **Memory fraction**: By default, 60% of executor heap (`spark.memory.fraction = 0.6`) is allocated for execution and storage combined; increase to 0.8 for memory-intensive shuffle or join workloads.
+- **Salting for skew**: When AQE cannot fully resolve extreme data skew, manually add a random salt column to the skewed join key, join with the salt applied, then strip the salt after the join.
+- **Predicate and column pushdown**: Spark automatically pushes predicates to the file scan level and reads only the columns requested — avoid `SELECT *` and put filters before joins to maximize these optimizations.
+
 ## Related Topics
 
 - [File Sizing](01-file-sizing.md) - Write optimization

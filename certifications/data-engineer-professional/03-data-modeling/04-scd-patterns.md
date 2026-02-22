@@ -719,6 +719,17 @@ result = fact_df.join(broadcast(current_df), "customer_id")
 9. **Point-in-time query** - `effective_date <= date AND end_date >= date`
 10. **Surrogate vs Natural key** - Type 2 requires surrogate key for uniqueness
 
+## Key Takeaways
+
+- **SCD Type 1**: overwrites the existing row with new values; no history is preserved; implemented with a MERGE that only has `WHEN MATCHED THEN UPDATE` and `WHEN NOT MATCHED THEN INSERT`
+- **SCD Type 2**: preserves full history by inserting a new row on each change; requires a surrogate key (often an identity column), `is_current BOOLEAN`, `effective_date`, and `end_date` (convention: `9999-12-31` for active rows)
+- **SCD Type 2 point-in-time query**: `WHERE effective_date <= '<as_of_date>' AND end_date >= '<as_of_date>'` retrieves the dimension value that was active at a given point in time
+- **SCD Type 3**: adds `previous_<attr>` columns to track only the immediately prior value; limited to one change of history per tracked attribute
+- **SCD Type 4**: extracts rapidly changing attributes into a separate mini-dimension table; the fact table holds a foreign key to the mini-dimension at transaction time
+- **SCD Type 6**: hybrid of Types 1 + 2 + 3; stores full Type 2 history rows AND carries a `current_<attr>` column (Type 1 update) and a `previous_<attr>` column (Type 3) on every row
+- **DLT APPLY CHANGES**: `dlt.apply_changes(..., stored_as_scd_type=2)` generates Type 2 history automatically; the resulting table adds `__START_AT` and `__END_AT` metadata columns; `stored_as_scd_type=1` does a simple upsert
+- **MERGE as primary SCD mechanism**: MERGE is the standard DML for all SCD types in Delta Lake; two-step MERGE (expire then insert) is common for Type 2 to avoid ambiguous row matching
+
 ## Related Topics
 
 - [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - MERGE operations

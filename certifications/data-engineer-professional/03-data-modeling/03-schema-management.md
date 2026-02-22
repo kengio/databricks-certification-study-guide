@@ -688,11 +688,22 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 9. **VARIANT type** - For flexible semi-structured data
 10. **Schema validation** - Compare schemas before write for safety
 
+## Key Takeaways
+
+- **Schema enforcement rules**: extra columns in the incoming DataFrame are rejected; missing nullable columns are silently filled with NULL; wrong data types are rejected — schema enforcement is always on by default in Delta Lake
+- **mergeSchema vs overwriteSchema**: `mergeSchema=true` adds new columns and widens compatible types but cannot remove or rename columns; `overwriteSchema=true` completely replaces the schema (and data) on an overwrite write
+- **Column mapping requirement**: `RENAME COLUMN` and `DROP COLUMN` require `delta.columnMapping.mode = 'name'` (plus `minReaderVersion=2`, `minWriterVersion=5`); without it, those DDL statements fail
+- **Type widening rules**: only safe numeric widenings are allowed (e.g., INT → LONG, FLOAT → DOUBLE); narrowing (LONG → INT) is always rejected
+- **Auto Loader schema evolution modes**: `addNewColumns` silently adds new columns; `failOnNewColumns` stops the stream on any change; `rescue` routes unexpected fields to `_rescued_data`; `none` ignores source schema changes entirely
+- **ALTER TABLE ADD column positioning**: `ADD COLUMN <name> <type> FIRST` or `ADD COLUMN <name> <type> AFTER <other_col>` controls insertion order
+- **Streaming schema tracking**: Auto Loader requires a `cloudFiles.schemaLocation` checkpoint path to persist inferred schemas across restarts; omitting it forces re-inference on every restart
+- **VARIANT type**: stores arbitrary semi-structured JSON in a single column; queried with colon-path notation (`event_data:user_id::INT`); useful when upstream schema is completely unknown
+
 ## Related Topics
 
 - [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - Core Delta features
 - [Auto Loader](../01-data-processing/04-auto-loader.md) - Schema inference and evolution
-- [Structured Streaming](../01-data-processing/03-structured-streaming.md) - Streaming schema handling
+- [Structured Streaming](../01-data-processing/03-structured-streaming-part1.md) - Streaming schema handling
 
 ## Official Documentation
 

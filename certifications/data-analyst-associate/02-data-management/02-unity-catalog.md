@@ -440,7 +440,7 @@ TO `engineer@company.com`;
 -- Enables reproducibility and disaster recovery
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Three-level namespace**: catalog.schema.table (vs. hive.schema.table)
 - **Multi-workspace**: Data visible across workspaces with Unity Catalog

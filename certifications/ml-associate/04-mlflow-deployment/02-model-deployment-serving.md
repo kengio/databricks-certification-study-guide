@@ -162,7 +162,7 @@ scoring_df.write.mode("overwrite").saveAsTable("predictions.churn_scores")
 
 ## Real-Time Serving
 
-![Model Serving Endpoint](../../../../../images/databricks-ui/mlflow/model_serving_endpoint.png)
+![Model Serving Endpoint](../../../images/databricks-ui/mlflow/model_serving_endpoint.png)
 
 *Databricks Model Serving endpoint showing environment, compute size, and traffic routing.*
 

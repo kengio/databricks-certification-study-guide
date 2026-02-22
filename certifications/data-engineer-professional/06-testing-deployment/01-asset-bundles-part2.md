@@ -391,6 +391,17 @@ artifacts:
 9. **Sync exclude** - Prevent unwanted files from deploying
 10. **State management** - Local .databricks/ folder, target-specific state
 
+## Key Takeaways
+
+- **Development mode behavior**: When `mode: development` is set, DAB automatically prefixes resource names with the user's name, pauses all job schedules, and deploys to user-specific workspace paths.
+- **Variable syntax**: Reference bundle variables with `${var.name}`, dynamic context with `${bundle.target}` and `${workspace.current_user.userName}`.
+- **Core CLI commands**: `validate` checks configuration without deploying; `deploy` creates/updates resources; `run` triggers a specific job or pipeline; `destroy` removes all bundle resources.
+- **run_as requirement**: Production deployments must specify `run_as` with a service principal name so the job runs under a fixed identity rather than the deploying user's credentials.
+- **State files**: DAB stores Terraform state in `.databricks/bundle/<target>/` locally — always add `.databricks/` to `.gitignore` and never commit state files.
+- **Sync exclude**: Use `sync.exclude` patterns to prevent test files, `__pycache__`, and `.git` from being uploaded to the workspace during deployment.
+- **Artifacts**: DAB can build and deploy Python wheel (`.whl`) and JAR artifacts automatically as part of `bundle deploy` using the `artifacts:` section.
+- **Multi-YAML composition**: Use the `include:` directive to merge shared cluster definitions, notification settings, and permission configurations across team bundles without duplication.
+
 ## Related Topics
 
 - [CI/CD Integration](02-cicd-integration-part1.md) - Pipeline workflows

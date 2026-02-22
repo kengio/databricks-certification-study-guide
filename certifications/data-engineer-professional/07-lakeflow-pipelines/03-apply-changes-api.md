@@ -644,6 +644,17 @@ TRACK HISTORY ON (salary, department, title)
 9. **CDC formats** - Debezium, DMS, GoldenGate patterns
 10. **Target table** - Must be streaming table
 
+## Key Takeaways
+
+- **APPLY CHANGES syntax**: Requires `KEYS` (primary key columns), `SEQUENCE BY` (ordering column), and `STORED AS SCD TYPE 1 or 2` — all three clauses are mandatory.
+- **SCD Type 1 vs Type 2**: SCD Type 1 overwrites with the latest value only; SCD Type 2 preserves full history by adding `__START_AT` and `__END_AT` timestamp columns automatically.
+- **Current records query**: For SCD Type 2 tables, query current records with `WHERE __END_AT IS NULL`; historical records have a non-null `__END_AT`.
+- **APPLY AS DELETE**: Use `APPLY AS DELETE WHEN operation = 'DELETE'` to specify which CDC operation value triggers a physical delete from the target Streaming Table.
+- **Sequence key guarantees**: The sequence column handles out-of-order events — late-arriving events with an older sequence value are correctly ordered and do not overwrite newer state.
+- **Target must be Streaming Table**: The `APPLY CHANGES INTO` target must always be declared as a Streaming Table (`CREATE OR REFRESH STREAMING TABLE`), not a Materialized View.
+- **Python API**: `dlt.apply_changes()` is the Python equivalent; use `apply_as_deletes=expr("operation = 'DELETE'")` and `except_column_list` to exclude metadata columns.
+- **TRACK HISTORY ON**: Use this clause in SCD Type 2 to limit which column changes create a new history version, preventing high-churn columns (e.g., `last_login`) from generating excessive rows.
+
 ## Related Topics
 
 - [Declarative Pipelines](01-declarative-pipelines.md) - Pipeline basics

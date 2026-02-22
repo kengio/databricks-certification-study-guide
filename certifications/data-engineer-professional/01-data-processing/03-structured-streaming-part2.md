@@ -386,6 +386,17 @@ query = (df.writeStream
 - Use `availableNow` for scheduled batch-style streaming
 - Test with rate source before connecting production sources
 
+## Key Takeaways
+
+- **Output modes**: `append` for inserts only, `complete` for full aggregation results, `update` for rows changed in the current batch — not every mode is compatible with every operation or sink
+- **Watermarks** are required for streaming aggregations to enable state cleanup; without them, state grows unboundedly and causes OOM
+- **Stream-static joins** read the static side once at query start; changes to the static table are only reflected after the streaming query is restarted
+- **RocksDB state store** is recommended when state exceeds available executor heap memory (GB+ scale or high-cardinality keys); HDFS-backed store is the default and suits smaller state
+- **State timeouts**: `ProcessingTimeTimeout` expires based on wall clock; `EventTimeTimeout` expires when the watermark advances past the set timestamp; `NoTimeout` causes unbounded state growth
+- **`foreachBatch`** enables batch operations (such as MERGE) within a streaming context, providing exactly-once semantics when combined with checkpoints
+- **Checkpoint compatibility**: changing groupBy keys, watermark delay, output mode, or stateful operators requires a new checkpoint location
+- **`query.lastProgress`** and `stateOperators[].numRowsTotal` are the primary metrics for detecting unbounded state growth in production
+
 ## Related Topics
 
 - [Incremental Processing](02-incremental-processing.md) - Checkpoint management

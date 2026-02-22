@@ -339,6 +339,16 @@ Alert configuration steps:
 **Scenario:** Connecting Model Monitoring and Observability to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Monitoring and Observability prior to deployment.
 
+## Key Takeaways
+
+- **Three monitoring layers**: Data quality (inputs), model performance (predictions vs ground truth), system/operational health (latency, error rate)
+- **Inference tables**: Enable BEFORE production traffic starts — requests already served cannot be backfilled retroactively
+- **Lakehouse Monitoring**: Automatically generates a profile metrics table and a drift metrics table from a scored Delta table
+- **Ground truth join**: Required for accuracy metrics; often delayed hours-to-days — join inference logs with late-arriving labels in a background job
+- **Prediction drift as leading indicator**: Detectable immediately without labels; use to trigger investigation while waiting for ground truth labels to confirm concept drift
+- **SQL alerts on drift metrics**: Set thresholds on the drift metrics table to send Slack/PagerDuty notifications automatically when drift exceeds acceptable bounds
+- **Remediation actions**: Retrain on recent data, roll back to `previous_champion` alias, investigate upstream pipeline schema changes
+
 ## Related Topics
 
 - [Drift Detection & Remediation](02-drift-detection-remediation.md)

@@ -430,7 +430,7 @@ Alert Escalation:
     ✅ Escalate if not acknowledged (15 min)
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Alert**: Monitors query results against condition, sends notification
 - **Threshold alert**: Triggers when value crosses limit

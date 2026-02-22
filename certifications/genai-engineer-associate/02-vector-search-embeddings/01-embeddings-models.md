@@ -334,6 +334,16 @@ D) Any model — architecture does not affect retrieval quality
 **Scenario:** Connecting Embedding Models to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Embedding Models prior to deployment.
 
+## Key Takeaways
+
+- **Consistency is critical**: use the exact same embedding model at index time and query time — any mismatch makes all vectors incomparable
+- **Databricks Foundation Model API**: `databricks-gte-large-en`, `databricks-bge-large-en` — serverless, no cluster provisioning needed
+- **L2 normalization**: standard for text embeddings; makes dot product equivalent to cosine similarity
+- **Embedding dimension trade-off**: larger dimensions capture more semantic nuance but cost more storage and compute
+- **Batch embedding**: more efficient than embedding one chunk at a time — use batch API calls for indexing pipelines
+- **Domain-specific models**: fine-tuned embedding models outperform general models for specialized vocabularies (legal, medical, code)
+- **Switching models**: requires re-embedding the entire corpus and rebuilding the vector index from scratch
+
 ---
 
 **[↑ Back to Vector Search & Embeddings](./README.md) | [Next: Databricks Vector Search](./02-databricks-vector-search.md) →**

@@ -450,6 +450,17 @@ SET spark.sql.adaptive.enabled;
 **Scenario:** Optimizer chooses slow operations (e.g., SortMergeJoin over BroadcastHashJoin) for small tables.
 **Fix:** Run `ANALYZE TABLE <name> COMPUTE STATISTICS` so Catalyst has accurate file and row counts to inform Cost-Based Optimization.
 
+## Key Takeaways
+
+- **Read plans bottom-up**: Physical plans execute from bottom to top — start reading at `FileScan` (the data source) and trace upward to the final output operator.
+- **PartitionFilters prune directories**: `PartitionFilters` in `FileScan` means entire partition directories are skipped before any data is read; `PushedFilters` filters row groups inside files — both reduce I/O but PartitionFilters has the greater impact.
+- **AQE re-optimizes at shuffle boundaries**: AQE collects actual runtime statistics after each stage completes, then re-optimizes the remaining plan — enabling dynamic switching from `SortMergeJoin` to `BroadcastHashJoin` at runtime.
+- **CustomShuffleReaderExec confirms AQE**: Seeing `CustomShuffleReaderExec` (or `AQEShuffleRead`) in the physical plan confirms that AQE has actively modified the shuffle reader by coalescing or splitting partitions.
+- **EXPLAIN EXTENDED shows all four plans**: Parsed, Analyzed, Optimized Logical, and Physical — comparing Analyzed vs Optimized reveals exactly which Catalyst optimizer rules fired (predicate pushdown, column pruning, etc.).
+- **UDFs block predicate pushdown**: Python UDFs are opaque to the Catalyst optimizer — filters applied via UDFs will never appear in `PushedFilters` and cannot benefit from data source skipping.
+- **ANALYZE TABLE enables CBO**: Running `ANALYZE TABLE ... COMPUTE STATISTICS FOR COLUMNS` provides the Cost-Based Optimizer accurate column histograms and row counts for better join order and strategy decisions.
+- **Skew indicator in plan**: The presence of `SortMergeJoin-SkewedPartition` in the physical plan confirms AQE's skew join optimization has detected and split a heavily skewed partition.
+
 ## Next
 
 Continue with [Photon, Diagnostics & Query Optimization](./06-photon-diagnostics-optimization-part1.md) for Photon acceleration, memory and spill diagnostics, Spark UI deep dive, query optimization strategies, practice questions, and exam tips.

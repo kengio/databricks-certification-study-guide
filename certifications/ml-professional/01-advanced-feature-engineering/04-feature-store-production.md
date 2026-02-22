@@ -582,7 +582,7 @@ log_feature_computation_metrics(
 )
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - Unity Catalog provides governance and access control for feature stores
 - Data lineage tracking maintains compliance and reproducibility

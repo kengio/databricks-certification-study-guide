@@ -447,7 +447,7 @@ curl -X POST \
 
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Query Editor**: Web IDE for SQL development with visualization
 - **Parameters**: Dynamic queries using `{{ parameter_name }}` syntax

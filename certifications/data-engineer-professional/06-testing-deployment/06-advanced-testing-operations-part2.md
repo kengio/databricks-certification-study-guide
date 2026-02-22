@@ -652,6 +652,17 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 9. **Feature flags** - Store in Unity Catalog table; check in pipeline code to toggle behavior per environment
 10. **Mono-repo CI** - Use path-based triggers (`paths:` filter in GitHub Actions) to deploy only changed projects
 
+## Key Takeaways
+
+- **Post-deployment validation**: Always run a smoke test job immediately after deployment and trigger an automated rollback (git checkout previous commit + redeploy) if it fails.
+- **OIDC replaces stored secrets**: OIDC federation with GitHub Actions requires `permissions: id-token: write` in the workflow and a matching federation policy on the Databricks service principal — no stored client secrets needed.
+- **Bundle include paths**: All paths in the `include:` directive are relative to the location of `databricks.yml`, not the working directory from which the CLI is run.
+- **DLT testing pattern**: DLT decorators cannot run locally — extract transformation logic into plain PySpark functions, test those with a local SparkSession, and wrap them in `@dlt.table` for the pipeline.
+- **Test schema isolation**: Use `test_catalog.ci_<uuid>` schema names for integration tests and drop the schema with `CASCADE` in test teardown to prevent parallel CI run collisions.
+- **Coverage gating**: Use `--cov-fail-under=80` in pytest CI to enforce a minimum code coverage threshold and block merges on coverage regressions.
+- **Mono-repo path triggers**: Use `paths:` filters in GitHub Actions to deploy only the changed project bundle, preventing unnecessary redeployments of unrelated pipelines.
+- **Trunk-based with feature flags**: For data engineering, trunk-based development (short-lived branches merged to main frequently) combined with feature flags is recommended over GitFlow to enable faster iteration.
+
 ## Related Topics
 
 - [Asset Bundles](01-asset-bundles-part1.md) - DAB fundamentals, structure, and targets

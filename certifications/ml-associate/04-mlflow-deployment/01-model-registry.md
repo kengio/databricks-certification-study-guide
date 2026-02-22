@@ -89,7 +89,7 @@ print(f"Registered model version: {model_version.version}")
 
 ### **Model Versions**
 
-![Model Registry Versions](../../../../../images/databricks-ui/mlflow/model_registry_versions.png)
+![Model Registry Versions](../../../images/databricks-ui/mlflow/model_registry_versions.png)
 
 Each version tracks a specific model artifact and its metadata.
 

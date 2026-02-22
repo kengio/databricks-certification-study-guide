@@ -720,6 +720,17 @@ print(query.status)
 - Set appropriate rate limits to prevent OOM
 - Store schema and checkpoint in cloud storage for durability
 
+## Key Takeaways
+
+- **Auto Loader format**: use `format("cloudFiles")` with the `cloudFiles.format` option to specify the file type (json, csv, parquet, avro, etc.)
+- **Directory listing** (default) periodically scans the source path and requires no cloud setup; **File Notification** mode uses cloud events (SNS/SQS, Event Grid, Pub/Sub) and scales to millions of files with lower latency
+- **`cloudFiles.schemaLocation`** is required for schema inference and tracks the inferred schema and its evolution history; without it, Auto Loader cannot persist schema between runs
+- **Schema evolution modes**: `addNewColumns` auto-expands the schema; `rescue` stores unexpected fields in `_rescued_data`; `failOnNewColumns` halts the stream; `none` silently drops new columns
+- **`_rescued_data`** column captures fields that do not match the current schema (new fields or type mismatches) when using `rescue` mode
+- **`includeExistingFiles`** (default `true`) determines whether files already present at the source path when the stream starts are processed
+- **Unity Catalog integration**: read from Volumes or external locations requires `READ FILES` permission; writing to external locations requires `WRITE FILES`; `mergeSchema=true` is required on the write side when Auto Loader adds columns to a UC table
+- **`availableNow=True`** trigger combined with Auto Loader is the standard pattern for scheduled batch-style incremental file ingestion with exactly-once semantics
+
 ## Related Topics
 
 - [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals

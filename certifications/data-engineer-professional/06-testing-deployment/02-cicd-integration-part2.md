@@ -353,6 +353,17 @@ def mock_spark():
 9. **Notifications** - Slack, email, webhook integrations
 10. **Concurrency** - Handle parallel deployments and state conflicts
 
+## Key Takeaways
+
+- **Service principal over PAT**: Production CI/CD pipelines should authenticate using service principals rather than personal access tokens (PATs) to avoid dependency on individual user credentials.
+- **Concurrency gating**: Use GitHub Actions `concurrency:` groups to prevent parallel deployments from causing Terraform state file conflicts when multiple PRs merge simultaneously.
+- **Testing pyramid in CI**: Unit tests (local, fast, no Spark) run first; integration tests (real Spark/Databricks) run after; data quality tests (schema and null checks) validate production correctness.
+- **Blue-green with bundles**: Implement blue-green deployments by defining two separate `targets` (e.g., `prod-blue`, `prod-green`) in `databricks.yml` with slot-specific resource names.
+- **Canary pattern**: Deploy to a small subset first, monitor for a fixed period, then either promote to full rollout or trigger rollback — never deploy directly to 100% of traffic.
+- **Secret management**: Never hardcode credentials in workflow YAML; use GitHub Secrets, Azure DevOps variable groups, or HashiCorp Vault for all credential references.
+- **Environment gates**: Require manual approvers and wait timers on GitHub Actions production environments to enforce a human-in-the-loop before critical deployments.
+- **Deployment timeout handling**: Set explicit `timeout-minutes` on deploy steps and use `--resource jobs` to deploy incrementally when full deployments time out.
+
 ## Related Topics
 
 - [Asset Bundles](01-asset-bundles-part1.md) - DAB configuration

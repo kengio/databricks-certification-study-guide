@@ -441,7 +441,7 @@ df_cleaned.unpersist()
 | **Optimization** | Catalyst optimizes | Limited optimization |
 | **When to Use** | Always prefer | Last resort |
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **UDF**: User-defined functions for custom logic; Pandas UDFs faster than Python UDFs
 - **Window Functions**: Compute values over partitions without aggregating rows

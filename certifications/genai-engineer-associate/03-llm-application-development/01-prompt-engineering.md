@@ -364,6 +364,16 @@ Answer:"""
 **Scenario:** Connecting Prompt Engineering to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Prompt Engineering prior to deployment.
 
+## Key Takeaways
+
+- **Three chat roles**: `system` (persona, standing instructions — highest influence), `user` (query/context), `assistant` (prior turns for multi-turn memory)
+- **System vs user**: system prompt controls *how* the model behaves; user prompt controls *what* it is asked — never reverse their purposes
+- **Few-shot prompting**: provide 3-5 input/output examples in the prompt to guide format and response style
+- **Chain-of-thought (CoT)**: instruct the model to "think step by step" — improves accuracy on multi-step reasoning tasks
+- **JSON output mode**: use `response_format={"type": "json_object"}` or provide a Pydantic schema to enforce structured output
+- **Databricks Foundation Model API**: OpenAI-compatible — use `client.chat.completions.create()` with the same interface
+- **Temperature**: higher = more creative/random; lower = more deterministic — set low for classification and extraction tasks
+
 ---
 
 **[↑ Back to LLM Application Development](./README.md) | [Next: LLM Chains & Agents](./02-chains-agents.md) →**

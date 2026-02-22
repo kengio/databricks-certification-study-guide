@@ -482,7 +482,7 @@ selected_region = ''
 -- Verify: Treats as "All" or returns error message
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Parameter**: User input placeholder `{{ param_name }}`
 - **Text parameter**: `{{ customer_name }}` for LIKE searches

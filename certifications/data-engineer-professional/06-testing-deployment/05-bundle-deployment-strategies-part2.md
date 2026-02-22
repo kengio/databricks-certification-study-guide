@@ -327,10 +327,21 @@ az ad app federated-credential create \
 9. **Environment protection rules** - Enforce manual approval and reviewer gates for production
 10. **Separate service principals** - Use different SPs per environment for least-privilege access
 
+## Key Takeaways
+
+- **Bundle rollback procedure**: The fastest rollback with DAB is `git checkout <previous-commit>` then `databricks bundle deploy -t prod` — this redeploys the previous configuration without destroying and recreating resources.
+- **Delta Time Travel for data rollback**: Use `RESTORE TABLE ... TO VERSION AS OF N` or `TO TIMESTAMP AS OF '...'` to undo bad data written by a failed deployment, independently of the infrastructure rollback.
+- **Feature flags in Unity Catalog**: Store feature flags in a Delta table in Unity Catalog and read them at pipeline runtime to toggle behavior per environment without redeployment.
+- **Schema migrations tracking**: Track applied migration versions in a dedicated Delta table to ensure each migration SQL script is idempotent and runs exactly once across all environments.
+- **OIDC federation eliminates secrets**: Configure OIDC with `permissions: id-token: write` in GitHub Actions to exchange short-lived JWT tokens instead of storing long-lived PATs or client secrets.
+- **Separate service principals per env**: Use different service principals for dev, staging, and prod to enforce least-privilege access and prevent accidental cross-environment operations.
+- **Environment protection rules**: Require manual approvers and a wait timer on GitHub production environments to add a human gate before all production bundle deployments.
+- **Blue-green via SQL views**: Implement blue-green slot switching by replacing a SQL view that points from the `prod_blue` schema to `prod_green`, making the switchover instantaneous for consumers.
+
 ## Related Topics
 
 - [CI/CD Integration](./02-cicd-integration-part1.md) - Platform-specific CI/CD configuration
-- [CI/CD Integration Part 2](./08-cicd-integration-part2.md) - Testing and secret management patterns
+- [CI/CD Integration Part 2](./02-cicd-integration-part2.md) - Testing and secret management patterns
 - [Asset Bundles](./01-asset-bundles-part1.md) - Core DAB configuration reference
 - [Advanced Testing & Operations](./06-advanced-testing-operations-part1.md) - Property-based and DLT testing
 

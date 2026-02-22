@@ -754,6 +754,17 @@ D) `foreachBatch` with MERGE on sensor_id
 >
 > `dropDuplicatesWithinWatermark` with a 5-minute watermark is ideal because it only tracks keys within the watermark window, minimizing memory usage. Option A has no watermark, causing unbounded state growth. Option B deduplicates on sensor_id alone, which would drop all but the first reading per sensor. Option D works but uses more resources and is more complex than necessary.
 
+## Key Takeaways
+
+- **Stream-stream inner joins require watermarks on both sides** and a time range condition in the join predicate; watermarks alone are not sufficient — without a time range condition, state grows unboundedly
+- **Left outer join**: the right-side stream must have a watermark; right outer join: the left-side stream must have a watermark; full outer: both sides need watermarks
+- **Stream-static joins** re-read the static side at each micro-batch (unless cached); no watermark is needed on the static side, and changes to the static table are automatically picked up each batch
+- **`mapGroupsWithState`** emits exactly one output record per group per micro-batch; **`flatMapGroupsWithState`** emits zero or more, enabling alerts and complex state machine patterns
+- **`ProcessingTimeTimeout`** expires based on wall clock time (no watermark needed); **`EventTimeTimeout`** expires when the watermark advances past a set timestamp (watermark required)
+- **Global watermark policy `min`** (default) uses the slowest watermark, retaining more state but reducing late-data loss; `max` uses the fastest watermark, cleaning state sooner but dropping more late events
+- **Events at exactly the watermark boundary are included** (condition is `event_time >= watermark`, not `>`); events strictly before the watermark are dropped
+- **`dropDuplicatesWithinWatermark`** bounds deduplication state to the watermark window, unlike `dropDuplicates` which tracks all keys ever seen
+
 ## Next
 
 Continue with [Streaming Monitoring & Optimization](./09-streaming-monitoring-optimization.md) for back-pressure management, streaming monitoring & troubleshooting, state store deep dive, practice questions, and exam tips.

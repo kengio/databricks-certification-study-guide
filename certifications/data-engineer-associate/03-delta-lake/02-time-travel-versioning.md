@@ -379,7 +379,7 @@ log_path = "/mnt/data/employees/_delta_log"
 | **Iceberg** | Full history | Yes | Complete rollback | Yes |
 | **Hudi** | Limited history | Yes | Snapshot restore | Limited |
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Version History**: Tracked in `_delta_log/` JSON files
 - **Time Travel**: Query any historical version by version number or timestamp

@@ -453,6 +453,16 @@ D) Increase max_tokens so the LLM has room to fully explain its reasoning
 **Scenario:** Connecting Retrieval & Augmentation Strategies to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Retrieval & Augmentation Strategies prior to deployment.
 
+## Key Takeaways
+
+- **Dense search**: semantic similarity via embeddings — excels at paraphrases and conceptual matches
+- **Sparse search (BM25)**: keyword-based inverted index — excels at exact term matches, product codes, proper nouns
+- **Hybrid search**: combines dense and sparse scores with an `alpha` parameter (0 = fully sparse, 1 = fully dense)
+- **Metadata filtering**: pre-filters the index before ANN search to narrow the candidate pool efficiently
+- **Re-ranking**: cross-encoder re-scores the full retrieved candidate set after initial retrieval — more accurate but adds latency
+- **Retrieve more than you return**: set `num_results` higher than the final context count so re-ranking has candidates to select from
+- **Query rewriting/expansion**: paraphrasing, decomposing, or expanding the query improves recall before retrieval runs
+
 ---
 
 **[← Previous: Document Processing & Chunking](./02-document-processing-chunking.md) | [↑ Back to RAG Architecture](./README.md)**

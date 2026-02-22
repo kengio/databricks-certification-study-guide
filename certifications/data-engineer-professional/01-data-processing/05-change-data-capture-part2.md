@@ -438,6 +438,17 @@ CREATE TABLE cdc_monitoring.metrics (
 - Use MERGE for idempotent change application
 - Consider SCD Type 2 for dimension tables requiring history
 
+## Key Takeaways
+
+- **CDF must be enabled before changes are written**; it is not retroactive — no history is captured for operations performed before enabling `delta.enableChangeDataFeed`
+- **`_change_type` values**: `insert`, `update_preimage` (before state), `update_postimage` (after state), `delete` — use `update_postimage` for downstream updates, not `preimage`
+- **`table_changes(table, startVersion)`** is the SQL function for reading CDF; the DataFrame API uses `.option("readChangeFeed", "true")` on a streaming or batch read
+- **`APPLY CHANGES`** is the Lakeflow/DLT declarative CDC API; `sequence_by` is required to order events correctly and determine which change wins on conflict
+- **Multi-hop CDC** requires CDF enabled at each layer (Bronze, Silver, Gold) so that changes can be propagated as streams between layers
+- **Idempotent CDC processing** requires deduplicating on `(id, _commit_version)` and using MERGE so that reprocessing the same batch produces the same result
+- **Row Tracking** (`delta.enableRowTracking`) adds `_metadata.row_id` and `_metadata.row_commit_version` for stable row-level lineage and audit verification
+- **MERGE on a CDF-enabled table automatically generates** `update_preimage` and `update_postimage` records in the change data log
+
 ## Related Topics
 
 - [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE patterns

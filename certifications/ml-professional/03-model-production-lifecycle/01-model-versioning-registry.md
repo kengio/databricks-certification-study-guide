@@ -433,6 +433,16 @@ service principals.
 **Scenario:** Connecting Model Versioning and Registry to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Versioning and Registry prior to deployment.
 
+## Key Takeaways
+
+- **UC vs Workspace registry**: UC registry has a three-level namespace (`catalog.schema.model`), automatic lineage, and SQL GRANT/REVOKE; workspace registry is flat with no lineage
+- **`set_registry_uri`**: Must call `mlflow.set_registry_uri("databricks-uc")` before any registration or loading call to target UC; omitting it sends the model to the workspace registry
+- **Aliases replace stages**: UC uses `champion`, `challenger`, `baseline` aliases — lifecycle stages (`Staging/Production/Archived`) are not supported in UC
+- **Load by alias URI**: `models:/catalog.schema.model@champion` — app code never references a hardcoded version number
+- **Promoting a champion is an API call**: `client.set_registered_model_alias(alias="champion", version="5")` updates all downstream consumers automatically
+- **Model signature**: Infer from raw (pre-scaler) input DataFrame; enforced at serving time — column name mismatch causes 4xx errors
+- **Least-privilege grants**: Serving SPs get `EXECUTE`; ML engineering team gets `MODIFY`; analysts get `USE SCHEMA`
+
 ## Related Topics
 
 - [Model Serving & Deployment](02-model-serving-deployment.md)

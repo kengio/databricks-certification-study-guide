@@ -467,7 +467,7 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
     return time_overhead
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - Distributed tuning via Spark parallelism and SparkTrials
 - XGBoost native distributed training with GPU support
@@ -521,7 +521,6 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 
 - [Tuning Fundamentals](01-tuning-fundamentals.md)
 - [Bayesian Optimization](02-bayesian-optimization.md)
-- [AutoML Strategies](04-automl-strategies.md)
 
 ---
 

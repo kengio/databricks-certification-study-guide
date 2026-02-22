@@ -381,6 +381,16 @@ D) Add more metadata fields to improve filtering accuracy
 **Scenario:** Connecting Document Processing & Chunking to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Document Processing & Chunking prior to deployment.
 
+## Key Takeaways
+
+- **Chunking quality determines retrieval quality**: no retrieval strategy compensates for poorly chunked documents
+- **Fixed-size chunking**: simple, uniform; risks splitting sentences mid-thought at boundaries
+- **Sentence/semantic chunking**: preserves meaning units; variable chunk sizes; better for Q&A
+- **Parent-child chunking**: small child chunks for retrieval precision; full parent chunk passed to LLM for complete context
+- **Chunk size trade-off**: smaller = more precise retrieval; larger = more context but reduced precision
+- **Always store metadata**: source document, page number, section title alongside each chunk — enables filtering and citation
+- **Same model for index and query**: switching embedding models invalidates the entire index; a mismatch causes vector space incompatibility
+
 ---
 
 **[← Previous: RAG Design Patterns](./01-rag-design-patterns.md) | [↑ Back to RAG Architecture](./README.md) | [Next: Retrieval & Augmentation Strategies](./03-retrieval-augmentation-strategies.md) →**

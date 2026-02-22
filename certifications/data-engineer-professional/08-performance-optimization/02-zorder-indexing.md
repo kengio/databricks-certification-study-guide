@@ -495,6 +495,17 @@ OPTIMIZE catalog.schema.orders;
 9. **Data skipping** - File-level statistics MIN/MAX
 10. **Statistics** - First 32 columns by default
 
+## Key Takeaways
+
+- **Z-ORDER mechanism**: Z-ORDER co-locates rows with similar values for the specified columns into the same files, enabling Delta Lake's file-level MIN/MAX statistics to skip files during filtered queries.
+- **Best column candidates**: Choose high-cardinality columns (many distinct values) that are frequently used in `WHERE` clauses or `JOIN` conditions — never use Z-ORDER on partition columns.
+- **Column limit**: Diminishing returns set in after 3–4 Z-ORDER columns; first column gets the best clustering, and effectiveness decreases significantly beyond the fourth.
+- **Partitioning vs Z-ORDER**: Use partitioning for low-cardinality columns (< 1,000 distinct values, e.g., `date`, `region`); use Z-ORDER for high-cardinality columns (e.g., `customer_id`, `user_id`).
+- **Liquid Clustering replaces Z-ORDER**: `CLUSTER BY` (Databricks 13.3+) is the successor — it clusters incrementally and automatically, requires no manual `OPTIMIZE ZORDER BY`, and supports `ALTER TABLE ... CLUSTER BY` to change columns.
+- **Bloom filters for point lookups**: Bloom filters enable probabilistic data skipping for equality predicates on high-cardinality columns (e.g., UUID lookups) where Z-ORDER range skipping is less effective.
+- **Data skipping statistics**: Delta tracks `MIN`, `MAX`, and `NULL` counts per column in each file for the first 32 columns (configurable via `delta.dataSkippingNumIndexedCols`).
+- **Z-ORDER maintenance**: Unlike Liquid Clustering, Z-ORDER requires periodic manual `OPTIMIZE ... ZORDER BY` runs because new writes append unsorted files that bypass the existing clustering.
+
 ## Related Topics
 
 - [File Sizing](01-file-sizing.md) - OPTIMIZE for compaction

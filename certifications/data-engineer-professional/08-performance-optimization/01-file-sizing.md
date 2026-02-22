@@ -554,11 +554,22 @@ spark.sql("""
 9. **DLT** - Auto-manages file sizes, no manual OPTIMIZE needed
 10. **Monitoring** - DESCRIBE DETAIL shows numFiles and sizeInBytes
 
+## Key Takeaways
+
+- **Target file size**: Aim for ~1 GB per file for general workloads and ~128 MB for streaming micro-batch outputs to balance read efficiency with write overhead.
+- **OPTIMIZE command**: Consolidates small files into larger ones; can be combined with `ZORDER BY` in the same command and supports a `WHERE` predicate to limit scope to specific partitions.
+- **optimizeWrite vs autoCompact**: `optimizeWrite` bin-packs files during the write operation; `autoCompact` runs a background compaction job after writes complete — both are disabled by default.
+- **VACUUM removes old files**: `VACUUM` deletes files no longer referenced by the Delta log; the default retention is 7 days (168 hours) — never vacuum below this unless time travel is not needed.
+- **Over-partitioning causes small files**: Partitioning by too many high-cardinality columns (e.g., date + hour + region + store) creates millions of tiny partitions, each with very small files.
+- **DLT auto-manages file sizes**: Delta Live Tables automatically enables `optimizeWrite` and manages file sizing — manual `OPTIMIZE` commands are not needed for DLT-managed tables.
+- **Streaming compaction strategy**: Enable both `optimizeWrite` and `autoCompact` on streaming output tables, or schedule a periodic `OPTIMIZE` job every N batches using `foreachBatch`.
+- **DESCRIBE DETAIL for diagnosis**: `DESCRIBE DETAIL table_name` returns `numFiles` and `sizeInBytes`, making it easy to calculate average file size and identify tables needing compaction.
+
 ## Related Topics
 
 - [Z-ORDER Indexing](02-zorder-indexing.md) - Combine with OPTIMIZE
 - [Spark Tuning](03-spark-tuning.md) - Write performance
-- [Delta Lake Operations](../01-data-processing/06-delta-lake-operations.md) - Table maintenance
+- [Delta Lake Operations](../01-data-processing/06-delta-lake-operations-part1.md) - Table maintenance
 
 ## Official Documentation
 

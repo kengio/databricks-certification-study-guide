@@ -597,6 +597,17 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 - Use `ignoreChanges` when updates don't need downstream propagation
 - Test incremental logic with edge cases (empty batches, duplicates)
 
+## Key Takeaways
+
+- **High-water mark pattern** tracks progress using a reliable timestamp or sequence column stored in a control table; it misses updates and deletes without additional CDC handling
+- **`availableNow=True`** is the recommended replacement for the deprecated `once=True` trigger; it processes all available data across multiple batches then stops, respecting rate limits
+- **Checkpoints** (`checkpointLocation`) provide exactly-once semantics in streaming; delete and recreate them only when changing schema or reprocessing from the beginning
+- **`ignoreDeletes`** skips delete operations when streaming from a Delta source; **`ignoreChanges`** skips both updates and deletes
+- **`startingVersion` / `startingTimestamp`** options control where a Delta streaming source begins reading
+- **MERGE is inherently idempotent**: applying the same CDC batch twice produces the same result, making it the safe choice for `foreachBatch` writes
+- **Deletion Vectors** mark rows as deleted without rewriting files, improving incremental read performance on Delta sources
+- **Rate limiting** (`maxFilesPerTrigger`, `maxBytesPerTrigger`) prevents OOM when processing large backlogs from Delta or Auto Loader sources
+
 ## Related Topics
 
 - [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals

@@ -1,5 +1,5 @@
 ---
-tags: [errors, troubleshooting, reference, data-engineering]
+tags: [errors, troubleshooting, reference, data-engineering, ml, genai]
 ---
 
 # Common Error Messages and Solutions
@@ -307,13 +307,201 @@ Circular dependency detected in pipeline
 
 **Solution**: Review and remove table dependencies that form cycles.
 
+## MLflow and Model Registry Errors
+
+### Wrong Registry URI
+
+```text
+MlflowException: No such model version found
+```
+
+**Cause**: Using workspace registry URI when model is registered in Unity Catalog (or vice versa).
+
+**Solution**:
+
+```python
+import mlflow
+
+# For Unity Catalog models
+mlflow.set_registry_uri("databricks-uc")
+client = mlflow.tracking.MlflowClient(registry_uri="databricks-uc")
+
+# For workspace registry (legacy)
+mlflow.set_registry_uri("databricks")
+```
+
+### Model Signature Mismatch
+
+```text
+MlflowException: Incompatible input types for the model signature
+```
+
+**Cause**: Input DataFrame schema does not match the model's logged signature.
+
+**Solution**:
+
+```python
+# Check model signature
+import mlflow.pyfunc
+model = mlflow.pyfunc.load_model("models:/catalog.schema.model@champion")
+print(model.metadata.signature)
+
+# Ensure input matches expected schema
+# Cast columns if needed before calling predict()
+```
+
+### Alias Not Found
+
+```text
+MlflowException: Registered model alias 'champion' not found
+```
+
+**Cause**: The `@champion` alias has not been assigned to any version yet.
+
+**Solution**:
+
+```python
+from mlflow import MlflowClient
+client = MlflowClient(registry_uri="databricks-uc")
+
+client.set_registered_model_alias(
+    name="catalog.schema.model_name",
+    alias="champion",
+    version="1",
+)
+```
+
+## Model Serving Errors
+
+### Wrong Payload Format
+
+```text
+{"error_code": "BAD_REQUEST", "message": "Failed to parse request"}
+```
+
+**Cause**: Request body does not match the expected serving input format.
+
+**Solution**:
+
+```python
+import requests
+
+# Correct format for pyfunc models
+payload = {
+    "dataframe_records": [
+        {"feature1": 1.0, "feature2": "value"}
+    ]
+}
+
+# Or for tensor-based models
+payload = {
+    "inputs": [[1.0, 2.0, 3.0]]
+}
+```
+
+### Scale-to-Zero Cold Start Timeout
+
+```text
+{"error_code": "REQUEST_TIMEOUT", "message": "Endpoint is initializing"}
+```
+
+**Cause**: Endpoint scaled to zero and the first request arrived before warm-up completed.
+
+**Solution**:
+
+- Disable scale-to-zero for latency-sensitive or canary test endpoints
+- Implement client-side retry with exponential backoff
+
+```python
+from databricks.sdk.service.serving import ServedModelInput
+
+ServedModelInput(
+    scale_to_zero_enabled=False,  # Keep warm for SLA compliance
+    ...
+)
+```
+
+### Endpoint Config Update Conflict
+
+```text
+{"error_code": "RESOURCE_CONFLICT", "message": "Endpoint is being updated"}
+```
+
+**Cause**: Attempting to update endpoint configuration while a previous update is in progress.
+
+**Solution**: Poll endpoint state and wait for `READY` status before applying the next update.
+
+## Vector Search and GenAI Errors
+
+### Vector Index Not Ready
+
+```text
+DatabricksError: Vector search index is not in READY state
+```
+
+**Cause**: Index creation or sync is still in progress.
+
+**Solution**:
+
+```python
+from databricks.vector_search.client import VectorSearchClient
+
+vsc = VectorSearchClient()
+index = vsc.get_index(endpoint_name="my_endpoint", index_name="catalog.schema.index")
+
+# Wait for READY state before querying
+index.describe()  # Check state field
+```
+
+### CDF Not Enabled for Delta Sync Index
+
+```text
+DatabricksError: Change Data Feed must be enabled on the source Delta table
+```
+
+**Cause**: Attempting to create a `DELTA_SYNC` vector index on a table without CDF enabled.
+
+**Solution**:
+
+```sql
+ALTER TABLE catalog.schema.my_table
+SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
+```
+
+### Embedding Dimension Mismatch
+
+```text
+DatabricksError: Query vector dimension (768) does not match index dimension (1536)
+```
+
+**Cause**: Query was embedded with a different model than the one used to build the index.
+
+**Solution**: Always use the same embedding model for indexing and querying. Never change the embedding model on an existing index; rebuild the index instead.
+
+### Foundation Model API Rate Limit
+
+```text
+{"error_code": "TOO_MANY_REQUESTS", "message": "Rate limit exceeded"}
+```
+
+**Solution**:
+
+- Implement exponential backoff with jitter
+- Use provisioned throughput for production workloads with guaranteed QPS
+- Batch embedding requests to reduce call volume
+
 ## Common Solutions Summary
 
-| Error Type  | First Step             |
-| ----------- | ---------------------- |
-| Permission  | Check SHOW GRANTS      |
-| Schema      | Enable mergeSchema     |
-| Memory      | Increase partitions    |
-| Checkpoint  | Delete and restart     |
-| Concurrency | Add retry logic        |
-| Time Travel | Check DESCRIBE HISTORY |
+| Error Type          | First Step                      |
+| ------------------- | ------------------------------- |
+| Permission          | Check SHOW GRANTS               |
+| Schema              | Enable mergeSchema              |
+| Memory              | Increase partitions             |
+| Checkpoint          | Delete and restart              |
+| Concurrency         | Add retry logic                 |
+| Time Travel         | Check DESCRIBE HISTORY          |
+| Wrong registry      | Set `mlflow.set_registry_uri()` |
+| Model signature     | Print and match `model.metadata.signature` |
+| Scale-to-zero cold start | Disable `scale_to_zero_enabled` |
+| Vector index not ready | Wait for `READY` state; enable CDF |
+| Embedding mismatch  | Use same model for index and query |

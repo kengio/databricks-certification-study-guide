@@ -454,7 +454,7 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 -- Recipient gets read-only access via Share
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - **Principals**: Users, Groups, Service Principals
 - **Hierarchy**: Permissions cascade from parent to child objects

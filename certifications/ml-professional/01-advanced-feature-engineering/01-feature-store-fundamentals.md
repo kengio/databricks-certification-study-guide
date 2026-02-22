@@ -392,7 +392,7 @@ GROUP BY user_id
 
 ```
 
-## Key Exam Concepts
+## Key Takeaways
 
 - Feature Store provides centralized management of features
 - Online stores (Redis) for real-time serving, offline stores (Delta) for batch

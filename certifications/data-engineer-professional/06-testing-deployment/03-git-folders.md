@@ -638,6 +638,17 @@ flowchart TB
 9. **Conflict resolution** - Keep local, take remote, or manual merge
 10. **Combined with DAB** - Git Folders for dev, bundles for deployment
 
+## Key Takeaways
+
+- **Git Folders supersede Repos**: Git Folders (under `/Workspace/`) is the current recommended approach; the legacy Repos path (`/Repos/`) is deprecated and supports fewer file types.
+- **Supported providers**: GitHub, GitLab, Azure DevOps, Bitbucket, and AWS CodeCommit are all natively supported; authentication uses personal access tokens configured per user.
+- **Notebook source header**: A Python notebook stored in Git must begin with `# Databricks notebook source` — without this header Databricks will not render it as a notebook.
+- **Permission levels**: Git Folder permissions are `CAN_READ`, `CAN_RUN`, `CAN_EDIT`, and `CAN_MANAGE`, following the workspace folder permission hierarchy.
+- **%run and imports**: `%run ./relative/path` executes another notebook; `sys.path.append(workspace_path)` enables importing Python modules from the same Git Folder.
+- **Conflict resolution options**: When a pull detects conflicts, the user can keep local changes, take remote changes, or manually merge — Databricks does not auto-merge conflicting notebooks.
+- **Combined workflow**: Git Folders are best for interactive development; Databricks Asset Bundles are best for automated CI/CD deployment — use both together in production workflows.
+- **CLI operations**: Use `databricks repos update --repo-id <id> --branch <branch>` to programmatically pull the latest branch, enabling webhook-triggered auto-updates.
+
 ## Related Topics
 
 - [Asset Bundles](01-asset-bundles-part1.md) - Deployment automation

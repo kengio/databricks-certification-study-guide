@@ -281,7 +281,7 @@ GROUP BY DATE(timestamp), details:expectations.dataset, details:expectations.nam
 
 ## Alerting Patterns
 
-![SQL Alerts Configuration](../../../../../images/databricks-ui/sql/sql_alerts_configuration.png)
+![SQL Alerts Configuration](../../../images/databricks-ui/sql/sql_alerts_configuration.png)
 
 *SQL alert configuration showing threshold condition and notification channel settings.*
 
@@ -514,6 +514,17 @@ WHERE event_type = 'flow_progress';
 8. **Retention** - Configure with pipelines.eventLog.retentionDays
 9. **Storage location** - `/pipelines/<id>/system/events` Delta table
 10. **Level column** - INFO, WARN, ERROR for filtering
+
+## Key Takeaways
+
+- **Event log access**: Query the event log using `event_log(TABLE(target_table))` or directly via `delta.\`/pipelines/<id>/system/events\`` for pipelines without a named target.
+- **Key event types**: `flow_definition` captures pipeline structure; `flow_progress` captures per-dataset execution metrics and expectation results; `maintenance_actions` records OPTIMIZE/VACUUM runs.
+- **JSON extraction syntax**: Use the colon (`:`) notation to extract fields from the `details` STRING column (e.g., `details:flow_progress.metrics.num_output_rows`).
+- **Streaming backlog metric**: `seconds_of_backlog` in `flow_progress` events indicates how far behind a streaming dataset is; a growing value signals consumer lag.
+- **Expectation results location**: Pass/fail counts for data quality constraints appear inside `flow_progress` events when `details:expectations` is not NULL — not in a separate event type.
+- **Error diagnosis**: Check the `error.message` and `error.exception` fields within `flow_progress` events to diagnose failed dataset updates.
+- **Retention configuration**: Set event log retention with the pipeline property `pipelines.eventLog.retentionDays`; the event log is a Delta table and can be vacuumed with `VACUUM`.
+- **Level column filtering**: Use `level = 'ERROR'` or `level = 'WARN'` to quickly filter the event log for operational issues.
 
 ## Related Topics
 

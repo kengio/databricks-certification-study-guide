@@ -409,6 +409,17 @@ D) `EXPLAIN COST`
 >
 > `EXPLAIN EXTENDED` shows all four plan stages: Parsed Logical Plan, Analyzed Logical Plan, Optimized Logical Plan, and Physical Plan. By comparing the Analyzed and Optimized logical plans, an engineer can see exactly which optimizer rules were applied, including predicate pushdown and column pruning. `EXPLAIN` (A) shows only the physical plan. `EXPLAIN FORMATTED` (C) shows a formatted physical plan. `EXPLAIN COST` (D) shows cost estimates but not the full optimization stages.
 
+## Key Takeaways
+
+- **Photon prefix in operators**: When Photon is active, plan operators are named `PhotonGroupingAgg`, `PhotonScan`, etc.; absence of the prefix means the operator fell back to standard Spark JVM execution.
+- **UDFs disable Photon**: Python UDFs always execute in the Spark JVM and cause adjacent operators to fall back from Photon — replace UDFs with built-in Spark SQL functions to restore Photon acceleration.
+- **Predicate pushdown order matters**: Place simple equality or range filters before UDFs and complex transformations so the Catalyst optimizer can push them into `PushedFilters` at the scan level.
+- **ANALYZE TABLE for CBO**: `ANALYZE TABLE ... COMPUTE STATISTICS FOR COLUMNS` collects column histograms; enable `spark.sql.cbo.enabled = true` and `spark.sql.cbo.joinReorder.enabled = true` to leverage them.
+- **Subquery elimination**: Catalyst automatically detects and evaluates duplicate subqueries only once — prefer `EXISTS` over `IN` for large correlated subqueries to allow the optimizer to convert them to joins.
+- **Spill fix for aggregations**: If `HashAggregate` spills to disk, increase `spark.sql.shuffle.partitions` (more, smaller partitions) or raise `spark.memory.fraction` to give execution more heap space.
+- **CartesianProduct is a bug signal**: Seeing `CartesianProduct` or `BroadcastNestedLoopJoin` without an explicit cross join intent almost always indicates a missing or incorrect join condition in the query.
+- **AQE broadcast conversion**: If AQE does not convert `SortMergeJoin` to `BroadcastHashJoin` despite small runtime table size, increase `spark.sql.adaptive.autoBroadcastJoinThreshold` or use an explicit `broadcast()` hint.
+
 ## Related Topics
 
 - [Spark Tuning](03-spark-tuning.md) - Core Spark configurations, AQE, and shuffle optimization

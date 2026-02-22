@@ -1,5 +1,5 @@
 ---
-tags: [reference, comparison, data-engineering]
+tags: [reference, comparison, data-engineering, ml, genai]
 ---
 
 # Comparison Tables
@@ -143,3 +143,71 @@ tags: [reference, comparison, data-engineering]
 | **New Data**       | Not clustered     | Automatically clustered |
 | **Maturity**       | GA, older         | GA, newer               |
 | **Recommendation** | Existing tables   | New tables              |
+
+## UC Model Registry vs Workspace Registry
+
+| Aspect               | Unity Catalog Registry            | Workspace Registry           |
+| -------------------- | --------------------------------- | ---------------------------- |
+| **Namespace**        | `catalog.schema.model_name`       | `model_name` only            |
+| **Governance**       | UC GRANT/REVOKE (SQL-based)       | ACL via workspace UI         |
+| **Aliases**          | Named aliases (`@champion`)       | Legacy stages (Staging/Production) |
+| **Cross-workspace**  | Yes (account-level)               | No (workspace-scoped)        |
+| **Lineage**          | Automatic via UC                  | Not available                |
+| **Registry URI**     | `"databricks-uc"`                 | `"databricks"` (default)     |
+| **Recommendation**   | New deployments                   | Legacy only                  |
+
+## Model Deployment Modes
+
+| Mode                  | API                          | Latency    | Use Case                       | Scales to Zero |
+| --------------------- | ---------------------------- | ---------- | ------------------------------ | -------------- |
+| **Real-time serving** | Model Serving REST endpoint  | < 100 ms   | Online inference, APIs         | Yes (optional) |
+| **Batch (Spark)**     | `mlflow.pyfunc.spark_udf()`  | Minutes    | Bulk scoring, scheduled jobs   | N/A            |
+| **Streaming**         | `mlflow.pyfunc.spark_udf()` in `writeStream` | Seconds | Continuous scoring  | N/A            |
+
+## Shadow vs Canary vs A/B Test
+
+| Strategy          | Traffic to Challenger | User Impact | Risk    | Purpose                              |
+| ----------------- | --------------------- | ----------- | ------- | ------------------------------------ |
+| **Shadow**        | 0% (mirrored only)    | None        | Lowest  | Offline output validation            |
+| **Canary**        | 5–25%                 | Minimal     | Low     | Gradual rollout with live signals    |
+| **A/B Test**      | 50%                   | Half users  | Medium  | Statistical comparison with outcome  |
+
+## Dense vs Sparse vs Hybrid Vector Search
+
+| Aspect           | Dense (Semantic)         | Sparse (Keyword/BM25)      | Hybrid                        |
+| ---------------- | ------------------------ | -------------------------- | ----------------------------- |
+| **Matching**     | Semantic similarity      | Exact keyword frequency    | Both combined                 |
+| **Best for**     | Natural language queries | Technical terms, IDs, SKUs | General-purpose RAG           |
+| **Embedding**    | Required                 | Not required               | Required for dense component  |
+| **Tuning**       | `ef_search` parameter    | BM25 weights               | `alpha` mixing parameter      |
+| **Miss rate**    | Low for paraphrases      | Low for exact terms        | Low overall                   |
+
+## RAG vs Fine-tuning
+
+| Aspect                | RAG                                  | Fine-tuning                           |
+| --------------------- | ------------------------------------ | ------------------------------------- |
+| **Knowledge update**  | Real-time (retrieval from live index)| Requires retraining (static snapshot) |
+| **Hallucination risk**| Lower (grounded in retrieved docs)   | Higher (relies on baked-in weights)   |
+| **Data required**     | Documents for indexing               | Labeled input-output pairs            |
+| **Cost**              | Index + inference                    | Training + inference                  |
+| **Best for**          | Domain knowledge, FAQs, docs         | Tone/style, task adaptation           |
+| **Explainability**    | High (source citations possible)     | Low                                   |
+
+## Pay-per-Token vs Provisioned Throughput
+
+| Aspect              | Pay-per-Token (Foundation Model API) | Provisioned Throughput            |
+| ------------------- | ------------------------------------ | --------------------------------- |
+| **Billing**         | Per input/output token               | Per hour (reserved capacity)      |
+| **Latency**         | Variable (shared pool)               | Predictable (dedicated resources) |
+| **Throughput**      | Best-effort                          | Guaranteed QPS SLA                |
+| **Setup**           | Immediate, no config                 | Must pre-provision capacity       |
+| **Best for**        | Dev, low-volume, variable load       | Production, high-volume, SLA-bound|
+
+## Drift Types
+
+| Drift Type          | What Changes                                   | Labels Needed | Detectable Early |
+| ------------------- | ---------------------------------------------- | ------------- | ---------------- |
+| **Data drift**      | Distribution of input features                 | No            | Yes              |
+| **Prediction drift**| Distribution of model output scores/classes    | No            | Yes              |
+| **Concept drift**   | Relationship between inputs and target         | Yes           | No               |
+| **Label drift**     | Distribution of actual ground-truth labels     | Yes           | No               |

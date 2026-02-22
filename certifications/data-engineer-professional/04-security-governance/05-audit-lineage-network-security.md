@@ -673,6 +673,24 @@ VPC Peering Setup:
 **Scenario:** Data lineage is not showing up in the Catalog Explorer for a specific set of tables.
 **Fix:** Tables stored in the legacy `hive_metastore` do not support automatic lineage capture. Migrate the tables to Unity Catalog to enable lineage.
 
+## Key Takeaways
+
+- **Automatic lineage capture**: Unity Catalog records table-to-table, column-level, and notebook/job lineage for all queries run against UC-managed tables; tables in `hive_metastore` do NOT generate lineage
+- **Column-level lineage**: tracked automatically when Spark queries create or overwrite UC tables; visible in Catalog Explorer under the Lineage tab and queryable via the REST API (`/api/2.1/unity-catalog/lineage/column-lineage`)
+- **Impact analysis**: downstream lineage from the table lineage API shows the "blast radius" before a schema change — which tables, views, notebooks, and dashboards depend on a given table or column
+- **Audit table structure**: `system.access.audit` is partitioned by `event_date` for performance; key columns are `service_name`, `action_name`, `user_identity.email`, `request_params`, and `response.status_code`; default retention is 365 days
+- **Audit long-term archival**: `system.access.audit` retention cannot be extended in-place; create a scheduled job to copy records to your own Delta table for multi-year compliance retention
+- **Information schema visibility**: `system.information_schema` tables are permission-filtered — users only see objects they have `USE CATALOG`/`USE SCHEMA` access to; compliance team needs explicit grants to query the full object inventory
+- **Secure Cluster Connectivity (SCC)**: removes public IP addresses from cluster nodes; all control-plane communication is initiated outbound from the cluster through a secure tunnel; recommended for all production workloads
+- **Private Link vs SCC**: Private Link routes traffic between the Databricks control plane and cloud storage over the cloud provider's private backbone (not the public internet); SCC removes public IPs from cluster nodes — both address different network threat surfaces
+
+## Related Topics
+
+- [Unity Catalog](01-unity-catalog.md) - Governance foundation
+- [Access Control](02-access-control.md) - Row/column security
+- [Secret Management](04-secret-management.md) - Audit of secret access
+- [Data Classification, Compliance & Permissions](06-classification-compliance-permissions.md) - GDPR, tagging, advanced permissions
+
 ---
 
 **[← Previous: Secret Management](./04-secret-management.md) | [↑ Back to Security & Governance](./README.md) | [Next: Data Classification, Compliance & Permissions](./06-classification-compliance-permissions.md) →**

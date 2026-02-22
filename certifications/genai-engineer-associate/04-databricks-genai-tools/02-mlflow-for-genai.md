@@ -406,6 +406,16 @@ with mlflow.start_run(run_name="rag-v3-llama-70b"):
 **Scenario:** Connecting MLflow for GenAI to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for MLflow for GenAI prior to deployment.
 
+## Key Takeaways
+
+- **MLflow Tracing**: captures inputs, outputs, and latency of every LLM call and retrieval step as a hierarchical span tree — displayed in the MLflow Trace UI
+- **`mlflow.langchain.autolog()`**: enables automatic traces for all LangChain chains with a single line — no manual instrumentation needed
+- **`mlflow.start_span(name, span_type)`**: manual span creation for custom components not covered by autolog
+- **`mlflow.pyfunc.ChatModel`**: standard interface for custom agents — implement `predict()` to accept OpenAI-format chat messages; enables consistent deployment
+- **`agents.deploy()`**: deploys a registered model to Model Serving AND automatically enables the Review App for human feedback collection
+- **Review App**: collaborative human annotation interface — captures thumbs up/down and free-text feedback per prediction
+- **Tracing for debugging**: use span tree to identify which step (retrieval, LLM call, tool execution) is causing latency or incorrect output
+
 ---
 
 **[← Previous: Mosaic AI & Foundation Models](./01-mosaic-ai-and-foundation-models.md) | [↑ Back to Databricks GenAI Tools](./README.md)**

@@ -413,6 +413,17 @@ spark = (SparkSession.builder
 9. **Naming conventions** - Descriptive test names
 10. **Testing pyramid** - Unit → Integration → E2E
 
+## Key Takeaways
+
+- **Fixture scopes matter**: Use `scope="session"` for the SparkSession fixture to create it once for all tests; function-scoped fixtures recreate it per test and dramatically slow down the test suite.
+- **Test isolation**: Each test must create its own data and clean up after itself — tests that depend on shared state or a specific execution order are fragile and unreliable in CI.
+- **Delta in local tests**: To test Delta Lake operations locally, add `io.delta:delta-core_2.12:<version>` to `spark.jars.packages` and enable the Delta extension in the SparkSession configuration.
+- **Chispa for DataFrame equality**: Use `chispa.assert_df_equality()` to compare two DataFrames with proper null and order handling, rather than converting to Python lists for comparison.
+- **Nutter pattern**: Nutter notebook tests follow a `before` / `run_<name>` / `assertion_<name>` naming convention and are discovered automatically by the Nutter runner.
+- **Streaming test trick**: Use `query.processAllAvailable()` followed by `query.stop()` to run a streaming query to completion in a test environment without setting up a continuous trigger.
+- **JUnit reports**: Output test results with `--junitxml=test-results.xml` so CI platforms like GitHub Actions can parse and display per-test pass/fail results.
+- **Low parallelism for speed**: Set `spark.sql.shuffle.partitions=1` and `spark.default.parallelism=1` in local test SparkSessions to dramatically reduce test execution time.
+
 ## Related Topics
 
 - [Asset Bundles](01-asset-bundles-part1.md) - Test deployment

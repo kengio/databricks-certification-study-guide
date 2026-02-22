@@ -570,6 +570,17 @@ WHERE event_time >= current_timestamp() - INTERVAL 7 DAYS
 9. **Information schema** - Standard SQL metadata tables
 10. **Enable via admin** - Account admin enables system tables
 
+## Key Takeaways
+
+- **System catalog**: All system tables live in the `system` catalog and must be enabled by an account admin before use.
+- **Date partitioning**: Always filter on date columns (e.g., `event_date`, `usage_date`) to activate partition pruning; filtering on timestamp columns causes full scans.
+- **Audit log retention**: `system.access.audit` retains data for 365 days; `system.query.history` retains data for only 30 days.
+- **Billing with tags**: `system.billing.usage` stores custom cluster/workspace tags in a `MAP` type column, accessed with bracket notation (`custom_tags['team']`).
+- **SKU naming patterns**: Know the key SKU patterns — `ALL_PURPOSE`, `JOBS`, `SQL` — for cost breakdown queries.
+- **Lineage tables**: `system.lineage.table_lineage` and `column_lineage` track upstream/downstream dataset dependencies for impact analysis.
+- **Audit scope**: Audit logs are account-level and cover all workspaces; the `user_identity` column is a STRUCT with email and user_id fields.
+- **Permission grants**: Users must be explicitly granted `SELECT` on system schemas/tables (e.g., `GRANT SELECT ON SCHEMA system.billing TO ...`).
+
 ## Related Topics
 
 - [Spark UI Debugging](02-spark-ui-debugging.md) - Job-level monitoring

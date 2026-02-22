@@ -327,7 +327,7 @@ deletes = changes_df.filter(col("_change_type") == "delete")
 - Use `update_postimage` for the new values (not `preimage`)
 - CDF works with both batch and streaming reads
 
-For comprehensive CDC patterns including APPLY CHANGES, SCD types, and multi-hop propagation, see [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture.md).
+For comprehensive CDC patterns including APPLY CHANGES, SCD types, and multi-hop propagation, see [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture-part1.md).
 
 ## Use Cases
 
@@ -431,9 +431,9 @@ D) It eliminates the need for VACUUM
 ## Related Topics
 
 - [Open Table Formats](open-table-formats.md) - UniForm, Iceberg, Hudi comparison
-- [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-data-processing/06-delta-lake-operations.md) - OPTIMIZE, VACUUM, Z-ordering
+- [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-data-processing/06-delta-lake-operations-part1.md) - OPTIMIZE, VACUUM, Z-ordering
 - [Medallion Architecture](medallion-architecture.md) - Bronze/Silver/Gold pattern
-- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture.md) - CDC patterns
+- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture-part1.md) - CDC patterns
 
 ## Official Documentation
 

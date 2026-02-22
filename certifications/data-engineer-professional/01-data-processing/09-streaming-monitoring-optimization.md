@@ -463,6 +463,17 @@ spark.conf.set(
 - Test stateful logic with small datasets and the `rate` source before connecting production sources
 - Keep checkpoint locations versioned (e.g., `/checkpoints/query_v2/`) when making incompatible query changes
 
+## Key Takeaways
+
+- **Back-pressure detection**: `inputRowsPerSecond > processedRowsPerSecond` or batch duration exceeding the trigger interval are the primary signals; use `maxFilesPerTrigger` (files) or `maxOffsetsPerTrigger` (Kafka) to limit intake
+- **`StreamingQueryListener`** provides event-driven monitoring for production streams; implement all three methods (`onQueryStarted`, `onQueryProgress`, `onQueryTerminated`) and register before starting the query
+- **Checkpoint compatibility**: changes to groupBy keys, watermark delay, join conditions, state schema, or output mode are incompatible with an existing checkpoint and require a new checkpoint location
+- **RocksDB state store** is recommended when state exceeds ~100 MB or has millions of keys; it spills to local SSD instead of keeping all state in JVM heap; enable changelog checkpointing to reduce checkpoint write overhead
+- **Stream-stream join state explosion** occurs when no time range condition is included in the join predicate; watermarks alone do not bound state — a time range condition is also required
+- **`numRowsDroppedByWatermark`** in `stateOperators` progress metrics indicates late events being discarded; a high value suggests the watermark delay should be increased
+- **Global watermark policy `min`** (default) can cause excessive state retention when one stream is much slower than another; switching to `max` reduces state but increases late-data loss
+- **`query.lastProgress`** and `query.recentProgress` are the primary APIs for monitoring batch metrics, state size, throughput, and lag in production streaming queries
+
 ## Related Topics
 
 - [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals, triggers, output modes, basic watermarking

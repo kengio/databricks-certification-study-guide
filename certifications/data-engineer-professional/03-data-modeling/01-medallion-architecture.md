@@ -686,6 +686,17 @@ deduped = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
 9. **Catalog organization** - Consider layer-based or domain-based schemas
 10. **Lineage tracking** - Add metadata columns for debugging
 
+## Key Takeaways
+
+- **Bronze layer principles**: append-only writes, preserve source schema, add metadata columns (`_ingested_at`, `_source_file`, `_source_system`), no business transformations, enable schema evolution with `mergeSchema=true`
+- **Silver layer principles**: enforce schema with NOT NULL constraints and CHECK constraints, deduplicate records using `row_number()` or MERGE, use MERGE for idempotent upserts from Bronze
+- **Gold layer patterns**: pre-aggregate for query performance, apply consistent business logic, build star schemas (fact + dimension tables) optimized for read-heavy consumption
+- **Quarantine pattern**: separate valid from invalid records during Silver processing; route invalid rows to a quarantine table with an `_error_reason` column for later remediation
+- **DLT maps cleanly to medallion**: Bronze = streaming ingestion with Auto Loader, Silver = expectations + dedup + MERGE, Gold = aggregation tables
+- **Unity Catalog organization**: use catalogs per environment (dev/staging/prod) with schemas per layer (bronze/silver/gold), or domain-based schemas (sales_bronze, sales_silver, etc.)
+- **Schema drift in Bronze**: handled with `mergeSchema=true` and Auto Loader `schemaEvolutionMode=addNewColumns`; schema enforcement belongs in Silver
+- **Partition strategy by layer**: Bronze partitioned by ingestion date for retention management; Silver/Gold partitioned by business date or business key
+
 ## Related Topics
 
 - [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - Underlying technology
