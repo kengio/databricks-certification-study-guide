@@ -70,6 +70,8 @@ flowchart LR
 
 ![Workflow Task Types](../../../../../images/databricks-ui/workflows/workflow_task_types.png)
 
+*Task type selector in the Databricks Workflows UI showing available task types (Notebook, Python, dbt, SQL, DLT).*
+
 | Task Type | Use Case | Configuration |
 | :--- | :--- | :--- |
 | Notebook | Run notebook code | Notebook path, parameters |
@@ -280,6 +282,8 @@ tasks:
 
 ![Workflow DAG View](../../../../../images/databricks-ui/workflows/workflow_dag_view.png)
 
+*Workflow DAG visualizer showing task dependencies and execution ordering in a multi-task job.*
+
 ```mermaid
 flowchart TD
     A[Ingest Orders] --> D[Join Data]
@@ -476,7 +480,7 @@ df.write.format("delta").mode("overwrite").saveAsTable(f"silver.{table_name}")
 print(f"Processed table: {table_name}")
 ```
 
-> **Continue reading:** [Part 2 — Triggers, Compute, Notifications, Parameters, Error Handling & Exam Tips](./05-lakeflow-jobs-part2.md)
+> **Continue reading:** [Part 2 — Triggers, Compute, Notifications, Parameters, Error Handling & Exam Tips](./04-lakeflow-jobs-part2.md)
 
 ---
 

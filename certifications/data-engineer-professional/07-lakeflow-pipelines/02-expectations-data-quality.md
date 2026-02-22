@@ -41,6 +41,8 @@ flowchart TB
 
 ![DLT Data Quality Metrics](../../../../../images/databricks-ui/dlt/dlt_data_quality_metrics.png)
 
+*DLT pipeline graph showing expectation pass, fail, and drop row counts per table.*
+
 ## Expectation Types
 
 ### Comparison Table

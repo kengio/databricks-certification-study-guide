@@ -194,6 +194,8 @@ print(ENVIRONMENT)  # "production"
 
 ![SQL Dashboard Parameters](../../../../../images/databricks-ui/sql/sql_dashboard_parameters.png)
 
+*Databricks SQL dashboard with dynamic parameters for interactive filtering.*
+
 Widgets provide parameterization for notebooks, enabling reusable pipelines.
 
 ### Widget Types

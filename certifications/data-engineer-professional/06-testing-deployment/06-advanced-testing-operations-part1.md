@@ -13,7 +13,7 @@ status: published
 
 This guide covers advanced testing strategies for Databricks — property-based testing, DLT testing, streaming pipeline testing, integration testing, and test isolation patterns.
 
-> For deployment validation, GitOps patterns, and rollback strategies, see [Part 2: Advanced Operations & Deployment](./07-advanced-testing-operations-part2.md).
+> For deployment validation, GitOps patterns, and rollback strategies, see [Part 2: Advanced Operations & Deployment](./06-advanced-testing-operations-part2.md).
 
 ## Advanced Testing Strategies
 
@@ -707,7 +707,7 @@ targets:
 
 ---
 
-> **Continue reading:** [Part 2 — Deployment Validation, GitOps, Practice Questions & Exam Tips](./07-advanced-testing-operations-part2.md)
+> **Continue reading:** [Part 2 — Deployment Validation, GitOps, Practice Questions & Exam Tips](./06-advanced-testing-operations-part2.md)
 
 ---
 

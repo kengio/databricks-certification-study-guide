@@ -609,7 +609,7 @@ pipeline {
 }
 ```
 
-> **Continue reading:** [Part 2 — Testing, Secrets & Monitoring](./08-cicd-integration-part2.md)
+> **Continue reading:** [Part 2 — Testing, Secrets & Monitoring](./02-cicd-integration-part2.md)
 
 ---
 

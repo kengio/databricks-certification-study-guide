@@ -224,6 +224,8 @@ JOIN customers c ON o.customer_id = c.customer_id;
 
 ![SQL Editor Query Profile](../../../../../images/databricks-ui/sql/sql_editor_query_profile.png)
 
+*Query Profile in the Databricks SQL editor visualizing per-stage execution details.*
+
 ```text
 Access:
 1. Run query in SQL editor

@@ -164,6 +164,8 @@ scoring_df.write.mode("overwrite").saveAsTable("predictions.churn_scores")
 
 ![Model Serving Endpoint](../../../../../images/databricks-ui/mlflow/model_serving_endpoint.png)
 
+*Databricks Model Serving endpoint showing environment, compute size, and traffic routing.*
+
 ### **Model Serving Endpoints**
 
 ```python

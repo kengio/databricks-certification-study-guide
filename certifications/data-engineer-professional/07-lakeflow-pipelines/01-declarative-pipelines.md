@@ -31,6 +31,8 @@ flowchart TB
 
 ![DLT Pipeline DAG View](../../../../../images/databricks-ui/dlt/dlt_pipeline_graph.png)
 
+*DLT pipeline DAG showing Bronze → Silver → Gold data flow between tables.*
+
 ## Table Types
 
 ### Comparison
@@ -394,7 +396,11 @@ def mv_from_jdbc():
 
 ![DLT Pipeline Settings](../../../../../images/databricks-ui/dlt/dlt_pipeline_settings.png)
 
+*DLT pipeline settings panel showing target schema, development mode, and trigger type.*
+
 ![DLT Cluster Autoscale](../../../../../images/databricks-ui/dlt/dlt_cluster_autoscale.png)
+
+*DLT pipeline cluster settings showing enhanced autoscaling configuration.*
 
 ### databricks.yml for DLT
 

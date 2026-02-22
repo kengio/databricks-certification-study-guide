@@ -18,6 +18,8 @@ This part covers triggers and scheduling, compute configuration, notifications, 
 
 ![Workflow Trigger Schedule](../../../../../images/databricks-ui/workflows/workflow_trigger_schedule.png)
 
+*Databricks Job trigger schedule configuration showing cron, continuous, and file-arrival options.*
+
 ### Cron Schedule
 
 ```yaml
@@ -235,6 +237,8 @@ tasks:
 ## Monitoring and Logging
 
 ![Workflow Run Matrix](../../../../../images/databricks-ui/workflows/workflow_run_matrix.png)
+
+*Job run matrix showing historical success and failure status across multiple executions.*
 
 ### Job Run API
 

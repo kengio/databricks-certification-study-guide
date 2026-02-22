@@ -442,7 +442,7 @@ Solutions:
 4. Use broadcast join if one side is small enough
 ```
 
-> **Continue reading:** [Part 2 — Query Optimization Strategies, Common Issues & Exam Tips](./08-photon-diagnostics-optimization-part2.md)
+> **Continue reading:** [Part 2 — Query Optimization Strategies, Common Issues & Exam Tips](./06-photon-diagnostics-optimization-part2.md)
 
 ---
 

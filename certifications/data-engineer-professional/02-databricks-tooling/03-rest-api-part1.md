@@ -648,7 +648,7 @@ curl -X POST \
   -d '{"scope": "my-scope", "key": "db-password"}'
 ```
 
-> **Continue reading:** [Part 2 — Permissions, SQL, Error Handling & Use Cases](./06-rest-api-part2.md)
+> **Continue reading:** [Part 2 — Permissions, SQL, Error Handling & Use Cases](./03-rest-api-part2.md)
 
 ---
 

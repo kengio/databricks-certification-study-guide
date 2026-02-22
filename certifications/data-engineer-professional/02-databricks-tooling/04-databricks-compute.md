@@ -352,6 +352,8 @@ flowchart TB
 
 ![SQL Warehouse Creation](../../../../../images/databricks-ui/sql/sql_warehouse_creation.png)
 
+*SQL Warehouse creation form showing cluster size, auto-stop, and scaling settings.*
+
 ```python
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.sql import EndpointInfo

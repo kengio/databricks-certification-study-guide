@@ -472,7 +472,7 @@ ANALYZE TABLE table_name COMPUTE STATISTICS FOR COLUMNS col1, col2;
 ANALYZE TABLE table_name COMPUTE STATISTICS FOR ALL COLUMNS;
 ```
 
-> **Continue reading:** [Part 2 — Schema Operations, Table Properties, Delta 3.0+ Features & Exam Tips](./13-delta-lake-operations-part2.md)
+> **Continue reading:** [Part 2 — Schema Operations, Table Properties, Delta 3.0+ Features & Exam Tips](./06-delta-lake-operations-part2.md)
 
 ---
 

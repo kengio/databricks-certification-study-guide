@@ -45,7 +45,7 @@ flowchart TD
 
 ## Next Steps
 
-You've completed the associate certification path. Review all topics with [Practice Questions](../resources/practice-questions/) and [Mock Exams](../resources/mock-exam/).
+You've completed the associate certification path. Review all topics with [Practice Questions](../resources/practice-questions/README.md) and [Mock Exams](../resources/mock-exam/README.md).
 
 ---
 

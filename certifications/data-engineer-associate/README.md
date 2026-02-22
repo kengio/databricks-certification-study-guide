@@ -50,9 +50,9 @@ pie title Exam Topic Distribution
 
 | Resource                                                | Description                              |
 | ------------------------------------------------------- | ---------------------------------------- |
-| [Practice Questions](resources/practice-questions/)    | Topic-specific practice questions        |
-| [Mock Exam 1](resources/mock-exam/)                    | Full-length practice exam (45 questions) |
-| [Mock Exam 2](resources/mock-exam-2/)                  | Alternative practice exam                |
+| [Practice Questions](resources/practice-questions/README.md)    | Topic-specific practice questions        |
+| [Mock Exam 1](resources/mock-exam/README.md)                    | Full-length practice exam (45 questions) |
+| [Mock Exam 2](resources/mock-exam-2/README.md)                  | Alternative practice exam                |
 | [Exam Tips](resources/exam-tips.md)                    | Strategies and exam format guide         |
 | [Official Links](resources/official-links.md)          | Documentation and registration links     |
 

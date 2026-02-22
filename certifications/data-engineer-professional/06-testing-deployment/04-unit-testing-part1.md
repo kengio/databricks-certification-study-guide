@@ -480,7 +480,7 @@ nutter run /Workspace/Users/user@company.com/project/tests/ \
     --junit_report results.xml
 ```
 
-> **Continue reading:** [Part 2 — Testing Patterns, CI/CD Integration, Best Practices & Exam Tips](./11-unit-testing-part2.md)
+> **Continue reading:** [Part 2 — Testing Patterns, CI/CD Integration, Best Practices & Exam Tips](./04-unit-testing-part2.md)
 
 ---
 

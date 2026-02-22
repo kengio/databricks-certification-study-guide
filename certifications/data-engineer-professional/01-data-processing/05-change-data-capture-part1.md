@@ -456,7 +456,7 @@ spark.sql("""
 """)
 ```
 
-> **Continue reading:** [Part 2 — CDC Best Practices, Pipeline Patterns, Row Tracking, Multi-Hop CDC & Exam Tips](./11-change-data-capture-part2.md)
+> **Continue reading:** [Part 2 — CDC Best Practices, Pipeline Patterns, Row Tracking, Multi-Hop CDC & Exam Tips](./05-change-data-capture-part2.md)
 
 ---
 

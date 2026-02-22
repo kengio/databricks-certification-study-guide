@@ -481,7 +481,7 @@ resources:
             - jar: ../artifacts/spark_extensions/*.jar
 ```
 
-> **Continue reading:** [Part 2 — Sync, CI/CD Integration, Bundle Templates, Common Patterns & Exam Tips](./10-asset-bundles-part2.md)
+> **Continue reading:** [Part 2 — Sync, CI/CD Integration, Bundle Templates, Common Patterns & Exam Tips](./01-asset-bundles-part2.md)
 
 ---
 

@@ -283,6 +283,8 @@ GROUP BY DATE(timestamp), details:expectations.dataset, details:expectations.nam
 
 ![SQL Alerts Configuration](../../../../../images/databricks-ui/sql/sql_alerts_configuration.png)
 
+*SQL alert configuration showing threshold condition and notification channel settings.*
+
 ### Alert on Data Quality Failures
 
 ```python

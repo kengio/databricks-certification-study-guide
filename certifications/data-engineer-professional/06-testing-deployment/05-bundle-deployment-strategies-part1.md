@@ -631,7 +631,7 @@ def get_job_id(client, job_name):
     raise ValueError(f"Job not found: {job_name}")
 ```
 
-> **Continue reading:** [Part 2 — Rollback, Feature Flags & OIDC](./09-bundle-deployment-strategies-part2.md)
+> **Continue reading:** [Part 2 — Rollback, Feature Flags & OIDC](./05-bundle-deployment-strategies-part2.md)
 
 ---
 

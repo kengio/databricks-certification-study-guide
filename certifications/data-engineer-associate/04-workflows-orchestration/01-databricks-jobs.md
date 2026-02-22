@@ -276,6 +276,10 @@ args = parser.parse_args()
 
 ## Multi-Task Jobs
 
+![Databricks Job Task DAG View](../../../images/databricks-ui/workspace/job-task-dag.png)
+
+*The Databricks UI DAG visualizer showing task dependencies in a multi-task job.*
+
 ### Job with Dependencies
 
 ```json

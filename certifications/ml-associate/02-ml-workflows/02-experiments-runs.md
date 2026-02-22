@@ -37,6 +37,8 @@ flowchart TD
 
 ![MLflow Experiment Runs](../../../../../images/databricks-ui/mlflow/mlflow_experiment_runs.png)
 
+*MLflow Experiments UI listing runs with logged metrics and parameters.*
+
 ### **Creating Experiments**
 
 ```python
@@ -114,6 +116,8 @@ mlflow.set_experiment(exp_name)
 ## Run Management
 
 ![MLflow Run Details](../../../../../images/databricks-ui/mlflow/mlflow_run_details.png)
+
+*MLflow Run detail view showing logged parameters, metrics, and artifacts.*
 
 ### **Creating & Managing Runs**
 

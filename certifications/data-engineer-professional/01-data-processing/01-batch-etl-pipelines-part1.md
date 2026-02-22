@@ -648,7 +648,7 @@ df.withColumn("discounted", calculate_discount(col("amount"), col("rate")))
 
 **Best Practice**: Always prefer built-in Spark functions over UDFs when possible.
 
-> **Continue reading:** [Part 2 — Performance Optimization, Error Handling, Use Cases & Exam Tips](./10-batch-etl-pipelines-part2.md)
+> **Continue reading:** [Part 2 — Performance Optimization, Error Handling, Use Cases & Exam Tips](./01-batch-etl-pipelines-part2.md)
 
 ---
 

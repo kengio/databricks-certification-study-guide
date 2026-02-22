@@ -530,7 +530,7 @@ sequenceDiagram
 | Right Outer | Left side required | Right buffered |
 | Full Outer | Both sides | Both buffered |
 
-> **Continue reading:** [Part 2 — Stream-Static Joins, Stateful Operations, State Store Management, Query Management & Exam Tips](./12-structured-streaming-part2.md)
+> **Continue reading:** [Part 2 — Stream-Static Joins, Stateful Operations, State Store Management, Query Management & Exam Tips](./03-structured-streaming-part2.md)
 
 ---
 
