@@ -246,7 +246,7 @@ Fine-tuning workflow:
 > A) Query performance improves because bge-large-en produces higher-quality embeddings
 > B) The system automatically re-embeds the index to match the new model
 > C) Similarity search results are corrupted because index and query vectors are in different
->    embedding spaces
+> embedding spaces
 > D) The Vector Search endpoint raises an error and refuses to serve queries
 >
 > **Correct Answer: C**

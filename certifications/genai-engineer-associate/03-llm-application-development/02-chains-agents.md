@@ -333,7 +333,7 @@ Model Serving using `agents.deploy()`.
 >
 > A) It specifies the Python packages to install when the model is served
 > B) It declares which Databricks services (Vector Search index, serving endpoint) the chain
->    uses so that permissions are automatically granted at deployment time
+> uses so that permissions are automatically granted at deployment time
 > C) It limits the number of concurrent requests the served model will accept
 > D) It defines the chunk size used by the retriever during similarity search
 >
