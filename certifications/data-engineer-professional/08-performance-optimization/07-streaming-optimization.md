@@ -379,16 +379,6 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 - **Catch-up Processing Post-Outage**: Utilizing the `availableNow()` trigger in a Structured Streaming query to swiftly power through a backlog of millions of queued Kafka events left after a maintenance window, cleanly spinning down the cluster when complete.
 - **Handling Out-of-Order Sensor Data**: Configuring a generous 24-hour watermark on an IoT sensor stateful aggregation stream using RocksDB, allowing delayed telemetry records to be gracefully incorporated into yesterday's daily averages without running out of JVM heap space.
 
-## Exam Tips
-
-1. **Trigger selection**: Match trigger interval to latency requirements
-2. **Watermarks**: Required for stateful operations to prevent unbounded state
-3. **Checkpoints**: Never delete - essential for exactly-once semantics
-4. **Auto Loader**: Use `useNotifications` for directories with many files
-5. **Kafka tuning**: `maxOffsetsPerTrigger` controls micro-batch size
-6. **State stores**: RocksDB for large state, default for small state
-7. **File sizing**: 128 MB target for streaming, enable auto-compact
-
 ## Common Issues and Solutions
 
 | Issue | Symptom | Solution |
@@ -398,6 +388,16 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 | High latency | Batches take too long | Reduce trigger interval scope |
 | Missed data | Data not processed | Check `useNotifications`, backfill |
 | Checkpoint corruption | Stream won't start | Start fresh (carefully) |
+
+## Exam Tips
+
+1. **Trigger selection**: Match trigger interval to latency requirements
+2. **Watermarks**: Required for stateful operations to prevent unbounded state
+3. **Checkpoints**: Never delete - essential for exactly-once semantics
+4. **Auto Loader**: Use `useNotifications` for directories with many files
+5. **Kafka tuning**: `maxOffsetsPerTrigger` controls micro-batch size
+6. **State stores**: RocksDB for large state, default for small state
+7. **File sizing**: 128 MB target for streaming, enable auto-compact
 
 ## Key Numbers to Remember
 

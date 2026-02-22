@@ -463,6 +463,12 @@ GRANT SELECT ON SCHEMA prod.gold TO `sp-bi-dashboard`;
 | Regular rotation | Rotate secrets periodically |
 | Audit access | Monitor SP activity in audit logs |
 
+## Use Cases
+
+- **Multi-Tenant Data Platforms**: Isolating department data using declarative row-level filters (e.g., Sales can only see their designated region's rows) without duplicating data into multiple tables.
+- **Regulatory Compliance**: Hiding PII columns like emails or SSNs from standard analysts using column masking, while still allowing compliance officers to view the unmasked data.
+- **Delegated Administration**: Using the `MANAGE` privilege to allow team leads to manage access to their own schemas without granting them full ownership rights.
+
 ## Common Issues & Errors
 
 ### User Can't See Tables
@@ -502,12 +508,6 @@ GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
 **Scenario:** Row filter causes slow queries.
 
 **Fix:** Optimize filter function, ensure mapping tables are small and indexed.
-
-## Use Cases
-
-- **Multi-Tenant Data Platforms**: Isolating department data using declarative row-level filters (e.g., Sales can only see their designated region's rows) without duplicating data into multiple tables.
-- **Regulatory Compliance**: Hiding PII columns like emails or SSNs from standard analysts using column masking, while still allowing compliance officers to view the unmasked data.
-- **Delegated Administration**: Using the `MANAGE` privilege to allow team leads to manage access to their own schemas without granting them full ownership rights.
 
 ## Exam Tips
 

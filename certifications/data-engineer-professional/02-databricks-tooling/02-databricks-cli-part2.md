@@ -356,6 +356,12 @@ jq 'del(.job_id, .created_time)' job.json > job_clean.json
 DATABRICKS_CONFIG_PROFILE=target databricks jobs create --json-file job_clean.json
 ```
 
+## Use Cases
+
+- **CI/CD Automation**: Integrating Databricks Asset Bundles (DABs) deployment into GitHub Actions or Azure DevOps pipelines.
+- **Bulk Operations**: Managing hundreds of secrets, creating cluster policies, or syncing workspace directories automatically.
+- **Local IDE Integration**: Interacting with the remote Databricks workspace directly from a local terminal or IDE.
+
 ## Common Issues & Errors
 
 ### Authentication Failed
@@ -416,12 +422,6 @@ databricks configure --token
 ```
 
 **Fix:** Add delays between requests or batch operations.
-
-## Use Cases
-
-- **CI/CD Automation**: Integrating Databricks Asset Bundles (DABs) deployment into GitHub Actions or Azure DevOps pipelines.
-- **Bulk Operations**: Managing hundreds of secrets, creating cluster policies, or syncing workspace directories automatically.
-- **Local IDE Integration**: Interacting with the remote Databricks workspace directly from a local terminal or IDE.
 
 ## Exam Tips
 

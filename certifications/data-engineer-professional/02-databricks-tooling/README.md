@@ -31,7 +31,7 @@ flowchart LR
 | [02-databricks-cli-part1.md](02-databricks-cli-part1.md) | CLI installation, authentication, workspace, DBFS & jobs commands | Medium |
 | [02-databricks-cli-part2.md](02-databricks-cli-part2.md) | Cluster, secrets, bundle, Unity Catalog commands & exam prep | Medium |
 | [03-rest-api-part1.md](03-rest-api-part1.md) | Jobs API 2.1, Clusters API, DBFS API, Workspace API, Secrets API | High |
-| [06-rest-api-part2.md](06-rest-api-part2.md) | Permissions API, SQL Statements, error handling, rate limits, use cases | High |
+| [03-rest-api-part2.md](03-rest-api-part2.md) | Permissions API, SQL Statements, error handling, rate limits, use cases | High |
 | [04-databricks-compute.md](04-databricks-compute.md) | Cluster types, serverless, pools | High |
 | [05-dbfs-and-mounts.md](05-dbfs-and-mounts.md) | DBFS operations, cloud storage mounts | Medium |
 
