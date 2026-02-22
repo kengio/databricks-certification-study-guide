@@ -18,27 +18,27 @@ A comprehensive study guide for all Databricks certifications.
 
 | Certification                                                                     | Level        | Status           |
 | --------------------------------------------------------------------------------- | ------------ | ---------------- |
-| [Data Engineer Associate](certifications/data-engineer-associate/README.md)       | Associate    | ✅ Structured    |
-| [Data Engineer Professional](certifications/data-engineer-professional/README.md) | Professional | ✅ In Progress   |
+| [Data Engineer Associate](certifications/data-engineer-associate/README.md)       | Associate    | ✅ Complete |
+| [Data Engineer Professional](certifications/data-engineer-professional/README.md) | Professional | ✅ Complete |
 
 ### Data Analytics
 
 | Certification                                                             | Level     | Status        |
 | ------------------------------------------------------------------------- | --------- | ------------- |
-| [Data Analyst Associate](certifications/data-analyst-associate/README.md) | Associate | ✅ Structured |
+| [Data Analyst Associate](certifications/data-analyst-associate/README.md) | Associate | ✅ Complete |
 
 ### Machine Learning
 
 | Certification                                                | Level        | Status        |
 | ------------------------------------------------------------ | ------------ | ------------- |
-| [ML Associate](certifications/ml-associate/README.md)        | Associate    | ✅ Structured |
-| [ML Professional](certifications/ml-professional/README.md)  | Professional | ✅ Structured |
+| [ML Associate](certifications/ml-associate/README.md)        | Associate    | ✅ Complete |
+| [ML Professional](certifications/ml-professional/README.md)  | Professional | ✅ Complete |
 
 ### Generative AI
 
 | Certification                                                                 | Level     | Status        |
 | ----------------------------------------------------------------------------- | --------- | ------------- |
-| [GenAI Engineer Associate](certifications/genai-engineer-associate/README.md) | Associate | ✅ Structured |
+| [GenAI Engineer Associate](certifications/genai-engineer-associate/README.md) | Associate | ✅ Complete |
 
 ## Certification Paths
 
