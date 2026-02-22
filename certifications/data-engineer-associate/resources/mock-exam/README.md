@@ -1,31 +1,51 @@
 ---
-title: Mock Exam 1
-type: resources
+title: Mock Exam 1 — Data Engineer Associate
+type: mock-exam
+tags:
+  - data-engineer-associate
+  - mock-exam
 ---
 
-# Mock Exam 1
+# Mock Exam 1 — Databricks Data Engineer Associate
 
-Full-length practice exam for the Databricks Data Engineer Associate certification.
+Simulate the real exam under timed conditions before your test date.
 
-## Exam Details
+## Exam Instructions
 
-- **Format**: 45 multiple-choice questions
-- **Duration**: 90 minutes
-- **Passing Score**: 70% (32 questions)
-- **Topics**: All 5 exam domains
+| Detail | Value |
+| ------ | ----- |
+| Total Questions | 45 |
+| Time Limit | 90 minutes |
+| Passing Score | 70% (32 or more correct) |
+| Format | Multiple choice, single correct answer |
+
+## Domain Distribution
+
+| Domain | Weight | Questions |
+| ------ | ------ | --------- |
+| Lakehouse Platform | 24% | 11 |
+| ELT with Spark & SQL | 29% | 13 |
+| Delta Lake & Incremental | 21% | 10 |
+| Workflows & Orchestration | 16% | 7 |
+| Data Governance | 10% | 4 |
 
 ## How to Take This Exam
 
-1. Set a timer for 90 minutes
-2. Answer all questions without references
-3. Record your answers as you go
-4. Check your score against the answer key
-5. Review weak areas in the study materials
+1. Set a 90-minute timer before opening [questions.md](./questions.md)
+2. Answer all questions without referring to notes or documentation
+3. Expand the `[!success]- Answer` callout only after committing to an answer
+4. Score yourself per domain to identify weak areas
+5. Review [exam-tips.md](../exam-tips.md) if scoring below 70%
 
-## Content to be Expanded
+## Scoring Guide
 
-Full exam questions and answers to be added here.
+| Score | Result | Action |
+| ----- | ------ | ------ |
+| 36–45 (80–100%) | Excellent — ready to sit the exam | Schedule your exam |
+| 32–35 (71–79%) | Passing — review weak areas | Review missed topics, attempt Mock Exam 2 |
+| 28–31 (62–70%) | Close — focused study needed | Study weak domains, retry in 1 week |
+| Below 28 (<62%) | Not ready — comprehensive review needed | Review all study material before retrying |
 
 ---
 
-**[← Back to Practice Questions](../README.md)**
+**[Start the Exam →](./questions.md)** | **[← Back to Resources](../README.md)**

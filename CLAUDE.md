@@ -131,15 +131,15 @@ databricks-certification-study-guide/
 │   │   │   ├── 06-photon-diagnostics-optimization-part1.md
 │   │   │   ├── 06-photon-diagnostics-optimization-part2.md
 │   │   │   └── 07-streaming-optimization.md
-│   │   ├── cheat-sheets/
-│   │   │   ├── README.md
-│   │   │   ├── auto-loader-quick-ref.md
-│   │   │   ├── delta-lake-quick-ref.md
-│   │   │   ├── dlt-quick-ref.md
-│   │   │   ├── streaming-quick-ref.md
-│   │   │   └── unity-catalog-quick-ref.md
 │   │   └── resources/
 │   │       ├── exam-tips.md
+│   │       ├── cheat-sheets/
+│   │       │   ├── README.md
+│   │       │   ├── auto-loader-quick-ref.md
+│   │       │   ├── delta-lake-quick-ref.md
+│   │       │   ├── dlt-quick-ref.md
+│   │       │   ├── streaming-quick-ref.md
+│   │       │   └── unity-catalog-quick-ref.md
 │   │       ├── official-links.md
 │   │       ├── practice-questions/
 │   │       │   ├── README.md
@@ -149,15 +149,10 @@ databricks-certification-study-guide/
 │   │       │   └── 08-performance-optimization.md
 │   │       ├── mock-exam/
 │   │       │   ├── README.md
-│   │       │   ├── 05-monitoring-logging.md
-│   │       │   ├── 06-testing-deployment.md
-│   │       │   └── 07-lakeflow-performance.md
+│   │       │   └── questions.md
 │   │       └── mock-exam-2/
 │   │           ├── README.md
-│   │           ├── 04-security-governance.md
-│   │           ├── 05-monitoring-logging.md
-│   │           ├── 06-testing-deployment.md
-│   │           └── 07-lakeflow-performance.md
+│   │           └── questions.md
 │   │
 │   ├── data-analyst-associate/
 │   │   ├── README.md

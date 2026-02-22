@@ -59,6 +59,25 @@ spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.coalescePartitions.minPartitionSize", "4MB")
 ```
 
+## AQE Features
+
+AQE (enabled by default) activates four optimizations at query runtime:
+
+| Feature | What It Does | Key Config |
+| :--- | :--- | :--- |
+| Partition Coalescing | Merges small shuffle partitions post-shuffle | `coalescePartitions.enabled` (default: true) |
+| Skew Join Handling | Splits oversized skewed partitions | `skewJoin.enabled` (default: true) |
+| Local Shuffle Reader | Reads shuffle data locally when no shuffle needed | `localShuffleReader.enabled` (default: true) |
+| Dynamic Join Strategy | Switches sort-merge → broadcast at runtime | `autoBroadcastJoinThreshold` (default: 30MB) |
+
+```python
+# Tune skew detection (partition is skewed when BOTH conditions hold)
+# size > skewedPartitionFactor × median  AND  size > skewedPartitionThresholdInBytes
+spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionFactor", "5")
+spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes", "256MB")
+spark.conf.set("spark.sql.adaptive.localShuffleReader.enabled", "true")
+```
+
 ## Broadcast Join
 
 | Configuration                           | Default | Description              |
@@ -78,6 +97,34 @@ spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
 from pyspark.sql.functions import broadcast
 df1.join(broadcast(df2), "key")
 ```
+
+## Join SQL Hints
+
+Force a specific join strategy without changing configs:
+
+```sql
+-- SQL hints (place after SELECT)
+SELECT /*+ BROADCAST(dim) */ * FROM fact JOIN dim ON fact.id = dim.id;
+SELECT /*+ MERGE(t1, t2) */ * FROM t1 JOIN t2 ON t1.id = t2.id;
+SELECT /*+ SHUFFLE_HASH(t1) */ * FROM t1 JOIN t2 ON t1.id = t2.id;
+```
+
+```python
+from pyspark.sql.functions import broadcast
+
+# PySpark equivalents
+df1.join(broadcast(df2), "key")                    # Broadcast
+df1.hint("merge").join(df2, "key")                 # Sort-merge
+df1.hint("shuffle_hash").join(df2, "key")          # Shuffle hash
+df1.hint("shuffle_replicate_nl").join(df2, "key")  # Nested loop
+```
+
+| Hint | Use When |
+| :--- | :--- |
+| `BROADCAST` | Smaller table fits in executor memory (< broadcast threshold) |
+| `MERGE` | Both tables large; produce a sorted output |
+| `SHUFFLE_HASH` | One side can fit in memory per partition |
+| `SHUFFLE_REPLICATE_NL` | No equi-join key (cross / theta joins) |
 
 ## Delta Lake Configurations
 
@@ -117,6 +164,59 @@ spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
 ```python
 # These are typically set at cluster level, not runtime
 # spark.conf.set("spark.executor.memory", "4g")  # Won't work at runtime
+```
+
+## Memory Layout
+
+The JVM heap is divided into three regions:
+
+| Region | Size | Description |
+| :--- | :--- | :--- |
+| Reserved memory | ~300MB fixed | Internal Spark use |
+| Spark memory | `memory.fraction` × (heap − reserved) | Execution + storage (default 60%) |
+| User memory | Remaining heap | UDFs, data structures, metadata |
+
+Within Spark memory (unified memory manager):
+
+| Sub-region | Description |
+| :--- | :--- |
+| Execution memory | Shuffles, sorts, joins, aggregations |
+| Storage memory | Cached DataFrames and broadcast variables |
+
+`storageFraction` (default 0.5) is a **soft** limit. Under the unified memory manager, execution can evict cached data when it needs memory, and storage can reclaim space when execution is idle.
+
+## Skew Handling
+
+### AQE Detection Algorithm
+
+A partition is considered skewed when **both** conditions hold:
+
+- `size > skewedPartitionFactor × median partition size` (factor default: 5)
+- `size > skewedPartitionThresholdInBytes` (threshold default: 256MB)
+
+AQE splits skewed partitions and processes them with matching partitions from the other side.
+
+### Manual Salting (When AQE Is Insufficient)
+
+```python
+import pyspark.sql.functions as F
+
+N_SALTS = 10
+
+# Add salt to the skewed (large) table
+skewed_df = (skewed_df
+    .withColumn("salt", (F.rand() * N_SALTS).cast("int"))
+    .withColumn("salted_key",
+        F.concat(F.col("key").cast("string"), F.lit("_"), F.col("salt"))))
+
+# Explode the small table to match every salt value
+small_df = (small_df
+    .withColumn("salt", F.explode(F.array([F.lit(i) for i in range(N_SALTS)])))
+    .withColumn("salted_key",
+        F.concat(F.col("key").cast("string"), F.lit("_"), F.col("salt"))))
+
+result = (skewed_df.join(small_df, "salted_key")
+    .drop("salt", "salted_key"))
 ```
 
 ## Caching

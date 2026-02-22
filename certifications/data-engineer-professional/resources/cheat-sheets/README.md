@@ -14,13 +14,13 @@ Quick reference cards for key exam topics.
 
 ## Shared Cheat Sheets
 
-See also the [shared cheat sheets](../../../shared/cheat-sheets/README.md) for content applicable across certifications:
+See also the [shared cheat sheets](../../../../shared/cheat-sheets/README.md) for content applicable across certifications:
 
-- [Delta Lake Commands](../../../shared/cheat-sheets/delta-lake-commands.md)
-- [Spark Configurations](../../../shared/cheat-sheets/spark-configurations.md)
-- [SQL Functions](../../../shared/cheat-sheets/sql-functions.md)
-- [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
+- [Delta Lake Commands](../../../../shared/cheat-sheets/delta-lake-commands.md)
+- [Spark Configurations](../../../../shared/cheat-sheets/spark-configurations.md)
+- [SQL Functions](../../../../shared/cheat-sheets/sql-functions.md)
+- [Unity Catalog Quick Reference](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
 
 ---
 
-**[← Back to Certification](../README.md)**
+**[← Back to Certification](../../README.md)**

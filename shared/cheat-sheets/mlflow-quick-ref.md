@@ -150,6 +150,54 @@ mlflow.sklearn.log_model(
 | `Model not found in registry` | Check spelling and that the model was registered, not just logged |
 | Alias not found | Use `client.get_registered_model_alias()` to verify alias exists |
 
+## MLflow for GenAI
+
+MLflow 2.x adds LLM-specific tracking and evaluation:
+
+```python
+import mlflow
+
+# Log a table of evaluation inputs/outputs
+with mlflow.start_run():
+    mlflow.log_table(
+        data={
+            "question": ["What is Delta Lake?", "How does Auto Loader work?"],
+            "answer":   ["Delta Lake is...",     "Auto Loader uses cloudFiles..."],
+            "context":  ["context A",            "context B"]
+        },
+        artifact_file="eval_dataset.json"
+    )
+
+# Evaluate an LLM endpoint with built-in metrics
+results = mlflow.evaluate(
+    model="endpoints:/databricks-meta-llama-3-1-70b-instruct",
+    data=eval_df,           # DataFrame with "inputs" and optional "targets" columns
+    model_type="question-answering",  # or "text", "text-summarization"
+    evaluators="default"
+)
+
+print(results.metrics)  # toxicity, readability, answer_similarity, ...
+```
+
+```python
+# Custom scorer added alongside built-in metrics
+from mlflow.metrics import make_genai_metric
+
+conciseness = make_genai_metric(
+    name="conciseness",
+    definition="Rate how concisely the answer addresses the question.",
+    grading_prompt="Score 1-5 where 5 is very concise.",
+    model="endpoints:/databricks-meta-llama-3-1-70b-instruct"
+)
+
+results = mlflow.evaluate(
+    model="endpoints:/my-rag-app",
+    data=eval_df,
+    model_type="question-answering",
+    extra_metrics=[conciseness]
+)
+```
+
 ## Related Topics
 
 - [MLflow Basics (Fundamentals)](../fundamentals/mlflow-basics.md)

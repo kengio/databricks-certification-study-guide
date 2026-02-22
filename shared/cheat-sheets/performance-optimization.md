@@ -99,17 +99,35 @@ DESCRIBE DETAIL table_name;
 
 ## Join Optimization Quick Reference
 
-| Join Type | When to Use | Trigger |
-| --------- | ----------- | ------- |
-| Broadcast Hash | Small table (< 10 MB) joins large | Automatic or `broadcast()` hint |
-| Sort Merge | Both tables large, sorted | Default for large joins |
-| Shuffle Hash | Medium tables, no sorting needed | AQE may choose |
+| Join Type | When to Use | How to Trigger |
+| :--- | :--- | :--- |
+| Broadcast Hash | Small table (< broadcast threshold) | Auto or `broadcast()` / `BROADCAST` hint |
+| Sort Merge | Both tables large | Default for large joins |
+| Shuffle Hash | Medium table fits in memory per partition | AQE may choose, or `SHUFFLE_HASH` hint |
+| Skewed join | One partition is disproportionately large | AQE auto-splits (skew join), or manual salting |
+| Local Shuffle Read | Shuffle data already on same node | AQE automatically enables |
 
 ```python
 # Force broadcast
 from pyspark.sql.functions import broadcast
 result = large_df.join(broadcast(small_df), "key")
 ```
+
+```sql
+-- SQL join hints
+SELECT /*+ BROADCAST(dim) */ * FROM fact JOIN dim ON fact.id = dim.id;
+SELECT /*+ MERGE(t1, t2) */ * FROM t1 JOIN t2 ON t1.id = t2.id;
+SELECT /*+ SHUFFLE_HASH(t1) */ * FROM t1 JOIN t2 ON t1.id = t2.id;
+```
+
+## AQE Features Summary
+
+| Feature | What It Does | Key Config |
+| :--- | :--- | :--- |
+| Partition Coalescing | Merges small shuffle partitions post-shuffle | `coalescePartitions.enabled` (default: true) |
+| Skew Join Handling | Splits and rebalances oversized partitions | `skewJoin.enabled` (default: true) |
+| Local Shuffle Reader | Avoids redundant data movement when possible | `localShuffleReader.enabled` (default: true) |
+| Dynamic Join Strategy | Switches sort-merge → broadcast at runtime if table fits | `autoBroadcastJoinThreshold` (default: 30MB) |
 
 ## Cost Optimization Checklist
 
@@ -137,13 +155,15 @@ result = large_df.join(broadcast(small_df), "key")
 ## Common Anti-Patterns
 
 | Anti-Pattern | Problem | Solution |
-| ------------ | ------- | -------- |
+| :--- | :--- | :--- |
 | Too many shuffle partitions | Overhead, small files | Use AQE or set based on data size |
 | Over-partitioning | Too many small files | Max 10K partitions, use Z-ORDER |
 | Broadcasting large tables | OOM errors | Set threshold or disable broadcast |
 | Caching everything | Memory pressure | Cache only reused DataFrames |
 | OPTIMIZE too frequently | Write amplification | Balance with read patterns |
 | Z-ORDER on too many columns | Diminishing returns | Max 3-4 columns |
+| Skewed keys without salting | One executor handles most data | Enable AQE skew join, or manually salt keys |
+| Disabling AQE | Loses partition coalescing, skew handling | Keep `spark.sql.adaptive.enabled=true` |
 
 ## Performance Diagnostics Commands
 

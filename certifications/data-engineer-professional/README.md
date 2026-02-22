@@ -58,16 +58,17 @@ pie title Exam Topic Distribution
 
 ### Practice Exams
 
-| Resource                                                | Description                              |
-| ------------------------------------------------------- | ---------------------------------------- |
-| [Mock Exam](resources/mock-exam/README.md)                     | 63-question full-length practice exam    |
-| [Practice Questions](resources/practice-questions/README.md)   | 45 section-specific practice questions   |
+| Resource                                                        | Description                              |
+| --------------------------------------------------------------- | ---------------------------------------- |
+| [Mock Exam](resources/mock-exam/README.md)                      | 63-question full-length practice exam    |
+| [Mock Exam 2](resources/mock-exam-2/README.md)                  | 60-question advanced practice exam       |
+| [Practice Questions](resources/practice-questions/README.md)    | 45 section-specific practice questions   |
 
 ### Quick Reference
 
 | Resource                                            | Purpose                                       |
 | --------------------------------------------------- | --------------------------------------------- |
-| [Cheat Sheets](cheat-sheets/README.md)              | Quick reference cards for key topics          |
+| [Cheat Sheets](resources/cheat-sheets/README.md)    | Quick reference cards for key topics          |
 | [Exam Tips](resources/exam-tips.md)                 | Exam strategies and common traps              |
 | [Official Links](resources/official-links.md)       | Databricks documentation references           |
 

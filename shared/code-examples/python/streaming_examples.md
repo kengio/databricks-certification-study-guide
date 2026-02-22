@@ -201,6 +201,142 @@ query = (
 query.stop()
 ```
 
+## Stream-Stream Join with Watermarks
+
+Both streams require watermarks; a time-range condition keeps state bounded:
+
+```python
+from pyspark.sql.functions import expr
+
+# Two streaming sources
+orders = (spark.readStream.format("delta")
+    .table("my_catalog.bronze.orders")
+    .withWatermark("order_time", "10 minutes"))
+
+payments = (spark.readStream.format("delta")
+    .table("my_catalog.bronze.payments")
+    .withWatermark("payment_time", "10 minutes"))
+
+# Inner join — payment must occur within 1 hour of order
+joined = orders.join(
+    payments,
+    expr("""
+        order_id = payment_order_id AND
+        payment_time >= order_time AND
+        payment_time <= order_time + INTERVAL 1 HOUR
+    """),
+    "inner"
+)
+
+query = (joined.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/tmp/checkpoints/stream_join")
+    .toTable("my_catalog.silver.fulfilled_orders"))
+
+query.awaitTermination()
+```
+
+## Deduplication with dropDuplicatesWithinWatermark
+
+```python
+from pyspark.sql.functions import col
+
+events = (spark.readStream.format("delta")
+    .table("my_catalog.bronze.events"))
+
+# GOOD: bounded state — expires after watermark
+deduped = (events
+    .withWatermark("event_time", "1 hour")
+    .dropDuplicatesWithinWatermark(["event_id"]))
+
+# BAD: unbounded state — state grows forever (OOM risk)
+# deduped = events.dropDuplicates(["event_id"])
+
+query = (deduped.writeStream
+    .format("delta")
+    .outputMode("append")
+    .option("checkpointLocation", "/tmp/checkpoints/dedup")
+    .toTable("my_catalog.silver.events_deduped"))
+
+query.awaitTermination()
+```
+
+`dropDuplicatesWithinWatermark` drops duplicates within the watermark window only.
+State is cleaned up once the watermark passes the event time — critical for long-running streams.
+
+## Exactly-Once Sink with foreachBatch + MERGE
+
+Use this pattern when writing to a sink that is not natively idempotent:
+
+```python
+from delta.tables import DeltaTable
+
+def idempotent_upsert(batch_df, batch_id):
+    """
+    Exactly-once upsert pattern.
+    batch_id is stable across retries — safe to re-run.
+    """
+    # Deduplicate within the batch first
+    batch_deduped = batch_df.dropDuplicates(["event_id"])
+
+    target = DeltaTable.forName(spark, "my_catalog.silver.events")
+
+    (target.alias("t")
+        .merge(batch_deduped.alias("s"), "t.event_id = s.event_id")
+        .whenMatchedUpdate(condition="s.updated_at > t.updated_at",
+                           set={"*": "s.*"})
+        .whenNotMatchedInsertAll()
+        .execute())
+
+query = (spark.readStream
+    .format("delta")
+    .table("my_catalog.bronze.events")
+    .writeStream
+    .foreachBatch(idempotent_upsert)
+    .option("checkpointLocation", "/tmp/checkpoints/idempotent")
+    .trigger(availableNow=True)
+    .start())
+
+query.awaitTermination()
+```
+
+## CDF Full Change Type Reference
+
+CDF produces four `_change_type` values. Handle each explicitly:
+
+```python
+from pyspark.sql.functions import col
+
+# Read CDF as a stream
+cdf_stream = (spark.readStream
+    .format("delta")
+    .option("readChangeFeed", "true")
+    .option("startingVersion", 0)
+    .table("my_catalog.bronze.customers"))
+
+# Insert: new records
+inserts = cdf_stream.filter(col("_change_type") == "insert")
+
+# Update (before image): previous value of updated row
+update_before = cdf_stream.filter(col("_change_type") == "update_preimage")
+
+# Update (after image): new value of updated row — use this for propagation
+update_after = cdf_stream.filter(col("_change_type") == "update_postimage")
+
+# Delete: rows that were removed
+deletes = cdf_stream.filter(col("_change_type") == "delete")
+
+# Typical propagation: apply inserts + updates (after image)
+to_apply = cdf_stream.filter(
+    col("_change_type").isin("insert", "update_postimage"))
+
+# Metadata columns always present with CDF
+# _change_type        : change operation
+# _commit_version     : Delta table version of the change
+# _commit_timestamp   : Timestamp of the change
+```
+
 ## Monitoring Streams
 
 ```python

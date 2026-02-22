@@ -1,7 +1,7 @@
 # Unity Catalog — DE Professional Supplement
 
 > For the full Unity Catalog reference (object creation, permissions, external locations, Delta Sharing), see
-> [shared/cheat-sheets/unity-catalog-quick-ref.md](../../../shared/cheat-sheets/unity-catalog-quick-ref.md).
+> [shared/cheat-sheets/unity-catalog-quick-ref.md](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md).
 
 This file covers DE Professional-specific patterns not in the shared reference.
 

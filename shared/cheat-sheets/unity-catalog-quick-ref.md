@@ -16,6 +16,20 @@ Metastore
         └── Volume
 ```
 
+## Permission Hierarchy
+
+Accessing any object requires permissions on **all parent objects**:
+
+```text
+CATALOG (USE CATALOG)
+    │
+    └── SCHEMA (USE SCHEMA)  ← Requires USE CATALOG on parent
+            │
+            └── TABLE (SELECT)  ← Requires USE SCHEMA on parent
+```
+
+**Rule:** Reading a table always requires `USE CATALOG` + `USE SCHEMA` + `SELECT`.
+
 ## Three-Level Namespace
 
 ```sql
@@ -87,6 +101,16 @@ CREATE EXTERNAL VOLUME catalog.schema.volume_name
 LOCATION 'abfss://container@storage/path';
 ```
 
+Volumes are accessed at runtime via the `/Volumes/` path format:
+
+```python
+# Path format: /Volumes/<catalog>/<schema>/<volume>/<file>
+df = spark.read.csv("/Volumes/my_catalog/my_schema/my_volume/data.csv")
+dbutils.fs.ls("/Volumes/my_catalog/my_schema/my_volume/")
+```
+
+Requires `READ FILES` (or `WRITE FILES`) privilege on the volume.
+
 ## Permissions
 
 ### Privilege Types
@@ -124,6 +148,12 @@ GRANT USE CATALOG ON CATALOG catalog_name TO `user@email.com`;
 
 -- Grant all privileges
 GRANT ALL PRIVILEGES ON TABLE catalog.schema.table TO `user@email.com`;
+
+-- Bulk grant on all tables in a schema
+GRANT SELECT ON ALL TABLES IN SCHEMA my_catalog.my_schema TO `analysts`;
+
+-- Grant with delegation rights
+GRANT SELECT ON TABLE catalog.schema.table TO `user@email.com` WITH GRANT OPTION;
 ```
 
 ### Revoke Syntax
@@ -212,13 +242,49 @@ CREATE RECIPIENT recipient_name;
 GRANT SELECT ON SHARE share_name TO RECIPIENT recipient_name;
 ```
 
+## Information Schema
+
+The `information_schema` and `system` schemas provide metadata and audit access:
+
+```sql
+-- Tables in a catalog
+SELECT table_name, table_type, created
+FROM system.information_schema.tables
+WHERE table_catalog = 'my_catalog' AND table_schema = 'my_schema';
+
+-- Column details
+SELECT column_name, data_type
+FROM system.information_schema.columns
+WHERE table_catalog = 'my_catalog' AND table_name = 'my_table';
+
+-- Grants on a table
+SELECT grantee, privilege_type
+FROM system.information_schema.table_privileges
+WHERE table_catalog = 'my_catalog' AND table_name = 'my_table';
+
+-- Audit log (who accessed what, when)
+SELECT user_identity.email, action_name, event_time
+FROM system.access.audit
+WHERE action_name = 'getTable'
+  AND request_params.full_name_arg = 'my_catalog.my_schema.my_table';
+```
+
+| System Table | Description |
+| :--- | :--- |
+| `system.information_schema.catalogs` | All catalogs visible to the user |
+| `system.information_schema.tables` | Table metadata (type, owner, created) |
+| `system.information_schema.columns` | Column metadata per table |
+| `system.information_schema.table_privileges` | Privilege grants per table |
+| `system.access.audit` | Full UC audit log |
+
 ## Key Functions
 
-| Function                           | Description            |
-| ---------------------------------- | ---------------------- |
-| `current_user()`                   | Current user's email   |
-| `is_account_group_member('group')` | Check group membership |
-| `is_member('group')`               | Alias for group check  |
+| Function | Description |
+| :--- | :--- |
+| `current_user()` | Current user's email |
+| `is_account_group_member('group')` | Check account-level group membership |
+| `is_member('group')` | Check workspace-level group membership |
+| `current_user_attribute('attr')` | Get a custom user attribute value |
 
 ## Managed vs External
 

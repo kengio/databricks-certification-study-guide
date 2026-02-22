@@ -23,6 +23,8 @@ Quick reference guides for common Databricks operations and configurations.
 | [MLflow Quick Reference](mlflow-quick-ref.md) | Experiment tracking, model registry, inference APIs |
 | [PySpark API Quick Reference](pyspark-api-quick-ref.md) | DataFrame, aggregation, window, streaming APIs |
 | [DLT / Lakeflow Pipelines Quick Reference](dlt-quick-ref.md) | Table types, expectations, APPLY CHANGES, pipeline settings |
+| [Auto Loader Quick Reference](auto-loader-quick-ref.md) | cloudFiles options, schema evolution modes, file notification, UC Volumes |
+| [Streaming Quick Reference](streaming-quick-ref.md) | Triggers, watermarks, stream-stream joins, stateful aggregations, exactly-once |
 
 ## How to Use
 
@@ -42,3 +44,5 @@ These cheat sheets are designed for quick lookups during:
 | Shuffle partitions | 200 | Default, adjust by data size |
 | Broadcast threshold | 10 MB | Auto-broadcast join limit |
 | Max Z-ORDER columns | 3-4 | Practical limit |
+| Auto Loader max files/trigger | 1000 | `cloudFiles.maxFilesPerTrigger` default |
+| File notification threshold | > 10K files/day | Use notification over directory listing |

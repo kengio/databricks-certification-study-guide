@@ -1,39 +1,51 @@
 ---
-title: Data Analyst Associate Mock Exam 2
+title: Mock Exam 2 — Data Analyst Associate
 type: mock-exam
-tags: [data-analyst-associate, mock-exam, practice]
+tags:
+  - data-analyst-associate
+  - mock-exam
 ---
 
-# Data Analyst Associate Mock Exam 2
+# Mock Exam 2 — Databricks Data Analyst Associate
 
-## Exam Simulation
+A second full-length practice exam with different scenarios and edge cases than Mock Exam 1.
 
-| Item | Details |
-|---|---|
-| Questions | 45 (simulated) |
-| Time limit | 90 minutes (self-timed) |
-| Passing score | 70% (32/45 correct) |
-| Format | Multiple choice (A/B/C/D) |
+## Exam Instructions
+
+| Detail | Value |
+| ------ | ----- |
+| Total Questions | 45 |
+| Time Limit | 90 minutes |
+| Passing Score | 70% (32 or more correct) |
+| Format | Multiple choice, single correct answer |
 
 ## Domain Distribution
 
-| Domain | Exam Weight | Questions in This Mock |
-|---|---|---|
+| Domain | Weight | Questions |
+| ------ | ------ | --------- |
 | Databricks SQL | 22% | 10 |
 | Data Management | 20% | 9 |
 | SQL Queries | 29% | 13 |
 | Dashboards & Visualization | 18% | 8 |
 | Analytics Applications | 11% | 5 |
 
-## Instructions
+## How to Take This Exam
 
-1. Open [questions.md](questions.md) and attempt all 45 questions without peeking
-2. Time yourself — aim to finish under 90 minutes
-3. Expand callouts only after committing to an answer
-4. Score yourself per domain to identify weak areas
-5. Compare results with [Mock Exam 1](../mock-exam/README.md) to track improvement
-6. Review [exam-tips.md](../exam-tips.md) if scoring below 70%
+1. Complete Mock Exam 1 first and review your weak areas
+2. Set a 90-minute timer before opening [questions.md](./questions.md)
+3. Answer all questions without referring to notes or documentation
+4. Expand the `[!success]- Answer` callout only after committing to an answer
+5. Compare your score with [Mock Exam 1](../mock-exam/README.md) to track improvement
 
-[Start Exam →](questions.md)
+## Scoring Guide
 
-[← Back to Resources](../README.md)
+| Score | Result | Action |
+| ----- | ------ | ------ |
+| 36–45 (80–100%) | Excellent — ready to sit the exam | Schedule your exam |
+| 32–35 (71–79%) | Passing — review weak areas | Review remaining weak topics |
+| 28–31 (62–70%) | Close — focused study needed | Study weak domains, retry in 1 week |
+| Below 28 (<62%) | Not ready — comprehensive review needed | Review all study material before retrying |
+
+---
+
+**[Start the Exam →](./questions.md)** | **[← Mock Exam 1](../mock-exam/README.md)** | **[← Back to Resources](../README.md)**

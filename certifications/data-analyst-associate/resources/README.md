@@ -1,19 +1,24 @@
 ---
 title: Exam Resources
 type: resources
+tags:
+  - resources
+  - exam-prep
 ---
 
 # Data Analyst Associate - Exam Resources
 
-Preparation materials for the Databricks Data Analyst Associate exam.
+Preparation materials for the Databricks Certified Data Analyst Associate exam.
 
 ## Available Resources
 
-- [Practice Questions](practice-questions/) - Topic-specific questions
-- [Mock Exam 1](mock-exam/) - Full-length exam (45 questions, 90 min)
-- [Mock Exam 2](mock-exam-2/) - Alternative exam
-- [Exam Tips](exam-tips.md) - Strategies and tips
-- [Official Links](official-links.md) - Documentation links
+| Resource | Description |
+| -------- | ----------- |
+| [Practice Questions](./practice-questions/README.md) | Topic-specific practice questions |
+| [Mock Exam](./mock-exam/README.md) | Full-length practice exam (45 questions) |
+| [Mock Exam 2](./mock-exam-2/README.md) | Alternative practice exam (45 questions) |
+| [Exam Tips](./exam-tips.md) | Strategies, time management, common pitfalls |
+| [Official Links](./official-links.md) | Databricks documentation and registration |
 
 ---
 
