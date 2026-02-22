@@ -25,4 +25,4 @@ This section will include links to:
 
 ---
 
-[← Back to Resources](README.md)
+[← Back to Resources](./README.md)

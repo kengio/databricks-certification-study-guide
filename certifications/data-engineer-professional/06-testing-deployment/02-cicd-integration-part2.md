@@ -358,7 +358,7 @@ def mock_spark():
 - [Asset Bundles](01-asset-bundles-part1.md) - DAB configuration
 - [Git Folders](03-git-folders.md) - Version control
 - [Unit Testing](04-unit-testing-part1.md) - Testing practices
-- [Databricks CLI](../02-databricks-tooling/02-databricks-cli.md) - CLI commands
+- [Databricks CLI — Part 1](../02-databricks-tooling/02-databricks-cli-part1.md) - CLI commands
 
 ## Official Documentation
 

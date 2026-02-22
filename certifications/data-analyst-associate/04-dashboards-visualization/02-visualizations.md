@@ -476,6 +476,31 @@ Alternative:
 **Scenario:** Connecting Visualizations & Chart Types to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Visualizations & Chart Types prior to deployment.
 
+## Exam Tips
+
+1. **Chart selection** - Bar chart for category comparison, line chart for trends over time, scatter for correlation
+2. **Pie chart limit** - Best for 5 or fewer slices; more categories become hard to read
+3. **Histogram vs bar chart** - Histogram shows distribution of a single numeric variable; bar chart compares categories
+4. **Scatter plot R²** - R² close to 1 means strong linear relationship; close to 0 means weak or no relationship
+5. **Dual-axis charts** - Use when comparing two metrics with different scales (e.g., revenue and count)
+6. **Color usage** - Use sequential palettes for continuous data, categorical palettes for distinct groups
+7. **Aggregation matters** - Always verify the aggregation method (SUM, AVG, COUNT) matches the question intent
+8. **Table vs chart** - Use tables when exact values matter; use charts when patterns or trends matter
+9. **Formatting** - Labels, axis titles, and legends are essential for exam questions about readability
+10. **Time series** - Line charts require a properly ordered time axis; bar charts can misrepresent time sequences
+
+## Related Topics
+
+- [Dashboards & Dashboard Design](./01-dashboards.md) - Building dashboards with visualizations
+- [Alerts & Scheduling](./03-alerts-scheduling.md) - Triggering alerts from query results
+- [SQL Query Optimization](../../02-sql-queries/README.md) - Writing efficient queries for charts
+
+## Official Documentation
+
+- [Databricks Visualizations](https://docs.databricks.com/sql/user/visualizations/index.html)
+- [Visualization Types](https://docs.databricks.com/sql/user/visualizations/visualization-types.html)
+- [Databricks SQL Dashboards](https://docs.databricks.com/sql/user/dashboards/index.html)
+
 ---
 
 **[← Previous: Dashboards & Dashboard Design](./01-dashboards.md) | [↑ Back to Dashboards & Visualization](./README.md) | [Next: Alerts & Scheduling](./03-alerts-scheduling.md) →**

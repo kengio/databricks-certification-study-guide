@@ -27,4 +27,4 @@ This section will cover:
 
 ---
 
-[← Back to Resources](README.md)
+[← Back to Resources](./README.md)

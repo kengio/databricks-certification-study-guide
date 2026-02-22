@@ -59,7 +59,8 @@ Each content file follows this structure:
 | File | Topic | Key Content |
 |------|-------|-------------|
 | `01-workspace-and-notebooks.md` | Notebook features | Widgets, magic commands, %run, dbutils |
-| `02-databricks-cli.md` | CLI commands | Authentication, workspace management, secrets |
+| `02-databricks-cli-part1.md` | CLI commands (part 1) | Installation, authentication, workspace, DBFS, jobs |
+| `02-databricks-cli-part2.md` | CLI commands (part 2) | Clusters, secrets, bundles, Unity Catalog, exam prep |
 | `03-rest-api.md` | REST API | Jobs API 2.1, Clusters API, SDK |
 | `04-databricks-compute.md` | Compute types | All-purpose vs job clusters, serverless, pools |
 | `05-dbfs-and-mounts.md` | Storage | DBFS, Unity Catalog volumes, cloud mounts |

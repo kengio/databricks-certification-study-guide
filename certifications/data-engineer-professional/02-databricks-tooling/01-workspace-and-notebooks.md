@@ -770,7 +770,7 @@ value = dbutils.jobs.taskValues.get(
 
 ## Related Topics
 
-- [Databricks CLI](02-databricks-cli.md) - Command line management
+- [Databricks CLI — Part 1](02-databricks-cli-part1.md) - Command line management
 - [REST API](03-rest-api-part1.md) - Programmatic workspace access
 - [Secret Management](../04-security-governance/04-secret-management.md) - Secure credential storage
 
@@ -783,4 +783,4 @@ value = dbutils.jobs.taskValues.get(
 
 ---
 
-**[↑ Back to Databricks Tooling](./README.md) | [Next: Databricks CLI](./02-databricks-cli.md) →**
+**[↑ Back to Databricks Tooling](./README.md) | [Next: Databricks CLI — Part 1](./02-databricks-cli-part1.md) →**

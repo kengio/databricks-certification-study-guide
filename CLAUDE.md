@@ -188,9 +188,10 @@ All topic `.md` files should end with sections in this order:
 1. `## Use Cases`
 2. `## Common Issues & Errors`
 3. `## Exam Tips`
-4. `## Related Topics`
-5. `## Official Documentation`
-6. `---` separator + navigation link (`**[← Back to ...](./README.md)**`)
+4. `## Key Takeaways` *(optional — concise summary of the most important points)*
+5. `## Related Topics`
+6. `## Official Documentation`
+7. `---` separator + navigation link (`**[← Back to ...](./README.md)**`)
 
 Navigation links (`← Back to ...`) must always be the **very last element** in each file. Never place Use Cases or Common Issues after navigation links.
 
