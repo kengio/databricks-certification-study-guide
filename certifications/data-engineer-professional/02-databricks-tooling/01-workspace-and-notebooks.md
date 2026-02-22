@@ -192,6 +192,8 @@ print(ENVIRONMENT)  # "production"
 
 ## Widgets
 
+![SQL Dashboard Parameters](../../../../../images/databricks-ui/sql/sql_dashboard_parameters.png)
+
 Widgets provide parameterization for notebooks, enabling reusable pipelines.
 
 ### Widget Types

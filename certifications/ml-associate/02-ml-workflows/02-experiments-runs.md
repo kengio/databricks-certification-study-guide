@@ -35,6 +35,8 @@ flowchart TD
 
 ## Experiment Management
 
+![MLflow Experiment Runs](../../../../../images/databricks-ui/mlflow/mlflow_experiment_runs.png)
+
 ### **Creating Experiments**
 
 ```python
@@ -110,6 +112,8 @@ mlflow.set_experiment(exp_name)
 ```
 
 ## Run Management
+
+![MLflow Run Details](../../../../../images/databricks-ui/mlflow/mlflow_run_details.png)
 
 ### **Creating & Managing Runs**
 

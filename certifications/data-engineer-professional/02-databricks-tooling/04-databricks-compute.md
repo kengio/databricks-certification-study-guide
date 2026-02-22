@@ -350,6 +350,8 @@ flowchart TB
 
 ### Creating SQL Warehouse
 
+![SQL Warehouse Creation](../../../../../images/databricks-ui/sql/sql_warehouse_creation.png)
+
 ```python
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.sql import EndpointInfo

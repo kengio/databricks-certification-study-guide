@@ -29,6 +29,8 @@ flowchart TB
     Execute --> Output
 ```
 
+![DLT Pipeline DAG View](../../../../../images/databricks-ui/dlt/dlt_pipeline_graph.png)
+
 ## Table Types
 
 ### Comparison
@@ -389,6 +391,10 @@ def mv_from_jdbc():
 ```
 
 ## Pipeline Configuration
+
+![DLT Pipeline Settings](../../../../../images/databricks-ui/dlt/dlt_pipeline_settings.png)
+
+![DLT Cluster Autoscale](../../../../../images/databricks-ui/dlt/dlt_cluster_autoscale.png)
 
 ### databricks.yml for DLT
 

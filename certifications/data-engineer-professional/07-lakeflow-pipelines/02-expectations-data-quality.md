@@ -39,6 +39,8 @@ flowchart TB
     Metrics --> EventLog
 ```
 
+![DLT Data Quality Metrics](../../../../../images/databricks-ui/dlt/dlt_data_quality_metrics.png)
+
 ## Expectation Types
 
 ### Comparison Table

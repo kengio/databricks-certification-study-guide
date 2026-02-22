@@ -281,6 +281,8 @@ GROUP BY DATE(timestamp), details:expectations.dataset, details:expectations.nam
 
 ## Alerting Patterns
 
+![SQL Alerts Configuration](../../../../../images/databricks-ui/sql/sql_alerts_configuration.png)
+
 ### Alert on Data Quality Failures
 
 ```python

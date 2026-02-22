@@ -68,6 +68,8 @@ flowchart LR
 
 ### Task Types
 
+![Workflow Task Types](../../../../../images/databricks-ui/workflows/workflow_task_types.png)
+
 | Task Type | Use Case | Configuration |
 | :--- | :--- | :--- |
 | Notebook | Run notebook code | Notebook path, parameters |
@@ -275,6 +277,8 @@ tasks:
 ```
 
 ### DAG Visualization
+
+![Workflow DAG View](../../../../../images/databricks-ui/workflows/workflow_dag_view.png)
 
 ```mermaid
 flowchart TD

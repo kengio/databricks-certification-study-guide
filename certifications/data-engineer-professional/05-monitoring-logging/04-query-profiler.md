@@ -222,6 +222,8 @@ JOIN customers c ON o.customer_id = c.customer_id;
 
 ### SQL Warehouse Query Profile
 
+![SQL Editor Query Profile](../../../../../images/databricks-ui/sql/sql_editor_query_profile.png)
+
 ```text
 Access:
 1. Run query in SQL editor
