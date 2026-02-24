@@ -9,3 +9,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Python virtual environments
+.venv/
