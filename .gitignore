@@ -1,9 +1,5 @@
-# Obsidian (keep app.json for shared settings)
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-.obsidian/cache
-.obsidian/plugins/
-.obsidian/themes/
+# Obsidian
+.obsidian/
 
 # OS files
 .DS_Store
@@ -13,8 +9,3 @@ Thumbs.db
 *.swp
 *.swo
 *~
-
-# Obsidian plugins
-.obsidian/plugins/*/main.js
-.obsidian/plugins/*/styles.css
-.obsidian/plugins/*/manifest.json
