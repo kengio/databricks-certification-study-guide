@@ -13,3 +13,8 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Obsidian plugins
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
+.obsidian/plugins/*/manifest.json
