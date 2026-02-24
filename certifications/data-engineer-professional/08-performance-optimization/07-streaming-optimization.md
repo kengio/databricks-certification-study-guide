@@ -1,3 +1,12 @@
+---
+title: Streaming Performance Optimization
+type: study-material
+tags:
+  - data-engineer-professional
+  - performance-optimization
+status: published
+---
+
 # Streaming Performance Optimization
 
 Optimizing Structured Streaming workloads requires balancing latency, throughput, resource utilization, and cost. This guide covers key tuning strategies for streaming pipelines on Databricks.

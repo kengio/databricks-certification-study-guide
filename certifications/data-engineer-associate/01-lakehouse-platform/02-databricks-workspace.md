@@ -262,14 +262,6 @@ Captures:
 5. **Clone notebook**: Right-click > `Clone`
 6. **Publish notebook**: Share as HTML dashboard
 
-## Key Takeaways
-
-- **Workspace isolation**: Each workspace is independent
-- **Three-level permissions**: Admin, User, Viewer roles
-- **Notebook versions**: Automatically saved, 30-day recovery
-- **Repos**: Git integration for production code
-- **Multi-language support**: SQL + Python in same notebook
-
 ## Use Cases
 
 - **Databricks Workspace Implementation**: Incorporating Databricks Workspace principles to build scalable and maintainable solutions in Databricks environments.
@@ -286,6 +278,32 @@ Captures:
 
 **Scenario:** Connecting Databricks Workspace to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Workspace prior to deployment.
+
+## Exam Tips
+
+- Know the difference between the Home directory (`/Users/{email}/`), Shared folder, and Repos
+- Understand magic commands (`%python`, `%sql`, `%md`, etc.) for switching languages within a notebook
+- Remember that notebook version history has 30-day retention and is automatic
+- Global temporary views use the `global_temp` database and persist across sessions; regular temp views are session-scoped
+
+## Key Takeaways
+
+- **Workspace isolation**: Each workspace is independent
+- **Three-level permissions**: Admin, User, Viewer roles
+- **Notebook versions**: Automatically saved, 30-day recovery
+- **Repos**: Git integration for production code
+- **Multi-language support**: SQL + Python in same notebook
+
+## Related Topics
+
+- [Lakehouse Architecture](./01-lakehouse-architecture.md)
+- [Compute and Clusters](./03-compute-clusters.md)
+- [Databricks Workspace (Shared)](../../../shared/fundamentals/databricks-workspace.md)
+
+## Official Documentation
+
+- [Databricks Workspace Overview](https://docs.databricks.com/en/workspace/index.html)
+- [Databricks Notebooks](https://docs.databricks.com/en/notebooks/index.html)
 
 ---
 

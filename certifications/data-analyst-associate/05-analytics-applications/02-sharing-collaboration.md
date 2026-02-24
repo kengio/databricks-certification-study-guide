@@ -453,36 +453,6 @@ Subscribe to Alerts:
   - Query results posted
 ```
 
-## Key Takeaways
-
-- **Permission levels**: Owner (full), Editor (edit), Viewer (read-only)
-- **Sharing methods**: Direct (users/groups), URL link, email
-- **Comments**: Collaborate on queries/dashboards
-- **Version history**: Track changes, restore previous versions
-- **Draft vs Published**: Development vs production states
-- **Access control**: Groups for scalability, audit permissions
-- **Data sensitivity**: Public, Internal, Confidential, Restricted levels
-- **Workflows**: Review → Revise → Publish → Announce
-- **Integration**: Slack notifications, email distribution
-
-## Common Exam Questions
-
-**Q: What permission level allows editing but not sharing?**
-
-- **A**: Editor (also has view/edit, but cannot change permissions)
-
-**Q: How do you prevent a user from seeing sensitive data?**
-
-- **A**: Grant Viewer role on masked views, not raw tables
-
-**Q: Can you track who viewed a dashboard?**
-
-- **A**: Yes, via audit logs and access metrics
-
-**Q: What's the safest way to manage permissions for 50+ users?**
-
-- **A**: Create group (Sales Team), add users to group, grant group permission once
-
 ## Use Cases
 
 - **Sharing & Collaboration Implementation**: Incorporating Sharing & Collaboration principles to build scalable and maintainable solutions in Databricks environments.
@@ -499,6 +469,36 @@ Subscribe to Alerts:
 
 **Scenario:** Connecting Sharing & Collaboration to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Sharing & Collaboration prior to deployment.
+
+## Exam Tips
+
+- Editor role allows editing but cannot change permissions or delete; Owner has full control
+- Protect sensitive data by granting Viewer access to masked views, not raw tables
+- Use groups (not individual users) to manage permissions at scale for 50+ users
+- Audit logs track who viewed, edited, or shared dashboards and queries
+
+## Key Takeaways
+
+- **Permission levels**: Owner (full), Editor (edit), Viewer (read-only)
+- **Sharing methods**: Direct (users/groups), URL link, email
+- **Comments**: Collaborate on queries/dashboards
+- **Version history**: Track changes, restore previous versions
+- **Draft vs Published**: Development vs production states
+- **Access control**: Groups for scalability, audit permissions
+- **Data sensitivity**: Public, Internal, Confidential, Restricted levels
+- **Workflows**: Review → Revise → Publish → Announce
+- **Integration**: Slack notifications, email distribution
+
+## Related Topics
+
+- [Access Control & Security](../02-data-management/03-access-control.md) - Detailed RBAC and permission management
+- [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md) - Governance framework that underpins sharing controls
+- [Dashboards & Dashboard Design](../04-dashboards-visualization/01-dashboards.md) - Creating dashboards to share with teams
+
+## Official Documentation
+
+- [Databricks SQL Sharing](https://docs.databricks.com/sql/user/queries/share-query.html)
+- [Dashboard Permissions](https://docs.databricks.com/sql/user/dashboards/dashboard-permissions.html)
 
 ---
 

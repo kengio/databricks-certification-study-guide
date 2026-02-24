@@ -439,36 +439,6 @@ SELECT
 FROM events_with_gaps;
 ```
 
-## Key Takeaways
-
-- **Window function**: Calculation across related rows (no grouping)
-- **PARTITION BY**: Defines groups for window scope
-- **ORDER BY**: Specifies ordering within partition
-- **ROW_NUMBER**: Unique sequential number
-- **RANK/DENSE_RANK**: Handle ties differently
-- **LAG/LEAD**: Access offset rows
-- **Running totals**: SUM with ROWS BETWEEN
-- **Frame**: ROWS (count-based) vs RANGE (value-based)
-- **FIRST_VALUE/LAST_VALUE**: Boundary values in window
-
-## Common Exam Questions
-
-**Q: How is RANK different from ROW_NUMBER?**
-
-- **A**: RANK gives same rank to ties and skips numbers; ROW_NUMBER always unique
-
-**Q: What's needed to get correct results from LAST_VALUE?**
-
-- **A**: Specify ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-
-**Q: How do you calculate YoY growth using window functions?**
-
-- **A**: Use LAG(value, 12) for 12-month prior, then calculate (current - prior) / prior
-
-**Q: Can you use multiple PARTITION BY clauses?**
-
-- **A**: No, but can include multiple columns: PARTITION BY col1, col2
-
 ## Use Cases
 
 - **Window Functions & Analytics Implementation**: Incorporating Window Functions & Analytics principles to build scalable and maintainable solutions in Databricks environments.
@@ -485,6 +455,36 @@ FROM events_with_gaps;
 
 **Scenario:** Connecting Window Functions & Analytics to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Window Functions & Analytics prior to deployment.
+
+## Exam Tips
+
+- RANK gives same rank to ties and skips numbers; DENSE_RANK gives same rank but no gaps; ROW_NUMBER is always unique
+- LAST_VALUE requires `ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING` to see all rows in the partition
+- LAG accesses previous rows; LEAD accesses next rows; both accept an offset parameter (default 1)
+- ROWS is count-based (exact row count); RANGE is value-based (logical range of values)
+
+## Key Takeaways
+
+- **Window function**: Calculation across related rows (no grouping)
+- **PARTITION BY**: Defines groups for window scope
+- **ORDER BY**: Specifies ordering within partition
+- **ROW_NUMBER**: Unique sequential number
+- **RANK/DENSE_RANK**: Handle ties differently
+- **LAG/LEAD**: Access offset rows
+- **Running totals**: SUM with ROWS BETWEEN
+- **Frame**: ROWS (count-based) vs RANGE (value-based)
+- **FIRST_VALUE/LAST_VALUE**: Boundary values in window
+
+## Related Topics
+
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts foundational to window functions
+- [Window Functions Examples](../../../shared/code-examples/sql/window_functions.md) - Reusable code patterns for window functions
+- [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md) - Quick reference for all SQL function categories
+
+## Official Documentation
+
+- [Databricks Window Functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin.html#window-functions)
+- [Analytic Functions Guide](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-window.html)
 
 ---
 

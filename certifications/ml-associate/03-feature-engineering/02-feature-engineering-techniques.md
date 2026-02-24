@@ -562,15 +562,13 @@ df_engineered.select("customer_id", "scaledFeatures", "label")\
 - Always fit transformations on training data, apply to test
 - Domain knowledge crucial for creating meaningful features
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [Spark ML Pipelines](01-spark-ml-pipelines.md)
 - [Feature Store](03-feature-store.md)
 - [Feature Engineering Basics](../../../shared/fundamentals/feature-engineering-basics.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Spark ML Features](https://spark.apache.org/docs/latest/ml-features.html)
 - [Feature Engineering Guide](https://docs.databricks.com/machine-learning/feature-engineering/index.html)

@@ -471,24 +471,6 @@ Alternative:
 - **Formatting**: Axes labels, number formats, legends
 - **Multi-series**: Dual axes, side-by-side comparisons
 
-## Common Exam Questions
-
-**Q: When is a pie chart not recommended?**
-
-- **A**: When showing >5 categories or precise values (hard to compare visually)
-
-**Q: What chart type best shows sales trend over 24 months?**
-
-- **A**: Line chart with time on X-axis
-
-**Q: How do you compare revenue between two years?**
-
-- **A**: Use line chart with two series or dual bar chart side-by-side
-
-**Q: What does scatter plot's correlation coefficient (R²) indicate?**
-
-- **A**: Strength of linear relationship (0=none, 1=perfect)
-
 ## Related Topics
 
 - [Dashboards & Dashboard Design](./01-dashboards.md) - Building dashboards with visualizations

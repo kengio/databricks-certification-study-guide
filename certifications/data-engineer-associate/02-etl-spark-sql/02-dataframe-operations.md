@@ -65,10 +65,10 @@ df.show()
 ```python
 # CSV
 
-df_csv = spark.read.format("csv") \
-    .option("header", "true") \
-    .option("inferSchema", "true") \
-    .load("/path/to/data.csv")
+df_csv = (spark.read.format("csv")
+    .option("header", "true")
+    .option("inferSchema", "true")
+    .load("/path/to/data.csv"))
 
 # JSON
 
@@ -200,8 +200,8 @@ df_new = df.withColumn("bonus", col("salary") * 0.1)
 
 # Add multiple columns
 
-df_new = df.withColumn("annual_bonus", col("salary") * 0.15) \
-    .withColumn("is_manager", col("salary") > 100000)
+df_new = (df.withColumn("annual_bonus", col("salary") * 0.15)
+    .withColumn("is_manager", col("salary") > 100000))
 
 # Rename column
 
@@ -346,16 +346,6 @@ sample_df = df.sampleBy("category", fractions={
 | `distinct` | High | Use carefully on large datasets |
 | `take` | Low | Use before show/collect |
 
-## Key Takeaways
-
-- **DataFrame**: Distributed, immutable collection of rows with schema
-- **Lazy Evaluation**: Transformations don't execute until action called
-- **Schema**: Column names, types, nullability metadata
-- **Transformations**: Return new DataFrame (select, filter, withColumn)
-- **Actions**: Compute and return results (show, collect, count, write)
-- **Column Selection**: Use `col()` function for expressions
-- **Filter Conditions**: Use `&` (and), `|` (or), `~` (not) for logic operators
-
 ## Use Cases
 
 - **DataFrame Operations Implementation**: Incorporating DataFrame Operations principles to build scalable and maintainable solutions in Databricks environments.
@@ -372,6 +362,34 @@ sample_df = df.sampleBy("category", fractions={
 
 **Scenario:** Connecting DataFrame Operations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for DataFrame Operations prior to deployment.
+
+## Exam Tips
+
+- Understand the difference between transformations (lazy, return new DataFrame) and actions (trigger execution: `show`, `collect`, `count`, `write`)
+- Know how to define schemas explicitly using `StructType` and `StructField` -- exam often tests this
+- `collect()` pulls all data to the driver; avoid on large DataFrames -- use `take()` or `limit()` instead
+- `dropDuplicates(["col1", "col2"])` deduplicates on specific columns; `distinct()` uses all columns
+
+## Key Takeaways
+
+- **DataFrame**: Distributed, immutable collection of rows with schema
+- **Lazy Evaluation**: Transformations don't execute until action called
+- **Schema**: Column names, types, nullability metadata
+- **Transformations**: Return new DataFrame (select, filter, withColumn)
+- **Actions**: Compute and return results (show, collect, count, write)
+- **Column Selection**: Use `col()` function for expressions
+- **Filter Conditions**: Use `&` (and), `|` (or), `~` (not) for logic operators
+
+## Related Topics
+
+- [Spark SQL Fundamentals](./01-spark-sql-fundamentals.md)
+- [Joins and Aggregations](./03-joins-aggregations.md)
+- [PySpark API Quick Reference](../../../shared/cheat-sheets/pyspark-api-quick-ref.md)
+
+## Official Documentation
+
+- [PySpark DataFrame API](https://docs.databricks.com/en/pyspark/index.html)
+- [Introduction to DataFrames](https://docs.databricks.com/en/dataframes/index.html)
 
 ---
 

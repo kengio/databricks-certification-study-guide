@@ -571,16 +571,14 @@ Deploy & Monitor
 - Proper tracking enables reproducibility and collaboration
 - Phase gates ensure quality models reach production
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [MLflow Tracking](01-mlflow-tracking.md)
 - [Experiments & Runs](02-experiments-runs.md)
 - [Spark ML Pipelines](../03-feature-engineering/01-spark-ml-pipelines.md)
 - [Model Registry](../04-mlflow-deployment/01-model-registry.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [MLflow Best Practices](https://mlflow.org/docs/latest/tracking.html#best-practices)
 - [Experiment Design](https://docs.databricks.com/machine-learning/experiments/index.html)

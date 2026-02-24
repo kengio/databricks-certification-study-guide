@@ -447,35 +447,6 @@ curl -X POST \
 
 ```
 
-## Key Takeaways
-
-- **Query Editor**: Web IDE for SQL development with visualization
-- **Parameters**: Dynamic queries using `{{ parameter_name }}` syntax
-- **Autocomplete**: Suggestions for tables, columns, functions
-- **Execution**: Ctrl+Enter runs query, results auto-visualized
-- **Query History**: Stored in `system.query_history` table
-- **Visualization**: Auto-suggested based on result shape (table, chart, etc.)
-- **Sharing**: Queries shareable with fine-grained access controls
-- **API**: Programmable via Python SqlAlchemy, REST API, or CLI
-
-## Common Exam Questions
-
-**Q: How do you run only selected text in a query?**
-
-- **A**: Highlight the text and press Ctrl+Enter (or Cmd+Enter on macOS)
-
-**Q: What parameter syntax is used for dynamic queries?**
-
-- **A**: Double curly braces: `{{ parameter_name }}`
-
-**Q: How are query results cached?**
-
-- **A**: Automatically for 24 hours, unless underlying data changes
-
-**Q: What happens when you modify a saved query?**
-
-- **A**: Changes are saved to the query object; previous versions accessible via history
-
 ## Use Cases
 
 - **Query Editor & Execution Implementation**: Incorporating Query Editor & Execution principles to build scalable and maintainable solutions in Databricks environments.
@@ -492,6 +463,35 @@ curl -X POST \
 
 **Scenario:** Connecting Query Editor & Execution to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Query Editor & Execution prior to deployment.
+
+## Exam Tips
+
+- Know the parameter syntax: double curly braces `{{ parameter_name }}`
+- Understand that Ctrl+Enter (Cmd+Enter on macOS) executes the full query or selected text
+- Result caching lasts 24 hours and is invalidated when underlying data changes
+- Query history is stored in `system.query_history` and is queryable via SQL
+
+## Key Takeaways
+
+- **Query Editor**: Web IDE for SQL development with visualization
+- **Parameters**: Dynamic queries using `{{ parameter_name }}` syntax
+- **Autocomplete**: Suggestions for tables, columns, functions
+- **Execution**: Ctrl+Enter runs query, results auto-visualized
+- **Query History**: Stored in `system.query_history` table
+- **Visualization**: Auto-suggested based on result shape (table, chart, etc.)
+- **Sharing**: Queries shareable with fine-grained access controls
+- **API**: Programmable via Python SqlAlchemy, REST API, or CLI
+
+## Related Topics
+
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts used in the query editor
+- [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md) - Quick reference for common SQL functions
+- [Query Parameters & Dynamic Queries](../05-analytics-applications/01-parameters-queries.md) - Deep dive into parameterized queries
+
+## Official Documentation
+
+- [Databricks SQL Query Editor](https://docs.databricks.com/sql/user/queries/index.html)
+- [Query Parameters](https://docs.databricks.com/sql/user/queries/query-parameters.html)
 
 ---
 

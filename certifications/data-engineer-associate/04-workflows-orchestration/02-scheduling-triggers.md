@@ -431,19 +431,6 @@ When DST changes occur:
 - Check your scheduled time before/after DST transition
 - Document timezone explicitly in job config
 
-## Key Takeaways
-
-- **Cron Syntax**: `minute hour day month day_of_week`
-- **Quartz Format**: Requires seconds field (7 fields)
-- **Timezone**: Affects when cron fires (different regions)
-- **Max Concurrent Runs**: Prevents duplicate execution
-- **Timeout**: Maximum execution time per task
-- **Pause/Resume**: Control scheduling without deleting job
-- **Webhooks**: External systems trigger via API
-- **Off-Peak**: Schedule during low-demand hours
-- **Staggering**: Space jobs to avoid resource contention
-- **Daylight Saving**: Automatic adjustment with timezone
-
 ## Use Cases
 
 - **Scheduling and Triggers Implementation**: Incorporating Scheduling and Triggers principles to build scalable and maintainable solutions in Databricks environments.
@@ -460,6 +447,36 @@ When DST changes occur:
 
 **Scenario:** Connecting Scheduling and Triggers to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Scheduling and Triggers prior to deployment.
+
+## Exam Tips
+
+- Databricks uses Quartz Cron (7 fields including seconds): `second minute hour day_of_month month day_of_week ?`
+- Know common cron expressions: daily at 2 AM (`0 0 2 * * ?`), every hour (`0 0 * * * ?`), weekdays only (`0 0 9 * * 1-5 ?`)
+- `max_concurrent_runs: 1` prevents duplicate processing when a job takes longer than the schedule interval
+- Jobs scheduled with `timezone_id` automatically adjust for daylight saving time changes
+
+## Key Takeaways
+
+- **Cron Syntax**: `minute hour day month day_of_week`
+- **Quartz Format**: Requires seconds field (7 fields)
+- **Timezone**: Affects when cron fires (different regions)
+- **Max Concurrent Runs**: Prevents duplicate execution
+- **Timeout**: Maximum execution time per task
+- **Pause/Resume**: Control scheduling without deleting job
+- **Webhooks**: External systems trigger via API
+- **Off-Peak**: Schedule during low-demand hours
+- **Staggering**: Space jobs to avoid resource contention
+- **Daylight Saving**: Automatic adjustment with timezone
+
+## Related Topics
+
+- [Databricks Jobs](./01-databricks-jobs.md)
+- [Job Monitoring](./03-job-monitoring.md)
+
+## Official Documentation
+
+- [Schedule a Job](https://docs.databricks.com/en/workflows/jobs/schedule-jobs.html)
+- [Trigger a Job](https://docs.databricks.com/en/workflows/jobs/trigger-jobs.html)
 
 ---
 

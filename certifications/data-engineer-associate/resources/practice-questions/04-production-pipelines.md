@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Production Pipelines"
+type: practice-questions
+tags: [data-engineer-associate, practice-questions, production-pipelines]
+---
+
 # Domain 4: Production Pipelines
 
 ## Question 1: When to Use Cluster Pools

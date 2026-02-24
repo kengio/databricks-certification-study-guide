@@ -414,6 +414,16 @@ CREATE TABLE cdc_monitoring.metrics (
 
 **Fix:** Use `update_postimage` to get the *new* values. Preimage is only for "before" state analysis.
 
+## Best Practices
+
+- Enable CDF on tables that need change tracking
+- Use streaming for near-real-time CDC propagation
+- Deduplicate and handle out-of-order events
+- Use `sequence_by` column for consistent ordering
+- Track CDC processing lag for monitoring
+- Use MERGE for idempotent change application
+- Consider SCD Type 2 for dimension tables requiring history
+
 ## Exam Tips
 
 1. **CDF must be enabled** before changes are tracked - not retroactive
@@ -427,16 +437,6 @@ CREATE TABLE cdc_monitoring.metrics (
 9. **Row Tracking** provides stable `_metadata.row_id` for lineage
 10. **Multi-hop CDC** requires CDF enabled at each layer
 11. Use `update_postimage` (not `preimage`) for latest values in downstream
-
-## Best Practices
-
-- Enable CDF on tables that need change tracking
-- Use streaming for near-real-time CDC propagation
-- Deduplicate and handle out-of-order events
-- Use `sequence_by` column for consistent ordering
-- Track CDC processing lag for monitoring
-- Use MERGE for idempotent change application
-- Consider SCD Type 2 for dimension tables requiring history
 
 ## Key Takeaways
 

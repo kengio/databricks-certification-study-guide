@@ -454,20 +454,6 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 -- Recipient gets read-only access via Share
 ```
 
-## Key Takeaways
-
-- **Principals**: Users, Groups, Service Principals
-- **Hierarchy**: Permissions cascade from parent to child objects
-- **GRANT**: Add privileges to principal
-- **REVOKE**: Remove privileges from principal
-- **Usage**: Catalog/Schema permission to browse/reference
-- **SELECT**: Read data from table
-- **MODIFY**: INSERT, UPDATE, DELETE on table
-- **Least Privilege**: Grant minimum necessary permissions
-- **Groups**: Scales access management
-- **Service Principal**: Machine account for automation
-- **Dynamic Views**: Implement column-level security before UC supports it
-
 ## Use Cases
 
 - **Access Control and Permissions Implementation**: Incorporating Access Control and Permissions principles to build scalable and maintainable solutions in Databricks environments.
@@ -484,6 +470,38 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 
 **Scenario:** Connecting Access Control and Permissions to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control and Permissions prior to deployment.
+
+## Exam Tips
+
+- Permissions cascade downward: granting on a catalog applies to all schemas and tables within it
+- `USAGE` is required on both the catalog and schema before `SELECT` on a table works
+- Know the three principal types: Users (individuals), Groups (collections of users), Service Principals (automation/CI/CD)
+- Dynamic views are the current approach for column-level security -- create a view that excludes sensitive columns and grant `SELECT` on the view
+
+## Key Takeaways
+
+- **Principals**: Users, Groups, Service Principals
+- **Hierarchy**: Permissions cascade from parent to child objects
+- **GRANT**: Add privileges to principal
+- **REVOKE**: Remove privileges from principal
+- **Usage**: Catalog/Schema permission to browse/reference
+- **SELECT**: Read data from table
+- **MODIFY**: INSERT, UPDATE, DELETE on table
+- **Least Privilege**: Grant minimum necessary permissions
+- **Groups**: Scales access management
+- **Service Principal**: Machine account for automation
+- **Dynamic Views**: Implement column-level security before UC supports it
+
+## Related Topics
+
+- [Unity Catalog Basics](./01-unity-catalog-basics.md)
+- [Data Sharing](./03-data-sharing.md)
+- [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
+
+## Official Documentation
+
+- [Manage Privileges in Unity Catalog](https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges/index.html)
+- [Unity Catalog Best Practices](https://docs.databricks.com/en/data-governance/unity-catalog/best-practices.html)
 
 ---
 

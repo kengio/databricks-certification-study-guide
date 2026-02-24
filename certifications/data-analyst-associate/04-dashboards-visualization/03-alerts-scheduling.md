@@ -430,36 +430,6 @@ Alert Escalation:
     ✅ Escalate if not acknowledged (15 min)
 ```
 
-## Key Takeaways
-
-- **Alert**: Monitors query results against condition, sends notification
-- **Threshold alert**: Triggers when value crosses limit
-- **Anomaly alert**: Statistical outlier detection
-- **Destinations**: Slack, email, webhook custom integrations
-- **Scheduling**: Cron expressions for frequencies
-- **Materialized view**: Pre-computed table with auto-refresh
-- **Query export**: Schedule results distribution
-- **Alert fatigue**: Balance alerting to prevent notification overload
-- **Workflow**: Combine scheduling + alerts for monitoring
-
-## Common Exam Questions
-
-**Q: How often can an alert check its condition?**
-
-- **A**: Every 5 minutes minimum to daily; configurable based on needs
-
-**Q: What integration is best for real-time operational alerts?**
-
-- **A**: Slack (immediate notification) or PagerDuty (incident management)
-
-**Q: How do you prevent duplicate alerts from firing?**
-
-- **A**: Set reasonable thresholds, use deduplication logic, escalate severity levels
-
-**Q: What's the benefit of a materialized view vs scheduled query?**
-
-- **A**: Materialized view keeps data pre-computed and indexed; queries are instant
-
 ## Use Cases
 
 - **Alerts & Scheduling Implementation**: Incorporating Alerts & Scheduling principles to build scalable and maintainable solutions in Databricks environments.
@@ -476,6 +446,36 @@ Alert Escalation:
 
 **Scenario:** Connecting Alerts & Scheduling to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Alerts & Scheduling prior to deployment.
+
+## Exam Tips
+
+- Alerts can check conditions as frequently as every 5 minutes; frequency is configurable
+- Slack and PagerDuty are best for real-time operational alerts; email is better for periodic reports
+- Materialized views keep data pre-computed and indexed, making queries instant compared to scheduled queries
+- Prevent alert fatigue by using realistic thresholds, dynamic baselines, and severity escalation
+
+## Key Takeaways
+
+- **Alert**: Monitors query results against condition, sends notification
+- **Threshold alert**: Triggers when value crosses limit
+- **Anomaly alert**: Statistical outlier detection
+- **Destinations**: Slack, email, webhook custom integrations
+- **Scheduling**: Cron expressions for frequencies
+- **Materialized view**: Pre-computed table with auto-refresh
+- **Query export**: Schedule results distribution
+- **Alert fatigue**: Balance alerting to prevent notification overload
+- **Workflow**: Combine scheduling + alerts for monitoring
+
+## Related Topics
+
+- [Dashboards & Dashboard Design](./01-dashboards.md) - Dashboards that consume alert-driven data
+- [Visualizations & Chart Types](./02-visualizations.md) - Visualizing alert thresholds and trends
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Writing queries that power alerts and scheduled reports
+
+## Official Documentation
+
+- [Databricks SQL Alerts](https://docs.databricks.com/sql/user/alerts/index.html)
+- [Query Scheduling](https://docs.databricks.com/sql/user/queries/schedule-query.html)
 
 ---
 

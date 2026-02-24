@@ -1,4 +1,5 @@
 ---
+title: Data Engineer Associate
 tags:
   - databricks
   - certification

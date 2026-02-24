@@ -359,8 +359,8 @@ spark.createDataFrame([
 ```python
 # Repartition to use more workers
 
-df = spark.read.delta("/mnt/data/large") \
-    .repartition(1000)  # Spread across workers
+df = (spark.read.delta("/mnt/data/large")
+    .repartition(1000))  # Spread across workers
 ```
 
 ### Issue 3: Max Concurrent Runs Skipped
@@ -445,10 +445,10 @@ job_metrics = spark.createDataFrame([
     run_date DATE
 """)
 
-job_metrics.write \
-    .format("delta") \
-    .mode("append") \
-    .save("/mnt/metrics/job_runs")
+(job_metrics.write
+    .format("delta")
+    .mode("append")
+    .save("/mnt/metrics/job_runs"))
 
 # Analyze trends
 
@@ -500,19 +500,6 @@ for run in runs:
     print(f"Run {run['run_id']}: {run['state']} - {run['start_time']}")
 ```
 
-## Key Takeaways
-
-- **Run Status**: PENDING, RUNNING, SUCCESS, FAILED, TIMEOUT, SKIPPED
-- **Logs**: Access via UI or API; contain execution details
-- **Email Alerts**: on_success/on_failure notifications
-- **Slack Integration**: Webhook-based alerting
-- **Performance Metrics**: Duration, CPU, memory, shuffle I/O
-- **Timeout**: Task execution time limit
-- **Max Concurrent Runs**: Prevents duplicate execution
-- **OOM Errors**: Increase cluster size or repartition
-- **Skipped Runs**: Previous run still executing
-- **Audit Trail**: Track user, time, status via metrics tables
-
 ## Use Cases
 
 - **Job Monitoring Implementation**: Incorporating Job Monitoring principles to build scalable and maintainable solutions in Databricks environments.
@@ -529,6 +516,37 @@ for run in runs:
 
 **Scenario:** Connecting Job Monitoring to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Job Monitoring prior to deployment.
+
+## Exam Tips
+
+- Know the job run statuses: PENDING, RUNNING, SUCCESS, FAILED, TIMEOUT, SKIPPED -- and what causes each
+- SKIPPED status means a previous run was still executing and `max_concurrent_runs` prevented a new one
+- Email notifications support `on_success` and `on_failure` -- configure both for production pipelines
+- OOM errors are resolved by increasing cluster size, adding workers, or repartitioning data
+
+## Key Takeaways
+
+- **Run Status**: PENDING, RUNNING, SUCCESS, FAILED, TIMEOUT, SKIPPED
+- **Logs**: Access via UI or API; contain execution details
+- **Email Alerts**: on_success/on_failure notifications
+- **Slack Integration**: Webhook-based alerting
+- **Performance Metrics**: Duration, CPU, memory, shuffle I/O
+- **Timeout**: Task execution time limit
+- **Max Concurrent Runs**: Prevents duplicate execution
+- **OOM Errors**: Increase cluster size or repartition
+- **Skipped Runs**: Previous run still executing
+- **Audit Trail**: Track user, time, status via metrics tables
+
+## Related Topics
+
+- [Databricks Jobs](./01-databricks-jobs.md)
+- [Scheduling and Triggers](./02-scheduling-triggers.md)
+- [Spark UI Debugging (DE Professional)](../../data-engineer-professional/05-monitoring-logging/02-spark-ui-debugging.md)
+
+## Official Documentation
+
+- [Monitor Job Runs](https://docs.databricks.com/en/workflows/jobs/monitor-job-runs.html)
+- [Job Run Notifications](https://docs.databricks.com/en/workflows/jobs/notifications.html)
 
 ---
 

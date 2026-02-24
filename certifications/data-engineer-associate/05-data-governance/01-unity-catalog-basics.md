@@ -264,10 +264,10 @@ Scattered data → Centralized discovery
 
 df = spark.read.csv("/mnt/landing/data.csv", header=True)
 
-df.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .saveAsTable("prod.raw.incoming_data")
+(df.write
+    .format("delta")
+    .mode("overwrite")
+    .saveAsTable("prod.raw.incoming_data"))
 
 # Verify in UC
 
@@ -398,19 +398,6 @@ CREATE EXTERNAL LOCATION location_name
 CREATE METASTORE ASSIGNMENT catalog_name
 ```
 
-## Key Takeaways
-
-- **Unity Catalog**: Centralized governance across Databricks platform
-- **Metastore**: Root container (per region, per organization)
-- **Catalog**: Top-level organizational container
-- **Schema**: Groups related objects
-- **Three-level namespace**: `catalog.schema.object`
-- **Managed Tables**: UC manages storage and lifecycle
-- **External Tables**: UC provides access control, data in external storage
-- **Volumes**: Designated storage for files, documents, artifacts
-- **External Locations**: Cloud storage paths with credential binding
-- **UC vs Hive**: UC is modern, fine-grained access control
-
 ## Use Cases
 
 - **Unity Catalog Basics Implementation**: Incorporating Unity Catalog Basics principles to build scalable and maintainable solutions in Databricks environments.
@@ -427,6 +414,37 @@ CREATE METASTORE ASSIGNMENT catalog_name
 
 **Scenario:** Connecting Unity Catalog Basics to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Unity Catalog Basics prior to deployment.
+
+## Exam Tips
+
+- The three-level namespace is `catalog.schema.object` -- be able to write fully qualified table references like `prod.analytics.orders`
+- One metastore per region per organization; metastore is the root container for all UC objects
+- Know the difference between managed tables (UC manages storage) and external tables (data in external location with UC access control)
+- Volumes store non-tabular files (PDFs, images, code) and are accessed via `/Volumes/catalog/schema/volume_name/`
+
+## Key Takeaways
+
+- **Unity Catalog**: Centralized governance across Databricks platform
+- **Metastore**: Root container (per region, per organization)
+- **Catalog**: Top-level organizational container
+- **Schema**: Groups related objects
+- **Three-level namespace**: `catalog.schema.object`
+- **Managed Tables**: UC manages storage and lifecycle
+- **External Tables**: UC provides access control, data in external storage
+- **Volumes**: Designated storage for files, documents, artifacts
+- **External Locations**: Cloud storage paths with credential binding
+- **UC vs Hive**: UC is modern, fine-grained access control
+
+## Related Topics
+
+- [Access Control and Permissions](./02-access-control-permissions.md)
+- [Data Sharing](./03-data-sharing.md)
+- [Unity Catalog Basics (Shared)](../../../shared/fundamentals/unity-catalog-basics.md)
+
+## Official Documentation
+
+- [Unity Catalog Overview](https://docs.databricks.com/en/data-governance/unity-catalog/index.html)
+- [Create and Manage Catalogs](https://docs.databricks.com/en/catalogs/index.html)
 
 ---
 

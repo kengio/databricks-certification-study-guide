@@ -1,3 +1,12 @@
+---
+title: Performance Optimization
+type: category
+tags:
+  - data-engineer-professional
+  - performance-optimization
+status: published
+---
+
 # Performance Optimization
 
 Optimizing Databricks workloads involves understanding file management, indexing, Spark tuning, and cost optimization strategies.
@@ -27,6 +36,17 @@ flowchart LR
 | [06-photon-diagnostics-optimization-part1.md](06-photon-diagnostics-optimization-part1.md) | Photon acceleration, memory diagnostics, Spark UI analysis | High |
 | [06-photon-diagnostics-optimization-part2.md](06-photon-diagnostics-optimization-part2.md) | Query optimization strategies, common issues, exam tips, practice questions | High |
 | [07-streaming-optimization.md](07-streaming-optimization.md) | Streaming-specific performance tuning | Medium |
+
+## Key Concepts
+
+| Concept | Definition |
+| :--- | :--- |
+| **OPTIMIZE** | A Delta Lake command that compacts small files into larger ones (target ~1 GB) to reduce metadata overhead and improve read performance |
+| **Z-Order** | A multi-dimensional clustering technique applied during OPTIMIZE that co-locates related data in the same files, enabling data skipping on filtered columns |
+| **Liquid Clustering** | A newer, incremental clustering strategy that replaces static partitioning and Z-ORDER with automatic, adaptive data layout |
+| **Adaptive Query Execution (AQE)** | A Spark runtime optimization that dynamically adjusts query plans based on runtime statistics -- coalescing partitions, converting joins, and handling skew |
+| **Photon** | Databricks' native vectorized execution engine written in C++ that accelerates SQL and DataFrame workloads on Delta Lake |
+| **Data Skipping** | A read optimization where Delta Lake uses min/max statistics stored in the transaction log to skip files that cannot contain matching rows |
 
 ## File Size Optimization
 
@@ -133,6 +153,14 @@ flowchart TD
 - [ ] Tune shuffle partitions based on data size
 - [ ] Compare costs: job cluster vs all-purpose
 - [ ] Enable and verify Photon benefits
+
+## Related Resources
+
+- [Performance Optimization Cheat Sheet](../../../shared/cheat-sheets/performance-optimization.md)
+- [Spark Configurations Cheat Sheet](../../../shared/cheat-sheets/spark-configurations.md)
+- [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md)
+- [Spark Fundamentals](../../../shared/fundamentals/spark-fundamentals.md)
+- [Delta Lake Basics](../../../shared/fundamentals/delta-lake-basics.md)
 
 ---
 

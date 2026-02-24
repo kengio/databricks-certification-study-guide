@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Data Processing"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, data-processing]
+---
+
 # Practice Questions - Section 01: Data Processing (30%)
 
 ## Question 1.1: Auto Loader Schema Evolution

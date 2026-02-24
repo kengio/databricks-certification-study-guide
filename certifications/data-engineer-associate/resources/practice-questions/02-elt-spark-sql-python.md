@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: ELT with Spark SQL and Python"
+type: practice-questions
+tags: [data-engineer-associate, practice-questions, elt-spark-sql]
+---
+
 # Domain 2: ELT with Spark SQL and Python
 
 ## Question 1: DELETE Syntax

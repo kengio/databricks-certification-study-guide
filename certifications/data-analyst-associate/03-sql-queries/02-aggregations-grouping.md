@@ -429,35 +429,6 @@ LEFT JOIN order_counts oc ON c.customer_id = oc.customer_id
 GROUP BY c.region;
 ```
 
-## Key Takeaways
-
-- **COUNT(*)**: All rows; **COUNT(col)**: Non-NULL; **COUNT(DISTINCT)**: Unique
-- **GROUP BY**: Aggregates rows by specified column(s)
-- **HAVING**: Filters aggregates (used AFTER GROUP BY)
-- **WHERE**: Filters rows (used BEFORE GROUP BY)
-- **ROLLUP**: Hierarchical subtotals
-- **CUBE**: All dimension combinations
-- **NULL handling**: NULLs ignored in aggregates, NULL is its own group
-- **Order matters**: FROM → WHERE → GROUP BY → HAVING → SELECT
-
-## Common Exam Questions
-
-**Q: What's the difference between COUNT(*) and COUNT(column)?**
-
-- **A**: COUNT(*) includes NULLs; COUNT(column) excludes NULLs
-
-**Q: Can you use an aggregate in a WHERE clause?**
-
-- **A**: No, use HAVING instead: WHERE filters before grouping, HAVING after
-
-**Q: How many result rows from GROUP BY ALL with 3 columns?**
-
-- **A**: Depends on data cardinality, but includes one row per unique combo
-
-**Q: What does ROLLUP add compared to GROUP BY?**
-
-- **A**: ROLLUP includes hierarchical subtotals and grand total
-
 ## Use Cases
 
 - **Aggregations & Grouping Implementation**: Incorporating Aggregations & Grouping principles to build scalable and maintainable solutions in Databricks environments.
@@ -474,6 +445,35 @@ GROUP BY c.region;
 
 **Scenario:** Connecting Aggregations & Grouping to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Aggregations & Grouping prior to deployment.
+
+## Exam Tips
+
+- COUNT(*) counts all rows including NULLs; COUNT(column) excludes NULLs; COUNT(DISTINCT column) counts unique non-NULL values
+- Aggregates cannot be used in WHERE; use HAVING to filter on aggregate results
+- Know the query execution order: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT
+- ROLLUP produces hierarchical subtotals and a grand total; CUBE produces all dimension combinations
+
+## Key Takeaways
+
+- **COUNT(*)**: All rows; **COUNT(col)**: Non-NULL; **COUNT(DISTINCT)**: Unique
+- **GROUP BY**: Aggregates rows by specified column(s)
+- **HAVING**: Filters aggregates (used AFTER GROUP BY)
+- **WHERE**: Filters rows (used BEFORE GROUP BY)
+- **ROLLUP**: Hierarchical subtotals
+- **CUBE**: All dimension combinations
+- **NULL handling**: NULLs ignored in aggregates, NULL is its own group
+- **Order matters**: FROM → WHERE → GROUP BY → HAVING → SELECT
+
+## Related Topics
+
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Foundational SQL concepts including GROUP BY
+- [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md) - Quick reference for aggregate and scalar functions
+- [CTE Patterns](../../../shared/code-examples/sql/cte_patterns.md) - Common Table Expression patterns used with aggregations
+
+## Official Documentation
+
+- [Databricks SQL GROUP BY](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-groupby.html)
+- [Aggregate Functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin.html#aggregate-functions)
 
 ---
 

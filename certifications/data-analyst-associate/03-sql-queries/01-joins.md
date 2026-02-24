@@ -424,36 +424,6 @@ FROM source s
 FULL OUTER JOIN target t ON s.id = t.id;
 ```
 
-## Key Takeaways
-
-- **INNER JOIN**: Only matching rows from both tables
-- **LEFT JOIN**: All left rows + matching right rows
-- **FULL OUTER JOIN**: All rows from both tables (left + right)
-- **CROSS JOIN**: Cartesian product (every combo)
-- **SEMI/ANTI**: Existence checks without adding columns
-- **Multi-table**: Can chain multiple joins
-- **Join condition**: Can use expressions, ranges, multiple columns
-- **Order matters**: Filter before join for performance
-- **NULL handling**: IS NULL checks for unmatched rows
-
-## Common Exam Questions
-
-**Q: To find customers with no orders, which join would you use?**
-
-- **A**: LEFT JOIN customers to orders, then WHERE order_id IS NULL
-
-**Q: What is the result of CROSS JOIN between 5 rows and 3 rows?**
-
-- **A**: 15 rows (5 × 3 Cartesian product)
-
-**Q: When would SEMI JOIN be preferred over IN?**
-
-- **A**: SEMI JOIN is often optimized better for existence checks
-
-**Q: How do you join on multiple columns?**
-
-- **A**: AND in ON clause: ON table1.col1 = table2.col1 AND table1.col2 = table2.col2
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -470,6 +440,36 @@ FULL OUTER JOIN target t ON s.id = t.id;
 
 **Scenario:** Connecting Joins & Multi-table Operations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Joins & Multi-table Operations prior to deployment.
+
+## Exam Tips
+
+- To find records with no match (e.g., customers with no orders), use LEFT JOIN with `WHERE key IS NULL`
+- CROSS JOIN produces a Cartesian product: row count = left rows multiplied by right rows
+- SEMI JOIN is often more optimized than IN or EXISTS for existence checks
+- Always filter rows before joining for better performance (WHERE before JOIN)
+
+## Key Takeaways
+
+- **INNER JOIN**: Only matching rows from both tables
+- **LEFT JOIN**: All left rows + matching right rows
+- **FULL OUTER JOIN**: All rows from both tables (left + right)
+- **CROSS JOIN**: Cartesian product (every combo)
+- **SEMI/ANTI**: Existence checks without adding columns
+- **Multi-table**: Can chain multiple joins
+- **Join condition**: Can use expressions, ranges, multiple columns
+- **Order matters**: Filter before join for performance
+- **NULL handling**: IS NULL checks for unmatched rows
+
+## Related Topics
+
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts including join fundamentals
+- [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md) - Quick reference for functions used in join conditions
+- [Window Functions](../../../shared/code-examples/sql/window_functions.md) - Advanced SQL patterns often combined with joins
+
+## Official Documentation
+
+- [Databricks SQL JOIN Syntax](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-join.html)
+- [Query Performance Tuning](https://docs.databricks.com/sql/admin/query-tuning.html)
 
 ---
 

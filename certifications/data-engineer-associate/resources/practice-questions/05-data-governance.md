@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Data Governance"
+type: practice-questions
+tags: [data-engineer-associate, practice-questions, data-governance]
+---
+
 # Domain 5: Data Governance
 
 ## Question 1: Git Operations Outside Databricks Repos

@@ -1,4 +1,5 @@
 ---
+title: GenAI Engineer Associate
 tags:
   - databricks
   - certification

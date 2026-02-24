@@ -49,8 +49,10 @@ Practice questions designed to simulate a real Databricks technical job intervie
 | [08-pyspark-api.md](08-pyspark-api.md) | Window functions, UDFs, complex types, QUALIFY | Both | 6 |
 | [09-python-code-quality.md](09-python-code-quality.md) | Generators, decorators, context managers, OOP, testing | Both | 5 |
 | [10-data-modeling.md](10-data-modeling.md) | Star schema, SCD types, Delta SCD2, schema versioning | Both | 5 |
+| [11-ml-system-design.md](11-ml-system-design.md) | Feature Store design, model monitoring, retraining pipelines | Professional | 5 |
+| [12-genai-rag-design.md](12-genai-rag-design.md) | RAG architecture, chunking, evaluation, Vector Search, guardrails | Both | 5 |
 
-**Total: 54 questions**
+**Total: 64 questions**
 
 ---
 

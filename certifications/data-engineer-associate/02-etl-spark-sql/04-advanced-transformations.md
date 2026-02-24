@@ -441,17 +441,6 @@ df_cleaned.unpersist()
 | **Optimization** | Catalyst optimizes | Limited optimization |
 | **When to Use** | Always prefer | Last resort |
 
-## Key Takeaways
-
-- **UDF**: User-defined functions for custom logic; Pandas UDFs faster than Python UDFs
-- **Window Functions**: Compute values over partitions without aggregating rows
-- **Collections**: Arrays, maps, structs for complex data types
-- **String/Date**: Standard functions for text and temporal data
-- **Conditionals**: when/otherwise for complex business logic
-- **Null Handling**: Use fillna/dropna for data quality
-- **Optimization**: Use broadcast for small tables, avoid UDFs when possible
-- **Pivot**: Transform data from rows to columns
-
 ## Use Cases
 
 - **Advanced Transformations Implementation**: Incorporating Advanced Transformations principles to build scalable and maintainable solutions in Databricks environments.
@@ -468,6 +457,35 @@ df_cleaned.unpersist()
 
 **Scenario:** Connecting Advanced Transformations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Advanced Transformations prior to deployment.
+
+## Exam Tips
+
+- Always prefer built-in Spark functions over UDFs; UDFs bypass Catalyst optimization and are slower
+- Pandas UDFs (vectorized) are significantly faster than regular Python UDFs because they process batches
+- Know the difference between `ROW_NUMBER()`, `RANK()`, and `DENSE_RANK()` -- especially how they handle ties
+- `explode()` converts an array column into multiple rows; this is a common exam question pattern
+
+## Key Takeaways
+
+- **UDF**: User-defined functions for custom logic; Pandas UDFs faster than Python UDFs
+- **Window Functions**: Compute values over partitions without aggregating rows
+- **Collections**: Arrays, maps, structs for complex data types
+- **String/Date**: Standard functions for text and temporal data
+- **Conditionals**: when/otherwise for complex business logic
+- **Null Handling**: Use fillna/dropna for data quality
+- **Optimization**: Use broadcast for small tables, avoid UDFs when possible
+- **Pivot**: Transform data from rows to columns
+
+## Related Topics
+
+- [Joins and Aggregations](./03-joins-aggregations.md)
+- [PySpark API Quick Reference](../../../shared/cheat-sheets/pyspark-api-quick-ref.md)
+- [Python Patterns (Code Examples)](../../../shared/code-examples/python/python_patterns.md)
+
+## Official Documentation
+
+- [PySpark Built-in Functions](https://docs.databricks.com/en/pyspark/index.html)
+- [Window Functions](https://docs.databricks.com/en/sql/language-manual/sql-ref-functions-builtin.html#window-functions)
 
 ---
 

@@ -298,15 +298,6 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 - No manual cluster management
 ```
 
-## Key Takeaways
-
-- **All-Purpose vs Job Clusters**: Purpose, cost, multi-user support
-- **Node Types**: Impact on performance and cost
-- **Auto-scaling**: How it works, benefits, limitations
-- **DBU Pricing**: How charges are calculated
-- **Best Practice**: Right-size clusters, use auto-terminate
-- **Spot Instances**: Cost savings with trade-offs
-
 ## Use Cases
 
 - **Compute and Clusters Implementation**: Incorporating Compute and Clusters principles to build scalable and maintainable solutions in Databricks environments.
@@ -323,6 +314,33 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 
 **Scenario:** Connecting Compute and Clusters to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Compute and Clusters prior to deployment.
+
+## Exam Tips
+
+- Know the three cluster types: All-Purpose (interactive dev), Job Clusters (automated jobs), SQL Warehouses (SQL/BI)
+- Job clusters are more cost-efficient than all-purpose clusters because they auto-terminate when the job finishes
+- Understand DBU billing: 1 DBU = 1 hour of processing on 1 worker; job clusters have lower per-DBU rates
+- Spot instances save up to 60% but can be interrupted -- suitable for non-critical, checkpointed workloads
+
+## Key Takeaways
+
+- **All-Purpose vs Job Clusters**: Purpose, cost, multi-user support
+- **Node Types**: Impact on performance and cost
+- **Auto-scaling**: How it works, benefits, limitations
+- **DBU Pricing**: How charges are calculated
+- **Best Practice**: Right-size clusters, use auto-terminate
+- **Spot Instances**: Cost savings with trade-offs
+
+## Related Topics
+
+- [Databricks Workspace](./02-databricks-workspace.md)
+- [Spark Fundamentals (Shared)](../../../shared/fundamentals/spark-fundamentals.md)
+- [Performance Optimization (Shared)](../../../shared/cheat-sheets/performance-optimization.md)
+
+## Official Documentation
+
+- [Compute Overview](https://docs.databricks.com/en/compute/index.html)
+- [Cluster Configuration Best Practices](https://docs.databricks.com/en/compute/cluster-config-best-practices.html)
 
 ---
 

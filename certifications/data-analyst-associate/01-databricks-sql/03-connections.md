@@ -476,35 +476,6 @@ Ports required:
   - 32000-32010: Driver communication (JDBC/ODBC)
 ```
 
-## Key Takeaways
-
-- **JDBC**: Java applications and tools like Tableau, Qlik
-- **ODBC**: Legacy tools, Excel, Power BI, SQL Server
-- **REST API**: Custom integrations, programmatic access
-- **Authentication**: PAT (most common), OAuth, M2M, AAD
-- **Connection string**: Contains host, path, auth, SSL settings
-- **Catalog/Schema**: Fully qualified table path for multi-workspace setups
-- **Connection pooling**: Reuse connections for performance
-- **HTTP Path**: Warehouse-specific, format: `/sql/1.0/warehouses/id`
-
-## Common Exam Questions
-
-**Q: Which authentication method is most common for tool integrations?**
-
-- **A**: Personal Access Token (PAT) - easy to generate and revoke
-
-**Q: What does HTTP Path identify?**
-
-- **A**: The specific SQL warehouse the connection uses
-
-**Q: How are query parameters passed in Python?**
-
-- **A**: Using `params` argument: `execute(query, params=[...])`
-
-**Q: What port does Databricks SQL use for connections?**
-
-- **A**: 443 (HTTPS) for secure connections
-
 ## Use Cases
 
 - **Connections & Integrations Implementation**: Incorporating Connections & Integrations principles to build scalable and maintainable solutions in Databricks environments.
@@ -521,6 +492,35 @@ Ports required:
 
 **Scenario:** Connecting Connections & Integrations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Connections & Integrations prior to deployment.
+
+## Exam Tips
+
+- PAT (Personal Access Token) is the most common authentication method for tool integrations
+- HTTP Path identifies the specific SQL warehouse a connection uses
+- Databricks SQL connections use port 443 (HTTPS)
+- Know the difference between JDBC (Java apps, Tableau) and ODBC (Excel, Power BI, legacy tools)
+
+## Key Takeaways
+
+- **JDBC**: Java applications and tools like Tableau, Qlik
+- **ODBC**: Legacy tools, Excel, Power BI, SQL Server
+- **REST API**: Custom integrations, programmatic access
+- **Authentication**: PAT (most common), OAuth, M2M, AAD
+- **Connection string**: Contains host, path, auth, SSL settings
+- **Catalog/Schema**: Fully qualified table path for multi-workspace setups
+- **Connection pooling**: Reuse connections for performance
+- **HTTP Path**: Warehouse-specific, format: `/sql/1.0/warehouses/id`
+
+## Related Topics
+
+- [Databricks Workspace](../../../shared/fundamentals/databricks-workspace.md) - Understanding the workspace environment for connections
+- [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md) - How catalog namespaces affect connection paths
+- [PySpark API Quick Reference](../../../shared/cheat-sheets/pyspark-api-quick-ref.md) - Python API patterns for Databricks connections
+
+## Official Documentation
+
+- [Databricks SQL Drivers](https://docs.databricks.com/integrations/jdbc-odbc-bi.html)
+- [Partner Connect](https://docs.databricks.com/integrations/partner-connect/index.html)
 
 ---
 

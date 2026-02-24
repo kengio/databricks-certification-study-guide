@@ -33,6 +33,17 @@ flowchart LR
 | [04-scd-patterns.md](04-scd-patterns.md) | SCD Type 1, Type 2 implementations | Medium |
 | [05-partitioning-strategies.md](05-partitioning-strategies.md) | Partition selection, liquid clustering | Medium |
 
+## Key Concepts
+
+| Concept | Definition |
+| :--- | :--- |
+| **Medallion Architecture** | A multi-hop data design pattern with Bronze (raw), Silver (cleansed), and Gold (curated) layers that progressively improve data quality |
+| **Schema Enforcement** | Delta Lake's write-time validation that rejects records whose schema does not match the target table, preventing data corruption |
+| **Schema Evolution** | The ability to automatically add new columns to a Delta table using `mergeSchema` or completely replace the schema with `overwriteSchema` |
+| **SCD Type 2** | A slowly changing dimension pattern that preserves full history by inserting new rows with effective date ranges rather than overwriting |
+| **Deep Clone vs Shallow Clone** | Deep clone copies both metadata and data files (independent copy); shallow clone copies only metadata and references the original data files |
+| **Liquid Clustering** | An adaptive data layout strategy that replaces static partitioning and Z-ORDER, automatically reorganizing data for optimal query performance |
+
 ## Medallion Architecture
 
 ```mermaid
@@ -99,6 +110,14 @@ flowchart LR
 - [ ] Configure schema evolution for Auto Loader
 - [ ] Choose optimal partition columns
 - [ ] Use Delta constraints for data quality
+
+## Related Resources
+
+- [Delta Lake Basics](../../../shared/fundamentals/delta-lake-basics.md)
+- [Medallion Architecture](../../../shared/fundamentals/medallion-architecture.md)
+- [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md)
+- [Performance Optimization Cheat Sheet](../../../shared/cheat-sheets/performance-optimization.md)
+- [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md)
 
 ---
 

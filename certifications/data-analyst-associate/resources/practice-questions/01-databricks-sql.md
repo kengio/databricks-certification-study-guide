@@ -6,7 +6,7 @@ tags: [data-analyst-associate, practice-questions, databricks-sql]
 
 # Databricks SQL Practice Questions
 
-[← Back to Practice Questions](./README.md) | [Next: Data Management](02-data-management.md)
+[← Back to Practice Questions](./README.md) | [Next: Data Management](./02-data-management.md)
 
 ---
 

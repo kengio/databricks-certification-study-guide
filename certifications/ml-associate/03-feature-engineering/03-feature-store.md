@@ -559,15 +559,13 @@ job_config = {
 - Batch scoring uses same features as training for consistency
 - Feature discovery enables team collaboration and feature reuse
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [Spark ML Pipelines](01-spark-ml-pipelines.md)
 - [Feature Engineering Techniques](02-feature-engineering-techniques.md)
 - [MLflow Tracking](../02-ml-workflows/01-mlflow-tracking.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Databricks Feature Store](https://docs.databricks.com/machine-learning/feature-store/index.html)
 - [Feature Engineering Guide](https://docs.databricks.com/machine-learning/feature-engineering/index.html)

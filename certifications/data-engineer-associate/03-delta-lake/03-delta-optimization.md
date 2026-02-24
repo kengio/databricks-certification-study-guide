@@ -66,9 +66,9 @@ OPTIMIZE employees WHERE year = 2025 AND month = 1;
 ```python
 # Optimize with partition pruning
 
-delta_table.optimize() \
-    .where("year = 2025") \
-    .executeCompaction()
+(delta_table.optimize()
+    .where("year = 2025")
+    .executeCompaction())
 ```
 
 ### OPTIMIZE with Z-order
@@ -90,10 +90,10 @@ ZORDER BY (customer_id, order_date);
 
 from delta.tables import DeltaTable
 
-DeltaTable.forPath(spark, "/mnt/data/employees") \
-    .optimize() \
-    .zorderBy("department") \
-    .executeCompaction()
+(DeltaTable.forPath(spark, "/mnt/data/employees")
+    .optimize()
+    .zorderBy("department")
+    .executeCompaction())
 ```
 
 ## Z-order Indexing
@@ -368,11 +368,11 @@ spark.sql("VACUUM employees RETAIN 30 DAYS")
 ```python
 # Delta automatically uses optimal compression (Snappy by default)
 
-df.write \
-    .format("delta") \
-    .option("compression", "snappy") \
-    .mode("overwrite") \
-    .save("/mnt/data/employees")
+(df.write
+    .format("delta")
+    .option("compression", "snappy")
+    .mode("overwrite")
+    .save("/mnt/data/employees"))
 
 # Other options: gzip, lz4, uncompressed
 
@@ -420,9 +420,9 @@ spark.sql("ANALYZE TABLE employees COMPUTE STATISTICS")
 
 # Optimize and Z-order
 
-delta_table.optimize() \
-    .zorderBy("department", "hire_date") \
-    .executeCompaction()
+(delta_table.optimize()
+    .zorderBy("department", "hire_date")
+    .executeCompaction())
 
 # VACUUM old files
 
@@ -433,17 +433,6 @@ delta_table.vacuum(retention_hours=168)  # 7 days
 print("Optimization complete!")
 spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 ```
-
-## Key Takeaways
-
-- **OPTIMIZE**: Compact small files into larger ones for faster scans
-- **Z-order**: Index columns for better query performance on filters
-- **VACUUM**: Remove old data files and transaction logs to save storage
-- **Statistics**: Automatic collection helps query optimizer
-- **Retention**: Default 7 days prevents accidental data loss
-- **Auto-optimize**: Automatic OPTIMIZE on write (if enabled)
-- **Bloom Filters**: Fast lookup filtering on specific columns
-- **Maintenance**: Regular OPTIMIZE, ANALYZE, and VACUUM needed
 
 ## Use Cases
 
@@ -461,6 +450,35 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
 **Scenario:** Connecting Delta Lake Optimization to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Optimization prior to deployment.
+
+## Exam Tips
+
+- OPTIMIZE compacts small files; Z-ORDER clusters data by specified columns for faster filtering -- know the syntax `OPTIMIZE table ZORDER BY (col)`
+- VACUUM default retention is 7 days; running `VACUUM RETAIN 0 HOURS` breaks time travel and is dangerous
+- `ANALYZE TABLE ... COMPUTE STATISTICS` collects column-level statistics for the query optimizer
+- Auto-optimize (`delta.autoOptimize.optimizeWrite` and `delta.autoOptimize.autoCompact`) runs optimization on every write
+
+## Key Takeaways
+
+- **OPTIMIZE**: Compact small files into larger ones for faster scans
+- **Z-order**: Index columns for better query performance on filters
+- **VACUUM**: Remove old data files and transaction logs to save storage
+- **Statistics**: Automatic collection helps query optimizer
+- **Retention**: Default 7 days prevents accidental data loss
+- **Auto-optimize**: Automatic OPTIMIZE on write (if enabled)
+- **Bloom Filters**: Fast lookup filtering on specific columns
+- **Maintenance**: Regular OPTIMIZE, ANALYZE, and VACUUM needed
+
+## Related Topics
+
+- [Time Travel and Versioning](./02-time-travel-versioning.md)
+- [Delta Lake Fundamentals](./01-delta-lake-fundamentals.md)
+- [Performance Optimization Cheat Sheet](../../../shared/cheat-sheets/performance-optimization.md)
+
+## Official Documentation
+
+- [Optimize Data Files](https://docs.databricks.com/en/delta/optimize.html)
+- [Remove Unused Data Files with Vacuum](https://docs.databricks.com/en/delta/vacuum.html)
 
 ---
 

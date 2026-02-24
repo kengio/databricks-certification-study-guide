@@ -148,17 +148,17 @@ employees_df = spark.createDataFrame([
     (2, "Bob", 75000)
 ], ["id", "name", "salary"])
 
-employees_df.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .save("/mnt/data/employees")
+(employees_df.write
+    .format("delta")
+    .mode("overwrite")
+    .save("/mnt/data/employees"))
 
 # Or create managed table
 
-employees_df.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .saveAsTable("employees")
+(employees_df.write
+    .format("delta")
+    .mode("overwrite")
+    .saveAsTable("employees"))
 ```
 
 ### Convert Existing Parquet
@@ -257,10 +257,10 @@ new_employees = spark.createDataFrame([
     (3, "Charlie", 95000)
 ], ["id", "name", "salary"])
 
-new_employees.write \
-    .format("delta") \
-    .mode("append") \
-    .save("/mnt/data/employees")
+(new_employees.write
+    .format("delta")
+    .mode("append")
+    .save("/mnt/data/employees"))
 ```
 
 ### Overwrite Modes
@@ -268,25 +268,25 @@ new_employees.write \
 ```python
 # Overwrite all data
 
-updated_data.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .save("/mnt/data/employees")
+(updated_data.write
+    .format("delta")
+    .mode("overwrite")
+    .save("/mnt/data/employees"))
 
 # Error if schema doesn't match
 
-updated_data.write \
-    .format("delta") \
-    .mode("append") \
-    .save("/mnt/data/employees")
+(updated_data.write
+    .format("delta")
+    .mode("append")
+    .save("/mnt/data/employees"))
 
 # Merge schemas (add new columns)
 
-updated_data.write \
-    .format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .save("/mnt/data/employees")
+(updated_data.write
+    .format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
+    .save("/mnt/data/employees"))
 ```
 
 ## Schema Enforcement and Evolution
@@ -302,10 +302,10 @@ bad_data = spark.createDataFrame([
     ("Alice", "Not a number", 85000)  # Wrong types
 ], ["name", "salary", "bonus"])
 
-bad_data.write \
-    .format("delta") \
-    .mode("append") \
-    .save("/mnt/data/employees")  # Failed!
+(bad_data.write
+    .format("delta")
+    .mode("append")
+    .save("/mnt/data/employees"))  # Failed!
 ```
 
 ### Schema Evolution (Add New Columns)
@@ -319,11 +319,11 @@ new_schema_data = spark.createDataFrame([
     (1, "Alice", 85000, "Engineering")
 ], ["id", "name", "salary", "department"])
 
-new_schema_data.write \
-    .format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .save("/mnt/data/employees")
+(new_schema_data.write
+    .format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
+    .save("/mnt/data/employees"))
 
 # Table now has: id, name, salary, department
 
@@ -398,17 +398,6 @@ Each JSON file represents one committed transaction, enabling:
 - Isolation (multi-version concurrency)
 - Durability (permanent record)
 
-## Key Takeaways
-
-- **Delta Lake**: Storage layer adding ACID, governance, and performance to data lakes
-- **Managed Tables**: Data in warehouse directory, deleted with table
-- **External Tables**: Data in external location, persists after table drop
-- **Merge Schema**: Allow new columns during append
-- **ACID Guarantees**: Atomicity, Consistency, Isolation, Durability
-- **Transaction Log**: `_delta_log/` maintains complete history
-- **Schema Enforcement**: Prevents bad data, enforces types
-- **Schema Evolution**: Controlled addition of new columns via mergeSchema
-
 ## Use Cases
 
 - **ACID Transactions Backup**: Using Delta Lake's robust versioning to create a reliable and auditable data warehouse pipeline.
@@ -425,6 +414,35 @@ Each JSON file represents one committed transaction, enabling:
 
 **Scenario:** Connecting Delta Lake Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Fundamentals prior to deployment.
+
+## Exam Tips
+
+- Delta Lake = Parquet files + `_delta_log/` transaction log -- know this structure
+- Managed tables: `DROP TABLE` deletes both metadata and data; External tables: `DROP TABLE` deletes only metadata
+- Schema enforcement is the default behavior; `.option("mergeSchema", "true")` enables schema evolution
+- MERGE (upsert) is a key Delta Lake feature -- understand the `WHEN MATCHED` / `WHEN NOT MATCHED` syntax
+
+## Key Takeaways
+
+- **Delta Lake**: Storage layer adding ACID, governance, and performance to data lakes
+- **Managed Tables**: Data in warehouse directory, deleted with table
+- **External Tables**: Data in external location, persists after table drop
+- **Merge Schema**: Allow new columns during append
+- **ACID Guarantees**: Atomicity, Consistency, Isolation, Durability
+- **Transaction Log**: `_delta_log/` maintains complete history
+- **Schema Enforcement**: Prevents bad data, enforces types
+- **Schema Evolution**: Controlled addition of new columns via mergeSchema
+
+## Related Topics
+
+- [Time Travel and Versioning](./02-time-travel-versioning.md)
+- [Delta Lake Optimization](./03-delta-optimization.md)
+- [Delta Lake Basics (Shared)](../../../shared/fundamentals/delta-lake-basics.md)
+
+## Official Documentation
+
+- [Delta Lake Documentation](https://docs.databricks.com/en/delta/index.html)
+- [Delta Lake Table Properties](https://docs.databricks.com/en/delta/table-properties.html)
 
 ---
 

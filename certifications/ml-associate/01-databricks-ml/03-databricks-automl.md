@@ -467,15 +467,13 @@ model_uri = f"models:/customer_churn_predictor/Production"
 - Best used for rapid prototyping and baseline creation
 - Manual ML skills still critical for complex domains
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [MLflow Tracking](../02-ml-workflows/01-mlflow-tracking.md)
 - [Spark ML Pipelines](../03-feature-engineering/01-spark-ml-pipelines.md)
 - [Model Registry](../04-mlflow-deployment/01-model-registry.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Databricks AutoML](https://docs.databricks.com/machine-learning/automl/index.html)
 - [AutoML Best Practices](https://docs.databricks.com/machine-learning/automl/best-practices.html)

@@ -481,19 +481,6 @@ GROUP BY recipient_name, share_name, object_accessed
 ORDER BY query_count DESC;
 ```
 
-## Key Takeaways
-
-- **Delta Sharing**: Protocol for sharing without copying data
-- **Provider**: Databricks workspace that creates shares
-- **Consumer**: Workspace/organization that receives shared data
-- **Recipient**: Identity (workspace, email) that accesses share
-- **Share**: Collection of tables/views shared together
-- **Read-only**: Consumers can only query, not modify
-- **Live Data**: No copying, always current
-- **Rest API**: Uses HTTPS REST for access
-- **Row/Column Filtering**: Use views to control exposure
-- **Audit Trail**: Complete access logs
-
 ## Use Cases
 
 - **Data Sharing Implementation**: Incorporating Data Sharing principles to build scalable and maintainable solutions in Databricks environments.
@@ -510,6 +497,37 @@ ORDER BY query_count DESC;
 
 **Scenario:** Connecting Data Sharing to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Data Sharing prior to deployment.
+
+## Exam Tips
+
+- Delta Sharing is read-only for consumers -- they cannot modify shared data
+- No data copying occurs; consumers query live data via the Delta Sharing protocol (REST API over HTTPS)
+- Share views instead of raw tables to control row and column exposure
+- Recipients can be internal (another workspace) or external (email-based invitation)
+
+## Key Takeaways
+
+- **Delta Sharing**: Protocol for sharing without copying data
+- **Provider**: Databricks workspace that creates shares
+- **Consumer**: Workspace/organization that receives shared data
+- **Recipient**: Identity (workspace, email) that accesses share
+- **Share**: Collection of tables/views shared together
+- **Read-only**: Consumers can only query, not modify
+- **Live Data**: No copying, always current
+- **Rest API**: Uses HTTPS REST for access
+- **Row/Column Filtering**: Use views to control exposure
+- **Audit Trail**: Complete access logs
+
+## Related Topics
+
+- [Access Control and Permissions](./02-access-control-permissions.md)
+- [Unity Catalog Basics](./01-unity-catalog-basics.md)
+- [Data Sharing (DE Professional)](../../data-engineer-professional/04-security-governance/03-data-sharing.md)
+
+## Official Documentation
+
+- [Delta Sharing](https://docs.databricks.com/en/delta-sharing/index.html)
+- [Create and Manage Shares](https://docs.databricks.com/en/delta-sharing/create-share.html)
 
 ---
 

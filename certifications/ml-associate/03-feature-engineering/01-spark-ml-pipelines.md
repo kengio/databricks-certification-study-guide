@@ -535,15 +535,13 @@ fitted_pipeline.save("/mnt/production/churn_pipeline")
 - Feature scaling prevents certain features from dominating
 - Pipelines enable easy production deployment and A/B testing
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [Feature Engineering Techniques](02-feature-engineering-techniques.md)
 - [Feature Store](03-feature-store.md)
 - [MLflow Tracking](../02-ml-workflows/01-mlflow-tracking.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Spark ML Pipelines](https://spark.apache.org/docs/latest/ml-pipeline.html)
 - [Databricks ML Guide](https://docs.databricks.com/machine-learning/index.html)

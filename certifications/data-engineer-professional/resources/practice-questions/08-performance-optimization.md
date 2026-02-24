@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Performance Optimization"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, performance-optimization]
+---
+
 # Practice Questions - Section 08: Performance Optimization (5%)
 
 ## Question 8.1: OPTIMIZE and ZORDER

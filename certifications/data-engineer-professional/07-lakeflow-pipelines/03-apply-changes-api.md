@@ -1,3 +1,12 @@
+---
+title: APPLY CHANGES API
+type: study-material
+tags:
+  - data-engineer-professional
+  - lakeflow-pipelines
+status: published
+---
+
 # APPLY CHANGES API
 
 The APPLY CHANGES API enables Change Data Capture (CDC) processing in Lakeflow Pipelines (DLT). It simplifies the implementation of SCD (Slowly Changing Dimension) patterns by automatically handling inserts, updates, and deletes from source systems.

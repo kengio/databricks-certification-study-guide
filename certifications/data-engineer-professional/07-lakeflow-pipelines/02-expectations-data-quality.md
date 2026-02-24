@@ -1,3 +1,12 @@
+---
+title: Expectations and Data Quality
+type: study-material
+tags:
+  - data-engineer-professional
+  - lakeflow-pipelines
+status: published
+---
+
 # Expectations and Data Quality
 
 Expectations provide declarative data quality constraints in Lakeflow Pipelines (DLT). They enable data validation, quality monitoring, and enforcement directly within pipeline definitions.

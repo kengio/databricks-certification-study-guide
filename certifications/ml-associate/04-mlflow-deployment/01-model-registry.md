@@ -644,15 +644,13 @@ else:
 - Model URIs (models:/name/stage) enable reproducible production serving
 - Registry integration with MLflow Tracking enables full lineage
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [MLflow Tracking](../02-ml-workflows/01-mlflow-tracking.md)
 - [Model Deployment & Serving](02-model-deployment-serving.md)
 - [Experiments & Runs](../02-ml-workflows/02-experiments-runs.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
 - [Model Management](https://docs.databricks.com/mlflow/model-registry/index.html)

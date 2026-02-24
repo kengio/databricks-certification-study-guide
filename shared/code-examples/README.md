@@ -19,6 +19,7 @@ All examples are stored as Markdown files with fenced code blocks for readabilit
 - [python/python_patterns.md](python/python_patterns.md) — Data structures, comprehensions, generators, dataclasses, context managers, string manipulation, inheritance, error handling, CSV/JSON, datetime, logging
 - [python/cdc_and_deduplication.md](python/cdc_and_deduplication.md) — CDF enable/read, metadata columns, SCD Type 1/2 MERGE, deduplication strategies, row tracking, identity columns
 - [python/feature_store_and_vector_search.md](python/feature_store_and_vector_search.md) — Feature Store API, training set creation, Vector Search index types, similarity search, RAG pattern
+- [python/ml_inference_examples.md](python/ml_inference_examples.md) — Batch scoring with spark_udf, Model Serving REST API, A/B testing, MLflow evaluation, custom PyFunc
 
 ## SQL Examples
 

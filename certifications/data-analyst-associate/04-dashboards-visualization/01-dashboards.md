@@ -444,36 +444,6 @@ Dashboards/
     └── Supply Chain
 ```
 
-## Key Takeaways
-
-- **Dashboard**: Collection of visualizations with interactivity
-- **Widgets**: Individual components (KPI, chart, table, text)
-- **Filters**: Parameters for dynamic queries
-- **Grid layout**: 12-column flexible layout system
-- **Refresh**: Scheduled or manual; uses result cache
-- **Permissions**: Owner, Editor, Viewer roles
-- **Sharing**: Via email, links, or groups
-- **Performance**: Queries should run < 5 seconds
-- **Drill-down**: Navigate from summary to detail
-
-## Common Exam Questions
-
-**Q: How often should a dashboard refresh?**
-
-- **A**: Depends on use case; typically 8 hours for stable data, hourly for active monitoring
-
-**Q: Can parameters filter multiple queries at once?**
-
-- **A**: Yes, use same parameter in WHERE clause of multiple dashboard queries
-
-**Q: What happens when you edit a shared dashboard?**
-
-- **A**: All viewers see the updated version (if they have permissions)
-
-**Q: How do you optimize dashboard load time?**
-
-- **A**: Filter queries (date range, specific regions), pre-aggregate data, use caching
-
 ## Use Cases
 
 - **Dashboards & Dashboard Design Implementation**: Incorporating Dashboards & Dashboard Design principles to build scalable and maintainable solutions in Databricks environments.
@@ -490,6 +460,36 @@ Dashboards/
 
 **Scenario:** Connecting Dashboards & Dashboard Design to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Dashboards & Dashboard Design prior to deployment.
+
+## Exam Tips
+
+- Dashboard refresh frequency depends on use case: 8 hours for stable data, hourly for monitoring, 5 minutes for real-time
+- A shared parameter can filter multiple widgets simultaneously when used in each widget's query
+- Editing a shared dashboard updates it for all viewers with access
+- Optimize load time by filtering queries (date range), pre-aggregating data, and leveraging result caching
+
+## Key Takeaways
+
+- **Dashboard**: Collection of visualizations with interactivity
+- **Widgets**: Individual components (KPI, chart, table, text)
+- **Filters**: Parameters for dynamic queries
+- **Grid layout**: 12-column flexible layout system
+- **Refresh**: Scheduled or manual; uses result cache
+- **Permissions**: Owner, Editor, Viewer roles
+- **Sharing**: Via email, links, or groups
+- **Performance**: Queries should run < 5 seconds
+- **Drill-down**: Navigate from summary to detail
+
+## Related Topics
+
+- [Visualizations & Chart Types](./02-visualizations.md) - Choosing the right chart type for dashboard widgets
+- [Alerts & Scheduling](./03-alerts-scheduling.md) - Automating dashboard refresh and alert notifications
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Writing efficient queries for dashboard widgets
+
+## Official Documentation
+
+- [Databricks SQL Dashboards](https://docs.databricks.com/sql/user/dashboards/index.html)
+- [Dashboard Widgets](https://docs.databricks.com/sql/user/dashboards/dashboard-widgets.html)
 
 ---
 

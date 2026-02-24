@@ -335,10 +335,10 @@ df_result = large_df.join(
 ```python
 # Pre-bucket large table for faster joins
 
-employees.write \
-    .bucketBy(10, "department_id") \
-    .mode("overwrite") \
-    .saveAsTable("employees_bucketed")
+(employees.write
+    .bucketBy(10, "department_id")
+    .mode("overwrite")
+    .saveAsTable("employees_bucketed"))
 
 # Subsequent joins on department_id will be faster
 
@@ -402,17 +402,6 @@ df_window = employees.withColumn(
 | Skewed data | One join key value has many rows | Apply salting technique |
 | Duplicates | Multiple matches on both sides | Use semi-join or apply deduplication |
 
-## Key Takeaways
-
-- **Inner Join**: Only matching rows from both tables
-- **Left Join**: All rows from left table, matching rows from right
-- **Full Join**: All rows from both tables, nulls where no match
-- **GROUP BY**: Aggregate data by specified columns
-- **HAVING**: Filter groups after aggregation (not WHERE)
-- **Window Functions**: Compute aggregates over partitions
-- **Join Optimization**: Broadcast small tables, bucket large tables
-- **Anti-Join**: Returns unmatched rows from left table
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -429,6 +418,35 @@ df_window = employees.withColumn(
 
 **Scenario:** Connecting Joins and Aggregations to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Joins and Aggregations prior to deployment.
+
+## Exam Tips
+
+- Know all seven join types and when to use each: inner, left, right, full, cross, semi, anti
+- Semi join returns columns from the left table only (no right columns); anti join returns rows with no match
+- `HAVING` filters after `GROUP BY` aggregation; `WHERE` filters before grouping
+- Broadcast joins are automatic for tables under 10 MB; use `broadcast()` to force for larger reference tables
+
+## Key Takeaways
+
+- **Inner Join**: Only matching rows from both tables
+- **Left Join**: All rows from left table, matching rows from right
+- **Full Join**: All rows from both tables, nulls where no match
+- **GROUP BY**: Aggregate data by specified columns
+- **HAVING**: Filter groups after aggregation (not WHERE)
+- **Window Functions**: Compute aggregates over partitions
+- **Join Optimization**: Broadcast small tables, bucket large tables
+- **Anti-Join**: Returns unmatched rows from left table
+
+## Related Topics
+
+- [DataFrame Operations](./02-dataframe-operations.md)
+- [Advanced Transformations](./04-advanced-transformations.md)
+- [Window Functions (SQL Examples)](../../../shared/code-examples/sql/window_functions.md)
+
+## Official Documentation
+
+- [Join Hints](https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-qry-select-hints.html)
+- [Aggregate Functions](https://docs.databricks.com/en/sql/language-manual/sql-ref-functions-builtin.html)
 
 ---
 

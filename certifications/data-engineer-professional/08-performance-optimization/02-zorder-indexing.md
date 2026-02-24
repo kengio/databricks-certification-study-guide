@@ -1,3 +1,12 @@
+---
+title: Z-ORDER Indexing and Data Skipping
+type: study-material
+tags:
+  - data-engineer-professional
+  - performance-optimization
+status: published
+---
+
 # Z-ORDER Indexing and Data Skipping
 
 Z-ORDER indexing enables efficient data skipping by co-locating related data in the same files. Understanding Z-ORDER and its newer replacement, Liquid Clustering, is essential for optimizing query performance.

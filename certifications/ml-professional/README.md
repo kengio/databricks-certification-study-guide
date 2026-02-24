@@ -1,4 +1,5 @@
 ---
+title: ML Professional
 tags:
   - databricks
   - certification

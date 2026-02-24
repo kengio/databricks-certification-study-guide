@@ -6,7 +6,7 @@ tags: [ml-professional, practice-questions, feature-engineering, feature-store]
 
 # Advanced Feature Engineering — Practice Questions
 
-[← Back to Practice Questions](./README.md) | [Next: Hyperparameter Optimization](02-hyperparameter-optimization.md)
+[← Back to Practice Questions](./README.md) | [Next: Hyperparameter Optimization](./02-hyperparameter-optimization.md)
 
 ---
 

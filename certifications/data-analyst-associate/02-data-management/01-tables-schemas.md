@@ -447,34 +447,6 @@ AND status = 'active';
 | Many columns | Project needed columns only |
 | Duplicates | Add primary key constraint (when possible) |
 
-## Key Takeaways
-
-- **Managed tables**: Databricks manages data and metadata; drop removes all
-- **External tables**: Databricks manages metadata; data stays in cloud storage
-- **Delta format**: Default, ACID-compliant, supports time travel
-- **Schemas**: Logical containers for tables, organize by domain/layer/owner
-- **Partitioning**: Split large tables by column (usually date)
-- **Data types**: Choose appropriate types for storage efficiency
-- **Temporary tables**: Session-scoped, useful for intermediate results
-
-## Common Exam Questions
-
-**Q: What happens when you drop a managed table?**
-
-- **A**: Both data and metadata are deleted permanently
-
-**Q: What happens when you drop an external table?**
-
-- **A**: Only metadata is deleted; data remains in cloud storage
-
-**Q: Which format supports ACID transactions by default?**
-
-- **A**: Delta (and Iceberg/Hudi with specific configuration)
-
-**Q: How would you partition a sales table for best performance?**
-
-- **A**: By date column (sale_date), assuming date-based queries are common
-
 ## Use Cases
 
 - **Tables & Schemas Implementation**: Incorporating Tables & Schemas principles to build scalable and maintainable solutions in Databricks environments.
@@ -491,6 +463,34 @@ AND status = 'active';
 
 **Scenario:** Connecting Tables & Schemas to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Tables & Schemas prior to deployment.
+
+## Exam Tips
+
+- Dropping a managed table deletes both data and metadata; dropping an external table deletes only metadata
+- Delta is the default table format and supports ACID transactions, time travel, and schema evolution
+- Partition large tables by date columns for faster time-based queries
+- Temporary tables are session-scoped and automatically dropped when the session ends
+
+## Key Takeaways
+
+- **Managed tables**: Databricks manages data and metadata; drop removes all
+- **External tables**: Databricks manages metadata; data stays in cloud storage
+- **Delta format**: Default, ACID-compliant, supports time travel
+- **Schemas**: Logical containers for tables, organize by domain/layer/owner
+- **Partitioning**: Split large tables by column (usually date)
+- **Data types**: Choose appropriate types for storage efficiency
+- **Temporary tables**: Session-scoped, useful for intermediate results
+
+## Related Topics
+
+- [Delta Lake Basics](../../../shared/fundamentals/delta-lake-basics.md) - Core Delta Lake concepts and ACID transactions
+- [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md) - Quick reference for Delta table operations
+- [Medallion Architecture](../../../shared/fundamentals/medallion-architecture.md) - Schema organization patterns (bronze/silver/gold)
+
+## Official Documentation
+
+- [Databricks Tables](https://docs.databricks.com/sql/language-manual/sql-ref-tables.html)
+- [Delta Lake Overview](https://docs.databricks.com/delta/index.html)
 
 ---
 

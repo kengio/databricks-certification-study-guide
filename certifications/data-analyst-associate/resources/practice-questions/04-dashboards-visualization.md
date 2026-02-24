@@ -8,7 +8,7 @@ tags: [data-analyst-associate, practice-questions, dashboards, visualization, al
 
 **Exam Weight: 18%**
 
-[← Back to Practice Questions](./README.md) | [Next: Analytics Applications](05-analytics-applications.md)
+[← Back to Practice Questions](./README.md) | [Next: Analytics Applications](./05-analytics-applications.md)
 
 ---
 

@@ -72,15 +72,15 @@ LIMIT 10;
 ```python
 # Read exact version
 
-df_v0 = spark.read \
-    .format("delta") \
-    .option("versionAsOf", 0) \
-    .load("/mnt/data/employees")
+df_v0 = (spark.read
+    .format("delta")
+    .option("versionAsOf", 0)
+    .load("/mnt/data/employees"))
 
-df_v5 = spark.read \
-    .format("delta") \
-    .option("versionAsOf", 5) \
-    .load("/mnt/data/employees")
+df_v5 = (spark.read
+    .format("delta")
+    .option("versionAsOf", 5)
+    .load("/mnt/data/employees"))
 
 # Compare versions
 
@@ -93,20 +93,20 @@ df_v5.count()  # 1150 rows
 ```python
 # Read data as of specific date/time
 
-df_past = spark.read \
-    .format("delta") \
-    .option("timestampAsOf", "2025-01-15T10:30:00Z") \
-    .load("/mnt/data/employees")
+df_past = (spark.read
+    .format("delta")
+    .option("timestampAsOf", "2025-01-15T10:30:00Z")
+    .load("/mnt/data/employees"))
 
 # Read data from yesterday
 
 from pyspark.sql.functions import date_sub, current_date
 yesterday = date_sub(current_date(), 1)
 
-df_yesterday = spark.read \
-    .format("delta") \
-    .option("timestampAsOf", yesterday) \
-    .load("/mnt/data/employees")
+df_yesterday = (spark.read
+    .format("delta")
+    .option("timestampAsOf", yesterday)
+    .load("/mnt/data/employees"))
 ```
 
 ### SQL Time Travel
@@ -184,8 +184,8 @@ SHALLOW CLONE employees;
 
 # Or with Python
 
-DeltaTable.forPath(spark, "/mnt/data/employees") \
-    .clone("/mnt/data/employees_clone", isShallow=True)
+(DeltaTable.forPath(spark, "/mnt/data/employees")
+    .clone("/mnt/data/employees_clone", isShallow=True))
 ```
 
 Shallow clone benefits:
@@ -208,8 +208,8 @@ DEEP CLONE employees;
 
 # Or with Python
 
-DeltaTable.forPath(spark, "/mnt/data/employees") \
-    .clone("/mnt/data/employees_backup", isShallow=False)
+(DeltaTable.forPath(spark, "/mnt/data/employees")
+    .clone("/mnt/data/employees_backup", isShallow=False))
 ```
 
 Deep clone benefits:
@@ -242,20 +242,20 @@ spark.sql("CREATE TABLE read_only SHALLOW CLONE sensitive_data")
 # Get history with details
 
 history = spark.sql("DESCRIBE HISTORY employees LIMIT 100")
-history.select("version", "timestamp", "operation", "operationParameters") \
-    .show(truncate=False)
+(history.select("version", "timestamp", "operation", "operationParameters")
+    .show(truncate=False))
 
 # Compare version 3 and version 5
 
-v3 = spark.read \
-    .format("delta") \
-    .option("versionAsOf", 3) \
-    .load("/mnt/data/employees")
+v3 = (spark.read
+    .format("delta")
+    .option("versionAsOf", 3)
+    .load("/mnt/data/employees"))
 
-v5 = spark.read \
-    .format("delta") \
-    .option("versionAsOf", 5) \
-    .load("/mnt/data/employees")
+v5 = (spark.read
+    .format("delta")
+    .option("versionAsOf", 5)
+    .load("/mnt/data/employees"))
 
 # Count differences
 
@@ -292,12 +292,12 @@ spark.sql(f"""
 
 for version in [0, 5, 10, 15]:
     print(f"\n--- Version {version} ---")
-    spark.read \
-        .format("delta") \
-        .option("versionAsOf", version) \
-        .load("/mnt/data/employees") \
-        .filter(f"id = {employee_id}") \
-        .show()
+    (spark.read
+        .format("delta")
+        .option("versionAsOf", version)
+        .load("/mnt/data/employees")
+        .filter(f"id = {employee_id}")
+        .show())
 ```
 
 ## Retention Policies
@@ -323,8 +323,8 @@ SET TBLPROPERTIES (
 ```python
 # Manual cleanup (remove versions older than 30 days)
 
-DeltaTable.forPath(spark, "/mnt/data/employees") \
-    .delete(condition="timestamp < current_timestamp() - interval 30 days")
+(DeltaTable.forPath(spark, "/mnt/data/employees")
+    .delete(condition="timestamp < current_timestamp() - interval 30 days"))
 ```
 
 ## Version Management Best Practices
@@ -379,17 +379,6 @@ log_path = "/mnt/data/employees/_delta_log"
 | **Iceberg** | Full history | Yes | Complete rollback | Yes |
 | **Hudi** | Limited history | Yes | Snapshot restore | Limited |
 
-## Key Takeaways
-
-- **Version History**: Tracked in `_delta_log/` JSON files
-- **Time Travel**: Query any historical version by version number or timestamp
-- **Restore**: Rollback table to previous state
-- **Shallow Clone**: Metadata copy, shared data files, instant
-- **Deep Clone**: Complete copy, independent data, larger storage
-- **Retention Policy**: Default 30 days for versions
-- **Audit Trail**: Full history of all operations
-- **Point-in-Time Recovery**: Essential for compliance and debugging
-
 ## Use Cases
 
 - **Time Travel and Versioning Implementation**: Incorporating Time Travel and Versioning principles to build scalable and maintainable solutions in Databricks environments.
@@ -406,6 +395,35 @@ log_path = "/mnt/data/employees/_delta_log"
 
 **Scenario:** Connecting Time Travel and Versioning to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Time Travel and Versioning prior to deployment.
+
+## Exam Tips
+
+- Know both syntaxes for time travel: `VERSION AS OF n` and `TIMESTAMP AS OF 'date'` in SQL; `versionAsOf` and `timestampAsOf` options in PySpark
+- `RESTORE TABLE ... TO VERSION AS OF n` rolls back the table -- this creates a new version (it does not delete versions)
+- Shallow clone copies metadata only (fast, small); Deep clone copies data and metadata (slow, independent)
+- VACUUM removes old files and breaks time travel for versions older than the retention period
+
+## Key Takeaways
+
+- **Version History**: Tracked in `_delta_log/` JSON files
+- **Time Travel**: Query any historical version by version number or timestamp
+- **Restore**: Rollback table to previous state
+- **Shallow Clone**: Metadata copy, shared data files, instant
+- **Deep Clone**: Complete copy, independent data, larger storage
+- **Retention Policy**: Default 30 days for versions
+- **Audit Trail**: Full history of all operations
+- **Point-in-Time Recovery**: Essential for compliance and debugging
+
+## Related Topics
+
+- [Delta Lake Fundamentals](./01-delta-lake-fundamentals.md)
+- [Delta Lake Optimization](./03-delta-optimization.md)
+- [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md)
+
+## Official Documentation
+
+- [Delta Lake Time Travel](https://docs.databricks.com/en/delta/history.html)
+- [Clone a Table on Databricks](https://docs.databricks.com/en/delta/clone.html)
 
 ---
 

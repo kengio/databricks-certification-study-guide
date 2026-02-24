@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Security & Governance"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, security-governance]
+---
+
 # Practice Questions - Section 04: Security & Governance (10%)
 
 ## Question 4.1: Unity Catalog Permission Inheritance

@@ -79,18 +79,18 @@ flowchart LR
 ```python
 # Schema enforcement prevents bad data
 
-df.write \
-    .format("delta") \
-    .mode("append") \
-    .save("/mnt/data/table")
+(df.write
+    .format("delta")
+    .mode("append")
+    .save("/mnt/data/table"))
 
 # Schema evolution allows controlled changes
 
-df.write \
-    .format("delta") \
-    .mode("append") \
-    .option("mergeSchema", "true") \
-    .save("/mnt/data/table")
+(df.write
+    .format("delta")
+    .mode("append")
+    .option("mergeSchema", "true")
+    .save("/mnt/data/table"))
 ```
 
 ### **Data Versioning & Time Travel**
@@ -102,17 +102,17 @@ df.write \
 ```python
 # Time travel query
 
-spark.read \
-    .format("delta") \
-    .option("versionAsOf", 0) \
-    .load("/mnt/data/table")
+(spark.read
+    .format("delta")
+    .option("versionAsOf", 0)
+    .load("/mnt/data/table"))
 
 # Or by timestamp
 
-spark.read \
-    .format("delta") \
-    .option("timestampAsOf", "2025-01-15") \
-    .load("/mnt/data/table")
+(spark.read
+    .format("delta")
+    .option("timestampAsOf", "2025-01-15")
+    .load("/mnt/data/table"))
 ```
 
 ### **Data Lineage & Audit Logs**
@@ -251,6 +251,13 @@ spark.sql("SELECT * FROM main.default.my_table")
 
 **Fix:** Run `REFRESH TABLE <table_name>` or use Delta Lake (which handles metadata automatically) instead of plain Parquet/CSV tables.
 
+## Exam Tips
+
+- Know the three layers of the Medallion Architecture (Bronze, Silver, Gold) and the purpose of each
+- Understand the difference between a data warehouse, data lake, and lakehouse — especially around ACID support and schema flexibility
+- Remember that Delta Lake is Parquet + transaction log; this enables ACID, time travel, and DML operations
+- Be able to identify the Unity Catalog three-level namespace: `catalog.schema.table`
+
 ## Key Takeaways
 
 - **Lakehouse combines**: ACID transactions and strong governance of a data warehouse with the low cost and schema flexibility of a data lake
@@ -260,6 +267,17 @@ spark.sql("SELECT * FROM main.default.my_table")
 - **Time travel**: Query by version (`versionAsOf`) or timestamp (`timestampAsOf`) — no external tool needed
 - **Unity Catalog namespace**: Three levels — `catalog.schema.table`; provides column-level security, lineage, and auditing
 - **ACID via MVCC**: Multi-version concurrency control lets concurrent readers and writers operate without locks
+
+## Related Topics
+
+- [Delta Lake Fundamentals](../03-delta-lake/01-delta-lake-fundamentals.md)
+- [Unity Catalog Basics](../05-data-governance/01-unity-catalog-basics.md)
+- [Medallion Architecture (Shared)](../../../shared/fundamentals/medallion-architecture.md)
+
+## Official Documentation
+
+- [What is a Lakehouse?](https://docs.databricks.com/en/lakehouse/index.html)
+- [Delta Lake Documentation](https://docs.databricks.com/en/delta/index.html)
 
 ---
 

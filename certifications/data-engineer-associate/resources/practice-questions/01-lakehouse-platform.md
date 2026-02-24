@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Lakehouse Platform"
+type: practice-questions
+tags: [data-engineer-associate, practice-questions, lakehouse-platform]
+---
+
 # Domain 1: Databricks Lakehouse Platform
 
 ## Question 1: Lakehouse as a Unified Source of Truth

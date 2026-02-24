@@ -1,3 +1,12 @@
+---
+title: Cost Optimization
+type: study-material
+tags:
+  - data-engineer-professional
+  - performance-optimization
+status: published
+---
+
 # Cost Optimization
 
 Understanding cost drivers and optimization strategies is essential for running efficient Databricks workloads. This guide covers compute selection, instance types, autoscaling, and cost-saving best practices.

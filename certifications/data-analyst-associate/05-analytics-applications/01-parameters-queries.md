@@ -482,36 +482,6 @@ selected_region = ''
 -- Verify: Treats as "All" or returns error message
 ```
 
-## Key Takeaways
-
-- **Parameter**: User input placeholder `{{ param_name }}`
-- **Text parameter**: `{{ customer_name }}` for LIKE searches
-- **Number parameter**: `{{ min_value }}` for numerical filtering
-- **Date parameter**: `{{ start_date }}` with calendar picker
-- **Dropdown parameter**: Predefined options or dynamic from query
-- **Multi-select**: Multiple options supported
-- **Cascading**: Second parameter depends on first (region → store)
-- **URL parameters**: Pre-fill filters via URL
-- **Validation**: Type casting, required vs optional
-
-## Common Exam Questions
-
-**Q: How do you make a parameter optional (allow blank)?**
-
-- **A**: Use `WHERE (col = '{{ param }}' OR '{{ param }}' = '')`
-
-**Q: Can you chain parameters (second depends on first)?**
-
-- **A**: Yes, using cascading dropdowns where second query uses first parameter
-
-**Q: What's the syntax for a parameter in a SQL query?**
-
-- **A**: Double braces: `{{ parameter_name }}`
-
-**Q: How do you share a dashboard with pre-filled parameters?**
-
-- **A**: Use URL parameters: `?region=West&date=2024-01-01`
-
 ## Use Cases
 
 - **Query Parameters & Dynamic Queries Implementation**: Incorporating Query Parameters & Dynamic Queries principles to build scalable and maintainable solutions in Databricks environments.
@@ -528,6 +498,36 @@ selected_region = ''
 
 **Scenario:** Connecting Query Parameters & Dynamic Queries to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Query Parameters & Dynamic Queries prior to deployment.
+
+## Exam Tips
+
+- Parameter syntax is double curly braces: `{{ parameter_name }}`
+- Make a parameter optional using the pattern `WHERE (col = '{{ param }}' OR '{{ param }}' = '')`
+- Cascading parameters allow chaining: the second dropdown's query references the first parameter
+- Share pre-filled dashboards using URL parameters (e.g., `?region=West&date=2024-01-01`)
+
+## Key Takeaways
+
+- **Parameter**: User input placeholder `{{ param_name }}`
+- **Text parameter**: `{{ customer_name }}` for LIKE searches
+- **Number parameter**: `{{ min_value }}` for numerical filtering
+- **Date parameter**: `{{ start_date }}` with calendar picker
+- **Dropdown parameter**: Predefined options or dynamic from query
+- **Multi-select**: Multiple options supported
+- **Cascading**: Second parameter depends on first (region → store)
+- **URL parameters**: Pre-fill filters via URL
+- **Validation**: Type casting, required vs optional
+
+## Related Topics
+
+- [Query Editor & Execution](../01-databricks-sql/02-query-editor.md) - The editor where parameterized queries are written and tested
+- [Dashboards & Dashboard Design](../04-dashboards-visualization/01-dashboards.md) - Dashboards that consume parameterized queries
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts underlying dynamic queries
+
+## Official Documentation
+
+- [Query Parameters](https://docs.databricks.com/sql/user/queries/query-parameters.html)
+- [Databricks SQL Queries](https://docs.databricks.com/sql/user/queries/index.html)
 
 ---
 

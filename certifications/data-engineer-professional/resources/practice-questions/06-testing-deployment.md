@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Testing & Deployment"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, testing-deployment]
+---
+
 # Practice Questions - Section 06: Testing & Deployment (10%)
 
 ## Question 6.1: Databricks Asset Bundles

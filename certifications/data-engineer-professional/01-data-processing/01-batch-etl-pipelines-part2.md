@@ -283,6 +283,15 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 **Fix:** choosing a lower cardinality partition column (like `date`) or using `OPTIMIZE` / Auto Optimize.
 
+## Best Practices
+
+- Define schemas explicitly instead of using `inferSchema`
+- Use built-in functions instead of UDFs when possible
+- Broadcast small dimension tables for faster joins
+- Partition large tables by date or other common filter columns
+- Use `replaceWhere` for efficient partition overwrites
+- Always handle null values explicitly
+
 ## Exam Tips
 
 1. **Know all join types** - especially left_anti and left_semi
@@ -295,15 +304,6 @@ Understanding when to apply specific techniques is crucial for the exam and real
 8. **Photon** accelerates joins/aggregations but not UDFs
 9. **AQE** handles skew and optimizes joins at runtime
 10. **DPP** pushes filters from dimension to fact tables automatically
-
-## Best Practices
-
-- Define schemas explicitly instead of using `inferSchema`
-- Use built-in functions instead of UDFs when possible
-- Broadcast small dimension tables for faster joins
-- Partition large tables by date or other common filter columns
-- Use `replaceWhere` for efficient partition overwrites
-- Always handle null values explicitly
 
 ## Key Takeaways
 

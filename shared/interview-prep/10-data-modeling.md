@@ -1,6 +1,6 @@
 # Interview Questions — Data Modeling
 
-[Back to Interview Prep](./README.md) | [Previous: Python for Production Data Engineering](09-python-code-quality.md)
+[Back to Interview Prep](./README.md) | [Previous: Python for Production Data Engineering](./09-python-code-quality.md) | [Next: ML System Design](./11-ml-system-design.md)
 
 ---
 
@@ -440,4 +440,4 @@ Your `gold.daily_sales_summary` table needs two changes: (1) add a new `channel`
 
 ---
 
-**[← Previous: Interview Questions — Python for Production Data Engineering](./09-python-code-quality.md) | [↑ Back to Databricks Interview Prep](./README.md)**
+**[← Previous: Python for Production Data Engineering](./09-python-code-quality.md) | [↑ Back to Interview Prep](./README.md) | [Next: ML System Design →](./11-ml-system-design.md)**

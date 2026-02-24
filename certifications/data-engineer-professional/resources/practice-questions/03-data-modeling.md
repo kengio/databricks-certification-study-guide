@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Data Modeling"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, data-modeling]
+---
+
 # Practice Questions - Section 03: Data Modeling (15%)
 
 ## Question 3.1: Medallion Architecture

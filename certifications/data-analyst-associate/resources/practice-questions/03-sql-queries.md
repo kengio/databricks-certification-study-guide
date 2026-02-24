@@ -8,7 +8,7 @@ tags: [data-analyst-associate, practice-questions, sql, joins, window-functions]
 
 **Exam Weight: 29%** — This domain carries the most exam weight.
 
-[← Back to Practice Questions](./README.md) | [Next: Dashboards](04-dashboards-visualization.md)
+[← Back to Practice Questions](./README.md) | [Next: Dashboards](./04-dashboards-visualization.md)
 
 ---
 

@@ -456,35 +456,6 @@ CREATE TABLE production.meta.pii_columns (
 -- Keep unmasked tables for authorized use only
 ```
 
-## Key Takeaways
-
-- **Authentication**: PAT (programmatic), SSO (enterprise), Service Principals (automation)
-- **Workspace permissions**: User, Advanced User, Admin roles
-- **Catalog RBAC**: SELECT, MODIFY, CREATE_TABLE, CREATE_SCHEMA privileges
-- **Hierarchy**: Permissions cascade (Catalog → Schema → Table → Row/Column)
-- **Row-level**: Dynamic views using current_user()
-- **Column-level**: CASE statements for masking sensitive data
-- **Groups**: Simplify permission management across many users
-- **Current user**: Use current_user(), current_catalog(), current_schema()
-
-## Common Exam Questions
-
-**Q: How should PII be protected in Databricks?**
-
-- **A**: Use masked views with CASE statement checking current_user()
-
-**Q: What authentication method is best for CI/CD pipelines?**
-
-- **A**: Service Principal (M2M) with client_id/client_secret
-
-**Q: How do you verify who has access to a table?**
-
-- **A**: Use SHOW GRANTS ON TABLE tablename
-
-**Q: Can row-level security be applied to a table directly?**
-
-- **A**: No, use dynamic views that filter based on current_user()
-
 ## Use Cases
 
 - **Access Control & Security Implementation**: Incorporating Access Control & Security principles to build scalable and maintainable solutions in Databricks environments.
@@ -501,6 +472,35 @@ CREATE TABLE production.meta.pii_columns (
 
 **Scenario:** Connecting Access Control & Security to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control & Security prior to deployment.
+
+## Exam Tips
+
+- PII should be protected using masked views with CASE statements checking `current_user()`
+- Row-level security cannot be applied directly to tables; use dynamic views that filter based on `current_user()`
+- Service Principal (M2M) authentication is best for CI/CD pipelines and automation
+- Use `SHOW GRANTS ON TABLE tablename` to verify who has access to a table
+
+## Key Takeaways
+
+- **Authentication**: PAT (programmatic), SSO (enterprise), Service Principals (automation)
+- **Workspace permissions**: User, Advanced User, Admin roles
+- **Catalog RBAC**: SELECT, MODIFY, CREATE_TABLE, CREATE_SCHEMA privileges
+- **Hierarchy**: Permissions cascade (Catalog → Schema → Table → Row/Column)
+- **Row-level**: Dynamic views using current_user()
+- **Column-level**: CASE statements for masking sensitive data
+- **Groups**: Simplify permission management across many users
+- **Current user**: Use current_user(), current_catalog(), current_schema()
+
+## Related Topics
+
+- [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md) - Foundation for understanding access control in Unity Catalog
+- [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md) - Quick reference for permissions and GRANT syntax
+- [Unity Catalog](./02-unity-catalog.md) - The governance platform that powers access control
+
+## Official Documentation
+
+- [Databricks Access Control](https://docs.databricks.com/security/access-control/index.html)
+- [Unity Catalog Privileges](https://docs.databricks.com/data-governance/unity-catalog/manage-privileges/privileges.html)
 
 ---
 

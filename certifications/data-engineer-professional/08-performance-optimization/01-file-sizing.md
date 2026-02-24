@@ -1,3 +1,12 @@
+---
+title: File Sizing and Compaction
+type: study-material
+tags:
+  - data-engineer-professional
+  - performance-optimization
+status: published
+---
+
 # File Sizing and Compaction
 
 Proper file sizing is critical for Delta Lake performance. The small file problem is one of the most common causes of poor query performance and excessive costs in data lakes.

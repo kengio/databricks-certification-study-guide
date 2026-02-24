@@ -1,3 +1,13 @@
+---
+title: Lakeflow Pipelines (DLT)
+type: category
+tags:
+  - data-engineer-professional
+  - lakeflow-pipelines
+  - dlt
+status: published
+---
+
 # Lakeflow Pipelines (DLT)
 
 Lakeflow Spark Declarative Pipelines (formerly Delta Live Tables) is Databricks' framework for building reliable, maintainable ETL pipelines.
@@ -21,6 +31,17 @@ flowchart LR
 | [03-apply-changes-api.md](03-apply-changes-api.md) | CDC with APPLY CHANGES, SCD handling | High |
 | [04-lakeflow-jobs-part1.md](04-lakeflow-jobs-part1.md) | Job components, task dependencies, task values, for-each loops | Medium |
 | [04-lakeflow-jobs-part2.md](04-lakeflow-jobs-part2.md) | Triggers, compute, notifications, parameters, error handling, exam tips | Medium |
+
+## Key Concepts
+
+| Concept | Definition |
+| :--- | :--- |
+| **Declarative Pipeline** | A pipeline defined by the desired end state (tables, views) rather than step-by-step instructions; Lakeflow resolves dependencies and execution order automatically |
+| **Streaming Table** | A DLT table type that processes data incrementally using append-only semantics, ideal for ingesting continuously arriving data |
+| **Materialized View** | A DLT table type that fully recomputes its result set on each update, suited for aggregations and joins that must reflect the entire source |
+| **Expectations** | Data quality constraints (`EXPECT`, `ON VIOLATION DROP ROW`, `ON VIOLATION FAIL UPDATE`) that validate rows during pipeline execution |
+| **APPLY CHANGES** | A DLT API for processing Change Data Capture (CDC) feeds, supporting SCD Type 1 and Type 2 patterns via sequence-based ordering |
+| **Lakeflow Jobs** | Orchestrated workflows that combine DLT pipelines with other tasks (notebooks, JARs, SQL) using directed acyclic graph (DAG) dependencies |
 
 ## Pipeline Architecture
 
@@ -127,6 +148,14 @@ sequenceDiagram
 - [ ] Configure CDC with APPLY CHANGES
 - [ ] Monitor pipeline with event logs
 - [ ] Handle schema evolution in streaming tables
+
+## Related Resources
+
+- [Streaming Fundamentals](../../../shared/fundamentals/streaming-fundamentals.md)
+- [Delta Lake Basics](../../../shared/fundamentals/delta-lake-basics.md)
+- [Medallion Architecture](../../../shared/fundamentals/medallion-architecture.md)
+- [DLT Quick Reference](../../../shared/cheat-sheets/dlt-quick-ref.md)
+- [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md)
 
 ---
 

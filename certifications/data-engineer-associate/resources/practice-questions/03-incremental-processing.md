@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Incremental Data Processing"
+type: practice-questions
+tags: [data-engineer-associate, practice-questions, incremental-processing]
+---
+
 # Domain 3: Incremental Data Processing
 
 ## Question 1: COPY INTO Idempotency

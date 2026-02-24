@@ -6,7 +6,7 @@ tags: [data-analyst-associate, practice-questions, data-management, unity-catalo
 
 # Data Management Practice Questions
 
-[← Back to Practice Questions](./README.md) | [Next: SQL Queries](03-sql-queries.md)
+[← Back to Practice Questions](./README.md) | [Next: SQL Queries](./03-sql-queries.md)
 
 ---
 

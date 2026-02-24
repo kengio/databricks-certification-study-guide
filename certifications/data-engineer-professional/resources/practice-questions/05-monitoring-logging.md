@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Monitoring & Logging"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, monitoring-logging]
+---
+
 # Practice Questions - Section 05: Monitoring & Logging (10%)
 
 ## Question 5.1: System Tables

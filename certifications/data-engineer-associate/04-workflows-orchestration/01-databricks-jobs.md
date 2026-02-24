@@ -90,10 +90,10 @@ df_processed = (df
 
 # Write results
 
-df_processed.write \
-    .format("delta") \
-    .mode("overwrite") \
-    .save(f"/mnt/data/processed/{dbutils.widgets.get('date')}")
+(df_processed.write
+    .format("delta")
+    .mode("overwrite")
+    .save(f"/mnt/data/processed/{dbutils.widgets.get('date')}"))
 
 print("Pipeline complete!")
 ```
@@ -123,10 +123,10 @@ def main():
     result = df.filter(F.col("value") > 0)
 
     # Write
-    result.write \
-        .format("delta") \
-        .mode("overwrite") \
-        .save(f"/mnt/data/processed/{args.date}")
+    (result.write
+        .format("delta")
+        .mode("overwrite")
+        .save(f"/mnt/data/processed/{args.date}"))
 
 if __name__ == "__main__":
     main()
@@ -483,19 +483,6 @@ flowchart LR
 }
 ```
 
-## Key Takeaways
-
-- **Job**: Container for scheduled/triggered workloads
-- **Task**: Individual unit of work (notebook, Python, SQL, etc.)
-- **Cluster**: Compute resource (existing or job-specific)
-- **Parameters**: Dynamic/static inputs to jobs via macros
-- **Dependencies**: Multi-task workflows with ordering constraints
-- **Max Runs**: Limits concurrent executions
-- **Timeout**: Maximum execution time per task
-- **Max Retries**: Automatic retry on failure
-- **Job Cluster**: Auto-created, cost-efficient (slower startup)
-- **Existing Cluster**: Pre-running, faster (manual management)
-
 ## Use Cases
 
 - **Databricks Jobs Implementation**: Incorporating Databricks Jobs principles to build scalable and maintainable solutions in Databricks environments.
@@ -512,6 +499,37 @@ flowchart LR
 
 **Scenario:** Connecting Databricks Jobs to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Jobs prior to deployment.
+
+## Exam Tips
+
+- Job clusters are more cost-efficient than all-purpose clusters for production jobs; they auto-terminate when the job finishes
+- Multi-task jobs use `depends_on` to define a DAG of task dependencies; tasks without dependencies run in parallel
+- Know the parameter macro syntax: `{{job.start_date}}`, `{{job.run_id}}`, `{{task.run_id}}`
+- `max_concurrent_runs: 1` prevents overlapping runs; skipped runs get status SKIPPED
+
+## Key Takeaways
+
+- **Job**: Container for scheduled/triggered workloads
+- **Task**: Individual unit of work (notebook, Python, SQL, etc.)
+- **Cluster**: Compute resource (existing or job-specific)
+- **Parameters**: Dynamic/static inputs to jobs via macros
+- **Dependencies**: Multi-task workflows with ordering constraints
+- **Max Runs**: Limits concurrent executions
+- **Timeout**: Maximum execution time per task
+- **Max Retries**: Automatic retry on failure
+- **Job Cluster**: Auto-created, cost-efficient (slower startup)
+- **Existing Cluster**: Pre-running, faster (manual management)
+
+## Related Topics
+
+- [Scheduling and Triggers](./02-scheduling-triggers.md)
+- [Job Monitoring](./03-job-monitoring.md)
+- [Compute and Clusters](../01-lakehouse-platform/03-compute-clusters.md)
+
+## Official Documentation
+
+- [Databricks Jobs](https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html)
+- [Jobs API Reference](https://docs.databricks.com/en/workflows/jobs/jobs-api-updates.html)
 
 ---
 

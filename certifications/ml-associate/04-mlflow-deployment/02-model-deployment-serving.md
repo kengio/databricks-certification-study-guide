@@ -642,15 +642,13 @@ print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
 - Auto-scaling handles variable traffic efficiently
 - Model registry enables reproducible, auditable deployments
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [Model Registry](01-model-registry.md)
 - [MLflow Tracking](../02-ml-workflows/01-mlflow-tracking.md)
 - [Feature Store](../03-feature-engineering/03-feature-store.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Model Serving](https://docs.databricks.com/machine-learning/model-serving/index.html)
 - [Deployment Best Practices](https://docs.databricks.com/machine-learning/model-serving/score-sql-reference.html)

@@ -486,15 +486,13 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 - Search functionality enables finding best runs across experiments
 - Tags enable organization and filtering of runs
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [Experiments & Runs](02-experiments-runs.md)
 - [ML Experimentation Workflow](03-ml-experimentation-workflow.md)
 - [Model Registry](../04-mlflow-deployment/01-model-registry.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [MLflow Tracking](https://mlflow.org/docs/latest/tracking.html)
 - [MLflow on Databricks](https://docs.databricks.com/mlflow/index.html)

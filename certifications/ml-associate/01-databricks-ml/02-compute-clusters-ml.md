@@ -428,15 +428,13 @@ print(f"Created cluster: {cluster.cluster_id}")
 - Initialization scripts automate dependency management
 - Proper configurations optimize both performance and cost
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [Databricks ML Workspace](01-databricks-ml-workspace.md)
 - [Databricks AutoML](03-databricks-automl.md)
 - [ML Experimentation Workflow](../02-ml-workflows/03-ml-experimentation-workflow.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Compute Configuration](https://docs.databricks.com/compute/configure.html)
 - [Cluster Best Practices](https://docs.databricks.com/compute/clusters-manage.html)

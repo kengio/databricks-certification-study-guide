@@ -362,15 +362,13 @@ df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 - DBFS and workspace provide flexible file management
 - Widgets enable notebook parameterization for reusability
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [Compute Clusters for ML](02-compute-clusters-ml.md)
 - [Databricks AutoML](03-databricks-automl.md)
 - [MLflow Tracking](../02-ml-workflows/01-mlflow-tracking.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Databricks Workspace](https://docs.databricks.com/workspace/index.html)
 - [Notebooks Guide](https://docs.databricks.com/notebooks/index.html)

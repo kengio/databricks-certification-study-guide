@@ -464,15 +464,13 @@ client.delete_experiment(old_exp.experiment_id)
 - Search and filtering enable finding best runs across experiments
 - Proper naming and tagging strategy essential for team collaboration
 
----
-
-**Related Topics:**
+## Related Topics
 
 - [MLflow Tracking](01-mlflow-tracking.md)
 - [ML Experimentation Workflow](03-ml-experimentation-workflow.md)
 - [Model Registry](../04-mlflow-deployment/01-model-registry.md)
 
-**Official Docs:**
+## Official Documentation
 
 - [Experiments](https://mlflow.org/docs/latest/experiments.html)
 - [Search API](https://mlflow.org/docs/latest/search-syntax.html)

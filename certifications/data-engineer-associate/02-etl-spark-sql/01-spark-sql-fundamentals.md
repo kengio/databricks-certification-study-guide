@@ -78,10 +78,10 @@ df.write.mode("overwrite").saveAsTable("my_table")  # Managed
 
 # Create external
 
-df.write \
-    .mode("overwrite") \
-    .option("path", "/mnt/data/external") \
-    .saveAsTable("my_external_table")
+(df.write
+    .mode("overwrite")
+    .option("path", "/mnt/data/external")
+    .saveAsTable("my_external_table"))
 
 # From file
 
@@ -268,14 +268,6 @@ SELECT id, amount FROM new_sales
 | **Compliance** | ANSI SQL | Hive dialect |
 | **Execution** | Spark engine | Hive + MapReduce |
 
-## Key Takeaways
-
-- **Managed vs External**: Data location and lifecycle
-- **Temporary Views**: Session-scoped, auto-deleted
-- **Partitioning**: Organize large tables for performance
-- **Catalog**: Metadata management
-- **SQL Optimization**: Catalyst optimizer benefits
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -292,6 +284,32 @@ SELECT id, amount FROM new_sales
 
 **Scenario:** Connecting Spark SQL Fundamentals to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Spark SQL Fundamentals prior to deployment.
+
+## Exam Tips
+
+- Know the difference between managed tables (data deleted with `DROP TABLE`) and external tables (data persists after `DROP TABLE`)
+- Temporary views are session-scoped; global temporary views use the `global_temp` database and survive across sessions
+- The Catalyst optimizer optimizes both SQL and DataFrame queries identically
+- Understand `CREATE TABLE ... USING DELTA` vs `CREATE TABLE ... USING PARQUET` and the benefits of Delta
+
+## Key Takeaways
+
+- **Managed vs External**: Data location and lifecycle
+- **Temporary Views**: Session-scoped, auto-deleted
+- **Partitioning**: Organize large tables for performance
+- **Catalog**: Metadata management
+- **SQL Optimization**: Catalyst optimizer benefits
+
+## Related Topics
+
+- [DataFrame Operations](./02-dataframe-operations.md)
+- [SQL Essentials (Shared)](../../../shared/fundamentals/sql-essentials.md)
+- [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md)
+
+## Official Documentation
+
+- [Spark SQL Guide](https://docs.databricks.com/en/sql/language-manual/index.html)
+- [Tables in Databricks](https://docs.databricks.com/en/tables/index.html)
 
 ---
 

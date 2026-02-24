@@ -364,6 +364,15 @@ query = (df.writeStream
 
 **Fix:** File sinks only support `append` mode. Use Delta sink for `delete`/`update` capabilities (via MERGE in `foreachBatch`).
 
+## Best Practices
+
+- Always specify checkpoint location for production queries
+- Use watermarks with streaming aggregations
+- Choose appropriate trigger based on latency needs
+- Monitor query progress with `lastProgress`
+- Use `availableNow` for scheduled batch-style streaming
+- Test with rate source before connecting production sources
+
 ## Exam Tips
 
 1. **Triggers**: `availableNow=True` replaces deprecated `once=True` - processes all available data in multiple batches
@@ -376,15 +385,6 @@ query = (df.writeStream
 8. **RocksDB state store**: Use for large state that exceeds memory
 9. **State timeouts**: `ProcessingTimeTimeout` vs `EventTimeTimeout` vs `NoTimeout`
 10. **Monitor `numRowsTotal`** in stateOperators to detect unbounded state growth
-
-## Best Practices
-
-- Always specify checkpoint location for production queries
-- Use watermarks with streaming aggregations
-- Choose appropriate trigger based on latency needs
-- Monitor query progress with `lastProgress`
-- Use `availableNow` for scheduled batch-style streaming
-- Test with rate source before connecting production sources
 
 ## Key Takeaways
 

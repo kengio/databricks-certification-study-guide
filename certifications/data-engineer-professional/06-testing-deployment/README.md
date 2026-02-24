@@ -41,6 +41,17 @@ flowchart LR
 | [06-advanced-testing-operations-part1.md](06-advanced-testing-operations-part1.md) | Property-based testing, DLT testing, streaming tests, integration patterns | High |
 | [06-advanced-testing-operations-part2.md](06-advanced-testing-operations-part2.md) | Deployment validation, rollback, GitOps, practice questions, exam tips | High |
 
+## Key Concepts
+
+| Concept | Definition |
+| :--- | :--- |
+| **Databricks Asset Bundles (DAB)** | An Infrastructure-as-Code framework for defining, validating, and deploying Databricks resources (jobs, pipelines, notebooks) as versioned YAML configurations |
+| **Bundle Targets** | Named deployment environments (dev, staging, prod) within a `databricks.yml` file, each with its own workspace URL, variable overrides, and permissions |
+| **Git Folders** | Databricks' built-in Git integration that syncs notebooks and files from a remote repository directly into the workspace for version control |
+| **Nutter Framework** | A Databricks-specific testing framework for running notebook-based tests, complementing standard pytest for unit testing PySpark transformations |
+| **Blue/Green Deployment** | A zero-downtime deployment strategy that runs two identical environments, switching traffic from the old (blue) to the new (green) after validation |
+| **OIDC Federation** | OpenID Connect-based authentication that eliminates long-lived tokens in CI/CD pipelines by exchanging short-lived identity tokens for Databricks access |
+
 ## Databricks Asset Bundles (DAB)
 
 ### Bundle Structure
@@ -136,6 +147,13 @@ sequenceDiagram
 - [ ] Set up Git folder integration
 - [ ] Write unit tests with pytest
 - [ ] Implement data quality checks
+
+## Related Resources
+
+- [Platform Architecture](../../../shared/fundamentals/platform-architecture.md)
+- [Databricks Workspace](../../../shared/fundamentals/databricks-workspace.md)
+- [Python Essentials](../../../shared/fundamentals/python-essentials.md)
+- [PySpark API Quick Reference](../../../shared/cheat-sheets/pyspark-api-quick-ref.md)
 
 ---
 

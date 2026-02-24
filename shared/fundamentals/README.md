@@ -21,6 +21,7 @@ This directory contains foundational concepts used across multiple Databricks ce
 | [Python Essentials — Part 1](python-essentials.md) | DE Associate, DE Professional, ML Associate, ML Professional, GenAI Engineer |
 | [Python Essentials — Part 2](python-essentials-2.md) | DE Associate, DE Professional, ML Associate, ML Professional, GenAI Engineer |
 | [Streaming Fundamentals](streaming-fundamentals.md) | DE Associate, DE Professional |
+| [Databricks Jobs & Workflows](databricks-jobs-workflows.md) | DE Associate, DE Professional, ML Associate |
 | [MLflow Basics](mlflow-basics.md) | ML Associate, ML Professional |
 | [Feature Engineering Basics](feature-engineering-basics.md) | ML Associate, ML Professional |
 | [RAG & Vector Search Basics](rag-vector-search-basics.md) | GenAI Engineer Associate |

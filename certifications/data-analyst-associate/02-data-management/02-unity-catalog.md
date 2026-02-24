@@ -440,35 +440,6 @@ TO `engineer@company.com`;
 -- Enables reproducibility and disaster recovery
 ```
 
-## Key Takeaways
-
-- **Three-level namespace**: catalog.schema.table (vs. hive.schema.table)
-- **Multi-workspace**: Data visible across workspaces with Unity Catalog
-- **Governance**: Centralized access control, lineage, audit logs
-- **Default catalog**: `main` is default; can be overridden with USE CATALOG
-- **External locations**: Cloud storage integration with credentials
-- **Volumes**: For non-tabular data files
-- **Permissions**: Hierarchical, inherited from catalog to tables
-- **Lineage**: Track data dependencies and origins
-
-## Common Exam Questions
-
-**Q: What is the hierarchy of objects in Unity Catalog?**
-
-- **A**: Catalog > Schema > Table/View/External Location
-
-**Q: Can tables be shared across workspaces with Unity Catalog?**
-
-- **A**: Yes - through the same catalog (same Databricks account)
-
-**Q: What does the default catalog name?**
-
-- **A**: `main` (can be changed with USE CATALOG)
-
-**Q: What permission model does Unity Catalog use?**
-
-- **A**: RBAC (Role-Based Access Control) with hierarchical inheritance
-
 ## Use Cases
 
 - **Unity Catalog Implementation**: Incorporating Unity Catalog principles to build scalable and maintainable solutions in Databricks environments.
@@ -485,6 +456,35 @@ TO `engineer@company.com`;
 
 **Scenario:** Connecting Unity Catalog to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for Unity Catalog prior to deployment.
+
+## Exam Tips
+
+- The three-level namespace is catalog.schema.table (e.g., `main.sales.orders`)
+- The default catalog is `main`; override with `USE CATALOG`
+- Unity Catalog uses RBAC with hierarchical inheritance (catalog permissions flow to schemas and tables)
+- Tables can be shared across workspaces within the same Databricks account
+
+## Key Takeaways
+
+- **Three-level namespace**: catalog.schema.table (vs. hive.schema.table)
+- **Multi-workspace**: Data visible across workspaces with Unity Catalog
+- **Governance**: Centralized access control, lineage, audit logs
+- **Default catalog**: `main` is default; can be overridden with USE CATALOG
+- **External locations**: Cloud storage integration with credentials
+- **Volumes**: For non-tabular data files
+- **Permissions**: Hierarchical, inherited from catalog to tables
+- **Lineage**: Track data dependencies and origins
+
+## Related Topics
+
+- [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md) - Shared fundamentals for Unity Catalog across certifications
+- [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md) - Quick reference for UC commands and permissions
+- [Access Control & Security](./03-access-control.md) - Deep dive into permissions and RBAC
+
+## Official Documentation
+
+- [Unity Catalog Overview](https://docs.databricks.com/data-governance/unity-catalog/index.html)
+- [Unity Catalog Best Practices](https://docs.databricks.com/data-governance/unity-catalog/best-practices.html)
 
 ---
 

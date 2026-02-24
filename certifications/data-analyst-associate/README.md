@@ -1,4 +1,5 @@
 ---
+title: Data Analyst Associate
 tags:
   - databricks
   - certification

@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Lakeflow Pipelines"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, lakeflow-pipelines]
+---
+
 # Practice Questions - Section 07: Lakeflow Pipelines (5%)
 
 ## Question 7.1: Streaming Table vs Materialized View

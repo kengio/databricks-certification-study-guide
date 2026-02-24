@@ -35,6 +35,17 @@ flowchart TD
 | [05-audit-lineage-network-security.md](05-audit-lineage-network-security.md) | Data lineage, audit logging, information schema, network security (Private Link, SCC) | High |
 | [06-classification-compliance-permissions.md](06-classification-compliance-permissions.md) | Data classification & tagging, GDPR/CCPA compliance, advanced permission models | High |
 
+## Key Concepts
+
+| Concept | Definition |
+| :--- | :--- |
+| **Unity Catalog** | Databricks' account-level governance layer providing a three-level namespace (catalog.schema.object), centralized access control, and cross-workspace data sharing |
+| **Permission Inheritance** | The model where privileges granted at a higher level (catalog) automatically propagate to all child objects (schemas, tables) unless explicitly overridden |
+| **Dynamic Views** | Views that use `current_user()` or `is_account_group_member()` to enforce row-level and column-level security at query time |
+| **Delta Sharing** | An open protocol for secure, cross-platform data sharing that does not require the recipient to be on Databricks |
+| **Secret Scope** | A named collection of secrets (Databricks-backed or cloud Key Vault-backed) accessed via `dbutils.secrets.get()`, with values automatically redacted in logs |
+| **Data Lineage** | Unity Catalog's automatic tracking of data flow from source to destination across tables, notebooks, and jobs, enabling impact analysis and compliance auditing |
+
 ## Unity Catalog Hierarchy
 
 ```mermaid
@@ -124,6 +135,13 @@ sequenceDiagram
 - [ ] Create dynamic views for row-level security
 - [ ] Configure Delta Sharing
 - [ ] Access secrets securely in notebooks
+
+## Related Resources
+
+- [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md)
+- [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
+- [Platform Architecture](../../../shared/fundamentals/platform-architecture.md)
+- [Databricks Workspace](../../../shared/fundamentals/databricks-workspace.md)
 
 ---
 

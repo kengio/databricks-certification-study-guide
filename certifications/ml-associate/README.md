@@ -1,4 +1,5 @@
 ---
+title: ML Associate
 tags:
   - databricks
   - certification

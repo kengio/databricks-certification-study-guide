@@ -12,7 +12,7 @@ status: complete
 
 # Practice Questions: Model Production Lifecycle
 
-[← Back to Practice Questions](./README.md) | [Next: Model Governance](04-model-governance.md)
+[← Back to Practice Questions](./README.md) | [Next: Model Governance](./04-model-governance.md)
 
 ---
 
@@ -254,7 +254,7 @@ D) Event-triggered retraining — new data arriving in cloud storage automatical
 >
 > Drift-triggered (or performance-triggered) retraining responds to observed degradation rather than a fixed schedule, making it both timely and resource-efficient. Databricks Lakehouse Monitoring supports alert conditions on monitored metrics; when a threshold is breached, a notification can call a webhook that in turn invokes the Databricks Jobs REST API to start a retraining pipeline. This creates a closed-loop MLOps system where production monitoring directly drives model refresh.
 
-[← Back to Practice Questions](./README.md) | [Next: Model Governance](04-model-governance.md)
+[← Back to Practice Questions](./README.md) | [Next: Model Governance](./04-model-governance.md)
 
 ---
 

@@ -349,36 +349,6 @@ testing:
   cost: Minimal
 ```
 
-## Key Takeaways
-
-- **SQL Warehouses**: Serverless, managed compute for SQL analytics
-- **Three types**: Pro (default), Classic (legacy), Serverless
-- **Auto-scaling**: Automatically adjusts cluster size 2-512 DBUs
-- **DBU pricing**: Consumption-based, ~$0.40 per DBU (AWS/GCP)
-- **Result caching**: 24-hour cache for identical queries
-- **Concurrency**: Handles multiple queries with fair queuing
-- **Auto-stop**: Automatically stops warehouses to save costs
-- **Monitoring**: Use `system.query_history` for performance insights
-- **Performance**: Spot instances, query optimization, right-sizing are key
-
-## Common Exam Questions
-
-**Q: Which warehouse type is best for production analytics?**
-
-- **A**: Pro warehouse (serverless, auto-scaling, cost-effective)
-
-**Q: How long are query results cached?**
-
-- **A**: 24 hours (invalidated by data changes or schema updates)
-
-**Q: What happens when you scale a warehouse mid-query?**
-
-- **A**: Current queries complete on original size; new queries use scaled size
-
-**Q: If warehouse size is Medium (16 DBU/h), and runs 2 hours, what's the DBU cost?**
-
-- **A**: 16 × 2 = 32 DBUs
-
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -395,6 +365,36 @@ testing:
 
 **Scenario:** Connecting SQL Warehouses to other downstream components results in unexpected failures.
 **Fix:** Ensure that permissions and network access rules are correctly provisioned for SQL Warehouses prior to deployment.
+
+## Exam Tips
+
+- Know the three warehouse types (Pro, Classic/legacy, Serverless) and when to use each
+- Understand DBU cost calculations: warehouse size (DBU/h) multiplied by hours run
+- Remember result cache duration is 24 hours and is invalidated by data changes or schema updates
+- Scaling mid-query does not affect running queries; only new queries use the scaled size
+
+## Key Takeaways
+
+- **SQL Warehouses**: Serverless, managed compute for SQL analytics
+- **Three types**: Pro (default), Classic (legacy), Serverless
+- **Auto-scaling**: Automatically adjusts cluster size 2-512 DBUs
+- **DBU pricing**: Consumption-based, ~$0.40 per DBU (AWS/GCP)
+- **Result caching**: 24-hour cache for identical queries
+- **Concurrency**: Handles multiple queries with fair queuing
+- **Auto-stop**: Automatically stops warehouses to save costs
+- **Monitoring**: Use `system.query_history` for performance insights
+- **Performance**: Spot instances, query optimization, right-sizing are key
+
+## Related Topics
+
+- [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts for Databricks
+- [Spark Fundamentals](../../../shared/fundamentals/spark-fundamentals.md) - Understanding the compute engine behind SQL warehouses
+- [Performance Optimization Cheat Sheet](../../../shared/cheat-sheets/performance-optimization.md) - Quick reference for tuning queries
+
+## Official Documentation
+
+- [Databricks SQL Warehouses](https://docs.databricks.com/sql/admin/sql-endpoints.html)
+- [SQL Warehouse Types](https://docs.databricks.com/sql/admin/warehouse-type.html)
 
 ---
 

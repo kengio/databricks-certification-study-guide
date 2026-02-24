@@ -1,3 +1,12 @@
+---
+title: Declarative Pipelines
+type: study-material
+tags:
+  - data-engineer-professional
+  - lakeflow-pipelines
+status: published
+---
+
 # Declarative Pipelines
 
 Lakeflow Spark Declarative Pipelines (formerly Delta Live Tables/DLT) provide a declarative approach to building reliable ETL pipelines. Understanding the core concepts and syntax is essential for building production data pipelines.

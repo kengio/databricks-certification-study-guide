@@ -1,3 +1,9 @@
+---
+title: "Practice Questions: Databricks Tooling"
+type: practice-questions
+tags: [data-engineer-professional, practice-questions, databricks-tooling]
+---
+
 # Practice Questions - Section 02: Databricks Tooling (20%)
 
 ## Question 2.1: dbutils.widgets
