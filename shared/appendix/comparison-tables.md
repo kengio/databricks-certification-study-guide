@@ -211,3 +211,17 @@ tags: [reference, comparison, data-engineering, ml, genai]
 | **Prediction drift**| Distribution of model output scores/classes    | No            | Yes              |
 | **Concept drift**   | Relationship between inputs and target         | Yes           | No               |
 | **Label drift**     | Distribution of actual ground-truth labels     | Yes           | No               |
+
+## Tungsten vs Photon
+
+| Feature | Tungsten (Apache Spark default) | Photon (Databricks) |
+| --- | --- | --- |
+| **Language** | JVM bytecode (via Janino compiler) | Native C++ |
+| **Execution model** | Whole-Stage Code Generation (WSCG) | Vectorized columnar execution |
+| **Memory management** | Off-heap UnsafeRow (reduced GC) | Fully off-JVM (no GC) |
+| **Vectorized reads** | Parquet/ORC batch reader (4096-row batches) | Extended vectorized reads |
+| **Speedup vs baseline** | Baseline (replaces interpreted execution) | 2–8× over Tungsten |
+| **Availability** | All Apache Spark clusters | Photon-enabled Databricks clusters only |
+| **Code changes needed** | No | No |
+| **Fallback behavior** | N/A (is the baseline) | Falls back to Tungsten for unsupported ops |
+| **Enabled by** | Default (always on) | Select Photon runtime in cluster config |

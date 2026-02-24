@@ -188,12 +188,14 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | **Tool calling**   | LLM capability to invoke external functions or APIs to complete a task                  |
 | **Transaction Log**| Record of all changes to a Delta table (stored in `_delta_log/`)                       |
 | **Trigger**        | Defines when streaming micro-batches are processed                                      |
+| **Tungsten**       | Apache Spark's in-memory execution engine (Spark 1.5+); provides off-heap memory via UnsafeRow, Whole-Stage Code Generation, and vectorized Parquet/ORC reading |
 
 ## U
 
 | Term             | Definition                                                                     |
 | ---------------- | ------------------------------------------------------------------------------ |
 | **Unity Catalog**| Databricks' unified governance solution for data and AI assets across accounts |
+| **UnsafeRow**    | Tungsten's compact binary row format stored off-heap, bypassing JVM garbage collection for large in-memory Spark datasets |
 | **Upsert**       | Combined INSERT and UPDATE operation; implemented via MERGE in Delta Lake       |
 
 ## V
@@ -210,6 +212,7 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | Term               | Definition                                                               |
 | ------------------ | ------------------------------------------------------------------------ |
 | **Watermark**      | Threshold for handling late-arriving data in streaming aggregations      |
+| **Whole-Stage Code Generation (WSCG)** | Tungsten optimization that fuses multiple Spark operators into a single compiled bytecode function; stages marked `*(N)` in `df.explain()` output are WSCG-compiled |
 | **Widget**         | Notebook parameter input element for interactive parameterization        |
 | **Window Function**| SQL function operating over a sliding or fixed row partition             |
 | **Workspace**      | Databricks environment for notebooks, jobs, clusters, and experiments    |

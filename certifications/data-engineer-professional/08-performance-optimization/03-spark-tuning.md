@@ -415,6 +415,17 @@ spark.conf.set("spark.sql.parquet.enableVectorizedReader", "true")
 
 ## Photon Engine
 
+### Tungsten: Spark's Native Execution Layer
+
+Tungsten is Apache Spark's built-in execution engine (Spark 1.5+) that provides off-heap
+memory management via `UnsafeRow`, Whole-Stage Code Generation (WSCG), and vectorized
+Parquet/ORC reading. Photon replaces Tungsten for supported operations with a C++
+implementation that removes JVM overhead entirely; for unsupported operations, Spark
+falls back to Tungsten automatically.
+
+See [Spark Fundamentals — Tungsten](../../../shared/fundamentals/spark-fundamentals.md) for
+full details.
+
 ### What is Photon
 
 ```text

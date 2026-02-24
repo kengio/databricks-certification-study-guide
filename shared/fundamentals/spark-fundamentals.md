@@ -294,6 +294,80 @@ def pandas_upper(s: pd.Series) -> pd.Series:
 df.withColumn("name_upper", pandas_upper(df.name))
 ```
 
+## Spark Execution Engine (Tungsten)
+
+Project Tungsten (Spark 1.5+) is Spark's in-memory execution engine. It delivers
+near-bare-metal performance by eliminating JVM overhead through three optimizations:
+off-heap memory management, Whole-Stage Code Generation, and vectorized execution.
+
+### Core Components
+
+| Component | Description |
+| --- | --- |
+| **Off-Heap Memory (UnsafeRow)** | Binary row format stored outside the JVM heap; eliminates GC pressure |
+| **Whole-Stage Code Generation** | Fuses multiple operators into one compiled Java function; removes virtual call overhead |
+| **Vectorized Execution** | Reads Parquet/ORC in columnar batches (default 4096 rows) instead of row-by-row |
+
+### Off-Heap Memory Management
+
+Tungsten stores rows using `UnsafeRow` — a compact binary format written directly to
+off-heap memory, bypassing JVM garbage collection for large in-memory datasets.
+
+```python
+# Enable off-heap memory for Tungsten
+spark.conf.set("spark.memory.offHeap.enabled", "true")
+spark.conf.set("spark.memory.offHeap.size", "4g")
+```
+
+### Whole-Stage Code Generation (WSCG)
+
+WSCG compiles a chain of operators (filter → project → aggregate) into a single bytecode
+function using the Janino compiler. Operators marked `*(N)` in `explain()` are fused
+into one compiled stage:
+
+```text
+*(1) HashAggregate(keys=[dept], functions=[sum(salary)])
++- *(1) Filter (age > 30)
+   +- *(1) FileScan parquet [dept,salary,age]
+
+The *(1) prefix means all three operators compile to a single stage.
+```
+
+```python
+# Enabled by default; disable only for debugging
+spark.conf.set("spark.sql.codegen.wholeStage", "true")
+
+# Inspect generated Java code
+df.explain(mode="codegen")
+```
+
+### Vectorized Execution
+
+Column-batch reading allows SIMD-style CPU operations, significantly reducing per-row overhead:
+
+```python
+# Both enabled by default
+spark.conf.get("spark.sql.parquet.enableVectorizedReader")  # "true"
+spark.conf.get("spark.sql.orc.enableVectorizedReader")      # "true"
+
+# Tune batch size (default 4096 rows)
+spark.conf.set("spark.sql.parquet.columnarReaderBatchSize", "8192")
+```
+
+### Tungsten vs. Photon
+
+Photon (Databricks runtime) extends and replaces Tungsten's JVM execution for supported
+operations. See the [Comparison Tables](../appendix/comparison-tables.md) for a full
+side-by-side breakdown.
+
+| Feature | Tungsten | Photon |
+| --- | --- | --- |
+| **Language** | JVM bytecode (Janino) | Native C++ |
+| **Execution model** | Whole-Stage Code Generation | Vectorized columnar |
+| **GC overhead** | Reduced (off-heap UnsafeRow) | Eliminated (no JVM) |
+| **Speedup** | Baseline Spark performance | 2–8× over Tungsten |
+| **Availability** | All Spark clusters | Photon-enabled Databricks runtimes only |
+
 ## Use Cases
 
 | Use Case             | Relevant Spark Features                 |
