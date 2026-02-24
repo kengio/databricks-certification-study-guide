@@ -6,6 +6,7 @@ This directory contains recommended learning paths for progressing through Datab
 
 | Path                                         | Description                             |
 | -------------------------------------------- | --------------------------------------- |
+| [Master Roadmap](master-roadmap.md)             | Visual progression across all 6 certs   |
 | [Data Engineer Path](data-engineer-path.md)     | Associate → Professional progression    |
 | [ML Engineer Path](ml-engineer-path.md)         | ML Associate → Professional progression |
 | [Data Analyst Path](data-analyst-path.md)       | Data Analyst Associate preparation      |
