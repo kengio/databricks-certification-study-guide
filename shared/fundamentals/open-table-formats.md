@@ -392,6 +392,11 @@ D) Write Optimized
 >
 > Merge on Read (MoR) writes data to log files first and compacts later, making writes fast and efficient for streaming CDC workloads. Copy on Write (CoW) rewrites entire files on each update, making it better for read-heavy workloads but slower for writes.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md) - Core Delta Lake concepts

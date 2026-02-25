@@ -415,6 +415,13 @@ D) SQL warehouses do not support Delta Lake
 >
 > SQL warehouses (formerly SQL endpoints) are optimized specifically for SQL analytics workloads, BI tool connectivity, and dashboards. All-purpose clusters support multiple languages and are designed for interactive development and ETL. Both can be serverless, and both support Delta Lake.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [Data Analyst Associate](../../certifications/data-analyst-associate/README.md)
+- [GenAI Engineer Associate](../../certifications/genai-engineer-associate/README.md)
+
 ## Related Topics
 
 - [Unity Catalog Basics](unity-catalog-basics.md)

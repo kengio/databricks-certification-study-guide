@@ -42,7 +42,7 @@ flowchart TD
 
 - [Databricks Workspace Fundamentals](../../../shared/fundamentals/databricks-workspace.md)
 - [Platform Architecture](../../../shared/fundamentals/platform-architecture.md)
-- [Code Examples](../../../shared/code-examples/)
+- [Code Examples](../../../shared/code-examples/README.md)
 
 ## Next Steps
 

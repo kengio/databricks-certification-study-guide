@@ -634,6 +634,11 @@ D) An error
 >
 > `COALESCE` returns the first non-NULL argument from its list. It evaluates arguments left to right: `NULL`, `NULL`, `'default'` (first non-NULL, returned). The `'other'` value is never evaluated.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Analyst Associate](../../certifications/data-analyst-associate/README.md)
+
 ## Related Topics
 
 - [Spark Fundamentals](spark-fundamentals.md)

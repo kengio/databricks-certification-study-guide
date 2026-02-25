@@ -365,6 +365,11 @@ D) `Pipeline` is required; applying transformers manually raises an exception
 > Applying transformers manually risks accidentally re-fitting on test data (leakage)
 > or using inconsistent parameters at inference time.
 
+## Referenced By
+
+- [ML Associate](../../certifications/ml-associate/README.md)
+- [ML Professional](../../certifications/ml-professional/README.md)
+
 ## Related Topics
 
 - [ML Associate Certification](../../certifications/ml-associate/README.md)

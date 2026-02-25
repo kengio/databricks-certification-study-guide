@@ -408,6 +408,14 @@ asdict(config)   # convert to plain dict for JSON serialisation
 
 For abstract base classes and the template method pattern, see [Python for Production Data Engineering](../interview-prep/09-python-code-quality.md) Question 4.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [ML Associate](../../certifications/ml-associate/README.md)
+- [ML Professional](../../certifications/ml-professional/README.md)
+- [GenAI Engineer Associate](../../certifications/genai-engineer-associate/README.md)
+
 ---
 
 > [!info] Continue to Part 2

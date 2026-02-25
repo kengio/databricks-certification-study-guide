@@ -323,6 +323,12 @@ D) Business KPIs computed after the model is deployed to production
 > Supported frameworks include scikit-learn, XGBoost, LightGBM, PyTorch, TensorFlow,
 > Keras, Spark ML, and Hugging Face Transformers.
 
+## Referenced By
+
+- [ML Associate](../../certifications/ml-associate/README.md)
+- [ML Professional](../../certifications/ml-professional/README.md)
+- [GenAI Engineer Associate](../../certifications/genai-engineer-associate/README.md)
+
 ## Related Topics
 
 - [ML Associate Certification](../../certifications/ml-associate/README.md)

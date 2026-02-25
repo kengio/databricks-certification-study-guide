@@ -412,6 +412,14 @@ D) Storage-level file access patterns
 >
 > Unity Catalog automatically captures column-level lineage, tracking how data flows from source columns to target columns across tables, notebooks, workflows, and dashboards. This is captured automatically without requiring manual configuration.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [Data Analyst Associate](../../certifications/data-analyst-associate/README.md)
+- [ML Professional](../../certifications/ml-professional/README.md)
+- [GenAI Engineer Associate](../../certifications/genai-engineer-associate/README.md)
+
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md)

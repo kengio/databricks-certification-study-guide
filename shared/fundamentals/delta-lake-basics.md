@@ -428,6 +428,13 @@ D) It eliminates the need for VACUUM
 >
 > Liquid Clustering automatically optimizes data layout incrementally without manual OPTIMIZE ZORDER commands. You can change clustering columns with `ALTER TABLE ... CLUSTER BY` without rewriting existing data. It does not eliminate VACUUM, and while it supports any cardinality, the max column count is similar to Z-ORDER.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [Data Analyst Associate](../../certifications/data-analyst-associate/README.md)
+- [ML Professional](../../certifications/ml-professional/README.md)
+
 ## Related Topics
 
 - [Open Table Formats](open-table-formats.md) - UniForm, Iceberg, Hudi comparison

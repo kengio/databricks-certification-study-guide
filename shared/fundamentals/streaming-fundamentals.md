@@ -354,6 +354,11 @@ D) The event is held in a buffer until the next trigger
 > safely clean up state for old windows. To capture more late data, increase the
 > watermark delay — but this increases memory usage for state storage.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+
 ## Related Topics
 
 - [Structured Streaming (DE Pro)](../../certifications/data-engineer-professional/01-data-processing/03-structured-streaming-part1.md)

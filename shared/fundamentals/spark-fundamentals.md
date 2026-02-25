@@ -451,6 +451,14 @@ D) `df.repartition(10).coalesce(1)`
 >
 > `coalesce(10)` reduces partitions without a full shuffle, making it more efficient than `repartition` for decreasing partition count. `repartition` performs a full shuffle, which is unnecessary when only reducing partitions. Option D would create a single file, not 10.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [ML Associate](../../certifications/ml-associate/README.md)
+- [ML Professional](../../certifications/ml-professional/README.md)
+- [Data Analyst Associate](../../certifications/data-analyst-associate/README.md)
+
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md)

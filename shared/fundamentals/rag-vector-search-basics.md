@@ -356,6 +356,10 @@ D) Pre-compute all possible questions and answers and store them in a lookup tab
 > knowledge over successive updates. Large context windows can work for small knowledge
 > bases but are slow and expensive at inference time; they do not scale to large corpora.
 
+## Referenced By
+
+- [GenAI Engineer Associate](../../certifications/genai-engineer-associate/README.md)
+
 ## Related Topics
 
 - [GenAI Engineer Associate Certification](../../certifications/genai-engineer-associate/README.md)

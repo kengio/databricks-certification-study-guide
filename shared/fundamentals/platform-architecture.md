@@ -411,6 +411,14 @@ D) Customer-Managed Keys
 >
 > Secure Cluster Connectivity (also called No Public IP) ensures cluster nodes only have private IP addresses. Communication with the control plane happens through a secure tunnel initiated from the data plane, eliminating the need for public IPs and reducing the attack surface.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [ML Associate](../../certifications/ml-associate/README.md)
+- [Data Analyst Associate](../../certifications/data-analyst-associate/README.md)
+- [GenAI Engineer Associate](../../certifications/genai-engineer-associate/README.md)
+
 ## Related Topics
 
 - [Databricks Workspace](databricks-workspace.md) - UI and workspace features

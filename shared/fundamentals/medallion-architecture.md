@@ -373,6 +373,12 @@ D) Source -> Bronze -> Gold -> Silver
 >
 > Data flows from source systems into Bronze (raw), then is cleansed and transformed into Silver (validated), and finally aggregated into Gold (business-ready). Each layer progressively increases data quality and decreases data volume.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [Data Analyst Associate](../../certifications/data-analyst-associate/README.md)
+
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md)

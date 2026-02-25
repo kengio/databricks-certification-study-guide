@@ -334,6 +334,14 @@ D) `[{"a.b": 1}, {"a.c": 2}, {"d": 3}]`
 > keys using the separator (default `"."`). `"a"` is a nested dict so its children
 > become `"a.b"` and `"a.c"`. `"d"` is a scalar so it stays as-is.
 
+## Referenced By
+
+- [Data Engineer Associate](../../certifications/data-engineer-associate/README.md)
+- [Data Engineer Professional](../../certifications/data-engineer-professional/README.md)
+- [ML Associate](../../certifications/ml-associate/README.md)
+- [ML Professional](../../certifications/ml-professional/README.md)
+- [GenAI Engineer Associate](../../certifications/genai-engineer-associate/README.md)
+
 ## Related Topics
 
 - [Python Essentials — Part 1](python-essentials.md) — data types, strings, control flow, functions, OOP
