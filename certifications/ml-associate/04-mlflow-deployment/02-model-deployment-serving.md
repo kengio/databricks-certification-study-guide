@@ -592,8 +592,8 @@ comparison = (predictions
 
 # Rolling accuracy
 
-accuracy = comparison.filter(F.datediff(F.current_date(), F.col("date")) <= 30)\
-    .agg(F.mean("correct").alias("accuracy"))
+accuracy = (comparison.filter(F.datediff(F.current_date(), F.col("date")) <= 30)
+    .agg(F.mean("correct").alias("accuracy")))
 
 print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
 ```

@@ -1,6 +1,8 @@
-# Interview Questions — Pipeline Architecture
+---
+tags: [interview-prep, pipeline-architecture]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: Delta Lake Internals](02-delta-lake-internals.md) | [Next: Performance Optimization](04-performance-optimization.md)
+# Interview Questions — Pipeline Architecture
 
 ---
 
@@ -87,9 +89,9 @@ You're starting a new data engineering project. When would you choose Delta Live
 >
 > @dlt.table(comment="Raw orders from Kafka")
 > def bronze_orders():
->     return spark.readStream.format("kafka") \
->         .option("kafka.bootstrap.servers", "broker:9092") \
->         .option("subscribe", "orders").load()
+>     return (spark.readStream.format("kafka")
+>         .option("kafka.bootstrap.servers", "broker:9092")
+>         .option("subscribe", "orders").load())
 >
 > @dlt.expect("valid_order_id", "order_id IS NOT NULL")
 > @dlt.expect_or_drop("positive_amount", "amount > 0")
@@ -97,7 +99,7 @@ You're starting a new data engineering project. When would you choose Delta Live
 > def silver_orders():
 >     return (dlt.read_stream("bronze_orders")
 >         .select("order_id", "customer_id", col("amount").cast("double")))
-> ```text
+> ```
 >
 > **Choose notebooks + Workflows when:**
 >
@@ -155,7 +157,7 @@ You need to incrementally ingest Parquet files that land in cloud storage every 
 > FROM 's3://my-bucket/landing/orders/'
 > FILEFORMAT = PARQUET
 > COPY_OPTIONS ('mergeSchema' = 'true');
-> ```text
+> ```
 >
 > It's great for **scheduled batch jobs** (hourly, daily), SQL-friendly environments, and tables receiving a moderate number of files. The downside: it lists the entire directory on every run, which gets slow with millions of files.
 >
@@ -172,7 +174,7 @@ You need to incrementally ingest Parquet files that land in cloud storage every 
 >     .option("checkpointLocation", "/checkpoints/orders")
 >     .trigger(processingTime="1 hour")
 >     .toTable("prod.bronze.orders"))
-> ```text
+> ```
 >
 > Auto Loader excels at **high-volume ingestion** (millions of files), near-real-time landing detection, and automatic schema evolution with `schemaEvolutionMode`.
 >
@@ -230,7 +232,7 @@ Your Silver layer pipeline processes sensor events. Due to network issues, some 
 >         "sensor_id"
 >     )
 >     .agg(avg("reading").alias("avg_reading")))
-> ```text
+> ```
 >
 > This means Gold aggregations built from this stream will be **eventually consistent** — they may be slightly understated initially if late events haven't arrived yet.
 >
@@ -256,7 +258,7 @@ Your Silver layer pipeline processes sensor events. Due to network issues, some 
 >   target.event_count = source.event_count,
 >   target.last_updated = current_timestamp()
 > WHEN NOT MATCHED THEN INSERT *;
-> ```text
+> ```
 >
 > This gives you sub-minute Gold freshness via streaming, with full accuracy corrections applied daily.
 >
@@ -302,7 +304,7 @@ Your ingestion job runs every hour but occasionally gets triggered twice (duplic
 > ON target.order_id = source.order_id
 >   AND target.event_time = source.event_time
 > WHEN NOT MATCHED THEN INSERT *;
-> ```text
+> ```
 >
 > **Pattern 3 — INSERT OVERWRITE partition**: For daily batch jobs, overwrite only the target partition. Running twice overwrites the same partition with the same data:
 >
@@ -312,14 +314,14 @@ Your ingestion job runs every hour but occasionally gets triggered twice (duplic
 >     .mode("overwrite")
 >     .option("replaceWhere", "event_date = '2026-02-18'")
 >     .save(bronze_path))
-> ```text
+> ```
 >
 > **Pattern 4 — Deduplication before write**: If you must use append, deduplicate on business key + timestamp before writing:
 >
 > ```python
 > deduped_df = incoming_df.dropDuplicates(["order_id", "event_time"])
 > deduped_df.write.format("delta").mode("append").save(bronze_path)
-> ```text
+> ```
 >
 > For most production pipelines, I combine Auto Loader (file-level idempotency) with MERGE (record-level idempotency) for defense in depth.
 >
@@ -384,7 +386,7 @@ You're building a DLT pipeline for financial transaction data. Compliance requir
 >             when(col("amount") <= 0, "invalid_amount")
 >             .when(col("account_id").isNull(), "missing_account_id")
 >             .otherwise("unknown")))
-> ```text
+> ```
 >
 > This ensures: every Bronze record goes to exactly one of Silver (valid) or Quarantine (invalid). Compliance can audit the quarantine table, remediate records, and reprocess them back through the pipeline.
 >

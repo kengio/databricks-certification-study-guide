@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, unity-catalog, data-engineer-professional]
+---
+
 # Unity Catalog — DE Professional Supplement
 
 > For the full Unity Catalog reference (object creation, permissions, external locations, Delta Sharing), see

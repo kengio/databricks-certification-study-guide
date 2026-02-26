@@ -1,6 +1,8 @@
-# Interview Questions — ML System Design
+---
+tags: [interview-prep, ml, system-design]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: Data Modeling](./10-data-modeling.md) | [Next: GenAI & RAG Design](./12-genai-rag-design.md)
+# Interview Questions — ML System Design
 
 ---
 
@@ -282,4 +284,4 @@ You have a gradient-boosted tree model with 8 hyperparameters to tune. Training 
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: Data Modeling](./10-data-modeling.md) | [Next: GenAI & RAG Design](./12-genai-rag-design.md)
+**[← Previous: Data Modeling](./10-data-modeling.md) | [↑ Back to Interview Prep](./README.md) | [Next: GenAI & RAG Design →](./12-genai-rag-design.md)**

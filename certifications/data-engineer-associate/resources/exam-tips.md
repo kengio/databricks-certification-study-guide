@@ -148,7 +148,7 @@ after new data was written. What should the engineer check?"
 - [ ] Review Auto Loader vs COPY INTO differences
 - [ ] Re-read Unity Catalog hierarchy and GRANT syntax
 - [ ] Review streaming triggers: `processingTime`, `availableNow`, checkpoint requirement
-- [ ] Review the [cheat sheets](../../shared/cheat-sheets/README.md) for quick refresher
+- [ ] Review the [cheat sheets](../../../shared/cheat-sheets/README.md) for quick refresher
 - [ ] Confirm your proctor software is installed and test your internet connection
 - [ ] Get 8 hours of sleep
 

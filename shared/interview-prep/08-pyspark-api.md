@@ -1,6 +1,8 @@
-# Interview Questions — PySpark API Deep Dive
+---
+tags: [interview-prep, pyspark, api]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: File Formats & Spark Internals](07-file-formats-spark.md) | [Next: Python for Production Data Engineering](09-python-code-quality.md)
+# Interview Questions — PySpark API Deep Dive
 
 ---
 
@@ -43,7 +45,7 @@ A colleague's running total query gives unexpected results. They're using `sum("
 >     .rowsBetween(Window.unboundedPreceding, 0)
 > )
 > df.withColumn("running_total", sum("amount").over(window_rows))
-> ```text
+> ```
 >
 > **Common window frame patterns:**
 >
@@ -99,7 +101,7 @@ You need to find the most recent order for each customer. Two orders for custome
 >     .withColumn("rn", row_number().over(window))
 >     .withColumn("rnk", rank().over(window))
 >     .withColumn("dense_rnk", dense_rank().over(window)))
-> ```text
+> ```
 >
 > For customer 42 with two tied orders (same timestamp):
 >
@@ -123,7 +125,7 @@ You need to find the most recent order for each customer. Two orders for custome
 >     )
 >     .filter(col("rn") == 1)
 >     .drop("rn"))
-> ```text
+> ```
 >
 > **Choosing the right function:**
 >
@@ -189,7 +191,7 @@ Calculate month-over-month revenue change for each product. Flag any month where
 >         .when(col("mom_change_pct") < -20, True)
 >         .otherwise(False)
 >     ))
-> ```text
+> ```
 >
 > **Common lag/lead patterns:**
 >
@@ -215,7 +217,7 @@ Calculate month-over-month revenue change for each product. Flag any month where
 >         ELSE FALSE
 >     END AS revenue_drop_flag
 > FROM monthly_revenue;
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >
@@ -268,7 +270,7 @@ A colleague wrote a Python UDF to normalize phone numbers (strip non-digit chara
 >         digits.substr(7, 4)
 >     )
 > ))
-> ```text
+> ```
 >
 > No Python serialization, no UDF overhead, Catalyst-optimized.
 >
@@ -287,7 +289,7 @@ A colleague wrote a Python UDF to normalize phone numbers (strip non-digit chara
 >     )
 >
 > df.withColumn("phone_normalized", normalize_phone(col("phone")))
-> ```text
+> ```
 >
 > Pandas UDFs process an entire Arrow batch at once — no per-row serialization.
 >
@@ -343,7 +345,7 @@ Your Bronze table has a `payload` column containing JSON strings like `{"events"
 >         StructField("ts", LongType())
 >     ])))
 > ])
-> ```text
+> ```
 >
 > **Step 2 — Parse JSON and explode**:
 >
@@ -359,7 +361,7 @@ Your Bronze table has a `payload` column containing JSON strings like `{"events"
 >         col("event.type").alias("event_type"),
 >         col("event.ts").alias("event_ts")
 >     ))
-> ```text
+> ```
 >
 > **Why `explode_outer` over `explode`**: If a Bronze row has `payload = null` or `{"events": []}`, `explode` silently drops the row — you lose data. `explode_outer` keeps the row with null event fields so you can audit empty payloads.
 >
@@ -421,7 +423,7 @@ Write a query to keep only the most recent record per `customer_id` from a `cust
 > SELECT customer_id, name, email, updated_at
 > FROM ranked
 > WHERE rn = 1;
-> ```text
+> ```
 >
 > **With QUALIFY** (Databricks SQL):
 >
@@ -429,7 +431,7 @@ Write a query to keep only the most recent record per `customer_id` from a `cust
 > SELECT customer_id, name, email, updated_at
 > FROM customers
 > QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY updated_at DESC) = 1;
-> ```text
+> ```
 >
 > **How `QUALIFY` works**: It applies a filter condition on the result of a window function computed over the current query's result set. The window function expression does not need to appear in the `SELECT` list — it is evaluated implicitly for filtering only.
 >
@@ -448,13 +450,13 @@ Write a query to keep only the most recent record per `customer_id` from a `cust
 >     PARTITION BY customer_id ORDER BY order_date
 >     ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
 > ) <= 10000;
-> ```text
+> ```
 >
 > **Query clause evaluation order:**
 >
-> ```text
+> ```
 > FROM → WHERE → GROUP BY → HAVING → SELECT (window functions) → QUALIFY → ORDER BY → LIMIT
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >

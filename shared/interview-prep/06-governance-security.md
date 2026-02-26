@@ -1,6 +1,8 @@
-# Interview Questions — Governance & Security
+---
+tags: [interview-prep, governance, security]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: Streaming & CDC](05-streaming-cdc.md)
+# Interview Questions — Governance & Security
 
 ---
 
@@ -29,12 +31,12 @@ Explain Unity Catalog's securable object hierarchy. How does it differ from the 
 >
 > Unity Catalog organizes data assets in a four-level hierarchy:
 >
-> ```text
+> ```
 > Metastore (1 per region)
 > └── Catalog (e.g., prod, dev, finance)
 >     └── Schema (e.g., bronze, silver, gold)
 >         └── Table / View / Function / Volume
-> ```text
+> ```
 >
 > The **metastore** is the top-level container — typically one per cloud region — and is attached to one or more Databricks workspaces. It stores storage credentials, external locations, and all catalog metadata.
 >
@@ -60,7 +62,7 @@ Explain Unity Catalog's securable object hierarchy. How does it differ from the 
 >
 > ```sql
 > ALTER TABLE prod.silver.orders SET OWNER TO `data_engineering`;
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >
@@ -111,7 +113,7 @@ Your HR table contains employee salary data and PII (name, SSN, email). HR manag
 > -- Apply the row filter to the table
 > ALTER TABLE prod.hr.employees
 > SET ROW FILTER prod.hr.dept_filter ON (department_id);
-> ```text
+> ```
 >
 > Now when HR managers query `prod.hr.employees`, they automatically see only rows where they are the manager. The filter is invisible to the consumer — it's applied by the engine.
 >
@@ -137,7 +139,7 @@ Your HR table contains employee salary data and PII (name, SSN, email). HR manag
 > ALTER TABLE prod.hr.employees
 >   ALTER COLUMN ssn SET MASK prod.hr.mask_ssn,
 >   ALTER COLUMN email SET MASK prod.hr.mask_email;
-> ```text
+> ```
 >
 > **Step 4 — Salary access for finance auditors**:
 > Finance auditors get `SELECT` on the table (they can see salary) but the column masks mean they only see the masked SSN and email. No separate view needed.
@@ -147,7 +149,7 @@ Your HR table contains employee salary data and PII (name, SSN, email). HR manag
 > GRANT USE SCHEMA ON SCHEMA prod.hr TO `finance_auditors`;
 > GRANT SELECT ON TABLE prod.hr.employees TO `finance_auditors`;
 > -- Column masks automatically apply
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >
@@ -195,7 +197,7 @@ A new team member confuses "metastore", "catalog", "schema", and "table" when se
 > ```sql
 > CREATE CATALOG IF NOT EXISTS prod;
 > CREATE CATALOG IF NOT EXISTS dev;
-> ```text
+> ```
 >
 > **Schema**: Groups tables, views, and functions within a catalog:
 >
@@ -203,7 +205,7 @@ A new team member confuses "metastore", "catalog", "schema", and "table" when se
 > CREATE SCHEMA IF NOT EXISTS prod.bronze;
 > CREATE SCHEMA IF NOT EXISTS prod.silver;
 > CREATE SCHEMA IF NOT EXISTS prod.gold;
-> ```text
+> ```
 >
 > **Table**: Where the actual data lives:
 >
@@ -213,7 +215,7 @@ A new team member confuses "metastore", "catalog", "schema", and "table" when se
 >     customer_id BIGINT,
 >     amount DECIMAL(10,2)
 > ) USING DELTA;
-> ```text
+> ```
 >
 > **What `USE CATALOG` and `USE SCHEMA` do**: They set the default namespace so you can write shorter SQL without repeating the full three-level path:
 >
@@ -223,7 +225,7 @@ A new team member confuses "metastore", "catalog", "schema", and "table" when se
 >
 > -- Now this is equivalent to prod.silver.orders
 > SELECT * FROM orders;
-> ```text
+> ```
 >
 > Important: `USE CATALOG` / `USE SCHEMA` require that you have `USE CATALOG` and `USE SCHEMA` privileges respectively — they don't grant access, they just set defaults.
 >
@@ -273,7 +275,7 @@ You're building a data platform for a bank subject to BCBS 239 (data lineage req
 > FROM system.lineage.column_lineage
 > WHERE target_table_full_name = 'prod.gold.regulatory_report'
 >   AND target_column_name = 'tier1_capital_ratio';
-> ```text
+> ```
 >
 > **Layer 2 — Source system metadata in Bronze**: Capture provenance at ingestion time — source system name, source file path, extraction timestamp, source record ID:
 >
@@ -283,7 +285,7 @@ You're building a data platform for a bank subject to BCBS 239 (data lineage req
 >     .withColumn("_source_file", input_file_name())
 >     .withColumn("_extraction_timestamp", lit(extraction_ts))
 >     .withColumn("_ingestion_timestamp", current_timestamp()))
-> ```text
+> ```
 >
 > **Layer 3 — Propagate lineage columns through Silver → Gold**: Carry `_source_system` and `_source_record_id` forward so Gold-level report cells can be traced to a specific source record.
 >
@@ -338,7 +340,7 @@ Explain how privilege inheritance works in Unity Catalog. If I `GRANT SELECT ON 
 >
 > -- OR Step 3b: Grant SELECT on the entire schema (all current + future tables)
 > GRANT SELECT ON SCHEMA prod.gold TO `analysts`;
-> ```text
+> ```
 >
 > **Schema-level `SELECT` and future tables**: Yes — `GRANT SELECT ON SCHEMA prod.gold` covers all tables that currently exist AND any new tables created in `prod.gold` in the future. This is a key difference from table-level grants.
 >
@@ -359,7 +361,7 @@ Explain how privilege inheritance works in Unity Catalog. If I `GRANT SELECT ON 
 > ```sql
 > -- When an analyst is added to the analysts group, they immediately
 > -- have access to all gold tables — no additional grants needed
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >

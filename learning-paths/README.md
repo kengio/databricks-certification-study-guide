@@ -1,3 +1,7 @@
+---
+tags: [learning-paths, study-guide]
+---
+
 # Learning Paths
 
 This directory contains recommended learning paths for progressing through Databricks certifications.

@@ -1,6 +1,8 @@
-# Interview Questions — Performance Optimization
+---
+tags: [interview-prep, performance-optimization]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: Pipeline Architecture](03-pipeline-architecture.md) | [Next: Streaming & CDC](05-streaming-cdc.md)
+# Interview Questions — Performance Optimization
 
 ---
 
@@ -38,7 +40,7 @@ A business analyst reports that a query that used to run in 30 seconds now takes
 >
 > ```sql
 > EXPLAIN SELECT * FROM orders o JOIN customers c ON o.customer_id = c.customer_id;
-> ```text
+> ```
 >
 > Is `customers` (50M rows) being broadcast? At 50M rows it's too large for the default 10MB broadcast threshold. Is it doing a sort-merge join with too many shuffle partitions (200 is too few for 2B rows)?
 >
@@ -47,20 +49,20 @@ A business analyst reports that a query that used to run in 30 seconds now takes
 > ```sql
 > DESCRIBE DETAIL orders;
 > DESCRIBE DETAIL customers;
-> ```text
+> ```
 >
 > Look at `numFiles` and `sizeInBytes / numFiles`. If average file size is < 1MB, you have a small files problem causing excessive task overhead. Run `OPTIMIZE`:
 >
 > ```sql
 > OPTIMIZE orders;
 > OPTIMIZE customers ZORDER BY (customer_id);
-> ```text
+> ```
 >
 > **Step 5 — Tune shuffle partitions**: For 2 billion rows, 200 partitions means 10M rows per partition — likely too large, causing spill to disk. Increase:
 >
 > ```python
 > spark.conf.set("spark.sql.shuffle.partitions", 2000)
-> ```text
+> ```
 >
 > **Step 6 — Check AQE**: Verify `spark.sql.adaptive.enabled` is `true` (it should be). AQE auto-adjusts shuffle partitions and can coalesce small partitions. If it's off, enable it.
 >
@@ -111,7 +113,7 @@ Explain what Adaptive Query Execution (AQE) is, what specific problems it solves
 > spark.conf.set("spark.sql.adaptive.enabled", "true")
 > spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")
 > spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
-> ```text
+> ```
 >
 > **Limitations — when you still need manual tuning:**
 >
@@ -158,7 +160,7 @@ A Spark join between two tables takes 2 hours. When you look at the Spark UI, 99
 > ```python
 > # Check key distribution
 > df.groupBy("customer_id").count().orderBy(col("count").desc()).show(10)
-> ```text
+> ```
 >
 > If the top key has 100M rows while the average is 100 rows, you have severe skew.
 >
@@ -186,7 +188,7 @@ A Spark join between two tables takes 2 hours. When you look at the Spark UI, 99
 > )
 >
 > result = large_df_salted.join(small_df_salted, "salted_key")
-> ```text
+> ```
 >
 > **Fix 3 — Filter or pre-aggregate**: If the skewed key is a known outlier (e.g., guest checkouts), handle it separately with a special case and union the results.
 >
@@ -233,13 +235,13 @@ You're joining a 500GB fact table with a 100MB dimension table. Explain the diff
 > from pyspark.sql.functions import broadcast
 >
 > result = fact_df.join(broadcast(dimension_df), "key")
-> ```text
+> ```
 >
 > Or increase the threshold (if you have sufficient executor memory):
 >
 > ```python
 > spark.conf.set("spark.sql.autoBroadcastJoinThreshold", str(200 * 1024 * 1024))  # 200MB
-> ```text
+> ```
 >
 > **Risk**: Broadcasting a 100MB table to each executor increases memory pressure. If executors have 8GB of RAM and you're broadcasting 100MB × multiple concurrent queries, you may run out of memory. Check executor memory before increasing the threshold.
 >
@@ -295,7 +297,7 @@ You have an existing production Delta table with 5TB of data, partitioned by `ev
 > OPTIMIZE events
 > WHERE event_year = 2025 AND event_month = 12
 > ZORDER BY (user_id, product_category);
-> ```text
+> ```
 >
 > Schedule this nightly or after major batch loads. The downside: you must remember to run it and it rewrites all files in the partition.
 >
@@ -307,7 +309,7 @@ You have an existing production Delta table with 5TB of data, partitioned by `ev
 >
 > -- Trigger initial clustering (rewrites unclustered files incrementally)
 > OPTIMIZE events;
-> ```text
+> ```
 >
 > Liquid Clustering auto-maintains after this initial OPTIMIZE. You can also remove the partition scheme over time as Liquid Clustering handles data layout.
 >

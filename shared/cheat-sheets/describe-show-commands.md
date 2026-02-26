@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, sql, metadata, data-engineering]
+---
+
 # DESCRIBE and SHOW Commands Cheat Sheet
 
 Quick reference for inspecting metadata in Databricks SQL.
@@ -395,5 +399,5 @@ SHOW GRANTS ON SCHEMA catalog.schema;
 ## Related Topics
 
 - [Delta Lake Commands](delta-lake-commands.md) - OPTIMIZE, VACUUM, MERGE
-- [Unity Catalog Quick Reference](unity-catalog-quick-ref.md) - Permissions and grants
+- [Unity Catalog Quick Reference](./unity-catalog-quick-ref.md) - Permissions and grants
 - [SQL Functions](sql-functions.md) - Common SQL functions

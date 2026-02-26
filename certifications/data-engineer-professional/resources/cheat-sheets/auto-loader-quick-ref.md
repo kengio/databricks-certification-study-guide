@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, auto-loader, data-engineer-professional]
+---
+
 # Auto Loader Quick Reference
 
 ## Basic Syntax

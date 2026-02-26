@@ -1,6 +1,8 @@
-# Interview Questions — GenAI & RAG System Design
+---
+tags: [interview-prep, genai, rag]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: ML System Design](./11-ml-system-design.md)
+# Interview Questions — GenAI & RAG System Design
 
 ---
 
@@ -249,7 +251,7 @@ Your RAG chatbot sometimes generates answers that aren't grounded in the retriev
 >
 > **Layer 1: Prompt engineering**
 >
-> ```text
+> ```
 > System: You are an assistant that answers questions ONLY using the
 > provided context documents. Follow these rules strictly:
 > 1. Only use information explicitly stated in the context below.
@@ -280,4 +282,4 @@ Your RAG chatbot sometimes generates answers that aren't grounded in the retriev
 
 ---
 
-[Back to Interview Prep](./README.md) | [Previous: ML System Design](./11-ml-system-design.md)
+**[← Previous: ML System Design](./11-ml-system-design.md) | [↑ Back to Interview Prep](./README.md)**

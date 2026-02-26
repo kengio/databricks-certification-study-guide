@@ -29,7 +29,7 @@ flowchart TD
 | :--- | :--- | :--- |
 | [01-unity-catalog-basics.md](01-unity-catalog-basics.md) | UC structure, metastores, catalogs, schemas | High |
 | [02-access-control-permissions.md](02-access-control-permissions.md) | Privileges, roles, object ownership | Medium |
-| [03-data-sharing.md](03-data-sharing.md) | Sharing objects, collaboration, Delta Sharing | Low |
+| [03-data-sharing.md](./03-data-sharing.md) | Sharing objects, collaboration, Delta Sharing | Low |
 
 ## Key Concepts
 

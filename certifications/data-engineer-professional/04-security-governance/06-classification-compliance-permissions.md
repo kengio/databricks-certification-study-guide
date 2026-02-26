@@ -720,7 +720,7 @@ D) GRANT OPTION
 
 - [Unity Catalog](01-unity-catalog.md) - UC basics, hierarchy, metastore, permissions
 - [Access Control](02-access-control.md) - Row/column security, dynamic views
-- [Data Sharing](03-data-sharing.md) - Delta Sharing
+- [Data Sharing](./03-data-sharing.md) - Delta Sharing
 - [Secret Management](04-secret-management.md) - Secrets, Key Vault
 
 ---

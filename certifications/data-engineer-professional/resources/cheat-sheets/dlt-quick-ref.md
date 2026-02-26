@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, dlt, lakeflow-pipelines, data-engineer-professional]
+---
+
 # DLT (Lakeflow Pipelines) Quick Reference
 
 ## Table Types

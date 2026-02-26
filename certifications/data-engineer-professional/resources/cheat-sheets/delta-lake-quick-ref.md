@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, delta-lake, data-engineer-professional]
+---
+
 # Delta Lake Quick Reference
 
 ## MERGE (Upsert)

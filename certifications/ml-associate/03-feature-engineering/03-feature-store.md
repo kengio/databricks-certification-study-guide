@@ -65,14 +65,14 @@ table_name = "customer_features"
 
 # Prepare feature data
 
-features_df = spark.read.table("silver.customers")\
+features_df = (spark.read.table("silver.customers")
     .select(
         "customer_id",
         (F.col("age") / F.col("age").mean()).alias("age_scaled"),
         F.col("tenure").alias("customer_lifetime_days"),
         (F.col("total_spent") / (F.col("months_active") + 1)).alias("avg_monthly_spend"),
         F.current_timestamp().alias("created_at")
-    )
+    ))
 
 # Write to feature store
 
@@ -102,13 +102,13 @@ fs_client = FeatureStoreClient()
 
 # Define training data
 
-training_set = spark.read.table("raw.transactions")\
+training_set = (spark.read.table("raw.transactions")
     .select(
         "transaction_id",
         "customer_id",
         "purchased_product",
         F.col("purchase_amount").alias("label")
-    )
+    ))
 
 # Lookup features from feature store
 # Look for matching customer_id

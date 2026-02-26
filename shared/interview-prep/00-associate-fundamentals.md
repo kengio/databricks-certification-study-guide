@@ -1,6 +1,8 @@
-# Interview Questions — Associate Fundamentals
+---
+tags: [interview-prep, associate, fundamentals]
+---
 
-[Back to Interview Prep](./README.md) | [Next: System Design](01-system-design.md)
+# Interview Questions — Associate Fundamentals
 
 ---
 
@@ -430,4 +432,4 @@ Explain at a high level how Apache Spark processes a SQL query or DataFrame tran
 
 ---
 
-[Back to Interview Prep](./README.md) | [Next: System Design](01-system-design.md)
+**[↑ Back to Interview Prep](./README.md) | [Next: System Design →](./01-system-design.md)**

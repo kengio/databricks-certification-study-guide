@@ -1,6 +1,8 @@
-# Interview Questions — Delta Lake Internals
+---
+tags: [interview-prep, delta-lake]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: System Design](01-system-design.md) | [Next: Pipeline Architecture](03-pipeline-architecture.md)
+# Interview Questions — Delta Lake Internals
 
 ---
 
@@ -33,11 +35,11 @@ Explain how Delta Lake achieves ACID transactions on top of cloud object storage
 >
 > For **Isolation**: Delta uses **optimistic concurrency control**. Both writers read the current table state, compute their changes, and try to write the next log version. The first to commit wins. The second detects a conflict and either retries (if the operations don't overlap) or raises `ConcurrentModificationException`.
 >
-> ```text
+> ```
 > Writer A: reads version 5, computes changes, tries to write 00000...0006.json ✓
 > Writer B: reads version 5, computes changes, tries to write 00000...0006.json ✗
 >           → detects conflict → retries by reading version 6 → writes version 7
-> ```text
+> ```
 >
 > For **Durability**: cloud object stores (S3, ADLS, GCS) provide strong consistency — once a file is written and the PUT succeeds, it's durable. Delta relies on this guarantee.
 >
@@ -101,7 +103,7 @@ You have a Silver table that's written by two jobs simultaneously — one append
 >         break
 >     except ConcurrentModificationException:
 >         time.sleep(2 ** attempt)
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >
@@ -147,7 +149,7 @@ A Delta table has 500 million rows and users typically filter by `customer_id` a
 > -- Partition by date (done at table creation, can't change easily)
 > -- Then Z-ORDER within each partition by customer_id
 > OPTIMIZE orders ZORDER BY (customer_id);
-> ```text
+> ```
 >
 > For a new table (Databricks 13.3+):
 >
@@ -159,7 +161,7 @@ A Delta table has 500 million rows and users typically filter by `customer_id` a
 >     amount DECIMAL(10,2)
 > ) USING DELTA
 > CLUSTER BY (customer_id, order_date);
-> ```text
+> ```
 >
 > Liquid Clustering is preferred for new tables because: (1) no manual `OPTIMIZE ZORDER` schedule needed, (2) clustering columns can change with `ALTER TABLE`, (3) it works incrementally — only new data gets clustered.
 >
@@ -253,7 +255,7 @@ A data engineer accidentally ran `DELETE FROM orders WHERE order_date < '2024-01
 >
 > -- Or by timestamp (1 hour before the delete)
 > RESTORE TABLE orders TO TIMESTAMP AS OF '2026-02-17 14:00:00';
-> ```text
+> ```
 >
 > **What prevents this from working:**
 >
@@ -265,7 +267,7 @@ A data engineer accidentally ran `DELETE FROM orders WHERE order_date < '2024-01
 > ```sql
 > ALTER TABLE orders
 > SET TBLPROPERTIES ('delta.deletedFileRetentionDuration' = '30 days');
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >
@@ -310,7 +312,7 @@ A colleague says "Delta's Change Data Feed is the same as Change Data Capture �
 >
 > -- Read only changes since version 50
 > SELECT * FROM table_changes('silver.orders', 50);
-> ```text
+> ```
 >
 > CDF is ideal for **propagating changes within the lakehouse** — e.g., Silver → Gold incremental updates, or triggering downstream ML retraining on only changed rows.
 >

@@ -521,9 +521,9 @@ df_engineered = pipeline.fit(df_featured).transform(df_featured)
 
 # STEP 4: Save for modeling
 
-df_engineered.select("customer_id", "scaledFeatures", "label")\
-    .write.mode("overwrite")\
-    .saveAsTable("ml_ready.customer_features")
+(df_engineered.select("customer_id", "scaledFeatures", "label")
+    .write.mode("overwrite")
+    .saveAsTable("ml_ready.customer_features"))
 ```
 
 ## Use Cases

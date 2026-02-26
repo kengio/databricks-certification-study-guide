@@ -1,6 +1,8 @@
-# Interview Questions — Streaming & CDC
+---
+tags: [interview-prep, streaming, cdc]
+---
 
-[Back to Interview Prep](./README.md) | [Previous: Performance Optimization](04-performance-optimization.md) | [Next: Governance & Security](06-governance-security.md)
+# Interview Questions — Streaming & CDC
 
 ---
 
@@ -45,7 +47,7 @@ Explain watermarking in Spark Structured Streaming. Why is it necessary, what pr
 >     .outputMode("append")  # watermark required for append mode on windowed agg
 >     .option("checkpointLocation", "/checkpoints/sensor_agg")
 >     .toTable("silver.sensor_hourly"))
-> ```text
+> ```
 >
 > **Trade-offs:**
 >
@@ -102,7 +104,7 @@ What is stateful streaming in Spark, and what operational challenges come with r
 >     "spark.sql.streaming.stateStore.providerClass",
 >     "com.databricks.sql.streaming.state.RocksDBStateStoreProvider"
 > )
-> ```text
+> ```
 >
 > **Operational challenges:**
 >
@@ -119,7 +121,7 @@ What is stateful streaming in Spark, and what operational challenges come with r
 > ```python
 > # Track StateStoreSizeBytes in Spark streaming metrics
 > # Alert if state grows beyond expected bounds
-> ```text
+> ```
 >
 > ### Follow-up Questions
 >
@@ -168,7 +170,7 @@ How does Spark Structured Streaming achieve exactly-once end-to-end semantics? W
 >     .option("checkpointLocation", "/checkpoints/my_stream")  # required
 >     .trigger(processingTime="1 minute")
 >     .toTable("silver.orders"))
-> ```text
+> ```
 >
 > **What breaks exactly-once**:
 >
@@ -210,7 +212,7 @@ Explain the four Structured Streaming trigger types — `processingTime`, `once`
 >
 > ```python
 > .trigger(processingTime="30 seconds")  # batch every 30 seconds
-> ```text
+> ```
 >
 > **`trigger(once=True)`**: Processes exactly one micro-batch (all available data at that moment) and stops. **Deprecated as of Spark 3.3** — use `availableNow` instead. Behavior: only processes data available at the moment of the first batch, even if more arrives mid-run.
 >
@@ -224,7 +226,7 @@ Explain the four Structured Streaming trigger types — `processingTime`, `once`
 >     .option("checkpointLocation", "/checkpoints/orders")
 >     .trigger(availableNow=True)  # process all backlog, then stop
 >     .toTable("silver.orders"))
-> ```text
+> ```
 >
 > Unlike `once`, `availableNow` correctly handles schema evolution and processes data in multiple batches if needed.
 >
@@ -286,7 +288,7 @@ A critical Silver-layer streaming job has been failing silently for 3 hours — 
 >
 > ```sql
 > SELECT MAX(_ingestion_timestamp) FROM silver.orders;
-> ```text
+> ```
 >
 > Compare to `current_timestamp()`. A 3-hour gap confirms the problem.
 >

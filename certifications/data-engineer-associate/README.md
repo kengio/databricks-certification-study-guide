@@ -100,4 +100,4 @@ Before starting this certification, review:
 
 1. Complete this **Data Engineer Associate** certification
 2. Progress to [Data Engineer Professional](../data-engineer-professional/README.md) for advanced topics
-3. Reference [Learning Paths](../../learning-paths/) for recommended progression
+3. Reference [Learning Paths](../../learning-paths/README.md) for recommended progression

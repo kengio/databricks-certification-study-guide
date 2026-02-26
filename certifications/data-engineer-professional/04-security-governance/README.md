@@ -30,7 +30,7 @@ flowchart TD
 | :--- | :--- | :--- |
 | [01-unity-catalog.md](01-unity-catalog.md) | Metastore, catalog hierarchy, permission inheritance | High |
 | [02-access-control.md](02-access-control.md) | Table ACLs, row/column security, dynamic views | High |
-| [03-data-sharing.md](03-data-sharing.md) | Delta Sharing, external data sharing | Medium |
+| [03-data-sharing.md](./03-data-sharing.md) | Delta Sharing, external data sharing | Medium |
 | [04-secret-management.md](04-secret-management.md) | Secret scopes, accessing secrets in code | Medium |
 | [05-audit-lineage-network-security.md](05-audit-lineage-network-security.md) | Data lineage, audit logging, information schema, network security (Private Link, SCC) | High |
 | [06-classification-compliance-permissions.md](06-classification-compliance-permissions.md) | Data classification & tagging, GDPR/CCPA compliance, advanced permission models | High |

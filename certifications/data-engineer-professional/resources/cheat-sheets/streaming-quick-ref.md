@@ -1,3 +1,7 @@
+---
+tags: [cheat-sheet, streaming, data-engineer-professional]
+---
+
 # Structured Streaming Quick Reference
 
 ## Basic Streaming Read
