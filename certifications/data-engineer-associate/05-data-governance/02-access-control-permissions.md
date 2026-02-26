@@ -456,8 +456,8 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 
 ## Use Cases
 
-- **Access Control and Permissions Implementation**: Incorporating Access Control and Permissions principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Access Control and Permissions Workflows**: Using the advanced capabilities of Access Control and Permissions to automate processes and reduce manual operational overhead.
+- **Group-Based Access Management**: Assigning permissions to groups (e.g., `finance_team`, `data_engineers`) instead of individual users, so that access is automatically granted or revoked when team members join or leave.
+- **Column-Level Security via Dynamic Views**: Creating views that expose only non-sensitive columns and granting `SELECT` on the view to restricted users, effectively implementing column-level security before native UC column masking is available.
 
 ## Common Issues & Errors
 
@@ -466,10 +466,15 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 **Scenario:** The default settings for Access Control and Permissions do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Access Control and Permissions to handle production-scale workloads.
 
-### Integration Bottlenecks
+### GRANT Succeeds But User Still Cannot Access Data
 
-**Scenario:** Connecting Access Control and Permissions to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control and Permissions prior to deployment.
+**Scenario:** An admin runs `GRANT SELECT ON table TO user` and it succeeds, but the user still receives `INSUFFICIENT_PERMISSIONS` when querying the table.
+**Fix:** Permissions require `USE CATALOG` and `USE SCHEMA` on parent objects in addition to `SELECT` on the table. Grants on a child object do not automatically grant traversal permissions on the parent catalog and schema.
+
+### DENY Not Supported in Unity Catalog
+
+**Scenario:** An admin tries to run `DENY SELECT ON table TO user` to explicitly block access, but receives a syntax error because `DENY` is not a valid statement in Unity Catalog.
+**Fix:** Unity Catalog uses an allow-only permission model. To remove access, use `REVOKE` to remove the previously granted privilege instead of attempting to deny it.
 
 ## Exam Tips
 

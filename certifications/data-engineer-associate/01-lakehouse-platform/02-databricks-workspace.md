@@ -264,8 +264,8 @@ Captures:
 
 ## Use Cases
 
-- **Databricks Workspace Implementation**: Incorporating Databricks Workspace principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Databricks Workspace Workflows**: Using the advanced capabilities of Databricks Workspace to automate processes and reduce manual operational overhead.
+- **Collaborative Notebook Development**: Multiple data engineers work simultaneously in shared notebooks during sprint development, using real-time co-editing and inline comments for code reviews.
+- **Git-Integrated CI/CD Pipelines**: Using Repos to connect notebooks to GitHub/GitLab, enabling pull request workflows, branch-based development, and automated testing before promoting code to production.
 
 ## Common Issues & Errors
 
@@ -274,10 +274,10 @@ Captures:
 **Scenario:** The default settings for Databricks Workspace do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks Workspace to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Notebook Session Timeout
 
-**Scenario:** Connecting Databricks Workspace to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Workspace prior to deployment.
+**Scenario:** A notebook session times out after inactivity, and unsaved work in cells is lost.
+**Fix:** Enable autosave in notebook settings and use Repos for version control so that code changes are always committed to Git.
 
 ## Exam Tips
 

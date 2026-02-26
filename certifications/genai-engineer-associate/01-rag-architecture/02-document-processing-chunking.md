@@ -366,20 +366,20 @@ D) Add more metadata fields to improve filtering accuracy
 
 ## Use Cases
 
-- **Document Processing & Chunking Implementation**: Incorporating Document Processing & Chunking principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Document Processing & Chunking Workflows**: Using the advanced capabilities of Document Processing & Chunking to automate processes and reduce manual operational overhead.
+- **Legal Contract Ingestion Pipeline**: Parsing multi-section legal PDFs using recursive character splitting with section-header detection, preserving clause boundaries so the RAG system retrieves complete contractual provisions rather than fragments.
+- **Technical Documentation Knowledge Base**: Chunking API reference pages with parent-child strategy -- small child chunks (200 tokens) for precise retrieval, full parent sections (1000 tokens) passed to the LLM so the answer includes surrounding context like parameter descriptions and code examples.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Chunks Break Mid-Sentence at Boundaries
 
-**Scenario:** The default settings for Document Processing & Chunking do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Document Processing & Chunking to handle production-scale workloads.
+**Scenario:** Fixed-size chunking splits text in the middle of sentences, causing the retriever to return fragments that lack enough context for the LLM to generate a coherent answer.
+**Fix:** Use `RecursiveCharacterTextSplitter` with sentence-level separators (`["\n\n", "\n", ". ", " "]`) and set `chunk_overlap` to 50-100 tokens so boundary content appears in at least one complete chunk.
 
-### Integration Bottlenecks
+### Metadata Not Stored with Chunks
 
-**Scenario:** Connecting Document Processing & Chunking to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Document Processing & Chunking prior to deployment.
+**Scenario:** Retrieved chunks have no source attribution, making it impossible for the LLM to cite which document or page the answer came from.
+**Fix:** Attach metadata (source filename, page number, section title, document version) to each chunk at ingestion time. Store metadata columns alongside the text in the Delta table so they are available in `similarity_search()` results.
 
 ## Key Takeaways
 

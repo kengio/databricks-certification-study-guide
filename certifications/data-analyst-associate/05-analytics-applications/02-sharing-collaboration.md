@@ -455,20 +455,15 @@ Subscribe to Alerts:
 
 ## Use Cases
 
-- **Sharing & Collaboration Implementation**: Incorporating Sharing & Collaboration principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Sharing & Collaboration Workflows**: Using the advanced capabilities of Sharing & Collaboration to automate processes and reduce manual operational overhead.
+- **Team Dashboard Distribution**: Sharing a published dashboard with an entire group (e.g., Sales Team as Viewer) so all members see the same metrics without individual setup.
+- **Pre-filtered Links for Stakeholders**: Distributing URL-parameterized dashboard links so each regional manager opens the dashboard pre-filtered to their region.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Shared Dashboard Shows "Permission Denied"
 
-**Scenario:** The default settings for Sharing & Collaboration do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Sharing & Collaboration to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Sharing & Collaboration to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Sharing & Collaboration prior to deployment.
+**Scenario:** A colleague clicks the shared dashboard link but gets an access error.
+**Fix:** The viewer needs at minimum `CAN VIEW` on the dashboard AND `SELECT` permission (plus `USE CATALOG`/`USE SCHEMA`) on the underlying tables.
 
 ## Exam Tips
 

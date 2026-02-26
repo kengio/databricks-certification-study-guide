@@ -13,7 +13,7 @@ status: published
 
 ---
 
-## Question 1: RAG vs Fine-Tuning
+## Question 1 *(Easy)*: RAG vs Fine-Tuning
 
 **Question**: A company has a large proprietary document repository that is updated weekly with new reports. They want an LLM that can answer questions using the latest documents. Which approach is BEST?
 
@@ -29,7 +29,7 @@ D) Train a custom embedding model on the proprietary corpus
 
 ---
 
-## Question 2: Chunking Strategy Selection
+## Question 2 *(Medium)*: Chunking Strategy Selection
 
 **Question**: A data engineer is chunking 100-page PDF financial reports for a RAG pipeline. The reports contain dense paragraphs with no consistent headers. Which chunking strategy is MOST appropriate?
 
@@ -45,7 +45,7 @@ D) Sentence-level chunking using punctuation delimiters only
 
 ---
 
-## Question 3: Chunk Size Trade-Off
+## Question 3 *(Medium)*: Chunk Size Trade-Off
 
 **Question**: A team is building a RAG pipeline and debates whether to use small chunks (128 tokens) or large chunks (1024 tokens). Which statement BEST describes the trade-off?
 
@@ -61,7 +61,7 @@ D) Chunk size only affects indexing speed and has no impact on retrieval quality
 
 ---
 
-## Question 4: Chunk Overlap Purpose
+## Question 4 *(Easy)*: Chunk Overlap Purpose
 
 **Question**: A team configures their chunking pipeline with a chunk size of 512 tokens and an overlap of 50 tokens. What is the PRIMARY purpose of the 50-token overlap?
 
@@ -77,7 +77,7 @@ D) To increase embedding vector dimensionality for better retrieval
 
 ---
 
-## Question 5: Dense vs Sparse Retrieval
+## Question 5 *(Medium)*: Dense vs Sparse Retrieval
 
 **Question**: A RAG system for a medical knowledge base must retrieve documents that contain both a specific drug name (exact term match) and semantically related conditions. Which retrieval approach is BEST?
 
@@ -93,7 +93,7 @@ D) Keyword filtering on the metadata field before dense retrieval
 
 ---
 
-## Question 6: Retrieval Precision vs Recall
+## Question 6 *(Medium)*: Retrieval Precision vs Recall
 
 **Question**: A RAG pipeline uses top-k retrieval with k=3 and has low answer quality because the correct document is often not in the top 3. What adjustment should be made FIRST?
 
@@ -109,7 +109,7 @@ D) Reduce the chunk size to 64 tokens
 
 ---
 
-## Question 7: Reranking Purpose
+## Question 7 *(Easy)*: Reranking Purpose
 
 **Question**: A RAG pipeline retrieves the top 20 documents using vector similarity, then applies a cross-encoder reranker before passing the top 5 to the LLM. What is the PRIMARY benefit of reranking?
 
@@ -125,7 +125,7 @@ D) Reranking reduces indexing time by pre-sorting the vector database
 
 ---
 
-## Question 8: RAG Faithfulness Metric
+## Question 8 *(Easy)*: RAG Faithfulness Metric
 
 **Question**: After deploying a RAG pipeline, an evaluation reveals that the LLM frequently makes statements not supported by the retrieved documents. Which metric BEST captures this problem?
 
@@ -141,7 +141,7 @@ D) Perplexity — measures the fluency of generated text
 
 ---
 
-## Question 9: RAG vs Fine-Tuning — Style Adaptation
+## Question 9 *(Medium)*: RAG vs Fine-Tuning — Style Adaptation
 
 **Question**: A company wants an LLM to respond exclusively in formal legal prose and adopt their firm's preferred citation format. The knowledge content itself is unchanged. Which approach is MOST appropriate?
 
@@ -157,7 +157,7 @@ D) Use a larger embedding model with higher dimensionality
 
 ---
 
-## Question 10: Context Window Management
+## Question 10 *(Medium)*: Context Window Management
 
 **Question**: A RAG pipeline retrieves top-20 chunks, each 512 tokens. The LLM has a 4096-token context window. Which scenario will cause the pipeline to FAIL?
 
@@ -173,7 +173,7 @@ D) Storing chunk metadata in the vector index alongside embeddings
 
 ---
 
-## Question 11: HyDE Retrieval
+## Question 11 *(Medium)*: HyDE Retrieval
 
 **Question**: A RAG system uses Hypothetical Document Embeddings (HyDE). What does this technique involve?
 
@@ -189,7 +189,7 @@ D) Replacing missing metadata with hypothetical values inferred from document co
 
 ---
 
-## Question 12: Multi-Query Retrieval
+## Question 12 *(Easy)*: Multi-Query Retrieval
 
 **Question**: A team implements multi-query retrieval in their RAG pipeline. What does this technique do?
 
@@ -205,7 +205,7 @@ D) Indexes each document multiple times with different embedding models
 
 ---
 
-## Question 13: Parent-Child Chunking
+## Question 13 *(Medium)*: Parent-Child Chunking
 
 **Question**: A team implements parent-child chunking. Small child chunks are used for retrieval; larger parent chunks are returned to the LLM. What is the PRIMARY advantage over standard-sized chunking?
 
@@ -221,7 +221,7 @@ D) It allows multiple users to share the same parent chunk simultaneously
 
 ---
 
-## Question 14: RAG Evaluation Dimensions
+## Question 14 *(Medium)*: RAG Evaluation Dimensions
 
 **Question**: A team wants to evaluate their RAG pipeline comprehensively. Which combination of metrics covers BOTH retrieval quality AND generation quality?
 
@@ -237,7 +237,7 @@ D) Embedding similarity and chunk count
 
 ---
 
-## Question 15: Metadata Filtering in RAG
+## Question 15 *(Easy)*: Metadata Filtering in RAG
 
 **Question**: A RAG pipeline indexes documents from multiple departments. A user query should only retrieve documents from the `legal` department. How is this best implemented?
 

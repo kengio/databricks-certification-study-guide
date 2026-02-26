@@ -330,7 +330,7 @@ df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 ## Use Cases
 
 - **Databricks ML Workspace & Notebooks Implementation**: Incorporating Databricks ML Workspace & Notebooks principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Databricks ML Workspace & Notebooks Workflows**: Using the advanced capabilities of Databricks ML Workspace & Notebooks to automate processes and reduce manual operational overhead.
+- **Shared Notebook Environment for Team Collaboration**: Multiple data scientists working in the same workspace, using shared folders and repos to collaboratively develop and review ML experiments.
 
 ## Common Issues & Errors
 
@@ -339,10 +339,10 @@ df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 **Scenario:** The default settings for Databricks ML Workspace & Notebooks do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks ML Workspace & Notebooks to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Notebook Cannot Access MLflow Experiment
 
-**Scenario:** Connecting Databricks ML Workspace & Notebooks to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks ML Workspace & Notebooks prior to deployment.
+**Scenario:** `mlflow.start_run()` fails because the experiment doesn't exist or the user lacks permissions.
+**Fix:** Create the experiment first with `mlflow.create_experiment()` or verify workspace permissions on the experiment folder.
 
 ## Exam Tips
 

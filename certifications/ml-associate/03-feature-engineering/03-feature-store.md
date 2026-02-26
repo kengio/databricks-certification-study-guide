@@ -526,7 +526,7 @@ job_config = {
 ## Use Cases
 
 - **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Databricks Feature Store Workflows**: Using the advanced capabilities of Databricks Feature Store to automate processes and reduce manual operational overhead.
+- **Eliminating Train-Serve Skew**: Centralizing feature computation in the Feature Store so that training and inference use identical feature logic, preventing subtle bugs from duplicated transformation code.
 
 ## Common Issues & Errors
 
@@ -535,10 +535,10 @@ job_config = {
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Feature Lookup Returns NULL Values
 
-**Scenario:** Connecting Databricks Feature Store to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Feature Store prior to deployment.
+**Scenario:** `FeatureLookup` returns nulls for some rows at inference time.
+**Fix:** The lookup key values in the inference request don't match any rows in the feature table. Verify key column types match and check for missing entries in the feature table.
 
 ## Exam Tips
 

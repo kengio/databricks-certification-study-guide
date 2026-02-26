@@ -8,7 +8,7 @@ tags: [data-engineer-associate, practice-questions, incremental-processing]
 
 ## Question 1: COPY INTO Idempotency
 
-**Question**: Every day, a data engineer runs a command to transfer the previous day's sales data into a `transactions` table. Today, after running the command, the record count remains unchanged. Why were no new records copied?
+**Question** *(Medium)*: Every day, a data engineer runs a command to transfer the previous day's sales data into a `transactions` table. Today, after running the command, the record count remains unchanged. Why were no new records copied?
 
 > [!success]- Answer
 > The previous day's file has already been copied into the table.
@@ -19,7 +19,7 @@ tags: [data-engineer-associate, practice-questions, incremental-processing]
 
 ## Question 2: Tool for Automated Data Quality Monitoring
 
-**Question**: During data ingestion, a data engineer observes that source data quality is declining. They want to automate the process of monitoring the quality level. Which tool addresses this?
+**Question** *(Easy)*: During data ingestion, a data engineer observes that source data quality is declining. They want to automate the process of monitoring the quality level. Which tool addresses this?
 
 > [!success]- Answer
 > Delta Live Tables (DLT).
@@ -30,7 +30,7 @@ tags: [data-engineer-associate, practice-questions, incremental-processing]
 
 ## Question 3: DLT Continuous Pipeline Behavior
 
-**Question**: A DLT pipeline has two datasets defined with `STREAMING LIVE TABLE` and three datasets using `LIVE TABLE`. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?
+**Question** *(Hard)*: A DLT pipeline has two datasets defined with `STREAMING LIVE TABLE` and three datasets using `LIVE TABLE`. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?
 
 > [!success]- Answer
 > All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped.
@@ -41,7 +41,7 @@ tags: [data-engineer-associate, practice-questions, incremental-processing]
 
 ## Question 4: Spark Offset Tracking Methods
 
-**Question**: To reliably monitor the precise progress of processing and manage failures through restarting or reprocessing, which two methods does Spark use to log the offset range of the data processed in each trigger?
+**Question** *(Easy)*: To reliably monitor the precise progress of processing and manage failures through restarting or reprocessing, which two methods does Spark use to log the offset range of the data processed in each trigger?
 
 > [!success]- Answer
 > Checkpointing and Write-ahead Logs (WAL).
@@ -52,7 +52,7 @@ tags: [data-engineer-associate, practice-questions, incremental-processing]
 
 ## Question 5: Auto Loader Underlying Technology
 
-**Question**: Which tool does Auto Loader use to incrementally process data?
+**Question** *(Easy)*: Which tool does Auto Loader use to incrementally process data?
 
 > [!success]- Answer
 > Spark Structured Streaming.
@@ -63,7 +63,7 @@ tags: [data-engineer-associate, practice-questions, incremental-processing]
 
 ## Question 6: Micro-Batch Trigger Every 5 Seconds
 
-**Question**: A data engineer sets up a Structured Streaming job to read from a table, process the data, and subsequently write it to a new table in real-time. The code block is shown below:
+**Question** *(Medium)*: A data engineer sets up a Structured Streaming job to read from a table, process the data, and subsequently write it to a new table in real-time. The code block is shown below:
 
 ```python
 (spark.table("sales")
@@ -86,7 +86,7 @@ If the data engineer aims to run a micro-batch query that processes data every 5
 
 ## Question 7: DLT DROP Expectation Behavior
 
-**Question**: A dataset established through Delta Live Tables has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?
+**Question** *(Medium)*: A dataset established through Delta Live Tables has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?
 
 > [!success]- Answer
 > Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.
@@ -97,7 +97,7 @@ If the data engineer aims to run a micro-batch query that processes data every 5
 
 ## Question 8: CREATE STREAMING LIVE TABLE vs CREATE LIVE TABLE
 
-**Question**: When should `CREATE STREAMING LIVE TABLE` be used instead of `CREATE LIVE TABLE` for creating Delta Live Tables in SQL?
+**Question** *(Medium)*: When should `CREATE STREAMING LIVE TABLE` be used instead of `CREATE LIVE TABLE` for creating Delta Live Tables in SQL?
 
 > [!success]- Answer
 > `CREATE STREAMING LIVE TABLE` should be used when data needs to be processed incrementally.
@@ -108,7 +108,7 @@ If the data engineer aims to run a micro-batch query that processes data every 5
 
 ## Question 9: Auto Loader for New File Detection
 
-**Question**: A data engineer's source system produces files in a shared directory that accumulate over time. The engineer must recognize which files are new since the last pipeline execution and ingest only those during each run. Which tool addresses this?
+**Question** *(Medium)*: A data engineer's source system produces files in a shared directory that accumulate over time. The engineer must recognize which files are new since the last pipeline execution and ingest only those during each run. Which tool addresses this?
 
 > [!success]- Answer
 > Auto Loader.
@@ -119,7 +119,7 @@ If the data engineer aims to run a micro-batch query that processes data every 5
 
 ## Question 10: Silver to Gold Streaming Query
 
-**Question**: Which type of Structured Streaming query represents the transition from a Silver table to a Gold table?
+**Question** *(Medium)*: Which type of Structured Streaming query represents the transition from a Silver table to a Gold table?
 
 > [!success]- Answer
 > A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table.
@@ -132,7 +132,7 @@ If the data engineer aims to run a micro-batch query that processes data every 5
 
 ## Question 11: Identifying Which DLT Table Drops Records
 
-**Question**: A data engineer manages three tables in a DLT pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?
+**Question** *(Medium)*: A data engineer manages three tables in a DLT pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?
 
 > [!success]- Answer
 > Navigate to the DLT pipeline page, click on each table, and view the data quality statistics.
@@ -143,7 +143,7 @@ If the data engineer aims to run a micro-batch query that processes data every 5
 
 ## Question 12: Streaming Write Issues
 
-**Question**: What is wrong with the following code?
+**Question** *(Medium)*: What is wrong with the following code?
 
 ```python
 df = spark.read.json("data/")
@@ -159,7 +159,7 @@ df.write.save("output", format="delta")
 
 ## Question 13: CREATE TABLE from CSV Keyword
 
-**Question**: A data engineer needs to create a table in Databricks using data from a CSV file. They run a `CREATE TABLE` command that already specifies the CSV path and format in the statement body. Which additional line of code completes the blank?
+**Question** *(Easy)*: A data engineer needs to create a table in Databricks using data from a CSV file. They run a `CREATE TABLE` command that already specifies the CSV path and format in the statement body. Which additional line of code completes the blank?
 
 > [!success]- Answer
 > No additional line is needed.
@@ -172,7 +172,7 @@ df.write.save("output", format="delta")
 
 ## Question 14: Process All Available Data Trigger
 
-**Question**: A data engineer sets up a Structured Streaming job to read from a table and write results to a new table. The code block is shown below:
+**Question** *(Medium)*: A data engineer sets up a Structured Streaming job to read from a table and write results to a new table. The code block is shown below:
 
 ```python
 (spark.table("transactions")
@@ -195,7 +195,7 @@ If the data engineer intends for the query to process all available data across 
 
 ## Question 15: Auto Loader JSON String Inference
 
-**Question**: A data engineer creates a pipeline to ingest JSON data via Auto Loader with no type inference or schema hints specified. After examining the data, all columns in the target table are of string type, even for fields containing only float or boolean values. Why does Auto Loader infer all columns as string type?
+**Question** *(Medium)*: A data engineer creates a pipeline to ingest JSON data via Auto Loader with no type inference or schema hints specified. After examining the data, all columns in the target table are of string type, even for fields containing only float or boolean values. Why does Auto Loader infer all columns as string type?
 
 > [!success]- Answer
 > JSON data is a text-based format.
@@ -206,7 +206,7 @@ If the data engineer intends for the query to process all available data across 
 
 ## Question 16: DLT Pipeline Minimum Requirement
 
-**Question**: What needs to be specified when creating a new Delta Live Tables pipeline?
+**Question** *(Easy)*: What needs to be specified when creating a new Delta Live Tables pipeline?
 
 > [!success]- Answer
 > At least one notebook library to be executed.
@@ -217,7 +217,7 @@ If the data engineer intends for the query to process all available data across 
 
 ## Question 17: STREAM() Function in DLT
 
-**Question**: A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a DLT SQL query. What explains its inclusion?
+**Question** *(Medium)*: A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a DLT SQL query. What explains its inclusion?
 
 > [!success]- Answer
 > The referenced table is a streaming live table.
@@ -228,7 +228,7 @@ If the data engineer intends for the query to process all available data across 
 
 ## Question 18: Auto Loader Compatible Workloads
 
-**Question**: What type of workloads are consistently compatible with Auto Loader?
+**Question** *(Easy)*: What type of workloads are consistently compatible with Auto Loader?
 
 > [!success]- Answer
 > Both streaming and batch workloads.
@@ -239,7 +239,7 @@ If the data engineer intends for the query to process all available data across 
 
 ## Question 19: DLT Migration Changes
 
-**Question**: A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Delta Live Tables. What changes are necessary?
+**Question** *(Medium)*: A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Delta Live Tables. What changes are necessary?
 
 > [!success]- Answer
 > No changes are required.
@@ -250,7 +250,7 @@ If the data engineer intends for the query to process all available data across 
 
 ## Question 20: spark.read to spark.readStream
 
-**Question**: A data engineer utilizes this code block within a batch ingestion pipeline to read from a Delta table:
+**Question** *(Easy)*: A data engineer utilizes this code block within a batch ingestion pipeline to read from a Delta table:
 
 ```python
 df = (spark.read
@@ -270,7 +270,7 @@ What single change must be made for this code block to work correctly when the `
 
 ## Question 21: Streaming DataFrame Write API Error
 
-**Question**: Why will the following code fail?
+**Question** *(Medium)*: Why will the following code fail?
 
 ```python
 df = spark.readStream.format("delta").load("dbfs:/delta/events")
@@ -286,7 +286,7 @@ df.write.csv("output")
 
 ## Question 22: Missing Checkpoint in Streaming Write
 
-**Question**: What is missing from this streaming write?
+**Question** *(Medium)*: What is missing from this streaming write?
 
 ```python
 df.writeStream.format("delta").start("output")

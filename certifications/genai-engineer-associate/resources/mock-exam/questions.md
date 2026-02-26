@@ -17,7 +17,7 @@ Set a 90-minute timer and answer all 45 questions before checking answers.
 
 ---
 
-## Question 1
+## Question 1 *(Medium)*
 
 **Question**: A retail company wants to allow customers to ask natural language questions about their product catalog (50,000 products, updated daily). The answers must reflect today's inventory. Which architecture is MOST appropriate?
 
@@ -33,7 +33,7 @@ D) Build a classification model that maps questions to product categories
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 **Question**: A developer decides between recursive character text splitting and fixed-size chunking for a document corpus consisting of structured legal contracts with clearly defined numbered clauses. Which is MOST appropriate?
 
@@ -49,7 +49,7 @@ D) Page-level chunking — legal documents are formatted consistently page by pa
 
 ---
 
-## Question 3
+## Question 3 *(Medium)*
 
 **Question**: A developer configures their RAG pipeline with top-k=10 retrieval. The LLM produces verbose, unfocused answers that include information from many unrelated chunks. What is the MOST appropriate adjustment?
 
@@ -65,7 +65,7 @@ D) Increase the chunk size to reduce the total number of retrieved chunks
 
 ---
 
-## Question 4
+## Question 4 *(Hard)*
 
 **Question**: A RAG pipeline consistently returns good retrieval results for concrete factual questions but fails for abstract questions like "What are the strategic risks discussed in the annual reports?" Which technique MOST improves results for abstract queries?
 
@@ -81,7 +81,7 @@ D) Add metadata filters for the `strategic_risk` category
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 **Question**: A developer uses `mlflow.evaluate()` to score their RAG pipeline and gets a faithfulness score of 0.4 (scale 0–1). What does this indicate?
 
@@ -97,7 +97,7 @@ D) The retrieval step successfully finds the correct document 40% of the time
 
 ---
 
-## Question 6
+## Question 6 *(Easy)*
 
 **Question**: A team uses RAG to power an internal HR chatbot. HR policies are updated quarterly. Which approach CORRECTLY handles policy updates?
 
@@ -113,7 +113,7 @@ D) Fine-tune the LLM's embedding layer on the new documents
 
 ---
 
-## Question 7
+## Question 7 *(Hard)*
 
 **Question**: A developer evaluates two RAG pipelines. Pipeline A achieves precision@5 = 0.8 but faithfulness = 0.5. Pipeline B achieves precision@5 = 0.6 but faithfulness = 0.9. Which pipeline should be preferred for a production customer-facing application, and why?
 
@@ -129,7 +129,7 @@ D) Neither is acceptable — both metrics must exceed 0.9 before production depl
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 **Question**: A company wants to build a multi-modal RAG system that can answer questions about both product text descriptions and product images. What must the embedding model support?
 
@@ -145,7 +145,7 @@ D) OCR to convert all images to text before embedding
 
 ---
 
-## Question 9
+## Question 9 *(Medium)*
 
 **Question**: A developer's RAG pipeline answers questions about a company's internal API documentation. Users complain that answers are cut off mid-explanation. What is the MOST likely root cause?
 
@@ -161,7 +161,7 @@ D) The LLM's temperature is set too low, causing early stopping
 
 ---
 
-## Question 10
+## Question 10 *(Medium)*
 
 **Question**: A team implements a RAG pipeline for a legal QA system and wants to ensure that retrieved passages are from documents uploaded no more than 12 months ago. How is this constraint BEST implemented?
 
@@ -177,7 +177,7 @@ D) Fine-tune the LLM to ignore outdated legal citations
 
 ---
 
-## Question 11
+## Question 11 *(Easy)*
 
 **Question**: What is the PRIMARY reason RAG is preferred over fine-tuning for grounding LLM responses in proprietary company data?
 
@@ -193,7 +193,7 @@ D) RAG eliminates the need for an embedding model
 
 ---
 
-## Question 12
+## Question 12 *(Easy)*
 
 **Question**: A developer implements parent-child chunking. Child chunks are 128 tokens with 20-token overlap. Parent chunks are 512 tokens. During retrieval, which chunks are passed to the LLM?
 
@@ -209,7 +209,7 @@ D) The midpoint chunk (320 tokens) between child and parent size
 
 ---
 
-## Question 13
+## Question 13 *(Hard)*
 
 **Question**: A RAG pipeline's `answer_relevance` score is 0.9 but its `faithfulness` score is 0.4. What does this combination indicate?
 
@@ -225,7 +225,7 @@ D) The embedding model is producing high-quality vectors but retrieval recall is
 
 ---
 
-## Question 14
+## Question 14 *(Medium)*
 
 **Question**: A developer wants to implement re-ranking in their RAG pipeline to improve precision. Which architecture is CORRECT?
 
@@ -245,7 +245,7 @@ D) Apply BM25 as a post-retrieval filter to remove semantically dissimilar docum
 
 ---
 
-## Question 15
+## Question 15 *(Easy)*
 
 **Question**: A team creates a Delta Sync Index with `pipeline_type="CONTINUOUS"` on a Delta table. When a new row is inserted into the source table, when is the index updated?
 
@@ -261,7 +261,7 @@ D) The index is updated on a fixed 24-hour schedule
 
 ---
 
-## Question 16
+## Question 16 *(Easy)*
 
 **Question**: A team wants to create a Databricks Vector Search index on a table that is NOT managed by Databricks (e.g., an external system writes embeddings computed abroad). Which index type is CORRECT?
 
@@ -277,7 +277,7 @@ D) Managed Sync Index
 
 ---
 
-## Question 17
+## Question 17 *(Easy)*
 
 **Question**: A developer creates a Vector Search index using the `COSINE` similarity metric. At query time, a higher cosine similarity score between the query vector and a document vector indicates what?
 
@@ -293,7 +293,7 @@ D) The document chunk is shorter and therefore more specific
 
 ---
 
-## Question 18
+## Question 18 *(Medium)*
 
 **Question**: A developer is building a product search feature. Users search using image uploads (not text). The product catalog documents are stored as text. Which embedding approach enables cross-modal retrieval?
 
@@ -309,7 +309,7 @@ D) Use a text-only embedding model and convert user images to a text description
 
 ---
 
-## Question 19
+## Question 19 *(Medium)*
 
 **Question**: A developer queries a Databricks Vector Search index and receives results with low similarity scores despite the user's query being clearly relevant to indexed content. What is the MOST likely cause?
 
@@ -325,7 +325,7 @@ D) The Vector Search endpoint has not been started
 
 ---
 
-## Question 20
+## Question 20 *(Easy)*
 
 **Question**: A data engineer needs to add 10,000 new product embeddings to an existing Direct Access Index. Which SDK method is correct?
 
@@ -341,7 +341,7 @@ D) `index.merge(embeddings=new_embeddings_df)`
 
 ---
 
-## Question 21
+## Question 21 *(Medium)*
 
 **Question**: For a customer support chatbot, a developer can choose between `databricks-bge-large-en` (MTEB score 63.6, 1024-dim) and `databricks-gte-large-en` (MTEB score 63.1, 1024-dim). Which factor MOST influences the decision?
 
@@ -357,7 +357,7 @@ D) The models are equivalent; choose based on alphabetical order
 
 ---
 
-## Question 22
+## Question 22 *(Hard)*
 
 **Question**: A developer wants to filter Vector Search results to documents where the `status` field equals `"active"` AND the `priority` field is greater than 3. Which filter dictionary is CORRECT?
 
@@ -373,7 +373,7 @@ D) `filters="status = 'active' AND priority > 3"`
 
 ---
 
-## Question 23
+## Question 23 *(Hard)*
 
 **Question**: A team indexes 1 million product embeddings and notices that query latency increases significantly as the index grows. Which index configuration change is MOST likely to improve query latency?
 
@@ -389,7 +389,7 @@ D) Switch from COSINE to L2 similarity metric
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 **Question**: A team stores embeddings for 500,000 documents using `databricks-bge-large-en` (1024-dim, float32). Approximately how much storage do the raw vectors require?
 
@@ -405,7 +405,7 @@ D) ~200 GB
 
 ---
 
-## Question 25
+## Question 25 *(Easy)*
 
 **Question**: A developer deletes a document from the source Delta table. With a Delta Sync Index in `CONTINUOUS` mode, what happens to the corresponding document's embedding in the vector index?
 
@@ -425,7 +425,7 @@ D) The entire index must be rebuilt to remove the deleted document's embedding
 
 ---
 
-## Question 26
+## Question 26 *(Easy)*
 
 **Question**: A developer wants all LangChain chain calls in their notebook to be traced and logged to MLflow automatically. Which single line of code accomplishes this?
 
@@ -441,7 +441,7 @@ D) `mlflow.set_tracking_uri("databricks")`
 
 ---
 
-## Question 27
+## Question 27 *(Hard)*
 
 **Question**: A developer passes the system prompt: "You are a helpful assistant. Answer only from the provided context. If the answer is not in the context, say 'I don't know.'" — but the LLM still generates answers from its parametric knowledge. What is the MOST likely cause?
 
@@ -457,7 +457,7 @@ D) The temperature parameter is too high
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 **Question**: A developer builds a multi-turn chatbot using LangChain with `ConversationBufferMemory`. After 50 conversation turns, the LLM API returns a context length exceeded error. What is the BEST solution?
 
@@ -473,7 +473,7 @@ D) Reduce the LLM's `max_tokens` parameter
 
 ---
 
-## Question 29
+## Question 29 *(Medium)*
 
 **Question**: A developer uses `mlflow.evaluate()` to score a RAG pipeline with `model_type="question-answering"`. The evaluation dataset contains `inputs`, `outputs` (model-generated answers), and `contexts` (retrieved chunks). Which column provides the retrieved context to the faithfulness metric?
 
@@ -489,7 +489,7 @@ D) `targets`
 
 ---
 
-## Question 30
+## Question 30 *(Easy)*
 
 **Question**: A LangChain application uses a `ConversationChain` with `ConversationSummaryMemory`. What does `ConversationSummaryMemory` store between turns?
 
@@ -505,7 +505,7 @@ D) Only the last user message and the LLM's most recent response
 
 ---
 
-## Question 31
+## Question 31 *(Easy)*
 
 **Question**: A developer wants to create a LangChain agent that can use three tools: `search_database`, `call_weather_api`, and `lookup_inventory`. Which component decides which tool to call for a given user input?
 
@@ -521,7 +521,7 @@ D) The `RetrievalQA` chain automatically routes to the appropriate retriever
 
 ---
 
-## Question 32
+## Question 32 *(Medium)*
 
 **Question**: A developer logs a LangChain `RetrievalQA` chain with `mlflow.langchain.log_model()` and wants to load it back for inference. Which code is correct?
 
@@ -537,7 +537,7 @@ D) `chain = pickle.load(open(model_uri, "rb"))`
 
 ---
 
-## Question 33
+## Question 33 *(Easy)*
 
 **Question**: A developer configures a LangChain `RetrievalQA` chain with `chain_type="stuff"`. What does this configuration do with retrieved documents?
 
@@ -553,7 +553,7 @@ D) Splits retrieved documents into smaller chunks before passing to the LLM
 
 ---
 
-## Question 34
+## Question 34 *(Hard)*
 
 **Question**: A developer needs to prevent their LangChain agent from calling the `delete_database` tool unless the user's message explicitly contains the word "delete". Which is the MOST appropriate implementation?
 
@@ -569,7 +569,7 @@ D) Set the LLM's temperature to 0 to prevent unexpected tool calls
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 **Question**: A team wants to A/B test two different system prompts for their RAG chatbot. MLflow evaluation will be run on the same 100-question test set for both prompts. Which MLflow feature enables systematic comparison?
 
@@ -585,7 +585,7 @@ D) Databricks Workflows — schedule two workflows, one per prompt
 
 ---
 
-## Question 36
+## Question 36 *(Easy)*
 
 **Question**: A developer sets `temperature=0.0` when calling a Foundation Model API endpoint. What is the effect?
 
@@ -601,7 +601,7 @@ D) The model skips the context window and uses only parametric knowledge
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 **Question**: A developer builds a LangChain pipeline where Step 1 extracts key entities from the user query, and Step 2 uses those entities to formulate a database query. Which LangChain construct is MOST appropriate?
 
@@ -617,7 +617,7 @@ D) Two separate `LLMChain` objects called independently and joined with Python s
 
 ---
 
-## Question 38
+## Question 38 *(Hard)*
 
 **Question**: A developer uses `mlflow.evaluate()` with a custom judge model for evaluating response quality. The judge model is a Foundation Model API endpoint. Which parameter specifies the judge model?
 
@@ -637,7 +637,7 @@ D) `model_type="llm-judge"` with `judge_endpoint="databricks-dbrx-instruct"`
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 **Question**: A team's production RAG chatbot handles 500 requests per minute with strict p99 latency requirements under 2 seconds. Which Foundation Model API endpoint type is MOST appropriate?
 
@@ -653,7 +653,7 @@ D) Batch Inference endpoint — processes all 500 requests in parallel
 
 ---
 
-## Question 40
+## Question 40 *(Medium)*
 
 **Question**: A developer registers a LangChain chain as an MLflow model. Which `mlflow.evaluate()` input format correctly measures chain performance on a test dataset?
 
@@ -669,7 +669,7 @@ D) A dictionary with `questions` and `expected_answers` keys
 
 ---
 
-## Question 41
+## Question 41 *(Easy)*
 
 **Question**: A team deploys a Model Serving endpoint for their RAG chain and enables inference tables. Where are the logged request/response payloads stored?
 
@@ -685,7 +685,7 @@ D) In the Databricks audit log accessible via `system.access.audit`
 
 ---
 
-## Question 42
+## Question 42 *(Medium)*
 
 **Question**: A developer queries a `databricks-meta-llama-3-1-70b-instruct` Foundation Model endpoint and needs the response to be in JSON format with specific fields. Which approach is MOST reliable?
 
@@ -701,7 +701,7 @@ D) Set `max_tokens=100` to prevent the model from generating extra text
 
 ---
 
-## Question 43
+## Question 43 *(Medium)*
 
 **Question**: An organization wants to use Databricks Foundation Model APIs for internal use but prevent individual teams from storing API keys in their notebooks. Which Databricks feature enables centralized credential management for Foundation Model endpoints?
 
@@ -717,7 +717,7 @@ D) Cluster-level environment variables set by workspace administrators
 
 ---
 
-## Question 44
+## Question 44 *(Medium)*
 
 **Question**: A developer logs a LangChain chain to MLflow and wants to deploy it as a REST endpoint on Databricks Model Serving. What is the EXACT correct sequence of steps?
 
@@ -733,7 +733,7 @@ D) Create serving endpoint → Log model → Register to Model Registry
 
 ---
 
-## Question 45
+## Question 45 *(Hard)*
 
 **Question**: A team uses `mlflow.evaluate()` to score their RAG chain and gets these results: `faithfulness=0.85`, `answer_relevance=0.90`, `toxicity=0.02`. Which conclusion is MOST accurate?
 

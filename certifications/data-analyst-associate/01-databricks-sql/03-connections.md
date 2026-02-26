@@ -478,20 +478,15 @@ Ports required:
 
 ## Use Cases
 
-- **Connections & Integrations Implementation**: Incorporating Connections & Integrations principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Connections & Integrations Workflows**: Using the advanced capabilities of Connections & Integrations to automate processes and reduce manual operational overhead.
+- **BI Tool Integration**: Connecting Tableau, Power BI, or Excel to a SQL warehouse via JDBC/ODBC so analysts can build reports using their preferred tools.
+- **Programmatic Data Access**: Using the Python SQL connector or REST API to extract query results into downstream applications or automated pipelines.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### JDBC/ODBC Connection Drops
 
-**Scenario:** The default settings for Connections & Integrations do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Connections & Integrations to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Connections & Integrations to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Connections & Integrations prior to deployment.
+**Scenario:** BI tool loses connection to SQL warehouse after idle period.
+**Fix:** SQL warehouses auto-suspend after inactivity. Configure the BI tool to reconnect automatically, or increase the warehouse auto-stop timeout.
 
 ## Exam Tips
 

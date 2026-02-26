@@ -433,8 +433,8 @@ When DST changes occur:
 
 ## Use Cases
 
-- **Scheduling and Triggers Implementation**: Incorporating Scheduling and Triggers principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Scheduling and Triggers Workflows**: Using the advanced capabilities of Scheduling and Triggers to automate processes and reduce manual operational overhead.
+- **Time-Based Batch Scheduling**: Running nightly ETL jobs at 2 AM via cron expressions to process the previous day's data before business users arrive, with timezone-aware scheduling for global teams.
+- **Event-Driven Ingestion via File Arrival**: Triggering a job automatically when new files land in cloud storage (S3/ADLS), eliminating polling delays and processing data as soon as it becomes available.
 
 ## Common Issues & Errors
 
@@ -443,10 +443,15 @@ When DST changes occur:
 **Scenario:** The default settings for Scheduling and Triggers do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Scheduling and Triggers to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Cron Schedule Running at Wrong Time Due to Timezone
 
-**Scenario:** Connecting Scheduling and Triggers to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Scheduling and Triggers prior to deployment.
+**Scenario:** A job scheduled for 2 AM local time runs at the wrong hour because the timezone was not explicitly set, defaulting to UTC.
+**Fix:** Always set `timezone_id` explicitly in the schedule configuration (e.g., `"timezone_id": "America/New_York"`). Document the intended timezone in the job description for clarity.
+
+### Overlapping Job Runs From File-Arrival Triggers
+
+**Scenario:** A file-arrival trigger fires multiple times in rapid succession (e.g., batch of files landing simultaneously), causing duplicate or concurrent job runs that corrupt downstream tables.
+**Fix:** Set `max_concurrent_runs = 1` in the job definition to prevent parallel execution. The overlapping trigger will be skipped, and data will be picked up on the next run.
 
 ## Exam Tips
 

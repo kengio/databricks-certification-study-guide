@@ -619,8 +619,8 @@ log_feature_computation_metrics(
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Feature Store Production Patterns Workflows**: Using the advanced capabilities of Feature Store Production Patterns to automate processes and reduce manual operational overhead.
+- **Batch-to-Online Feature Pipeline**: Running a nightly Spark job that computes aggregated user features, writes them to a Unity Catalog feature table, and publishes to an online store (Cosmos DB / DynamoDB) for sub-50ms serving at inference time.
+- **Low-Latency Recommendation Serving**: Pre-computing user-item affinity features in batch, publishing to an online store (Cosmos DB / DynamoDB), and serving them at <50ms p99 to a real-time recommendation endpoint.
 
 ## Common Issues & Errors
 
@@ -629,10 +629,10 @@ log_feature_computation_metrics(
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Online Store Serving Latency Too High
 
-**Scenario:** Connecting Feature Store Production Patterns to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Store Production Patterns prior to deployment.
+**Scenario:** A model serving endpoint that performs online feature lookups exceeds the 100ms SLA because each request triggers individual key lookups against a remote online store.
+**Fix:** Batch feature lookups into a single multi-key request using `score_batch()` where possible, or pre-join frequently co-requested features into a single composite feature table with a shared primary key. Monitor p99 latency via the Model Serving metrics dashboard.
 
 ## Related Topics
 

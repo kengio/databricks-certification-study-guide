@@ -346,8 +346,8 @@ Model Serving using `agents.deploy()`.
 
 ## Use Cases
 
-- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
-- **Optimized LLM Chains & Agents Workflows**: Using the advanced capabilities of LLM Chains & Agents to automate processes and reduce manual operational overhead.
+- **Multi-Step Research Agent**: An agent that decomposes complex user questions into sub-queries, calls a Vector Search tool for each sub-query, aggregates the retrieved context, and generates a synthesised answer -- handling questions like "Compare our Q1 and Q2 revenue trends" that require multiple retrieval steps.
+- **RAG Chain with Guardrails**: An LCEL chain that pipes user input through a content-filter step, retrieves relevant chunks, generates an answer, and passes the output through a safety classifier before returning -- ensuring policy-compliant responses in a regulated industry chatbot.
 
 ## Common Issues & Errors
 
@@ -356,10 +356,10 @@ Model Serving using `agents.deploy()`.
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
-### Integration Bottlenecks
+### Agent Stuck in Infinite Tool-Call Loop
 
-**Scenario:** Connecting LLM Chains & Agents to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for LLM Chains & Agents prior to deployment.
+**Scenario:** A ReAct agent repeatedly calls the same tool with identical arguments, never producing a final answer, consuming tokens and racking up cost.
+**Fix:** Set a `max_iterations` limit on the agent executor (e.g., 5-10 iterations). Add a system prompt instruction: "If you have already called a tool and received its result, do not call the same tool again with the same arguments." Monitor agent traces in MLflow to identify looping patterns during development.
 
 ## Key Takeaways
 

@@ -400,8 +400,8 @@ CREATE METASTORE ASSIGNMENT catalog_name
 
 ## Use Cases
 
-- **Unity Catalog Basics Implementation**: Incorporating Unity Catalog Basics principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Unity Catalog Basics Workflows**: Using the advanced capabilities of Unity Catalog Basics to automate processes and reduce manual operational overhead.
+- **Centralized Multi-Environment Governance**: Organizing data into separate catalogs (`prod`, `staging`, `dev`) so that access controls, lineage tracking, and audit logging apply consistently across all environments from a single metastore.
+- **Cross-Team Data Discovery**: Enabling analysts and data scientists to browse the three-level namespace (`catalog.schema.table`) to discover and request access to datasets without needing direct knowledge of storage locations or file paths.
 
 ## Common Issues & Errors
 
@@ -410,10 +410,15 @@ CREATE METASTORE ASSIGNMENT catalog_name
 **Scenario:** The default settings for Unity Catalog Basics do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Unity Catalog Basics to handle production-scale workloads.
 
-### Integration Bottlenecks
+### INSUFFICIENT_PERMISSIONS When Querying Across Catalogs
 
-**Scenario:** Connecting Unity Catalog Basics to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Unity Catalog Basics prior to deployment.
+**Scenario:** A user receives `INSUFFICIENT_PERMISSIONS` when running `SELECT * FROM other_catalog.schema.table` even though they have `SELECT` on the table.
+**Fix:** Verify that the user also has `USE CATALOG` on the target catalog and `USE SCHEMA` on the target schema. All three privileges (`USE CATALOG` + `USE SCHEMA` + `SELECT`) are required to query a table.
+
+### Metastore Not Attached to Workspace
+
+**Scenario:** Unity Catalog objects are not visible in the workspace, and `SHOW CATALOGS` returns empty results or an error because no metastore is attached.
+**Fix:** A workspace admin or account admin must attach the Unity Catalog metastore to the workspace via the account console. Each workspace must be explicitly associated with a regional metastore.
 
 ## Exam Tips
 

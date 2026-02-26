@@ -449,20 +449,15 @@ curl -X POST \
 
 ## Use Cases
 
-- **Query Editor & Execution Implementation**: Incorporating Query Editor & Execution principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Query Editor & Execution Workflows**: Using the advanced capabilities of Query Editor & Execution to automate processes and reduce manual operational overhead.
+- **Ad-hoc Data Exploration**: Analysts use the query editor to quickly explore datasets, test hypotheses, and prototype queries before embedding them in dashboards.
+- **Parameterized Reporting**: Building reusable queries with `{{ parameters }}` that non-technical stakeholders can filter without modifying SQL code.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Query Results Truncated
 
-**Scenario:** The default settings for Query Editor & Execution do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Query Editor & Execution to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Query Editor & Execution to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Query Editor & Execution prior to deployment.
+**Scenario:** Query editor shows partial results for large result sets.
+**Fix:** The editor limits displayed rows (default 1000). Use `LIMIT` to control output or export full results to a file.
 
 ## Exam Tips
 

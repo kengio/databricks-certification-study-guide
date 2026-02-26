@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, monitoring-logging]
 
 **Scenario**: A data engineer needs to track compute costs by team over the past month.
 
-**Question**: Which system table provides this information?
+**Question** *(Easy)*: Which system table provides this information?
 
 A) `system.access.audit`
 B) `system.billing.usage`
@@ -28,7 +28,7 @@ D) `system.query.history`
 
 **Scenario**: A Spark job is experiencing long task times with high "Shuffle Read Blocked Time."
 
-**Question**: What does this indicate?
+**Question** *(Medium)*: What does this indicate?
 
 A) Too few partitions
 B) Network congestion or slow shuffle fetch
@@ -46,7 +46,7 @@ D) Insufficient disk space
 
 **Scenario**: A DLT pipeline ran with data quality issues. The team needs to find how many records failed expectations.
 
-**Question**: How can this information be retrieved?
+**Question** *(Easy)*: How can this information be retrieved?
 
 A) Query the Delta table directly
 B) Check the Spark UI
@@ -64,7 +64,7 @@ D) Review the cluster logs
 
 **Scenario**: A SQL query is running slowly. The data engineer wants to see if partition pruning is working.
 
-**Question**: What should they look for in EXPLAIN output?
+**Question** *(Medium)*: What should they look for in EXPLAIN output?
 
 A) `PartitionFilters` showing filter conditions
 B) `DataFilters` showing filter conditions
@@ -82,7 +82,7 @@ D) All of the above indicate different types of filtering
 
 **Scenario**: A job has 99 tasks completing in 1 minute but one task takes 30 minutes.
 
-**Question**: What is the most likely cause?
+**Question** *(Medium)*: What is the most likely cause?
 
 A) Insufficient cluster memory
 B) Data skew in partition keys

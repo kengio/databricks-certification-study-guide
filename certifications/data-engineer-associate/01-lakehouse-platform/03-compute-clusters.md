@@ -300,8 +300,8 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 
 ## Use Cases
 
-- **Compute and Clusters Implementation**: Incorporating Compute and Clusters principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Compute and Clusters Workflows**: Using the advanced capabilities of Compute and Clusters to automate processes and reduce manual operational overhead.
+- **Right-Sizing for Cost Optimization**: Selecting appropriate node types and auto-scaling ranges based on workload profiling to balance performance and cost for both interactive development and production jobs.
+- **Cluster Pools for Fast Startup**: Pre-provisioning idle instances in cluster pools so that job clusters spin up in under a minute, enabling tight SLA adherence for time-sensitive data pipelines.
 
 ## Common Issues & Errors
 
@@ -310,10 +310,15 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 **Scenario:** The default settings for Compute and Clusters do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compute and Clusters to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Auto-Termination Kills Long-Running Jobs
 
-**Scenario:** Connecting Compute and Clusters to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Compute and Clusters prior to deployment.
+**Scenario:** A cluster's auto-termination setting shuts down the cluster while a long-running job is still executing, causing the job to fail.
+**Fix:** Increase the auto-termination timeout for interactive clusters running long workloads, or use dedicated job clusters that only terminate when the job completes.
+
+### Cluster Startup Time Delays
+
+**Scenario:** Job clusters take 5-10 minutes to provision, causing unacceptable latency for time-sensitive pipelines.
+**Fix:** Use cluster pools to pre-provision idle instances, reducing startup time to under a minute for new clusters drawn from the pool.
 
 ## Exam Tips
 

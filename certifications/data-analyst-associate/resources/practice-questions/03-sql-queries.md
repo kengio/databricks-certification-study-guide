@@ -12,7 +12,7 @@ tags: [data-analyst-associate, practice-questions, sql, joins, window-functions]
 
 ---
 
-## Question 1: INNER JOIN vs LEFT JOIN
+## Question 1: INNER JOIN vs LEFT JOIN *(Medium)*
 
 A query needs all employees and their department names, including employees without a department.
 Which JOIN type should be used?
@@ -30,7 +30,7 @@ D) SEMI JOIN — checks for existence only
 
 ---
 
-## Question 2: Window Function — ROW_NUMBER
+## Question 2: Window Function — ROW_NUMBER *(Medium)*
 
 A query must return one row per customer with the highest purchase amount. Which window function
 assigns a unique rank per customer?
@@ -49,7 +49,7 @@ D) `NTILE(1) OVER (PARTITION BY customer_id ORDER BY amount DESC)`
 
 ---
 
-## Question 3: RANK vs DENSE_RANK
+## Question 3: RANK vs DENSE_RANK *(Hard)*
 
 Sales figures are: Alice=100, Bob=100, Carol=90. Using `RANK()` and `DENSE_RANK()`, what are
 Carol's values?
@@ -67,7 +67,7 @@ D) `RANK()` = 3, `DENSE_RANK()` = 3
 
 ---
 
-## Question 4: LAG Function
+## Question 4: LAG Function *(Medium)*
 
 A query calculates the change in monthly sales vs the previous month. Which function retrieves the
 previous month's value?
@@ -86,7 +86,7 @@ D) `OFFSET(sales, 1) OVER (ORDER BY month)`
 
 ---
 
-## Question 5: QUALIFY Clause
+## Question 5: QUALIFY Clause *(Hard)*
 
 An analyst wants to return only the top-ranked product per category (based on revenue), using
 window functions. Which clause filters on the window function result?
@@ -105,7 +105,7 @@ D) `FILTER (WHERE rank = 1)`
 
 ---
 
-## Question 6: Running Total
+## Question 6: Running Total *(Medium)*
 
 An analyst needs a running total of sales, ordered by date, within each region. Which expression
 computes this?
@@ -124,7 +124,7 @@ D) `CUMSUM(sales) OVER (PARTITION BY region ORDER BY date)`
 
 ---
 
-## Question 7: CTE vs Subquery
+## Question 7: CTE vs Subquery *(Easy)*
 
 Which statement about CTEs (Common Table Expressions) is TRUE?
 
@@ -142,7 +142,7 @@ D) CTEs are materialized by default in Databricks SQL
 
 ---
 
-## Question 8: EXPLODE for Arrays
+## Question 8: EXPLODE for Arrays *(Easy)*
 
 A table has a `tags` column of type `ARRAY<STRING>`. A query needs one row per tag. Which function
 produces this?
@@ -161,7 +161,7 @@ D) `SPLIT(tags, ',')`
 
 ---
 
-## Question 9: COLLECT_LIST Aggregation
+## Question 9: COLLECT_LIST Aggregation *(Easy)*
 
 Which aggregate function combines multiple row values into an array?
 
@@ -179,7 +179,7 @@ D) `CONCAT_WS`
 
 ---
 
-## Question 10: ANTI JOIN
+## Question 10: ANTI JOIN *(Medium)*
 
 A query needs all customers who have NOT made a purchase. Which JOIN type filters for non-matches?
 
@@ -197,7 +197,7 @@ D) `OUTER JOIN ... WHERE purchase_id IS NULL`
 
 ---
 
-## Question 11: PIVOT Syntax
+## Question 11: PIVOT Syntax *(Medium)*
 
 An analyst wants to pivot monthly sales into columns (Jan, Feb, Mar). Which SQL feature
 accomplishes this?
@@ -217,7 +217,7 @@ D) `TRANSPOSE(sales, month)`
 
 ---
 
-## Question 12: HAVING vs WHERE
+## Question 12: HAVING vs WHERE *(Medium)*
 
 An analyst writes a query with `WHERE COUNT(*) > 5` and gets an error. What is the correct
 approach?
@@ -236,7 +236,7 @@ D) Add `ORDER BY COUNT(*)` after WHERE
 
 ---
 
-## Question 13: Date Function
+## Question 13: Date Function *(Easy)*
 
 Which function returns the number of days between `order_date` and today?
 
@@ -254,7 +254,7 @@ D) `TIMESTAMPDIFF('day', order_date, current_date())`
 
 ---
 
-## Question 14: String Function — SUBSTRING
+## Question 14: String Function — SUBSTRING *(Hard)*
 
 Which expression extracts characters 2 through 5 from the `product_code` column?
 
@@ -273,7 +273,7 @@ D) `MID(product_code, 2, 4)`
 
 ---
 
-## Question 15: EXPLAIN Statement
+## Question 15: EXPLAIN Statement *(Easy)*
 
 A data analyst wants to understand why a SQL query is performing slowly. Which statement provides
 the query execution plan?
@@ -293,7 +293,7 @@ D) `ANALYZE SELECT ...`
 
 ---
 
-## Question 16: NULL Handling in Aggregations
+## Question 16: NULL Handling in Aggregations *(Medium)*
 
 A column `revenue` has some NULL values. What does `SUM(revenue)` return?
 
@@ -311,7 +311,7 @@ D) 0 — NULLs are treated as 0 in aggregations
 
 ---
 
-## Question 17: SEMI JOIN
+## Question 17: SEMI JOIN *(Medium)*
 
 A query returns all products that have at least one review. Which JOIN type is most appropriate?
 
@@ -329,7 +329,7 @@ D) CROSS JOIN
 
 ---
 
-## Question 18: Subquery in WHERE
+## Question 18: Subquery in WHERE *(Medium)*
 
 Which query returns employees earning more than the average salary?
 

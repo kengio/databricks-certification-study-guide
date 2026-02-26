@@ -14,7 +14,7 @@ tags: [data-analyst-associate, mock-exam, practice]
 
 ---
 
-## Question 1
+## Question 1 *(Easy)*
 
 Which SQL warehouse type provides near-instant startup with no cold start delay?
 
@@ -32,7 +32,7 @@ D) All warehouse types have instant startup
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 A team needs 8 concurrent analyst sessions without queue buildup. Which warehouse configuration supports this best?
 
@@ -50,7 +50,7 @@ D) Assign personal clusters to each analyst
 
 ---
 
-## Question 3
+## Question 3 *(Easy)*
 
 What does the SQL warehouse auto-stop feature do?
 
@@ -68,7 +68,7 @@ D) Prevents a warehouse from starting if another is already running
 
 ---
 
-## Question 4
+## Question 4 *(Easy)*
 
 An analyst needs to connect Power BI Desktop to a Databricks SQL warehouse. Which connection protocol should they use?
 
@@ -85,7 +85,7 @@ D) Direct cloud storage access (S3/ADLS)
 
 ---
 
-## Question 5
+## Question 5 *(Easy)*
 
 Row-level security via Unity Catalog row access policies is available on which SQL warehouse types?
 
@@ -103,7 +103,7 @@ D) All warehouse types equally
 
 ---
 
-## Question 6
+## Question 6 *(Medium)*
 
 Which Databricks SQL feature helps identify the most expensive queries by cost and duration?
 
@@ -121,7 +121,7 @@ D) MLflow experiment tracking
 
 ---
 
-## Question 7
+## Question 7 *(Easy)*
 
 Partner Connect in Databricks is used to:
 
@@ -139,7 +139,7 @@ D) Connect to on-premises databases over a VPN
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 A Serverless SQL warehouse has been idle for 10 minutes with no active queries. What happens next?
 
@@ -157,7 +157,7 @@ D) It must be restarted manually from the SQL Warehouses UI
 
 ---
 
-## Question 9
+## Question 9 *(Medium)*
 
 Which SQL warehouse size is most appropriate for a single analyst running exploratory queries on 10 GB of data?
 
@@ -175,7 +175,7 @@ D) Size does not affect query performance for Delta tables
 
 ---
 
-## Question 10
+## Question 10 *(Medium)*
 
 A SQL query in Databricks SQL reads from a Delta table. The identical query runs again 30 seconds later with no data changes in between. What happens?
 
@@ -197,7 +197,7 @@ D) Query caching only activates after a minimum of 5 minutes between runs
 
 ---
 
-## Question 11
+## Question 11 *(Easy)*
 
 What is the Unity Catalog three-level namespace?
 
@@ -215,7 +215,7 @@ D) environment.schema.table
 
 ---
 
-## Question 12
+## Question 12 *(Easy)*
 
 A managed Delta table is dropped with `DROP TABLE`. What happens to the underlying data files?
 
@@ -233,7 +233,7 @@ D) Files are archived in cloud storage for 90 days
 
 ---
 
-## Question 13
+## Question 13 *(Easy)*
 
 Which GRANT statement gives a user the ability to read data from a Delta table in Unity Catalog?
 
@@ -251,7 +251,7 @@ D) `GRANT ACCESS ON TABLE catalog.schema.table TO user`
 
 ---
 
-## Question 14
+## Question 14 *(Easy)*
 
 A data engineer appends data with new columns to an existing Delta table. Which write option enables schema evolution?
 
@@ -270,7 +270,7 @@ D) No option is needed — Delta always accepts new columns
 
 ---
 
-## Question 15
+## Question 15 *(Easy)*
 
 An external table pointing to `gs://bucket/data/` is dropped with `DROP TABLE`. What happens to the files in GCS?
 
@@ -288,7 +288,7 @@ D) Files are archived by Databricks for 30 days
 
 ---
 
-## Question 16
+## Question 16 *(Easy)*
 
 In Unity Catalog, what does `USE CATALOG my_catalog` accomplish?
 
@@ -306,7 +306,7 @@ D) Lists all objects in `my_catalog`
 
 ---
 
-## Question 17
+## Question 17 *(Easy)*
 
 Which statement correctly describes Delta Lake ACID transactions?
 
@@ -324,7 +324,7 @@ D) ACID compliance requires a Unity Catalog metastore to be attached
 
 ---
 
-## Question 18
+## Question 18 *(Easy)*
 
 What does `SHOW GRANTS ON TABLE catalog.schema.table` return?
 
@@ -342,7 +342,7 @@ D) Recent data access history for the table
 
 ---
 
-## Question 19
+## Question 19 *(Medium)*
 
 A data engineer runs:
 
@@ -372,7 +372,7 @@ D) The Delta transaction log is compacted and retained for 30 days
 
 ---
 
-## Question 20
+## Question 20 *(Easy)*
 
 Which window function returns the value from the next row in the result set?
 
@@ -390,7 +390,7 @@ D) `OFFSET(col, -1)`
 
 ---
 
-## Question 21
+## Question 21 *(Medium)*
 
 When two rows have the same value, which function produces gaps in the sequence of rank numbers?
 
@@ -408,7 +408,7 @@ D) Both `RANK()` and `ROW_NUMBER()` produce gaps for ties
 
 ---
 
-## Question 22
+## Question 22 *(Hard)*
 
 A query uses `SUM(revenue) OVER (PARTITION BY region)` with no `ORDER BY` clause. What does each row receive?
 
@@ -427,7 +427,7 @@ D) Each row's individual `revenue` value unchanged
 
 ---
 
-## Question 23
+## Question 23 *(Easy)*
 
 Which JOIN type returns rows from the left table only when no match exists in the right table?
 
@@ -445,7 +445,7 @@ D) EXCEPT
 
 ---
 
-## Question 24
+## Question 24 *(Hard)*
 
 An analyst writes `WHERE ROW_NUMBER() OVER (PARTITION BY id ORDER BY date DESC) = 1`. The query fails. What is the correct approach?
 
@@ -465,7 +465,7 @@ D) Add `GROUP BY` before the `WHERE` clause
 
 ---
 
-## Question 25
+## Question 25 *(Medium)*
 
 Which function flattens a nested array `[[1, 2], [3, 4]]` into `[1, 2, 3, 4]`?
 
@@ -483,7 +483,7 @@ D) `ARRAY_UNION(array_col)`
 
 ---
 
-## Question 26
+## Question 26 *(Easy)*
 
 What is the difference between `COLLECT_LIST(product)` and `COLLECT_SET(product)`?
 
@@ -501,7 +501,7 @@ D) `COLLECT_SET` is faster; `COLLECT_LIST` is used for large datasets only
 
 ---
 
-## Question 27
+## Question 27 *(Easy)*
 
 A CTE is defined as `WITH sales AS (SELECT ...)`. How many times can `sales` be referenced in the main query body?
 
@@ -519,7 +519,7 @@ D) CTEs cannot be reused — use subqueries for any reuse pattern
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 Which of the following aggregate functions ignores NULL values?
 
@@ -537,7 +537,7 @@ D) None — all aggregates in Databricks SQL include NULLs in their calculations
 
 ---
 
-## Question 29
+## Question 29 *(Easy)*
 
 `DATEDIFF(end_date, start_date)` — what does this function return in Databricks SQL?
 
@@ -555,7 +555,7 @@ D) A formatted string representing the interval
 
 ---
 
-## Question 30
+## Question 30 *(Easy)*
 
 Which SQL expression returns the current timestamp in Databricks SQL?
 
@@ -573,7 +573,7 @@ D) `NOW()` — only this form is valid
 
 ---
 
-## Question 31
+## Question 31 *(Medium)*
 
 Table A has 100 rows and table B has 50 rows. A `CROSS JOIN` is performed. How many rows are in the result?
 
@@ -591,7 +591,7 @@ D) 50 rows
 
 ---
 
-## Question 32
+## Question 32 *(Easy)*
 
 An analyst needs to filter rows where a window function result equals 1. Which SQL clause is designed for this purpose?
 
@@ -614,7 +614,7 @@ D) `FILTER ROW_NUMBER() OVER (...) = 1`
 
 ---
 
-## Question 33
+## Question 33 *(Easy)*
 
 Which dashboard widget is designed to display a single KPI value prominently, such as "Total Revenue: $1.2M"?
 
@@ -632,7 +632,7 @@ D) Pivot widget
 
 ---
 
-## Question 34
+## Question 34 *(Medium)*
 
 When is a pie chart the most appropriate visualization choice?
 
@@ -650,7 +650,7 @@ D) When one or more values are negative
 
 ---
 
-## Question 35
+## Question 35 *(Easy)*
 
 How is a refresh schedule configured on a Databricks SQL dashboard?
 
@@ -668,7 +668,7 @@ D) Dashboards cannot have refresh schedules — only individual queries can be s
 
 ---
 
-## Question 36
+## Question 36 *(Easy)*
 
 What is the `{{parameter_name}}` syntax used for in Databricks SQL queries?
 
@@ -686,7 +686,7 @@ D) Referencing the output of a previously run query
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 A SQL alert has the condition `WHEN VALUE > 1000`. The query returns 850. Does the alert fire?
 
@@ -704,7 +704,7 @@ D) The alert returns an error because the threshold was not met
 
 ---
 
-## Question 38
+## Question 38 *(Easy)*
 
 Which notification destination is NOT natively supported by Databricks SQL alerts?
 
@@ -722,7 +722,7 @@ D) SMS text message
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 A Lakeview Dashboard is shared with a user with "Can View" permission. What can that user do?
 
@@ -740,7 +740,7 @@ D) Change the dashboard's refresh schedule
 
 ---
 
-## Question 40
+## Question 40 *(Medium)*
 
 An analyst creates a line chart with `date` on the X-axis and `revenue` on the Y-axis. They want separate lines per region. Which configuration achieves this?
 
@@ -762,7 +762,7 @@ D) Set the chart color scheme to map colors by `revenue` value
 
 ---
 
-## Question 41
+## Question 41 *(Easy)*
 
 A dashboard filter passes a selected date to all underlying queries. Which SQL snippet correctly uses this parameter?
 
@@ -780,7 +780,7 @@ D) `WHERE order_date = $selected_date`
 
 ---
 
-## Question 42
+## Question 42 *(Medium)*
 
 An analyst needs a summary table refreshed nightly without manually running the query. What is the most appropriate approach?
 
@@ -798,7 +798,7 @@ D) Use Delta Live Tables — it is the only supported option for automated query
 
 ---
 
-## Question 43
+## Question 43 *(Hard)*
 
 A sales dashboard shows different data per sales rep based on who is logged in. This behavior is implemented with:
 
@@ -817,7 +817,7 @@ D) A Python UDF in the dashboard query that filters by session user
 
 ---
 
-## Question 44
+## Question 44 *(Medium)*
 
 A query result cache serves stale data after an ETL pipeline writes new data to the underlying Delta table. What invalidates the cache?
 
@@ -835,7 +835,7 @@ D) Restarting the SQL warehouse
 
 ---
 
-## Question 45
+## Question 45 *(Hard)*
 
 A compliance team requires that all SQL queries run on company data be logged with user identity for 90 days. Which Databricks feature best provides this?
 

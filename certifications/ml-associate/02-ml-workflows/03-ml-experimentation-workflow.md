@@ -538,7 +538,7 @@ Deploy & Monitor
 ## Use Cases
 
 - **ML Experimentation Workflow Implementation**: Incorporating ML Experimentation Workflow principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized ML Experimentation Workflow Workflows**: Using the advanced capabilities of ML Experimentation Workflow to automate processes and reduce manual operational overhead.
+- **Iterative Model Improvement**: Following a structured experiment cycle of feature engineering, algorithm selection, and hyperparameter tuning to systematically improve model performance from a baseline.
 
 ## Common Issues & Errors
 
@@ -547,10 +547,10 @@ Deploy & Monitor
 **Scenario:** The default settings for ML Experimentation Workflow do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for ML Experimentation Workflow to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Experiment Reproducibility Issues
 
-**Scenario:** Connecting ML Experimentation Workflow to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for ML Experimentation Workflow prior to deployment.
+**Scenario:** Re-running the same notebook produces different model metrics.
+**Fix:** Set random seeds (`random_state`, `np.random.seed`, `torch.manual_seed`), pin library versions, and log the full environment with `mlflow.log_artifact()`.
 
 ## Exam Tips
 

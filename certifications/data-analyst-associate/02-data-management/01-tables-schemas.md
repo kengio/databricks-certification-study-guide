@@ -449,20 +449,15 @@ AND status = 'active';
 
 ## Use Cases
 
-- **Tables & Schemas Implementation**: Incorporating Tables & Schemas principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Tables & Schemas Workflows**: Using the advanced capabilities of Tables & Schemas to automate processes and reduce manual operational overhead.
+- **Organizing Analytical Data**: Creating schemas by business domain (sales, marketing, finance) so analysts can discover and query tables using predictable naming conventions.
+- **Managed vs External Tables**: Using managed tables for production analytics and external tables for staging data from cloud storage before transformation.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Table Not Found After Creation
 
-**Scenario:** The default settings for Tables & Schemas do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Tables & Schemas to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Tables & Schemas to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Tables & Schemas prior to deployment.
+**Scenario:** `CREATE TABLE` succeeds but `SELECT` fails with table not found.
+**Fix:** Ensure you are using the correct three-level namespace (`catalog.schema.table`) and have `USE CATALOG` and `USE SCHEMA` set.
 
 ## Exam Tips
 

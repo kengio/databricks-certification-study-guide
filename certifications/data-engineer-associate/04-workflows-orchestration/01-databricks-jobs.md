@@ -485,8 +485,8 @@ flowchart LR
 
 ## Use Cases
 
-- **Databricks Jobs Implementation**: Incorporating Databricks Jobs principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Databricks Jobs Workflows**: Using the advanced capabilities of Databricks Jobs to automate processes and reduce manual operational overhead.
+- **Multi-Task ETL Pipelines**: Defining extract, transform, and load as separate tasks within a single job, using `depends_on` to create a DAG that runs tasks in the correct order with parallel branches where possible.
+- **Parameterized Backfill Jobs**: Using dynamic parameter macros like `{{job.start_date}}` to run the same job for different date ranges, enabling efficient historical data backfills without duplicating job definitions.
 
 ## Common Issues & Errors
 
@@ -495,10 +495,15 @@ flowchart LR
 **Scenario:** The default settings for Databricks Jobs do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Databricks Jobs to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Job Fails But No Alert Received
 
-**Scenario:** Connecting Databricks Jobs to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Jobs prior to deployment.
+**Scenario:** A production job fails overnight but the on-call engineer is not notified because email or webhook notifications were never configured in the job settings.
+**Fix:** Configure email notifications (on_failure) and/or webhook notifications (e.g., Slack) in the job definition. Always verify alert delivery with a test run before relying on notifications in production.
+
+### Task Dependency Misconfiguration Causing Skipped Tasks
+
+**Scenario:** A downstream task in a multi-task job never executes because its `depends_on` references the wrong `task_key`, or an upstream task's failure condition is not handled.
+**Fix:** Review the task DAG visualization in the Jobs UI to verify that all dependency edges are correct and that upstream task success conditions match expectations.
 
 ## Exam Tips
 

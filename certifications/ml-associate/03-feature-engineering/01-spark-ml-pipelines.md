@@ -503,7 +503,7 @@ fitted_pipeline.save("/mnt/production/churn_pipeline")
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
-- **Optimized Spark ML Pipelines Workflows**: Using the advanced capabilities of Spark ML Pipelines to automate processes and reduce manual operational overhead.
+- **Reproducible Training-to-Serving Pipeline**: Packaging all preprocessing and model steps into a single pipeline so that the same transformations are applied consistently during both training and batch inference.
 
 ## Common Issues & Errors
 
@@ -512,10 +512,10 @@ fitted_pipeline.save("/mnt/production/churn_pipeline")
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### Integration Bottlenecks
+### Pipeline `transform()` Fails on New Data
 
-**Scenario:** Connecting Spark ML Pipelines to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Spark ML Pipelines prior to deployment.
+**Scenario:** A fitted pipeline throws `IllegalArgumentException` when transforming new data with different column names or types.
+**Fix:** Ensure the input schema matches exactly what the pipeline was fitted on. Use `StringIndexer(handleInvalid="keep")` for unseen categories.
 
 ## Exam Tips
 

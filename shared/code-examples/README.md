@@ -20,6 +20,8 @@ All examples are stored as Markdown files with fenced code blocks for readabilit
 - [python/cdc_and_deduplication.md](python/cdc_and_deduplication.md) — CDF enable/read, metadata columns, SCD Type 1/2 MERGE, deduplication strategies, row tracking, identity columns
 - [python/feature_store_and_vector_search.md](python/feature_store_and_vector_search.md) — Feature Store API, training set creation, Vector Search index types, similarity search, RAG pattern
 - [python/ml_inference_examples.md](python/ml_inference_examples.md) — Batch scoring with spark_udf, Model Serving REST API, A/B testing, MLflow evaluation, custom PyFunc
+- [python/dlt_pipelines.md](python/dlt_pipelines.md) — DLT/LakeFlow declarative pipelines, expectations, APPLY CHANGES, event log queries
+- [python/mlflow_patterns.md](python/mlflow_patterns.md) — Experiment tracking, autologging, UC model registry, aliases, batch inference, GenAI evaluation
 
 ## SQL Examples
 
@@ -27,6 +29,7 @@ All examples are stored as Markdown files with fenced code blocks for readabilit
 - [sql/window_functions.md](sql/window_functions.md) — ROW_NUMBER, RANK, LAG/LEAD, running aggregates
 - [sql/cte_patterns.md](sql/cte_patterns.md) — Common Table Expressions, PIVOT, UNPIVOT
 - [sql/cdc_merge_patterns.md](sql/cdc_merge_patterns.md) — SCD Type 1/2 MERGE, APPLY CHANGES syntax, CDF queries, deduplication SQL
+- [sql/analyst_patterns.md](sql/analyst_patterns.md) — CASE, PIVOT, UNPIVOT, date/string functions, parameters, percentiles, NULL handling
 
 ## How to Use
 

@@ -430,20 +430,15 @@ Alternative:
 
 ## Use Cases
 
-- **Visualizations & Chart Types Implementation**: Incorporating Visualizations & Chart Types principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Visualizations & Chart Types Workflows**: Using the advanced capabilities of Visualizations & Chart Types to automate processes and reduce manual operational overhead.
+- **Sales Trend Analysis**: Using line charts to show revenue over time with multiple series for year-over-year comparison.
+- **Market Share Breakdown**: Using pie or donut charts (with 3-5 slices) to communicate composition at a glance in executive presentations.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Chart Not Rendering Correctly
 
-**Scenario:** The default settings for Visualizations & Chart Types do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Visualizations & Chart Types to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Visualizations & Chart Types to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Visualizations & Chart Types prior to deployment.
+**Scenario:** A bar chart shows only one bar despite multiple categories in the data.
+**Fix:** Verify the X-axis column is categorical (not a single aggregated value). Check column mappings in the visualization editor.
 
 ## Exam Tips
 

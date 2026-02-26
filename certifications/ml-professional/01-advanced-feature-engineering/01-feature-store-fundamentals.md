@@ -426,8 +426,8 @@ GROUP BY user_id
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Feature Store Fundamentals Workflows**: Using the advanced capabilities of Feature Store Fundamentals to automate processes and reduce manual operational overhead.
+- **Shared Feature Repository for Multiple Models**: Creating a single `customer_features` table consumed by fraud detection, churn prediction, and recommendation models -- eliminating duplicated feature pipelines and ensuring consistency across teams.
+- **Real-Time Fraud Detection Features**: Building feature tables with pre-computed transaction velocity, merchant risk scores, and behavioral profiles that are served to online models with sub-100ms latency.
 
 ## Common Issues & Errors
 
@@ -436,10 +436,10 @@ GROUP BY user_id
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Feature Table Schema Mismatch
 
-**Scenario:** Connecting Feature Store Fundamentals to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Store Fundamentals prior to deployment.
+**Scenario:** A `write_feature_table()` call fails after a team member adds a new column to the feature engineering pipeline, but existing consumers still expect the old schema.
+**Fix:** Use `write_feature_table()` with `mode="merge"` to allow additive schema evolution. Coordinate breaking changes (column renames or type changes) by versioning the feature table name (e.g., `user_features_v2`) and updating all downstream `FeatureLookup` references.
 
 ## Related Topics
 

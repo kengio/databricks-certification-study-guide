@@ -502,8 +502,8 @@ for run in runs:
 
 ## Use Cases
 
-- **Job Monitoring Implementation**: Incorporating Job Monitoring principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Job Monitoring Workflows**: Using the advanced capabilities of Job Monitoring to automate processes and reduce manual operational overhead.
+- **Proactive Pipeline Health Dashboards**: Logging job run metrics (duration, row counts, status) to a Delta table and building Databricks SQL dashboards to track pipeline health trends, SLA adherence, and failure rates over time.
+- **Automated Alerting and Escalation**: Configuring email and Slack webhook notifications for job failures, with tiered escalation (e.g., task owner on first failure, on-call team after retry exhaustion) to ensure rapid incident response.
 
 ## Common Issues & Errors
 
@@ -512,10 +512,15 @@ for run in runs:
 **Scenario:** The default settings for Job Monitoring do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Job Monitoring to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Spark UI Not Loading for Completed Runs
 
-**Scenario:** Connecting Job Monitoring to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Job Monitoring prior to deployment.
+**Scenario:** After a job cluster terminates, the Spark UI link in the job run page becomes inaccessible, making it impossible to debug performance issues from a past run.
+**Fix:** Access the Spark UI link while the cluster is still running, or query system tables (`system.compute.clusters`, `system.billing.usage`) for historical metrics. Consider logging key performance counters (row counts, durations) within the notebook itself.
+
+### Alert Fatigue From Noisy Failure Notifications
+
+**Scenario:** Transient errors (e.g., spot instance preemption, brief network blips) trigger failure alerts on every retry attempt, flooding the on-call engineer's inbox with non-actionable notifications.
+**Fix:** Configure task-level retries (`max_retries: 2-3`) and set email/webhook notifications to fire only on the final failure after all retries are exhausted, not on each individual attempt.
 
 ## Exam Tips
 

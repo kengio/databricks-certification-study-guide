@@ -389,20 +389,20 @@ A typical promotion workflow:
 
 ## Use Cases
 
-- **Governance Frameworks Implementation**: Incorporating Governance Frameworks principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Governance Frameworks Workflows**: Using the advanced capabilities of Governance Frameworks to automate processes and reduce manual operational overhead.
+- **Regulated Financial Model Approval**: Implementing a multi-stage approval workflow where model registration requires data-science review, the evaluation gate enforces minimum AUC thresholds, and the champion alias can only be set by a service principal controlled by the model risk management team.
+- **Cross-Team Model Sharing with Least Privilege**: Granting `EXECUTE` on a shared fraud-scoring model to the analytics team (load and predict only) while restricting `MODIFY` to the ML engineering team (register versions and set aliases).
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Model Lineage Not Captured
 
-**Scenario:** The default settings for Governance Frameworks do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Governance Frameworks to handle production-scale workloads.
+**Scenario:** A model registered to Unity Catalog shows no lineage to the Delta tables used during training, making it impossible to trace which data produced the model.
+**Fix:** Train and log the model within a Databricks notebook (not an external IDE) so that UC can automatically capture lineage from `spark.table()` calls. If training externally, manually log the source table paths as MLflow tags (e.g., `mlflow.set_tag("training_table", "catalog.schema.features")`) to provide a partial audit trail.
 
-### Integration Bottlenecks
+### MODIFY Privilege Granted Too Broadly
 
-**Scenario:** Connecting Governance Frameworks to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Governance Frameworks prior to deployment.
+**Scenario:** Every data scientist in the workspace has `MODIFY` on the production model, allowing anyone to overwrite the `champion` alias without review.
+**Fix:** Restrict `MODIFY` to a service principal used by the CI/CD pipeline. Grant individual data scientists `EXECUTE` (for loading/serving) and `USE SCHEMA` (for browsing). Enforce promotion controls through branch protection and pipeline approval gates rather than UC privileges alone.
 
 ## Key Takeaways
 

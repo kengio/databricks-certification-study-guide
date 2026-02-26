@@ -1,3 +1,9 @@
+---
+title: "Data Engineer Associate — Practice Questions"
+type: index
+tags: [practice-questions, data-engineer-associate]
+---
+
 # DE Associate Practice Questions
 
 Practice questions sourced from the Databricks DE Associate assessment, organized by exam domain.

@@ -360,20 +360,20 @@ quality assessment.
 
 ## Use Cases
 
-- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
-- **Optimized Evaluating LLM Applications Workflows**: Using the advanced capabilities of Evaluating LLM Applications to automate processes and reduce manual operational overhead.
+- **Pre-Deployment Quality Gate**: Running `mlflow.evaluate()` on a curated eval dataset of 200 question-answer pairs before every deployment, blocking promotion if faithfulness drops below 0.85 or answer relevance drops below 0.80.
+- **Continuous Production Monitoring**: Scheduling weekly `mlflow.evaluate()` runs on samples from the inference table, tracking faithfulness and latency trends over time, and alerting when quality metrics degrade by more than 5% from baseline.
 
 ## Common Issues & Errors
 
-### High Latency Responses
+### Evaluation Metrics Disagree with Human Judgment
 
-**Scenario:** LLM endpoints take too long to return generated text.
-**Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
+**Scenario:** `mlflow.evaluate()` reports high faithfulness scores but human reviewers in the Review App consistently rate answers as incorrect or unhelpful.
+**Fix:** Review the LLM-as-judge prompt template to ensure it is evaluating the same criteria humans care about. Calibrate by running the judge on a small set of human-annotated examples and adjusting the prompt until judge scores align with human ratings. Consider adding custom metrics that better capture domain-specific quality (e.g., "does the answer cite the correct policy section?").
 
-### Integration Bottlenecks
+### Eval Dataset Too Small to Detect Regressions
 
-**Scenario:** Connecting Evaluating LLM Applications to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Evaluating LLM Applications prior to deployment.
+**Scenario:** An eval dataset with only 20 questions shows no significant difference between model versions, masking a real regression that users report after deployment.
+**Fix:** Expand the eval dataset to at least 100-200 diverse questions covering edge cases, multi-hop reasoning, and out-of-scope queries. Include questions where the expected answer is "I don't know" to test faithfulness under missing context.
 
 ## Key Takeaways
 

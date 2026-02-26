@@ -8,7 +8,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 1: When to Use Cluster Pools
 
-**Question**: When would a data team use cluster pools?
+**Question** *(Medium)*: When would a data team use cluster pools?
 
 > [!success]- Answer
 > When an automated report needs to be refreshed as quickly as possible.
@@ -19,7 +19,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 2: Adding an Upstream Task to an Existing Job
 
-**Question**: A data engineer executes a single-task job each morning. Upon discovering an upstream data issue, they must add a new notebook to run before the original task. What is the correct approach to set up this new upstream task?
+**Question** *(Medium)*: A data engineer executes a single-task job each morning. Upon discovering an upstream data issue, they must add a new notebook to run before the original task. What is the correct approach to set up this new upstream task?
 
 > [!success]- Answer
 > Create a new task in the existing Job, and then add the original task as a dependency of the new task.
@@ -30,7 +30,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 3: Limiting Query Refresh Schedule Duration
 
-**Question**: An engineering manager wants a query to refresh every minute for the first week after a project launch, with no compute costs after that week. What strategy ensures the query stops refreshing and generating costs beyond week one?
+**Question** *(Medium)*: An engineering manager wants a query to refresh every minute for the first week after a project launch, with no compute costs after that week. What strategy ensures the query stops refreshing and generating costs beyond week one?
 
 > [!success]- Answer
 > Set the query's refresh schedule to end on a specific date in the query scheduler.
@@ -41,7 +41,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 4: SQL Endpoint Performance for Concurrent Queries
 
-**Question**: A data analysis team's Databricks SQL queries perform poorly when multiple members execute small queries simultaneously on an always-on SQL endpoint. All queries use the same endpoint. What strategy improves performance?
+**Question** *(Medium)*: A data analysis team's Databricks SQL queries perform poorly when multiple members execute small queries simultaneously on an always-on SQL endpoint. All queries use the same endpoint. What strategy improves performance?
 
 > [!success]- Answer
 > Increase the maximum bound of the SQL endpoint's scaling range.
@@ -52,7 +52,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 5: Reducing SQL Endpoint Cost on Daily Dashboard
 
-**Question**: A data engineer sets a Databricks SQL dashboard to refresh daily and wants the related SQL endpoint to run only when needed. What strategy reduces the overall running time of the SQL endpoint?
+**Question** *(Medium)*: A data engineer sets a Databricks SQL dashboard to refresh daily and wants the related SQL endpoint to run only when needed. What strategy reduces the overall running time of the SQL endpoint?
 
 > [!success]- Answer
 > Turn on the Auto Stop feature for the SQL endpoint.
@@ -63,7 +63,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 6: Webhook Alert for NULL Count
 
-**Question**: A data engineer uses a Databricks SQL dashboard to monitor data quality. When the count of NULL values in a query result reaches 100, the entire team should be alerted via a messaging webhook. What method accomplishes this?
+**Question** *(Medium)*: A data engineer uses a Databricks SQL dashboard to monitor data quality. When the count of NULL values in a query result reaches 100, the entire team should be alerted via a messaging webhook. What method accomplishes this?
 
 > [!success]- Answer
 > Set up an Alert with a new webhook alert destination.
@@ -74,7 +74,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 7: Diagnosing a Slow Job Task
 
-**Question**: A single Job executes two notebooks as distinct tasks. One notebook is performing slowly during the current Job run. What method can a tech lead use to diagnose the cause?
+**Question** *(Medium)*: A single Job executes two notebooks as distinct tasks. One notebook is performing slowly during the current Job run. What method can a tech lead use to diagnose the cause?
 
 > [!success]- Answer
 > Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook.
@@ -85,7 +85,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 8: Faster Cluster Startup for Nightly Jobs
 
-**Question**: A data engineer manages a nightly job with several tasks that run slowly due to long cluster startup times. What action improves cluster startup time?
+**Question** *(Easy)*: A data engineer manages a nightly job with several tasks that run slowly due to long cluster startup times. What action improves cluster startup time?
 
 > [!success]- Answer
 > Use clusters from a cluster pool.
@@ -96,7 +96,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 9: Programmatic Job Schedule Representation
 
-**Question**: A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?
+**Question** *(Medium)*: A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?
 
 > [!success]- Answer
 > Cron syntax.
@@ -107,7 +107,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 10: Job Failure Email Notification
 
-**Question**: What approach should be taken to email the owner of a Databricks Job if it fails?
+**Question** *(Easy)*: What approach should be taken to email the owner of a Databricks Job if it fails?
 
 > [!success]- Answer
 > Set up an Alert in the Job's notification settings (Job page).
@@ -118,7 +118,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 11: Scheduling a Daily SQL Query Refresh
 
-**Question**: An engineering manager reviews a query daily but currently reruns it manually and waits for results. What strategy guarantees the query results are refreshed daily automatically?
+**Question** *(Easy)*: An engineering manager reviews a query daily but currently reruns it manually and waits for results. What strategy guarantees the query results are refreshed daily automatically?
 
 > [!success]- Answer
 > Schedule the query to refresh every 1 day from the query's page in Databricks SQL.
@@ -129,7 +129,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 12: When to Use "Depends On" for a Job Task
 
-**Question**: In what situations should a data engineer choose a task in the "Depends On" field when creating a new Databricks Job task?
+**Question** *(Easy)*: In what situations should a data engineer choose a task in the "Depends On" field when creating a new Databricks Job task?
 
 > [!success]- Answer
 > When another task needs to successfully complete before the new task begins.
@@ -140,7 +140,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 13: Webhook Alert for Zero-Sales Stores
 
-**Question**: A data engineer tracks store-level records where sales equal zero. When this count exceeds zero, the entire team should be notified via a messaging webhook. What approach accomplishes this?
+**Question** *(Medium)*: A data engineer tracks store-level records where sales equal zero. When this count exceeds zero, the entire team should be notified via a messaging webhook. What approach accomplishes this?
 
 > [!success]- Answer
 > Set up an Alert with a new webhook alert destination.
@@ -151,7 +151,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 14: Minimizing SQL Endpoint Runtime on Hourly Dashboard
 
-**Question**: A data engineer has an hourly Databricks SQL dashboard whose underlying data is managed by an automated Databricks Job. How can they minimize the total running time of the SQL endpoint during the dashboard's hourly refresh?
+**Question** *(Medium)*: A data engineer has an hourly Databricks SQL dashboard whose underlying data is managed by an automated Databricks Job. How can they minimize the total running time of the SQL endpoint during the dashboard's hourly refresh?
 
 > [!success]- Answer
 > Turn on the Auto Stop feature for the SQL endpoint.
@@ -162,7 +162,7 @@ tags: [data-engineer-associate, practice-questions, production-pipelines]
 
 ## Question 15: Persist to Memory and Disk
 
-**Question**: Which Spark method persists data to both memory and disk when memory is insufficient?
+**Question** *(Medium)*: Which Spark method persists data to both memory and disk when memory is insufficient?
 
 > [!success]- Answer
 > `persist()` with `StorageLevel.MEMORY_AND_DISK`.

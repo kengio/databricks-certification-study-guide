@@ -20,7 +20,7 @@ aliases:
 
 ## Section 1: Data Processing (Questions 1–18)
 
-## Question 1
+## Question 1 *(Easy)*
 
 **Scenario**: A data engineering team is building an ingestion pipeline that reads JSON files from cloud storage. The source system occasionally adds new fields to the JSON schema without notice. The team needs to automatically capture all fields while maintaining schema consistency in the Delta table.
 
@@ -38,7 +38,7 @@ D) `cloudFiles.schemaEvolutionMode = addNewColumns`
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 **Scenario**: A streaming pipeline processes clickstream data with an average of 50,000 events per second. The pipeline writes to a Delta table that downstream analysts query frequently. The team notices query performance degrading due to many small files.
 
@@ -56,7 +56,7 @@ D) `trigger(once=True)`
 
 ---
 
-## Question 3
+## Question 3 *(Hard)*
 
 **Scenario**: A data engineer needs to implement a pipeline that captures both current and historical versions of customer records. When a customer's address changes, the old record should be marked as inactive with an end date, and a new active record should be inserted.
 
@@ -74,7 +74,7 @@ D) Use `DELETE` followed by `INSERT` to replace the customer record
 
 ---
 
-## Question 4
+## Question 4 *(Medium)*
 
 **Scenario**: A pipeline uses Auto Loader to ingest JSON files. The data engineer wants to ensure that the inferred schema is persisted and reused across stream restarts, and that any data not matching the schema is captured for later analysis rather than causing failures.
 
@@ -92,7 +92,7 @@ D) Set `cloudFiles.format = json` with `mode = PERMISSIVE`
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 **Scenario**: A streaming pipeline processes transaction data and must ensure exactly-once semantics when writing to a Delta table. The pipeline occasionally fails and restarts from checkpoints.
 
@@ -110,7 +110,7 @@ D) `outputMode("update")` with watermarking
 
 ---
 
-## Question 6
+## Question 6 *(Medium)*
 
 **Scenario**: A data engineer is building a Change Data Feed (CDF) pipeline to propagate changes from a bronze table to silver. The bronze table has CDF enabled. The engineer needs to read only the changes since the last pipeline run.
 
@@ -128,7 +128,7 @@ D) `spark.readStream.format("delta").option("readChangeFeed", "true").table("bro
 
 ---
 
-## Question 7
+## Question 7 *(Medium)*
 
 **Scenario**: A MERGE operation is taking longer than expected when updating a large Delta table with 500 million rows. The merge condition uses `customer_id` which is not the partition column. Analysis shows the merge scans nearly all files in the table.
 
@@ -146,7 +146,7 @@ D) Enable `spark.databricks.delta.merge.enableLowShuffle`
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 **Scenario**: A streaming pipeline uses watermarking to handle late-arriving data. The watermark is set to 10 minutes. A data quality check shows that some events arriving 15 minutes late are being dropped.
 
@@ -164,7 +164,7 @@ D) Use `outputMode("complete")` to include all data
 
 ---
 
-## Question 9
+## Question 9 *(Medium)*
 
 **Scenario**: A data engineer needs to implement a pipeline that reads from multiple Kafka topics with different schemas. Each topic should be written to its own Delta table while maintaining streaming progress.
 
@@ -182,7 +182,7 @@ D) Use `readStream.format("kafka").option("subscribe", "topic1,topic2")` with sc
 
 ---
 
-## Question 10
+## Question 10 *(Easy)*
 
 **Scenario**: A table uses `DELETE` operations to remove records that are older than 90 days for compliance. After running deletes for several weeks, the table's storage size hasn't decreased despite fewer rows.
 
@@ -200,7 +200,7 @@ D) Run `VACUUM` with an appropriate retention period
 
 ---
 
-## Question 11
+## Question 11 *(Medium)*
 
 **Scenario**: A streaming pipeline aggregates hourly sales totals. The source data sometimes arrives out of order, with events from previous hours arriving in the current batch. The pipeline uses `groupBy(window(timestamp, "1 hour"))`.
 
@@ -218,7 +218,7 @@ D) Set `spark.sql.streaming.stateStore.maintenanceInterval` to "1 hour"
 
 ---
 
-## Question 12
+## Question 12 *(Hard)*
 
 **Scenario**: A data engineer is debugging a streaming pipeline that stopped processing data. The query shows `ACTIVE` status but the `processedRowsPerSecond` metric shows 0. New files are continuously arriving in the source location.
 
@@ -236,7 +236,7 @@ D) The stream is waiting for the trigger interval
 
 ---
 
-## Question 13
+## Question 13 *(Hard)*
 
 **Scenario**: A MERGE operation needs to handle duplicate keys in the source data. The business rule states that when duplicates exist, the record with the latest timestamp should be used.
 
@@ -254,7 +254,7 @@ D) Deduplicate within the MERGE using `ROW_NUMBER()` in a subquery
 
 ---
 
-## Question 14
+## Question 14 *(Easy)*
 
 **Scenario**: A pipeline processes IoT sensor data using Auto Loader. The sensors occasionally send malformed JSON that causes parsing errors. The team wants to capture bad records for analysis without failing the pipeline.
 
@@ -272,7 +272,7 @@ D) Wrap the read in a try-catch block
 
 ---
 
-## Question 15
+## Question 15 *(Medium)*
 
 **Scenario**: A batch ETL job reads from a Delta table and writes to another Delta table. The job runs daily and should only process records that changed since the last run. The source table has Change Data Feed enabled.
 
@@ -290,7 +290,7 @@ D) Read the `_delta_log` directly to find changed files
 
 ---
 
-## Question 16
+## Question 16 *(Easy)*
 
 **Scenario**: A streaming pipeline writes to a Delta table that is also queried by a BI dashboard. Users report seeing inconsistent results during pipeline runs, with some queries returning partial batches.
 
@@ -308,7 +308,7 @@ D) Configure `delta.isolationLevel = serializable` to ensure consistency
 
 ---
 
-## Question 17
+## Question 17 *(Medium)*
 
 **Scenario**: A data engineer needs to implement conditional updates in a MERGE operation. Records should only be updated if the source timestamp is newer than the target timestamp. Otherwise, the source record should be ignored.
 
@@ -326,7 +326,7 @@ D) `WHEN MATCHED THEN UPDATE SET * HAVING source.timestamp > target.timestamp`
 
 ---
 
-## Question 18
+## Question 18 *(Hard)*
 
 **Scenario**: A streaming pipeline uses `foreachBatch()` to write to multiple Delta tables. The engineer wants to ensure atomicity across all writes within each batch--either all tables are updated or none are.
 
@@ -346,7 +346,7 @@ D) Use `foreachPartition()` instead for transactional guarantees
 
 ## Section 2: Databricks Tooling (Questions 19–30)
 
-## Question 19
+## Question 19 *(Medium)*
 
 **Scenario**: A data engineer is creating a notebook that should accept runtime parameters for the environment (dev, staging, prod) and a date range. The notebook will be called both interactively during development and by a scheduled job.
 
@@ -364,7 +364,7 @@ D) Hard-code values and create separate notebooks for each environment
 
 ---
 
-## Question 20
+## Question 20 *(Medium)*
 
 **Scenario**: A notebook needs to execute SQL queries and store the results in a Python variable for further processing. The data engineer wants to use the most appropriate magic command.
 
@@ -382,7 +382,7 @@ D) Use `%run` to execute a SQL notebook and capture results
 
 ---
 
-## Question 21
+## Question 21 *(Easy)*
 
 **Scenario**: A data engineer needs to securely access a third-party API from a Databricks notebook. The API requires an authentication token that should not be stored in code or version control.
 
@@ -400,7 +400,7 @@ D) Use `dbutils.secrets.get(scope="api_scope", key="api_token")`
 
 ---
 
-## Question 22
+## Question 22 *(Easy)*
 
 **Scenario**: A team maintains a library of shared utility functions used across multiple notebooks. When the library is updated, all notebooks using it should automatically get the latest version without modification.
 
@@ -418,7 +418,7 @@ D) Store utilities in a Delta table and read them at runtime
 
 ---
 
-## Question 23
+## Question 23 *(Medium)*
 
 **Scenario**: A data engineer is configuring the Databricks CLI for a CI/CD pipeline. The pipeline runs in a containerized environment where storing credentials in `~/.databrickscfg` is not practical.
 
@@ -436,7 +436,7 @@ D) Username and password authentication
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 **Scenario**: A REST API call to create a cluster returns successfully with a cluster_id. However, a subsequent API call to run a job on that cluster fails with "Cluster not found."
 
@@ -454,7 +454,7 @@ D) Rate limiting is preventing the second API call
 
 ---
 
-## Question 25
+## Question 25 *(Medium)*
 
 **Scenario**: A team is deciding between all-purpose clusters and job clusters for their production ETL workloads that run on a schedule four times daily.
 
@@ -472,7 +472,7 @@ D) Use job clusters which are automatically created and terminated per job run
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 **Scenario**: A data engineer needs to list all files in a Unity Catalog volume and filter for Parquet files created in the last 24 hours.
 
@@ -490,7 +490,7 @@ D) `os.listdir("/dbfs/Volumes/catalog/schema/volume")`
 
 ---
 
-## Question 27
+## Question 27 *(Easy)*
 
 **Scenario**: A notebook widget is created with `dbutils.widgets.dropdown("env", "dev", ["dev", "staging", "prod"])`. When the notebook runs as part of a job, the job needs to override this value to "prod".
 
@@ -508,7 +508,7 @@ D) Create a separate notebook for production without widgets
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 **Scenario**: A data engineer is using the Jobs API 2.1 to submit a job run. The job includes a notebook task that accepts parameters. The engineer wants to pass dynamic values based on the current date.
 
@@ -526,7 +526,7 @@ D) POST `/api/2.1/jobs/run-now` with `notebook_params` in the request
 
 ---
 
-## Question 29
+## Question 29 *(Medium)*
 
 **Scenario**: A team is migrating from DBFS mounts to Unity Catalog external locations. Their existing code uses paths like `dbfs:/mnt/data/bronze/`.
 
@@ -544,7 +544,7 @@ D) Use storage credentials to access cloud storage via `dbutils.fs`
 
 ---
 
-## Question 30
+## Question 30 *(Medium)*
 
 **Scenario**: A data engineer needs to run a SQL query from the Databricks CLI and output the results as JSON for processing by another script.
 
@@ -564,7 +564,7 @@ D) `databricks api post /api/2.0/sql/statements -d '{"statement": "SELECT * FROM
 
 ## Section 3: Data Modeling (Questions 31–39)
 
-## Question 31
+## Question 31 *(Easy)*
 
 **Scenario**: A retail company is implementing the medallion architecture. Raw point-of-sale data arrives as JSON files with nested structures containing transaction details and line items.
 
@@ -582,7 +582,7 @@ D) A separate staging layer before bronze
 
 ---
 
-## Question 32
+## Question 32 *(Easy)*
 
 **Scenario**: A Delta table has a column `email` defined as `STRING NOT NULL`. A new data file arrives containing records with null email values.
 
@@ -600,7 +600,7 @@ D) The NOT NULL constraint is automatically removed
 
 ---
 
-## Question 33
+## Question 33 *(Medium)*
 
 **Scenario**: A data engineer needs to add a new column `loyalty_tier` to an existing Delta table with millions of records. The column should be nullable and positioned after the `customer_id` column.
 
@@ -618,7 +618,7 @@ D) Table must be recreated to add a column at a specific position
 
 ---
 
-## Question 34
+## Question 34 *(Easy)*
 
 **Scenario**: A slowly changing dimension table tracks customer addresses with SCD Type 2 implementation. The table has columns: customer_id, address, start_date, end_date, is_current. A customer changes their address.
 
@@ -636,7 +636,7 @@ D) Depends on the number of historical records for that customer
 
 ---
 
-## Question 35
+## Question 35 *(Hard)*
 
 **Scenario**: A fact table containing 5 years of transaction data is partitioned by `transaction_date`. Most queries filter on `customer_id` and `product_id`, rarely filtering on date. Query performance is poor.
 
@@ -654,7 +654,7 @@ D) Convert to Liquid Clustering on `customer_id, product_id`
 
 ---
 
-## Question 36
+## Question 36 *(Medium)*
 
 **Scenario**: A data engineer is implementing a Delta table for product catalog data. Products are frequently updated, and analysts need to see what the catalog looked like at any point in the past 30 days.
 
@@ -672,7 +672,7 @@ D) Use Delta Lake versioning with `delta.logRetentionDuration = 30 days`
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 **Scenario**: A table has schema evolution enabled with `mergeSchema = true`. The source data occasionally includes columns with names that differ from existing columns only by case (e.g., "CustomerId" vs "customerid").
 
@@ -690,7 +690,7 @@ D) Delta automatically renames conflicting columns with suffixes
 
 ---
 
-## Question 38
+## Question 38 *(Easy)*
 
 **Scenario**: A deep clone of a production Delta table is created for a testing environment. After the clone, updates are made to both the production table and the clone.
 
@@ -708,7 +708,7 @@ D) The clone is completely independent; changes don't propagate
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 **Scenario**: A dimension table needs to track corrections to historical records. When an error is discovered in a past record, the correction should be applied, but there must also be an audit trail showing the original incorrect value.
 
@@ -728,7 +728,7 @@ D) SCD Type 6 (hybrid) with Type 1, 2, and 3 elements
 
 ## Section 4: Security & Governance (Questions 40–45)
 
-## Question 40
+## Question 40 *(Medium)*
 
 **Scenario**: A data engineering team needs to grant a group of analysts SELECT access to all tables in a schema, including tables that will be created in the future.
 
@@ -746,7 +746,7 @@ D) Grant USE SCHEMA and SELECT on SCHEMA to give access to all current and futur
 
 ---
 
-## Question 41
+## Question 41 *(Medium)*
 
 **Scenario**: A table contains employee data including salary information. The HR department should see all columns, but managers should only see employee name, department, and title--not salary.
 
@@ -764,7 +764,7 @@ D) Implement application-level security in the BI tool
 
 ---
 
-## Question 42
+## Question 42 *(Easy)*
 
 **Scenario**: An organization wants to share a curated dataset with an external partner who uses Snowflake. The partner should receive daily updates but should not have direct access to the Databricks workspace.
 
@@ -782,7 +782,7 @@ D) Create a Databricks workspace for the partner with access to the dataset
 
 ---
 
-## Question 43
+## Question 43 *(Easy)*
 
 **Scenario**: A data engineer is building a notebook that needs to access credentials for an external database. The credentials are stored in Azure Key Vault, which has been configured as a secret backend.
 
@@ -800,7 +800,7 @@ D) `%keyvault get db-password`
 
 ---
 
-## Question 44
+## Question 44 *(Easy)*
 
 **Scenario**: A Unity Catalog metastore is shared across multiple workspaces. A user has SELECT permission on a table granted in Workspace A. The same user accesses Workspace B.
 
@@ -818,7 +818,7 @@ D) Permissions depend on workspace-level settings
 
 ---
 
-## Question 45
+## Question 45 *(Hard)*
 
 **Scenario**: A healthcare organization needs to implement row-level security so that doctors can only see records for patients assigned to them. The patient_assignments table maps doctors to patients.
 
@@ -838,7 +838,7 @@ D) Implement filtering in the application layer only
 
 ## Section 5: Monitoring & Logging (Questions 46–51)
 
-## Question 46
+## Question 46 *(Easy)*
 
 **Scenario**: A cost analyst needs to identify which jobs consumed the most DBUs last month to optimize spending.
 
@@ -856,7 +856,7 @@ D) `system.workflow.jobs`
 
 ---
 
-## Question 47
+## Question 47 *(Medium)*
 
 **Scenario**: A streaming job is running slower than expected. The Spark UI shows that one task in a stage takes 10x longer than the others, while most executors sit idle.
 
@@ -874,7 +874,7 @@ D) Network bottleneck; check cluster networking
 
 ---
 
-## Question 48
+## Question 48 *(Medium)*
 
 **Scenario**: A Lakeflow (DLT) pipeline shows "Update Failed" status. The data engineer needs to identify which specific expectation caused the failure.
 
@@ -892,7 +892,7 @@ D) Query the pipeline's event log table for expectation metrics
 
 ---
 
-## Question 49
+## Question 49 *(Medium)*
 
 **Scenario**: A data engineer needs to understand why a SQL query is performing a full table scan despite having filters that should enable partition pruning.
 
@@ -910,7 +910,7 @@ D) Review the table's `DESCRIBE DETAIL` output
 
 ---
 
-## Question 50
+## Question 50 *(Easy)*
 
 **Scenario**: The security team requests a report of all users who accessed a specific table containing PII data in the last 7 days.
 
@@ -928,7 +928,7 @@ D) `system.compute.clusters`
 
 ---
 
-## Question 51
+## Question 51 *(Medium)*
 
 **Scenario**: A batch job's execution time has gradually increased from 30 minutes to 2 hours over the past month. The code hasn't changed.
 
@@ -948,7 +948,7 @@ D) Network latency to cloud storage
 
 ## Section 6: Testing & Deployment (Questions 52–57)
 
-## Question 52
+## Question 52 *(Easy)*
 
 **Scenario**: A data engineering team is setting up Databricks Asset Bundles (DAB) for their project. They need separate configurations for development, staging, and production environments.
 
@@ -966,7 +966,7 @@ D) Create separate bundles for each environment in different directories
 
 ---
 
-## Question 53
+## Question 53 *(Medium)*
 
 **Scenario**: A CI/CD pipeline runs unit tests on PySpark code that transforms DataFrames. The tests should run quickly without requiring a Databricks cluster.
 
@@ -984,7 +984,7 @@ D) Use local Spark session in pytest with mocked data
 
 ---
 
-## Question 54
+## Question 54 *(Easy)*
 
 **Scenario**: A Git folder in Databricks is configured with main branch protection. A developer tries to push directly to main and receives an error.
 
@@ -1002,7 +1002,7 @@ D) Make changes in a separate notebook outside Git folders
 
 ---
 
-## Question 55
+## Question 55 *(Medium)*
 
 **Scenario**: A GitHub Actions workflow deploys Databricks Asset Bundles to a staging environment. The workflow needs to authenticate with Databricks.
 
@@ -1020,7 +1020,7 @@ D) Create a dedicated user account for GitHub Actions
 
 ---
 
-## Question 56
+## Question 56 *(Medium)*
 
 **Scenario**: A Nutter test notebook tests a function that reads from a Delta table. The test should verify the function handles empty tables correctly.
 
@@ -1038,7 +1038,7 @@ D) Use Nutter's built-in empty table generator
 
 ---
 
-## Question 57
+## Question 57 *(Medium)*
 
 **Scenario**: A bundle deployment fails with the error: "Resource already exists". The data engineer confirms the resource was created by a previous partial deployment.
 
@@ -1058,7 +1058,7 @@ D) Run `databricks bundle deploy --force` to overwrite
 
 ## Section 7: Lakeflow Pipelines & Performance (Questions 58–63)
 
-## Question 58
+## Question 58 *(Medium)*
 
 **Scenario**: A Lakeflow (DLT) pipeline has a streaming table that ingests data and a downstream materialized view that aggregates it. The materialized view is showing stale data even though the streaming table is updating.
 
@@ -1076,7 +1076,7 @@ D) The materialized view requires a manual REFRESH command
 
 ---
 
-## Question 59
+## Question 59 *(Medium)*
 
 **Scenario**: A DLT pipeline implements CDC from a source database using APPLY CHANGES. Some records are arriving with out-of-order timestamps due to source system behavior.
 
@@ -1094,7 +1094,7 @@ D) The pipeline fails on out-of-order detection
 
 ---
 
-## Question 60
+## Question 60 *(Medium)*
 
 **Scenario**: A DLT pipeline has an expectation `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After processing, the engineer wants to know how many rows were dropped.
 
@@ -1112,7 +1112,7 @@ D) Query the pipeline event log for expectation metrics
 
 ---
 
-## Question 61
+## Question 61 *(Medium)*
 
 **Scenario**: A Delta table with 2TB of data has 50,000 small files averaging 40MB each. Queries scanning the table are slow due to file listing overhead.
 
@@ -1130,7 +1130,7 @@ D) Repartition the table with `spark.sql.shuffle.partitions = 2000`
 
 ---
 
-## Question 62
+## Question 62 *(Medium)*
 
 **Scenario**: A query joins a 500GB fact table with a 50MB dimension table. The join is running slowly with significant shuffle.
 
@@ -1148,7 +1148,7 @@ D) Partition both tables by the join key
 
 ---
 
-## Question 63
+## Question 63 *(Medium)*
 
 **Scenario**: A data engineer is tuning a complex aggregation query that processes 100GB of data. The query runs out of memory during the shuffle phase.
 

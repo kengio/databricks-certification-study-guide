@@ -442,20 +442,15 @@ TO `engineer@company.com`;
 
 ## Use Cases
 
-- **Unity Catalog Implementation**: Incorporating Unity Catalog principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Unity Catalog Workflows**: Using the advanced capabilities of Unity Catalog to automate processes and reduce manual operational overhead.
+- **Cross-workspace Data Sharing**: Making curated gold tables accessible to analysts across multiple Databricks workspaces without duplicating data.
+- **Centralized Governance**: Enforcing consistent access control policies across all catalogs so data owners can manage who sees what from a single place.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Cannot Browse Catalog Objects
 
-**Scenario:** The default settings for Unity Catalog do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Unity Catalog to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Unity Catalog to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Unity Catalog prior to deployment.
+**Scenario:** User cannot see tables in Data Explorer despite having SELECT permission.
+**Fix:** User also needs `USE CATALOG` on the catalog and `USE SCHEMA` on the schema -- these are required for browsing.
 
 ## Exam Tips
 

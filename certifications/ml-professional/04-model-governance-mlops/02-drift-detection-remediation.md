@@ -443,20 +443,20 @@ Not all drift is the model's fault. Before retraining, rule out infrastructure c
 
 ## Use Cases
 
-- **Drift Detection and Remediation Implementation**: Incorporating Drift Detection and Remediation principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Drift Detection and Remediation Workflows**: Using the advanced capabilities of Drift Detection and Remediation to automate processes and reduce manual operational overhead.
+- **Early Warning System for Seasonal Shifts**: Detecting data drift in e-commerce transaction features (average order value, category mix) during holiday periods, allowing the team to switch to a seasonally-tuned model before accuracy degrades.
+- **Automated Retraining on Concept Drift**: Configuring a SQL alert on the drift metrics table that triggers a Databricks Job to retrain the model on the most recent 90 days of labelled data when KS-test p-values drop below 0.05 on key features.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### False Positive Drift Alerts
 
-**Scenario:** The default settings for Drift Detection and Remediation do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Drift Detection and Remediation to handle production-scale workloads.
+**Scenario:** The monitoring system fires drift alerts every Monday morning because weekend traffic has a legitimately different feature distribution (e.g., fewer business transactions), causing alert fatigue.
+**Fix:** Use day-of-week-stratified baseline windows so the reference distribution reflects the same weekday. Alternatively, set separate drift thresholds for weekday vs weekend traffic. Tune the PSI threshold upward (e.g., from 0.1 to 0.2) if the model is robust to these known seasonal shifts.
 
-### Integration Bottlenecks
+### Drift Detected but Model Accuracy Unchanged
 
-**Scenario:** Connecting Drift Detection and Remediation to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Drift Detection and Remediation prior to deployment.
+**Scenario:** PSI and KS tests flag significant data drift on several features, but the model's actual accuracy (measured when ground truth arrives) has not degraded.
+**Fix:** Not all data drift causes concept drift. Before retraining, join the drift window's predictions with ground truth to confirm whether accuracy has actually degraded. If not, log the drift as informational and adjust alert thresholds to reduce noise.
 
 ## Key Takeaways
 

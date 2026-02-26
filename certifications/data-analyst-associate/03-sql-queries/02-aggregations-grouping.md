@@ -431,20 +431,15 @@ GROUP BY c.region;
 
 ## Use Cases
 
-- **Aggregations & Grouping Implementation**: Incorporating Aggregations & Grouping principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Aggregations & Grouping Workflows**: Using the advanced capabilities of Aggregations & Grouping to automate processes and reduce manual operational overhead.
+- **Executive KPI Reporting**: Summarizing revenue, order counts, and averages by region, category, or time period for dashboard widgets and scheduled reports.
+- **Cohort and Retention Analysis**: Grouping users by signup month and tracking activity over time to measure retention and identify churn patterns.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Column Not in GROUP BY Error
 
-**Scenario:** The default settings for Aggregations & Grouping do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Aggregations & Grouping to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Aggregations & Grouping to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Aggregations & Grouping prior to deployment.
+**Scenario:** `SELECT name, SUM(sales)` fails because `name` is not in the GROUP BY clause.
+**Fix:** Every non-aggregated column in SELECT must appear in GROUP BY. Add the column to GROUP BY or wrap it in an aggregate function.
 
 ## Exam Tips
 

@@ -418,8 +418,8 @@ service principals.
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Model Versioning and Registry Workflows**: Using the advanced capabilities of Model Versioning and Registry to automate processes and reduce manual operational overhead.
+- **Multi-Environment Model Promotion**: Registering model versions in a `dev` catalog, promoting to `staging` via alias, running automated evaluation gates, then setting the `champion` alias in the `prod` catalog -- all through CI/CD without manual registry interaction.
+- **Automated Champion Promotion in CI/CD**: A GitHub Actions pipeline trains a new model, registers it to Unity Catalog, compares metrics against `@champion`, and calls `set_registered_model_alias("champion", new_version)` only if the challenger wins -- zero manual intervention.
 
 ## Common Issues & Errors
 
@@ -428,10 +428,10 @@ service principals.
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Model Version Conflicts in CI/CD
 
-**Scenario:** Connecting Model Versioning and Registry to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Versioning and Registry prior to deployment.
+**Scenario:** Two concurrent CI/CD pipelines register versions of the same model at the same time; one pipeline's `set_registered_model_alias("champion", ...)` overwrites the other's promotion silently.
+**Fix:** Add a validation step that loads `@champion` and confirms its version matches the one you just promoted. Use `client.get_model_version_by_alias()` immediately after setting the alias to detect race conditions. For critical models, gate promotions behind a manual approval step in the CI/CD workflow.
 
 ## Key Takeaways
 

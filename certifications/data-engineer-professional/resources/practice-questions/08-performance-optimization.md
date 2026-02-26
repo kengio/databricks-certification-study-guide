@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, performance-optimization]
 
 **Scenario**: A table frequently filters on `region` and `date` columns. Small files are causing performance issues.
 
-**Question**: Which command best optimizes query performance?
+**Question** *(Easy)*: Which command best optimizes query performance?
 
 A) `OPTIMIZE table_name`
 B) `OPTIMIZE table_name ZORDER BY (region)`
@@ -28,7 +28,7 @@ D) `VACUUM table_name`
 
 **Scenario**: A Spark job processing 10GB of data is running slowly with default settings.
 
-**Question**: What is the default value of `spark.sql.shuffle.partitions` and how should it be adjusted?
+**Question** *(Medium)*: What is the default value of `spark.sql.shuffle.partitions` and how should it be adjusted?
 
 A) 100; increase for large data
 B) 200; decrease for small data
@@ -46,7 +46,7 @@ D) 500; keep default for all data
 
 **Scenario**: A large fact table (100GB) is joined with a small dimension table (50MB).
 
-**Question**: How can the join be optimized?
+**Question** *(Easy)*: How can the join be optimized?
 
 A) Increase shuffle partitions
 B) Use a broadcast hint on the large table
@@ -64,7 +64,7 @@ D) Partition both tables by the join key
 
 **Scenario**: A query has skewed data causing one task to run much longer than others.
 
-**Question**: Which AQE feature helps with this?
+**Question** *(Medium)*: Which AQE feature helps with this?
 
 A) Coalesce partitions
 B) Skew join optimization
@@ -82,7 +82,7 @@ D) Local shuffle reader
 
 **Scenario**: A streaming job creates many small files, degrading query performance.
 
-**Question**: Which configuration helps?
+**Question** *(Easy)*: Which configuration helps?
 
 A) `spark.sql.shuffle.partitions = 1`
 B) `delta.autoOptimize.optimizeWrite = true`
@@ -100,7 +100,7 @@ D) `delta.checkpoint.writeStatsAsJson = false`
 
 **Scenario**: A daily ETL job runs for 3 hours. The team wants to reduce costs.
 
-**Question**: Which change provides the biggest cost savings?
+**Question** *(Easy)*: Which change provides the biggest cost savings?
 
 A) Switch from all-purpose to job cluster
 B) Increase cluster size to finish faster
@@ -118,7 +118,7 @@ D) Disable auto-scaling
 
 **Scenario**: A data engineer runs `EXPLAIN EXTENDED` on a slow query and sees `SortMergeJoin` in the physical plan where one table is only 5MB.
 
-**Question**: What does this indicate and how should it be fixed?
+**Question** *(Hard)*: What does this indicate and how should it be fixed?
 
 A) The join is optimal; SortMergeJoin is always the fastest strategy
 B) Add a Z-ORDER on the join key to improve data locality
@@ -136,7 +136,7 @@ D) The query needs more shuffle partitions to distribute the sort
 
 **Scenario**: A team enables Photon on their cluster expecting all queries to run faster. Some queries show improvement while others show no change.
 
-**Question**: Which workload type benefits MOST from Photon acceleration?
+**Question** *(Medium)*: Which workload type benefits MOST from Photon acceleration?
 
 A) Machine learning model training with MLlib
 B) Scan-heavy queries with aggregations and joins on large Delta tables
@@ -154,7 +154,7 @@ D) Streaming micro-batches with very small data volumes
 
 **Scenario**: A Spark job shows "spill to disk" warnings in the Spark UI. The job completes but is much slower than expected.
 
-**Question**: What is the primary cause of disk spill and the best remediation?
+**Question** *(Medium)*: What is the primary cause of disk spill and the best remediation?
 
 A) Disk spill is caused by too many tasks; reduce `spark.sql.shuffle.partitions`
 B) Disk spill is caused by insufficient CPU cores; increase cluster size
@@ -172,7 +172,7 @@ D) Disk spill occurs when partition data exceeds available memory; increase `spa
 
 **Scenario**: A data engineer examines the Spark UI and notices one stage has 200 tasks where 199 complete in 2 seconds but 1 task takes 15 minutes.
 
-**Question**: What is this pattern called and which AQE feature addresses it?
+**Question** *(Medium)*: What is this pattern called and which AQE feature addresses it?
 
 A) A straggler task; enable speculative execution with `spark.speculation = true`
 B) Data skew; AQE's `spark.sql.adaptive.skewJoin.enabled` splits the skewed partition
@@ -190,7 +190,7 @@ D) Garbage collection overhead; tune JVM GC with `spark.executor.extraJavaOption
 
 **Scenario**: A table currently uses `OPTIMIZE ... ZORDER BY (region, date)` which must be run manually after each batch load. The team wants automatic incremental data layout optimization.
 
-**Question**: What is the correct approach to migrate to liquid clustering?
+**Question** *(Hard)*: What is the correct approach to migrate to liquid clustering?
 
 A) `ALTER TABLE t CLUSTER BY (region, date)` and future writes/OPTIMIZE runs apply clustering incrementally
 B) `ALTER TABLE t SET TBLPROPERTIES ('delta.liquidClustering' = true, 'clusterColumns' = 'region,date')`
@@ -208,7 +208,7 @@ D) Liquid clustering and Z-ORDER cannot coexist; the table must be fully rewritt
 
 **Scenario**: A query reads from a Delta table partitioned by `date` and filtered by `region`. The EXPLAIN plan shows a `Filter` node above the `Scan` node for the `region` predicate.
 
-**Question**: How can predicate pushdown for the `region` column be improved?
+**Question** *(Hard)*: How can predicate pushdown for the `region` column be improved?
 
 A) Add a WHERE clause earlier in the SQL query to force pushdown
 B) Enable `spark.sql.optimizer.enablePredicatePushDown = true` (disabled by default)
@@ -226,7 +226,7 @@ D) Convert the `region` column to a partition column for physical-level pushdown
 
 **Scenario**: A streaming pipeline writes to a Delta table using `foreachBatch`. The table accumulates many small files between manual OPTIMIZE runs. The team wants to automate file compaction.
 
-**Question**: Which combination of settings prevents small file accumulation for this use case?
+**Question** *(Medium)*: Which combination of settings prevents small file accumulation for this use case?
 
 A) Set `spark.databricks.delta.autoCompact.enabled = true` only
 B) Set `spark.databricks.delta.optimizeWrite.enabled = true` only

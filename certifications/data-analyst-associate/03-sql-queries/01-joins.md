@@ -427,7 +427,7 @@ FULL OUTER JOIN target t ON s.id = t.id;
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
-- **Optimized Joins & Multi-table Operations Workflows**: Using the advanced capabilities of Joins & Multi-table Operations to automate processes and reduce manual operational overhead.
+- **Data Reconciliation**: Using FULL OUTER JOIN to compare source and target datasets and identify mismatches, missing records, or duplicates.
 
 ## Common Issues & Errors
 
@@ -436,10 +436,10 @@ FULL OUTER JOIN target t ON s.id = t.id;
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### Integration Bottlenecks
+### Unexpected Row Duplication After JOIN
 
-**Scenario:** Connecting Joins & Multi-table Operations to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Joins & Multi-table Operations prior to deployment.
+**Scenario:** A LEFT JOIN produces more rows than the left table.
+**Fix:** The right table has duplicate keys. Use `SELECT DISTINCT` on the join key or aggregate before joining to ensure one-to-one cardinality.
 
 ## Exam Tips
 

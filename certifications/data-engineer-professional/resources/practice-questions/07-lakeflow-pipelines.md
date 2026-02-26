@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, lakeflow-pipelines]
 
 **Scenario**: A DLT pipeline needs a table that aggregates daily sales totals from a streaming source.
 
-**Question**: Which table type is most appropriate?
+**Question** *(Medium)*: Which table type is most appropriate?
 
 A) Streaming table
 B) Materialized view
@@ -28,7 +28,7 @@ D) Temporary view
 
 **Scenario**: A DLT pipeline requires that all records have a non-null customer_id. Invalid records should be removed but not fail the pipeline.
 
-**Question**: Which expectation syntax achieves this?
+**Question** *(Easy)*: Which expectation syntax achieves this?
 
 A) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL)`
 B) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW`
@@ -46,7 +46,7 @@ D) `@dlt.expect_all("valid_id", "customer_id IS NOT NULL")`
 
 **Scenario**: A CDC pipeline receives insert, update, and delete events. The target table should reflect the current state only.
 
-**Question**: Which APPLY CHANGES configuration is correct?
+**Question** *(Medium)*: Which APPLY CHANGES configuration is correct?
 
 A) `STORED AS SCD TYPE 1`
 B) `STORED AS SCD TYPE 2`
@@ -64,7 +64,7 @@ D) `STORED AS CURRENT`
 
 **Scenario**: A DLT SQL query needs to read from another table defined in the same pipeline.
 
-**Question**: How should the source table be referenced?
+**Question** *(Easy)*: How should the source table be referenced?
 
 A) `SELECT * FROM source_table`
 B) `SELECT * FROM LIVE.source_table`
@@ -82,7 +82,7 @@ D) `SELECT * FROM dlt.source_table`
 
 **Scenario**: A DLT pipeline processes data continuously as it arrives with minimal latency.
 
-**Question**: Which pipeline configuration enables this?
+**Question** *(Easy)*: Which pipeline configuration enables this?
 
 A) `triggered: true`
 B) `continuous: true`
@@ -100,7 +100,7 @@ D) `streaming: true`
 
 **Scenario**: A schema change requires reprocessing all historical data in a DLT pipeline.
 
-**Question**: How should the pipeline be refreshed?
+**Question** *(Easy)*: How should the pipeline be refreshed?
 
 A) Delete the target tables and restart
 B) Use `databricks pipelines start --full-refresh`

@@ -453,29 +453,29 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized MLflow Tracking Workflows**: Using the advanced capabilities of MLflow Tracking to automate processes and reduce manual operational overhead.
+- **Hyperparameter Sweep with Experiment Comparison**: Logging parameters and metrics for multiple model configurations (e.g., Random Forest with different `n_estimators` and `max_depth` values) in the same experiment, then using `client.search_runs()` to find the best run by F1 score.
+- **Reproducible Model Artifacts**: Logging the trained model, scaler, feature importance JSON, and learning curve plots as artifacts so any team member can reproduce or inspect the exact model version that was promoted to production.
 
 ## Common Issues & Errors
 
-### Artifact Access Denied
+### Metrics Not Logged to Experiment
 
-**Scenario:** Models fail to load from MLflow registry during serving.
-**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+**Scenario:** `mlflow.log_metric()` calls succeed but metrics don't appear in the experiment UI.
+**Fix:** Ensure `mlflow.start_run()` was called and the run is active. Metrics logged outside an active run context are silently dropped. Use the `with mlflow.start_run():` context manager to guarantee the run is properly opened and closed.
 
-### Integration Bottlenecks
+### Duplicate Runs Created in Databricks Notebooks
 
-**Scenario:** Connecting MLflow Tracking to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for MLflow Tracking prior to deployment.
+**Scenario:** Re-running a notebook cell creates a new MLflow run each time, cluttering the experiment with incomplete runs.
+**Fix:** Use `mlflow.start_run()` with an explicit `run_name` and wrap training logic in a `with` block. Call `mlflow.end_run()` if using the imperative API to ensure the previous run is closed before starting a new one.
 
 ## Exam Tips
 
-- ✅ Understand log_param vs log_metric differences
-- ✅ Know how to organize experiments and runs
-- ✅ Recognize logging artifacts for reproducibility
-- ✅ Understand MLflow UI for comparing runs
-- ✅ Know framework-specific logging (sklearn, spark, xgboost)
-- ✅ Remember Databricks automatic experiment creation
+- `log_param()` stores a single string value (hyperparameter); `log_metric()` stores a numeric value (performance measure) and supports a `step` argument for epoch tracking
+- `log_params()` and `log_metrics()` accept dictionaries for batch logging -- know the plural forms
+- Databricks automatically creates an experiment at `/Users/{email}/notebook_name` when you log from a notebook -- no explicit `set_experiment()` is needed
+- `mlflow.sklearn.log_model()` vs `mlflow.spark.log_model()` -- know which flavor matches which framework (sklearn, xgboost, lightgbm, spark)
+- `client.search_runs(filter_string="metrics.accuracy > 0.9")` uses a SQL-like filter syntax with `metrics.` and `params.` prefixes
+- Artifacts (plots, JSON files, pickled objects) are stored in the artifact store (object storage), not the backend metadata store
 
 ## Key Takeaways
 

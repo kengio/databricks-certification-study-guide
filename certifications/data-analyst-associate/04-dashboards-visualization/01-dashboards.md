@@ -446,20 +446,15 @@ Dashboards/
 
 ## Use Cases
 
-- **Dashboards & Dashboard Design Implementation**: Incorporating Dashboards & Dashboard Design principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Dashboards & Dashboard Design Workflows**: Using the advanced capabilities of Dashboards & Dashboard Design to automate processes and reduce manual operational overhead.
+- **Executive KPI Monitoring**: Building a dashboard with KPI cards, trend lines, and regional breakdowns that auto-refreshes for leadership review.
+- **Self-service Reporting**: Creating parameterized dashboards that let business users filter by date range, region, or product category without writing SQL.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Dashboard Shows Stale Data
 
-**Scenario:** The default settings for Dashboards & Dashboard Design do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Dashboards & Dashboard Design to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Dashboards & Dashboard Design to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Dashboards & Dashboard Design prior to deployment.
+**Scenario:** Dashboard displays yesterday's numbers despite new data being loaded.
+**Fix:** Check the refresh schedule. Dashboards do not auto-refresh unless a schedule is configured. Click "Refresh" or set an automatic refresh interval.
 
 ## Exam Tips
 

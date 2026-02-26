@@ -432,7 +432,7 @@ client.delete_experiment(old_exp.experiment_id)
 ## Use Cases
 
 - **Experiments & Runs Implementation**: Incorporating Experiments & Runs principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Experiments & Runs Workflows**: Using the advanced capabilities of Experiments & Runs to automate processes and reduce manual operational overhead.
+- **Hyperparameter Sweep Organization**: Using nested runs to structure a parent sweep run with child runs for each parameter combination, making it easy to navigate and compare results.
 
 ## Common Issues & Errors
 
@@ -441,10 +441,10 @@ client.delete_experiment(old_exp.experiment_id)
 **Scenario:** The default settings for Experiments & Runs do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Experiments & Runs to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Cannot Compare Runs Across Experiments
 
-**Scenario:** Connecting Experiments & Runs to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Experiments & Runs prior to deployment.
+**Scenario:** Two runs are in different experiments and cannot be compared side-by-side.
+**Fix:** MLflow's compare feature only works within a single experiment. Log related runs to the same experiment, or use `mlflow.search_runs()` with multiple experiment IDs.
 
 ## Exam Tips
 

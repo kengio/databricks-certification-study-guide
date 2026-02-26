@@ -258,20 +258,20 @@ Fine-tuning workflow:
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Mosaic AI & Foundation Models Workflows**: Using the advanced capabilities of Mosaic AI & Foundation Models to automate processes and reduce manual operational overhead.
+- **Rapid Prototyping with Pay-Per-Token**: Using Foundation Model API with pay-per-token pricing to quickly build and test a RAG prototype without provisioning GPU clusters, then switching to provisioned throughput once traffic patterns are established.
+- **Unified Multi-Provider LLM Gateway**: Routing requests to OpenAI, Anthropic, and open-source Llama models through AI Gateway (External Models), providing a single authentication layer, centralised rate limiting, and unified audit logging across all providers.
 
 ## Common Issues & Errors
 
-### Artifact Access Denied
+### Foundation Model API Rate Limited
 
-**Scenario:** Models fail to load from MLflow registry during serving.
-**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+**Scenario:** A burst of user queries causes 429 (rate limit) errors from the Foundation Model API, dropping requests and degrading user experience.
+**Fix:** For development and variable traffic, implement client-side retry with exponential backoff. For production workloads with predictable throughput needs, switch from pay-per-token to provisioned throughput to guarantee a reserved tokens-per-minute allocation with SLA-backed latency.
 
-### Integration Bottlenecks
+### AI Gateway Returns Unexpected Model Output Format
 
-**Scenario:** Connecting Mosaic AI & Foundation Models to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Mosaic AI & Foundation Models prior to deployment.
+**Scenario:** Switching from a Databricks-hosted model to an external model via AI Gateway changes the response structure, breaking downstream parsing logic.
+**Fix:** AI Gateway standardises the response format to OpenAI-compatible chat completions. Ensure your code reads from `response["choices"][0]["message"]["content"]` regardless of the backing provider. Test with a sample request after any endpoint configuration change.
 
 ## Key Takeaways
 

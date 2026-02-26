@@ -271,7 +271,7 @@ SELECT id, amount FROM new_sales
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
-- **Optimized Spark SQL Fundamentals Workflows**: Using the advanced capabilities of Spark SQL Fundamentals to automate processes and reduce manual operational overhead.
+- **Interactive Data Exploration**: Using Spark SQL in notebooks to run ad-hoc queries against Delta tables, inspect schema metadata via `DESCRIBE`, and prototype transformation logic before codifying it in production pipelines.
 
 ## Common Issues & Errors
 
@@ -280,10 +280,15 @@ SELECT id, amount FROM new_sales
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### Integration Bottlenecks
+### Temp Views Not Visible Across SparkSessions
 
-**Scenario:** Connecting Spark SQL Fundamentals to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Spark SQL Fundamentals prior to deployment.
+**Scenario:** A temporary view created in one notebook is not accessible from another notebook or a different SparkSession, causing `AnalysisException: Table or view not found`.
+**Fix:** Use global temporary views (`CREATE GLOBAL TEMP VIEW`) and query them via `global_temp.view_name`, or persist the data as a table instead of a view.
+
+### SQL Syntax Differences Between Spark SQL and ANSI SQL
+
+**Scenario:** Queries using strict ANSI SQL syntax (e.g., integer division, implicit casting) produce unexpected results or errors in Spark SQL due to dialect differences.
+**Fix:** Set `spark.sql.ansi.enabled = true` to enforce strict ANSI behavior, or review Spark SQL-specific syntax rules for operators and type casting.
 
 ## Exam Tips
 

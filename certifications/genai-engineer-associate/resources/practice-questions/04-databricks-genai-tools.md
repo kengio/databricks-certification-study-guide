@@ -13,7 +13,7 @@ status: published
 
 ---
 
-## Question 1: Foundation Model API Endpoint Types
+## Question 1 *(Medium)*: Foundation Model API Endpoint Types
 
 **Question**: A team deploys a RAG chatbot to production and needs guaranteed low latency with a predictable throughput cap of 100 requests per second. Which Foundation Model API endpoint type should they use?
 
@@ -29,7 +29,7 @@ D) Batch Inference endpoint — optimized for large offline workloads
 
 ---
 
-## Question 2: Pay-per-Token vs Provisioned Throughput
+## Question 2 *(Easy)*: Pay-per-Token vs Provisioned Throughput
 
 **Question**: A data scientist is prototyping a new GenAI feature and expects fewer than 10 queries per day during development. Which Foundation Model API endpoint type minimizes cost?
 
@@ -45,7 +45,7 @@ D) Batch Inference — cheapest because it processes multiple requests at once
 
 ---
 
-## Question 3: MLflow AI Gateway Purpose
+## Question 3 *(Easy)*: MLflow AI Gateway Purpose
 
 **Question**: An organization uses three different LLM providers (OpenAI, Anthropic, and Databricks Foundation Models). They want a unified API that abstracts provider differences, enforces rate limits, and centralizes credential management. Which Databricks component addresses this?
 
@@ -61,7 +61,7 @@ D) Unity Catalog — governs access to LLM endpoints via table ACLs
 
 ---
 
-## Question 4: Deploying a LangChain Chain as a Model Serving Endpoint
+## Question 4 *(Medium)*: Deploying a LangChain Chain as a Model Serving Endpoint
 
 **Question**: A developer has logged a LangChain `RetrievalQA` chain with `mlflow.langchain.log_model(chain, "rag-chain")`. What is the NEXT step to deploy it as a REST endpoint on Databricks?
 
@@ -77,7 +77,7 @@ D) Save the chain's source code to a Databricks Repo and trigger a CI/CD pipelin
 
 ---
 
-## Question 5: MLflow Evaluate for GenAI
+## Question 5 *(Hard)*: MLflow Evaluate for GenAI
 
 **Question**: A developer calls `mlflow.evaluate()` to assess their RAG pipeline on a test dataset. Which argument specifies that the evaluation should use LLM-judge metrics like faithfulness and answer relevance?
 
@@ -93,7 +93,7 @@ D) `extra_metrics=[faithfulness(), answer_relevance()]` with `model_type="questi
 
 ---
 
-## Question 6: Inference Tables for LLM Monitoring
+## Question 6 *(Easy)*: Inference Tables for LLM Monitoring
 
 **Question**: A team wants to automatically log all requests and responses from a Databricks Model Serving endpoint to a Delta table for monitoring. Which feature enables this?
 
@@ -109,7 +109,7 @@ D) Lakehouse Monitoring — creates statistical profiles of Delta tables on a sc
 
 ---
 
-## Question 7: Querying Foundation Model APIs
+## Question 7 *(Hard)*: Querying Foundation Model APIs
 
 **Question**: A developer queries the Databricks Foundation Model API using the Python SDK. Which code correctly sends a chat completion request to `databricks-meta-llama-3-1-70b-instruct`?
 

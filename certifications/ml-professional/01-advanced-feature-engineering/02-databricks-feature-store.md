@@ -466,8 +466,8 @@ fs.write_table(
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Databricks Feature Store Workflows**: Using the advanced capabilities of Databricks Feature Store to automate processes and reduce manual operational overhead.
+- **Point-in-Time Correct Training Datasets**: Using `create_training_set()` with `timestamp_lookup_key` to build historically accurate training data that prevents future data leakage, critical for time-sensitive models like demand forecasting.
+- **Centralized Feature Sharing Across Teams**: Multiple ML teams (fraud, recommendations, churn) share a single `customer_features` table via Unity Catalog, eliminating redundant feature pipelines and ensuring consistency across models.
 
 ## Common Issues & Errors
 
@@ -476,10 +476,10 @@ fs.write_table(
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Point-in-Time Lookup Returns Future Data
 
-**Scenario:** Connecting Databricks Feature Store to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Feature Store prior to deployment.
+**Scenario:** A training dataset created with `create_training_set()` leaks future feature values into historical rows, inflating offline metrics but degrading production performance.
+**Fix:** Always set the `timestamp_lookup_key` parameter in each `FeatureLookup` so the Feature Store performs a point-in-time join. Verify correctness by comparing the feature values for a known historical row against a manual query filtered by that timestamp.
 
 ## Related Topics
 

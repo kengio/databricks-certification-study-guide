@@ -17,7 +17,7 @@ Set a 90-minute timer and answer all 45 questions before checking answers.
 
 ---
 
-## Question 1
+## Question 1 *(Medium)*
 
 **Question**: A pharmaceutical company has 10 million pages of clinical trial data. Researchers ask ad hoc questions daily, and new trial data is added weekly. The company must comply with strict data residency requirements — no data can leave their Databricks environment. Which architecture is MOST appropriate?
 
@@ -33,7 +33,7 @@ D) Store all 10 million pages in the LLM system prompt using a 1M-token context 
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 **Question**: A team processes scientific papers in PDF format for a RAG pipeline. The papers contain long structured sections (Abstract, Methods, Results, Discussion) with consistent headers. Which chunking strategy MOST preserves the semantic integrity of each section?
 
@@ -49,7 +49,7 @@ D) Sentence-level chunking and re-grouping every 5 sentences
 
 ---
 
-## Question 3
+## Question 3 *(Hard)*
 
 **Question**: A developer tests their RAG pipeline and finds that retrieval precision@5 = 0.40 (only 2 of 5 retrieved chunks are relevant). The LLM produces mostly correct answers despite poor retrieval. What is the BIGGEST risk of this situation in production?
 
@@ -65,7 +65,7 @@ D) The embedding model is mismatched to the query domain
 
 ---
 
-## Question 4
+## Question 4 *(Hard)*
 
 **Question**: A developer measures their RAG pipeline and finds faithfulness=0.92 but answer_relevance=0.55. What does this combination indicate?
 
@@ -81,7 +81,7 @@ D) The embedding model is producing high-quality vectors but the LLM is too verb
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 **Question**: A team builds a RAG pipeline for customer support. They want to ensure that answers cite the specific support article used. Which approach enables citation generation?
 
@@ -97,7 +97,7 @@ D) Fine-tune the LLM to always include citations by training on examples with ci
 
 ---
 
-## Question 6
+## Question 6 *(Medium)*
 
 **Question**: A developer is building a code assistant that answers questions about a large private codebase. The codebase uses non-standard variable names and internal library APIs. Which approach provides the MOST accurate retrieval of relevant code snippets?
 
@@ -113,7 +113,7 @@ D) Index only function docstrings, not code bodies
 
 ---
 
-## Question 7
+## Question 7 *(Hard)*
 
 **Question**: A developer implements multi-query retrieval for their RAG pipeline. The LLM generates 5 query variants, each retrieving top-5 results. After deduplication, 18 unique chunks remain. How many chunks should be passed to the final LLM generation step?
 
@@ -129,7 +129,7 @@ D) 1 chunk — select the single highest-scoring chunk across all 5 queries
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 **Question**: A financial services RAG pipeline retrieves SEC filings. The team observes that questions about a specific company's 2023 filing sometimes retrieve documents from 2021 or 2022. How can the retrieval be constrained to specific fiscal years?
 
@@ -145,7 +145,7 @@ D) Use a larger embedding model to better distinguish documents from different y
 
 ---
 
-## Question 9
+## Question 9 *(Hard)*
 
 **Question**: A developer builds a RAG pipeline where each query retrieves 5 chunks. The evaluation shows that the correct answer is almost always fully contained within the retrieved chunks, yet the LLM still produces incorrect answers. What is the MOST likely root cause?
 
@@ -161,7 +161,7 @@ D) The vector index needs to be rebuilt with a smaller dimensionality
 
 ---
 
-## Question 10
+## Question 10 *(Hard)*
 
 **Question**: A developer implements a RAG pipeline where answers must be attributed to specific sentences (not just document chunks). Which architecture modification enables sentence-level attribution?
 
@@ -177,7 +177,7 @@ D) Post-process the LLM output with an NLP library to identify quoted sentences
 
 ---
 
-## Question 11
+## Question 11 *(Medium)*
 
 **Question**: A team discovers that their RAG pipeline's answers degrade significantly on questions that require reasoning across information from multiple documents (e.g., "Compare the safety profiles of Drug A and Drug B"). Which approach BEST addresses multi-document reasoning?
 
@@ -193,7 +193,7 @@ D) Switch from RAG to a fine-tuned model
 
 ---
 
-## Question 12
+## Question 12 *(Medium)*
 
 **Question**: A RAG pipeline uses `answer_relevance` as its primary optimization metric. The team achieves `answer_relevance=0.95` but the legal team raises concerns that the chatbot is confidently providing answers that contradict source documents. Which metric should be added to catch this failure mode?
 
@@ -209,7 +209,7 @@ D) `perplexity` — measures linguistic fluency
 
 ---
 
-## Question 13
+## Question 13 *(Medium)*
 
 **Question**: A developer's RAG pipeline works well for exact-match questions (e.g., "What is our return policy?") but struggles with paraphrased versions (e.g., "Can I get my money back?"). Which technique MOST improves retrieval for paraphrased queries?
 
@@ -225,7 +225,7 @@ D) Switch the similarity metric from cosine to dot product
 
 ---
 
-## Question 14
+## Question 14 *(Hard)*
 
 **Question**: A production RAG pipeline has `faithfulness=0.88` and `answer_relevance=0.82` on evaluation. The team wants to improve both metrics. Which is the CORRECT priority order to investigate?
 
@@ -245,7 +245,7 @@ D) These metrics cannot be optimized independently — only full system retraini
 
 ---
 
-## Question 15
+## Question 15 *(Medium)*
 
 **Question**: A developer creates a Vector Search index named `product_search_idx` on the endpoint `my_vs_endpoint`. They want to query it with the text "wireless noise-canceling headphones". Which SDK call is CORRECT?
 
@@ -291,7 +291,7 @@ results = vsc.similarity_search("product_search_idx", "wireless noise-canceling 
 
 ---
 
-## Question 16
+## Question 16 *(Easy)*
 
 **Question**: A developer has a Direct Access Index and wants to update embedding for product ID `"prod-123"` with a new description. Which approach is CORRECT?
 
@@ -307,7 +307,7 @@ D) Call `index.update(id="prod-123", embedding=new_vector)` to update in place
 
 ---
 
-## Question 17
+## Question 17 *(Medium)*
 
 **Question**: A team indexes 2 million documents for a RAG pipeline on Databricks. They notice that new documents added to the source Delta table take over 30 minutes to appear in the index. How can they reduce the synchronization lag?
 
@@ -323,7 +323,7 @@ D) Increase the number of Vector Search endpoints
 
 ---
 
-## Question 18
+## Question 18 *(Hard)*
 
 **Question**: A team stores customer reviews as embeddings in a Vector Search index with metadata columns: `rating` (integer 1–5), `product_category` (string), and `verified_purchase` (boolean). A developer wants to find reviews most similar to "excellent battery life" where rating >= 4 AND verified_purchase = true. Which filter dictionary is CORRECT?
 
@@ -339,7 +339,7 @@ D) `filters=[("rating", ">=", 4), ("verified_purchase", "=", True)]`
 
 ---
 
-## Question 19
+## Question 19 *(Medium)*
 
 **Question**: A developer wants to use Databricks-hosted embeddings with their Delta Sync Index instead of self-managed embeddings. What must be specified during index creation to enable this?
 
@@ -355,7 +355,7 @@ D) Both `embedding_source_column` AND the hosted embedding model endpoint name
 
 ---
 
-## Question 20
+## Question 20 *(Medium)*
 
 **Question**: A developer wants to store both the primary article text and a separate summary field in their Vector Search index, enabling queries to match either field. What is the CORRECT approach?
 
@@ -371,7 +371,7 @@ D) Use two separate query calls and merge results in Python
 
 ---
 
-## Question 21
+## Question 21 *(Hard)*
 
 **Question**: A team's Vector Search index was created 3 months ago. The source Delta table is unchanged but retrieval quality has degraded over time as the query distribution evolved. What is the MOST appropriate action?
 
@@ -387,7 +387,7 @@ D) Add more worker nodes to the Vector Search endpoint
 
 ---
 
-## Question 22
+## Question 22 *(Medium)*
 
 **Question**: A developer has a Vector Search index with 500,000 documents. They need to delete all documents where `status = "archived"` (approximately 50,000 documents). Which is the MOST efficient approach?
 
@@ -403,7 +403,7 @@ D) Use `index.upsert()` to overwrite archived documents with empty embedding vec
 
 ---
 
-## Question 23
+## Question 23 *(Medium)*
 
 **Question**: A developer notices that querying their Vector Search index with `num_results=100` takes 3x longer than with `num_results=10`. Which statement BEST explains this behavior?
 
@@ -419,7 +419,7 @@ D) The `num_results` parameter directly controls the number of similarity comput
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 **Question**: A developer creates an embedding with `databricks-gte-large-en` and queries the index with a French-language question, even though all indexed documents are in English. What is the MOST likely result?
 
@@ -435,7 +435,7 @@ D) The query returns documents with the highest token overlap with the French qu
 
 ---
 
-## Question 25
+## Question 25 *(Medium)*
 
 **Question**: A team uses a Delta Sync Index with `pipeline_type="CONTINUOUS"`. They truncate and reload the source Delta table with 500,000 new rows (replacing the original 500,000 rows). What happens to the Vector Search index?
 
@@ -455,7 +455,7 @@ D) Continuous mode only processes incremental additions; truncation requires swi
 
 ---
 
-## Question 26
+## Question 26 *(Hard)*
 
 **Question**: A developer uses few-shot prompting with 10 examples in the system prompt. The LLM starts ignoring the format demonstrated in the examples for complex inputs. Which intervention is MOST likely to help?
 
@@ -471,7 +471,7 @@ D) Reduce the system prompt to only the most critical instruction
 
 ---
 
-## Question 27
+## Question 27 *(Hard)*
 
 **Question**: A developer builds a LangChain agent for a travel booking system. The agent has three tools: `search_flights`, `search_hotels`, `book_trip`. A user asks "Find me flight options to Paris next week?" The agent incorrectly calls `book_trip` instead of `search_flights`. What is the MOST likely root cause?
 
@@ -487,7 +487,7 @@ D) The user's query is too short for the LLM to parse intent
 
 ---
 
-## Question 28
+## Question 28 *(Easy)*
 
 **Question**: A developer builds a chatbot that supports both English and Spanish. The system prompt is in English. A user writes in Spanish. The LLM responds in English. How can the developer reliably ensure the LLM responds in the user's language?
 
@@ -503,7 +503,7 @@ D) Set `language="auto"` in the Foundation Model API call
 
 ---
 
-## Question 29
+## Question 29 *(Medium)*
 
 **Question**: A developer logs a RAG chain with `mlflow.langchain.log_model(chain, "rag-chain", input_example={"query": "What is RAG?"})`. What is the PRIMARY benefit of providing `input_example`?
 
@@ -519,7 +519,7 @@ D) It pre-warms the model's cache for faster first-query response at serving tim
 
 ---
 
-## Question 30
+## Question 30 *(Hard)*
 
 **Question**: A developer is building a RAG pipeline and must choose between `chain_type="stuff"` and `chain_type="map_reduce"` in LangChain's `RetrievalQA`. Their typical query retrieves 10 chunks of 512 tokens each (5120 tokens total). The LLM has a 4096-token context window. Which chain type is REQUIRED?
 
@@ -535,7 +535,7 @@ D) Either `"stuff"` or `"map_reduce"` — both fit within the context window
 
 ---
 
-## Question 31
+## Question 31 *(Hard)*
 
 **Question**: A developer wants to ensure that every LangChain chain call logs a custom metadata field `session_id` to MLflow for request tracing. Which approach is MOST appropriate?
 
@@ -551,7 +551,7 @@ D) Set `MLFLOW_RUN_ID` environment variable to the session_id value
 
 ---
 
-## Question 32
+## Question 32 *(Hard)*
 
 **Question**: A developer uses a LangChain `RetrievalQA` chain and after debugging finds that the quality of answers depends heavily on the ORDER in which retrieved chunks are placed in the prompt. Specifically, the most relevant chunk in the middle of the context produces worse answers than when placed first. What does this represent?
 
@@ -567,7 +567,7 @@ D) A temperature calibration issue
 
 ---
 
-## Question 33
+## Question 33 *(Medium)*
 
 **Question**: A developer calls an external weather API from within a LangChain agent tool. The API occasionally returns HTTP 429 (rate limit exceeded) errors. How should the tool handle this?
 
@@ -583,7 +583,7 @@ D) Cache all weather API responses forever to avoid repeated calls
 
 ---
 
-## Question 34
+## Question 34 *(Hard)*
 
 **Question**: A developer evaluates their RAG pipeline using `mlflow.evaluate()`. The evaluation dataset has 200 rows but `mlflow.evaluate()` completes in 5 seconds — suspiciously fast for LLM-judge metrics. What is the MOST likely explanation?
 
@@ -599,7 +599,7 @@ D) The model's predict function is returning cached responses
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 **Question**: An organization deploys a RAG chatbot for internal employees. They use `ConversationSummaryMemory` to maintain context across a long session. After 30 turns, a user asks about a topic mentioned in turn 3. Which problem is MOST likely to occur?
 
@@ -615,7 +615,7 @@ D) The embedding model re-indexes the conversation history automatically
 
 ---
 
-## Question 36
+## Question 36 *(Medium)*
 
 **Question**: A developer builds a multi-step LangChain pipeline where Step 1 generates search queries and Step 2 retrieves documents using those queries. The developer wants each step's outputs to be logged separately to MLflow for debugging. Which approach enables this?
 
@@ -631,7 +631,7 @@ D) Use `mlflow.set_tag("step1_output", ...)` to store intermediate results
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 **Question**: A developer wants to load a LangChain chain that was logged with `mlflow.langchain.log_model()` and make predictions programmatically. The model URI is `runs:/abc123/rag-chain`. Which code produces a callable `.predict()` interface?
 
@@ -665,7 +665,7 @@ D) Both A and B are valid
 
 ---
 
-## Question 38
+## Question 38 *(Medium)*
 
 **Question**: A developer wants to compare two RAG prompting strategies across 50 test questions using MLflow. Strategy A uses a concise system prompt; Strategy B uses a detailed, multi-paragraph system prompt. What is the CORRECT MLflow pattern?
 
@@ -685,7 +685,7 @@ D) Log the strategies as model versions in the Model Registry and compare their 
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 **Question**: A developer calls the `databricks-meta-llama-3-1-70b-instruct` endpoint using the OpenAI Python client pointed at the Databricks host. The call succeeds during development but fails in production with a 401 Unauthorized error. What is the MOST likely cause?
 
@@ -701,7 +701,7 @@ D) The model is not available in the production workspace region
 
 ---
 
-## Question 40
+## Question 40 *(Medium)*
 
 **Question**: A team deploys a LangChain RAG chain to a Databricks Model Serving endpoint. Endpoint logs show frequent cold start latencies of 60–90 seconds for the first request after idle periods. What is the MOST appropriate solution for a customer-facing production app?
 
@@ -717,7 +717,7 @@ D) Reduce the LangChain chain complexity by removing the reranker
 
 ---
 
-## Question 41
+## Question 41 *(Hard)*
 
 **Question**: A team wants to monitor their deployed RAG chatbot for data drift — specifically detecting when user query topics shift significantly from the training distribution. What is the CORRECT Databricks approach?
 
@@ -733,7 +733,7 @@ D) Use a Databricks Job to compute cosine similarity between new queries and tra
 
 ---
 
-## Question 42
+## Question 42 *(Medium)*
 
 **Question**: An engineer needs to enable multiple teams to call the same Foundation Model endpoint with different rate limits per team. Which Databricks component provides this capability?
 
@@ -749,7 +749,7 @@ D) Databricks Secrets — store per-team API keys with different expiration time
 
 ---
 
-## Question 43
+## Question 43 *(Medium)*
 
 **Question**: A team logs their RAG chain and evaluation results to MLflow. They want to register the chain as a model version and add a description explaining the chunking strategy used. Which MLflow API accomplishes this?
 
@@ -775,7 +775,7 @@ D) `mlflow.register_model(model_uri, "rag-chain", description="...")`
 
 ---
 
-## Question 44
+## Question 44 *(Hard)*
 
 **Question**: A developer deployed a RAG chain to Model Serving and enabled inference tables. They query the inference table and see rows where `response` is `null` and `status_code` is `500`. What does this indicate and how should it be investigated?
 
@@ -791,7 +791,7 @@ D) The client sent malformed requests with null payloads
 
 ---
 
-## Question 45
+## Question 45 *(Hard)*
 
 **Question**: A team is deciding between MLflow AI Gateway and direct Foundation Model API calls for their multi-team organization. Which scenario makes MLflow AI Gateway the CLEARLY better choice?
 

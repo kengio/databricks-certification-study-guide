@@ -378,20 +378,20 @@ champion version and remove the old served model from the endpoint configuration
 
 ## Use Cases
 
-- **A/B Testing and Canary Deployments Implementation**: Incorporating A/B Testing and Canary Deployments principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized A/B Testing and Canary Deployments Workflows**: Using the advanced capabilities of A/B Testing and Canary Deployments to automate processes and reduce manual operational overhead.
+- **Safe Model Rollout for Credit Scoring**: Using canary deployment to route 5% of traffic to a retrained credit-scoring model, monitoring approval-rate and default-rate metrics for 48 hours before scaling to 100%.
+- **Multi-Variant Recommendation Testing**: Running a three-way A/B test (collaborative filtering vs content-based vs hybrid) on a recommendation endpoint, using inference tables and a two-sample t-test to select the variant that maximises click-through rate.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Inference Table Not Capturing Requests
 
-**Scenario:** The default settings for A/B Testing and Canary Deployments do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for A/B Testing and Canary Deployments to handle production-scale workloads.
+**Scenario:** After enabling an A/B test, the inference table is empty or missing requests, making it impossible to compare variants.
+**Fix:** Enable the inference table on the endpoint BEFORE starting the test -- historical requests cannot be backfilled retroactively. Verify the table exists in the expected catalog/schema with `spark.table("catalog.schema.endpoint_name_payload")`.
 
-### Integration Bottlenecks
+### A/B Test Shows No Statistical Significance
 
-**Scenario:** Connecting A/B Testing and Canary Deployments to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for A/B Testing and Canary Deployments prior to deployment.
+**Scenario:** After running a 50/50 A/B test for several days, the p-value remains above 0.05 despite a visible difference in mean metrics.
+**Fix:** Verify sample size is sufficient (hundreds to thousands per variant). Short tests or low-traffic endpoints need longer run times. If the true effect size is small (e.g., 0.002 AUC improvement), you may need tens of thousands of samples. Consider whether the improvement justifies the operational cost of the rollout even if statistically significant.
 
 ## Key Takeaways
 

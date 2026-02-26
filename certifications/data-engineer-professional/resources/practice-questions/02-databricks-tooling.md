@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, databricks-tooling]
 
 **Scenario**: A notebook needs to accept a date parameter that defaults to yesterday's date when not provided.
 
-**Question**: Which code correctly creates this widget?
+**Question** *(Easy)*: Which code correctly creates this widget?
 
 A) `dbutils.widgets.text("date", str(date.today() - timedelta(days=1)))`
 B) `dbutils.widgets.dropdown("date", str(date.today() - timedelta(days=1)), [])`
@@ -28,7 +28,7 @@ D) `dbutils.widgets.parameter("date", str(date.today() - timedelta(days=1)))`
 
 **Scenario**: A main notebook needs to call a utility notebook and use variables defined in it.
 
-**Question**: Which statement is true about `%run`?
+**Question** *(Easy)*: Which statement is true about `%run`?
 
 A) Variables from the called notebook are not accessible in the calling notebook
 B) `%run` executes the notebook asynchronously
@@ -46,7 +46,7 @@ D) `%run` can only be used with notebooks in the same folder
 
 **Scenario**: A CI/CD pipeline needs to authenticate with Databricks using a service principal.
 
-**Question**: Which environment variables should be set?
+**Question** *(Medium)*: Which environment variables should be set?
 
 A) `DATABRICKS_HOST` and `DATABRICKS_TOKEN`
 B) `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, and `DATABRICKS_CLIENT_SECRET`
@@ -64,7 +64,7 @@ D) `DATABRICKS_WORKSPACE` and `DATABRICKS_PAT`
 
 **Scenario**: A data engineer needs to trigger a job via API with custom parameters.
 
-**Question**: Which API endpoint and method should be used?
+**Question** *(Easy)*: Which API endpoint and method should be used?
 
 A) `POST /api/2.1/jobs/run-now`
 B) `GET /api/2.1/jobs/trigger`
@@ -82,7 +82,7 @@ D) `PUT /api/2.1/jobs/execute`
 
 **Scenario**: A production ETL job runs daily for 2 hours. Cost optimization is a priority.
 
-**Question**: Which cluster configuration is most cost-effective?
+**Question** *(Medium)*: Which cluster configuration is most cost-effective?
 
 A) All-purpose cluster running 24/7
 B) Job cluster created for each run
@@ -100,7 +100,7 @@ D) Serverless cluster
 
 **Scenario**: A team needs to store raw data files that will be governed by Unity Catalog.
 
-**Question**: Which storage option should they use?
+**Question** *(Easy)*: Which storage option should they use?
 
 A) DBFS root storage
 B) Mounted cloud storage

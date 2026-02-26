@@ -405,7 +405,7 @@ df_window = employees.withColumn(
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
-- **Optimized Joins and Aggregations Workflows**: Using the advanced capabilities of Joins and Aggregations to automate processes and reduce manual operational overhead.
+- **Enriching Fact Tables with Dimension Lookups**: Using broadcast joins to enrich large transaction tables with small reference/dimension tables (e.g., joining millions of orders with a few thousand product categories) with minimal shuffle overhead.
 
 ## Common Issues & Errors
 
@@ -414,10 +414,15 @@ df_window = employees.withColumn(
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### Integration Bottlenecks
+### Shuffle Spill on Large Joins Causing OOM
 
-**Scenario:** Connecting Joins and Aggregations to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Joins and Aggregations prior to deployment.
+**Scenario:** Joining two large tables causes excessive shuffle spill to disk or `OutOfMemoryError` on executors.
+**Fix:** Broadcast the smaller table using the `broadcast()` hint, or increase `spark.sql.shuffle.partitions` to distribute data across more tasks and reduce per-partition memory pressure.
+
+### Duplicate Columns After Join on Identically-Named Keys
+
+**Scenario:** After joining two DataFrames on columns with the same name (e.g., both have `id`), the result contains two `id` columns, causing ambiguity errors in downstream operations.
+**Fix:** Join on a single column expression (e.g., `df1.join(df2, ["id"])`) which automatically deduplicates the key column, or explicitly drop the duplicate column post-join.
 
 ## Exam Tips
 

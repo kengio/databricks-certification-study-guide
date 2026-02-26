@@ -13,7 +13,7 @@ status: published
 
 ---
 
-## Question 1: ML Runtime Pre-installed Libraries
+## Question 1: ML Runtime Pre-installed Libraries *(Easy)*
 
 **Question**: Which of the following libraries is pre-installed in the Databricks Runtime for Machine Learning but NOT in the standard Databricks Runtime?
 
@@ -29,7 +29,7 @@ D) Delta Lake
 
 ---
 
-## Question 2: Single-Node Cluster Use Case
+## Question 2: Single-Node Cluster Use Case *(Medium)*
 
 **Question**: A data scientist is training a scikit-learn model on a 500 MB dataset that fits entirely in memory. Which cluster type is most appropriate?
 
@@ -45,7 +45,7 @@ D) Multi-node cluster with autoscaling enabled
 
 ---
 
-## Question 3: AutoML Task Types
+## Question 3: AutoML Task Types *(Easy)*
 
 **Question**: A data scientist wants to use Databricks AutoML to predict customer churn (a binary yes/no outcome). Which AutoML task type should they select?
 
@@ -61,7 +61,7 @@ D) Clustering
 
 ---
 
-## Question 4: AutoML Output
+## Question 4: AutoML Output *(Easy)*
 
 **Question**: After running a Databricks AutoML experiment, where are the results stored?
 
@@ -77,7 +77,7 @@ D) A JSON configuration file in DBFS
 
 ---
 
-## Question 5: Cluster Policy Purpose
+## Question 5: Cluster Policy Purpose *(Medium)*
 
 **Question**: A platform engineer wants to prevent data science teams from launching GPU clusters without explicit approval. What is the best approach?
 
@@ -93,7 +93,7 @@ D) Restrict Unity Catalog permissions for the data science teams
 
 ---
 
-## Question 6: ML Runtime Version Selection
+## Question 6: ML Runtime Version Selection *(Medium)*
 
 **Question**: A data scientist needs to train a deep learning model using PyTorch with GPU acceleration. Which Databricks Runtime variant should they select?
 
@@ -111,7 +111,7 @@ D) Databricks Runtime Photon
 
 ## Question 7: Notebook %run Directive
 
-**Question**: A team stores common data preprocessing utility functions in a notebook called `utils.py`. What is the correct way to execute that notebook's code in another notebook?
+**Question** *(Easy)*: A team stores common data preprocessing utility functions in a notebook called `utils.py`. What is the correct way to execute that notebook's code in another notebook?
 
 A) `import utils`
 B) `%run ./utils`
@@ -127,7 +127,7 @@ D) `spark.sql("RUN NOTEBOOK utils")`
 
 ## Question 8: Databricks Repos Version Control
 
-**Question**: A data scientist wants to track changes to their model training notebooks using Git. What Databricks feature should they use?
+**Question** *(Easy)*: A data scientist wants to track changes to their model training notebooks using Git. What Databricks feature should they use?
 
 A) Delta Lake change data feed
 B) MLflow run history
@@ -143,7 +143,7 @@ D) Databricks Workflows
 
 ## Question 9: AutoML Forecasting Input
 
-**Question**: When configuring a Databricks AutoML forecasting experiment, which column is required in addition to the target variable?
+**Question** *(Easy)*: When configuring a Databricks AutoML forecasting experiment, which column is required in addition to the target variable?
 
 A) A feature importance column
 B) A time column
@@ -159,7 +159,7 @@ D) A row ID column
 
 ## Question 10: Standard vs ML Runtime
 
-**Question**: A data scientist wants to use the `mlflow.autolog()` function in a notebook. They notice the function is not available. What is the most likely cause?
+**Question** *(Medium)*: A data scientist wants to use the `mlflow.autolog()` function in a notebook. They notice the function is not available. What is the most likely cause?
 
 A) The cluster is running the standard Databricks Runtime instead of Databricks Runtime ML
 B) The cluster has autoscaling disabled
@@ -175,7 +175,7 @@ D) The MLflow tracking server is offline
 
 ## Question 11: Multi-Node Cluster Benefit
 
-**Question**: Which of the following workloads benefits MOST from using a multi-node Spark cluster instead of a single-node cluster?
+**Question** *(Medium)*: Which of the following workloads benefits MOST from using a multi-node Spark cluster instead of a single-node cluster?
 
 A) Training a logistic regression model with scikit-learn on a 1 GB CSV file
 B) Training a distributed gradient-boosted tree using Spark ML on a 500 GB Delta table
@@ -191,7 +191,7 @@ D) Visualizing model performance with matplotlib
 
 ## Question 12: AutoML Best Model
 
-**Question**: After completing an AutoML experiment, a data scientist wants to retrain and customize the best model. What does AutoML provide to enable this?
+**Question** *(Easy)*: After completing an AutoML experiment, a data scientist wants to retrain and customize the best model. What does AutoML provide to enable this?
 
 A) A compiled binary model file that can be fine-tuned
 B) A generated Python notebook containing the training code for the best model
@@ -207,7 +207,7 @@ D) A Delta table containing the best model's feature importances
 
 ## Question 13: Cluster Termination Policy
 
-**Question**: A platform administrator wants to ensure that ML training clusters are automatically terminated after 30 minutes of inactivity to reduce costs. Where is this configured?
+**Question** *(Easy)*: A platform administrator wants to ensure that ML training clusters are automatically terminated after 30 minutes of inactivity to reduce costs. Where is this configured?
 
 A) In the cluster policy definition
 B) In the cluster's auto-termination setting

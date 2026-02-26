@@ -396,7 +396,7 @@ print(f"Created cluster: {cluster.cluster_id}")
 ## Use Cases
 
 - **Compute Clusters for ML Implementation**: Incorporating Compute Clusters for ML principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Compute Clusters for ML Workflows**: Using the advanced capabilities of Compute Clusters for ML to automate processes and reduce manual operational overhead.
+- **Cost-Optimized Training with Spot Instances**: Using autoscaling clusters with SPOT instances to run large-scale hyperparameter sweeps while minimizing cloud compute costs.
 
 ## Common Issues & Errors
 
@@ -405,10 +405,10 @@ print(f"Created cluster: {cluster.cluster_id}")
 **Scenario:** The default settings for Compute Clusters for ML do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Compute Clusters for ML to handle production-scale workloads.
 
-### Integration Bottlenecks
+### GPU Cluster Out of Memory
 
-**Scenario:** Connecting Compute Clusters for ML to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Compute Clusters for ML prior to deployment.
+**Scenario:** Training job crashes with `CUDA out of memory` on a GPU cluster.
+**Fix:** Reduce batch size, use gradient accumulation, or select a node type with more GPU memory (e.g., A10G to A100).
 
 ## Exam Tips
 

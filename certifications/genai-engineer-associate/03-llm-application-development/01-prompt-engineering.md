@@ -349,20 +349,20 @@ Answer:"""
 
 ## Use Cases
 
-- **Prompt Engineering Implementation**: Incorporating Prompt Engineering principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Prompt Engineering Workflows**: Using the advanced capabilities of Prompt Engineering to automate processes and reduce manual operational overhead.
+- **Structured Data Extraction from Unstructured Text**: Using few-shot prompting with JSON output mode to extract product names, prices, and specifications from free-text product descriptions, feeding a downstream catalogue pipeline.
+- **Grounded Customer Support Bot**: Crafting a system prompt that instructs the LLM to answer ONLY from the retrieved context and respond "I don't know" when the context is insufficient, reducing hallucination in a production support chatbot.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### LLM Ignoring System Prompt Instructions
 
-**Scenario:** The default settings for Prompt Engineering do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Prompt Engineering to handle production-scale workloads.
+**Scenario:** The system prompt tells the model to reply in JSON, but the model intermittently returns free text or wraps the JSON in markdown code fences.
+**Fix:** Add `response_format={"type": "json_object"}` to the API call to enforce JSON output at the decoding level. Reinforce the instruction at the end of the system prompt ("You MUST respond in valid JSON with no additional text"). Provide 2-3 few-shot examples of the exact output format.
 
-### Integration Bottlenecks
+### Prompt Versioning Not Tracked
 
-**Scenario:** Connecting Prompt Engineering to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Prompt Engineering prior to deployment.
+**Scenario:** A prompt change in production causes a quality regression, but the team cannot determine which prompt version was deployed at the time.
+**Fix:** Log every prompt template version as an MLflow parameter (`mlflow.log_param("prompt_version", "v3")`) and save the full prompt text as an artifact (`mlflow.log_artifact("system_prompt.txt")`). This enables side-by-side comparison in the MLflow UI.
 
 ## Key Takeaways
 

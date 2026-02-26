@@ -299,9 +299,15 @@ df.write.format("delta").mode("overwrite").save("/path/to/table")
 
 num_rows = df.count()
 
-# Approximate size (MB)
+# Approximate size — cache first, then check via Spark UI Storage tab
+# There is no direct .memory_usage API in PySpark
 
-memory_usage = df.cache().memory_usage / 1024 / 1024
+df.cache()
+df.count()  # triggers caching
+# Check "Storage" tab in Spark UI for cached size
+
+# Alternatively, estimate from row count and schema
+print(f"Estimated rows: {df.count()}")
 
 # Schema info
 
@@ -348,8 +354,8 @@ sample_df = df.sampleBy("category", fractions={
 
 ## Use Cases
 
-- **DataFrame Operations Implementation**: Incorporating DataFrame Operations principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized DataFrame Operations Workflows**: Using the advanced capabilities of DataFrame Operations to automate processes and reduce manual operational overhead.
+- **Schema-Enforced ETL Pipelines**: Defining explicit schemas with `StructType` to validate incoming data before writing to Delta tables, catching type mismatches early in the pipeline.
+- **Exploratory Data Profiling**: Using `describe()`, `summary()`, `printSchema()`, and `distinct().count()` to profile new datasets and identify data quality issues before building transformation logic.
 
 ## Common Issues & Errors
 
@@ -358,10 +364,15 @@ sample_df = df.sampleBy("category", fractions={
 **Scenario:** The default settings for DataFrame Operations do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for DataFrame Operations to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Column Name Ambiguity After Joins
 
-**Scenario:** Connecting DataFrame Operations to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for DataFrame Operations prior to deployment.
+**Scenario:** After joining two DataFrames that share identically-named columns, subsequent `select()` or `filter()` calls raise `AnalysisException: Reference is ambiguous`.
+**Fix:** Use table aliases or the `df["col"]` syntax to disambiguate columns, or join on a single column expression (e.g., `["id"]`) which automatically deduplicates the join key.
+
+### AnalysisException From Misspelled Column Names
+
+**Scenario:** A `withColumn()` or `select()` call fails with `AnalysisException: cannot resolve column name` due to a typo or case mismatch in the column reference.
+**Fix:** Inspect the DataFrame schema with `df.columns` or `df.printSchema()` before applying transformations to verify exact column names and types.
 
 ## Exam Tips
 

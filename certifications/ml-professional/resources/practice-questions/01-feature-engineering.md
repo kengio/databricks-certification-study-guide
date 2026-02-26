@@ -10,7 +10,7 @@ tags: [ml-professional, practice-questions, feature-engineering, feature-store]
 
 ---
 
-## Question 1: Online vs Offline Feature Store Selection
+## Question 1 *(Medium)*: Online vs Offline Feature Store Selection
 
 **Question**: A recommendation model needs to return personalized results within 50ms of a user clicking a product page. Pre-computed user embeddings are updated nightly. Which feature store configuration is most appropriate?
 
@@ -29,7 +29,7 @@ D) Cache features in the driver node's memory between requests
 
 ---
 
-## Question 2: Primary Key Requirement for write_table()
+## Question 2 *(Medium)*: Primary Key Requirement for write_table()
 
 **Question**: A data engineer calls `FeatureEngineeringClient.write_table()` to persist a feature DataFrame to the feature store. The call raises a `MlflowException`. What is the most likely cause?
 
@@ -48,7 +48,7 @@ D) The Spark session is not connected to a GPU-enabled cluster
 
 ---
 
-## Question 3: create_training_set() and lookup_key
+## Question 3 *(Easy)*: create_training_set() and lookup_key
 
 **Question**: A data scientist uses `FeatureEngineeringClient.create_training_set()` with a `FeatureLookup` to join user features onto a label DataFrame. The label DataFrame has a column `user_id`. Which parameter on `FeatureLookup` connects the label DataFrame to the feature table?
 
@@ -68,7 +68,7 @@ D) `entity_key`
 
 ---
 
-## Question 4: Point-in-Time Correct Feature Retrieval
+## Question 4 *(Medium)*: Point-in-Time Correct Feature Retrieval
 
 **Question**: A fraud detection model is trained on historical transactions. Each transaction has an `event_timestamp`. The data scientist wants to ensure that feature values joined to each transaction reflect only information available at the moment the transaction occurred, avoiding future leakage. Which parameter enables this in `FeatureLookup`?
 
@@ -88,7 +88,7 @@ D) `max_lookback_days` — limits how far back in time features are retrieved
 
 ---
 
-## Question 5: Feature Lineage via log_model()
+## Question 5 *(Easy)*: Feature Lineage via log_model()
 
 **Question**: A team wants to track which feature table versions were used to train each model version, enabling them to reproduce training data for any registered model. Which method establishes this lineage automatically in Databricks?
 
@@ -108,7 +108,7 @@ D) `mlflow.set_tag("feature_table", table_name)` before logging the model
 
 ---
 
-## Question 6: Automatic Feature Retrieval at Inference Time
+## Question 6 *(Medium)*: Automatic Feature Retrieval at Inference Time
 
 **Question**: A model was logged with `FeatureEngineeringClient.log_model()` and deployed to a Databricks Model Serving endpoint. At inference time the client sends only `customer_id` in the request payload. How does the endpoint obtain the full set of feature values needed for prediction?
 
@@ -128,7 +128,7 @@ D) A separate microservice must be called first to hydrate features before hitti
 
 ---
 
-## Question 7: Train-Serving Skew Root Cause
+## Question 7 *(Hard)*: Train-Serving Skew Root Cause
 
 **Question**: A production model shows higher error rates on live data than on the held-out test set, even though the input distribution has not shifted. What is the most likely root cause?
 
@@ -149,7 +149,7 @@ D) The serving endpoint uses a different Python version than the training cluste
 
 ---
 
-## Question 8: publish_online_features()
+## Question 8 *(Easy)*: publish_online_features()
 
 **Question**: A team has a feature table stored in Delta Lake (offline store). They want to make those features available for sub-10ms lookups from a model serving endpoint. What is the correct next step?
 
@@ -169,7 +169,7 @@ D) Mount the Delta table path as a DBFS mount accessible from the serving cluste
 
 ---
 
-## Question 9: Feature Table Schema Requirements
+## Question 9 *(Easy)*: Feature Table Schema Requirements
 
 **Question**: A data scientist attempts to create a feature table using `FeatureEngineeringClient.create_table()`. Which combination of requirements must be satisfied for the call to succeed?
 
@@ -188,7 +188,7 @@ D) The table must include a timestamp column alongside the primary key
 
 ---
 
-## Question 10: Creating a Training Dataset
+## Question 10 *(Easy)*: Creating a Training Dataset
 
 **Question**: Which `FeatureEngineeringClient` method generates a training dataset by joining a label DataFrame with feature values from one or more feature tables?
 
@@ -209,7 +209,7 @@ D) `build_dataset()`
 
 ---
 
-## Question 11: Delta Lake as the Offline Store
+## Question 11 *(Easy)*: Delta Lake as the Offline Store
 
 **Question**: A data engineer asks why feature data stored via `FeatureEngineeringClient.write_table()` supports time travel queries. What is the underlying reason?
 
@@ -229,7 +229,7 @@ D) The Feature Engineering Client snapshots feature values to DBFS on each write
 
 ---
 
-## Question 12: Online Store vs Passing Features Directly
+## Question 12 *(Medium)*: Online Store vs Passing Features Directly
 
 **Question**: A batch scoring pipeline scores 10 million customer records nightly. Features are already computed and stored in a Delta table. A teammate suggests configuring the online store to serve these features. When is this suggestion necessary?
 
@@ -249,7 +249,7 @@ D) Only when Unity Catalog is not enabled
 
 ---
 
-## Question 13: Feature Sharing Across Teams with Unity Catalog
+## Question 13 *(Easy)*: Feature Sharing Across Teams with Unity Catalog
 
 **Question**: Team A has created a feature table `catalog_a.features.customer_ltv`. Team B wants to use this feature table to train their own model. What must Team A do to enable this?
 
@@ -269,7 +269,7 @@ D) Convert the feature table to a view and share the view definition
 
 ---
 
-## Question 14: Avoiding Data Leakage with Point-in-Time Lookups
+## Question 14 *(Hard)*: Avoiding Data Leakage with Point-in-Time Lookups
 
 **Question**: A model predicts whether a customer will churn in the next 30 days. The training data contains churn labels from the past year. A data scientist joins customer activity features without using `timestamp_lookup_key`. What is the likely consequence?
 
@@ -289,7 +289,7 @@ D) The model will train correctly but fail to deploy due to a schema mismatch
 
 ---
 
-## Question 15: Feature Versioning via Delta Table Versions
+## Question 15 *(Hard)*: Feature Versioning via Delta Table Versions
 
 **Question**: A data scientist needs to reproduce the exact training dataset used to train model version 12, which was trained six months ago. The feature table has had many updates since then. How does Databricks enable this?
 

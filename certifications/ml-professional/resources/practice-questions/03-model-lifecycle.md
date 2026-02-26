@@ -16,7 +16,7 @@ status: complete
 
 ---
 
-## Question 1: Unity Catalog Registry URI
+## Question 1 *(Medium)*: Unity Catalog Registry URI
 
 **Question**: A data scientist registers a model using `mlflow.sklearn.log_model()` without calling `mlflow.set_registry_uri()` first. Where does the model get registered?
 
@@ -32,7 +32,7 @@ D) A local MLflow tracking server on the driver node
 
 ---
 
-## Question 2: Model Alias URI Format
+## Question 2 *(Easy)*: Model Alias URI Format
 
 **Question**: A data scientist wants to load the model version tagged with the alias `champion` from a Unity Catalog registered model `ml_catalog.fraud.detector`. Which URI is correct?
 
@@ -48,7 +48,7 @@ D) `uc://ml_catalog.fraud.detector:champion`
 
 ---
 
-## Question 3: Legacy Stages in Unity Catalog
+## Question 3 *(Medium)*: Legacy Stages in Unity Catalog
 
 **Question**: A team migrates their model registry from the workspace registry to Unity Catalog. A developer calls `client.transition_model_version_stage(name, version, stage="Production")`. What happens?
 
@@ -64,7 +64,7 @@ D) The model is copied to a separate production catalog automatically
 
 ---
 
-## Question 4: spark_udf result_type
+## Question 4 *(Medium)*: spark_udf result_type
 
 **Question**: A regression model returns `float64` predictions. A data scientist loads it as a Spark UDF: `mlflow.pyfunc.spark_udf(spark, model_uri, result_type=???)`. What should `result_type` be?
 
@@ -80,7 +80,7 @@ D) `DoubleType()`
 
 ---
 
-## Question 5: load_model vs spark_udf Execution Location
+## Question 5 *(Medium)*: load_model vs spark_udf Execution Location
 
 **Question**: A team needs to score 50 million rows daily using an MLflow model. One option uses `mlflow.pyfunc.load_model()` followed by `model.predict(pandas_df)`. The other uses `mlflow.pyfunc.spark_udf()` applied to a Spark DataFrame. What is the key architectural difference?
 
@@ -96,7 +96,7 @@ D) There is no meaningful difference — both use all available cluster resource
 
 ---
 
-## Question 6: Scale-to-Zero Cold Start
+## Question 6 *(Medium)*: Scale-to-Zero Cold Start
 
 **Question**: A Databricks Model Serving endpoint is configured with scale-to-zero enabled. A user sends the first request after the endpoint has been idle for two hours. What should they expect?
 
@@ -112,7 +112,7 @@ D) Scale-to-zero is not available on Databricks Model Serving
 
 ---
 
-## Question 7: Model Signature Enforcement
+## Question 7 *(Medium)*: Model Signature Enforcement
 
 **Question**: A model is registered in MLflow with a signature requiring a `float` column named `age`. An incoming serving request sends `age` as a `string`. What happens at serving time?
 
@@ -128,7 +128,7 @@ D) The model ignores the signature at serving time; signatures are informational
 
 ---
 
-## Question 8: Traffic Split Totals
+## Question 8 *(Easy)*: Traffic Split Totals
 
 **Question**: A team configures a Model Serving endpoint with `champion` receiving 80% of traffic and `challenger` receiving 10%. What is the result?
 
@@ -144,7 +144,7 @@ D) The challenger receives the full remaining 20% at runtime despite the 10% con
 
 ---
 
-## Question 9: Inference Table Configuration Timing
+## Question 9 *(Medium)*: Inference Table Configuration Timing
 
 **Question**: A team launches a Model Serving endpoint without configuring inference table logging. Six months later they realize they need historical request and response data. Can they retroactively capture it?
 
@@ -160,7 +160,7 @@ D) No — inference tables are only available for endpoints using GPU compute
 
 ---
 
-## Question 10: Shadow Deployment
+## Question 10 *(Easy)*: Shadow Deployment
 
 **Question**: In a shadow deployment, a challenger model runs alongside the champion. Who receives the challenger's predictions?
 
@@ -176,7 +176,7 @@ D) All users, with results hidden unless they opt in
 
 ---
 
-## Question 11: Canary vs A/B Testing
+## Question 11 *(Medium)*: Canary vs A/B Testing
 
 **Question**: A team wants to detect whether a new model is statistically significantly better than the current champion at the same metric. Which deployment strategy is designed for this?
 
@@ -192,7 +192,7 @@ D) Blue-green deployment — keeps both versions live and switches instantly on 
 
 ---
 
-## Question 12: Multi-Task Job run_if for Integration Tests
+## Question 12 *(Medium)*: Multi-Task Job run_if for Integration Tests
 
 **Question**: A CI/CD pipeline is a Databricks multi-task job: Task A trains the model, Task B evaluates it against a gate threshold, and Task C runs integration tests. Integration tests should only execute if evaluation passes. How should Task C be configured?
 
@@ -208,7 +208,7 @@ D) Use a `try/except` block inside Task B to call Task C conditionally
 
 ---
 
-## Question 13: Promoting Challenger to Champion via Alias
+## Question 13 *(Easy)*: Promoting Challenger to Champion via Alias
 
 **Question**: A challenger model (version 7) has passed all evaluation gates and must be promoted to the champion alias, replacing version 5. Which operation is correct?
 
@@ -224,7 +224,7 @@ D) Delete version 5 from the registry, then the alias automatically moves to the
 
 ---
 
-## Question 14: Custom pyfunc — When to Use PythonModel
+## Question 14 *(Medium)*: Custom pyfunc — When to Use PythonModel
 
 **Question**: A team trains a model using an internal proprietary framework that MLflow does not have a built-in flavor for. They also need custom preprocessing steps bundled with inference. Which MLflow capability is appropriate?
 
@@ -240,7 +240,7 @@ D) Write the model to Delta as a binary column and load it at serving time
 
 ---
 
-## Question 15: Drift-Triggered Retraining
+## Question 15 *(Hard)*: Drift-Triggered Retraining
 
 **Question**: A Databricks Lakehouse Monitoring alert detects that the model's AUC on recent data has dropped below the threshold. Which retraining trigger type best describes this scenario, and what is the recommended mechanism to invoke retraining?
 

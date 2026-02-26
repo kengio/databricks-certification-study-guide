@@ -396,8 +396,8 @@ D) The `num_results` parameter is too low to include the new documents
 
 ## Use Cases
 
-- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
-- **Optimized Vector Search in Production Workflows**: Using the advanced capabilities of Vector Search in Production to automate processes and reduce manual operational overhead.
+- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices, with HNSW parameter tuning (`ef_search=128`) to balance recall and latency under production QPS loads.
+- **Blue-Green Index Deployment**: Building a new vector index from an updated embedding model alongside the live index, validating retrieval quality on a golden test set, then switching traffic atomically to avoid downtime during re-indexing.
 
 ## Common Issues & Errors
 
@@ -406,10 +406,10 @@ D) The `num_results` parameter is too low to include the new documents
 **Scenario:** LLM endpoints take too long to return generated text.
 **Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
 
-### Integration Bottlenecks
+### Vector Search Query Returns Low Relevance Scores
 
-**Scenario:** Connecting Vector Search in Production to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Vector Search in Production prior to deployment.
+**Scenario:** `similarity_search()` returns results but the similarity scores are consistently low (e.g., <0.5), and the LLM generates poor answers from the retrieved context.
+**Fix:** Verify the query is being embedded with the same model used to build the index. Check that vectors are L2-normalised (required for cosine similarity). If scores are low despite correct configuration, the chunk size or content may be too noisy -- re-chunk with smaller, more focused segments and rebuild the index.
 
 ## Key Takeaways
 

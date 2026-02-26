@@ -458,20 +458,15 @@ CREATE TABLE production.meta.pii_columns (
 
 ## Use Cases
 
-- **Access Control & Security Implementation**: Incorporating Access Control & Security principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Access Control & Security Workflows**: Using the advanced capabilities of Access Control & Security to automate processes and reduce manual operational overhead.
+- **PII Protection**: Using column-masking views with `current_user()` to let analysts query customer tables without exposing email addresses, phone numbers, or SSNs.
+- **Team-based Access**: Creating groups (e.g., `sales_analysts`) and granting schema-level SELECT so new team members inherit the correct permissions automatically.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Grant Applied but Data Still Inaccessible
 
-**Scenario:** The default settings for Access Control & Security do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Access Control & Security to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Access Control & Security to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Access Control & Security prior to deployment.
+**Scenario:** Admin grants SELECT on a table but the user still gets permission denied.
+**Fix:** Unity Catalog requires `USE CATALOG` + `USE SCHEMA` on parent objects in addition to the table-level grant.
 
 ## Exam Tips
 

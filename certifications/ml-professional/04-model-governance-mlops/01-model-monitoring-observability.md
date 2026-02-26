@@ -324,8 +324,8 @@ Alert configuration steps:
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Model Monitoring and Observability Workflows**: Using the advanced capabilities of Model Monitoring and Observability to automate processes and reduce manual operational overhead.
+- **Three-Layer Production Model Monitoring**: Setting up data quality checks on input features, prediction distribution monitoring via Lakehouse Monitoring, and operational health dashboards (latency, error rate, QPS) to detect issues across the entire serving stack.
+- **Proactive Fraud Model Health Checks**: Scheduling daily monitoring jobs that compare prediction score distributions against a baseline, triggering Slack alerts when PSI exceeds 0.2 so the team can investigate before ground-truth labels confirm degradation.
 
 ## Common Issues & Errors
 
@@ -334,10 +334,10 @@ Alert configuration steps:
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Monitoring Dashboard Missing Recent Predictions
 
-**Scenario:** Connecting Model Monitoring and Observability to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Monitoring and Observability prior to deployment.
+**Scenario:** The Lakehouse Monitoring dashboard shows stale data because the inference table has not been refreshed or the monitoring profile has not been re-computed.
+**Fix:** Ensure the inference table is enabled on the serving endpoint BEFORE production traffic begins (it cannot backfill). Schedule the monitoring `refresh()` job to run at least as frequently as the reporting cadence. Verify the inference table Delta path has not been moved or compacted in a way that breaks the monitor's table reference.
 
 ## Key Takeaways
 

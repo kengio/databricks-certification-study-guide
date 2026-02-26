@@ -446,20 +446,20 @@ unfairly skew latency comparisons.
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Model Serving and Deployment Workflows**: Using the advanced capabilities of Model Serving and Deployment to automate processes and reduce manual operational overhead.
+- **Real-Time Fraud Scoring API**: Deploying a fraud detection model as a REST endpoint with `scale_to_zero_enabled=False` for consistent sub-500ms latency, with a canary deployment strategy that routes 10% of traffic to the challenger model version.
+- **Nightly Batch Scoring at Scale**: Using `mlflow.pyfunc.spark_udf()` to score 50 million transaction records distributed across a Spark cluster, writing results to a partitioned Delta table for downstream reporting dashboards.
 
 ## Common Issues & Errors
 
-### Artifact Access Denied
+### Endpoint Stuck in FAILED State After Deployment
 
-**Scenario:** Models fail to load from MLflow registry during serving.
-**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+**Scenario:** A custom pyfunc model deploys but the endpoint immediately enters `FAILED` state. The model loads fine locally.
+**Fix:** Check the model's `pip_requirements` -- the serving container only installs packages explicitly listed. Missing dependencies (e.g., `scikit-learn`, `joblib`) cause import errors at container startup. Also verify the model signature matches the expected input schema.
 
-### Integration Bottlenecks
+### Model Serving Cold Start Latency
 
-**Scenario:** Connecting Model Serving and Deployment to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Serving and Deployment prior to deployment.
+**Scenario:** An endpoint with `scale_to_zero_enabled=True` takes 60-120 seconds to respond after an idle period, causing timeouts in the calling application.
+**Fix:** Disable scale-to-zero for latency-sensitive endpoints (`scale_to_zero_enabled=False`). If cost is a concern, set the minimum provisioned concurrency to 1 so at least one instance stays warm. For batch workloads that can tolerate startup delays, scale-to-zero is fine.
 
 ## Key Takeaways
 

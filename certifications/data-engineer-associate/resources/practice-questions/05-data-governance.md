@@ -8,7 +8,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 1: Git Operations Outside Databricks Repos
 
-**Question**: Which Git operations need to be completed outside of Databricks Repos?
+**Question** *(Easy)*: Which Git operations need to be completed outside of Databricks Repos?
 
 > [!success]- Answer
 > Merge.
@@ -19,7 +19,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 2: Benefit of Databricks Repos Over Notebook Versioning
 
-**Question**: A data engineer must decide between the built-in versioning of Databricks Notebooks and Databricks Repos. What is one benefit of using Repos instead?
+**Question** *(Medium)*: A data engineer must decide between the built-in versioning of Databricks Notebooks and Databricks Repos. What is one benefit of using Repos instead?
 
 > [!success]- Answer
 > Databricks Repos supports the use of multiple branches.
@@ -30,7 +30,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 3: Table Ownership Transfer
 
-**Question**: A data engineer has departed from the organization. The data team needs to transfer ownership of the departed engineer's Delta tables to the new lead data engineer. The previous engineer no longer has access. Who can perform this ownership transfer in Data Explorer?
+**Question** *(Medium)*: A data engineer has departed from the organization. The data team needs to transfer ownership of the departed engineer's Delta tables to the new lead data engineer. The previous engineer no longer has access. Who can perform this ownership transfer in Data Explorer?
 
 > [!success]- Answer
 > A workspace administrator.
@@ -41,7 +41,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 4: GRANT ALL PRIVILEGES on a Database
 
-**Question**: A new data engineering team needs full privileges on the `customers` database to manage the project effectively. Which command grants all permissions?
+**Question** *(Easy)*: A new data engineering team needs full privileges on the `customers` database to manage the project effectively. Which command grants all permissions?
 
 > [!success]- Answer
 > `GRANT ALL PRIVILEGES ON DATABASE customers TO team;`
@@ -52,7 +52,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 5: GRANT USAGE on a Database
 
-**Question**: A newly formed data engineering team needs access to browse the `customers` database to identify existing tables. Which GRANT command provides the necessary permission?
+**Question** *(Medium)*: A newly formed data engineering team needs access to browse the `customers` database to identify existing tables. Which GRANT command provides the necessary permission?
 
 > [!success]- Answer
 > `GRANT USAGE ON DATABASE customers TO team;`
@@ -63,7 +63,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 6: Syncing Databricks Repos with Remote Changes
 
-**Question**: A data engineer's colleague has pushed updates to the central Git repository. The data engineer needs to sync their Databricks Repo with these changes. Which Git operation accomplishes this?
+**Question** *(Easy)*: A data engineer's colleague has pushed updates to the central Git repository. The data engineer needs to sync their Databricks Repo with these changes. Which Git operation accomplishes this?
 
 > [!success]- Answer
 > Pull.
@@ -74,7 +74,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 7: Where to Check Table Permissions
 
-**Question**: A data engineer needs to use a Delta table but is unsure whether they have the necessary permissions. Where can they check their table permissions?
+**Question** *(Easy)*: A data engineer needs to use a Delta table but is unsure whether they have the necessary permissions. Where can they check their table permissions?
 
 > [!success]- Answer
 > Data Explorer.
@@ -85,7 +85,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 8: When to Use a Single-Node Cluster
 
-**Question**: What scenario would prompt a data engineer to use a single-node cluster?
+**Question** *(Medium)*: What scenario would prompt a data engineer to use a single-node cluster?
 
 > [!success]- Answer
 > When working interactively with a small amount of data.
@@ -96,7 +96,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 9: Using SQL in a Python Notebook Cell
 
-**Question**: A data engineer is working in a Python notebook on Databricks but needs to use SQL for one specific cell. They prefer that all other cells remain Python. How can they incorporate SQL into only that cell?
+**Question** *(Easy)*: A data engineer is working in a Python notebook on Databricks but needs to use SQL for one specific cell. They prefer that all other cells remain Python. How can they incorporate SQL into only that cell?
 
 > [!success]- Answer
 > Add `%sql` to the first line of the cell.
@@ -107,7 +107,7 @@ tags: [data-engineer-associate, practice-questions, data-governance]
 
 ## Question 10: Identifying a Table Owner
 
-**Question**: A data engineer requires access to `new_table` but does not know who owns it. What method can be used to identify the owner?
+**Question** *(Easy)*: A data engineer requires access to `new_table` but does not know who owns it. What method can be used to identify the owner?
 
 > [!success]- Answer
 > Review the Owner field in the table's page in Data Explorer.

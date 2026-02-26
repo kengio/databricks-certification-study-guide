@@ -8,7 +8,7 @@ tags: [data-engineer-associate, practice-questions, elt-spark-sql]
 
 ## Question 1: DELETE Syntax
 
-**Question**: Which code block will delete rows from the Delta table `my_table` where the `age` column value exceeds 25?
+**Question** *(Easy)*: Which code block will delete rows from the Delta table `my_table` where the `age` column value exceeds 25?
 
 > [!success]- Answer
 > `DELETE FROM my_table WHERE age > 25;`
@@ -19,7 +19,7 @@ tags: [data-engineer-associate, practice-questions, elt-spark-sql]
 
 ## Question 2: PySpark Table Access
 
-**Question**: A data analyst has developed a Delta table `sales` that the entire data analysis team uses. The data engineering team prefers Python. Which command can the engineering team use to access `sales` data in PySpark?
+**Question** *(Easy)*: A data analyst has developed a Delta table `sales` that the entire data analysis team uses. The data engineering team prefers Python. Which command can the engineering team use to access `sales` data in PySpark?
 
 > [!success]- Answer
 > `spark.table("sales")`
@@ -30,7 +30,7 @@ tags: [data-engineer-associate, practice-questions, elt-spark-sql]
 
 ## Question 3: Indicating PII in Table Metadata
 
-**Question**: A data engineer intends to create a new table listing customers residing in France and wants to indicate the table contains PII. The incomplete SQL is shown below:
+**Question** *(Medium)*: A data engineer intends to create a new table listing customers residing in France and wants to indicate the table contains PII. The incomplete SQL is shown below:
 
 ```sql
 CREATE TABLE customerInFrance
@@ -53,7 +53,7 @@ Which line of code correctly fills in the blank to add a table property indicati
 
 ## Question 4: Array Functions for Nested JSON
 
-**Question**: What benefits do the array functions from Spark SQL offer?
+**Question** *(Easy)*: What benefits do the array functions from Spark SQL offer?
 
 > [!success]- Answer
 > The ability to work with complex, nested data ingested from JSON files.
@@ -64,7 +64,7 @@ Which line of code correctly fills in the blank to add a table property indicati
 
 ## Question 5: MERGE to Prevent Duplicates
 
-**Question**: What commands can be utilized to insert data into a Delta table while preventing duplicate records?
+**Question** *(Easy)*: What commands can be utilized to insert data into a Delta table while preventing duplicate records?
 
 > [!success]- Answer
 > `MERGE`.
@@ -75,7 +75,7 @@ Which line of code correctly fills in the blank to add a table property indicati
 
 ## Question 6: JDBC Format for SQLite
 
-**Question**: A data engineer needs to create a table in Databricks using data from the organization's SQLite database. They set up a JDBC connection. Which format string correctly identifies the JDBC data source?
+**Question** *(Easy)*: A data engineer needs to create a table in Databricks using data from the organization's SQLite database. They set up a JDBC connection. Which format string correctly identifies the JDBC data source?
 
 > [!success]- Answer
 > `"jdbc"`
@@ -86,7 +86,7 @@ Which line of code correctly fills in the blank to add a table property indicati
 
 ## Question 7: UNION for Unique Records
 
-**Question**: A data engineering team maintains `march_transactions` (all March retail transactions) and `april_transactions` (all April retail transactions) with no overlapping records. What command creates a new table `all_transactions` containing all unique records from both?
+**Question** *(Medium)*: A data engineering team maintains `march_transactions` (all March retail transactions) and `april_transactions` (all April retail transactions) with no overlapping records. What command creates a new table `all_transactions` containing all unique records from both?
 
 > [!success]- Answer
 >
@@ -103,7 +103,7 @@ Which line of code correctly fills in the blank to add a table property indicati
 
 ## Question 8: Python Multi-Condition Control Flow
 
-**Question**: A data engineer intends to run the last block of a Python program only if `day_of_week` is set to 1 and `review_period` is `True`. The incomplete code block is shown below:
+**Question** *(Medium)*: A data engineer intends to run the last block of a Python program only if `day_of_week` is set to 1 and `review_period` is `True`. The incomplete code block is shown below:
 
 ```python
 day_of_week = get_day_of_week()
@@ -124,7 +124,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 9: External Table Data Retention After DROP
 
-**Question**: A data engineer drops `my_table` with `DROP TABLE IF EXISTS my_table`. The object no longer appears in `SHOW TABLES`, but the data files still exist on the filesystem. What explains this?
+**Question** *(Medium)*: A data engineer drops `my_table` with `DROP TABLE IF EXISTS my_table`. The object no longer appears in `SHOW TABLES`, but the data files still exist on the filesystem. What explains this?
 
 > [!success]- Answer
 > The table was an external table.
@@ -135,7 +135,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 10: Persistent Cross-Session Data Entity
 
-**Question**: A data engineer needs a data entity built from several tables that must be accessible to other data engineers in their sessions and stored in a physical location. Which data entity should be created?
+**Question** *(Medium)*: A data engineer needs a data entity built from several tables that must be accessible to other data engineers in their sessions and stored in a physical location. Which data entity should be created?
 
 > [!success]- Answer
 > A table (Delta or Spark SQL table).
@@ -146,7 +146,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 11: INSERT INTO a Delta Table
 
-**Question**: A data engineer needs to add a new record `('a1', 6, 9.4)` to the existing Delta table `my_table`. Which SQL command accomplishes this?
+**Question** *(Easy)*: A data engineer needs to add a new record `('a1', 6, 9.4)` to the existing Delta table `my_table`. Which SQL command accomplishes this?
 
 > [!success]- Answer
 > `INSERT INTO my_table VALUES ('a1', 6, 9.4);`
@@ -157,7 +157,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 12: CREATE OR REPLACE TABLE
 
-**Question**: A data architect needs to create an empty Delta table in a specified format, regardless of whether a table with that name already exists. Which SQL DDL approach accomplishes this?
+**Question** *(Easy)*: A data architect needs to create an empty Delta table in a specified format, regardless of whether a table with that name already exists. Which SQL DDL approach accomplishes this?
 
 > [!success]- Answer
 > `CREATE OR REPLACE TABLE table_name (...column definitions...)`
@@ -168,7 +168,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 13: PIVOT for Wide Format
 
-**Question**: Which SQL keyword can transform a table from long format to wide format?
+**Question** *(Easy)*: Which SQL keyword can transform a table from long format to wide format?
 
 > [!success]- Answer
 > `PIVOT`.
@@ -179,7 +179,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 14: Parquet Advantage Over CSV
 
-**Question**: What advantage does creating an external table using Parquet have over CSV in a `CREATE TABLE AS SELECT` statement?
+**Question** *(Medium)*: What advantage does creating an external table using Parquet have over CSV in a `CREATE TABLE AS SELECT` statement?
 
 > [!success]- Answer
 > Parquet files have a well-defined schema.
@@ -190,7 +190,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 15: Temporary View for Single-Session Use
 
-**Question**: A data engineer needs a relational object from two tables that will not be used by other engineers in different sessions. To minimize storage expenses, physical data should not be duplicated. Which relational object should be created?
+**Question** *(Medium)*: A data engineer needs a relational object from two tables that will not be used by other engineers in different sessions. To minimize storage expenses, physical data should not be duplicated. Which relational object should be created?
 
 > [!success]- Answer
 > A temporary view.
@@ -201,7 +201,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 16: PySpark SQL Query Execution
 
-**Question**: A data analyst has created a query that operates on a Delta table. They seek assistance from the data engineering team to perform a set of tests to verify that the data returned by the query is accurate and clean. However, the data engineering team utilizes Python for their tests instead of SQL. Which operations can the data engineering team use in PySpark to execute the query and process the results?
+**Question** *(Easy)*: A data analyst has created a query that operates on a Delta table. They seek assistance from the data engineering team to perform a set of tests to verify that the data returned by the query is accurate and clean. However, the data engineering team utilizes Python for their tests instead of SQL. Which operations can the data engineering team use in PySpark to execute the query and process the results?
 
 > [!success]- Answer
 > `spark.sql("SELECT ...")`
@@ -212,7 +212,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 17: count_if for NULL Values
 
-**Question**: Which command shows the count of null values in the `member_id` column?
+**Question** *(Medium)*: Which command shows the count of null values in the `member_id` column?
 
 > [!success]- Answer
 > `SELECT count_if(member_id IS NULL) FROM my_table;`
@@ -223,7 +223,7 @@ What control flow statement should be used to complete the blank?
 
 ## Question 18: FILTER Higher-Order Function
 
-**Question**: A data engineer needs to implement custom logic for the `employees` array column in the `stores` table to find employees with more than 5 years of experience. The result should be a new column `exp_employees` containing only matching employees for each row. The incomplete SQL query is shown below:
+**Question** *(Medium)*: A data engineer needs to implement custom logic for the `employees` array column in the `stores` table to find employees with more than 5 years of experience. The result should be a new column `exp_employees` containing only matching employees for each row. The incomplete SQL query is shown below:
 
 ```sql
 SELECT store_id,
@@ -242,7 +242,7 @@ Which code correctly completes the blank using the FILTER higher-order function?
 
 ## Question 19: Python Variable in SQL Query
 
-**Question**: A data engineer has a Python variable `table_name` and wants to execute a SQL query using it in PySpark. The incomplete code block is shown below:
+**Question** *(Easy)*: A data engineer has a Python variable `table_name` and wants to execute a SQL query using it in PySpark. The incomplete code block is shown below:
 
 ```python
 table_name = "sales"
@@ -260,7 +260,7 @@ Which method completes the blank?
 
 ## Question 20: Default Database Storage Location
 
-**Question**: A data engineer has established a new database with this command:
+**Question** *(Easy)*: A data engineer has established a new database with this command:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS customer360;
@@ -277,7 +277,7 @@ Where will the `customer360` database be situated?
 
 ## Question 21: DESCRIBE DATABASE Location
 
-**Question**: Which command retrieves the location of the `customer360` database?
+**Question** *(Easy)*: Which command retrieves the location of the `customer360` database?
 
 > [!success]- Answer
 > `DESCRIBE DATABASE customer360;`
@@ -288,7 +288,7 @@ Where will the `customer360` database be situated?
 
 ## Question 22: Managed Table File Deletion After DROP
 
-**Question**: A data engineer drops `my_table` and observes that both data files and metadata files are deleted from the filesystem. What explains the complete deletion?
+**Question** *(Medium)*: A data engineer drops `my_table` and observes that both data files and metadata files are deleted from the filesystem. What explains the complete deletion?
 
 > [!success]- Answer
 > The table was a managed table.
@@ -299,7 +299,7 @@ Where will the `customer360` database be situated?
 
 ## Question 23: Python Function Definition
 
-**Question**: A data engineer new to Python needs a function that adds two integers and returns their sum. Which code block is correct?
+**Question** *(Easy)*: A data engineer new to Python needs a function that adds two integers and returns their sum. Which code block is correct?
 
 > [!success]- Answer
 >
@@ -314,7 +314,7 @@ Where will the `customer360` database be situated?
 
 ## Question 24: MERGE INTO vs INSERT INTO
 
-**Question**: When should a data engineer prefer the `MERGE INTO` command over the `INSERT INTO` command?
+**Question** *(Medium)*: When should a data engineer prefer the `MERGE INTO` command over the `INSERT INTO` command?
 
 > [!success]- Answer
 > When the target table cannot contain duplicate records.
@@ -325,7 +325,7 @@ Where will the `customer360` database be situated?
 
 ## Question 25: GROUP BY Numeric Position in Spark SQL
 
-**Question**: What is wrong with the following SQL query?
+**Question** *(Medium)*: What is wrong with the following SQL query?
 
 ```sql
 SELECT name, count(*) FROM people GROUP BY 2

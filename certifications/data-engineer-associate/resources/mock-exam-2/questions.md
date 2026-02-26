@@ -18,7 +18,7 @@ tags:
 
 ---
 
-## Question 1
+## Question 1 *(Easy)*
 
 A data engineer needs to store a small reference file that will be accessed by Spark jobs in a Databricks workspace. The file must be accessible from any cluster without additional mount configuration. Which storage location is most appropriate?
 
@@ -34,7 +34,7 @@ D) Unity Catalog external volume with IAM role configuration
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 A data engineer is choosing between a single-node cluster and a standard multi-node cluster for a machine learning training workload. When is a single-node cluster the appropriate choice?
 
@@ -50,7 +50,7 @@ D) When running production streaming pipelines that require high availability
 
 ---
 
-## Question 3
+## Question 3 *(Easy)*
 
 A data engineer wants to version control notebooks using Git and collaborate with teammates via pull requests. Which Databricks feature supports this workflow?
 
@@ -66,7 +66,7 @@ D) Databricks Workflows — tracks job run history as a proxy for code versions
 
 ---
 
-## Question 4
+## Question 4 *(Medium)*
 
 An analyst notices that a Databricks SQL warehouse is taking 3 minutes to run the first query of the day but subsequent queries run in seconds. What is the most likely cause?
 
@@ -82,7 +82,7 @@ D) The SQL optimizer is recomputing all table statistics for the first query
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 A data engineer configures an all-purpose cluster with autoscaling between 2 and 8 workers. What determines when Databricks adds or removes worker nodes?
 
@@ -98,7 +98,7 @@ D) The engineer manually adjusts the worker count through the cluster UI
 
 ---
 
-## Question 6
+## Question 6 *(Easy)*
 
 A data engineer uses the `%run` magic command in a Databricks notebook. What does this command do?
 
@@ -114,7 +114,7 @@ D) Executes SQL against the currently attached SQL warehouse
 
 ---
 
-## Question 7
+## Question 7 *(Medium)*
 
 A Databricks SQL Pro warehouse is configured with a minimum of 1 cluster and a maximum of 5 clusters. A sudden spike brings 50 concurrent analysts running queries. What happens?
 
@@ -130,7 +130,7 @@ D) Each analyst is automatically assigned a dedicated Classic warehouse
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 A data engineer uses `dbutils.widgets.text("start_date", "2024-01-01")` in a notebook. What is the purpose of this widget?
 
@@ -146,7 +146,7 @@ D) Logs the value `"2024-01-01"` to the Databricks audit trail
 
 ---
 
-## Question 9
+## Question 9 *(Hard)*
 
 A data engineer examines the Spark UI after a job completes and sees one task taking 10× longer than all other tasks. What does this indicate?
 
@@ -162,7 +162,7 @@ D) Network latency caused a delay in fetching data from cloud storage
 
 ---
 
-## Question 10
+## Question 10 *(Medium)*
 
 A company migrates from an existing Hive metastore to Unity Catalog. What is the key advantage of Unity Catalog over the workspace-level Hive metastore?
 
@@ -178,7 +178,7 @@ D) Unity Catalog is faster because it uses an in-memory metadata cache
 
 ---
 
-## Question 11
+## Question 11 *(Easy)*
 
 A data engineer needs to run a Python script on a Databricks cluster that monitors a directory and triggers processing when new files arrive. Which `dbutils` module is used to interact with the file system?
 
@@ -198,7 +198,7 @@ D) `dbutils.notebook`
 
 ---
 
-## Question 12
+## Question 12 *(Medium)*
 
 A data engineer needs to replace all data in a partition of a Delta table with new data, without affecting other partitions. Which SQL command accomplishes this?
 
@@ -214,7 +214,7 @@ D) `CREATE OR REPLACE TABLE table AS SELECT ...`
 
 ---
 
-## Question 13
+## Question 13 *(Medium)*
 
 A data engineer must choose between COPY INTO and Auto Loader for ingesting files from cloud storage. Which statement correctly describes when to use each?
 
@@ -230,7 +230,7 @@ D) Both are equivalent — the choice is purely based on personal preference
 
 ---
 
-## Question 14
+## Question 14 *(Easy)*
 
 A data engineer has a column `price` stored as `STRING` type and needs to cast it to `DOUBLE` for calculations. Which SQL expression correctly performs this conversion?
 
@@ -246,7 +246,7 @@ D) `TO_DOUBLE(price)`
 
 ---
 
-## Question 15
+## Question 15 *(Medium)*
 
 A data engineer writes `SELECT * FROM orders WHERE discount IS NOT NULL AND discount != 0`. A row with `discount = NULL` — will it be returned?
 
@@ -262,7 +262,7 @@ D) A SQL error occurs because you cannot compare NULL with `!=`
 
 ---
 
-## Question 16
+## Question 16 *(Medium)*
 
 A data engineer writes Delta table data using `df.write.format("delta").mode("append").save(path)`. What happens if the path already contains a Delta table with a different schema?
 
@@ -278,7 +278,7 @@ D) The new data is silently dropped and the existing table is unchanged
 
 ---
 
-## Question 17
+## Question 17 *(Medium)*
 
 A data engineer calls `df.cache()` on a large DataFrame and then performs three different filter operations on it. What is the primary benefit of caching here?
 
@@ -294,7 +294,7 @@ D) Caching forces the DataFrame to be computed immediately (eager evaluation)
 
 ---
 
-## Question 18
+## Question 18 *(Medium)*
 
 A data engineer needs to share a large lookup dictionary across all tasks in a Spark job without sending it with every task. Which Spark mechanism is designed for this?
 
@@ -310,7 +310,7 @@ D) DataFrames — the correct way to share data between Spark tasks
 
 ---
 
-## Question 19
+## Question 19 *(Easy)*
 
 A data engineer defines a complex PySpark transformation pipeline with multiple `.filter()`, `.select()`, and `.groupBy()` calls. When does Spark actually execute these transformations?
 
@@ -326,7 +326,7 @@ D) Transformations execute in the background as soon as the cluster accepts the 
 
 ---
 
-## Question 20
+## Question 20 *(Medium)*
 
 A data engineer writes `df = spark.read.format("delta").load("/path/to/table")`. What is the difference if they use `spark.readStream` instead of `spark.read`?
 
@@ -342,7 +342,7 @@ D) `readStream` automatically converts the Delta table to a Kafka stream
 
 ---
 
-## Question 21
+## Question 21 *(Easy)*
 
 A data engineer queries a table with millions of rows and needs to know the count of distinct values in a column. Which function returns this?
 
@@ -358,7 +358,7 @@ D) `APPROX_COUNT_DISTINCT(column)`
 
 ---
 
-## Question 22
+## Question 22 *(Medium)*
 
 A data engineer uses `collect_list()` and `collect_set()` in a GROUP BY aggregation. What is the difference between these two functions?
 
@@ -374,7 +374,7 @@ D) Both functions are identical — the names are aliases for the same behavior
 
 ---
 
-## Question 23
+## Question 23 *(Medium)*
 
 A data engineer receives a DataFrame with a column containing nested arrays of arrays (e.g., `[[1,2],[3,4]]`). Which function flattens this into a single-level array (e.g., `[1,2,3,4]`)?
 
@@ -390,7 +390,7 @@ D) `transform()`
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 A data engineer uses `dbutils.notebook.run("./child_notebook", timeout_seconds=300, arguments={"date": "2024-01-15"})`. What does this accomplish?
 
@@ -410,7 +410,7 @@ D) Creates a permanent link between the parent and child notebook that runs on e
 
 ---
 
-## Question 25
+## Question 25 *(Easy)*
 
 A data engineer runs `DESCRIBE HISTORY transactions` on a Delta table. What information does this return?
 
@@ -426,7 +426,7 @@ D) The table's Z-ORDER configuration and data skipping statistics
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 A data engineer accidentally ran `DELETE FROM customers WHERE 1=1` which deleted all rows. The table is named `customers` in Delta format. How can they recover the data?
 
@@ -442,7 +442,7 @@ D) Rerun the original data ingestion pipeline to recreate the data
 
 ---
 
-## Question 27
+## Question 27 *(Medium)*
 
 A data engineer needs a copy of a Delta table to test schema changes without affecting production. They need the copy to be fast and space-efficient, sharing underlying files with the source. Which clone type should they use?
 
@@ -458,7 +458,7 @@ D) Databricks snapshot — an automatic backup created by the platform
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 A data engineer configures Auto Loader with `cloudFiles.schemaEvolutionMode = "addNewColumns"`. A new column appears in incoming JSON files. What happens?
 
@@ -474,7 +474,7 @@ D) Auto Loader quarantines files with new columns for manual review
 
 ---
 
-## Question 29
+## Question 29 *(Hard)*
 
 A data engineer sets a watermark on a streaming query: `withWatermark("event_time", "10 minutes")`. What is the purpose of this watermark?
 
@@ -490,7 +490,7 @@ D) Limits the streaming query to process at most 10 minutes of historical data
 
 ---
 
-## Question 30
+## Question 30 *(Medium)*
 
 A data engineer compares two streaming trigger settings: `trigger(processingTime="1 minute")` and `trigger(availableNow=True)`. Which scenario is best suited for each?
 
@@ -506,7 +506,7 @@ D) `processingTime` is deprecated; use `availableNow` for all streaming jobs
 
 ---
 
-## Question 31
+## Question 31 *(Hard)*
 
 A data engineer needs to delete records from a Delta table where a customer opted out, and also update other customers' status in the same operation. Which SQL command handles both in a single atomic operation?
 
@@ -522,7 +522,7 @@ D) Use a Python loop to delete and update records one by one
 
 ---
 
-## Question 32
+## Question 32 *(Medium)*
 
 A data engineer wants to enable Change Data Feed (CDF) on an existing Delta table. Which command accomplishes this?
 
@@ -538,7 +538,7 @@ D) CDF is enabled by default on all Delta tables; no action is needed
 
 ---
 
-## Question 33
+## Question 33 *(Hard)*
 
 A data engineer runs `OPTIMIZE transactions ZORDER BY (customer_id, transaction_date)`. How does Z-ORDER with multiple columns differ from Z-ORDER with a single column?
 
@@ -554,7 +554,7 @@ D) Each column is independently Z-ORDERed in separate file groups
 
 ---
 
-## Question 34
+## Question 34 *(Medium)*
 
 A data engineer has a CSV directory and wants to convert it to a managed Delta table in Unity Catalog. Which approach creates a properly managed Delta table?
 
@@ -574,7 +574,7 @@ D) Delta tables can only be created from Parquet format; CSV must first be conve
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 A DLT pipeline runs a full refresh. How does a full refresh differ from a standard pipeline update?
 
@@ -590,7 +590,7 @@ D) A full refresh is identical to a standard update — the terminology is inter
 
 ---
 
-## Question 36
+## Question 36 *(Medium)*
 
 A DLT pipeline has an `EXPECT` constraint with no `ON VIOLATION` modifier. A record fails the constraint. What is the default behavior?
 
@@ -606,7 +606,7 @@ D) The violating record is written to a quarantine table for review
 
 ---
 
-## Question 37
+## Question 37 *(Easy)*
 
 A data engineer wants to receive an email when a Databricks Workflow job fails. Where is this configured?
 
@@ -622,7 +622,7 @@ D) In the Databricks workspace admin settings under "Global Notifications"
 
 ---
 
-## Question 38
+## Question 38 *(Medium)*
 
 A data engineer uses task values to pass a dynamically computed date from Task A to Task B in a multi-task Databricks Workflow. Which `dbutils` functions are used to set and retrieve the value?
 
@@ -638,7 +638,7 @@ D) Write the value to DBFS in Task A; read from DBFS in Task B
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 A production Databricks Workflow job runs a task that occasionally takes much longer than usual due to data volume spikes. To prevent the job from running indefinitely, which configuration should the engineer set?
 
@@ -654,7 +654,7 @@ D) Maximum concurrent runs set to 1
 
 ---
 
-## Question 40
+## Question 40 *(Medium)*
 
 A Databricks Workflow multi-task job has tasks A → B → C (sequential dependency). Task B fails. What is the default behavior for Task C?
 
@@ -670,7 +670,7 @@ D) The entire job reruns from Task A automatically
 
 ---
 
-## Question 41
+## Question 41 *(Hard)*
 
 A data engineer needs to query the Delta Live Tables event log to find pipeline runs where expectations failed. Which system table or approach provides this information?
 
@@ -690,7 +690,7 @@ D) The DLT UI shows expectation violations but there is no queryable log
 
 ---
 
-## Question 42
+## Question 42 *(Easy)*
 
 A data engineer creates a new Delta table in Unity Catalog using `CREATE TABLE catalog.schema.table`. Who automatically becomes the table owner?
 
@@ -706,7 +706,7 @@ D) Ownership is not assigned until explicitly set with `ALTER TABLE ... OWNER TO
 
 ---
 
-## Question 43
+## Question 43 *(Medium)*
 
 A data engineer needs to restrict certain users from seeing the full value of a `ssn` (social security number) column, showing only the last 4 digits instead. Which Unity Catalog feature implements this?
 
@@ -722,7 +722,7 @@ D) Remove the column from the table and create a separate table for privileged u
 
 ---
 
-## Question 44
+## Question 44 *(Medium)*
 
 A data engineer creates an external table in Unity Catalog pointing to an S3 path. What happens to the underlying data files when the table is dropped with `DROP TABLE`?
 
@@ -738,7 +738,7 @@ D) `DROP TABLE` fails on external tables — you must use `DROP EXTERNAL TABLE`
 
 ---
 
-## Question 45
+## Question 45 *(Medium)*
 
 A data engineer queries `SELECT * FROM system.access.audit LIMIT 100` and sees events with `actionName = 'getTable'`. What do these events represent?
 

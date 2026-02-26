@@ -8,7 +8,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 1: Lakehouse as a Unified Source of Truth
 
-**Question**: A leader in data organization is frustrated because the reports from the data analysis team differ from those of the data engineering team. How might a data lakehouse resolve this issue?
+**Question** *(Medium)*: A leader in data organization is frustrated because the reports from the data analysis team differ from those of the data engineering team. How might a data lakehouse resolve this issue?
 
 > [!success]- Answer
 > Both teams would utilize the same source of truth for their tasks.
@@ -19,7 +19,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 2: Control Plane Components
 
-**Question**: Which option is entirely hosted within the control plane of the classic Databricks architecture?
+**Question** *(Easy)*: Which option is entirely hosted within the control plane of the classic Databricks architecture?
 
 > [!success]- Answer
 > The Databricks web application.
@@ -30,7 +30,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 3: Delta Lake Advantage for Workloads
 
-**Question**: Which of the following advantages associated with the Databricks Lakehouse Platform is offered by Delta Lake?
+**Question** *(Easy)*: Which of the following advantages associated with the Databricks Lakehouse Platform is offered by Delta Lake?
 
 > [!success]- Answer
 > The ability to support both batch and streaming workloads.
@@ -41,7 +41,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 4: Delta Table Storage Organization
 
-**Question**: What describes how a Delta table is organized for storage?
+**Question** *(Easy)*: What describes how a Delta table is organized for storage?
 
 > [!success]- Answer
 > Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes.
@@ -52,7 +52,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 5: VACUUM and Time Travel
 
-**Question**: A data engineer discovered an error while updating a table daily and needs to use Delta time travel to revert the table to a version from three days ago. However, when they try to access the older version, the data files are absent. What explains the absence of the data files?
+**Question** *(Medium)*: A data engineer discovered an error while updating a table daily and needs to use Delta time travel to revert the table to a version from three days ago. However, when they try to access the older version, the data files are absent. What explains the absence of the data files?
 
 > [!success]- Answer
 > The VACUUM command was run on the table.
@@ -63,7 +63,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 6: Data Quality Feature of a Lakehouse
 
-**Question**: Which feature of a data lakehouse enhances data quality compared to a traditional data lake?
+**Question** *(Easy)*: Which feature of a data lakehouse enhances data quality compared to a traditional data lake?
 
 > [!success]- Answer
 > A data lakehouse supports ACID-compliant transactions.
@@ -74,7 +74,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 7: Gold vs Silver Table Relationship
 
-**Question**: What best explains the connection between Gold tables and Silver tables?
+**Question** *(Easy)*: What best explains the connection between Gold tables and Silver tables?
 
 > [!success]- Answer
 > Gold tables are more likely to contain aggregations than Silver tables.
@@ -85,7 +85,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 8: Bronze vs Raw Data Relationship
 
-**Question**: What characterizes the connection between Bronze tables and raw data?
+**Question** *(Easy)*: What characterizes the connection between Bronze tables and raw data?
 
 > [!success]- Answer
 > Bronze tables contain raw data with a schema applied.
@@ -96,7 +96,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 9: Open-Source Technology Advantage
 
-**Question**: What is one advantage of the Databricks Lakehouse Platform utilizing open-source technologies?
+**Question** *(Easy)*: What is one advantage of the Databricks Lakehouse Platform utilizing open-source technologies?
 
 > [!success]- Answer
 > Avoiding vendor lock-in.
@@ -107,7 +107,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 10: Delta Lake Underlying File Format
 
-**Question**: Which file formats are primarily used to store data from Delta Lake tables?
+**Question** *(Easy)*: Which file formats are primarily used to store data from Delta Lake tables?
 
 > [!success]- Answer
 > Parquet.
@@ -118,7 +118,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 11: Customer Cloud Account Contents
 
-**Question**: What is stored in the cloud account of the Databricks customer?
+**Question** *(Easy)*: What is stored in the cloud account of the Databricks customer?
 
 > [!success]- Answer
 > Data.
@@ -129,7 +129,7 @@ tags: [data-engineer-associate, practice-questions, lakehouse-platform]
 
 ## Question 12: Streamlining Data Architectures
 
-**Question**: What methods can help streamline and integrate distinct data architectures tailored for particular applications?
+**Question** *(Medium)*: What methods can help streamline and integrate distinct data architectures tailored for particular applications?
 
 > [!success]- Answer
 > A data lakehouse.

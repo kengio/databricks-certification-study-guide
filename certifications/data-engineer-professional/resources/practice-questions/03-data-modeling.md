@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, data-modeling]
 
 **Scenario**: A data architect is designing a lakehouse. Raw JSON data needs to be ingested, cleaned, and then aggregated.
 
-**Question**: In which layer should data type casting and null handling occur?
+**Question** *(Easy)*: In which layer should data type casting and null handling occur?
 
 A) Bronze layer
 B) Silver layer
@@ -28,7 +28,7 @@ D) Landing zone
 
 **Scenario**: A user accidentally deleted important records 3 days ago. The table has default retention settings.
 
-**Question**: Which command restores the data?
+**Question** *(Medium)*: Which command restores the data?
 
 A) `RESTORE TABLE orders TO VERSION AS OF 100`
 B) `SELECT * FROM orders TIMESTAMP AS OF '2024-01-12'`
@@ -46,7 +46,7 @@ D) Both A and B can be used to access historical data
 
 **Scenario**: A streaming pipeline receives data with a new column. The target Delta table should automatically accept this change.
 
-**Question**: Which option enables this?
+**Question** *(Easy)*: Which option enables this?
 
 A) `.option("mergeSchema", "true")`
 B) `.option("overwriteSchema", "true")`
@@ -64,7 +64,7 @@ D) Schema evolution is automatic in Delta
 
 **Scenario**: A dimension table needs to track full history of changes with effective dates.
 
-**Question**: Which columns are typically added for SCD Type 2?
+**Question** *(Easy)*: Which columns are typically added for SCD Type 2?
 
 A) `is_current`, `version`
 B) `start_date`, `end_date`, `is_current`
@@ -82,7 +82,7 @@ D) `previous_value`, `current_value`
 
 **Scenario**: A table is frequently filtered by `customer_id` and `order_date`. The team wants automatic optimization.
 
-**Question**: Which approach provides automatic maintenance?
+**Question** *(Medium)*: Which approach provides automatic maintenance?
 
 A) `OPTIMIZE table ZORDER BY (customer_id, order_date)` scheduled daily
 B) `ALTER TABLE table CLUSTER BY (customer_id, order_date)`
@@ -100,7 +100,7 @@ D) Both A and B provide automatic maintenance
 
 **Scenario**: A table has 100 million rows with a `status` column containing 5 distinct values and a `customer_id` column with 1 million distinct values.
 
-**Question**: Which partitioning strategy is correct?
+**Question** *(Hard)*: Which partitioning strategy is correct?
 
 A) Partition by `customer_id`
 B) Partition by `status`

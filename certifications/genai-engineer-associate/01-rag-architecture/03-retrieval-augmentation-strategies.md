@@ -438,20 +438,20 @@ D) Increase max_tokens so the LLM has room to fully explain its reasoning
 
 ## Use Cases
 
-- **Retrieval & Augmentation Strategies Implementation**: Incorporating Retrieval & Augmentation Strategies principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Retrieval & Augmentation Strategies Workflows**: Using the advanced capabilities of Retrieval & Augmentation Strategies to automate processes and reduce manual operational overhead.
+- **Hybrid Search for Product Catalog QA**: Combining dense embeddings (for semantic product descriptions) with sparse BM25 (for exact SKU and model number lookups), using `alpha=0.5` to balance both signals in a customer support chatbot.
+- **Multi-Stage Retrieval for Financial Reports**: Retrieving 50 candidate chunks with fast ANN search, then re-ranking with a cross-encoder to select the top 5 most relevant passages before passing them to the LLM for earnings-call summarisation.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Re-Ranking Increases Latency Beyond SLA
 
-**Scenario:** The default settings for Retrieval & Augmentation Strategies do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Retrieval & Augmentation Strategies to handle production-scale workloads.
+**Scenario:** Adding a cross-encoder re-ranker to the retrieval pipeline pushes end-to-end latency from 400ms to 1.2 seconds, violating the application's 500ms SLA.
+**Fix:** Reduce the initial retrieval `num_results` so the re-ranker has fewer candidates to score (e.g., 20 instead of 50). Alternatively, use a lightweight re-ranker (distilled cross-encoder) or move re-ranking to a GPU-backed endpoint for faster inference.
 
-### Integration Bottlenecks
+### Hybrid Search Returns Duplicate Chunks
 
-**Scenario:** Connecting Retrieval & Augmentation Strategies to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Retrieval & Augmentation Strategies prior to deployment.
+**Scenario:** Combining dense and sparse retrieval returns the same chunk from both paths, wasting context window space with duplicate content.
+**Fix:** Deduplicate results by chunk ID after merging the two result sets and before passing to the LLM. Apply Reciprocal Rank Fusion (RRF) scoring to combine rankings while automatically handling overlapping results.
 
 ## Key Takeaways
 

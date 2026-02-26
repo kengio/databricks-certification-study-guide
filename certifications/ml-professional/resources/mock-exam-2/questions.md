@@ -12,7 +12,7 @@ tags: [ml-professional, mock-exam, practice]
 
 ## Feature Engineering (Questions 1–9)
 
-## Question 1
+## Question 1 *(Easy)*
 
 **Which method in `FeatureEngineeringClient` retrieves feature table metadata?**
 
@@ -28,7 +28,7 @@ D) `inspect_table()`
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 **A feature table has `user_id` as primary key and `event_time` as the timestamp column. Which `FeatureLookup` parameters are needed for point-in-time retrieval?**
 
@@ -44,7 +44,7 @@ D) `feature_names=["user_id", "event_time"]`
 
 ---
 
-## Question 3
+## Question 3 *(Medium)*
 
 **What is the relationship between the offline and online feature stores?**
 
@@ -60,7 +60,7 @@ D) They are separate systems with no automatic synchronization
 
 ---
 
-## Question 4
+## Question 4 *(Medium)*
 
 **A team logs a model using `mlflow.sklearn.log_model()` instead of `fe.log_model()`. What is the consequence for feature lineage?**
 
@@ -76,7 +76,7 @@ D) Point-in-time features will not work at serving time
 
 ---
 
-## Question 5
+## Question 5 *(Easy)*
 
 **`publish_online_features()` is called on a feature table. What does this do?**
 
@@ -92,7 +92,7 @@ D) Registers the feature table in the UC registry
 
 ---
 
-## Question 6
+## Question 6 *(Medium)*
 
 **A model at serving time needs to retrieve user features using only the `user_id` from the request. What is required in the feature table?**
 
@@ -108,7 +108,7 @@ D) The feature table must be co-located in the same catalog as the model
 
 ---
 
-## Question 7
+## Question 7 *(Medium)*
 
 **How does `FeatureEngineeringClient.create_training_set()` prevent data leakage?**
 
@@ -124,7 +124,7 @@ D) It drops features that are correlated with the target
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 **A data scientist needs feature lineage for compliance but does not need real-time serving. Which approach is correct?**
 
@@ -140,7 +140,7 @@ D) Use a regular Delta table instead of a feature table
 
 ---
 
-## Question 9
+## Question 9 *(Easy)*
 
 **What happens when two rows with the same primary key are written to a feature table using `fe.write_table()`?**
 
@@ -158,7 +158,7 @@ D) The new row is silently dropped
 
 ## Hyperparameter Optimization (Questions 10–18)
 
-## Question 10
+## Question 10 *(Medium)*
 
 **A data scientist defines `space = {'n_estimators': hp.quniform('n_estimators', 100, 1000, 100)}`. What values can `n_estimators` take?**
 
@@ -174,7 +174,7 @@ D) Only 100 and 1000
 
 ---
 
-## Question 11
+## Question 11 *(Medium)*
 
 **A Spark ML `CrossValidator` with `numFolds=3` and `parallelism=3` trains a grid of 9 configurations. How many models train simultaneously?**
 
@@ -190,7 +190,7 @@ D) 1
 
 ---
 
-## Question 12
+## Question 12 *(Medium)*
 
 **What is the main advantage of `hp.loguniform` over `hp.uniform` for a regularization parameter like `alpha` ranging from 0.0001 to 1.0?**
 
@@ -206,7 +206,7 @@ D) `hp.loguniform` is required for Bayesian optimization
 
 ---
 
-## Question 13
+## Question 13 *(Easy)*
 
 **AutoML is run on a classification task. Which outputs are produced?**
 
@@ -222,7 +222,7 @@ D) A trained model endpoint
 
 ---
 
-## Question 14
+## Question 14 *(Medium)*
 
 **The objective function for Hyperopt returns `1 - accuracy`. Why not return `-accuracy`?**
 
@@ -238,7 +238,7 @@ D) `-accuracy` would cause Hyperopt to maximize, not minimize
 
 ---
 
-## Question 15
+## Question 15 *(Hard)*
 
 **A team runs Hyperopt with `SparkTrials(parallelism=4)` and `max_evals=40`. Bayesian optimization (TPE) requires results from previous trials to suggest the next configuration. How does this work with parallelism?**
 
@@ -254,7 +254,7 @@ D) Parallelism only works with random search, not TPE
 
 ---
 
-## Question 16
+## Question 16 *(Medium)*
 
 **A model pipeline includes `VectorAssembler → StandardScaler → RandomForestClassifier`. A team wants to tune `RandomForestClassifier.numTrees` and `StandardScaler.withMean`. What object should wrap the tuning?**
 
@@ -270,7 +270,7 @@ D) Use Hyperopt on each stage independently
 
 ---
 
-## Question 17
+## Question 17 *(Easy)*
 
 **What does `no_progress_loss(n)` do in a Hyperopt early stopping function?**
 
@@ -286,7 +286,7 @@ D) Stops if any trial takes longer than n seconds
 
 ---
 
-## Question 18
+## Question 18 *(Easy)*
 
 **A data scientist wants to compare a fixed set of 8 hyperparameter combinations exhaustively. Which search strategy is most appropriate?**
 
@@ -304,7 +304,7 @@ D) AutoML
 
 ## Model Production Lifecycle (Questions 19–32)
 
-## Question 19
+## Question 19 *(Easy)*
 
 **A model version is in the UC registry. What is the correct way to load the latest version tagged with alias `champion`?**
 
@@ -320,7 +320,7 @@ D) `mlflow.pyfunc.load_model(f"models:/catalog.schema.model/{version_number}")`
 
 ---
 
-## Question 20
+## Question 20 *(Medium)*
 
 **A team registers a model with `mlflow.sklearn.log_model(model, "model", registered_model_name="fraud_clf")`. Which registry does this go to if `set_registry_uri` was not called?**
 
@@ -336,7 +336,7 @@ D) A temporary registry that expires after 30 days
 
 ---
 
-## Question 21
+## Question 21 *(Medium)*
 
 **A `ServedModelInput` is configured with `workload_size=SMALL` and a traffic of 100 RPS arrives. What happens?**
 
@@ -352,7 +352,7 @@ D) SMALL size is fixed — it cannot auto-scale
 
 ---
 
-## Question 22
+## Question 22 *(Hard)*
 
 **Model signatures with `infer_signature()` are inferred from training data. Why might this cause a serving error?**
 
@@ -368,7 +368,7 @@ D) Signatures with more than 10 features cause serving errors
 
 ---
 
-## Question 23
+## Question 23 *(Hard)*
 
 **In a multi-task Databricks Job, Task B `depends_on` Task A with `run_if: ALL_SUCCESS`. Task A is skipped because its condition was false. What happens to Task B?**
 
@@ -384,7 +384,7 @@ D) Task B waits indefinitely
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 **A team wants to compare champion vs challenger performance using inference tables. Which SQL query approach identifies predictions from each model?**
 
@@ -400,7 +400,7 @@ D) Join with the MLflow experiment table
 
 ---
 
-## Question 25
+## Question 25 *(Easy)*
 
 **What is a "blue-green deployment" in the context of ML model serving?**
 
@@ -416,7 +416,7 @@ D) Running shadow deployment alongside champion
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 **A model registered with `fe.log_model()` is deployed. A request comes in with only `{"user_id": 12345}`. How does the endpoint respond?**
 
@@ -432,7 +432,7 @@ D) The endpoint requests the missing features from the client
 
 ---
 
-## Question 27
+## Question 27 *(Easy)*
 
 **`mlflow.evaluate()` is called after training. What does it return?**
 
@@ -448,7 +448,7 @@ D) A serving endpoint configuration
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 **A Python wheel task is preferred over a notebook task in a Databricks Job because:**
 
@@ -464,7 +464,7 @@ D) Python wheels use less cluster memory
 
 ---
 
-## Question 29
+## Question 29 *(Medium)*
 
 **What should happen to the `previous_champion` alias after a successful canary completion and full traffic migration?**
 
@@ -480,7 +480,7 @@ D) It is automatically deleted by Databricks after 30 days
 
 ---
 
-## Question 30
+## Question 30 *(Medium)*
 
 **Which configuration option on a serving endpoint helps ensure consistent low latency for a high-SLA fraud detection service?**
 
@@ -496,7 +496,7 @@ D) `traffic_percentage=100` for the champion
 
 ---
 
-## Question 31
+## Question 31 *(Easy)*
 
 **A serving endpoint receives 1,000 requests per second. 5 requests returned status 500. What is the error rate?**
 
@@ -512,7 +512,7 @@ D) Cannot calculate without knowing the time window
 
 ---
 
-## Question 32
+## Question 32 *(Medium)*
 
 **A team needs to implement a promotion gate that compares challenger AUC to champion AUC. The champion alias must be updated only if the challenger improves by ≥ 0.5%. Which tool runs this logic?**
 
@@ -530,7 +530,7 @@ D) Lakehouse Monitoring auto-promotion
 
 ## Model Governance & MLOps (Questions 33–45)
 
-## Question 33
+## Question 33 *(Medium)*
 
 **A team's model has PSI = 0.22 on the `income_bracket` feature. What is the recommended first step?**
 
@@ -546,7 +546,7 @@ D) Ignore — PSI above 0.2 is normal
 
 ---
 
-## Question 34
+## Question 34 *(Easy)*
 
 **Which LHM output table stores per-window statistical profiles (mean, stddev, quantiles) of each feature?**
 
@@ -562,7 +562,7 @@ D) `_alert_history`
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 **A compliance officer asks: "Who changed the `champion` alias for `ml_catalog.fraud_models.fraud_classifier` on Jan 15?" Where is this information found?**
 
@@ -578,7 +578,7 @@ D) The model's `description` field
 
 ---
 
-## Question 36
+## Question 36 *(Medium)*
 
 **A team runs bias testing before deployment and finds disparate impact = 0.73. What should happen next?**
 
@@ -594,7 +594,7 @@ D) Retrain with twice the minority group data
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 **An MLflow run logs `mlflow.log_input(dataset, context="training")`. What does this enable?**
 
@@ -610,7 +610,7 @@ D) Automatic data quality monitoring
 
 ---
 
-## Question 38
+## Question 38 *(Easy)*
 
 **Lakehouse Monitoring is configured with `granularities=["1 day", "1 week"]`. What does this mean?**
 
@@ -626,7 +626,7 @@ D) Data is retained for 1 day or 1 week depending on the monitor type
 
 ---
 
-## Question 39
+## Question 39 *(Easy)*
 
 **Model cards provide which compliance benefit?**
 
@@ -642,7 +642,7 @@ D) Replace manual code review
 
 ---
 
-## Question 40
+## Question 40 *(Hard)*
 
 **After a model is promoted to production, the baseline table for LHM should be updated. When is the right time?**
 
@@ -658,7 +658,7 @@ D) Daily, automatically
 
 ---
 
-## Question 41
+## Question 41 *(Hard)*
 
 **A model uses PII (social security numbers) as a training feature. GDPR requires the right to erasure for a specific user. What is the correct approach?**
 
@@ -674,7 +674,7 @@ D) Encrypt the user's records in the feature table
 
 ---
 
-## Question 42
+## Question 42 *(Medium)*
 
 **Which drift type can be detected WITHOUT ground truth labels?**
 
@@ -690,7 +690,7 @@ D) Label drift
 
 ---
 
-## Question 43
+## Question 43 *(Medium)*
 
 **A governance team requires that every production ML model be explainable. Which MLflow feature enables storing explainability artifacts with each model version?**
 
@@ -706,7 +706,7 @@ D) `mlflow.pyfunc.log_model(explainability=True)`
 
 ---
 
-## Question 44
+## Question 44 *(Easy)*
 
 **A UC model object has the alias `champion` pointing to version 5. A new `champion` alias is set to version 6. What happens to version 5?**
 
@@ -722,7 +722,7 @@ D) Version 5 is archived (moved to Archived stage)
 
 ---
 
-## Question 45
+## Question 45 *(Hard)*
 
 **A serving endpoint's p99 latency has been increasing by 15ms per week for 4 weeks. AUC is stable. What is the most likely cause?**
 

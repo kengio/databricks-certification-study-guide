@@ -546,8 +546,8 @@ query = (
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Advanced Feature Techniques Workflows**: Using the advanced capabilities of Advanced Feature Techniques to automate processes and reduce manual operational overhead.
+- **Cyclical Time Feature Engineering**: Encoding day-of-week and month-of-year as sine/cosine pairs so that gradient-boosted models capture the periodicity of retail sales patterns without treating December and January as maximally distant categories.
+- **Automated Feature Generation for High-Cardinality Data**: Using target encoding and embedding lookups to convert categorical columns with millions of unique values (e.g., product IDs, ZIP codes) into dense numeric representations suitable for tree-based and neural models.
 
 ## Common Issues & Errors
 
@@ -556,10 +556,10 @@ query = (
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Feature Skew Between Training and Inference
 
-**Scenario:** Connecting Advanced Feature Techniques to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Advanced Feature Techniques prior to deployment.
+**Scenario:** A model trained on batch-computed window aggregates (e.g., 30-day rolling average) performs well offline but poorly in production because the serving pipeline computes the same aggregate with a slightly different window boundary or data freshness.
+**Fix:** Centralise the feature computation logic in the Feature Store so both training and serving read from the same table. For real-time features, publish the identical Spark transformation as a streaming job that writes to the online store, ensuring parity.
 
 ## Related Topics
 

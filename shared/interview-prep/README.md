@@ -39,6 +39,7 @@ Practice questions designed to simulate a real Databricks technical job intervie
 
 | File | Topic | Level | Questions |
 | ---- | ----- | ----- | --------- |
+| [00-associate-fundamentals.md](00-associate-fundamentals.md) | Lakehouse, medallion, Delta Lake, Unity Catalog, compute, streaming, DLT, sharing, jobs, Spark SQL | Associate | 10 |
 | [01-system-design.md](01-system-design.md) | End-to-end platform design | Both | 5 |
 | [02-delta-lake-internals.md](02-delta-lake-internals.md) | Delta Lake deep dive | Both | 6 |
 | [03-pipeline-architecture.md](03-pipeline-architecture.md) | Medallion, CDC, Auto Loader | Both | 6 |
@@ -52,7 +53,7 @@ Practice questions designed to simulate a real Databricks technical job intervie
 | [11-ml-system-design.md](11-ml-system-design.md) | Feature Store design, model monitoring, retraining pipelines | Professional | 5 |
 | [12-genai-rag-design.md](12-genai-rag-design.md) | RAG architecture, chunking, evaluation, Vector Search, guardrails | Both | 5 |
 
-**Total: 64 questions**
+**Total: 74 questions**
 
 ---
 

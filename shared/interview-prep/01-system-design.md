@@ -1,6 +1,6 @@
 # Interview Questions — System Design
 
-[Back to Interview Prep](./README.md) | [Next: Delta Lake Internals](02-delta-lake-internals.md)
+[Previous: Associate Fundamentals](00-associate-fundamentals.md) | [Back to Interview Prep](./README.md) | [Next: Delta Lake Internals](02-delta-lake-internals.md)
 
 ---
 

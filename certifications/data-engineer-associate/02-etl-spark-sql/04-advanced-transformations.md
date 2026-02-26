@@ -443,8 +443,8 @@ df_cleaned.unpersist()
 
 ## Use Cases
 
-- **Advanced Transformations Implementation**: Incorporating Advanced Transformations principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Advanced Transformations Workflows**: Using the advanced capabilities of Advanced Transformations to automate processes and reduce manual operational overhead.
+- **Flattening Nested JSON Payloads**: Using `explode()`, `from_json()`, and struct access patterns to transform deeply nested API responses or event logs into flat, queryable Delta tables.
+- **Custom Business Logic via UDFs**: Applying Python or Pandas UDFs for domain-specific transformations (e.g., address parsing, custom scoring functions) that cannot be expressed with built-in Spark functions.
 
 ## Common Issues & Errors
 
@@ -453,10 +453,15 @@ df_cleaned.unpersist()
 **Scenario:** The default settings for Advanced Transformations do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Advanced Transformations to handle production-scale workloads.
 
-### Integration Bottlenecks
+### UDF Serialization Errors
 
-**Scenario:** Connecting Advanced Transformations to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Advanced Transformations prior to deployment.
+**Scenario:** A Python UDF fails with `PicklingError` or `SerializationException` because it references a non-serializable object (e.g., a database connection or logger).
+**Fix:** Use Pandas UDFs (vectorized) or built-in Spark functions instead. If a custom UDF is necessary, ensure all referenced objects are serializable or instantiate them inside the UDF function body.
+
+### Schema Mismatch When Exploding Nested Data
+
+**Scenario:** `explode()` on a JSON-derived column fails with `AnalysisException` because the inferred schema for `ArrayType` or `MapType` is inconsistent across rows.
+**Fix:** Use `from_json()` with an explicit schema definition before exploding, ensuring all rows conform to the same expected structure.
 
 ## Exam Tips
 

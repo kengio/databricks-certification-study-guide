@@ -319,20 +319,20 @@ D) Any model — architecture does not affect retrieval quality
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Embedding Models Workflows**: Using the advanced capabilities of Embedding Models to automate processes and reduce manual operational overhead.
+- **Semantic Search Over Internal Documentation**: Embedding 100K+ Confluence pages with `databricks-gte-large-en` via batch API calls, indexing them in a Delta Sync vector search index, and serving similarity queries to an internal search chatbot.
+- **Domain-Specific Embedding for Medical Records**: Fine-tuning a base embedding model on clinical terminology so that queries like "patient presented with MI" retrieve chunks mentioning "myocardial infarction" -- a semantic match that general-purpose embeddings miss.
 
 ## Common Issues & Errors
 
-### Artifact Access Denied
+### Embedding Dimension Mismatch
 
-**Scenario:** Models fail to load from MLflow registry during serving.
-**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+**Scenario:** Queries return zero results or nonsensical rankings because the index was built with one embedding model (e.g., 768 dimensions) but queries are embedded with a different model (e.g., 1024 dimensions).
+**Fix:** Always use the exact same embedding model for indexing and querying. If you need to switch models, re-embed the entire corpus and rebuild the vector index. For Delta Sync indexes, update the `embedding_model_endpoint_name` and trigger a full re-sync.
 
-### Integration Bottlenecks
+### Batch Embedding Job Times Out
 
-**Scenario:** Connecting Embedding Models to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Embedding Models prior to deployment.
+**Scenario:** Embedding a large corpus (500K+ documents) in a single API call or tight loop causes rate-limiting errors or cluster timeouts.
+**Fix:** Use batch embedding with parallel API calls, processing documents in batches of 100-500. For Delta Sync indexes, Databricks handles embedding automatically. For Direct Vector Access indexes, use a Spark UDF that calls the embedding endpoint in parallel across workers.
 
 ## Key Takeaways
 

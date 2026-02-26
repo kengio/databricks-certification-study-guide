@@ -436,8 +436,8 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
 ## Use Cases
 
-- **ACID Transactions Backup**: Using Delta Lake's robust versioning to create a reliable and auditable data warehouse pipeline.
-- **Optimized Delta Lake Optimization Workflows**: Using the advanced capabilities of Delta Lake Optimization to automate processes and reduce manual operational overhead.
+- **Scheduled Table Maintenance**: Running weekly `OPTIMIZE` with Z-ORDER and monthly `VACUUM` as part of a maintenance job to keep Delta tables performant as data volume grows.
+- **Query Acceleration for BI Dashboards**: Z-ORDERing Delta tables on the columns used in dashboard filters (e.g., `region`, `product_category`) so that BI queries skip irrelevant files and return results in seconds.
 
 ## Common Issues & Errors
 
@@ -446,10 +446,15 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 **Scenario:** Frequent micro-batch writes cause slow reads.
 **Fix:** Run OPTIMIZE with Z-ORDER regularly.
 
-### Integration Bottlenecks
+### OPTIMIZE Not Improving Query Performance
 
-**Scenario:** Connecting Delta Lake Optimization to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Optimization prior to deployment.
+**Scenario:** Running `OPTIMIZE` compacts files but queries remain slow because the workload filters on columns that are not Z-ORDERed.
+**Fix:** Ensure that `OPTIMIZE ... ZORDER BY` targets the columns actually used in query `WHERE` clauses. Without Z-ORDER on filtered columns, compaction alone provides limited benefit for selective queries.
+
+### ZORDER on High-Cardinality Columns Wastes Resources
+
+**Scenario:** Z-ORDERing on a primary key or a timestamp column with millions of unique values provides no meaningful data skipping and wastes OPTIMIZE compute time.
+**Fix:** Z-ORDER on 1-4 frequently filtered columns with moderate cardinality (e.g., `region`, `category`, `date`). Avoid Z-ORDERing on columns with nearly unique values like auto-increment IDs or microsecond timestamps.
 
 ## Exam Tips
 

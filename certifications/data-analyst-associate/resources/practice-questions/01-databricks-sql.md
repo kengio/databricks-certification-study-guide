@@ -10,7 +10,7 @@ tags: [data-analyst-associate, practice-questions, databricks-sql]
 
 ---
 
-## Question 1: SQL Warehouse Type for High Concurrency
+## Question 1: SQL Warehouse Type for High Concurrency *(Medium)*
 
 A team has 50 analysts running simultaneous queries at unpredictable times. Which SQL warehouse type best handles this?
 
@@ -27,7 +27,7 @@ D) Personal cluster — dedicated resources per user
 
 ---
 
-## Question 2: Serverless vs Pro Warehouse — Start Time
+## Question 2: Serverless vs Pro Warehouse — Start Time *(Easy)*
 
 A product team needs a SQL warehouse that starts within seconds for morning dashboards. Which type should they choose?
 
@@ -44,7 +44,7 @@ D) All warehouse types start in seconds
 
 ---
 
-## Question 3: SQL Warehouse Auto-Stop Default
+## Question 3: SQL Warehouse Auto-Stop Default *(Easy)*
 
 What is the default auto-stop idle time for a Databricks SQL warehouse?
 
@@ -61,7 +61,7 @@ D) Auto-stop is disabled by default
 
 ---
 
-## Question 4: Connecting External BI Tools
+## Question 4: Connecting External BI Tools *(Easy)*
 
 A team uses Tableau to connect to Databricks SQL data. Which connection method should they use?
 
@@ -78,7 +78,7 @@ D) REST API polling every 5 minutes
 
 ---
 
-## Question 5: Query History Purpose
+## Question 5: Query History Purpose *(Medium)*
 
 A data engineer notices a query is running slower than expected in Databricks SQL. Which feature helps diagnose the performance issue?
 
@@ -95,7 +95,7 @@ D) Delta transaction log
 
 ---
 
-## Question 6: Pro Warehouse Unique Feature
+## Question 6: Pro Warehouse Unique Feature *(Medium)*
 
 Which capability is available in Pro and Serverless SQL warehouses but NOT in Classic warehouses?
 
@@ -113,7 +113,7 @@ D) Auto-stop configuration
 
 ---
 
-## Question 7: Partner Connect
+## Question 7: Partner Connect *(Easy)*
 
 A team wants to connect a third-party ETL tool directly to Databricks without manual credential setup. Which feature should they use?
 
@@ -130,7 +130,7 @@ D) Unity Catalog External Locations
 
 ---
 
-## Question 8: Multi-Cluster Warehouse
+## Question 8: Multi-Cluster Warehouse *(Medium)*
 
 A Classic SQL warehouse is overloaded during peak hours, causing queue buildup. What change would allow multiple concurrent query streams?
 
@@ -147,7 +147,7 @@ D) Add a second Classic warehouse
 
 ---
 
-## Question 9: Serverless Warehouse Billing
+## Question 9: Serverless Warehouse Billing *(Easy)*
 
 Which billing model applies to Serverless SQL warehouses?
 
@@ -164,7 +164,7 @@ D) Per query executed
 
 ---
 
-## Question 10: Warehouse Size Selection
+## Question 10: Warehouse Size Selection *(Medium)*
 
 A data analyst runs complex aggregate queries over 500 GB of Delta Lake data daily. Which warehouse size is most appropriate?
 

@@ -484,20 +484,15 @@ selected_region = ''
 
 ## Use Cases
 
-- **Query Parameters & Dynamic Queries Implementation**: Incorporating Query Parameters & Dynamic Queries principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Query Parameters & Dynamic Queries Workflows**: Using the advanced capabilities of Query Parameters & Dynamic Queries to automate processes and reduce manual operational overhead.
+- **Self-service Filtering**: Adding date range and region dropdown parameters so business users can slice dashboard data without editing SQL.
+- **Cascading Drill-downs**: Using cascading parameters (region then store) to let users progressively narrow their view from high-level summaries to granular detail.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Parameter Not Applied to Query
 
-**Scenario:** The default settings for Query Parameters & Dynamic Queries do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Query Parameters & Dynamic Queries to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Query Parameters & Dynamic Queries to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Query Parameters & Dynamic Queries prior to deployment.
+**Scenario:** Changing a query parameter dropdown does not update results.
+**Fix:** Ensure the parameter is referenced in the query using double curly braces (`{{ param_name }}`). Verify the parameter name matches exactly (case-sensitive).
 
 ## Exam Tips
 

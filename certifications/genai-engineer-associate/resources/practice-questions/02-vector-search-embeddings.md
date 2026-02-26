@@ -13,7 +13,7 @@ status: published
 
 ---
 
-## Question 1: Embedding Model Consistency
+## Question 1 *(Medium)*: Embedding Model Consistency
 
 **Question**: A team creates a Databricks Vector Search index using `databricks-bge-large-en` embeddings. Six months later, they want to query the index using `databricks-gte-large-en`. What will happen?
 
@@ -29,7 +29,7 @@ D) The query will fail with a dimension mismatch error
 
 ---
 
-## Question 2: Delta Sync vs Direct Access Index
+## Question 2 *(Easy)*: Delta Sync vs Direct Access Index
 
 **Question**: A data engineering team already has a managed Delta table of product descriptions that is updated nightly via a Delta Live Tables pipeline. They want to build a Vector Search index on this table with minimal operational overhead. Which index type should they use?
 
@@ -45,7 +45,7 @@ D) Delta Merge Index — merges vector updates with Delta table changes in real 
 
 ---
 
-## Question 3: Direct Access Index Use Case
+## Question 3 *(Easy)*: Direct Access Index Use Case
 
 **Question**: A team builds a real-time customer support system where embeddings are computed in a custom preprocessing pipeline before being stored. Which Databricks Vector Search index type should they use?
 
@@ -61,7 +61,7 @@ D) Delta Sync Index with triggered sync enabled
 
 ---
 
-## Question 4: Cosine Similarity vs L2 Distance
+## Question 4 *(Hard)*: Cosine Similarity vs L2 Distance
 
 **Question**: A team has two options for their vector similarity metric: cosine similarity or L2 distance. Their embedding model outputs L2-normalized unit vectors. Which metric will produce EQUIVALENT results and why?
 
@@ -77,7 +77,7 @@ D) Dot product — it is always preferred over both cosine and L2
 
 ---
 
-## Question 5: Querying a Vector Search Index
+## Question 5 *(Easy)*: Querying a Vector Search Index
 
 **Question**: A developer wants to retrieve the top 5 most similar product descriptions to a user query using the Databricks Vector Search Python SDK. Which method call is correct?
 
@@ -93,7 +93,7 @@ D) `index.find_similar(input="user query", limit=5)`
 
 ---
 
-## Question 6: Embedding Dimensionality
+## Question 6 *(Medium)*: Embedding Dimensionality
 
 **Question**: A team compares two embedding models: Model A produces 768-dimensional vectors and Model B produces 1536-dimensional vectors. Which statement is MOST accurate?
 
@@ -109,7 +109,7 @@ D) Dimensionality must match the LLM's hidden size for compatibility
 
 ---
 
-## Question 7: Metadata Filtering in Vector Search
+## Question 7 *(Medium)*: Metadata Filtering in Vector Search
 
 **Question**: A developer queries a Vector Search index to find support articles similar to a user's question, but only from the `billing` category. Which SDK call correctly applies this filter?
 
@@ -125,7 +125,7 @@ D) `index.similarity_search(query_text="...", num_results=5, metadata_filter=["c
 
 ---
 
-## Question 8: Sparse vs Dense Embeddings
+## Question 8 *(Medium)*: Sparse vs Dense Embeddings
 
 **Question**: A developer is evaluating BM25 (sparse) vs. text embedding models (dense) for a technical documentation search system. For which query type does BM25 have a distinct advantage over dense embeddings?
 
@@ -141,7 +141,7 @@ D) Queries that require reasoning across multiple document sections
 
 ---
 
-## Question 9: Vector Search Index Sync Modes
+## Question 9 *(Easy)*: Vector Search Index Sync Modes
 
 **Question**: A Delta Sync Index is configured with `pipeline_type="TRIGGERED"`. What does this mean for the index synchronization behavior?
 
@@ -157,7 +157,7 @@ D) The index updates only when Databricks detects a data quality issue in the so
 
 ---
 
-## Question 10: Embedding-Based Retrieval Failure Mode
+## Question 10 *(Hard)*: Embedding-Based Retrieval Failure Mode
 
 **Question**: A RAG pipeline returns irrelevant documents when users ask questions that use technical abbreviations unfamiliar to the embedding model (e.g., "What is the SLA for P1 incidents?"). What is the MOST effective mitigation?
 
@@ -173,7 +173,7 @@ D) Reduce chunk size to 64 tokens for more granular matching
 
 ---
 
-## Question 11: Cross-Encoder vs Bi-Encoder
+## Question 11 *(Medium)*: Cross-Encoder vs Bi-Encoder
 
 **Question**: A developer compares bi-encoder (dual encoder) models used in vector search with cross-encoder models used in reranking. Which statement is CORRECT?
 
@@ -189,7 +189,7 @@ D) Cross-encoders are used for indexing; bi-encoders are used for query-time rer
 
 ---
 
-## Question 12: Vector Search Endpoint
+## Question 12 *(Easy)*: Vector Search Endpoint
 
 **Question**: Before creating a Databricks Vector Search index, what resource must exist?
 

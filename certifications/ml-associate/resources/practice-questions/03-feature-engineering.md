@@ -15,7 +15,7 @@ status: published
 
 ## Question 1: VectorAssembler Required Parameters
 
-**Question**: A data scientist wants to use `VectorAssembler` to combine columns `age`, `income`, and `credit_score` into a single feature vector column called `features`. Which code is correct?
+**Question** *(Easy)*: A data scientist wants to use `VectorAssembler` to combine columns `age`, `income`, and `credit_score` into a single feature vector column called `features`. Which code is correct?
 
 A) `VectorAssembler(inputCol=["age", "income", "credit_score"], outputCol="features")`
 B) `VectorAssembler(inputCols=["age", "income", "credit_score"], outputCol="features")`
@@ -31,7 +31,7 @@ D) `VectorAssembler(features=["age", "income", "credit_score"], label="features"
 
 ## Question 2: Pipeline Stage Ordering — StringIndexer and OneHotEncoder
 
-**Question**: A data scientist wants to one-hot encode a categorical column `color`. Which stage ordering in the Pipeline is correct?
+**Question** *(Medium)*: A data scientist wants to one-hot encode a categorical column `color`. Which stage ordering in the Pipeline is correct?
 
 A) `OneHotEncoder` → `StringIndexer`
 B) `StringIndexer` → `OneHotEncoder`
@@ -47,7 +47,7 @@ D) `OneHotEncoder` can be applied directly to a string column without `StringInd
 
 ## Question 3: Pipeline fit() vs transform()
 
-**Question**: A data scientist creates a `Pipeline` with a `StringIndexer` and a `LogisticRegression` estimator. They call `pipeline.fit(train_df)`. What is returned?
+**Question** *(Medium)*: A data scientist creates a `Pipeline` with a `StringIndexer` and a `LogisticRegression` estimator. They call `pipeline.fit(train_df)`. What is returned?
 
 A) A trained `LogisticRegressionModel` object
 B) A `PipelineModel` object containing fitted stages
@@ -63,7 +63,7 @@ D) A pandas DataFrame with predictions
 
 ## Question 4: PipelineModel transform()
 
-**Question**: After fitting a `Pipeline`, a data scientist calls `pipeline_model.transform(test_df)`. What does this return?
+**Question** *(Easy)*: After fitting a `Pipeline`, a data scientist calls `pipeline_model.transform(test_df)`. What does this return?
 
 A) A new `Pipeline` object trained on `test_df`
 B) A `PipelineModel` with updated weights
@@ -79,7 +79,7 @@ D) A Python dictionary of model metrics
 
 ## Question 5: CrossValidator numFolds Default
 
-**Question**: A data scientist creates a `CrossValidator` without specifying `numFolds`. How many folds will be used by default?
+**Question** *(Easy)*: A data scientist creates a `CrossValidator` without specifying `numFolds`. How many folds will be used by default?
 
 A) 5
 B) 10
@@ -95,7 +95,7 @@ D) 2
 
 ## Question 6: ParamGridBuilder Syntax
 
-**Question**: A data scientist wants to search over two values of `regParam` (0.01 and 0.1) and two values of `maxIter` (10 and 100) for a `LogisticRegression` model. Which code correctly builds the parameter grid?
+**Question** *(Medium)*: A data scientist wants to search over two values of `regParam` (0.01 and 0.1) and two values of `maxIter` (10 and 100) for a `LogisticRegression` model. Which code correctly builds the parameter grid?
 
 A)
 
@@ -138,7 +138,7 @@ paramGrid = {"regParam": [0.01, 0.1], "maxIter": [10, 100]}
 
 ## Question 7: CrossValidator vs TrainValidationSplit
 
-**Question**: A data scientist has a small dataset of 5,000 rows. They want to select hyperparameters using the most statistically reliable method. Which Spark ML class should they use?
+**Question** *(Medium)*: A data scientist has a small dataset of 5,000 rows. They want to select hyperparameters using the most statistically reliable method. Which Spark ML class should they use?
 
 A) `TrainValidationSplit` — it is faster and more reliable on small datasets
 B) `CrossValidator` — it performs k-fold cross-validation, providing more reliable estimates on small datasets
@@ -154,7 +154,7 @@ D) `Pipeline` — it automatically performs cross-validation when `numFolds` is 
 
 ## Question 8: Feature Store create_feature_table Primary Keys
 
-**Question**: A data scientist calls `FeatureStoreClient.create_feature_table()` without specifying `primary_keys`. What happens?
+**Question** *(Easy)*: A data scientist calls `FeatureStoreClient.create_feature_table()` without specifying `primary_keys`. What happens?
 
 A) The feature table is created with an auto-generated UUID as the primary key
 B) An error is raised because `primary_keys` is a required parameter
@@ -170,7 +170,7 @@ D) The feature table is created using the first column as the default primary ke
 
 ## Question 9: Feature Store write_table Modes
 
-**Question**: A data scientist wants to update an existing feature table with new rows, preserving existing rows that are not in the new DataFrame. Which `write_table()` mode should they use?
+**Question** *(Medium)*: A data scientist wants to update an existing feature table with new rows, preserving existing rows that are not in the new DataFrame. Which `write_table()` mode should they use?
 
 A) `mode="overwrite"` — replaces all existing data with the new DataFrame
 B) `mode="append"` — adds new rows without touching existing rows
@@ -186,7 +186,7 @@ D) `mode="update"` — updates only the rows present in the new DataFrame
 
 ## Question 10: Feature Store score_batch()
 
-**Question**: A data scientist wants to perform offline batch inference using the Databricks Feature Store. The model was trained with Feature Store features. Which function retrieves features and scores a batch of entities?
+**Question** *(Medium)*: A data scientist wants to perform offline batch inference using the Databricks Feature Store. The model was trained with Feature Store features. Which function retrieves features and scores a batch of entities?
 
 A) `FeatureStoreClient.predict(model_uri, entities_df)`
 B) `FeatureStoreClient.score_batch(model_uri, entities_df)`
@@ -202,7 +202,7 @@ D) `FeatureStoreClient.get_table(feature_table_name).join(entities_df)`
 
 ## Question 11: Point-in-Time Lookups
 
-**Question**: Why does the Databricks Feature Store support point-in-time lookups?
+**Question** *(Medium)*: Why does the Databricks Feature Store support point-in-time lookups?
 
 A) To ensure features are computed faster using parallel processing
 B) To prevent data leakage by retrieving feature values as they existed at the time of each training label's event
@@ -218,7 +218,7 @@ D) To automatically version all feature tables when new data is ingested
 
 ## Question 12: Train-Serve Skew Prevention
 
-**Question**: A data scientist trains a model using manually computed features in their notebook. In production, a different team recomputes those features. The model's production accuracy is lower than its training accuracy. What is the most likely cause?
+**Question** *(Hard)*: A data scientist trains a model using manually computed features in their notebook. In production, a different team recomputes those features. The model's production accuracy is lower than its training accuracy. What is the most likely cause?
 
 A) The production cluster has fewer cores than the training cluster
 B) Train-serve skew — the feature computation logic differs between training and serving
@@ -234,7 +234,7 @@ D) The production Delta table uses a different partition scheme
 
 ## Question 13: Estimator vs Transformer in Pipeline
 
-**Question**: Which of the following Spark ML classes is an `Estimator` (requires `fit()`) rather than a `Transformer` (only requires `transform()`)?
+**Question** *(Medium)*: Which of the following Spark ML classes is an `Estimator` (requires `fit()`) rather than a `Transformer` (only requires `transform()`)?
 
 A) `VectorAssembler`
 B) `Bucketizer`
@@ -250,7 +250,7 @@ D) `SQLTransformer`
 
 ## Question 14: Feature Lookup in Feature Store
 
-**Question**: When training a model with the Databricks Feature Store, a data scientist specifies a `FeatureLookup`. What is the purpose of the `lookup_key` parameter?
+**Question** *(Easy)*: When training a model with the Databricks Feature Store, a data scientist specifies a `FeatureLookup`. What is the purpose of the `lookup_key` parameter?
 
 A) It specifies the primary key column in the feature table to join on
 B) It specifies the MLflow run ID used to retrieve the feature values
@@ -266,7 +266,7 @@ D) It specifies the maximum number of features to retrieve
 
 ## Question 15: Pipeline with CrossValidator
 
-**Question**: A data scientist wraps a `Pipeline` inside a `CrossValidator`. When `CrossValidator.fit(train_df)` is called, what happens?
+**Question** *(Hard)*: A data scientist wraps a `Pipeline` inside a `CrossValidator`. When `CrossValidator.fit(train_df)` is called, what happens?
 
 A) The Pipeline is fit once on the full training set, then evaluated on a held-out test set
 B) The Pipeline is fit and evaluated K times using K-fold splits, and the best hyperparameter combination is selected

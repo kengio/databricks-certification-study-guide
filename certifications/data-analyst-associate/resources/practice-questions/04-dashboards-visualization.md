@@ -12,7 +12,7 @@ tags: [data-analyst-associate, practice-questions, dashboards, visualization, al
 
 ---
 
-## Question 1: Dashboard Widget Types
+## Question 1: Dashboard Widget Types *(Easy)*
 
 Which widget type displays a single aggregated number prominently (e.g., total revenue)?
 
@@ -30,7 +30,7 @@ D) Text widget
 
 ---
 
-## Question 2: Lakeview vs Legacy Dashboards
+## Question 2: Lakeview vs Legacy Dashboards *(Easy)*
 
 What is the primary advantage of Lakeview Dashboards over legacy dashboards in Databricks SQL?
 
@@ -49,7 +49,7 @@ D) Lakeview automatically applies row-level security
 
 ---
 
-## Question 3: Dashboard Refresh Schedule
+## Question 3: Dashboard Refresh Schedule *(Medium)*
 
 A business stakeholder needs a dashboard to refresh automatically every morning at 8 AM. How
 should this be configured?
@@ -68,7 +68,7 @@ D) Dashboards cannot be scheduled — only individual queries can
 
 ---
 
-## Question 4: SQL Alert Condition
+## Question 4: SQL Alert Condition *(Medium)*
 
 An analyst creates a SQL alert on a query that returns the count of failed transactions. The alert
 should fire when the count exceeds 100. How should the alert condition be configured?
@@ -87,7 +87,7 @@ D) WHEN VALUE >= 100 AND VALUE < 200
 
 ---
 
-## Question 5: Alert Notification Destination
+## Question 5: Alert Notification Destination *(Medium)*
 
 A SQL alert needs to send a message to a Slack channel when triggered. Which configuration enables
 this?
@@ -106,7 +106,7 @@ D) Slack integration is not supported — use email only
 
 ---
 
-## Question 6: Dashboard Sharing
+## Question 6: Dashboard Sharing *(Medium)*
 
 A manager wants to share a Databricks SQL dashboard with external stakeholders who don't have
 Databricks accounts. Which sharing option allows this?
@@ -126,7 +126,7 @@ D) Use Delta Sharing to expose the dashboard data
 
 ---
 
-## Question 7: Chart Visualization — Bar vs Line
+## Question 7: Chart Visualization — Bar vs Line *(Easy)*
 
 Sales data needs to show trend over time for 12 months. Which visualization type is most
 appropriate?
@@ -145,7 +145,7 @@ D) Pie chart — shows proportions
 
 ---
 
-## Question 8: Table Widget Use Case
+## Question 8: Table Widget Use Case *(Easy)*
 
 Which scenario is best suited for a table widget in a Databricks SQL dashboard?
 
@@ -163,7 +163,7 @@ D) Showing the proportion of sales by region
 
 ---
 
-## Question 9: Alert Schedule
+## Question 9: Alert Schedule *(Medium)*
 
 A SQL alert monitors inventory below a reorder threshold. The business needs notification within
 1 hour of the condition occurring. What schedule frequency is appropriate?
@@ -183,7 +183,7 @@ D) Manual refresh only
 
 ---
 
-## Question 10: Dashboard Parameter Syntax
+## Question 10: Dashboard Parameter Syntax *(Easy)*
 
 A dashboard has a date range filter that passes the selected date to multiple queries. Which syntax
 is used in SQL queries to accept dashboard parameters?

@@ -15,7 +15,7 @@ status: published
 
 ## Question 1: Start Run Context Manager
 
-**Question**: A data scientist writes the following code. What happens when the `with` block exits normally?
+**Question** *(Easy)*: A data scientist writes the following code. What happens when the `with` block exits normally?
 
 ```python
 with mlflow.start_run():
@@ -37,7 +37,7 @@ D) The run parameters and metrics are discarded
 
 ## Question 2: log_metric vs log_metrics
 
-**Question**: A data scientist wants to log three metrics at once — `accuracy`, `precision`, and `recall` — without writing three separate log calls. Which function signature is correct?
+**Question** *(Easy)*: A data scientist wants to log three metrics at once — `accuracy`, `precision`, and `recall` — without writing three separate log calls. Which function signature is correct?
 
 A) `mlflow.log_metric({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`
 B) `mlflow.log_metrics({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`
@@ -53,7 +53,7 @@ D) `mlflow.log_metric("accuracy", "precision", "recall", [0.9, 0.85, 0.88])`
 
 ## Question 3: Autolog Supported Frameworks
 
-**Question**: A data scientist calls `mlflow.autolog()` at the start of their notebook. Which of the following frameworks will have its parameters and metrics automatically logged?
+**Question** *(Medium)*: A data scientist calls `mlflow.autolog()` at the start of their notebook. Which of the following frameworks will have its parameters and metrics automatically logged?
 
 A) scikit-learn only
 B) scikit-learn and XGBoost only
@@ -69,7 +69,7 @@ D) All Python libraries that call `fit()` on a model object
 
 ## Question 4: Autolog and Custom Metrics
 
-**Question**: A data scientist enables `mlflow.autolog()` and trains a scikit-learn model. They also compute a custom business metric called `revenue_impact`. Will `revenue_impact` be logged automatically?
+**Question** *(Medium)*: A data scientist enables `mlflow.autolog()` and trains a scikit-learn model. They also compute a custom business metric called `revenue_impact`. Will `revenue_impact` be logged automatically?
 
 A) Yes, autolog captures all variables assigned in the training script
 B) Yes, autolog logs all numeric values computed during training
@@ -85,7 +85,7 @@ D) No, custom metrics cannot be logged in the same run as autolog metrics
 
 ## Question 5: search_runs Filter Syntax
 
-**Question**: A data scientist wants to find all MLflow runs where the `test_accuracy` metric is greater than 0.90. Which `mlflow.search_runs()` call is correct?
+**Question** *(Medium)*: A data scientist wants to find all MLflow runs where the `test_accuracy` metric is greater than 0.90. Which `mlflow.search_runs()` call is correct?
 
 A) `mlflow.search_runs(filter_string="metrics.test_accuracy > 0.90")`
 B) `mlflow.search_runs(filter_string="metric.test_accuracy > 0.90")`
@@ -101,7 +101,7 @@ D) `mlflow.search_runs(metrics={"test_accuracy": ">0.90"})`
 
 ## Question 6: log_artifact Usage
 
-**Question**: A data scientist wants to save a confusion matrix image file (`confusion_matrix.png`) as part of their MLflow run. Which code is correct?
+**Question** *(Easy)*: A data scientist wants to save a confusion matrix image file (`confusion_matrix.png`) as part of their MLflow run. Which code is correct?
 
 A) `mlflow.log_metric("confusion_matrix", "confusion_matrix.png")`
 B) `mlflow.log_artifact("confusion_matrix.png")`
@@ -117,7 +117,7 @@ D) `mlflow.save_artifact("confusion_matrix.png")`
 
 ## Question 7: Experiment vs Run
 
-**Question**: What is the relationship between an MLflow experiment and an MLflow run?
+**Question** *(Easy)*: What is the relationship between an MLflow experiment and an MLflow run?
 
 A) An experiment is a single training attempt; a run is a collection of experiments
 B) An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts
@@ -133,7 +133,7 @@ D) A run contains multiple experiments, each representing a different dataset
 
 ## Question 8: Nested Runs
 
-**Question**: A data scientist is running a hyperparameter sweep and wants to create a parent run that tracks the sweep, with each individual trial as a child run. Which code correctly creates a child run inside an existing parent run?
+**Question** *(Medium)*: A data scientist is running a hyperparameter sweep and wants to create a parent run that tracks the sweep, with each individual trial as a child run. Which code correctly creates a child run inside an existing parent run?
 
 A) `mlflow.start_run(parent=True)`
 B) `mlflow.start_run(nested=True)`
@@ -149,7 +149,7 @@ D) `mlflow.start_run(run_type="child")`
 
 ## Question 9: log_artifacts for a Directory
 
-**Question**: A data scientist generates multiple output files in a local directory called `./outputs/` and wants to log all of them as artifacts. Which function should they use?
+**Question** *(Easy)*: A data scientist generates multiple output files in a local directory called `./outputs/` and wants to log all of them as artifacts. Which function should they use?
 
 A) `mlflow.log_artifact("./outputs/")`
 B) `mlflow.log_artifacts("./outputs/")`
@@ -165,7 +165,7 @@ D) `mlflow.log_model("./outputs/")`
 
 ## Question 10: Workspace vs Model Experiments
 
-**Question**: When a data scientist registers a model in the MLflow Model Registry, which type of experiment is automatically associated with model versions?
+**Question** *(Medium)*: When a data scientist registers a model in the MLflow Model Registry, which type of experiment is automatically associated with model versions?
 
 A) Workspace experiment
 B) Model experiment
@@ -181,7 +181,7 @@ D) Production experiment
 
 ## Question 11: Run Comparison in UI
 
-**Question**: A data scientist has run 10 experiments with different hyperparameters and wants to visually compare their metrics. Which MLflow UI feature enables this?
+**Question** *(Easy)*: A data scientist has run 10 experiments with different hyperparameters and wants to visually compare their metrics. Which MLflow UI feature enables this?
 
 A) The artifact browser in each individual run
 B) The "Compare" feature on the Experiments page, which creates parallel coordinate plots and scatter plots
@@ -197,7 +197,7 @@ D) The run tags section, which can be filtered by metric value
 
 ## Question 12: Setting the Active Experiment
 
-**Question**: A data scientist wants all MLflow runs in their notebook to be logged to an experiment named `fraud-detection-v2`. Which code sets the active experiment?
+**Question** *(Easy)*: A data scientist wants all MLflow runs in their notebook to be logged to an experiment named `fraud-detection-v2`. Which code sets the active experiment?
 
 A) `mlflow.set_experiment("fraud-detection-v2")`
 B) `mlflow.start_run(experiment_name="fraud-detection-v2")`
@@ -213,7 +213,7 @@ D) `mlflow.use_experiment("fraud-detection-v2")`
 
 ## Question 13: Retrieving Run Data Programmatically
 
-**Question**: A data scientist wants to retrieve the `rmse` metric from a specific MLflow run by its `run_id`. Which approach is correct?
+**Question** *(Medium)*: A data scientist wants to retrieve the `rmse` metric from a specific MLflow run by its `run_id`. Which approach is correct?
 
 A) `mlflow.get_run(run_id).data.metrics["rmse"]`
 B) `mlflow.load_run(run_id)["rmse"]`

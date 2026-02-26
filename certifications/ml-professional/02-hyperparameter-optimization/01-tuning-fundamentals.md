@@ -450,20 +450,20 @@ pipeline = Pipeline(stages=[
 
 ## Use Cases
 
-- **Hyperparameter Tuning Fundamentals Implementation**: Incorporating Hyperparameter Tuning Fundamentals principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Hyperparameter Tuning Fundamentals Workflows**: Using the advanced capabilities of Hyperparameter Tuning Fundamentals to automate processes and reduce manual operational overhead.
+- **Quick Model Selection with Grid Search**: Running `CrossValidator` with a small parameter grid (3 regularisation values x 3 elastic net ratios) and `parallelism=4` to quickly identify the best logistic regression configuration for a binary classification task.
+- **Automated Nightly Model Retraining**: A Databricks Job runs grid search over a small parameter space each night, selects the best model, and registers it to Unity Catalog -- keeping a fraud-detection model current as transaction patterns shift.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Overfitting to Validation Set During Tuning
 
-**Scenario:** The default settings for Hyperparameter Tuning Fundamentals do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Hyperparameter Tuning Fundamentals to handle production-scale workloads.
+**Scenario:** A model achieves 0.95 AUC during cross-validation but only 0.82 AUC on the held-out test set, indicating the hyperparameters were overfit to the validation folds.
+**Fix:** Use k-fold cross-validation (k=5) instead of a single train/validation split. Report final performance only once on the held-out test set. If the gap persists, reduce the number of hyperparameter combinations being evaluated or use a coarser search grid.
 
-### Integration Bottlenecks
+### Hyperparameter Search Exhausts Cluster Resources
 
-**Scenario:** Connecting Hyperparameter Tuning Fundamentals to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Hyperparameter Tuning Fundamentals prior to deployment.
+**Scenario:** A `CrossValidator` with `parallelism=8` and a large `ParamGridBuilder` causes worker OOM errors because each parallel trial loads the full dataset into memory.
+**Fix:** Reduce `parallelism` to match available worker memory, or switch to `TrainValidationSplit` (single train/validation split instead of k-fold) to lower per-trial memory usage. For very large grids, replace grid search with random search to evaluate fewer combinations.
 
 ## Related Topics
 

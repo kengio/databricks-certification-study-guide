@@ -432,20 +432,15 @@ Alert Escalation:
 
 ## Use Cases
 
-- **Alerts & Scheduling Implementation**: Incorporating Alerts & Scheduling principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Alerts & Scheduling Workflows**: Using the advanced capabilities of Alerts & Scheduling to automate processes and reduce manual operational overhead.
+- **Revenue Threshold Monitoring**: Setting an alert to notify the sales team via Slack when daily revenue drops below a target amount.
+- **Automated Report Distribution**: Scheduling a weekly summary query to run every Monday and emailing the results as a CSV attachment to stakeholders.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Alert Never Triggers
 
-**Scenario:** The default settings for Alerts & Scheduling do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Alerts & Scheduling to handle production-scale workloads.
-
-### Integration Bottlenecks
-
-**Scenario:** Connecting Alerts & Scheduling to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Alerts & Scheduling prior to deployment.
+**Scenario:** Alert condition is met in the data but no notification is sent.
+**Fix:** Alerts require a scheduled refresh to evaluate the query. Ensure the alert's query has an active refresh schedule and the threshold condition matches the actual column value.
 
 ## Exam Tips
 

@@ -15,7 +15,7 @@ status: published
 
 ## Question 1: register_model URI Format
 
-**Question**: A data scientist has trained a model and its `run_id` is `abc123`. The model was logged with `mlflow.sklearn.log_model(model, artifact_path="model")`. Which URI correctly registers this model to the Model Registry?
+**Question** *(Easy)*: A data scientist has trained a model and its `run_id` is `abc123`. The model was logged with `mlflow.sklearn.log_model(model, artifact_path="model")`. Which URI correctly registers this model to the Model Registry?
 
 A) `mlflow.register_model("model/abc123", "fraud-detector")`
 B) `mlflow.register_model("runs:/abc123/model", "fraud-detector")`
@@ -31,7 +31,7 @@ D) `mlflow.register_model("artifacts:/abc123/model", "fraud-detector")`
 
 ## Question 2: Model Version Stage Transition
 
-**Question**: A data scientist wants to promote model version 3 of a model named `churn-predictor` from `Staging` to `Production`. Which code is correct?
+**Question** *(Medium)*: A data scientist wants to promote model version 3 of a model named `churn-predictor` from `Staging` to `Production`. Which code is correct?
 
 A) `mlflow.transition_model_stage("churn-predictor", 3, "Production")`
 B) `mlflow.set_model_stage("churn-predictor", version=3, stage="Production")`
@@ -65,7 +65,7 @@ mlflow.register_model(
 
 ## Question 3: Valid Model Registry Stages
 
-**Question**: Which of the following is NOT a valid stage in the MLflow Model Registry?
+**Question** *(Easy)*: Which of the following is NOT a valid stage in the MLflow Model Registry?
 
 A) Staging
 B) Production
@@ -81,7 +81,7 @@ D) Deprecated
 
 ## Question 4: Loading a Registered Model for Inference
 
-**Question**: A data scientist wants to load the Production version of a model named `price-estimator` using its `models:/` URI. Which code is correct?
+**Question** *(Medium)*: A data scientist wants to load the Production version of a model named `price-estimator` using its `models:/` URI. Which code is correct?
 
 A) `model = mlflow.load_model("models:/price-estimator/Production")`
 B) `model = mlflow.pyfunc.load_model("models:/price-estimator/Production")`
@@ -97,7 +97,7 @@ D) `model = mlflow.sklearn.load_model("models:/price-estimator/Production")`
 
 ## Question 5: spark_udf for Batch Scoring
 
-**Question**: A data scientist wants to score a Spark DataFrame of 10 million customer records using a registered MLflow model. Which approach is most appropriate for distributed batch scoring?
+**Question** *(Medium)*: A data scientist wants to score a Spark DataFrame of 10 million customer records using a registered MLflow model. Which approach is most appropriate for distributed batch scoring?
 
 A) Load the model with `mlflow.pyfunc.load_model()` and call `model.predict(df.toPandas())`
 B) Use `mlflow.pyfunc.spark_udf()` to create a UDF and apply it to the Spark DataFrame
@@ -113,7 +113,7 @@ D) Use `FeatureStoreClient.score_batch()` without any model URI
 
 ## Question 6: spark_udf Usage Pattern
 
-**Question**: A data scientist creates a `spark_udf` from a registered model. Which code correctly applies the UDF to a DataFrame `df` that has a `features` column?
+**Question** *(Medium)*: A data scientist creates a `spark_udf` from a registered model. Which code correctly applies the UDF to a DataFrame `df` that has a `features` column?
 
 A)
 
@@ -152,7 +152,7 @@ result_df = df.withColumn("prediction", predict_udf(df["features"]))
 
 ## Question 7: log_model vs register_model
 
-**Question**: What is the key difference between `mlflow.sklearn.log_model()` and `mlflow.register_model()`?
+**Question** *(Medium)*: What is the key difference between `mlflow.sklearn.log_model()` and `mlflow.register_model()`?
 
 A) `log_model()` saves the model to the Model Registry; `register_model()` saves it as a run artifact
 B) `log_model()` saves the model as a run artifact inside an MLflow run; `register_model()` registers a previously logged artifact to the Model Registry under a named version
@@ -168,7 +168,7 @@ D) `register_model()` can only be called immediately after `log_model()` in the 
 
 ## Question 8: Model Serving Endpoint Invocation
 
-**Question**: A data scientist has deployed a model to a Databricks Model Serving endpoint. Which format is used to send prediction requests to the endpoint?
+**Question** *(Easy)*: A data scientist has deployed a model to a Databricks Model Serving endpoint. Which format is used to send prediction requests to the endpoint?
 
 A) A Spark DataFrame serialized as a Parquet file
 B) A JSON payload with a `dataframe_records` or `dataframe_split` key

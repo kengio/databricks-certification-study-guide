@@ -461,20 +461,20 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 
 ## Use Cases
 
-- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
-- **Optimized RAG Design Patterns Workflows**: Using the advanced capabilities of RAG Design Patterns to automate processes and reduce manual operational overhead.
+- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices, with HyDE to handle short employee queries against long policy documents.
+- **Multi-Source Knowledge Base**: Combining product docs, support tickets, and FAQs into a single RAG pipeline using multi-query retrieval to cover terminology differences across sources, then re-ranking to surface the most relevant chunks.
 
 ## Common Issues & Errors
 
-### High Latency Responses
+### Low Retrieval Recall on Short Queries
 
-**Scenario:** LLM endpoints take too long to return generated text.
-**Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
+**Scenario:** Users ask short questions like "what is AutoML?" but the top-5 retrieved chunks are irrelevant because the short query does not embed close to long documentation paragraphs.
+**Fix:** Implement HyDE -- generate a hypothetical answer first, then embed the hypothetical answer as the retrieval query. This bridges the embedding space gap between short queries and verbose documents.
 
-### Integration Bottlenecks
+### Context Window Overflow Causing Truncated Answers
 
-**Scenario:** Connecting RAG Design Patterns to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for RAG Design Patterns prior to deployment.
+**Scenario:** Passing too many retrieved chunks to the LLM causes the context window to fill up, resulting in incomplete or cut-off answers.
+**Fix:** Reduce `num_results`, apply contextual compression to extract only relevant sentences from each chunk, or switch to parent-child chunking so fewer but richer chunks are passed to the LLM.
 
 ## Key Takeaways
 

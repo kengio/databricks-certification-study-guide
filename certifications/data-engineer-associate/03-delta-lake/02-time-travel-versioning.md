@@ -381,8 +381,8 @@ log_path = "/mnt/data/employees/_delta_log"
 
 ## Use Cases
 
-- **Time Travel and Versioning Implementation**: Incorporating Time Travel and Versioning principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Time Travel and Versioning Workflows**: Using the advanced capabilities of Time Travel and Versioning to automate processes and reduce manual operational overhead.
+- **Accidental Data Recovery**: Restoring a Delta table to a previous version after an erroneous `DELETE` or `UPDATE` operation, using `RESTORE TABLE ... TO VERSION AS OF n` to recover lost data within minutes.
+- **Regulatory Audit and Compliance**: Querying historical versions of a table to reproduce reports as they existed on a specific date, satisfying audit requirements without maintaining separate snapshot copies.
 
 ## Common Issues & Errors
 
@@ -391,10 +391,15 @@ log_path = "/mnt/data/employees/_delta_log"
 **Scenario:** The default settings for Time Travel and Versioning do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Time Travel and Versioning to handle production-scale workloads.
 
-### Integration Bottlenecks
+### VersionNotFoundException After VACUUM
 
-**Scenario:** Connecting Time Travel and Versioning to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Time Travel and Versioning prior to deployment.
+**Scenario:** A time travel query like `SELECT * FROM table VERSION AS OF 5` fails with `VersionNotFoundException` because `VACUUM` already removed the data files for that version.
+**Fix:** Time travel is only available within the retention period (default 7 days). Plan VACUUM retention to cover your audit and recovery requirements, and use `DESCRIBE HISTORY` to check which versions are still available.
+
+### Accidentally Restoring to the Wrong Version
+
+**Scenario:** An engineer runs `RESTORE TABLE ... TO VERSION AS OF n` but picks the wrong version number, overwriting the current table state with incorrect data.
+**Fix:** Always run `DESCRIBE HISTORY` first to verify the contents and operation of each version before executing `RESTORE`. Since RESTORE creates a new version, you can restore again to undo a mistaken restore.
 
 ## Exam Tips
 

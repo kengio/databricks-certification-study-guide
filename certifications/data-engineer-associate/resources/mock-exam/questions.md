@@ -18,7 +18,7 @@ tags:
 
 ---
 
-## Question 1
+## Question 1 *(Medium)*
 
 A data engineering team is evaluating whether to migrate their existing data warehouse to a Databricks Lakehouse. The primary concern is maintaining ACID guarantees for concurrent reads and writes on large tables. Which Databricks technology directly addresses this requirement?
 
@@ -34,7 +34,7 @@ D) Unity Catalog with row-level security
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 An engineer is setting up a new Databricks workspace and needs to run interactive notebooks for development while also running scheduled production jobs. Which cluster type should they use for each workload?
 
@@ -50,7 +50,7 @@ D) SQL warehouses for notebooks; job clusters for scheduled jobs
 
 ---
 
-## Question 3
+## Question 3 *(Medium)*
 
 A company wants to reduce cluster startup time for their machine learning jobs that run every 30 minutes. The jobs require identical cluster configurations each time. Which Databricks feature should they configure?
 
@@ -66,7 +66,7 @@ D) Serverless compute for ML workloads
 
 ---
 
-## Question 4
+## Question 4 *(Easy)*
 
 A team member asks about the difference between the Databricks Control Plane and the Data Plane. Which statement correctly describes this architecture?
 
@@ -82,7 +82,7 @@ D) The Data Plane manages the web UI; the Control Plane runs Spark jobs
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 An analyst needs to access data stored in an external S3 bucket from a Databricks cluster without hardcoding credentials in notebooks. Which approach is most appropriate?
 
@@ -98,7 +98,7 @@ D) Pass credentials as job parameters in the Workflows UI
 
 ---
 
-## Question 6
+## Question 6 *(Medium)*
 
 A data engineer is comparing Databricks Photon engine to standard Spark. In which scenario does Photon provide the greatest performance benefit?
 
@@ -114,7 +114,7 @@ D) Machine learning model training with MLlib
 
 ---
 
-## Question 7
+## Question 7 *(Medium)*
 
 A Databricks cluster is configured with a driver node (16 cores) and 4 worker nodes (8 cores each). A user runs a SQL query. What is the total parallelism available for task execution?
 
@@ -130,7 +130,7 @@ D) Depends on the number of partitions in the data
 
 ---
 
-## Question 8
+## Question 8 *(Easy)*
 
 A team wants to use Databricks Runtime for Machine Learning (ML Runtime) instead of the standard Databricks Runtime. What is the primary reason to choose the ML Runtime?
 
@@ -146,7 +146,7 @@ D) ML Runtime provides faster SQL query execution via Photon
 
 ---
 
-## Question 9
+## Question 9 *(Medium)*
 
 A data engineer wants to understand the Lakehouse architecture. Which statement best describes what differentiates a Lakehouse from a traditional two-tier Lambda architecture (data lake + data warehouse)?
 
@@ -162,7 +162,7 @@ D) A Lakehouse eliminates the need for data transformation; Lambda requires full
 
 ---
 
-## Question 10
+## Question 10 *(Medium)*
 
 An organization runs a multi-tenant Databricks workspace. A cluster policy is configured with `spark.executor.memory` set as a fixed value. What is the effect of this policy on users?
 
@@ -178,7 +178,7 @@ D) Cluster policies only restrict admin users; regular users are unaffected
 
 ---
 
-## Question 11
+## Question 11 *(Medium)*
 
 A data engineer needs to run a notebook that performs interactive EDA (exploratory data analysis) with visualizations, then automatically hand off to a scheduled production pipeline. Which Databricks features best match these two phases respectively?
 
@@ -198,7 +198,7 @@ D) All-purpose cluster for EDA; job cluster with Workflows for production
 
 ---
 
-## Question 12
+## Question 12 *(Easy)*
 
 A data engineer runs the following SQL command. What is the result?
 
@@ -221,7 +221,7 @@ D) Creates a temporary view of the aggregated results
 
 ---
 
-## Question 13
+## Question 13 *(Easy)*
 
 A Databricks SQL query must return all rows from the `orders` table and only the matching rows from the `customers` table. Which JOIN type accomplishes this?
 
@@ -237,7 +237,7 @@ D) CROSS JOIN
 
 ---
 
-## Question 14
+## Question 14 *(Medium)*
 
 A data engineer needs to find the top 3 highest-selling products within each product category. Which SQL feature is most appropriate?
 
@@ -253,7 +253,7 @@ D) PIVOT table with category as columns
 
 ---
 
-## Question 15
+## Question 15 *(Medium)*
 
 A data engineer writes the following PySpark code. What does it accomplish?
 
@@ -276,7 +276,7 @@ D) Creates a new Delta table with department salary averages
 
 ---
 
-## Question 16
+## Question 16 *(Medium)*
 
 A data engineer needs to apply a custom Python function to a column in a large Spark DataFrame. The function uses a third-party library not available as a built-in Spark function. What is the recommended approach?
 
@@ -292,7 +292,7 @@ D) Use `df.withColumn()` with a Python lambda directly without registration
 
 ---
 
-## Question 17
+## Question 17 *(Easy)*
 
 A data engineer uses `explode()` on a column containing arrays. What does this function do?
 
@@ -308,7 +308,7 @@ D) Converts an array column into a string by joining elements
 
 ---
 
-## Question 18
+## Question 18 *(Easy)*
 
 A data engineer needs to add a column to an existing Delta table without rewriting the data. Which SQL command accomplishes this?
 
@@ -324,7 +324,7 @@ D) `CREATE OR REPLACE TABLE table_name AS SELECT *, NULL AS new_col FROM table_n
 
 ---
 
-## Question 19
+## Question 19 *(Hard)*
 
 A data engineer writes SQL to calculate a running total of sales by date using the following window specification. What does it return?
 
@@ -344,7 +344,7 @@ D) The sum of only the current row and the immediately following row
 
 ---
 
-## Question 20
+## Question 20 *(Easy)*
 
 A data engineer needs to combine two DataFrames that have the same schema, keeping all rows from both including duplicates. Which operation should they use?
 
@@ -360,7 +360,7 @@ D) `df1.merge(df2)`
 
 ---
 
-## Question 21
+## Question 21 *(Easy)*
 
 A data engineer needs to pivot sales data so that each product category becomes a separate column showing total sales. Which SQL keyword accomplishes this?
 
@@ -376,7 +376,7 @@ D) TRANSPOSE
 
 ---
 
-## Question 22
+## Question 22 *(Medium)*
 
 A data engineer wants to select only distinct combinations of `customer_id` and `product_id` from a table with millions of rows. Which approach is most efficient?
 
@@ -392,7 +392,7 @@ D) Use `dropDuplicates()` in PySpark only — `DISTINCT` is not supported in Dat
 
 ---
 
-## Question 23
+## Question 23 *(Hard)*
 
 A data engineer writes a SQL query joining three large tables. The query is slow and the Spark UI shows excessive shuffle volume. Which optimization should they apply first?
 
@@ -408,7 +408,7 @@ D) Add more worker nodes to the cluster
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 A data engineer uses higher-order functions to work with an array column. Which function filters array elements based on a lambda condition?
 
@@ -428,7 +428,7 @@ D) `aggregate(arr, 0, (acc, x) -> acc + x)`
 
 ---
 
-## Question 25
+## Question 25 *(Medium)*
 
 A data engineer needs to query data as it existed 7 days ago from a Delta table named `transactions`. Which command correctly retrieves this historical snapshot?
 
@@ -444,7 +444,7 @@ D) `RESTORE TABLE transactions TO TIMESTAMP AS OF date_sub(current_date(), 7)`
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 A data engineer needs to upsert records into a Delta table: update existing customer records when `customer_id` matches, and insert new records when there is no match. Which clause correctly completes the MERGE statement?
 
@@ -470,7 +470,7 @@ D) `INSERT * FROM source`
 
 ---
 
-## Question 27
+## Question 27 *(Medium)*
 
 A data engineer configures Auto Loader to ingest CSV files from an S3 bucket. The pipeline runs every hour. What happens if 5 new files arrive between runs?
 
@@ -486,7 +486,7 @@ D) Auto Loader fails if more than 1 file arrives between runs
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 A data engineer enables Change Data Feed (CDF) on a Delta table. What additional metadata columns does CDF expose when reading changes?
 
@@ -502,7 +502,7 @@ D) A JSON file in the `_delta_log` directory with changed row details
 
 ---
 
-## Question 29
+## Question 29 *(Easy)*
 
 A Delta table has accumulated many small Parquet files over several months of streaming ingestion. A data engineer runs `OPTIMIZE` on the table. What is the primary effect?
 
@@ -518,7 +518,7 @@ D) Converts the table from Parquet format to a different columnar format
 
 ---
 
-## Question 30
+## Question 30 *(Medium)*
 
 A data engineer runs `VACUUM transactions RETAIN 168 HOURS`. What is the effect on time travel capabilities?
 
@@ -534,7 +534,7 @@ D) VACUUM retains exactly 168 versions of the table, not based on time
 
 ---
 
-## Question 31
+## Question 31 *(Medium)*
 
 A streaming job reads from a Kafka topic and writes to a Delta table. The engineer wants the job to process all currently available data and then stop automatically. Which trigger type should they configure?
 
@@ -550,7 +550,7 @@ D) No trigger configuration — streaming jobs stop automatically when the sourc
 
 ---
 
-## Question 32
+## Question 32 *(Easy)*
 
 A data engineer uses the medallion architecture. Which layer is responsible for enforcing data quality rules, deduplication, and applying business logic transformations?
 
@@ -566,7 +566,7 @@ D) The medallion architecture has no dedicated quality enforcement layer
 
 ---
 
-## Question 33
+## Question 33 *(Medium)*
 
 A data engineer wants to Z-ORDER a Delta table by the `customer_id` column to improve query performance. When does Z-ORDER provide the most benefit?
 
@@ -582,7 +582,7 @@ D) Z-ORDER provides no benefit on Delta tables; use partitioning for all perform
 
 ---
 
-## Question 34
+## Question 34 *(Hard)*
 
 A data engineer notices that a Delta streaming job fails with `StreamingQueryException: Detected a data update in the source table`. What caused this error?
 
@@ -602,7 +602,7 @@ D) The checkpoint directory was deleted, causing the stream to restart
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 A data engineer is designing a Databricks Workflow with three tasks: `ingest → transform → report`. The `report` task must only run if `transform` succeeds. How should task dependencies be configured?
 
@@ -618,7 +618,7 @@ D) Set `transform` and `report` to run in parallel to reduce total execution tim
 
 ---
 
-## Question 36
+## Question 36 *(Medium)*
 
 A production job fails intermittently due to transient cloud API errors. What built-in Databricks Workflows feature can automatically retry failed tasks without manual intervention?
 
@@ -634,7 +634,7 @@ D) Databricks auto-recovers all failed tasks by default with no configuration ne
 
 ---
 
-## Question 37
+## Question 37 *(Easy)*
 
 A data engineer uses Delta Live Tables (DLT) to build a pipeline. Which Python decorator defines a table that is computed and materialized from a query?
 
@@ -650,7 +650,7 @@ D) `@dlt.expect`
 
 ---
 
-## Question 38
+## Question 38 *(Medium)*
 
 A DLT pipeline has an `EXPECT` constraint: `EXPECT (amount > 0) ON VIOLATION DROP ROW`. A batch of 1,000 records arrives and 50 have `amount <= 0`. What happens?
 
@@ -666,7 +666,7 @@ D) The pipeline pauses and waits for manual intervention to resolve the violatio
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 A data engineer configures a Databricks Workflow job with a schedule of `0 0 8 * * ?` (Quartz cron format). When does this job run?
 
@@ -682,7 +682,7 @@ D) At 8:00 AM on the 8th of every month
 
 ---
 
-## Question 40
+## Question 40 *(Medium)*
 
 A data engineer wants job clusters to start quickly for scheduled jobs without paying for always-running compute. Which Databricks feature achieves fast startup while keeping costs low?
 
@@ -698,7 +698,7 @@ D) Instance pool that job clusters acquire for fast startup, then release after 
 
 ---
 
-## Question 41
+## Question 41 *(Medium)*
 
 A DLT pipeline is configured in `CONTINUOUS` mode. How does this differ from `TRIGGERED` mode?
 
@@ -718,7 +718,7 @@ D) There is no functional difference; the setting only affects UI display
 
 ---
 
-## Question 42
+## Question 42 *(Hard)*
 
 A data engineer needs to grant a user access to query a specific table in Unity Catalog without giving access to the entire schema. What is the minimum set of privileges required?
 
@@ -734,7 +734,7 @@ D) `GRANT ALL PRIVILEGES ON TABLE catalog.schema.table TO user`
 
 ---
 
-## Question 43
+## Question 43 *(Medium)*
 
 A company wants to share a Delta table with an external partner organization that uses a different cloud provider, without copying the underlying data. Which Databricks feature enables this?
 
@@ -750,7 +750,7 @@ D) DBFS mount with public access enabled
 
 ---
 
-## Question 44
+## Question 44 *(Hard)*
 
 A data engineering team creates Unity Catalog external tables pointing to existing data in S3. Which Unity Catalog objects must be configured, and in what order?
 
@@ -766,7 +766,7 @@ D) Storage Credential first (defines the IAM identity), then External Location (
 
 ---
 
-## Question 45
+## Question 45 *(Medium)*
 
 A data engineer wants to audit who accessed a specific Unity Catalog table and when. Which Databricks feature provides this capability?
 

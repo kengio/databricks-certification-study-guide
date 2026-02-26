@@ -611,7 +611,7 @@ else:
 ## Use Cases
 
 - **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Model Registry Workflows**: Using the advanced capabilities of Model Registry to automate processes and reduce manual operational overhead.
+- **Governed Model Promotion Workflow**: Using stage transitions (None to Staging to Production to Archived) with approval gates to ensure only validated models reach production serving.
 
 ## Common Issues & Errors
 
@@ -620,10 +620,10 @@ else:
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Model Registration Fails in Unity Catalog
 
-**Scenario:** Connecting Model Registry to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Registry prior to deployment.
+**Scenario:** `mlflow.register_model()` fails with `RESOURCE_DOES_NOT_EXIST`.
+**Fix:** Set `mlflow.set_registry_uri("databricks-uc")` before registration. Ensure the target catalog and schema exist and you have `CREATE MODEL` permission.
 
 ## Exam Tips
 

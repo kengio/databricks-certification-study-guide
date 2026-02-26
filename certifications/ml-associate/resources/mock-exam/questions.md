@@ -17,7 +17,7 @@ Set a 90-minute timer and answer all 45 questions before checking answers.
 
 ---
 
-## Question 1
+## Question 1 *(Easy)*
 
 **Question**: Which pre-installed library distinguishes Databricks Runtime for Machine Learning from the standard Databricks Runtime?
 
@@ -33,7 +33,7 @@ D) JDBC driver
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 **Question**: A data scientist is prototyping a model using pandas and scikit-learn on a 200 MB dataset. Which cluster type minimizes cost while supporting this workload?
 
@@ -49,7 +49,7 @@ D) GPU-enabled multi-node cluster
 
 ---
 
-## Question 3
+## Question 3 *(Easy)*
 
 **Question**: What does Databricks AutoML produce after completing a classification experiment?
 
@@ -65,7 +65,7 @@ D) A REST endpoint ready for production traffic
 
 ---
 
-## Question 4
+## Question 4 *(Easy)*
 
 **Question**: A data scientist wants to use AutoML to forecast future sales. Which AutoML task type should they select?
 
@@ -81,7 +81,7 @@ D) Time Series
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 **Question**: An administrator wants to enforce that all ML team clusters use a specific instance type for cost control. What is the correct mechanism?
 
@@ -97,7 +97,7 @@ D) Use a Databricks Workflow job with restricted compute settings
 
 ---
 
-## Question 6
+## Question 6 *(Easy)*
 
 **Question**: Which Databricks Runtime is required to use GPU-accelerated deep learning with CUDA?
 
@@ -113,7 +113,7 @@ D) Databricks Runtime Photon
 
 ---
 
-## Question 7
+## Question 7 *(Easy)*
 
 **Question**: A data scientist stores shared feature engineering functions in a notebook. What magic command runs that notebook and imports its variables into the current notebook?
 
@@ -129,7 +129,7 @@ D) `%source ./shared_utils`
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 **Question**: A data scientist runs AutoML on a regression problem. After the experiment completes, they want to understand why the best model performed well. What does AutoML provide for this purpose?
 
@@ -145,7 +145,7 @@ D) An automatic A/B test comparing the best model to the baseline
 
 ---
 
-## Question 9
+## Question 9 *(Medium)*
 
 **Question**: A platform team wants to prevent users from creating clusters with more than 10 workers. Which cluster policy attribute achieves this?
 
@@ -161,7 +161,7 @@ D) Create a Unity Catalog group policy restricting cluster size
 
 ---
 
-## Question 10
+## Question 10 *(Easy)*
 
 **Question**: Which feature of Databricks Repos enables collaborative development on ML model code?
 
@@ -177,7 +177,7 @@ D) Shared feature store table locking
 
 ---
 
-## Question 11
+## Question 11 *(Medium)*
 
 **Question**: A data scientist wants to train a PyTorch model on image data. Which cluster configuration is most appropriate?
 
@@ -193,7 +193,7 @@ D) Standard Databricks Runtime on a general-purpose cluster
 
 ---
 
-## Question 12
+## Question 12 *(Medium)*
 
 **Question**: What is the primary benefit of using Databricks AutoML over manually training multiple models?
 
@@ -209,7 +209,7 @@ D) AutoML automatically deploys models to production without human review
 
 ---
 
-## Question 13
+## Question 13 *(Easy)*
 
 **Question**: A data scientist is using Databricks Repos and wants to create a new feature branch before making changes. Which operation should they perform in the Repos UI?
 
@@ -229,7 +229,7 @@ D) Tag the current commit with the feature name
 
 ---
 
-## Question 14
+## Question 14 *(Easy)*
 
 **Question**: What is the correct way to log a hyperparameter called `learning_rate` with value `0.01` to the current MLflow run?
 
@@ -245,7 +245,7 @@ D) `mlflow.set_tag("learning_rate", 0.01)`
 
 ---
 
-## Question 15
+## Question 15 *(Easy)*
 
 **Question**: A data scientist calls `mlflow.autolog()` at the start of a notebook and then trains a scikit-learn `RandomForestClassifier`. What is automatically logged?
 
@@ -261,7 +261,7 @@ D) Parameters only — metrics must still be logged manually
 
 ---
 
-## Question 16
+## Question 16 *(Easy)*
 
 **Question**: A data scientist wants all runs in their notebook to be grouped under an experiment named `churn-model-v3`. Which code achieves this?
 
@@ -277,7 +277,7 @@ D) `mlflow.log_tag("experiment", "churn-model-v3")`
 
 ---
 
-## Question 17
+## Question 17 *(Medium)*
 
 **Question**: A data scientist wants to find all runs in experiment ID `123` where `val_loss` is less than `0.5`. Which `search_runs` call is correct?
 
@@ -293,7 +293,7 @@ D) `mlflow.find_runs(experiment_ids=["123"], filter_string="metric.val_loss < 0.
 
 ---
 
-## Question 18
+## Question 18 *(Medium)*
 
 **Question**: A data scientist logs a metric `accuracy` at step 1 (0.72), step 2 (0.85), and step 3 (0.91) within a single run. What does `mlflow.get_run(run_id).data.metrics["accuracy"]` return?
 
@@ -309,7 +309,7 @@ D) The average: 0.827
 
 ---
 
-## Question 19
+## Question 19 *(Easy)*
 
 **Question**: Which MLflow function saves a local file called `report.html` to the current run's artifact store?
 
@@ -325,7 +325,7 @@ D) `mlflow.upload("report.html")`
 
 ---
 
-## Question 20
+## Question 20 *(Medium)*
 
 **Question**: A data scientist runs a hyperparameter sweep and wants each trial to be a child of a single parent run. Which code correctly creates a child run?
 
@@ -341,7 +341,7 @@ D) `MlflowClient().create_run(parent_run_id=active_run_id)`
 
 ---
 
-## Question 21
+## Question 21 *(Easy)*
 
 **Question**: A data scientist logs a directory of plots called `./plots/` as artifacts. Which function is correct?
 
@@ -357,7 +357,7 @@ D) `mlflow.log_file_directory("./plots/")`
 
 ---
 
-## Question 22
+## Question 22 *(Easy)*
 
 **Question**: What is the best way to compare the `val_accuracy` of 20 MLflow runs from the same experiment in the Databricks UI?
 
@@ -373,7 +373,7 @@ D) Use the Model Registry to compare version metrics
 
 ---
 
-## Question 23
+## Question 23 *(Medium)*
 
 **Question**: A data scientist uses `mlflow.autolog()` and also manually calls `mlflow.log_metric("custom_score", 0.95)`. What is the result?
 
@@ -389,7 +389,7 @@ D) Autolog is disabled for the rest of the run once manual logging starts
 
 ---
 
-## Question 24
+## Question 24 *(Easy)*
 
 **Question**: A data scientist calls `mlflow.log_metric("loss", 0.3, step=10)`. What does the `step` parameter represent?
 
@@ -405,7 +405,7 @@ D) The number of times this metric has been logged in the run
 
 ---
 
-## Question 25
+## Question 25 *(Easy)*
 
 **Question**: Which `mlflow.start_run()` parameter allows providing a human-readable name for the run?
 
@@ -421,7 +421,7 @@ D) `run_label`
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 **Question**: A data scientist retrieves a run object with `run = mlflow.get_run(run_id)`. How do they access the value of a logged parameter named `max_depth`?
 
@@ -441,7 +441,7 @@ D) `run.data["params"]["max_depth"]`
 
 ---
 
-## Question 27
+## Question 27 *(Easy)*
 
 **Question**: Which `VectorAssembler` parameter specifies the list of input columns to combine into a single feature vector?
 
@@ -457,7 +457,7 @@ D) `columns`
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 **Question**: A data scientist has a `Pipeline` with stages: `StringIndexer`, `VectorAssembler`, `RandomForestClassifier`. They call `pipeline.fit(train_df)`. In what order do the stages execute?
 
@@ -473,7 +473,7 @@ D) The order depends on which stages are `Estimator` vs `Transformer`
 
 ---
 
-## Question 29
+## Question 29 *(Easy)*
 
 **Question**: After calling `pipeline_model = pipeline.fit(train_df)`, a data scientist calls `predictions = pipeline_model.transform(test_df)`. What does `predictions` contain?
 
@@ -489,7 +489,7 @@ D) A dictionary of metric values from the model evaluation
 
 ---
 
-## Question 30
+## Question 30 *(Easy)*
 
 **Question**: What is the default number of folds used by `CrossValidator` if `numFolds` is not specified?
 
@@ -505,7 +505,7 @@ D) 3
 
 ---
 
-## Question 31
+## Question 31 *(Medium)*
 
 **Question**: A data scientist wants to search over `maxDepth` values of 5 and 10 for a `DecisionTreeClassifier` named `dt`. Which code correctly adds this to the parameter grid?
 
@@ -521,7 +521,7 @@ D) `ParamGridBuilder().add(dt, "maxDepth", [5, 10]).build()`
 
 ---
 
-## Question 32
+## Question 32 *(Medium)*
 
 **Question**: What is the key advantage of `CrossValidator` over `TrainValidationSplit` for hyperparameter tuning?
 
@@ -537,7 +537,7 @@ D) `CrossValidator` requires less memory because it processes one fold at a time
 
 ---
 
-## Question 33
+## Question 33 *(Easy)*
 
 **Question**: What error occurs if you call `FeatureStoreClient.create_feature_table()` without the `primary_keys` parameter?
 
@@ -553,7 +553,7 @@ D) A `DeprecationWarning` is shown but the table is still created
 
 ---
 
-## Question 34
+## Question 34 *(Medium)*
 
 **Question**: A data engineer wants to add new rows and update existing rows in a Feature Store table based on primary key matches. Which `write_table()` mode should they use?
 
@@ -569,7 +569,7 @@ D) `mode="upsert"`
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 **Question**: A data scientist trained a model using Feature Store features and wants to score a new batch of customer IDs. Which function performs offline batch inference while automatically retrieving features from the Feature Store?
 
@@ -585,7 +585,7 @@ D) `mlflow.pyfunc.spark_udf(spark, model_uri)(entity_df)`
 
 ---
 
-## Question 36
+## Question 36 *(Medium)*
 
 **Question**: Why does the Databricks Feature Store provide point-in-time feature lookups?
 
@@ -601,7 +601,7 @@ D) To support real-time feature computation with sub-second latency
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 **Question**: Which class is an `Estimator` in Spark ML (requiring `fit()` to produce a fitted object)?
 
@@ -617,7 +617,7 @@ D) `MinMaxScaler`
 
 ---
 
-## Question 38
+## Question 38 *(Hard)*
 
 **Question**: A Pipeline contains a `CrossValidator` as its last stage. Which statement is true?
 
@@ -633,7 +633,7 @@ D) `CrossValidator` automatically wraps all prior pipeline stages
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 **Question**: A data scientist uses `StringIndexer` with `handleInvalid="keep"`. What happens when the transformer encounters a category during test inference that was not seen during training?
 
@@ -649,7 +649,7 @@ D) The row containing the unseen category is dropped from the output
 
 ---
 
-## Question 40
+## Question 40 *(Easy)*
 
 **Question**: Which parameter in `FeatureLookup` specifies how the training DataFrame joins to the feature table?
 
@@ -665,7 +665,7 @@ D) `entity_key`
 
 ---
 
-## Question 41
+## Question 41 *(Easy)*
 
 **Question**: A data scientist wants to apply feature scaling so that each numerical feature has zero mean and unit variance. Which Spark ML transformer should they use?
 
@@ -685,7 +685,7 @@ D) `MaxAbsScaler`
 
 ---
 
-## Question 42
+## Question 42 *(Easy)*
 
 **Question**: A data scientist has run_id `xyz789` and logged a model with `artifact_path="classifier"`. Which URI registers this model to the registry as `purchase-predictor`?
 
@@ -701,7 +701,7 @@ D) `mlflow.register_model("models:/purchase-predictor/None", "purchase-predictor
 
 ---
 
-## Question 43
+## Question 43 *(Medium)*
 
 **Question**: A data scientist wants to move model version 5 of `revenue-predictor` to `Production`. Which code is correct?
 
@@ -727,7 +727,7 @@ D) `mlflow.register_model("models:/revenue-predictor/Staging", "revenue-predicto
 
 ---
 
-## Question 44
+## Question 44 *(Medium)*
 
 **Question**: A data scientist wants to perform distributed batch scoring of 50 million rows using a registered MLflow model. Which approach is correct?
 
@@ -766,7 +766,7 @@ result = spark_df.rdd.map(model.predict).collect()
 
 ---
 
-## Question 45
+## Question 45 *(Easy)*
 
 **Question**: Which is NOT a valid stage in the MLflow Model Registry lifecycle?
 

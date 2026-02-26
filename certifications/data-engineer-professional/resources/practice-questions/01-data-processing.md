@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, data-processing]
 
 **Scenario**: A data engineering team ingests JSON files from cloud storage using Auto Loader. New fields are occasionally added to the source data.
 
-**Question**: Which configuration ensures new columns are automatically added to the target table schema?
+**Question** *(Easy)*: Which configuration ensures new columns are automatically added to the target table schema?
 
 A) `cloudFiles.schemaEvolutionMode = "addNewColumns"`
 B) `cloudFiles.schemaEvolutionMode = "rescue"`
@@ -28,7 +28,7 @@ D) `cloudFiles.mergeSchema = "true"`
 
 **Scenario**: A streaming job processes data from a message queue. The business requires the job to process all available data once per hour and then stop.
 
-**Question**: Which trigger configuration should be used?
+**Question** *(Medium)*: Which trigger configuration should be used?
 
 A) `trigger(processingTime='1 hour')`
 B) `trigger(once=True)`
@@ -46,7 +46,7 @@ D) `trigger(continuous='1 hour')`
 
 **Scenario**: A data engineer needs to update existing records and insert new ones from a source table into a target Delta table.
 
-**Question**: Which MERGE clause handles records that exist in the source but not in the target?
+**Question** *(Easy)*: Which MERGE clause handles records that exist in the source but not in the target?
 
 A) `WHEN MATCHED THEN UPDATE`
 B) `WHEN NOT MATCHED THEN INSERT`
@@ -64,7 +64,7 @@ D) `WHEN NOT MATCHED BY SOURCE THEN DELETE`
 
 **Scenario**: A data engineer needs to track all changes (inserts, updates, deletes) to a Delta table for downstream CDC processing.
 
-**Question**: Which statement correctly enables this capability?
+**Question** *(Easy)*: Which statement correctly enables this capability?
 
 A) `ALTER TABLE orders SET TBLPROPERTIES ('delta.enableChangeDataCapture' = true)`
 B) `ALTER TABLE orders SET TBLPROPERTIES ('delta.enableChangeDataFeed' = true)`
@@ -82,7 +82,7 @@ D) `CREATE TABLE orders WITH (CDC = ENABLED)`
 
 **Scenario**: A streaming aggregation job groups events by a 10-minute window. Events can arrive up to 30 minutes late.
 
-**Question**: Which watermark configuration is correct?
+**Question** *(Medium)*: Which watermark configuration is correct?
 
 A) `withWatermark("event_time", "10 minutes")`
 B) `withWatermark("event_time", "30 minutes")`
@@ -100,7 +100,7 @@ D) `withWatermark("processing_time", "30 minutes")`
 
 **Scenario**: A pipeline reads from a Delta table that receives both inserts and updates. Only new and updated records should be processed.
 
-**Question**: Which configuration enables this?
+**Question** *(Medium)*: Which configuration enables this?
 
 A) `spark.readStream.option("ignoreChanges", "true").table("source")`
 B) `spark.readStream.option("readChangeData", "true").table("source")`
@@ -118,7 +118,7 @@ D) `spark.readStream.option("skipChangeCommits", "true").table("source")`
 
 **Scenario**: A data engineer needs to join two streaming sources - clickstream events and ad impressions - to calculate ad conversion rates. Both streams have event timestamps.
 
-**Question**: What is required when performing a stream-stream join?
+**Question** *(Medium)*: What is required when performing a stream-stream join?
 
 A) Both streams must use the same checkpoint location
 B) Both streams must have identical schemas
@@ -136,7 +136,7 @@ D) One stream must be converted to a static DataFrame first
 
 **Scenario**: A streaming pipeline enriches real-time transaction data with customer details from a slowly-changing dimension table.
 
-**Question**: What happens to the static DataFrame in a stream-static join when it's updated?
+**Question** *(Medium)*: What happens to the static DataFrame in a stream-static join when it's updated?
 
 A) The static side is re-read for each micro-batch, picking up changes
 B) The static side is cached at query start and never refreshed
@@ -154,7 +154,7 @@ D) Updates to the static table require restarting the streaming query
 
 **Scenario**: A real-time fraud detection system needs to maintain custom state per user session, tracking cumulative transaction amounts and flagging when thresholds are exceeded within a rolling time window.
 
-**Question**: Which Spark streaming operation provides the most flexibility for this use case?
+**Question** *(Hard)*: Which Spark streaming operation provides the most flexibility for this use case?
 
 A) Window aggregation with `groupBy(window(...)).sum()`
 B) `dropDuplicatesWithinWatermark()` with session tracking
@@ -172,7 +172,7 @@ D) `flatMapGroupsWithState()` with GroupStateTimeout
 
 **Scenario**: A streaming aggregation uses a 10-minute watermark. An event arrives with a timestamp 15 minutes behind the current watermark.
 
-**Question**: How does Spark handle this late event?
+**Question** *(Medium)*: How does Spark handle this late event?
 
 A) The event is added to the appropriate window and triggers a recomputation
 B) The event is silently dropped and not included in any aggregation
@@ -190,7 +190,7 @@ D) The query throws a StreamingQueryException for the late data
 
 **Scenario**: An IoT pipeline receives duplicate sensor readings due to at-least-once delivery. Each reading has a `device_id`, `reading_id`, and `event_time`. The pipeline uses a 1-hour watermark.
 
-**Question**: Which approach correctly deduplicates the stream while managing state?
+**Question** *(Hard)*: Which approach correctly deduplicates the stream while managing state?
 
 A) `dropDuplicatesWithinWatermark("device_id", "reading_id")` with the existing watermark
 B) `dropDuplicates("device_id", "reading_id")` without any watermark
@@ -208,7 +208,7 @@ D) `groupBy("device_id", "reading_id").count().filter("count = 1")`
 
 **Scenario**: A streaming query reads from Kafka and the processing time per micro-batch is consistently exceeding the trigger interval, causing increasing latency.
 
-**Question**: Which configuration limits the amount of data processed per micro-batch?
+**Question** *(Medium)*: Which configuration limits the amount of data processed per micro-batch?
 
 A) `trigger(processingTime="10 seconds")` to increase batch frequency
 B) `spark.sql.streaming.stateStore.maintenanceInterval` to reduce state overhead
@@ -226,7 +226,7 @@ D) `maxOffsetsPerTrigger` to limit records consumed from Kafka per batch
 
 **Scenario**: A stateful streaming query tracking millions of user sessions is running out of executor memory due to the state store size.
 
-**Question**: Which state store backend should be used for large state volumes?
+**Question** *(Hard)*: Which state store backend should be used for large state volumes?
 
 A) HDFS state store with increased `spark.executor.memory`
 B) RocksDB state store backend with `spark.sql.streaming.stateStore.providerClass`

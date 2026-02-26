@@ -12,7 +12,7 @@ tags: [data-analyst-associate, practice-questions, analytics, parameters, row-le
 
 ---
 
-## Question 1: Query Parameter Type
+## Question 1: Query Parameter Type *(Easy)*
 
 A dashboard has a dropdown for selecting a region that filters all queries. What is the parameter
 widget type?
@@ -31,7 +31,7 @@ D) Number input — for numeric values
 
 ---
 
-## Question 2: Multi-Value Parameter
+## Question 2: Multi-Value Parameter *(Medium)*
 
 An analyst needs a filter that allows selecting multiple product categories at once. Which SQL
 syntax handles multiple values from a multi-select dropdown?
@@ -50,7 +50,7 @@ D) `WHERE category CONTAINS '{{categories}}'`
 
 ---
 
-## Question 3: Scheduled Query Use Case
+## Question 3: Scheduled Query Use Case *(Hard)*
 
 A data team runs a heavy aggregation query daily to populate a summary table for analyst
 dashboards. Which approach reduces dashboard load time?
@@ -72,7 +72,7 @@ D) Enable query caching on the dashboard
 
 ---
 
-## Question 4: Row-Level Security
+## Question 4: Row-Level Security *(Hard)*
 
 A sales dashboard must show each sales rep only their own region's data. Which feature implements
 this transparently without requiring separate dashboards?
@@ -92,7 +92,7 @@ D) Separate dashboard per region
 
 ---
 
-## Question 5: Dashboard Embedding
+## Question 5: Dashboard Embedding *(Medium)*
 
 A company wants to embed a Databricks SQL dashboard in their internal web portal for non-Databricks
 users. Which capability enables this?
@@ -112,7 +112,7 @@ D) Export to HTML and host separately
 
 ---
 
-## Question 6: Alert Refresh vs Query Refresh
+## Question 6: Alert Refresh vs Query Refresh *(Medium)*
 
 What is the difference between refreshing a dashboard query and refreshing a SQL alert?
 
@@ -131,7 +131,7 @@ D) SQL alerts only work on scheduled queries, not dashboard queries
 
 ---
 
-## Question 7: Query Result Caching
+## Question 7: Query Result Caching *(Medium)*
 
 Databricks SQL query result caching can improve performance. Under which condition does the cache
 NOT apply?

@@ -445,20 +445,20 @@ print(f"Best XGBoost config: {best_config}")
 
 ## Use Cases
 
-- **Bayesian Optimization Implementation**: Incorporating Bayesian Optimization principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Bayesian Optimization Workflows**: Using the advanced capabilities of Bayesian Optimization to automate processes and reduce manual operational overhead.
+- **High-Dimensional XGBoost Tuning**: Using Hyperopt with TPE to efficiently search a 7-dimensional XGBoost parameter space (max_depth, learning_rate, subsample, colsample_bytree, reg_alpha, reg_lambda, n_estimators) in 100 trials, finding near-optimal configurations that grid search would take 50x longer to discover.
+- **Efficient Tuning of Expensive Deep Learning Models**: Using TPE-based Bayesian optimization to find optimal learning rate, dropout, and layer-size combinations in 50 trials instead of the 500+ a grid search would require, saving hours of GPU compute.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Search Space Defined Incorrectly
 
-**Scenario:** The default settings for Bayesian Optimization do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Bayesian Optimization to handle production-scale workloads.
+**Scenario:** `hp.choice('learning_rate', [0.01, 0.05, 0.1])` returns an index (0, 1, 2) instead of the actual float value, causing the model to train with integer learning rates and produce poor results.
+**Fix:** Use `space_eval(space, best)` to convert indices back to actual values after `fmin()` completes. For continuous parameters, prefer `hp.loguniform` or `hp.uniform` which return the actual float value directly, avoiding the index-mapping issue entirely.
 
-### Integration Bottlenecks
+### Hyperopt Trials All Return Same Result
 
-**Scenario:** Connecting Bayesian Optimization to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Bayesian Optimization prior to deployment.
+**Scenario:** Every trial logged by `fmin()` reports nearly identical loss values, suggesting the surrogate model is not exploring the space.
+**Fix:** Check that `hp.choice` index values are being converted back to actual parameter values before training (use `space_eval(space, best)` for the final result). Also verify the objective function returns `{'loss': ..., 'status': STATUS_OK}` -- missing the `status` key silently breaks TPE updates.
 
 ## Related Topics
 

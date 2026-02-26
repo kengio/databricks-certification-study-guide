@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, testing-deployment]
 
 **Scenario**: A team needs to deploy the same pipeline to dev, staging, and production environments.
 
-**Question**: How should environments be configured in Databricks Asset Bundles?
+**Question** *(Medium)*: How should environments be configured in Databricks Asset Bundles?
 
 A) Create separate bundle files for each environment
 B) Use targets in databricks.yml with environment-specific settings
@@ -28,7 +28,7 @@ D) Manually modify settings before each deployment
 
 **Scenario**: A developer wants to test their bundle without affecting shared resources.
 
-**Question**: Which target mode should they use?
+**Question** *(Easy)*: Which target mode should they use?
 
 A) `mode: production`
 B) `mode: development`
@@ -46,7 +46,7 @@ D) `mode: sandbox`
 
 **Scenario**: A team wants to version control their notebooks with automatic sync to Git.
 
-**Question**: Which statement about Git Folders is correct?
+**Question** *(Easy)*: Which statement about Git Folders is correct?
 
 A) Git Folders require manual sync after each change
 B) Git Folders can only connect to GitHub
@@ -64,7 +64,7 @@ D) Git Folders provide native Git operations like pull, commit, and push
 
 **Scenario**: A team needs to run tests inside Databricks notebooks as part of CI/CD.
 
-**Question**: Which Nutter pattern is correct?
+**Question** *(Medium)*: Which Nutter pattern is correct?
 
 A) `def test_my_function():` followed by assertions
 B) `before_`, `run_`, and `assertion_` method prefixes for each test
@@ -82,7 +82,7 @@ D) `TestCase` class inheritance
 
 **Scenario**: A GitHub Actions workflow needs to deploy a bundle to Databricks.
 
-**Question**: Which step is required before running `databricks bundle deploy`?
+**Question** *(Easy)*: Which step is required before running `databricks bundle deploy`?
 
 A) Install Python
 B) Run `databricks bundle init`
@@ -100,7 +100,7 @@ D) Create the workspace manually
 
 **Scenario**: A security team requires that CI/CD pipelines authenticate to Databricks without storing long-lived tokens in GitHub Actions secrets.
 
-**Question**: What is the recommended authentication approach?
+**Question** *(Hard)*: What is the recommended authentication approach?
 
 A) Use OIDC federation with GitHub's identity provider so the pipeline exchanges a short-lived GitHub token for a Databricks access token
 B) Generate a personal access token (PAT) and store it as an encrypted GitHub secret with automatic rotation
@@ -118,7 +118,7 @@ D) Configure SSH key-based authentication between GitHub Actions runners and the
 
 **Scenario**: A production pipeline processes financial data and cannot tolerate downtime during updates. The team needs a zero-downtime deployment strategy.
 
-**Question**: How should a blue/green deployment be implemented with Databricks Asset Bundles?
+**Question** *(Hard)*: How should a blue/green deployment be implemented with Databricks Asset Bundles?
 
 A) Deploy the new version to the same target and rely on Databricks to handle the transition automatically
 B) Maintain two separate DAB targets (blue and green), deploy the new version to the inactive target, run validation, then switch traffic
@@ -136,7 +136,7 @@ D) Deploy to a staging target, run all tests, then use `databricks bundle promot
 
 **Scenario**: A DAB project needs different cluster sizes, catalog names, and notification emails for dev vs. production targets.
 
-**Question**: Which approach correctly parameterizes these differences?
+**Question** *(Medium)*: Which approach correctly parameterizes these differences?
 
 A) Use shell environment variables like `$CLUSTER_SIZE` directly in databricks.yml
 B) Create separate databricks.yml files for each environment (databricks-dev.yml, databricks-prod.yml)
@@ -154,7 +154,7 @@ D) Define variables in the bundle and override them per target using `variables:
 
 **Scenario**: A team needs to test a DLT pipeline end-to-end as part of CI/CD, validating that expectations pass and output data is correct.
 
-**Question**: What is the recommended approach for integration testing DLT pipelines?
+**Question** *(Hard)*: What is the recommended approach for integration testing DLT pipelines?
 
 A) Deploy the pipeline to a test target with a test catalog/schema, trigger a full refresh, then validate the output tables and event log
 B) Mock the DLT framework locally using pytest and validate transformation logic without deploying
@@ -172,7 +172,7 @@ D) Use the DLT testing API `dlt.test_pipeline()` to run the pipeline in a sandbo
 
 **Scenario**: A deployment pipeline needs to verify that a bundle is correctly configured before deploying to production, checking for missing permissions, invalid references, and configuration errors.
 
-**Question**: Which command performs this validation?
+**Question** *(Easy)*: Which command performs this validation?
 
 A) `databricks bundle test -t production`
 B) `databricks bundle lint -t production`
@@ -190,7 +190,7 @@ D) `databricks bundle check -t production`
 
 **Scenario**: A team implements GitOps where the Git repository is the single source of truth. Changes to production should only occur through merged pull requests.
 
-**Question**: How should the CI/CD pipeline enforce this GitOps principle?
+**Question** *(Medium)*: How should the CI/CD pipeline enforce this GitOps principle?
 
 A) Allow direct deployments from any branch but require admin approval in the Databricks workspace
 B) Configure the deployment pipeline to only trigger on merges to the main branch, with PR reviews and bundle validation as required checks
@@ -208,7 +208,7 @@ D) Lock the production workspace to read-only and require API-only deployments
 
 **Scenario**: A data engineer writes a Python function that transforms a DataFrame (adding calculated columns, filtering invalid rows). The function is used inside a DLT pipeline.
 
-**Question**: What is the correct testing strategy for this function?
+**Question** *(Medium)*: What is the correct testing strategy for this function?
 
 A) Only test within the DLT pipeline since the function depends on the DLT runtime
 B) Write integration tests that deploy the full pipeline and verify end-to-end output

@@ -368,20 +368,20 @@ D) Update the `embedding_model_endpoint_name` field in the index configuration
 
 ## Use Cases
 
-- **Enterprise Search Assistant**: Backing a customized chatbot with domain-specific documentation using vector search indices.
-- **Optimized Databricks Vector Search Workflows**: Using the advanced capabilities of Databricks Vector Search to automate processes and reduce manual operational overhead.
+- **RAG Knowledge Base with Auto-Sync**: Creating a Delta Sync index with `CONTINUOUS` pipeline type so the vector index updates within seconds of new documents being added to the source Delta table, keeping the RAG chatbot's knowledge current.
+- **Custom Embedding Model Integration**: Using a Direct Vector Access index to support a proprietary embedding model not available as a Databricks endpoint, with a nightly batch job that re-embeds updated documents and pushes vectors via `upsert`.
 
 ## Common Issues & Errors
 
-### High Latency Responses
+### Delta Sync Index Creation Fails with CDF Error
 
-**Scenario:** LLM endpoints take too long to return generated text.
-**Fix:** Switch to provisioned throughput, reduce context length, or optimize chunk sizes.
+**Scenario:** `create_delta_sync_index()` raises an error stating that Change Data Feed is not enabled on the source table.
+**Fix:** Enable CDF on the source table before creating the index: `ALTER TABLE catalog.schema.my_table SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')`. CDF must be enabled explicitly -- Databricks does not enable it automatically.
 
-### Integration Bottlenecks
+### Stale Search Results After Document Updates
 
-**Scenario:** Connecting Databricks Vector Search to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Databricks Vector Search prior to deployment.
+**Scenario:** Documents were updated in the source Delta table but `similarity_search()` still returns old content.
+**Fix:** For `TRIGGERED` pipeline type, the index does not auto-sync. Call `index.sync()` explicitly or schedule it as a Databricks job. For near-real-time freshness, switch to `CONTINUOUS` pipeline type.
 
 ## Key Takeaways
 

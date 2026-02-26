@@ -10,7 +10,7 @@ tags: [data-analyst-associate, practice-questions, data-management, unity-catalo
 
 ---
 
-## Question 1: Unity Catalog Three-Level Namespace
+## Question 1: Unity Catalog Three-Level Namespace *(Easy)*
 
 Which format correctly refers to a table in Unity Catalog?
 
@@ -27,7 +27,7 @@ D) `database.table`
 
 ---
 
-## Question 2: Managed vs External Table DROP
+## Question 2: Managed vs External Table DROP *(Medium)*
 
 A data engineer drops a managed Delta table and then drops an external Delta table. What happens in each case?
 
@@ -45,7 +45,7 @@ D) External: deletes data AND metadata. Managed: deletes metadata only
 
 ---
 
-## Question 3: GRANT SELECT on a Table
+## Question 3: GRANT SELECT on a Table *(Easy)*
 
 Which SQL statement correctly grants read access to a table in Unity Catalog?
 
@@ -62,7 +62,7 @@ D) `GRANT VIEW ON TABLE catalog.schema.table TO 'user@company.com'`
 
 ---
 
-## Question 4: CREATE TABLE in UC
+## Question 4: CREATE TABLE in UC *(Medium)*
 
 Which statement creates a managed table in the `gold` schema of the `ml_catalog` catalog?
 
@@ -79,7 +79,7 @@ D) Both B and C are correct
 
 ---
 
-## Question 5: Schema Evolution — mergeSchema
+## Question 5: Schema Evolution — mergeSchema *(Medium)*
 
 An analyst appends data with a new column to an existing Delta table using `df.write.format("delta").mode("append").save(path)`. The new column is not in the table schema. What happens?
 
@@ -97,7 +97,7 @@ D) The write succeeds and the column is stored as a nested JSON string
 
 ---
 
-## Question 6: overwriteSchema Option
+## Question 6: overwriteSchema Option *(Easy)*
 
 What does the `overwriteSchema` option do in a Delta Lake write?
 
@@ -114,7 +114,7 @@ D) Enables automatic type casting
 
 ---
 
-## Question 7: REVOKE Privilege
+## Question 7: REVOKE Privilege *(Easy)*
 
 A data analyst's access to `finance.transactions` must be removed. Which statement is correct?
 
@@ -130,7 +130,7 @@ D) `REMOVE ACCESS ON TABLE finance.transactions FROM 'analyst@co.com'`
 
 ---
 
-## Question 8: Metastore vs Catalog
+## Question 8: Metastore vs Catalog *(Medium)*
 
 In Unity Catalog, what is the relationship between a metastore and a catalog?
 
@@ -147,7 +147,7 @@ D) A metastore is created per workspace; a catalog is account-level
 
 ---
 
-## Question 9: Delta Lake TBLPROPERTIES
+## Question 9: Delta Lake TBLPROPERTIES *(Easy)*
 
 Which statement sets a custom property on a Delta table?
 
@@ -164,7 +164,7 @@ D) `CONFIGURE TABLE finance.transactions WITH PROPERTIES (owner = 'finance-team'
 
 ---
 
-## Question 10: Data Lineage in UC Explorer
+## Question 10: Data Lineage in UC Explorer *(Medium)*
 
 A compliance team wants to see which dashboards read from the `gold.revenue_metrics` table. Which UC feature provides this?
 
@@ -181,7 +181,7 @@ D) SQL warehouse query history
 
 ---
 
-## Question 11: External Location
+## Question 11: External Location *(Hard)*
 
 An analyst creates an external table pointing to `s3://company-data/raw/sales/`. The underlying S3 files are deleted by a pipeline mistake. What happens when the table is queried?
 
@@ -199,7 +199,7 @@ D) The table is automatically dropped
 
 ---
 
-## Question 12: USE CATALOG Statement
+## Question 12: USE CATALOG Statement *(Medium)*
 
 A data analyst runs `USE CATALOG analytics; USE SCHEMA reporting;`. What does `SELECT * FROM revenue` query?
 

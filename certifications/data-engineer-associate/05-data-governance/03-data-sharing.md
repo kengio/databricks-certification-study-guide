@@ -483,8 +483,8 @@ ORDER BY query_count DESC;
 
 ## Use Cases
 
-- **Data Sharing Implementation**: Incorporating Data Sharing principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Data Sharing Workflows**: Using the advanced capabilities of Data Sharing to automate processes and reduce manual operational overhead.
+- **Replacing CSV Exports With Live Shares**: Migrating from nightly CSV file exports to Delta Sharing so that partners and downstream teams always query live, up-to-date data without managing file transfers or stale snapshots.
+- **Cross-Organization Data Collaboration**: Sharing curated datasets (e.g., product catalogs, anonymized usage metrics) with external partners or subsidiary organizations via Delta Sharing, with full audit trail and no credential exchange.
 
 ## Common Issues & Errors
 
@@ -493,10 +493,15 @@ ORDER BY query_count DESC;
 **Scenario:** The default settings for Data Sharing do not scale well with sudden spikes in data volume.
 **Fix:** Explicitly define and tune the configuration parameters for Data Sharing to handle production-scale workloads.
 
-### Integration Bottlenecks
+### Delta Sharing Recipient Cannot Read Shared Data
 
-**Scenario:** Connecting Data Sharing to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Data Sharing prior to deployment.
+**Scenario:** An external recipient has been granted access to a share but receives errors when trying to query the shared data, often because the activation link was not used or has expired.
+**Fix:** Verify that the recipient completed the activation process (clicked the activation link in the email and configured their client). Re-create the recipient and re-send the activation link if it has expired.
+
+### Share Not Updating With New Tables
+
+**Scenario:** New tables are added to the provider's schema, but the consumer's shared catalog does not include them, leading to confusion about data availability.
+**Fix:** Shares are point-in-time definitions -- new tables are not automatically included. The provider must explicitly add new tables with `ALTER SHARE ... ADD TABLE` for them to appear in the consumer's catalog.
 
 ## Exam Tips
 

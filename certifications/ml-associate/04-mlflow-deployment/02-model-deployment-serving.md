@@ -610,7 +610,7 @@ print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
 ## Use Cases
 
 - **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Model Deployment & Serving Workflows**: Using the advanced capabilities of Model Deployment & Serving to automate processes and reduce manual operational overhead.
+- **Real-Time Fraud Detection API**: Deploying a trained fraud detection model as a REST endpoint to score transactions in real time with sub-second latency.
 
 ## Common Issues & Errors
 
@@ -619,10 +619,10 @@ print(f"30-day accuracy: {accuracy.collect()[0]['accuracy']}")
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Model Serving Endpoint Returns 500 Error
 
-**Scenario:** Connecting Model Deployment & Serving to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Deployment & Serving prior to deployment.
+**Scenario:** The serving endpoint is "Ready" but requests return `InternalServerError`.
+**Fix:** Check the endpoint logs for dependency errors. Common causes: missing Python packages in the model's conda environment, or incompatible model signature vs request payload.
 
 ## Exam Tips
 

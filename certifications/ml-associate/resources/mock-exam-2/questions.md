@@ -17,7 +17,7 @@ Set a 90-minute timer and answer all 45 questions before checking answers. This 
 
 ---
 
-## Question 1
+## Question 1 *(Medium)*
 
 **Question**: A data scientist is debugging a scikit-learn pipeline on a small sample of data locally in a Databricks notebook. The full training dataset is 2 TB in Delta Lake. Which cluster type should they use for the debugging phase?
 
@@ -33,7 +33,7 @@ D) High-concurrency cluster shared with the rest of the team
 
 ---
 
-## Question 2
+## Question 2 *(Medium)*
 
 **Question**: A data scientist accidentally launches a Databricks Runtime ML cluster instead of Databricks Runtime ML GPU for a PyTorch training job that requires GPU. What symptom will they observe?
 
@@ -49,7 +49,7 @@ D) MLflow autolog is disabled because GPU metrics cannot be tracked
 
 ---
 
-## Question 3
+## Question 3 *(Medium)*
 
 **Question**: An ML platform team wants to allow data scientists to configure cluster memory and core counts but prevent them from changing the auto-termination setting. How should the policy be configured?
 
@@ -65,7 +65,7 @@ D) Set a minimum auto-termination threshold without fixing it
 
 ---
 
-## Question 4
+## Question 4 *(Medium)*
 
 **Question**: A data scientist runs AutoML for classification. The resulting experiment shows 20 trial runs. They want to use the best model's code as a starting point for further tuning. Where is this code located?
 
@@ -81,7 +81,7 @@ D) In a Delta table named `automl_best_model_code`
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 **Question**: A company wants to standardize all ML cluster configurations so that data scientists cannot accidentally change the Databricks Runtime version. Which cluster policy constraint type should be used?
 
@@ -97,7 +97,7 @@ D) `default` — set a default but allow overrides
 
 ---
 
-## Question 6
+## Question 6 *(Easy)*
 
 **Question**: A data scientist wants to track their ML experiment notebooks in version control and collaborate with teammates using pull requests. Which Databricks feature should they use?
 
@@ -113,7 +113,7 @@ D) Databricks Workflows version history
 
 ---
 
-## Question 7
+## Question 7 *(Medium)*
 
 **Question**: A data scientist is running a hyperparameter optimization loop in a notebook. After 50 iterations, they want to identify which hyperparameter combination produced the best validation AUC. What is the most efficient approach?
 
@@ -129,7 +129,7 @@ D) Review the printed output from each training loop iteration
 
 ---
 
-## Question 8
+## Question 8 *(Hard)*
 
 **Question**: An organization uses AutoML for initial model prototyping. A data scientist notices that the AutoML experiment uses different feature transformations than their production preprocessing pipeline. What is the risk?
 
@@ -145,7 +145,7 @@ D) There is no risk because AutoML models are never used directly in production
 
 ---
 
-## Question 9
+## Question 9 *(Easy)*
 
 **Question**: A data scientist wants to run their model training notebook as a scheduled job. Which Databricks feature orchestrates this?
 
@@ -161,7 +161,7 @@ D) Delta Live Tables pipeline
 
 ---
 
-## Question 10
+## Question 10 *(Easy)*
 
 **Question**: A data scientist runs `dbutils.notebook.run("train_model", 600)`. What does the integer `600` represent?
 
@@ -177,7 +177,7 @@ D) The cluster auto-termination time in minutes
 
 ---
 
-## Question 11
+## Question 11 *(Hard)*
 
 **Question**: Which Databricks Runtime feature reduces data shuffle costs in Spark ML training by keeping data co-located?
 
@@ -193,7 +193,7 @@ D) Spark ML `cacheData` option in `CrossValidator`
 
 ---
 
-## Question 12
+## Question 12 *(Medium)*
 
 **Question**: A team wants to share an AutoML-generated notebook with a colleague who works in a different Databricks workspace. What is the best approach?
 
@@ -209,7 +209,7 @@ D) Copy the notebook text and paste it into an email
 
 ---
 
-## Question 13
+## Question 13 *(Easy)*
 
 **Question**: A data scientist wants to create a reproducible experiment where the same random split is used every time the notebook runs. Which parameter in `train_test_split` (sklearn) or `randomSplit` (Spark) controls this?
 
@@ -229,7 +229,7 @@ D) `fixed_split=True`
 
 ---
 
-## Question 14
+## Question 14 *(Medium)*
 
 **Question**: A data scientist enables `mlflow.autolog()` and then manually logs `mlflow.log_metric("custom_f1", 0.88)` within the same run. What is the result?
 
@@ -245,7 +245,7 @@ D) The manual log overwrites all autolog metrics with the same name
 
 ---
 
-## Question 15
+## Question 15 *(Medium)*
 
 **Question**: A data scientist wants to log the full training dataset as an artifact for reproducibility. The dataset is a Spark DataFrame. What is the recommended approach?
 
@@ -261,7 +261,7 @@ D) Log the DataFrame as a pickle file using `mlflow.log_artifact()`
 
 ---
 
-## Question 16
+## Question 16 *(Hard)*
 
 **Question**: A parent run is active. A data scientist calls `mlflow.start_run(nested=True)` inside a loop to create child runs. When does the parent run end?
 
@@ -277,7 +277,7 @@ D) Automatically after 60 minutes of inactivity
 
 ---
 
-## Question 17
+## Question 17 *(Medium)*
 
 **Question**: A data scientist uses the same experiment name in two different notebooks running simultaneously. Both call `mlflow.set_experiment("shared-experiment")` and `mlflow.start_run()`. What happens?
 
@@ -293,7 +293,7 @@ D) One notebook's runs are automatically moved to a new experiment
 
 ---
 
-## Question 18
+## Question 18 *(Medium)*
 
 **Question**: A data scientist wants to retrieve the top 3 runs from an experiment ordered by `val_accuracy` descending. Which code is correct?
 
@@ -336,7 +336,7 @@ runs = mlflow.search_runs("123").sort_values("val_accuracy")[:3]
 
 ---
 
-## Question 19
+## Question 19 *(Medium)*
 
 **Question**: A data scientist logs a model inside a run but forgets to register it to the Model Registry. Later, they want to register it without re-running training. What should they do?
 
@@ -352,7 +352,7 @@ D) Copy the artifact file to the model registry manually using DBFS commands
 
 ---
 
-## Question 20
+## Question 20 *(Medium)*
 
 **Question**: Which MLflow tag is automatically set to identify the notebook path where a run was started in Databricks?
 
@@ -368,7 +368,7 @@ D) `databricks.notebook.id`
 
 ---
 
-## Question 21
+## Question 21 *(Medium)*
 
 **Question**: A data scientist calls `mlflow.log_metric("accuracy", 0.92)` multiple times in a run without specifying a `step`. What happens?
 
@@ -384,7 +384,7 @@ D) An error is raised because a metric can only be logged once per run
 
 ---
 
-## Question 22
+## Question 22 *(Medium)*
 
 **Question**: A data scientist wants to log a Python dictionary as a JSON artifact. Which approach is correct?
 
@@ -400,7 +400,7 @@ D) `mlflow.log_metric("config", my_dict)`
 
 ---
 
-## Question 23
+## Question 23 *(Hard)*
 
 **Question**: A data scientist wants to programmatically delete all MLflow runs in an experiment that have `val_loss > 1.0`. Which approach is correct?
 
@@ -416,7 +416,7 @@ D) Use `MlflowClient().archive_runs(filter_string="metrics.val_loss > 1.0")`
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 **Question**: A data scientist sets `mlflow.autolog(log_models=False)`. What is the effect?
 
@@ -432,7 +432,7 @@ D) Autolog raises a deprecation warning and falls back to default behavior
 
 ---
 
-## Question 25
+## Question 25 *(Hard)*
 
 **Question**: A data scientist uses `mlflow.autolog(disable=True)` at the top of their notebook. Then they call `mlflow.sklearn.autolog()` for a specific sklearn model. What happens?
 
@@ -448,7 +448,7 @@ D) The global `disable=True` is overridden by the sklearn-specific call for all 
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 **Question**: A data scientist has trained a model and wants to log it under a specific artifact subdirectory called `models/classifier` within the run. Which call is correct?
 
@@ -468,7 +468,7 @@ D) `mlflow.sklearn.log_model(model, path="models/classifier")`
 
 ---
 
-## Question 27
+## Question 27 *(Hard)*
 
 **Question**: A data scientist creates a `Pipeline` with a `VectorAssembler` and `LogisticRegression`. The `VectorAssembler` uses `inputCols=["age", "income"]` and `outputCol="features"`. `LogisticRegression` uses `featuresCol="features"`. What happens if the test DataFrame is missing the `income` column?
 
@@ -484,7 +484,7 @@ D) The pipeline adds a null `income` column automatically
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 **Question**: A data scientist wants to one-hot encode two categorical columns `city` and `category`. They use two `StringIndexer` stages and two `OneHotEncoder` stages. Which pipeline ordering is correct?
 
@@ -500,7 +500,7 @@ D) All four stages can be in any order since they operate on different columns
 
 ---
 
-## Question 29
+## Question 29 *(Hard)*
 
 **Question**: A `CrossValidator` with `numFolds=5` is used to tune a model with a `ParamGrid` containing 6 hyperparameter combinations. How many total model training runs occur?
 
@@ -516,7 +516,7 @@ D) 11 (6 combinations + 5 folds)
 
 ---
 
-## Question 30
+## Question 30 *(Medium)*
 
 **Question**: A data scientist fits a `Pipeline` on training data and saves it with `pipeline_model.save("/dbfs/models/pipeline")`. Later, they load it with `PipelineModel.load("/dbfs/models/pipeline")`. Which statement is true?
 
@@ -532,7 +532,7 @@ D) The `save()` method does not persist the fitted parameters, only the stage co
 
 ---
 
-## Question 31
+## Question 31 *(Medium)*
 
 **Question**: A data scientist wants to add `parallelism=4` to a `CrossValidator`. What does this parameter do?
 
@@ -548,7 +548,7 @@ D) It limits the CrossValidator to evaluating only 4 hyperparameter combinations
 
 ---
 
-## Question 32
+## Question 32 *(Hard)*
 
 **Question**: A data scientist creates a Feature Store table called `customer_features` with `primary_keys=["customer_id"]`. They then try to write a DataFrame that has duplicate `customer_id` values using `mode="merge"`. What happens?
 
@@ -564,7 +564,7 @@ D) Only the first occurrence of each duplicate `customer_id` is written
 
 ---
 
-## Question 33
+## Question 33 *(Medium)*
 
 **Question**: A data scientist is building a Feature Store pipeline where features are computed daily. They want to ensure that model training uses feature values from the day before each label's event. Which Feature Store capability should they use?
 
@@ -580,7 +580,7 @@ D) Scheduled `score_batch()` runs that re-score all historical entities
 
 ---
 
-## Question 34
+## Question 34 *(Medium)*
 
 **Question**: A data scientist accidentally passes a string column directly to `OneHotEncoder` (skipping `StringIndexer`). What happens?
 
@@ -596,7 +596,7 @@ D) `OneHotEncoder` silently ignores the column and produces a zero vector
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 **Question**: A data scientist uses the Feature Store to train a model. Later, a new version of the feature table is available with additional columns. How does this affect the deployed model?
 
@@ -612,7 +612,7 @@ D) The deployed model uses the new columns but ignores their values
 
 ---
 
-## Question 36
+## Question 36 *(Easy)*
 
 **Question**: Which Spark ML evaluator class should be used with `CrossValidator` for a binary classification problem?
 
@@ -628,7 +628,7 @@ D) `ClusteringEvaluator`
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 **Question**: A data scientist trains a model with Feature Store features. They call `FeatureStoreClient.log_model()` instead of `mlflow.sklearn.log_model()`. What is the key advantage?
 
@@ -644,7 +644,7 @@ D) The model skips cross-validation and uses the full dataset for training
 
 ---
 
-## Question 38
+## Question 38 *(Medium)*
 
 **Question**: A data scientist applies `Normalizer(p=2.0)` to a feature vector. What transformation is applied?
 
@@ -660,7 +660,7 @@ D) Each feature value is scaled to the range [0, 1]
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 **Question**: A data scientist's `CrossValidator` is running slowly because the parameter grid has 100 combinations and 5 folds (500 total training runs). Which `CrossValidator` parameter reduces wall-clock time by training multiple combinations simultaneously?
 
@@ -676,7 +676,7 @@ D) `collectSubModels=True` — reduces memory overhead
 
 ---
 
-## Question 40
+## Question 40 *(Hard)*
 
 **Question**: A data scientist uses `Pipeline` with stages `[indexer, encoder, assembler, classifier]`. During `pipeline.fit(train_df)`, which stages call `.fit()` vs `.transform()`?
 
@@ -692,7 +692,7 @@ D) All stages call `.transform()` only; `.fit()` is called once at the pipeline 
 
 ---
 
-## Question 41
+## Question 41 *(Medium)*
 
 **Question**: A data scientist wants to retrieve feature values from a Feature Store table for a list of customer IDs to prepare a batch scoring dataset. Which function retrieves features without performing model inference?
 
@@ -712,7 +712,7 @@ D) `FeatureStoreClient.get_table(table_name)`
 
 ---
 
-## Question 42
+## Question 42 *(Medium)*
 
 **Question**: A data scientist wants to create a custom MLflow model that wraps a proprietary scoring library. Which MLflow class should they subclass?
 
@@ -728,7 +728,7 @@ D) `mlflow.models.CustomModel`
 
 ---
 
-## Question 43
+## Question 43 *(Hard)*
 
 **Question**: A model is in Production in the Model Registry. A new, better version has been trained and registered as version 5. A data scientist wants to promote version 5 to Production and archive version 4. What is the correct sequence of API calls?
 
@@ -744,7 +744,7 @@ D) Call `transition_model_version_stage(version=5, stage="Staging")` first, then
 
 ---
 
-## Question 44
+## Question 44 *(Medium)*
 
 **Question**: A data scientist loads a model using `mlflow.pyfunc.load_model("models:/my-model/Production")` and calls `model.predict(df)`. The model was trained with scikit-learn. What type does `df` need to be?
 
@@ -760,7 +760,7 @@ D) A Delta Lake table path string
 
 ---
 
-## Question 45
+## Question 45 *(Medium)*
 
 **Question**: A data scientist registers the same model artifact to two different registered model names: `model-v1` and `model-v2`. Both point to `runs:/abc123/model`. Which statement is true?
 

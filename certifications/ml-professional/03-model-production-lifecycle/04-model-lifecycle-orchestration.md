@@ -440,8 +440,8 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Model Lifecycle Orchestration Workflows**: Using the advanced capabilities of Model Lifecycle Orchestration to automate processes and reduce manual operational overhead.
+- **Multi-Task DAG for Weekly Model Refresh**: A Databricks Job with four tasks (data validation, feature engineering, model training, evaluation gate) connected by `depends_on`, ensuring the pipeline halts automatically if any upstream step fails before the champion alias is updated.
+- **Drift-Triggered Retraining Pipeline**: A Databricks Job that fires when the monitoring service detects data drift, automatically retrains the model on fresh data, runs an evaluation gate against the current champion, and promotes the winner -- all without human intervention.
 
 ## Common Issues & Errors
 
@@ -450,10 +450,10 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 **Scenario:** Models fail to load from MLflow registry during serving.
 **Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
 
-### Integration Bottlenecks
+### Automated Retraining Pipeline Produces Degraded Model
 
-**Scenario:** Connecting Model Lifecycle Orchestration to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Model Lifecycle Orchestration prior to deployment.
+**Scenario:** A scheduled retraining job trains on stale or corrupted upstream data and registers a model version that performs worse than the current champion, but the pipeline promotes it anyway.
+**Fix:** Always include an evaluation gate task that loads the current `@champion` and compares it against the challenger on a held-out test set. Raise an exception (halting the DAG) if the challenger does not exceed the champion by a configurable improvement threshold (e.g., 0.5% AUC). Log comparison metrics to MLflow for audit.
 
 ## Key Takeaways
 

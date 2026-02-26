@@ -528,29 +528,29 @@ df_engineered.select("customer_id", "scaledFeatures", "label")\
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized Feature Engineering Techniques Workflows**: Using the advanced capabilities of Feature Engineering Techniques to automate processes and reduce manual operational overhead.
+- **Customer Churn Prediction Pipeline**: Engineering features like tenure-to-charge ratio, rolling 7-day usage averages, and weekend activity flags from raw customer data, then assembling them into a Spark ML Pipeline for model training.
+- **High-Cardinality Categorical Handling**: Using target encoding for a `zip_code` column with 40,000 distinct values where one-hot encoding would create too many sparse features, while carefully fitting the encoding only on training data to avoid leakage.
 
 ## Common Issues & Errors
 
-### Artifact Access Denied
+### Feature Leakage Causing Unrealistic Metrics
 
-**Scenario:** Models fail to load from MLflow registry during serving.
-**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+**Scenario:** Model scores 99% accuracy in training but performs poorly in production.
+**Fix:** Check for target leakage -- ensure no features are derived from the target variable or future data. Fit transformers (scalers, encoders, imputers) only on training data, then apply the fitted transformer to test data.
 
-### Integration Bottlenecks
+### OneHotEncoder Fails on Unseen Categories at Inference Time
 
-**Scenario:** Connecting Feature Engineering Techniques to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Feature Engineering Techniques prior to deployment.
+**Scenario:** `StringIndexer` raises an error when production data contains a category value not seen during training (e.g., a new `region` value).
+**Fix:** Set `handleInvalid="keep"` on the `StringIndexer` to map unknown categories to a separate index rather than throwing an error.
 
 ## Exam Tips
 
-- ✅ Understand when to impute vs drop missing values
-- ✅ Know StringIndexer → OneHotEncoder sequence for categorical data
-- ✅ Recognize StandardScaler for linear models, unnecessary for trees
-- ✅ Understand target leakage risks with target encoding
-- ✅ Know feature interactions improve non-linear models
-- ✅ Remember: fit on train data, apply same transformation to test
+- Impute when missing data is moderate (<50%); drop columns when >50% missing; drop rows when <5% missing
+- The required sequence is `StringIndexer` (string to numeric index) then `OneHotEncoder` (index to binary vector) -- OHE cannot accept raw strings
+- `StandardScaler` is essential for distance-based models (logistic regression, SVM, KMeans) but unnecessary for tree-based models (Random Forest, XGBoost)
+- Target encoding risks data leakage -- always fit encoding on training data only, never on the full dataset including test
+- `VectorAssembler` combines multiple feature columns into a single `features` vector column required by Spark ML estimators
+- `dropLast=True` on `OneHotEncoder` removes one column to prevent multicollinearity in linear models
 
 ## Key Takeaways
 

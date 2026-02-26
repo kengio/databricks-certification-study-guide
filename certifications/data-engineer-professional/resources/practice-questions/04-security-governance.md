@@ -10,7 +10,7 @@ tags: [data-engineer-professional, practice-questions, security-governance]
 
 **Scenario**: A user is granted SELECT on a schema in Unity Catalog.
 
-**Question**: What happens to tables created in that schema after the grant?
+**Question** *(Easy)*: What happens to tables created in that schema after the grant?
 
 A) User automatically has SELECT on new tables
 B) User must be granted SELECT on each new table
@@ -28,7 +28,7 @@ D) User has MODIFY access to new tables
 
 **Scenario**: Different sales teams should only see data for their assigned regions.
 
-**Question**: Which approach implements row-level security in Unity Catalog?
+**Question** *(Medium)*: Which approach implements row-level security in Unity Catalog?
 
 A) Create separate tables for each region
 B) Use dynamic views with `current_user()` function
@@ -46,7 +46,7 @@ D) Use secret scopes for each region
 
 **Scenario**: A company needs to share data with an external partner who uses Snowflake.
 
-**Question**: Which statement about Delta Sharing is correct?
+**Question** *(Easy)*: Which statement about Delta Sharing is correct?
 
 A) The recipient must have a Databricks workspace
 B) The recipient can read shared data using any Delta Sharing client
@@ -64,7 +64,7 @@ D) Delta Sharing only works within the same cloud provider
 
 **Scenario**: A notebook needs to access a database password without exposing it in code.
 
-**Question**: Which approach correctly retrieves the secret?
+**Question** *(Easy)*: Which approach correctly retrieves the secret?
 
 A) `dbutils.secrets.get(scope="db-scope", key="password")`
 B) `spark.conf.get("db.password")`
@@ -82,7 +82,7 @@ D) `os.environ.get("DB_PASSWORD")`
 
 **Scenario**: A team needs to register an existing data lake path in Unity Catalog without moving the data.
 
-**Question**: What type of table should they create?
+**Question** *(Easy)*: What type of table should they create?
 
 A) Managed table
 B) External table
@@ -100,7 +100,7 @@ D) Materialized view
 
 **Scenario**: An audit team needs to understand how a Gold-layer table is derived from raw data sources, including all intermediate transformations.
 
-**Question**: How does Unity Catalog capture this lineage information?
+**Question** *(Medium)*: How does Unity Catalog capture this lineage information?
 
 A) Lineage is automatically captured from Spark jobs, DLT pipelines, and SQL queries without additional configuration
 B) Engineers must manually register lineage by calling `dbutils.lineage.register()` after each transformation
@@ -118,7 +118,7 @@ D) Lineage requires enabling a separate "Lineage Tracking" feature at the metast
 
 **Scenario**: A security team needs to investigate who accessed a sensitive table in the last 30 days and what queries they ran.
 
-**Question**: Which system table provides this information?
+**Question** *(Medium)*: Which system table provides this information?
 
 A) `system.information_schema.tables` - contains table metadata including last access time
 B) `system.billing.usage` - tracks DBU consumption per user and table
@@ -136,7 +136,7 @@ D) `system.compute.clusters` - logs cluster activity and associated table access
 
 **Scenario**: A table contains PII (email, phone number). Analysts need to query the table but should only see masked versions of PII columns unless they are in the `pii_readers` group.
 
-**Question**: Which Unity Catalog feature implements this requirement?
+**Question** *(Hard)*: Which Unity Catalog feature implements this requirement?
 
 A) Create a dynamic view that checks `is_member('pii_readers')` and conditionally shows full or masked values
 B) Create separate tables with and without PII, granting access to the appropriate one
@@ -154,7 +154,7 @@ D) Apply column mask functions using `ALTER TABLE ... ALTER COLUMN ... SET MASK`
 
 **Scenario**: A data governance team needs to programmatically inventory all tables across all catalogs that a service principal has access to, including their column types and descriptions.
 
-**Question**: Which query approach provides this information?
+**Question** *(Medium)*: Which query approach provides this information?
 
 A) Query `system.information_schema.columns` which shows metadata for all accessible objects
 B) Run `SHOW TABLES IN *` to list all tables across catalogs
@@ -172,7 +172,7 @@ D) Call the Unity Catalog REST API endpoint `/api/2.1/unity-catalog/tables`
 
 **Scenario**: A financial services company requires that all Databricks workspace traffic stays within their private network and never traverses the public internet.
 
-**Question**: Which network configuration achieves this?
+**Question** *(Hard)*: Which network configuration achieves this?
 
 A) Enable IP access lists to restrict source IP addresses
 B) Configure VPN peering between the corporate network and Databricks control plane
@@ -190,7 +190,7 @@ D) Use a firewall to block all outbound traffic from the Databricks data plane
 
 **Scenario**: An organization needs to tag tables and columns containing sensitive data (PII, financial, health) to enforce governance policies and improve discoverability.
 
-**Question**: How should data classification be implemented in Unity Catalog?
+**Question** *(Medium)*: How should data classification be implemented in Unity Catalog?
 
 A) Store classification metadata in a separate governance database and cross-reference during queries
 B) Use Unity Catalog tags (`ALTER TABLE ... SET TAGS`) to apply classification labels at table and column level
@@ -208,7 +208,7 @@ D) Create a naming convention (e.g., `pii_email`, `sensitive_ssn`) and enforce v
 
 **Scenario**: Under GDPR, a customer requests deletion of all their personal data. The customer's data exists in Bronze, Silver, and Gold Delta tables across the lakehouse.
 
-**Question**: What is the correct approach to fulfill this deletion request?
+**Question** *(Hard)*: What is the correct approach to fulfill this deletion request?
 
 A) Run `VACUUM` on all tables to remove files containing the customer's data
 B) Use time travel to revert each table to a version before the customer's data was ingested

@@ -391,20 +391,20 @@ with mlflow.start_run(run_name="rag-v3-llama-70b"):
 
 ## Use Cases
 
-- **End-to-End MLOps Pipeline**: Tying model training, evaluation, and registry together to establish a reproducible lifecycle.
-- **Optimized MLflow for GenAI Workflows**: Using the advanced capabilities of MLflow for GenAI to automate processes and reduce manual operational overhead.
+- **Debugging RAG Latency with Tracing**: Using `mlflow.langchain.autolog()` to identify that 80% of end-to-end latency comes from the LLM generation step (not retrieval), guiding the team to switch to a faster model or reduce context length.
+- **Human-in-the-Loop Quality Assurance**: Deploying a RAG agent with `agents.deploy()` and sharing the Review App URL with domain experts, who rate 500 responses over two weeks -- producing a labelled dataset for fine-tuning the evaluation rubric.
 
 ## Common Issues & Errors
 
-### Artifact Access Denied
+### `agents.deploy()` Fails with Missing Resource Permissions
 
-**Scenario:** Models fail to load from MLflow registry during serving.
-**Fix:** Check Unity Catalog permissions or traditional workspace access controls on the underlying storage.
+**Scenario:** Deploying a logged LangChain model with `agents.deploy()` fails because the serving endpoint cannot access the Vector Search index or LLM endpoint, even though the notebook runs fine interactively.
+**Fix:** Declare all external Databricks resources in the `resources` parameter when logging the model (`DatabricksVectorSearchIndex`, `DatabricksServingEndpoint`). `agents.deploy()` uses this list to auto-provision IAM permissions for the serving endpoint's service principal.
 
-### Integration Bottlenecks
+### MLflow Traces Not Appearing in Experiment UI
 
-**Scenario:** Connecting MLflow for GenAI to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for MLflow for GenAI prior to deployment.
+**Scenario:** `mlflow.langchain.autolog()` is enabled but no traces appear in the MLflow Experiment Trace tab after running `chain.invoke()`.
+**Fix:** Ensure an active MLflow experiment is set (`mlflow.set_experiment("/path/to/experiment")`) before calling `autolog()`. If running in a Databricks notebook, the experiment is set automatically, but in external IDEs or CI scripts it must be set explicitly. Also verify that the `mlflow` and `langchain` package versions are compatible.
 
 ## Key Takeaways
 

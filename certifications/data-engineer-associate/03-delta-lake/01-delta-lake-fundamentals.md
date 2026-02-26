@@ -400,8 +400,8 @@ Each JSON file represents one committed transaction, enabling:
 
 ## Use Cases
 
-- **ACID Transactions Backup**: Using Delta Lake's robust versioning to create a reliable and auditable data warehouse pipeline.
-- **Optimized Delta Lake Fundamentals Workflows**: Using the advanced capabilities of Delta Lake Fundamentals to automate processes and reduce manual operational overhead.
+- **ACID Transactions for Concurrent Pipelines**: Multiple ETL jobs safely write to the same Delta table concurrently, relying on ACID guarantees to prevent data corruption and partial writes.
+- **Schema Enforcement at Ingestion**: Using Delta Lake's schema enforcement to reject malformed records at write time, preventing bad data from entering the lakehouse and catching upstream schema changes early.
 
 ## Common Issues & Errors
 
@@ -410,10 +410,15 @@ Each JSON file represents one committed transaction, enabling:
 **Scenario:** Frequent micro-batch writes cause slow reads.
 **Fix:** Run OPTIMIZE with Z-ORDER regularly.
 
-### Integration Bottlenecks
+### Small File Accumulation From Frequent Writes
 
-**Scenario:** Connecting Delta Lake Fundamentals to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Delta Lake Fundamentals prior to deployment.
+**Scenario:** Micro-batch streaming or frequent append operations create thousands of small Parquet files, degrading read performance significantly.
+**Fix:** Enable `spark.databricks.delta.optimizeWrite.enabled = true` for automatic write-time coalescing, and run `OPTIMIZE` periodically to compact small files into larger ones.
+
+### VACUUM Deleting Files Needed by Active Queries
+
+**Scenario:** Running `VACUUM` with a short retention period removes data files that are still being read by long-running queries, causing those queries to fail with `FileNotFoundException`.
+**Fix:** Ensure the VACUUM retention period exceeds the duration of the longest active query. The default 7-day retention is safe for most workloads.
 
 ## Exam Tips
 

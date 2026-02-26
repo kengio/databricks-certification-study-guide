@@ -380,20 +380,20 @@ under GDPR Article 22.
 
 ## Use Cases
 
-- **Compliance and Audit Logging Implementation**: Incorporating Compliance and Audit Logging principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Compliance and Audit Logging Workflows**: Using the advanced capabilities of Compliance and Audit Logging to automate processes and reduce manual operational overhead.
+- **GDPR Right-to-Explanation Compliance**: Using inference tables to retrieve the exact prediction, input features, and SHAP explanation for a specific customer on a specific date, satisfying GDPR Article 22 individual rights requests.
+- **Regulatory Audit Trail for Credit Decisions**: Querying `system.access.audit` to demonstrate which model version was serving on any given day, who promoted it, and what evaluation metrics it passed -- meeting SR 11-7 documentation requirements.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Audit Logs Missing Model Access Events
 
-**Scenario:** The default settings for Compliance and Audit Logging do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Compliance and Audit Logging to handle production-scale workloads.
+**Scenario:** The `system.access.audit` table does not contain expected `getRegisteredModel` or `createModelVersion` events, making it impossible to prove who accessed or modified a model.
+**Fix:** Ensure the Unity Catalog audit log is enabled at the account level (it is on by default but can be disabled by an account admin). Verify you are querying the correct system table (`system.access.audit`, not the legacy workspace audit log). Filter on `service_name = 'unityCatalog'` and relevant `action_name` values.
 
-### Integration Bottlenecks
+### Inference Table Grows Too Large
 
-**Scenario:** Connecting Compliance and Audit Logging to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Compliance and Audit Logging prior to deployment.
+**Scenario:** A high-traffic serving endpoint generates millions of rows per day in the inference table, causing storage costs to spike and downstream monitoring queries to slow down.
+**Fix:** Set a retention policy on the inference table using Delta `VACUUM` with an appropriate retention period (e.g., 90 days for regulatory compliance). For long-term archival, create a scheduled job that moves aged records to a cold-storage table partitioned by month. Use `OPTIMIZE` and `ZORDER BY timestamp` to keep monitoring queries fast.
 
 ## Exam Tips
 

@@ -16,7 +16,7 @@ status: complete
 
 ---
 
-## Question 1: SparkTrials vs Trials
+## Question 1 *(Easy)*: SparkTrials vs Trials
 
 **Question**: A data scientist wants to parallelize Hyperopt trials across a Spark cluster with multiple worker nodes. Which trials object should they use?
 
@@ -32,7 +32,7 @@ D) `ParallelTrials(n_jobs=-1)` — uses all available cores
 
 ---
 
-## Question 2: fmin() Objective Direction
+## Question 2 *(Medium)*: fmin() Objective Direction
 
 **Question**: A data scientist passes `roc_auc_score` directly as the objective function to `fmin()`. The search completes but the "best" model has the lowest AUC in the search. What is the problem?
 
@@ -48,7 +48,7 @@ D) The model was not serialized correctly during the trial
 
 ---
 
-## Question 3: MLflow Autolog Run Structure with Hyperopt
+## Question 3 *(Easy)*: MLflow Autolog Run Structure with Hyperopt
 
 **Question**: A data scientist enables `mlflow.sklearn.autolog()` and runs Hyperopt with `fmin()` for 20 trials. How are the MLflow runs organized?
 
@@ -64,7 +64,7 @@ D) 20 experiments, each containing one run
 
 ---
 
-## Question 4: hp.loguniform vs hp.uniform for Learning Rate
+## Question 4 *(Medium)*: hp.loguniform vs hp.uniform for Learning Rate
 
 **Question**: A data scientist needs to search learning rate values between `1e-5` and `1e-1`. Which Hyperopt search space expression is most appropriate?
 
@@ -80,7 +80,7 @@ D) `hp.normal('lr', 1e-3, 1e-4)`
 
 ---
 
-## Question 5: SparkTrials parallelism Parameter
+## Question 5 *(Easy)*: SparkTrials parallelism Parameter
 
 **Question**: A data scientist sets `parallelism=8` in `SparkTrials(parallelism=8)`. What does this control?
 
@@ -96,7 +96,7 @@ D) The number of cross-validation folds run per trial
 
 ---
 
-## Question 6: Early Stopping in Hyperopt
+## Question 6 *(Medium)*: Early Stopping in Hyperopt
 
 **Question**: A data scientist wants Hyperopt to stop automatically if no improvement is seen for 50 consecutive trials. Which approach is correct?
 
@@ -112,7 +112,7 @@ D) Wrap `fmin()` in a try/except block and raise `StopIteration` after 50 flat t
 
 ---
 
-## Question 7: Bayesian vs Random Search for Limited Budgets
+## Question 7 *(Medium)*: Bayesian vs Random Search for Limited Budgets
 
 **Question**: A hyperparameter search space contains over 1,000 possible combinations. A team has a compute budget for only 50 trials. Which search strategy is most sample-efficient?
 
@@ -128,7 +128,7 @@ D) Manual search — a domain expert selects the 50 most promising configuration
 
 ---
 
-## Question 8: hp.choice for Categorical Hyperparameters
+## Question 8 *(Easy)*: hp.choice for Categorical Hyperparameters
 
 **Question**: A data scientist wants Hyperopt to search over `["linear", "rbf", "poly"]` for an SVM kernel. Which Hyperopt space function should they use?
 
@@ -144,7 +144,7 @@ D) `hp.categorical('kernel', ["linear", "rbf", "poly"])`
 
 ---
 
-## Question 9: CrossValidator parallelism in Spark ML
+## Question 9 *(Easy)*: CrossValidator parallelism in Spark ML
 
 **Question**: A data scientist uses Spark ML's `CrossValidator` to perform 5-fold cross-validation over a parameter grid with 10 configurations, training 50 models total. What parameter controls how many models train simultaneously?
 
@@ -160,7 +160,7 @@ D) `sparkContext.setParallelism(10)` — global Spark parallelism setting
 
 ---
 
-## Question 10: AutoML as a Baseline Before Manual HPO
+## Question 10 *(Easy)*: AutoML as a Baseline Before Manual HPO
 
 **Question**: A team is beginning a new classification problem and needs the fastest path to a reasonable baseline model and starting hyperparameters. What should they do first?
 
@@ -176,7 +176,7 @@ D) Train an ensemble of 10 default models and average their predictions
 
 ---
 
-## Question 11: Hyperparameter Overfitting Risk
+## Question 11 *(Hard)*: Hyperparameter Overfitting Risk
 
 **Question**: A data scientist tunes hyperparameters by running 200 Hyperopt trials evaluated against the test set, selects the best configuration, and reports that test set AUC as the final model performance. What is the primary risk?
 
@@ -192,7 +192,7 @@ D) The model will underfit because hyperparameters were selected to minimize los
 
 ---
 
-## Question 12: Metrics Auto-Logged per Child Run
+## Question 12 *(Easy)*: Metrics Auto-Logged per Child Run
 
 **Question**: With `mlflow.autolog()` enabled and Hyperopt running 20 trials using a scikit-learn model, what is logged in each child run?
 

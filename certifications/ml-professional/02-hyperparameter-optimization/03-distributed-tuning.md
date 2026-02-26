@@ -502,20 +502,20 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 
 ## Use Cases
 
-- **Distributed Hyperparameter Tuning Implementation**: Incorporating Distributed Hyperparameter Tuning principles to build scalable and maintainable solutions in Databricks environments.
-- **Optimized Distributed Hyperparameter Tuning Workflows**: Using the advanced capabilities of Distributed Hyperparameter Tuning to automate processes and reduce manual operational overhead.
+- **Parallel SparkTrials for Rapid Experimentation**: Using `SparkTrials(parallelism=16)` to distribute 100 Hyperopt evaluations across a 16-node cluster, reducing wall-clock tuning time from 8 hours (sequential) to 40 minutes while automatically logging every trial to MLflow.
+- **Large-Scale Model Selection on Multi-GPU Clusters**: Running 100+ SparkTrials across a 16-node GPU cluster to simultaneously evaluate XGBoost, LightGBM, and neural network configurations, selecting the best model family and hyperparameters in a single job.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### SparkTrials Parallelism Set Too High
 
-**Scenario:** The default settings for Distributed Hyperparameter Tuning do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Distributed Hyperparameter Tuning to handle production-scale workloads.
+**Scenario:** Setting `SparkTrials(parallelism=64)` on a 16-worker cluster causes trials to queue and time out because there are not enough executors to run all trials simultaneously.
+**Fix:** Set `parallelism` to match the number of available worker nodes (or cores, depending on per-trial resource needs). For GPU workloads, set parallelism equal to the number of GPUs. Monitor the Spark UI to confirm trials are actually running in parallel and not queuing.
 
-### Integration Bottlenecks
+### Distributed Trials Fail on Worker Nodes
 
-**Scenario:** Connecting Distributed Hyperparameter Tuning to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for Distributed Hyperparameter Tuning prior to deployment.
+**Scenario:** `SparkTrials` jobs fail with serialisation errors or missing library exceptions on worker nodes, even though the objective function runs locally on the driver.
+**Fix:** Ensure all Python packages used inside the objective function are installed on every worker (use cluster-scoped init scripts or `%pip install`). Avoid referencing Spark DataFrames inside the objective when using `SparkTrials` -- convert to Pandas on the driver first, since each trial runs in its own process on a worker.
 
 ## Related Topics
 

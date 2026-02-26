@@ -352,7 +352,7 @@ testing:
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
-- **Optimized SQL Warehouses Workflows**: Using the advanced capabilities of SQL Warehouses to automate processes and reduce manual operational overhead.
+- **Cost Management**: Right-sizing SQL warehouses and configuring auto-stop to control DBU spend while maintaining query performance for dashboards and ad-hoc analysis.
 
 ## Common Issues & Errors
 
@@ -361,10 +361,10 @@ testing:
 **Scenario:** Data skew causes an executor to run out of memory.
 **Fix:** Use Adaptive Query Execution (AQE) and review joining logic.
 
-### Integration Bottlenecks
+### Query Timeout on Large Datasets
 
-**Scenario:** Connecting SQL Warehouses to other downstream components results in unexpected failures.
-**Fix:** Ensure that permissions and network access rules are correctly provisioned for SQL Warehouses prior to deployment.
+**Scenario:** Queries on unpartitioned large tables time out on small SQL warehouses.
+**Fix:** Scale up the warehouse size or add `WHERE` filters to reduce data scanned. Use `EXPLAIN` to check scan size before running.
 
 ## Exam Tips
 

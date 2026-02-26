@@ -12,7 +12,7 @@ tags: [ml-professional, mock-exam, practice]
 
 ## Feature Engineering (Questions 1–9)
 
-## Question 1
+## Question 1 *(Easy)*
 
 **What primary key constraint must a feature table have for Databricks Feature Engineering in UC?**
 
@@ -28,7 +28,7 @@ D) Must be a numeric integer type
 
 ---
 
-## Question 2
+## Question 2 *(Easy)*
 
 **A team wants to compute and register features for reuse across multiple ML projects. Which API should they use?**
 
@@ -44,7 +44,7 @@ D) `databricks.sdk.WorkspaceClient`
 
 ---
 
-## Question 3
+## Question 3 *(Easy)*
 
 **`FeatureEngineeringClient.create_training_set()` returns which object?**
 
@@ -60,7 +60,7 @@ D) A pandas DataFrame
 
 ---
 
-## Question 4
+## Question 4 *(Medium)*
 
 **A model deployed via `fe.log_model()` is served from an endpoint. How does the endpoint retrieve feature values for incoming requests?**
 
@@ -76,7 +76,7 @@ D) Features are cached at endpoint startup
 
 ---
 
-## Question 5
+## Question 5 *(Easy)*
 
 **What is "point-in-time correct" feature retrieval?**
 
@@ -92,7 +92,7 @@ D) Retrieving features at exactly midnight each day
 
 ---
 
-## Question 6
+## Question 6 *(Easy)*
 
 **Which `FeatureLookup` parameter enables point-in-time correct retrieval?**
 
@@ -108,7 +108,7 @@ D) `event_time_col`
 
 ---
 
-## Question 7
+## Question 7 *(Easy)*
 
 **A feature requires < 10ms retrieval latency for real-time serving. Where should the feature values be published?**
 
@@ -124,7 +124,7 @@ D) MLflow artifact store
 
 ---
 
-## Question 8
+## Question 8 *(Medium)*
 
 **Train-serving skew is caused by:**
 
@@ -140,7 +140,7 @@ D) Using a stale version of the model
 
 ---
 
-## Question 9
+## Question 9 *(Easy)*
 
 **A data scientist calls `fe.write_table(df=features_df, name="catalog.schema.user_features")` and the table does not yet exist. What happens?**
 
@@ -158,7 +158,7 @@ D) The call fails unless the online store is configured
 
 ## Hyperparameter Optimization (Questions 10–18)
 
-## Question 10
+## Question 10 *(Easy)*
 
 **A data scientist runs Hyperopt with `Trials()` on a 20-node Databricks cluster. How many trials run in parallel?**
 
@@ -174,7 +174,7 @@ D) Based on the `parallelism` parameter
 
 ---
 
-## Question 11
+## Question 11 *(Medium)*
 
 **What must the Hyperopt objective function return to signal a failed trial?**
 
@@ -190,7 +190,7 @@ D) Raise an exception
 
 ---
 
-## Question 12
+## Question 12 *(Medium)*
 
 **Which `hp.*` function is best for tuning a learning rate over the range 1e-5 to 1e-1?**
 
@@ -206,7 +206,7 @@ D) `hp.randint('lr', 5)`
 
 ---
 
-## Question 13
+## Question 13 *(Easy)*
 
 **`mlflow.autolog()` is enabled and Hyperopt runs 50 trials with `SparkTrials`. How are MLflow runs organized?**
 
@@ -222,7 +222,7 @@ D) No runs created — autolog doesn't support Hyperopt
 
 ---
 
-## Question 14
+## Question 14 *(Easy)*
 
 **A `CrossValidator` with `numFolds=5` evaluates a parameter grid with 12 combinations. How many models are trained total?**
 
@@ -238,7 +238,7 @@ D) 17
 
 ---
 
-## Question 15
+## Question 15 *(Medium)*
 
 **When does Bayesian optimization (TPE) outperform random search most significantly?**
 
@@ -254,7 +254,7 @@ D) When the objective function is convex
 
 ---
 
-## Question 16
+## Question 16 *(Easy)*
 
 **What does `parallelism=8` in `SparkTrials(parallelism=8)` control?**
 
@@ -270,7 +270,7 @@ D) Number of cross-validation folds
 
 ---
 
-## Question 17
+## Question 17 *(Easy)*
 
 **The `early_stop_fn` parameter in `fmin()` allows:**
 
@@ -286,7 +286,7 @@ D) Stopping MLflow logging mid-search
 
 ---
 
-## Question 18
+## Question 18 *(Medium)*
 
 **A team has budget for 30 trials to tune 6 hyperparameters. Which strategy is most efficient?**
 
@@ -304,7 +304,7 @@ D) Manual search based on intuition
 
 ## Model Production Lifecycle (Questions 19–32)
 
-## Question 19
+## Question 19 *(Easy)*
 
 **Which URI loads a model from the UC registry by alias?**
 
@@ -320,7 +320,7 @@ D) `mlflow://ml_catalog.fraud_models.fraud_classifier:champion`
 
 ---
 
-## Question 20
+## Question 20 *(Medium)*
 
 **A serving endpoint with `scale_to_zero_enabled=True` hasn't received traffic for 45 minutes. What happens to the next request?**
 
@@ -336,7 +336,7 @@ D) Auto-scaling resumes within 1 second
 
 ---
 
-## Question 21
+## Question 21 *(Easy)*
 
 **`mlflow.pyfunc.spark_udf()` runs inference on which Spark component?**
 
@@ -352,7 +352,7 @@ D) A dedicated GPU cluster
 
 ---
 
-## Question 22
+## Question 22 *(Medium)*
 
 **A model is registered to the workspace registry (no `set_registry_uri` call). Which UC feature is unavailable?**
 
@@ -368,7 +368,7 @@ D) Model descriptions
 
 ---
 
-## Question 23
+## Question 23 *(Medium)*
 
 **Which statement about model aliases is TRUE?**
 
@@ -384,7 +384,7 @@ D) Aliases are equivalent to legacy lifecycle stages
 
 ---
 
-## Question 24
+## Question 24 *(Easy)*
 
 **An endpoint has champion at 80% and challenger at 10% traffic. Is this a valid configuration?**
 
@@ -400,7 +400,7 @@ D) No — only two served models are allowed per endpoint
 
 ---
 
-## Question 25
+## Question 25 *(Easy)*
 
 **Which deployment pattern runs the challenger model in parallel without serving its predictions to users?**
 
@@ -416,7 +416,7 @@ D) A/B testing
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 **What enables automatic logging of all requests and responses from a serving endpoint to a Delta table?**
 
@@ -432,7 +432,7 @@ D) Delta Streaming from the endpoint logs
 
 ---
 
-## Question 27
+## Question 27 *(Medium)*
 
 **A `PythonModel` subclass needs to load a pre-trained tokenizer at serving time. The tokenizer is stored locally as a file. How should it be packaged with the model?**
 
@@ -448,7 +448,7 @@ D) Store it in DBFS and access it from the model
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 **Which task dependency setting ensures an integration test task runs only if the evaluation gate task succeeds?**
 
@@ -464,7 +464,7 @@ D) No special configuration — tasks always wait for predecessors
 
 ---
 
-## Question 29
+## Question 29 *(Medium)*
 
 **Drift-triggered retraining uses which mechanism to start a Databricks Job?**
 
@@ -480,7 +480,7 @@ D) Git push to the model training branch
 
 ---
 
-## Question 30
+## Question 30 *(Medium)*
 
 **For real-time fraud detection requiring < 50ms response time, which deployment mode is correct?**
 
@@ -496,7 +496,7 @@ D) Scheduled scoring job every 5 minutes
 
 ---
 
-## Question 31
+## Question 31 *(Hard)*
 
 **A custom pyfunc model returns predictions as a DataFrame with columns `[score, label]`. What should `result_type` be in `spark_udf()`?**
 
@@ -512,7 +512,7 @@ D) `"array<double>"`
 
 ---
 
-## Question 32
+## Question 32 *(Medium)*
 
 **What is the purpose of archiving the previous `champion` alias as `previous_champion` during promotion?**
 
@@ -530,7 +530,7 @@ D) Required for UC audit compliance
 
 ## Model Governance & MLOps (Questions 33–45)
 
-## Question 33
+## Question 33 *(Easy)*
 
 **Feature PSI = 0.05 this week. What action should you take?**
 
@@ -546,7 +546,7 @@ D) Enable Lakehouse Monitoring
 
 ---
 
-## Question 34
+## Question 34 *(Medium)*
 
 **A model's AUC dropped from 0.92 to 0.84 over 3 weeks with ground truth labels available. Which drift type explains this?**
 
@@ -562,7 +562,7 @@ D) Label drift — target class balance shifted
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 **Which column in a Databricks inference table identifies which model version handled each request (for A/B analysis)?**
 
@@ -578,7 +578,7 @@ D) `endpoint_name`
 
 ---
 
-## Question 36
+## Question 36 *(Easy)*
 
 **Which Lakehouse Monitoring monitor type is appropriate for a static, snapshot Delta table with no timestamp column?**
 
@@ -594,7 +594,7 @@ D) DriftProfile
 
 ---
 
-## Question 37
+## Question 37 *(Easy)*
 
 **UC audit logs capture which ML-related event?**
 
@@ -610,7 +610,7 @@ D) MLflow autolog metrics
 
 ---
 
-## Question 38
+## Question 38 *(Easy)*
 
 **The GDPR Article 22 requirement that affects ML models is:**
 
@@ -626,7 +626,7 @@ D) Predictions must be stored for 7 years
 
 ---
 
-## Question 39
+## Question 39 *(Medium)*
 
 **Equalized odds as a fairness metric requires:**
 
@@ -642,7 +642,7 @@ D) Equal training data representation across groups
 
 ---
 
-## Question 40
+## Question 40 *(Medium)*
 
 **A model has PSI = 0.28 on prediction scores (not features). What does this indicate?**
 
@@ -658,7 +658,7 @@ D) The online store is returning stale values
 
 ---
 
-## Question 41
+## Question 41 *(Hard)*
 
 **Which UC permission allows a data scientist to register new model versions but NOT change the `champion` alias?**
 
@@ -674,7 +674,7 @@ D) `CREATE ON SCHEMA`
 
 ---
 
-## Question 42
+## Question 42 *(Medium)*
 
 **A Delta table contains PII (email addresses) that must be hidden from data scientists but visible to the ML platform team. Which control should be used?**
 
@@ -690,7 +690,7 @@ D) Encrypt the column with a user-specific key
 
 ---
 
-## Question 43
+## Question 43 *(Easy)*
 
 **Databricks Lakehouse Monitoring outputs a `_drift_metrics` table. What columns does this table contain?**
 
@@ -706,7 +706,7 @@ D) MLflow run IDs for the monitored model
 
 ---
 
-## Question 44
+## Question 44 *(Medium)*
 
 **After retraining a model and promoting it to champion, what must be updated in Lakehouse Monitoring?**
 
@@ -722,7 +722,7 @@ D) Nothing — LHM automatically detects the new champion
 
 ---
 
-## Question 45
+## Question 45 *(Medium)*
 
 **A compliance evidence package for a high-risk ML model must include which item?**
 

@@ -11,7 +11,7 @@ status: complete
 
 ---
 
-## Question 1: Data Drift vs Concept Drift
+## Question 1 *(Medium)*: Data Drift vs Concept Drift
 
 **A model's input features have shifted distribution, but AUC remains stable at 0.93. Which drift type has occurred?**
 
@@ -27,7 +27,7 @@ D) Label drift — target variable shifted
 
 ---
 
-## Question 2: PSI Threshold — No Action
+## Question 2 *(Easy)*: PSI Threshold — No Action
 
 **A feature's PSI is calculated as 0.07. What is the recommended action?**
 
@@ -43,7 +43,7 @@ D) Roll back to previous model
 
 ---
 
-## Question 3: PSI Threshold — Investigate
+## Question 3 *(Easy)*: PSI Threshold — Investigate
 
 **A feature's PSI score is 0.14 this week. What does this indicate?**
 
@@ -59,7 +59,7 @@ D) Model is performing well
 
 ---
 
-## Question 4: Chi-Square for Categorical Drift
+## Question 4 *(Easy)*: Chi-Square for Categorical Drift
 
 **A team monitors the `payment_method` feature (values: card, cash, wallet). Which statistical test detects distribution drift in this feature?**
 
@@ -75,7 +75,7 @@ D) PSI with continuous binning
 
 ---
 
-## Question 5: KS Test Applicability
+## Question 5 *(Easy)*: KS Test Applicability
 
 **A data scientist wants to detect drift in the `transaction_amount` feature (continuous, numeric). Which test is appropriate?**
 
@@ -91,7 +91,7 @@ D) Shapiro-Wilk test
 
 ---
 
-## Question 6: Lakehouse Monitoring Monitor Type
+## Question 6 *(Easy)*: Lakehouse Monitoring Monitor Type
 
 **A team creates a monitor on an ML serving endpoint's inference table with prediction and label columns. Which monitor type should they select?**
 
@@ -107,7 +107,7 @@ D) DriftProfile
 
 ---
 
-## Question 7: Baseline Table Requirement
+## Question 7 *(Medium)*: Baseline Table Requirement
 
 **Why does Databricks Lakehouse Monitoring require a baseline table when computing drift metrics?**
 
@@ -123,7 +123,7 @@ D) Databricks uses the baseline to retrain models automatically
 
 ---
 
-## Question 8: Inference Table Timing
+## Question 8 *(Easy)*: Inference Table Timing
 
 **A model goes to production on Monday without inference tables configured. On Thursday the team enables inference tables. Which requests are captured?**
 
@@ -139,7 +139,7 @@ D) Requests from the past 24 hours are backfilled
 
 ---
 
-## Question 9: UC Audit Logs Location
+## Question 9 *(Easy)*: UC Audit Logs Location
 
 **A compliance team needs to audit all MLflow model alias changes over the past 30 days. Where should they query?**
 
@@ -155,7 +155,7 @@ D) Databricks model serving logs
 
 ---
 
-## Question 10: SHAP for Regulatory Compliance
+## Question 10 *(Medium)*: SHAP for Regulatory Compliance
 
 **A financial institution must explain why a specific loan application was denied by an ML model. Which technical control satisfies GDPR Article 22's right to explanation?**
 
@@ -171,7 +171,7 @@ D) Show the prediction probability score only
 
 ---
 
-## Question 11: Disparate Impact Rule
+## Question 11 *(Hard)*: Disparate Impact Rule
 
 **A credit scoring model has an approval rate of 65% for Group A and 84% for Group B. What is the disparate impact ratio and what does it indicate?**
 
@@ -187,7 +187,7 @@ D) 0.65 — the minority group's raw approval rate
 
 ---
 
-## Question 12: UC EXECUTE Permission
+## Question 12 *(Easy)*: UC EXECUTE Permission
 
 **A serving endpoint service principal needs to load and serve a model from `ml_catalog.fraud_models.fraud_classifier`. Which permission is required?**
 
@@ -203,7 +203,7 @@ D) `USE CATALOG`
 
 ---
 
-## Question 13: Prediction Drift as Proxy
+## Question 13 *(Medium)*: Prediction Drift as Proxy
 
 **Ground truth labels are available only after 14 days. What monitoring approach detects potential model degradation before labels arrive?**
 
@@ -219,7 +219,7 @@ D) Use the model's training metrics as the current performance estimate
 
 ---
 
-## Question 14: Feature Importance Drift
+## Question 14 *(Medium)*: Feature Importance Drift
 
 **A team suspects that some features have become less informative in production compared to training. How should they investigate?**
 
@@ -235,7 +235,7 @@ D) Check the feature table's Delta version
 
 ---
 
-## Question 15: Concept Drift Detection Requirement
+## Question 15 *(Medium)*: Concept Drift Detection Requirement
 
 **Which of the following is REQUIRED to detect concept drift (not just data drift)?**
 

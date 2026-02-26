@@ -14,7 +14,7 @@ tags: [data-analyst-associate, mock-exam, practice]
 
 ---
 
-## Question 1
+## Question 1 *(Medium)*
 
 An analyst uses Python to programmatically query Databricks SQL and retrieve results as a DataFrame. Which connection method is most appropriate for this use case?
 
@@ -33,7 +33,7 @@ D) Delta Sharing — enables programmatic data access
 
 ---
 
-## Question 2
+## Question 2 *(Hard)*
 
 A Pro SQL warehouse is configured with `max clusters = 3`. When does a third cluster spin up?
 
@@ -52,7 +52,7 @@ D) When any query takes longer than 60 seconds
 
 ---
 
-## Question 3
+## Question 3 *(Easy)*
 
 What does Photon acceleration do in Databricks SQL?
 
@@ -71,7 +71,7 @@ D) Accelerates only Python notebook cells, not SQL queries
 
 ---
 
-## Question 4
+## Question 4 *(Easy)*
 
 What does Databricks SQL query federation enable?
 
@@ -90,7 +90,7 @@ D) Sharing queries between different Databricks workspaces
 
 ---
 
-## Question 5
+## Question 5 *(Medium)*
 
 A Serverless SQL warehouse is idle with no queries running. Does it incur compute charges during this idle period?
 
@@ -109,7 +109,7 @@ D) No — Serverless warehouses are always free during idle periods regardless o
 
 ---
 
-## Question 6
+## Question 6 *(Medium)*
 
 Which Databricks workspace role is required to create a new SQL warehouse?
 
@@ -128,7 +128,7 @@ D) Only the account admin can create SQL warehouses
 
 ---
 
-## Question 7
+## Question 7 *(Medium)*
 
 What is the difference between Query Profile and `EXPLAIN` in Databricks SQL?
 
@@ -147,7 +147,7 @@ D) `EXPLAIN` requires admin privileges; Query Profile is available to all users
 
 ---
 
-## Question 8
+## Question 8 *(Easy)*
 
 How long are query results cached in Databricks SQL by default?
 
@@ -165,7 +165,7 @@ D) Until the SQL warehouse is restarted
 
 ---
 
-## Question 9
+## Question 9 *(Hard)*
 
 A SQL warehouse is configured with auto-stop set to 30 minutes. A long-running query has been executing for 25 minutes. What happens at the 30-minute mark?
 
@@ -183,7 +183,7 @@ D) The warehouse sends a warning but continues running for another 30 minutes
 
 ---
 
-## Question 10
+## Question 10 *(Medium)*
 
 What is a key difference between Databricks SQL and running SQL in a Databricks notebook?
 
@@ -206,7 +206,7 @@ D) Databricks SQL only supports SELECT statements; notebooks support all SQL com
 
 ---
 
-## Question 11
+## Question 11 *(Easy)*
 
 Which SQL command lists all tables visible in the current schema within Unity Catalog?
 
@@ -224,7 +224,7 @@ D) `SELECT * FROM information_schema.tables LIMIT 10`
 
 ---
 
-## Question 12
+## Question 12 *(Hard)*
 
 A data engineer wants to grant a user the ability to read only the `email` column in a table, not the `ssn` column. Which Unity Catalog feature enables this?
 
@@ -243,7 +243,7 @@ D) A view that selects only `email`, with SELECT granted on the view
 
 ---
 
-## Question 13
+## Question 13 *(Easy)*
 
 Which SQL syntax queries a Delta table as it existed at a specific version?
 
@@ -261,7 +261,7 @@ D) `SELECT * FROM table SNAPSHOT VERSION 5`
 
 ---
 
-## Question 14
+## Question 14 *(Medium)*
 
 In Unity Catalog, what does `GRANT USE SCHEMA ON SCHEMA catalog.schema TO user` allow the user to do?
 
@@ -280,7 +280,7 @@ D) Grant other users access to the schema
 
 ---
 
-## Question 15
+## Question 15 *(Easy)*
 
 A schema named `analytics` does not yet exist. Which SQL statement creates it only if it is absent, without raising an error?
 
@@ -298,7 +298,7 @@ D) `UPSERT SCHEMA analytics`
 
 ---
 
-## Question 16
+## Question 16 *(Medium)*
 
 What is the difference between a `SHALLOW CLONE` and a `DEEP CLONE` of a Delta table?
 
@@ -317,7 +317,7 @@ D) Shallow clone supports time travel; deep clone does not
 
 ---
 
-## Question 17
+## Question 17 *(Easy)*
 
 When is `CONVERT TO DELTA` needed?
 
@@ -335,7 +335,7 @@ D) When enabling Photon on a Delta table
 
 ---
 
-## Question 18
+## Question 18 *(Medium)*
 
 What does "attaching a workspace to a Unity Catalog metastore" mean?
 
@@ -354,7 +354,7 @@ D) Copying the workspace's existing Hive metastore tables into Unity Catalog
 
 ---
 
-## Question 19
+## Question 19 *(Easy)*
 
 What information is available in `INFORMATION_SCHEMA.COLUMNS` for a Unity Catalog schema?
 
@@ -377,7 +377,7 @@ D) Column-level statistics used by the query optimizer
 
 ---
 
-## Question 20
+## Question 20 *(Hard)*
 
 A window function uses the frame clause `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`. What does this compute?
 
@@ -396,7 +396,7 @@ D) The aggregate between the first and last rows of the entire result set
 
 ---
 
-## Question 21
+## Question 21 *(Medium)*
 
 `NTILE(4) OVER (ORDER BY revenue DESC)` — what does this function do?
 
@@ -415,7 +415,7 @@ D) Counts the number of distinct revenue values in each quartile
 
 ---
 
-## Question 22
+## Question 22 *(Medium)*
 
 What does `LPAD('42', 6, '0')` return?
 
@@ -433,7 +433,7 @@ D) `'42'`
 
 ---
 
-## Question 23
+## Question 23 *(Hard)*
 
 Which operator tests for equality between two values including the case where both are NULL?
 
@@ -452,7 +452,7 @@ D) Both B and C are correct
 
 ---
 
-## Question 24
+## Question 24 *(Medium)*
 
 What is the difference between `COALESCE(a, b, c)` and `IFNULL(a, b)`?
 
@@ -471,7 +471,7 @@ D) `COALESCE` short-circuits evaluation; `IFNULL` always evaluates all arguments
 
 ---
 
-## Question 25
+## Question 25 *(Easy)*
 
 What does `SPLIT('hello,world,foo', ',')` return?
 
@@ -489,7 +489,7 @@ D) Three separate rows: `'hello'`, `'world'`, `'foo'`
 
 ---
 
-## Question 26
+## Question 26 *(Medium)*
 
 `DATE_TRUNC('month', '2025-07-15')` — what does this return?
 
@@ -507,7 +507,7 @@ D) `'2025-07-31'` — rounds to the last day of the month
 
 ---
 
-## Question 27
+## Question 27 *(Medium)*
 
 An analyst needs to count orders where `status = 'completed'` within a larger aggregation query. Which SQL expression achieves this without a subquery?
 
@@ -526,7 +526,7 @@ D) `COUNT_IF(status = 'completed')`
 
 ---
 
-## Question 28
+## Question 28 *(Medium)*
 
 An analyst uses a `CROSS JOIN` between a `products` table (500 rows) and a `dates` table (365 rows) to generate all product-date combinations. How many rows does the result contain?
 
@@ -544,7 +544,7 @@ D) 365 rows — the smaller table determines row count
 
 ---
 
-## Question 29
+## Question 29 *(Hard)*
 
 A query uses `WHERE product_id NOT IN (SELECT product_id FROM returns)`. The `returns` table contains one NULL in `product_id`. What result does the main query return?
 
@@ -563,7 +563,7 @@ D) The same result as using `NOT EXISTS`
 
 ---
 
-## Question 30
+## Question 30 *(Easy)*
 
 What does the `INTERSECT` set operator return?
 
@@ -581,7 +581,7 @@ D) All rows from both queries, including duplicates
 
 ---
 
-## Question 31
+## Question 31 *(Easy)*
 
 What does the `EXCEPT` set operator return?
 
@@ -599,7 +599,7 @@ D) The symmetric difference of both result sets
 
 ---
 
-## Question 32
+## Question 32 *(Hard)*
 
 An analyst writes: `SELECT region, revenue, DENSE_RANK() OVER (ORDER BY revenue DESC) AS dr FROM sales QUALIFY dr <= 3`. What does this return?
 
@@ -621,7 +621,7 @@ D) The top 3 distinct revenue values with one row each
 
 ---
 
-## Question 33
+## Question 33 *(Easy)*
 
 A Databricks SQL dashboard contains a Text widget with markdown content. What is the primary use case for a Text widget?
 
@@ -639,7 +639,7 @@ D) Embedding an external URL in the dashboard
 
 ---
 
-## Question 34
+## Question 34 *(Medium)*
 
 A dashboard has four permission levels. Which level allows a user to run queries and see updated results, but not change query SQL or dashboard layout?
 
@@ -657,7 +657,7 @@ D) Owner
 
 ---
 
-## Question 35
+## Question 35 *(Medium)*
 
 A single SQL query returns columns for `region`, `product`, and `revenue`. An analyst wants both a bar chart and a table visualization from this same query result. What should they do?
 
@@ -676,7 +676,7 @@ D) Use a UNION to combine the data for the chart and the table
 
 ---
 
-## Question 36
+## Question 36 *(Easy)*
 
 Which export options are available from a Databricks SQL dashboard visualization?
 
@@ -694,7 +694,7 @@ D) Both A and B are available
 
 ---
 
-## Question 37
+## Question 37 *(Medium)*
 
 When configuring a Databricks SQL alert, which field allows customizing the email subject line?
 
@@ -713,7 +713,7 @@ D) Email subjects can only be customized via a webhook integration
 
 ---
 
-## Question 38
+## Question 38 *(Hard)*
 
 A dashboard is scheduled to refresh daily using Warehouse A. Warehouse A is then deleted by an admin. What happens to the scheduled refresh?
 
@@ -732,7 +732,7 @@ D) The refresh silently fails with no notification until manually reconfigured
 
 ---
 
-## Question 39
+## Question 39 *(Hard)*
 
 An analyst creates a bar chart and wants the bars for `revenue > 1,000,000` to appear in green and all others in gray. How is this achieved?
 
@@ -752,7 +752,7 @@ D) Use the chart's "Threshold" option to set color ranges
 
 ---
 
-## Question 40
+## Question 40 *(Hard)*
 
 A team wants to schedule one dashboard to refresh every hour on a high-capacity warehouse during business hours and use a smaller warehouse for the nightly refresh to save cost. How can this be achieved?
 
@@ -776,7 +776,7 @@ D) Configure warehouse auto-scaling to switch sizes based on time of day
 
 ---
 
-## Question 41
+## Question 41 *(Easy)*
 
 A dashboard filter needs to let users pick a date range (start date and end date). Does Databricks SQL support a native date range parameter type?
 
@@ -795,7 +795,7 @@ D) No — date ranges require a custom dropdown with hard-coded values
 
 ---
 
-## Question 42
+## Question 42 *(Medium)*
 
 A query parameter `{{min_revenue}}` is used in a dashboard filter. The analyst wants new users to see data filtered to `100000` until they change the filter. How is this configured?
 
@@ -814,7 +814,7 @@ D) Use `COALESCE({{min_revenue}}, 100000)` in the SQL
 
 ---
 
-## Question 43
+## Question 43 *(Medium)*
 
 An analyst shares a saved query with a colleague using "Can View" access. What can the colleague do with the query?
 
@@ -832,7 +832,7 @@ D) Delete the query
 
 ---
 
-## Question 44
+## Question 44 *(Hard)*
 
 A SQL alert monitors a query that returns no rows (an empty result). The alert condition is `WHEN VALUE > 0`. Does the alert fire?
 
@@ -851,7 +851,7 @@ D) The alert raises an error and sends an error notification
 
 ---
 
-## Question 45
+## Question 45 *(Medium)*
 
 A manager wants to receive a daily email snapshot of a Databricks SQL dashboard at 9 AM, without needing to log in. Which feature provides this?
 
