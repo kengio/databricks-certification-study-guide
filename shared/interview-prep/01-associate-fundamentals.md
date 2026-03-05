@@ -432,4 +432,4 @@ Explain at a high level how Apache Spark processes a SQL query or DataFrame tran
 
 ---
 
-**[↑ Back to Interview Prep](./README.md) | [Next: System Design →](./01-system-design.md)**
+**[↑ Back to Interview Prep](./README.md) | [Next: File Formats & Spark Internals →](./02-file-formats-spark-internals.md)**

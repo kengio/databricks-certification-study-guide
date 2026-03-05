@@ -37,23 +37,47 @@ Practice questions designed to simulate a real Databricks technical job intervie
 
 ## Question Index
 
+### Group 1 — Foundations
+
 | File | Topic | Level | Questions |
 | ---- | ----- | ----- | --------- |
-| [00-associate-fundamentals.md](00-associate-fundamentals.md) | Lakehouse, medallion, Delta Lake, Unity Catalog, compute, streaming, DLT, sharing, jobs, Spark SQL | Associate | 10 |
-| [01-system-design.md](01-system-design.md) | End-to-end platform design | Both | 5 |
-| [02-delta-lake-internals.md](02-delta-lake-internals.md) | Delta Lake deep dive | Both | 6 |
-| [03-pipeline-architecture.md](03-pipeline-architecture.md) | Medallion, CDC, Auto Loader | Both | 6 |
-| [04-performance-optimization.md](04-performance-optimization.md) | Query tuning, joins, skew | Professional | 5 |
-| [05-streaming-cdc.md](05-streaming-cdc.md) | Structured Streaming, CDF | Professional | 5 |
-| [06-governance-security.md](06-governance-security.md) | Unity Catalog, RBAC, lineage | Both | 5 |
-| [07-file-formats-spark.md](07-file-formats-spark.md) | Parquet, CSV, Delta vs Parquet, Spark internals | Both | 6 |
+| [01-associate-fundamentals.md](01-associate-fundamentals.md) | Lakehouse, medallion, Delta Lake, Unity Catalog, compute, streaming, DLT, sharing, jobs, Spark SQL | Associate | 10 |
+| [02-file-formats-spark-internals.md](02-file-formats-spark-internals.md) | Parquet, CSV, Delta vs Parquet, Spark internals, Catalyst optimizer | Both | 7 |
+| [03-delta-lake-internals.md](03-delta-lake-internals.md) | Transaction log, ACID, concurrency, MERGE, time travel, CDF, VACUUM, RESTORE | Both | 8 |
+
+### Group 2 — Engineering Patterns
+
+| File | Topic | Level | Questions |
+| ---- | ----- | ----- | --------- |
+| [04-pipeline-architecture.md](04-pipeline-architecture.md) | Medallion, DLT, Auto Loader, late data, idempotency | Both | 6 |
+| [05-streaming-cdc.md](05-streaming-cdc.md) | Structured Streaming, watermarking, exactly-once, CDF | Professional | 5 |
+| [06-data-modeling.md](06-data-modeling.md) | Star schema, SCD types, Delta SCD2, schema versioning | Both | 5 |
+
+### Group 3 — Performance & Code
+
+| File | Topic | Level | Questions |
+| ---- | ----- | ----- | --------- |
+| [07-performance-optimization.md](07-performance-optimization.md) | Query tuning, AQE, skew, joins, small files, DFP, caching, Photon | Both | 9 |
 | [08-pyspark-api.md](08-pyspark-api.md) | Window functions, UDFs, complex types, QUALIFY | Both | 6 |
 | [09-python-code-quality.md](09-python-code-quality.md) | Generators, decorators, context managers, OOP, testing | Both | 5 |
-| [10-data-modeling.md](10-data-modeling.md) | Star schema, SCD types, Delta SCD2, schema versioning | Both | 5 |
-| [11-ml-system-design.md](11-ml-system-design.md) | Feature Store design, model monitoring, retraining pipelines | Professional | 5 |
-| [12-genai-rag-design.md](12-genai-rag-design.md) | RAG architecture, chunking, evaluation, Vector Search, guardrails | Both | 5 |
 
-**Total: 74 questions**
+### Group 4 — Operations & Governance
+
+| File | Topic | Level | Questions |
+| ---- | ----- | ----- | --------- |
+| [10-governance-security.md](10-governance-security.md) | Unity Catalog, RBAC, lineage, privilege inheritance | Both | 5 |
+| [11-production-operations.md](11-production-operations.md) | CI/CD, failure debugging, monitoring, secrets, cost optimization, DR | Both | 6 |
+| [12-data-compliance-quality.md](12-data-compliance-quality.md) | GDPR, PII handling, reconciliation, data quality testing, schema drift | Both | 5 |
+
+### Group 5 — Design & Specializations
+
+| File | Topic | Level | Questions |
+| ---- | ----- | ----- | --------- |
+| [13-system-design.md](13-system-design.md) | End-to-end platform design (IoT, CDC, multi-tenant, fraud, migration) | Both | 5 |
+| [14-ml-system-design.md](14-ml-system-design.md) | Feature Store design, model monitoring, retraining pipelines | Professional | 5 |
+| [15-genai-rag-design.md](15-genai-rag-design.md) | RAG architecture, chunking, evaluation, Vector Search, guardrails | Both | 5 |
+
+**Total: 92 questions**
 
 ---
 
@@ -71,12 +95,14 @@ Use this framework for scenario questions:
 
 ### Topics Weighted Heavily in Interviews
 
-- Delta Lake internals (transaction log, concurrency, MERGE)
+- Delta Lake internals (transaction log, concurrency, MERGE, VACUUM, RESTORE)
 - Medallion architecture design decisions
 - Structured Streaming operations and recovery
 - Unity Catalog permissions model
-- Performance troubleshooting methodology
+- Performance troubleshooting methodology (Spark UI, small files, caching, Photon)
 - DLT (LakeFlow Pipelines) vs notebook-based pipelines
+- Production operations (CI/CD, monitoring, failure debugging, cost optimization)
+- Data compliance (GDPR, PII handling, schema drift)
 
 ### Red Flags to Avoid
 

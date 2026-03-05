@@ -454,7 +454,7 @@ Write a query to keep only the most recent record per `customer_id` from a `cust
 >
 > **Query clause evaluation order:**
 >
-> ```
+> ```text
 > FROM → WHERE → GROUP BY → HAVING → SELECT (window functions) → QUALIFY → ORDER BY → LIMIT
 > ```
 >
@@ -466,4 +466,4 @@ Write a query to keep only the most recent record per `customer_id` from a `cust
 
 ---
 
-**[← Previous: Interview Questions — File Formats & Spark Internals](./07-file-formats-spark.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Python for Production Data Engineering](./09-python-code-quality.md) →**
+**[← Previous: Performance Optimization](./07-performance-optimization.md) | [↑ Back to Interview Prep](./README.md) | [Next: Python Code Quality →](./09-python-code-quality.md)**

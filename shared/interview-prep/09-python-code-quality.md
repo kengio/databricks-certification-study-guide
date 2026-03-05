@@ -528,4 +528,4 @@ Write a unit test for a PySpark function `deduplicate_orders(df)` that removes d
 
 ---
 
-**[← Previous: Interview Questions — PySpark API Deep Dive](./08-pyspark-api.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Data Modeling](./10-data-modeling.md) →**
+**[← Previous: PySpark API](./08-pyspark-api.md) | [↑ Back to Interview Prep](./README.md) | [Next: Governance & Security →](./10-governance-security.md)**

@@ -31,7 +31,7 @@ Explain Unity Catalog's securable object hierarchy. How does it differ from the 
 >
 > Unity Catalog organizes data assets in a four-level hierarchy:
 >
-> ```
+> ```text
 > Metastore (1 per region)
 > └── Catalog (e.g., prod, dev, finance)
 >     └── Schema (e.g., bronze, silver, gold)
@@ -371,4 +371,4 @@ Explain how privilege inheritance works in Unity Catalog. If I `GRANT SELECT ON 
 
 ---
 
-**[← Previous: Interview Questions — Streaming & CDC](./05-streaming-cdc.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — File Formats & Spark Internals](./07-file-formats-spark.md) →**
+**[← Previous: Python Code Quality](./09-python-code-quality.md) | [↑ Back to Interview Prep](./README.md) | [Next: Production Operations →](./11-production-operations.md)**

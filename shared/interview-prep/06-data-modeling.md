@@ -33,7 +33,7 @@ You're designing a Gold-layer data model for an e-commerce platform. The busines
 >
 > **Star schema:**
 >
-> ```
+> ```text
 > fact_order_line (grain: one row per order line item)
 > ├── order_line_sk   BIGINT       -- surrogate key
 > ├── order_id        BIGINT       -- degenerate dimension (no dim table needed)
@@ -442,4 +442,4 @@ Your `gold.daily_sales_summary` table needs two changes: (1) add a new `channel`
 
 ---
 
-**[← Previous: Python for Production Data Engineering](./09-python-code-quality.md) | [↑ Back to Interview Prep](./README.md) | [Next: ML System Design →](./11-ml-system-design.md)**
+**[← Previous: Streaming & CDC](./05-streaming-cdc.md) | [↑ Back to Interview Prep](./README.md) | [Next: Performance Optimization →](./07-performance-optimization.md)**

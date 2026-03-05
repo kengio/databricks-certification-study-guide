@@ -35,7 +35,7 @@ Explain how Delta Lake achieves ACID transactions on top of cloud object storage
 >
 > For **Isolation**: Delta uses **optimistic concurrency control**. Both writers read the current table state, compute their changes, and try to write the next log version. The first to commit wins. The second detects a conflict and either retries (if the operations don't overlap) or raises `ConcurrentModificationException`.
 >
-> ```
+> ```text
 > Writer A: reads version 5, computes changes, tries to write 00000...0006.json ✓
 > Writer B: reads version 5, computes changes, tries to write 00000...0006.json ✗
 >           → detects conflict → retries by reading version 6 → writes version 7
@@ -338,4 +338,195 @@ A colleague says "Delta's Change Data Feed is the same as Change Data Capture �
 
 ---
 
-**[← Previous: Interview Questions — System Design](./01-system-design.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Pipeline Architecture](./03-pipeline-architecture.md) →**
+## Question 7: VACUUM Best Practices & Retention
+
+**Level**: Both
+**Type**: Deep Dive
+
+**Scenario / Question**:
+Your Delta tables are consuming 3x the expected storage because old files aren't being cleaned up. Explain how VACUUM works and the trade-offs of different retention policies.
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: VACUUM removes data files no longer referenced by the current table version AND older than the retention threshold (default 7 days); once vacuumed, you cannot time-travel to versions that relied on deleted files — set retention based on business needs (audit requirements may need 30-90 days), schedule VACUUM as a maintenance job during off-peak hours, and never lower retention below 7 days unless you fully understand the consequences.
+>
+> ### Key Points to Cover
+>
+> - VACUUM removes data files no longer referenced by the current table version AND older than the retention threshold
+> - Default retention: 7 days (`delta.deletedFileRetentionDuration = 'interval 7 days'`)
+> - Time travel dependency: once vacuumed, you CANNOT time-travel to versions that relied on deleted files
+> - Safety check: Databricks prevents VACUUM with retention < 7 days unless you set `spark.databricks.delta.retentionDurationCheck.enabled = false` — DANGEROUS
+> - VACUUM does NOT delete the transaction log files (JSON/checkpoint) — only data files
+> - `VACUUM` runs on the driver and can be slow for large tables — consider off-peak scheduling
+> - Best practice: schedule VACUUM as a maintenance job (daily/weekly), set retention based on business needs
+>
+> ### Example Answer
+>
+> VACUUM is Delta Lake's garbage collection mechanism. It removes Parquet data files that are no longer referenced by the current version of the table AND that are older than the retention threshold.
+>
+> **How VACUUM decides what to delete:**
+>
+> 1. Read the transaction log to identify all data files referenced by the **current** table version
+> 2. List all data files in the table's storage directory
+> 3. Any file NOT in the current version's reference list AND older than the retention period is deleted
+>
+> **Default retention and time travel trade-off:**
+>
+> ```sql
+> -- Default: files older than 7 days are eligible for deletion
+> VACUUM schema.table_name;
+>
+> -- Explicit retention: keep files for 168 hours (7 days)
+> VACUUM schema.table_name RETAIN 168 HOURS;
+>
+> -- Check what versions exist before vacuuming
+> DESCRIBE HISTORY schema.table_name;
+> ```
+>
+> Once VACUUM deletes a file, any time travel query that depends on that file will fail with a `FileNotFoundException`. For example, if version 42 references `part-00001.parquet` and VACUUM deletes it, `SELECT * FROM table VERSION AS OF 42` will fail even though the log entry still exists.
+>
+> **Retention policy trade-offs:**
+>
+> | Retention | Pros | Cons |
+> | --------- | ---- | ---- |
+> | 7 days (default) | Reasonable storage cost | Limited time travel window |
+> | 30-90 days | Audit compliance, longer rollback | 3-10x storage overhead |
+> | 0 hours | Minimal storage | No time travel at all — DANGEROUS |
+>
+> **Safety check:** Databricks prevents VACUUM with retention < 7 days by default. To override:
+>
+> ```python
+> # DANGEROUS — only do this if you understand the consequences
+> spark.conf.set(
+>     "spark.databricks.delta.retentionDurationCheck.enabled",
+>     "false"
+> )
+> ```
+>
+> **Important distinctions:**
+>
+> - VACUUM deletes **data files** (Parquet) — NOT transaction log files (JSON/checkpoint in `_delta_log/`)
+> - Transaction log cleanup is handled separately by Delta's log compaction (checkpoint files every 10 commits)
+> - VACUUM runs on the **driver node**, not distributed across executors — it can be slow for tables with millions of files
+>
+> **Best practice — schedule as maintenance:**
+>
+> ```sql
+> -- Run during off-peak hours as a scheduled job
+> VACUUM schema.table_name RETAIN 168 HOURS;
+>
+> -- For critical tables with audit requirements
+> ALTER TABLE schema.table_name
+> SET TBLPROPERTIES ('delta.deletedFileRetentionDuration' = '90 days');
+> ```
+>
+> ### Follow-up Questions
+>
+> - What happens to the transaction log when you run VACUUM? Does it get cleaned up too?
+> - How does VACUUM interact with concurrent readers — can a long-running query fail if VACUUM deletes files it's reading?
+> - What's the storage cost impact of increasing retention from 7 days to 90 days on a table with frequent updates?
+
+---
+
+## Question 8: Delta Table Corruption Recovery
+
+**Level**: Both
+**Type**: Scenario
+
+**Scenario / Question**:
+A production Delta table has become corrupted — queries return wrong results after an accidental UPDATE with a bad WHERE clause. How do you recover?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Use `DESCRIBE HISTORY` to identify the version before the bad change, then `RESTORE TABLE ... TO VERSION AS OF <good_version>` to atomically revert the table; verify with row counts and checksums against expected values; for extra safety, create a deep clone backup before restoring, and implement prevention measures like testing UPDATE/DELETE statements with SELECT first.
+>
+> ### Key Points to Cover
+>
+> - Step 1: `DESCRIBE HISTORY` to identify which version introduced the bad change
+> - Step 2: `RESTORE TABLE ... TO VERSION AS OF <good_version>` — atomically reverts to a previous state
+> - Step 3: Verify with `SELECT COUNT(*), SUM(amount)` and compare to expected values
+> - Alternative: `CREATE TABLE backup AS SELECT * FROM table VERSION AS OF <good_version>` for side-by-side comparison
+> - Shallow clone vs deep clone for backup: shallow = metadata only (fast, space-efficient), deep = full data copy (independent but expensive)
+> - Prevention: always test UPDATE/DELETE with SELECT first, use transactions with proper WHERE clauses
+> - Transaction log corruption (rare): if `_delta_log/` is damaged, may need to reconstruct from checkpoint files
+>
+> ### Example Answer
+>
+> This is a recoverable situation as long as VACUUM hasn't deleted the old data files. Here's the recovery process:
+>
+> **Step 1 — Identify the bad version:**
+>
+> ```sql
+> -- Show recent operations on the table
+> DESCRIBE HISTORY schema.table_name;
+> ```
+>
+> The output shows each version with its timestamp, operation type (UPDATE, DELETE, MERGE), and the user who ran it. Find the version number just BEFORE the accidental UPDATE — say version 15 was the last good state and version 16 was the bad UPDATE.
+>
+> **Step 2 — Verify the good version has correct data:**
+>
+> ```sql
+> -- Peek at the good version before restoring
+> SELECT COUNT(*) AS row_count,
+>        SUM(amount) AS total_amount
+> FROM schema.table_name VERSION AS OF 15;
+> ```
+>
+> Compare these values against known-good metrics (dashboards, reports, upstream source counts).
+>
+> **Step 3 — Restore the table:**
+>
+> ```sql
+> -- Atomically revert to the good version
+> RESTORE TABLE schema.table_name TO VERSION AS OF 15;
+> ```
+>
+> `RESTORE` is an atomic operation — it creates a new commit in the transaction log that references the same data files as version 15. No data is physically copied; it simply updates the log to point back to the old files.
+>
+> **Step 4 — Verify the restoration:**
+>
+> ```sql
+> SELECT COUNT(*) AS row_count,
+>        SUM(amount) AS total_amount
+> FROM schema.table_name;
+> -- Should match the values from Step 2
+> ```
+>
+> **Alternative — Deep clone for safety:**
+>
+> If you want a safety net before restoring, create a backup first:
+>
+> ```sql
+> -- Deep clone: full independent copy of the good version
+> CREATE TABLE schema.table_name_backup
+> DEEP CLONE schema.table_name VERSION AS OF 15;
+>
+> -- Shallow clone: metadata-only reference (fast but depends on source files)
+> CREATE TABLE schema.table_name_backup_shallow
+> SHALLOW CLONE schema.table_name VERSION AS OF 15;
+> ```
+>
+> | Clone Type | Speed | Storage Cost | Independent? |
+> | ---------- | ----- | ------------ | ------------ |
+> | Deep clone | Slow (copies all data) | Full duplicate | Yes — survives VACUUM on source |
+> | Shallow clone | Fast (metadata only) | Minimal | No — breaks if source files are vacuumed |
+>
+> **Prevention measures:**
+>
+> - **Always test with SELECT first**: Before running `UPDATE ... SET ... WHERE ...`, run the same `SELECT ... WHERE ...` to verify the WHERE clause returns the expected rows
+> - **Use row-level checks**: After critical operations, validate row counts and checksums against expected values
+> - **Schedule regular deep clone backups**: For mission-critical tables, maintain a nightly deep clone as an independent recovery point
+>
+> **Transaction log corruption (rare edge case):**
+>
+> If the `_delta_log/` directory itself is corrupted (e.g., files accidentally deleted from cloud storage), recovery is harder. Delta writes checkpoint files every 10 commits — if the latest checkpoint is intact, Delta can recover from it. If not, you may need to reconstruct from cloud storage backup or the data files themselves.
+>
+> ### Follow-up Questions
+>
+> - What's the difference between RESTORE and reading data with `VERSION AS OF`? Does RESTORE copy data?
+> - How do shallow and deep clones differ in terms of VACUUM dependency and storage cost?
+> - How would you prevent accidental data corruption in production — what guardrails would you implement?
+
+---
+
+**[← Previous: File Formats & Spark Internals](./02-file-formats-spark-internals.md) | [↑ Back to Interview Prep](./README.md) | [Next: Pipeline Architecture →](./04-pipeline-architecture.md)**

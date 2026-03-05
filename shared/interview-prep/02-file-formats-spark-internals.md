@@ -35,7 +35,7 @@ A new data engineer asks: "Our team uses both Parquet files and CSVs in the data
 >
 > Parquet is columnar — all values for one column are stored together on disk. To compute `SUM(revenue)` across 100 million rows of a 50-column table, Spark reads only the `revenue` column pages (2% of the data). CSV is row-oriented — Spark must parse every column of every row to reach `revenue`.
 >
-> ```
+> ```text
 > CSV layout (row-oriented):
 > Row 1: order_id | customer_id | product | qty | revenue | region | ... (50 cols)
 > Row 2: order_id | customer_id | product | qty | revenue | region | ...
@@ -328,7 +328,7 @@ A junior engineer on your team wrote a PySpark job with 10 transformation steps 
 >
 > With 10 transformations and 2 shuffles, you get exactly 3 stages:
 >
-> ```
+> ```text
 > 10 transformations → 3 stages:
 >
 > Stage 1: filter → select → withColumn → withColumn
@@ -479,7 +479,7 @@ A Spark job processing a 2TB DataFrame is running slowly. You open the Spark UI 
 >
 > Each executor's JVM heap is divided into three regions:
 >
-> ```
+> ```text
 > Executor JVM Heap (e.g., 16GB)
 > ├── Reserved Memory (300MB fixed) — Spark internal objects
 > ├── Spark Unified Memory (60% of remaining heap, default)
@@ -543,4 +543,90 @@ A Spark job processing a 2TB DataFrame is running slowly. You open the Spark UI 
 
 ---
 
-**[← Previous: Interview Questions — Governance & Security](./06-governance-security.md) | [↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — PySpark API Deep Dive](./08-pyspark-api.md) →**
+## Question 7: Catalyst Optimizer & Query Planning
+
+**Level**: Professional
+**Type**: Deep Dive
+
+**Scenario / Question**:
+You run `EXPLAIN EXTENDED` on a slow query and see an unexpected physical plan. Walk me through how Spark's Catalyst optimizer works and how you would interpret the output to fix the query.
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Catalyst converts SQL/DataFrame code through 4 phases — (1) Unresolved Logical Plan → (2) Analyzed Logical Plan (resolve column names, types) → (3) Optimized Logical Plan (apply rules: predicate pushdown, constant folding, column pruning, filter reordering) → (4) Physical Plan (choose join strategies, scan methods); reading `EXPLAIN` output, you look for `BroadcastHashJoin` vs `SortMergeJoin`, `Filter` position relative to `Scan`, and `Project` for column pruning — common pitfalls include stale statistics, UDFs blocking predicate pushdown, and implicit type casts preventing optimization.
+>
+> ### Key Points to Cover
+>
+> - Catalyst converts SQL/DataFrame code through 4 phases: Unresolved Logical Plan → Analyzed Logical Plan → Optimized Logical Plan → Physical Plan
+> - Rule-based optimization: deterministic rewrites (push filters before joins, eliminate redundant projections, constant folding)
+> - Cost-based optimization (CBO): uses table/column statistics (`ANALYZE TABLE ... COMPUTE STATISTICS`) to choose join order and strategy
+> - Reading EXPLAIN output: look for `BroadcastHashJoin` vs `SortMergeJoin`, `Filter` position relative to `Scan`, `Project` for column pruning
+> - Common pitfalls: stale statistics, UDFs blocking predicate pushdown, implicit type casts preventing optimization
+>
+> ### Example Answer
+>
+> Spark's Catalyst optimizer is the engine that transforms your SQL or DataFrame code into an efficient physical execution plan. It operates in four phases:
+>
+> **Phase 1 — Unresolved Logical Plan**: Parses SQL text or DataFrame operations into a tree of logical operators. Column names and types are NOT yet resolved — they're just strings.
+>
+> **Phase 2 — Analyzed Logical Plan**: Catalyst resolves column names against the catalog (Unity Catalog or Hive metastore), validates types, and confirms that all referenced tables and columns exist. A query referencing a non-existent column fails here.
+>
+> **Phase 3 — Optimized Logical Plan**: This is where the magic happens. Catalyst applies a set of **rule-based optimizations**:
+>
+> - **Predicate pushdown**: move `WHERE` filters as close to the data source as possible (before joins, into scan operators)
+> - **Column pruning**: drop columns that are never used downstream — reduces I/O
+> - **Constant folding**: evaluate `1 + 1` at compile time, not at runtime for every row
+> - **Filter reordering**: apply the most selective filter first to reduce rows early
+>
+> If **Cost-Based Optimization (CBO)** is enabled and statistics are available, Catalyst also uses table/column statistics to choose optimal join order and join strategy:
+>
+> ```sql
+> -- Collect statistics for CBO
+> ANALYZE TABLE orders COMPUTE STATISTICS FOR ALL COLUMNS;
+> ANALYZE TABLE customers COMPUTE STATISTICS FOR ALL COLUMNS;
+> ```
+>
+> **Phase 4 — Physical Plan**: Catalyst generates one or more physical plans and selects the best one based on cost estimates. This is where it decides between `BroadcastHashJoin` and `SortMergeJoin`, chooses scan methods, and plans shuffle boundaries.
+>
+> **Reading EXPLAIN output:**
+>
+> ```python
+> df.explain(mode="formatted")
+> ```
+>
+> ```text
+> == Physical Plan ==
+> *(3) Project [customer_id, name, total_revenue]
+> +- *(3) BroadcastHashJoin [customer_id], [customer_id], Inner
+>    :- *(3) Filter (total_revenue > 1000)        ← Filter AFTER join = bad
+>    :  +- *(3) HashAggregate(keys=[customer_id], functions=[sum(revenue)])
+>    :     +- Exchange hashpartitioning(customer_id, 200)   ← Shuffle
+>    :        +- *(1) Scan delta [customer_id, revenue]     ← Column pruning ✓
+>    +- BroadcastExchange                          ← Small table broadcast ✓
+>       +- *(2) Scan delta [customer_id, name]
+> ```
+>
+> **What to look for:**
+>
+> | Pattern | Good Sign | Bad Sign |
+> | ------- | --------- | -------- |
+> | `Filter` position | Before `Join` or inside `Scan` | After `Join` (filter too late) |
+> | Join type | `BroadcastHashJoin` for small dims | `SortMergeJoin` when one side is tiny |
+> | `Project` | Only needed columns listed | All columns passed through |
+> | `Exchange` | Minimal shuffles | Redundant shuffles |
+>
+> **Common pitfalls that block optimization:**
+>
+> - **Stale statistics**: CBO makes bad decisions (e.g., choosing sort-merge when broadcast is better) because row counts are outdated — re-run `ANALYZE TABLE`
+> - **UDFs blocking predicate pushdown**: Catalyst cannot push a Python UDF into a scan operator because it can't reason about UDF semantics — rewrite as built-in SQL functions when possible
+> - **Implicit type casts**: `WHERE string_col = 123` forces a cast on every row, preventing index/statistics use — always match types explicitly
+>
+> ### Follow-up Questions
+>
+> - How do stale statistics affect CBO decisions? What symptoms would you see?
+> - Why do UDFs prevent predicate pushdown, and how would you rewrite a UDF to allow it?
+> - How does AQE interact with Catalyst — does it replace Catalyst or complement it?
+
+---
+
+**[← Previous: Associate Fundamentals](./01-associate-fundamentals.md) | [↑ Back to Interview Prep](./README.md) | [Next: Delta Lake Internals →](./03-delta-lake-internals.md)**

@@ -157,7 +157,7 @@ Your company has 8 business domains (Sales, Marketing, Finance, HR, Legal, Engin
 >
 > Within each domain catalog, I'd use schemas for the medallion layers:
 >
-> ```
+> ```text
 > sales/
 > ├── bronze/     (raw ingested data, domain engineers only)
 > ├── silver/     (cleansed data, domain analysts + read from shared)
@@ -291,4 +291,4 @@ Your company has been running Databricks for 3 years with a legacy Hive metastor
 
 ---
 
-**[↑ Back to Databricks Interview Prep](./README.md) | [Next: Interview Questions — Delta Lake Internals](./02-delta-lake-internals.md) →**
+**[← Previous: Data Compliance & Quality](./12-data-compliance-quality.md) | [↑ Back to Interview Prep](./README.md) | [Next: ML System Design →](./14-ml-system-design.md)**
