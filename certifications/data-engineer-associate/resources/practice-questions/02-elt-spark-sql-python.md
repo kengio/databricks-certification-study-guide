@@ -511,4 +511,22 @@ D) The query is missing a `HAVING` clause to filter the aggregated results
 
 ---
 
+## Question 26: OPTIMIZE for File Compaction
+
+**Question** *(Easy)*: A data engineer has discovered that the data files related to a Delta table are quite small. They aim to merge these small files into larger ones to enhance performance. Which keywords can be utilized to compact the small files?
+
+A) VACUUM
+B) OPTIMIZE
+C) COMPACT
+D) DEFRAGMENT
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `OPTIMIZE`.
+>
+> The `OPTIMIZE` command compacts small files in a Delta table into larger ones, improving read performance by reducing the number of files that need to be scanned. This is different from `VACUUM`, which removes old data files no longer referenced by the transaction log.
+
+---
+
 **[← Previous: Domain 1: Databricks Lakehouse Platform](./01-lakehouse-platform.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 3: Incremental Data Processing](./03-incremental-processing.md) →**

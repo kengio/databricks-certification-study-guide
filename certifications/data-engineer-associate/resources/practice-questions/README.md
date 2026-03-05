@@ -21,12 +21,12 @@ Practice questions sourced from the Databricks DE Associate assessment, organize
 ## Question Count
 
 - [01-lakehouse-platform.md](01-lakehouse-platform.md) — 12 questions
-- [02-elt-spark-sql-python.md](02-elt-spark-sql-python.md) — 25 questions
+- [02-elt-spark-sql-python.md](02-elt-spark-sql-python.md) — 26 questions
 - [03-incremental-processing.md](03-incremental-processing.md) — 22 questions
 - [04-production-pipelines.md](04-production-pipelines.md) — 15 questions
 - [05-data-governance.md](05-data-governance.md) — 10 questions
 
-**Total: 84 questions**
+**Total: 85 questions**
 
 ## Format Note
 
