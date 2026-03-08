@@ -709,4 +709,55 @@ Your manager asks whether upgrading to Photon-enabled clusters is worth the high
 
 ---
 
-**[← Previous: Data Modeling](./06-data-modeling.md) | [↑ Back to Interview Prep](./README.md) | [Next: PySpark API →](./08-pyspark-api.md)**
+## Question 10: Predictive Optimization — Automatic Table Maintenance
+
+**Level**: Both
+**Type**: Conceptual
+
+**Scenario / Question**:
+You manage hundreds of Delta tables with different usage patterns. Manually scheduling OPTIMIZE and VACUUM for each is becoming unmanageable. What's the modern approach?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Predictive Optimization is a Unity Catalog feature that automatically runs OPTIMIZE, VACUUM, and ANALYZE TABLE on managed tables using ML-based scheduling — eliminating the need for manual maintenance jobs.
+>
+> ### Key Points to Cover
+>
+> - Automatically runs OPTIMIZE (compaction + Z-ordering), VACUUM, and ANALYZE TABLE
+> - ML model predicts which tables benefit most based on usage patterns and file statistics
+> - Works only on managed Unity Catalog tables (not external tables)
+> - Complements — but does not replace — auto-compaction for streaming workloads
+>
+> ### Example Answer
+>
+> Predictive Optimization removes the operational burden of table maintenance. Instead of writing cron jobs to OPTIMIZE and VACUUM each table on a fixed schedule, you enable it and let Databricks decide when each table needs maintenance.
+>
+> **Enabling and disabling:**
+>
+> ```sql
+> -- Enable for a specific table
+> ALTER TABLE prod.silver.orders
+> SET TBLPROPERTIES ('delta.enablePredictiveOptimization' = 'true');
+>
+> -- Enable for all tables in a schema (inherited by new tables)
+> ALTER SCHEMA prod.silver
+> SET TBLPROPERTIES ('delta.enablePredictiveOptimization' = 'true');
+>
+> -- Disable for a specific table
+> ALTER TABLE prod.silver.orders
+> SET TBLPROPERTIES ('delta.enablePredictiveOptimization' = 'false');
+> ```
+>
+> You can monitor what operations were performed through the system table `system.storage.predictive_optimization_operations_history`, which logs every auto-triggered OPTIMIZE, VACUUM, and ANALYZE with timestamps and metrics.
+>
+> One important distinction: predictive optimization handles batch table maintenance, while auto-compaction (`delta.autoOptimize.optimizeWrite`) handles real-time compaction during streaming writes. They serve different purposes and work together.
+>
+> ### Follow-up Questions
+>
+> - Can you use predictive optimization on external (unmanaged) Delta tables?
+> - How do you verify that predictive optimization is actually improving query performance?
+> - What happens if predictive optimization conflicts with a manually scheduled OPTIMIZE job?
+
+---
+
+**[← Previous: Data Modeling](./06-data-modeling.md) | [↑ Back to Interview Prep](./README.md) | [Next: PySpark & SQL Patterns →](./08-pyspark-sql-patterns.md)**

@@ -1,8 +1,9 @@
 ---
-tags: [interview-prep, pyspark, api]
+tags: [interview-prep, pyspark, sql]
+aliases: [PySpark API, 08-pyspark-api]
 ---
 
-# Interview Questions — PySpark API Deep Dive
+# Interview Questions — PySpark & SQL Patterns
 
 ---
 
@@ -463,6 +464,300 @@ Write a query to keep only the most recent record per `customer_id` from a `cust
 > - Can you use `QUALIFY` with `HAVING` in the same query? What order are they evaluated?
 > - Is `QUALIFY` available in standard Spark SQL (not Databricks SQL)? How would you handle deduplication in a PySpark job?
 > - You want the most recent record per customer, but if two records share the same `updated_at`, pick the one with the higher `customer_id`. How do you write the `QUALIFY` clause?
+
+---
+
+## Question 7: Recursive CTEs for Hierarchical Data
+
+**Level**: Professional
+**Type**: Deep Dive
+
+**Scenario / Question**:
+You have an `employees` table with `employee_id` and `manager_id` columns. You need to find all reports (direct and indirect) for a given manager. How do you solve this in Databricks SQL, and what do you do in PySpark if recursive CTEs are not available?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Use `WITH RECURSIVE` in Databricks SQL to traverse the hierarchy by anchoring on the target manager and recursively joining on `manager_id = employee_id` until no more child rows are found; in PySpark, implement an iterative loop that joins the current level's employees to their direct reports and unions results until the new level is empty.
+>
+> ### Key Points to Cover
+>
+> - `WITH RECURSIVE` syntax: anchor member (base case) + recursive member (self-join)
+> - Termination condition: recursion stops when the recursive member returns no new rows
+> - Max recursion depth: default limit exists to prevent infinite loops (circular references)
+> - PySpark iterative workaround: loop with join + union + anti-join to detect new rows
+> - Performance: recursive CTEs can be expensive on deep hierarchies — consider materializing levels
+>
+> ### Example Answer
+>
+> **Databricks SQL — `WITH RECURSIVE`**:
+>
+> ```sql
+> WITH RECURSIVE org_chart AS (
+>     -- Anchor: start with the target manager
+>     SELECT
+>         employee_id,
+>         employee_name,
+>         manager_id,
+>         0 AS depth
+>     FROM employees
+>     WHERE employee_id = 1001  -- target manager
+>
+>     UNION ALL
+>
+>     -- Recursive: find direct reports of the current level
+>     SELECT
+>         e.employee_id,
+>         e.employee_name,
+>         e.manager_id,
+>         oc.depth + 1
+>     FROM employees e
+>     INNER JOIN org_chart oc
+>         ON e.manager_id = oc.employee_id
+> )
+> SELECT * FROM org_chart
+> ORDER BY depth, employee_name;
+> ```
+>
+> The query starts with manager 1001 (anchor), then recursively finds everyone whose `manager_id` matches an `employee_id` already in the result set. It terminates when a recursive iteration returns zero new rows.
+>
+> **Guarding against infinite loops**: Circular references (A reports to B, B reports to A) will cause infinite recursion. Add a depth limit:
+>
+> ```sql
+> -- Add to the WHERE clause of the recursive member:
+> WHERE oc.depth < 20  -- safety limit
+> ```
+>
+> **PySpark iterative workaround** (when recursive CTEs are unavailable): Use a `while` loop that joins `current_level` to `employees` on `manager_id == employee_id`, unions each new level into the result, and terminates when no new rows are found or a depth limit is reached. The SQL recursive CTE is cleaner and lets the optimizer handle execution, but the iterative approach gives more control over termination and per-level transformations.
+>
+> ### Follow-up Questions
+>
+> - What is the default maximum recursion depth in Databricks SQL, and how do you change it?
+> - How would you find the shortest path between two employees in the org chart?
+> - If the `employees` table has 10 million rows but only 8 levels deep, which approach performs better and why?
+
+---
+
+## Question 8: PIVOT and UNPIVOT for Reshaping Data
+
+**Level**: Both
+**Type**: Deep Dive
+
+**Scenario / Question**:
+You have a table with columns `(product, month, revenue)` containing monthly revenue by product. Your BI tool requires the data reshaped so each month becomes its own column. How do you pivot this data in both SQL and PySpark, and how do you reverse it?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Use SQL `PIVOT` to rotate row values into columns by specifying an aggregate function and the list of pivot values, use `UNPIVOT` to reverse the transformation back to rows; in PySpark, use `.groupBy("product").pivot("month").agg(sum("revenue"))` — note that SQL PIVOT requires a static column list while PySpark can discover values dynamically (at the cost of an extra scan).
+>
+> ### Key Points to Cover
+>
+> - SQL `PIVOT`: requires explicit list of values to become columns
+> - SQL `UNPIVOT`: reverses pivot — converts columns back to rows
+> - PySpark `.pivot()`: can auto-discover values (but triggers extra job) or accept explicit list
+> - Static column list requirement: SQL PIVOT does not support dynamic column lists natively
+> - Dynamic pivot workaround: query distinct values first, then build the PIVOT SQL string
+>
+> ### Example Answer
+>
+> **Source data:**
+>
+> | product | month | revenue |
+> | ------- | ----- | ------- |
+> | Widget  | Jan   | 1000    |
+> | Widget  | Feb   | 1200    |
+> | Gadget  | Jan   | 800     |
+> | Gadget  | Feb   | 950     |
+>
+> **SQL PIVOT** — rows to columns:
+>
+> ```sql
+> SELECT *
+> FROM monthly_revenue
+> PIVOT (
+>     SUM(revenue)
+>     FOR month IN ('Jan' AS Jan, 'Feb' AS Feb, 'Mar' AS Mar)
+> );
+> ```
+>
+> Result:
+>
+> | product | Jan  | Feb  | Mar  |
+> | ------- | ---- | ---- | ---- |
+> | Widget  | 1000 | 1200 | NULL |
+> | Gadget  | 800  | 950  | NULL |
+>
+> **SQL UNPIVOT** — columns back to rows:
+>
+> ```sql
+> SELECT product, month, revenue
+> FROM pivoted_revenue
+> UNPIVOT (
+>     revenue
+>     FOR month IN (Jan, Feb, Mar)
+> );
+> ```
+>
+> This converts each month column back into a `(month, revenue)` row, dropping NULLs by default.
+>
+> **PySpark PIVOT**:
+>
+> ```python
+> from pyspark.sql.functions import sum
+>
+> pivoted = (df
+>     .groupBy("product")
+>     .pivot("month", ["Jan", "Feb", "Mar"])  # explicit list avoids extra scan
+>     .agg(sum("revenue")))
+>
+> pivoted.show()
+> ```
+>
+> Passing the values list to `.pivot()` is a best practice — without it, PySpark scans the entire column to discover distinct values, which is expensive on large datasets.
+>
+> **PySpark UNPIVOT** (using `stack`):
+>
+> ```python
+> from pyspark.sql.functions import expr
+>
+> unpivoted = (pivoted
+>     .select(
+>         "product",
+>         expr("""
+>             stack(3,
+>                 'Jan', Jan,
+>                 'Feb', Feb,
+>                 'Mar', Mar
+>             ) AS (month, revenue)
+>         """)
+>     )
+>     .filter("revenue IS NOT NULL"))
+>
+> unpivoted.show()
+> ```
+>
+> **Dynamic pivot workaround** — when you do not know the month values at code time:
+>
+> ```python
+> # Step 1: discover distinct values
+> months = [row.month for row in df.select("month").distinct().collect()]
+>
+> # Step 2: use the list in pivot
+> pivoted = (df
+>     .groupBy("product")
+>     .pivot("month", months)
+>     .agg(sum("revenue")))
+> ```
+>
+> Or in SQL, generate the query string dynamically in a notebook and execute it with `spark.sql()`.
+>
+> ### Follow-up Questions
+>
+> - What happens if a pivot value appears multiple times for the same group? How does the aggregation handle it?
+> - How do you handle pivoting on two columns simultaneously (e.g., month and region)?
+> - Why does PySpark's `.pivot()` without an explicit value list cause a performance penalty?
+
+---
+
+## Question 9: Semi-Joins, Anti-Joins, and EXISTS Patterns
+
+**Level**: Both
+**Type**: Deep Dive
+
+**Scenario / Question**:
+During a data migration, you need to find records that exist in the source table but are missing from the target table. What is the most efficient approach, and what pitfalls should you watch for?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Use a `LEFT ANTI JOIN` to find records in the source with no match in the target — it returns only non-matching rows without duplicating data; avoid `NOT IN` with nullable columns because a single NULL in the subquery causes the entire result to be empty, and prefer `NOT EXISTS` or anti-join for null-safe correctness and performance.
+>
+> ### Key Points to Cover
+>
+> - LEFT ANTI JOIN: returns rows from left table with no match in right — no duplication risk
+> - LEFT SEMI JOIN: returns rows from left table with at least one match in right — also no duplication
+> - `NOT EXISTS` vs `NOT IN`: `NOT IN` returns zero rows if the subquery contains any NULL value
+> - Performance: anti-join can broadcast the smaller table for hash-based filtering
+> - PySpark equivalents: `.join(other, condition, "left_anti")` and `.join(other, condition, "left_semi")`
+>
+> ### Example Answer
+>
+> **LEFT ANTI JOIN** — find records in source missing from target:
+>
+> ```sql
+> -- Records in source but NOT in target (missing from migration)
+> SELECT s.*
+> FROM source_table s
+> LEFT ANTI JOIN target_table t
+>     ON s.record_id = t.record_id;
+> ```
+>
+> This is the cleanest and safest approach. It returns only source rows with no corresponding target row, without any risk of row duplication.
+>
+> **LEFT SEMI JOIN** — find records in source that DO exist in target:
+>
+> ```sql
+> -- Records in source that WERE successfully migrated
+> SELECT s.*
+> FROM source_table s
+> LEFT SEMI JOIN target_table t
+>     ON s.record_id = t.record_id;
+> ```
+>
+> Unlike a regular `INNER JOIN`, a semi-join never duplicates rows from the left table — even if there are multiple matches in the right table. This makes it ideal for existence checks.
+>
+> **The `NOT IN` null-safety trap**:
+>
+> ```sql
+> -- DANGEROUS: returns ZERO rows if any record_id in target is NULL
+> SELECT *
+> FROM source_table
+> WHERE record_id NOT IN (SELECT record_id FROM target_table);
+>
+> -- SAFE: NOT EXISTS handles NULLs correctly
+> SELECT *
+> FROM source_table s
+> WHERE NOT EXISTS (
+>     SELECT 1
+>     FROM target_table t
+>     WHERE t.record_id = s.record_id
+> );
+> ```
+>
+> **Why `NOT IN` fails with NULLs**: SQL's three-valued logic means `5 NOT IN (1, 2, NULL)` evaluates to `UNKNOWN` (not `TRUE`), because `5 <> NULL` is `UNKNOWN`. When any element is UNKNOWN, the entire `NOT IN` is UNKNOWN, and the row is excluded.
+>
+> **PySpark equivalents**:
+>
+> ```python
+> # Anti-join: source records missing from target
+> missing = source_df.join(
+>     target_df,
+>     on="record_id",
+>     how="left_anti"
+> )
+>
+> # Semi-join: source records present in target
+> present = source_df.join(
+>     target_df,
+>     on="record_id",
+>     how="left_semi"
+> )
+> ```
+>
+> **Performance comparison**:
+>
+> | Pattern | Null-Safe | Duplicates Left Rows | Broadcast Eligible |
+> | ------- | --------- | -------------------- | ------------------ |
+> | LEFT ANTI JOIN | Yes | No | Yes (small right table) |
+> | NOT EXISTS | Yes | No | Depends on optimizer |
+> | NOT IN | No (fails with NULLs) | No | Depends on optimizer |
+> | LEFT JOIN + WHERE IS NULL | Yes | Yes (if multiple matches) | Yes |
+>
+> The `LEFT JOIN + WHERE t.key IS NULL` pattern is common but risky — if the right table has duplicate keys, it produces duplicate left rows before the filter, wasting memory and compute. Anti-join avoids this entirely.
+>
+> ### Follow-up Questions
+>
+> - When would you choose `NOT EXISTS` over `LEFT ANTI JOIN`? Are they always equivalent in Databricks?
+> - How does Spark's optimizer handle a semi-join when the right side is small enough to broadcast?
+> - You need to find records that exist in both source and target but have different column values. Which join type do you use?
 
 ---
 

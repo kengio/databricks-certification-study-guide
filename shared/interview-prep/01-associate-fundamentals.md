@@ -432,4 +432,197 @@ Explain at a high level how Apache Spark processes a SQL query or DataFrame tran
 
 ---
 
+## Question 11: SQL Warehouse Types — Classic vs Pro vs Serverless
+
+**Level**: Associate
+**Type**: Comparison
+
+**Scenario / Question**:
+Your organization is setting up Databricks SQL for its analytics team. There are three SQL warehouse types — Classic, Pro, and Serverless. How do you choose?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Classic warehouses offer basic SQL analytics at the lowest DBU cost; Pro adds Unity Catalog fine-grained access control, predictive optimization, and query federation; Serverless eliminates infrastructure management with instant startup and auto-scaling but at the highest DBU cost. Choose based on governance needs, operational overhead tolerance, and cost sensitivity.
+>
+> ### Key Points to Cover
+>
+> - **Classic**: Basic SQL analytics, lowest DBU rate, manual cluster management, limited governance features
+> - **Pro**: Adds Unity Catalog fine-grained access (row/column-level security), predictive optimization support, query federation to external databases, higher DBU rate than Classic
+> - **Serverless**: Instant startup (seconds vs minutes), fully managed infrastructure, auto-scaling with no idle cost between queries, highest DBU rate but zero operational overhead
+> - Decision framework: governance requirements, operational maturity, workload predictability, budget constraints
+> - All three support Photon engine for accelerated SQL execution
+> - Serverless is ideal for bursty or unpredictable query patterns; Classic/Pro for steady, predictable workloads
+>
+> ### Example Answer
+>
+> The three SQL warehouse types represent a spectrum from more control and lower unit cost to less management and higher unit cost. The right choice depends on your organization's priorities.
+>
+> **Classic SQL Warehouses** are the baseline option. They provide standard SQL analytics with Photon acceleration at the lowest DBU rate. You manage the cluster configuration — instance type, min/max clusters for concurrency scaling, auto-stop timeout. Classic is suitable for teams that have simple governance needs (workspace-level access control is sufficient) and predictable query patterns where you can right-size the warehouse.
+>
+> **Pro SQL Warehouses** add enterprise governance and advanced features on top of Classic:
+>
+> - **Fine-grained access control** via Unity Catalog — row-level and column-level security, dynamic data masking
+> - **Predictive optimization** — Databricks automatically runs `OPTIMIZE` and `VACUUM` on your tables based on usage patterns
+> - **Query federation** — query external databases (PostgreSQL, MySQL, SQL Server) directly from Databricks SQL without moving data
+>
+> The DBU rate is higher than Classic, but for any organization using Unity Catalog for governance, Pro is effectively required.
+>
+> **Serverless SQL Warehouses** remove infrastructure management entirely:
+>
+> - **Instant startup** — queries begin executing in seconds, no cluster warm-up
+> - **Auto-scaling** — Databricks manages capacity based on concurrent query load
+> - **No idle cost** — the warehouse scales to zero between queries (you only pay for actual query execution time)
+> - **No configuration** — no instance types, no cluster sizing, no auto-stop settings
+>
+> The DBU rate is the highest of the three, but total cost can be lower for bursty workloads because you eliminate idle compute.
+>
+> Here is a comparison across key dimensions:
+>
+> | Dimension | Classic | Pro | Serverless |
+> | --------- | ------- | --- | ---------- |
+> | DBU cost per unit | Lowest | Medium | Highest |
+> | Startup time | 5-10 min | 5-10 min | Seconds |
+> | Row/column security | No | Yes | Yes |
+> | Query federation | No | Yes | Yes |
+> | Predictive optimization | No | Yes | Yes |
+> | Infrastructure management | Manual | Manual | None |
+> | Idle cost | Yes (until auto-stop) | Yes (until auto-stop) | No |
+> | Best for | Simple analytics, tight budgets | Governed analytics, enterprise | Bursty workloads, zero-ops teams |
+>
+> **Decision framework**: If you need Unity Catalog fine-grained access control, eliminate Classic. If your team wants zero operational overhead and has unpredictable query volumes, choose Serverless. If you have predictable, steady workloads and want to minimize DBU spend while still getting governance features, choose Pro.
+>
+> ### Follow-up Questions
+>
+> - When would the total cost of Serverless actually be lower than Pro despite the higher DBU rate?
+> - How does concurrency scaling work on Classic and Pro warehouses?
+> - What is predictive optimization and how does it reduce manual maintenance?
+
+---
+
+## Question 12: Materialized Views vs Regular Views vs Live Tables
+
+**Level**: Associate
+**Type**: Comparison
+
+**Scenario / Question**:
+A colleague asks: "Why not just use a regular VIEW instead of creating a Gold Delta table?" Explain the options and when to use each.
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Regular views store only the SQL definition and re-execute the query on every read — cheap to create but expensive at query time for large data. Materialized views pre-compute and store results, auto-refreshing when underlying data changes — fast to query but consume storage. DLT live/streaming tables are pipeline-managed Delta tables for production ETL. Choose based on query frequency, data freshness needs, and compute-vs-storage cost trade-offs.
+>
+> ### Key Points to Cover
+>
+> - **Regular views**: Stored SQL definition only, re-executed on every query, zero storage cost, always fresh, expensive for complex queries over large data
+> - **Materialized views**: Pre-computed results stored as Delta tables, auto-refreshed (incrementally when possible, full recompute otherwise), fast reads, consume storage
+> - **DLT streaming tables**: Pipeline-managed, incremental processing, append-only, designed for Bronze/Silver ingestion
+> - **DLT materialized views (in DLT context)**: Fully recomputed on each pipeline update, used for Gold aggregations within DLT
+> - **Gold Delta tables**: Explicitly written by pipeline code (notebook or DLT), full control over write logic, most common production pattern
+> - `CREATE MATERIALIZED VIEW` syntax in Databricks SQL
+> - Refresh behavior: incremental refresh when the optimizer can determine the delta, full recompute otherwise
+>
+> ### Example Answer
+>
+> This is a common question that reveals important trade-offs between compute cost, query latency, and data freshness. There are four main options, each suited to different scenarios.
+>
+> **Regular Views** are the simplest option. A view is just a saved SQL query — no data is stored. Every time someone queries the view, the underlying SQL runs against the base tables:
+>
+> ```sql
+> CREATE VIEW gold.daily_revenue AS
+> SELECT
+>     date,
+>     region,
+>     SUM(amount) AS total_revenue,
+>     COUNT(DISTINCT customer_id) AS unique_customers
+> FROM silver.transactions
+> GROUP BY date, region;
+> ```
+>
+> This is perfectly fine when:
+>
+> - The underlying data is small (< 1 GB)
+> - The query is simple (no expensive joins or aggregations)
+> - The view is queried infrequently
+> - You need guaranteed real-time freshness (every query sees the latest data)
+>
+> The problem is when the view sits on top of a 500 GB Silver table with complex joins. Every dashboard refresh re-executes that expensive query, consuming cluster resources and making users wait.
+>
+> **Materialized Views** solve the performance problem by pre-computing and storing the result:
+>
+> ```sql
+> CREATE MATERIALIZED VIEW gold.daily_revenue AS
+> SELECT
+>     date,
+>     region,
+>     SUM(amount) AS total_revenue,
+>     COUNT(DISTINCT customer_id) AS unique_customers
+> FROM silver.transactions
+> GROUP BY date, region;
+> ```
+>
+> The results are stored as a Delta table. When users query the materialized view, they read from the pre-computed result — instant response, no re-execution of the aggregation. Databricks handles refreshing the materialized view when the underlying `silver.transactions` table changes.
+>
+> The refresh behavior is important to understand:
+>
+> - **Incremental refresh**: When the optimizer can determine what changed (e.g., new rows appended to the source), it processes only the delta — fast and cheap
+> - **Full recompute**: When changes are complex (e.g., updates or deletes in the source, or the query uses non-incremental operations), the entire materialized view is recomputed
+> - Refresh can be triggered manually with `REFRESH MATERIALIZED VIEW gold.daily_revenue` or happens automatically based on the warehouse's refresh schedule
+>
+> **DLT Streaming Tables and Materialized Views** are the DLT (LakeFlow) equivalents, managed within a pipeline:
+>
+> ```python
+> # DLT streaming table — incremental, append-only (Bronze/Silver)
+> @dlt.table
+> def silver_transactions():
+>     return dlt.read_stream("bronze_transactions").filter("amount > 0")
+>
+> # DLT materialized view — fully recomputed each pipeline run (Gold)
+> @dlt.table
+> def gold_daily_revenue():
+>     return (
+>         dlt.read("silver_transactions")
+>         .groupBy("date", "region")
+>         .agg(
+>             sum("amount").alias("total_revenue"),
+>             countDistinct("customer_id").alias("unique_customers")
+>         )
+>     )
+> ```
+>
+> In DLT, a streaming table processes only new data (incremental), while a materialized view is fully recomputed on each pipeline update. Both are managed by DLT — you define the logic, DLT handles execution, dependencies, and data quality.
+>
+> **Explicitly Written Gold Delta Tables** are the most common production pattern. Your pipeline code (notebook or DLT) writes the results to a Delta table using `MERGE`, `INSERT OVERWRITE`, or `APPEND`:
+>
+> ```sql
+> -- Explicit Gold table written by a scheduled job
+> INSERT OVERWRITE gold.daily_revenue
+> SELECT
+>     date,
+>     region,
+>     SUM(amount) AS total_revenue,
+>     COUNT(DISTINCT customer_id) AS unique_customers
+> FROM silver.transactions
+> WHERE date >= current_date() - INTERVAL 7 DAYS
+> GROUP BY date, region;
+> ```
+>
+> This gives you full control over refresh timing, partitioning, and write strategy, but you must manage the orchestration yourself (via Databricks Jobs).
+>
+> **When to use each**:
+>
+> | Option | Best for | Trade-off |
+> | ------ | -------- | --------- |
+> | Regular view | Small data, infrequent queries, must be real-time fresh | Expensive at query time for large data |
+> | Materialized view | Frequently queried aggregations, dashboard backing | Storage cost, slight staleness between refreshes |
+> | DLT streaming table | Incremental ingestion (Bronze/Silver) | Requires DLT pipeline infrastructure |
+> | Gold Delta table | Custom write logic, full control over refresh schedule | Manual orchestration required |
+>
+> ### Follow-up Questions
+>
+> - How does Databricks decide whether to incrementally refresh or fully recompute a materialized view?
+> - Can you create a materialized view on top of a streaming table?
+> - What are the storage and compute cost implications of materialized views vs regular views?
+
+---
+
 **[↑ Back to Interview Prep](./README.md) | [Next: File Formats & Spark Internals →](./02-file-formats-spark-internals.md)**

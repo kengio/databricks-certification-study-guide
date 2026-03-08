@@ -18,7 +18,7 @@ databricks-certification-study-guide/
 │   ├── cheat-sheets/       # Quick-reference sheets
 │   ├── appendix/           # Glossary, comparisons, errors, troubleshooting
 │   ├── code-examples/      # python/ and sql/ (always .md files)
-│   └── interview-prep/     # 10 topic files, 32 open-ended questions
+│   └── interview-prep/     # 15 topic files, 108 open-ended questions
 ├── learning-paths/         # Per-role study paths
 └── images/databricks-ui/   # Screenshots by feature area
 ```
@@ -117,4 +117,4 @@ Required: YAML frontmatter (`title`, `type: category`, `tags`, `status`), topic 
 - **cheat-sheets/**: delta-lake-commands, dlt-quick-ref, mlflow-quick-ref, pyspark-api-quick-ref, spark-configurations, sql-functions, unity-catalog-quick-ref, performance-optimization, describe-show-commands
 - **appendix/**: glossary, comparison-tables, error-messages, performance-troubleshooting, version-history
 - **code-examples/**: python/ (delta_lake_operations, python_patterns, streaming_examples, unity_catalog_setup), sql/ (cte_patterns, delta_lake_operations, window_functions)
-- **interview-prep/**: system-design, delta-lake-internals, pipeline-architecture, performance-optimization, streaming-cdc, governance-security, file-formats-spark, pyspark-api, python-code-quality, data-modeling
+- **interview-prep/**: associate-fundamentals, file-formats-spark-internals, delta-lake-internals, pipeline-architecture, streaming-cdc, data-modeling, performance-optimization, pyspark-sql-patterns, python-code-quality, governance-security, production-operations, data-compliance-quality, system-design, ml-system-design, genai-rag-design

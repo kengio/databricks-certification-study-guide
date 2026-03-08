@@ -400,4 +400,385 @@ You're building a DLT pipeline for financial transaction data. Compliance requir
 
 ---
 
+## Question 7: Multi-Task Job DAG Design
+
+**Level**: Professional
+**Type**: System Design
+
+**Scenario / Question**:
+You need to design a Databricks Workflow with 8 tasks that have complex dependencies — some tasks run in parallel, some require outputs from upstream tasks. How do you structure the DAG, handle data passing between tasks, and manage cluster allocation?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Define task dependencies using `depends_on` to build the DAG, use `dbutils.jobs.taskValues.set()` and `.get()` to pass small data between tasks, and allocate a shared job cluster for tightly coupled tasks while isolating resource-heavy tasks on dedicated clusters to balance cost and stability.
+>
+> ### Key Points to Cover
+>
+> - Task dependencies via `depends_on` — determines execution order and parallelism
+> - Shared job cluster vs per-task clusters (cost savings vs isolation)
+> - `dbutils.jobs.taskValues.set()` / `.get()` for passing small values (file paths, row counts) between tasks
+> - Conditional branching with if/else tasks and `run_if` conditions
+> - Error handling with task-level retries and `max_retries`
+> - DAB (Databricks Asset Bundles) for defining jobs as code
+>
+> ### Example Answer
+>
+> **Structuring the DAG**: The key principle is to maximize parallelism while respecting true data dependencies. For an 8-task pipeline, a typical pattern looks like:
+>
+> - **Layer 1** (parallel): Ingest tasks for independent data sources (e.g., `ingest_orders`, `ingest_customers`, `ingest_products`)
+> - **Layer 2** (parallel, depends on Layer 1): Transformation tasks that join/enrich data (e.g., `transform_order_details` depends on both `ingest_orders` and `ingest_products`)
+> - **Layer 3**: Aggregation and Gold table creation
+> - **Layer 4**: Data quality validation and notification
+>
+> **Data passing between tasks**: Use `taskValues` for lightweight metadata — never for large datasets. Tasks should write results to Delta tables and pass only references:
+>
+> ```python
+> # In upstream task: save a reference
+> row_count = df.count()
+> output_path = "catalog.schema.silver_orders"
+> dbutils.jobs.taskValues.set(key="order_count", value=row_count)
+> dbutils.jobs.taskValues.set(key="output_table", value=output_path)
+>
+> # In downstream task: retrieve the reference
+> order_count = dbutils.jobs.taskValues.get(
+>     taskKey="ingest_orders",
+>     key="order_count",
+>     default=0
+> )
+> output_table = dbutils.jobs.taskValues.get(
+>     taskKey="ingest_orders",
+>     key="output_table"
+> )
+> ```
+>
+> **Cluster allocation strategy**: Use a shared job cluster for lightweight tasks that run sequentially (saves cluster startup time), and dedicated clusters for memory-intensive or GPU tasks:
+>
+> - **Shared job cluster**: ingestion tasks, validation tasks, notification tasks
+> - **Dedicated cluster**: large joins, ML inference, tasks requiring different Spark configs
+>
+> **DAB definition with dependencies**:
+>
+> ```yaml
+> resources:
+>   jobs:
+>     daily_pipeline:
+>       name: "Daily Order Pipeline"
+>       job_clusters:
+>         - job_cluster_key: shared_etl
+>           new_cluster:
+>             spark_version: "15.4.x-scala2.12"
+>             num_workers: 4
+>             node_type_id: "i3.xlarge"
+>       tasks:
+>         - task_key: ingest_orders
+>           job_cluster_key: shared_etl
+>           notebook_task:
+>             notebook_path: ./notebooks/ingest_orders
+>           max_retries: 2
+>
+>         - task_key: ingest_customers
+>           job_cluster_key: shared_etl
+>           notebook_task:
+>             notebook_path: ./notebooks/ingest_customers
+>           max_retries: 2
+>
+>         - task_key: transform_order_details
+>           job_cluster_key: shared_etl
+>           depends_on:
+>             - task_key: ingest_orders
+>             - task_key: ingest_customers
+>           notebook_task:
+>             notebook_path: ./notebooks/transform_order_details
+>
+>         - task_key: validate_quality
+>           job_cluster_key: shared_etl
+>           depends_on:
+>             - task_key: transform_order_details
+>           notebook_task:
+>             notebook_path: ./notebooks/validate_quality
+> ```
+>
+> **Conditional branching**: Use if/else tasks to handle success vs failure paths — for example, if `validate_quality` reports failures above a threshold, route to an alerting task instead of the publish task.
+>
+> ### Follow-up Questions
+>
+> - What is the maximum size of data you can pass through `dbutils.jobs.taskValues`? What happens if you exceed it?
+> - How do you handle a scenario where one parallel task fails but the others succeed?
+> - When would you use a for-each task in a Workflow DAG?
+
+---
+
+## Question 8: File Arrival Triggers vs Cron vs API-Triggered Jobs
+
+**Level**: Both
+**Type**: Comparison
+
+**Scenario / Question**:
+Your team is building a data pipeline that processes files from an upstream system. Sometimes files arrive every 15 minutes, sometimes there is a 6-hour gap. How do you decide between file arrival triggers, cron schedules, and API-triggered runs?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Use file arrival triggers when processing is event-driven and file delivery is unpredictable, cron schedules when data lands on a fixed cadence and you want simplicity, and API-triggered runs when an external system (CI/CD, microservice, orchestrator) should control execution timing.
+>
+> ### Key Points to Cover
+>
+> - File arrival triggers: monitor a cloud storage path, fire when new files detected
+> - Cron schedules: fixed intervals (every hour, daily at midnight), predictable but may waste resources or miss data
+> - API-triggered: external system calls the Jobs API to start a run on demand
+> - `availableNow` trigger: a hybrid — streaming trigger that processes all available data then stops (batch semantics with streaming efficiency)
+> - Event-driven beats time-driven when file delivery is unpredictable
+>
+> ### Example Answer
+>
+> **Cron Schedule** (simplest):
+>
+> Run the pipeline every hour regardless of whether new data arrived. This works well when upstream delivers data on a predictable schedule:
+>
+> - **Pros**: Simple to set up, predictable compute costs, easy to monitor
+> - **Cons**: Wastes compute if no data arrived; may process stale data if files arrive mid-interval; latency = up to 1 full interval
+>
+> **File Arrival Trigger** (event-driven):
+>
+> The Workflow monitors a cloud storage path and triggers a run when new files appear. Ideal for your scenario with unpredictable file arrival:
+>
+> - **Pros**: Processes data as soon as it arrives, no wasted runs, handles irregular schedules
+> - **Cons**: Requires cloud event configuration (S3 Event Notifications, Azure Event Grid), potential for many small runs if files arrive frequently
+> - Configure a minimum wait time and batch window to avoid triggering on every single file
+>
+> **API-Triggered** (orchestrator-driven):
+>
+> An external system (Airflow, ADF, a microservice, or CI/CD) calls the Databricks Jobs API to start a run:
+>
+> - **Pros**: Full control from the orchestrator, can pass dynamic parameters, integrates with multi-system pipelines
+> - **Cons**: Requires external infrastructure, adds a dependency on the calling system
+>
+> **`availableNow` trigger** (hybrid):
+>
+> A streaming job with `.trigger(availableNow=True)` processes all files that have arrived since the last run, then stops. Schedule this with cron for batch-like behavior with Auto Loader's incremental tracking:
+>
+> ```python
+> (spark.readStream
+>     .format("cloudFiles")
+>     .option("cloudFiles.format", "parquet")
+>     .load("s3://bucket/landing/")
+>     .writeStream
+>     .format("delta")
+>     .trigger(availableNow=True)
+>     .option("checkpointLocation", "/checkpoints/orders")
+>     .toTable("bronze.orders"))
+> ```
+>
+> **Decision framework:**
+>
+> | Factor | Cron | File Arrival | API-Triggered | availableNow |
+> | ------ | ---- | ------------ | ------------- | ------------ |
+> | File arrival pattern | Predictable | Unpredictable | External event | Any |
+> | Latency requirement | Minutes–hours | Near-real-time | Depends on caller | Minutes |
+> | Setup complexity | Low | Medium | Medium | Low |
+> | Wasted compute | Possible | None | None | None |
+> | Multi-system orchestration | No | No | Yes | No |
+>
+> For your scenario with unpredictable 15-min to 6-hour gaps, I would use a **file arrival trigger** with a 5-minute batch window to group closely arriving files into a single run.
+>
+> ### Follow-up Questions
+>
+> - How does the file arrival trigger handle a burst of 1,000 files arriving in one minute?
+> - Can you combine a cron schedule with `availableNow` trigger? What are the benefits?
+> - What happens if the API-triggered job is already running when a second trigger arrives?
+
+---
+
+## Question 9: Workflows vs Airflow vs Azure Data Factory
+
+**Level**: Professional
+**Type**: Comparison
+
+**Scenario / Question**:
+Your team is debating whether to use Databricks Workflows natively or bring in Apache Airflow or Azure Data Factory for orchestration. What is your framework for deciding?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Use Databricks Workflows for Databricks-native DAGs with the lowest operational overhead, Airflow for multi-system orchestration with complex branching and open-source flexibility, and ADF/Step Functions for cloud-native pipelines tightly integrated with other cloud services — the decision hinges on the scope of orchestration, team skills, and existing infrastructure.
+>
+> ### Key Points to Cover
+>
+> - Databricks Workflows: lowest overhead for Databricks-centric pipelines, built-in retry/alerting, DAB-managed
+> - Airflow: best for multi-system orchestration (Databricks + Snowflake + APIs + dbt), rich operator ecosystem, open-source
+> - ADF / Step Functions: cloud-native, deep integration with Azure/AWS services, low-code UI
+> - Decision factors: scope of orchestration, team expertise, existing infrastructure, vendor lock-in tolerance
+> - Hybrid approach: Airflow/ADF as outer orchestrator, Databricks Workflows for inner DAGs
+>
+> ### Example Answer
+>
+> **Databricks Workflows** (best for Databricks-native):
+>
+> - **Strengths**: Zero additional infrastructure, tight integration with Databricks (clusters, Unity Catalog, DLT), task dependencies, shared job clusters, built-in monitoring, managed via Databricks Asset Bundles
+> - **Weaknesses**: Cannot orchestrate non-Databricks systems (APIs, Snowflake, dbt Cloud), limited branching compared to Airflow, vendor lock-in
+> - **Best for**: Teams where 80%+ of the pipeline runs inside Databricks
+>
+> **Apache Airflow** (best for multi-system orchestration):
+>
+> - **Strengths**: Rich operator ecosystem (DatabricksSubmitRunOperator, SnowflakeOperator, HTTP, S3, dbt), complex branching (BranchPythonOperator, trigger rules), open-source, runs anywhere, large community
+> - **Weaknesses**: Requires infrastructure to run (self-hosted or managed like MWAA/Astronomer), steeper learning curve, DAG parsing overhead at scale
+> - **Best for**: Pipelines spanning multiple platforms (Databricks + Snowflake + REST APIs + dbt)
+>
+> **Azure Data Factory / AWS Step Functions** (cloud-native):
+>
+> - **Strengths**: Tight integration with respective cloud ecosystems, low-code UI for non-engineers, managed infrastructure, built-in connectors for 100+ services
+> - **Weaknesses**: Limited expressiveness for complex logic, cloud vendor lock-in, harder to version control
+> - **Best for**: Cloud-native shops with non-engineering stakeholders building pipelines
+>
+> **Decision framework:**
+>
+> | Factor | Databricks Workflows | Airflow | ADF / Step Functions |
+> | ------ | -------------------- | ------- | -------------------- |
+> | Orchestration scope | Databricks only | Multi-system | Cloud ecosystem |
+> | Infrastructure overhead | None | Medium–High | None |
+> | Complex branching | Basic | Advanced | Basic |
+> | Version control / IaC | DABs, Terraform | DAGs as code | ARM/Bicep, Terraform |
+> | Team skills required | Databricks | Python + Airflow | Cloud platform |
+> | Vendor lock-in | Databricks | None (open-source) | Cloud provider |
+>
+> **Hybrid pattern**: Many mature teams use Airflow or ADF as the outer orchestrator (triggering Databricks jobs via API) while using Databricks Workflows for the inner DAG within Databricks. This gives you multi-system orchestration at the top level and Databricks-native features at the task level.
+>
+> ### Follow-up Questions
+>
+> - If you choose Airflow, how does `DatabricksSubmitRunOperator` differ from `DatabricksRunNowOperator`?
+> - How would you handle a pipeline that needs to run a dbt model, then a Databricks notebook, then call a REST API?
+> - What monitoring and alerting capabilities does each orchestrator provide out of the box?
+
+---
+
+## Question 10: Parameterization and Environment Promotion
+
+**Level**: Both
+**Type**: Deep Dive
+
+**Scenario / Question**:
+Your data engineering team has dev, staging, and prod environments. How do you promote a pipeline from dev to staging to prod without changing any code? What tools and patterns do you use?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Use Databricks Asset Bundles with `variables:` for environment-specific values and `targets:` for environment definitions (dev, staging, prod), so the same code deploys to different catalogs, schemas, and clusters by simply changing the deployment target — never hardcode catalog names, paths, or cluster IDs in notebook code.
+>
+> ### Key Points to Cover
+>
+> - Databricks Asset Bundles: `variables:` and `targets:` in `databricks.yml` for environment abstraction
+> - `dbutils.widgets` for notebook-level parameters passed from Workflows
+> - Task parameters in Workflow definitions (key-value pairs)
+> - Anti-pattern: hardcoded catalog/schema/path names in code
+> - CI/CD integration: deploy to staging on PR merge, prod on release tag
+>
+> ### Example Answer
+>
+> **The anti-pattern** — hardcoded environments:
+>
+> ```python
+> # BAD: changing environments requires code changes
+> df = spark.table("prod.sales.orders")
+> df.write.save("s3://prod-bucket/gold/orders")
+> ```
+>
+> **The solution** — parameterized code with Databricks Asset Bundles:
+>
+> **Step 1 — Define variables and targets in `databricks.yml`**:
+>
+> ```yaml
+> variables:
+>   catalog:
+>     description: "Target Unity Catalog"
+>   schema:
+>     description: "Target schema"
+>   storage_path:
+>     description: "Cloud storage base path"
+>
+> targets:
+>   dev:
+>     workspace:
+>       host: https://dev.cloud.databricks.com
+>     variables:
+>       catalog: dev_catalog
+>       schema: dev_sales
+>       storage_path: s3://dev-bucket
+>
+>   staging:
+>     workspace:
+>       host: https://staging.cloud.databricks.com
+>     variables:
+>       catalog: staging_catalog
+>       schema: staging_sales
+>       storage_path: s3://staging-bucket
+>
+>   prod:
+>     workspace:
+>       host: https://prod.cloud.databricks.com
+>     variables:
+>       catalog: prod_catalog
+>       schema: prod_sales
+>       storage_path: s3://prod-bucket
+>     run_as:
+>       service_principal_name: prod-pipeline-sp
+> ```
+>
+> **Step 2 — Reference variables in job definitions**:
+>
+> ```yaml
+> resources:
+>   jobs:
+>     order_pipeline:
+>       name: "Order Pipeline - ${var.catalog}"
+>       tasks:
+>         - task_key: ingest_orders
+>           notebook_task:
+>             notebook_path: ./notebooks/ingest_orders
+>             base_parameters:
+>               catalog: ${var.catalog}
+>               schema: ${var.schema}
+>               storage_path: ${var.storage_path}
+> ```
+>
+> **Step 3 — Read parameters in notebook code**:
+>
+> ```python
+> # Notebook code — environment-agnostic
+> catalog = dbutils.widgets.get("catalog")
+> schema = dbutils.widgets.get("schema")
+> storage_path = dbutils.widgets.get("storage_path")
+>
+> spark.sql(f"USE CATALOG {catalog}")
+> spark.sql(f"USE SCHEMA {schema}")
+>
+> df = spark.table("raw_orders")
+> df.write.format("delta").save(f"{storage_path}/gold/orders")
+> ```
+>
+> **Step 4 — Deploy to different environments**:
+>
+> ```text
+> # Deploy to dev (interactive development)
+> databricks bundle deploy -t dev
+>
+> # Deploy to staging (CI/CD on PR merge)
+> databricks bundle deploy -t staging
+>
+> # Deploy to prod (CI/CD on release tag)
+> databricks bundle deploy -t prod
+> ```
+>
+> The same notebooks, the same job definitions, deployed to different environments by changing only the target flag. No code changes required.
+>
+> **Additional parameterization patterns**:
+>
+> - **DLT pipelines**: Use the `configuration` block to pass catalog/schema as pipeline settings
+> - **SQL warehouses**: Use `spark.conf.get("pipeline.catalog")` in SQL notebooks
+> - **Secrets**: Use `dbutils.secrets.get(scope, key)` — scope names can vary per environment
+>
+> ### Follow-up Questions
+>
+> - How do you handle schema migrations (e.g., adding a column) across dev/staging/prod?
+> - What is the role of `run_as` and service principals in environment promotion?
+> - How do you prevent a developer from accidentally deploying to prod from their local machine?
+
+---
+
 **[← Previous: Delta Lake Internals](./03-delta-lake-internals.md) | [↑ Back to Interview Prep](./README.md) | [Next: Streaming & CDC →](./05-streaming-cdc.md)**

@@ -371,4 +371,328 @@ Explain how privilege inheritance works in Unity Catalog. If I `GRANT SELECT ON 
 
 ---
 
+## Question 6: Lakehouse Federation — Querying External Systems
+
+**Level**: Both
+**Type**: Deep Dive
+
+**Scenario / Question**:
+Your analytics team needs to join a Delta table in Unity Catalog with data living in PostgreSQL and Snowflake — but moving the data into Databricks isn't an option due to contractual and latency constraints. How do you enable cross-system queries without data movement?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Lakehouse Federation lets you create Unity Catalog connections to external databases (PostgreSQL, Snowflake, MySQL, etc.), register them as foreign catalogs, and query them with standard SQL alongside native Delta tables — all governed by UC permissions.
+>
+> ### Key Points to Cover
+>
+> - Lakehouse Federation creates read-only connections to external databases through Unity Catalog
+> - `CREATE CONNECTION` stores connection details (host, port, credentials via secrets)
+> - `CREATE FOREIGN CATALOG` maps the external database into the UC three-level namespace
+> - Federated tables are queried as `foreign_catalog.schema.table` — identical syntax to native tables
+> - Predicate and projection pushdown reduces data transferred from external systems
+> - UC permissions apply to federated tables — you can `GRANT SELECT` on foreign catalogs/schemas
+> - When to federate vs ingest: federate for low-frequency, small-volume queries; ingest for high-frequency, large-volume, or latency-sensitive workloads
+>
+> ### Example Answer
+>
+> Lakehouse Federation is the Databricks feature that lets you query external databases directly through Unity Catalog without copying data. It supports PostgreSQL, MySQL, SQL Server, Snowflake, BigQuery, Redshift, and others.
+>
+> **Setting up a connection to PostgreSQL:**
+>
+> ```sql
+> -- Step 1: Create a connection (credentials stored via Databricks secrets)
+> CREATE CONNECTION postgres_erp
+> TYPE POSTGRESQL
+> OPTIONS (
+>     host 'erp-db.company.internal',
+>     port '5432',
+>     user secret('federation-scope', 'pg-user'),
+>     password secret('federation-scope', 'pg-password')
+> );
+>
+> -- Step 2: Create a foreign catalog that maps to the external database
+> CREATE FOREIGN CATALOG erp_postgres
+> USING CONNECTION postgres_erp
+> OPTIONS (database 'erp_production');
+> ```
+>
+> **Setting up Snowflake:**
+>
+> ```sql
+> CREATE CONNECTION snowflake_finance
+> TYPE SNOWFLAKE
+> OPTIONS (
+>     host 'acme.snowflakecomputing.com',
+>     user secret('federation-scope', 'sf-user'),
+>     password secret('federation-scope', 'sf-password'),
+>     sfWarehouse 'ANALYTICS_WH'
+> );
+>
+> CREATE FOREIGN CATALOG finance_snowflake
+> USING CONNECTION snowflake_finance
+> OPTIONS (database 'FINANCE_DB');
+> ```
+>
+> **Querying across systems:**
+>
+> ```sql
+> -- Join a native Delta table with PostgreSQL and Snowflake data
+> SELECT
+>     o.order_id,
+>     c.customer_name,
+>     r.revenue_amount
+> FROM prod.silver.orders o
+> JOIN erp_postgres.public.customers c ON o.customer_id = c.id
+> JOIN finance_snowflake.reporting.revenue r ON o.order_id = r.order_id
+> WHERE o.order_date >= '2025-01-01';
+> ```
+>
+> **Performance considerations**: Databricks pushes predicates and column projections down to the external system, so `WHERE` clauses and column selections execute remotely. However, joins between two external systems still pull data into Databricks. For large-volume, high-frequency queries, ingesting data into Delta is almost always better — federation shines for ad-hoc analytics, low-frequency reporting, or data that contractually cannot be copied.
+>
+> **Governance**: Federated tables are governed by UC permissions like any other table. You can `GRANT SELECT ON CATALOG erp_postgres TO analysts` and they'll see it alongside native catalogs.
+>
+> ### Follow-up Questions
+>
+> - What happens to a federated query if the external database is down or slow?
+> - Can you write to external databases through Lakehouse Federation, or is it read-only?
+> - How does query performance compare between a federated query and the same data ingested into Delta?
+
+---
+
+## Question 7: Unity Catalog Volumes and External Locations
+
+**Level**: Both
+**Type**: Deep Dive
+
+**Scenario / Question**:
+Your team manages raw files — CSVs, JSONs, images, and ML model artifacts — alongside Delta tables. How does Unity Catalog handle governance for non-tabular data, and what are the key constructs involved?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Unity Catalog governs non-tabular data through Volumes (managed or external), which provide a file-system-like interface under the three-level namespace. External locations and storage credentials control access to cloud storage paths, enabling fine-grained governance over raw files just like tables.
+>
+> ### Key Points to Cover
+>
+> - Managed volumes: UC manages the storage location; files are stored under the catalog's managed storage
+> - External volumes: point to existing cloud storage (S3, ADLS, GCS) that you manage
+> - External locations: map a cloud storage path to a UC-governed object with an associated storage credential
+> - Storage credentials: wrap cloud IAM roles or service principals for secure access
+> - Volumes are accessed via `/Volumes/catalog/schema/volume_name/path/to/file`
+> - Migration from DBFS mounts: replace `/mnt/` paths with `/Volumes/` paths
+> - Use managed volumes for new data; external volumes for existing cloud storage you can't move
+>
+> ### Example Answer
+>
+> Unity Catalog extends governance beyond tables to raw files through two key constructs: **external locations** (cloud storage mapping) and **volumes** (file-system interface).
+>
+> **External location and storage credential setup:**
+>
+> ```sql
+> -- Step 1: Create a storage credential wrapping an IAM role
+> CREATE STORAGE CREDENTIAL landing_zone_cred
+> WITH (
+>     AWS_IAM_ROLE = 'arn:aws:iam::123456789:role/uc-landing-zone'
+> );
+>
+> -- Step 2: Create an external location mapping a cloud path
+> CREATE EXTERNAL LOCATION landing_zone
+> URL 's3://company-landing-zone/raw/'
+> WITH (STORAGE CREDENTIAL landing_zone_cred);
+> ```
+>
+> **Creating volumes:**
+>
+> ```sql
+> -- Managed volume (UC controls storage)
+> CREATE VOLUME prod.bronze.raw_uploads
+> COMMENT 'Uploaded CSVs and JSONs from partner feeds';
+>
+> -- External volume (you control storage)
+> CREATE EXTERNAL VOLUME prod.bronze.legacy_files
+> LOCATION 's3://company-landing-zone/raw/legacy/'
+> COMMENT 'Legacy files in existing S3 bucket';
+> ```
+>
+> **Accessing files in volumes:**
+>
+> ```python
+> # Read a CSV from a managed volume
+> df = (spark.read.format("csv")
+>     .option("header", "true")
+>     .load("/Volumes/prod/bronze/raw_uploads/partner_feed.csv"))
+>
+> # Copy files into a volume
+> dbutils.fs.cp(
+>     "s3://temp-bucket/upload.json",
+>     "/Volumes/prod/bronze/raw_uploads/upload.json"
+> )
+> ```
+>
+> **Managed vs external volumes**: Use managed volumes for new data where you want UC to handle storage lifecycle (drop volume = delete files). Use external volumes when the data already exists in cloud storage and moving it isn't feasible — UC governs access but doesn't own the storage.
+>
+> **Governance**: Volumes support `GRANT READ VOLUME` and `GRANT WRITE VOLUME` permissions, so you can control who reads or writes files. Combined with external locations, this replaces the old DBFS mount pattern with proper access control and audit logging.
+>
+> ### Follow-up Questions
+>
+> - What happens to the underlying files when you `DROP VOLUME` for managed vs external volumes?
+> - Can you use volumes with DLT pipelines, or are they only for ad-hoc access?
+> - How do you migrate existing notebooks that use `/mnt/data/` paths to use volumes?
+
+---
+
+## Question 8: Delta Sharing — External Partner Data Exchange
+
+**Level**: Professional
+**Type**: Scenario
+
+**Scenario / Question**:
+Your company needs to share curated revenue data with an external audit firm that doesn't use Databricks. The data must be filtered by region, access must be revocable, and all access must be logged. How do you set this up?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: Delta Sharing is an open protocol for secure data exchange without copying data. Create a share containing specific tables (optionally filtered by partition), create a recipient representing the audit firm, and provide them an activation link — they can then access the data from any client that supports the Delta Sharing protocol, including pandas, Spark, Power BI, and Tableau.
+>
+> ### Key Points to Cover
+>
+> - Delta Sharing is an open protocol — recipients don't need Databricks
+> - Open sharing: recipient gets an activation link and downloads a credential file (`.share` file)
+> - Databricks-to-Databricks sharing: native integration without credential files
+> - Partition filtering: share only specific partitions (e.g., `region = 'EMEA'`)
+> - Recipient activation flow: create recipient → share activation link → recipient downloads credentials
+> - Audit logging: all access is recorded in `system.access.audit`
+> - Access revocation: `DROP RECIPIENT` or `ALTER SHARE ... REMOVE TABLE` immediately cuts access
+>
+> ### Example Answer
+>
+> Delta Sharing lets you share data with external organizations securely without data copying or vendor lock-in.
+>
+> **Setting up the share:**
+>
+> ```sql
+> -- Step 1: Create a share (logical container for shared objects)
+> CREATE SHARE audit_revenue_share
+> COMMENT 'Revenue data for external auditors - EMEA region only';
+>
+> -- Step 2: Add a table with partition filtering
+> ALTER SHARE audit_revenue_share
+> ADD TABLE prod.gold.revenue_summary
+> PARTITION (region = 'EMEA')
+> COMMENT 'EMEA revenue only';
+>
+> -- Step 3: Create a recipient for the audit firm
+> CREATE RECIPIENT deloitte_audit_2025
+> COMMENT 'Deloitte external audit engagement 2025';
+> -- This generates an activation link
+>
+> -- Step 4: Grant the recipient access to the share
+> GRANT SELECT ON SHARE audit_revenue_share TO RECIPIENT deloitte_audit_2025;
+> ```
+>
+> **Recipient activation flow**: After creating the recipient, Databricks generates a one-time activation link. You send this link to the audit firm. They click it, download a `.share` credential file, and use it to connect from their tools:
+>
+> ```python
+> # Audit firm's side — reading shared data with pandas
+> import delta_sharing
+>
+> profile = "path/to/credential.share"
+> table_url = f"{profile}#audit_revenue_share.default.revenue_summary"
+> df = delta_sharing.load_as_pandas(table_url)
+> ```
+>
+> **Partition-level control**: The `PARTITION (region = 'EMEA')` clause means the audit firm only sees EMEA data — they cannot access other regions even if the underlying table contains global data. You can add multiple partition filters per table.
+>
+> **Revoking access**: When the audit engagement ends, revoke immediately:
+>
+> ```sql
+> -- Option 1: Remove the recipient entirely
+> DROP RECIPIENT deloitte_audit_2025;
+>
+> -- Option 2: Remove specific tables from the share
+> ALTER SHARE audit_revenue_share REMOVE TABLE prod.gold.revenue_summary;
+> ```
+>
+> **Audit logging**: All recipient access (data reads, schema inspections) is captured in Unity Catalog audit logs. You can query `system.access.audit` to see exactly when the audit firm accessed the data, what they queried, and how much data was transferred.
+>
+> ### Follow-up Questions
+>
+> - Can you share views or only tables? What about sharing materialized views?
+> - How do you rotate or expire the recipient's credentials?
+> - What's the difference between open sharing and Databricks-to-Databricks sharing in terms of setup and capabilities?
+
+---
+
+## Question 9: DBFS Deprecation and Mount Migration Strategy
+
+**Level**: Both
+**Type**: Deep Dive
+
+**Scenario / Question**:
+Your team uses DBFS mounts (`/mnt/data/`) extensively across hundreds of notebooks. Leadership has mandated a migration to Unity Catalog. What's your migration plan, and why is this migration necessary?
+
+> [!success]- Answer Framework
+>
+> **Short Answer**: DBFS mounts are insecure because they grant workspace-level access with no fine-grained permissions, no audit logging, and no lineage tracking. The migration path is: inventory all mount points, create corresponding UC external locations and volumes, update notebook paths from `/mnt/` to `/Volumes/`, test, and decommission mounts.
+>
+> ### Key Points to Cover
+>
+> - DBFS mounts are workspace-scoped — any user in the workspace can read all mounted data
+> - No fine-grained permissions: you cannot restrict access to specific folders or files within a mount
+> - No lineage tracking or audit logging for mount-based access
+> - Migration path: inventory → create UC objects → update paths → test → decommission
+> - Use `dbutils.fs.mounts()` to inventory existing mounts
+> - Replace `/mnt/data/` paths with `/Volumes/catalog/schema/volume/` paths
+> - Phased rollout: migrate one team or pipeline at a time, run old and new in parallel
+>
+> ### Example Answer
+>
+> DBFS mounts were the original way to access cloud storage in Databricks, but they have fundamental security limitations that Unity Catalog addresses.
+>
+> **Why mounts are a security risk**: When you create a mount with `dbutils.fs.mount()`, every user in the workspace can read every file under that mount. There's no way to restrict access to specific folders — it's all-or-nothing at the workspace level. There's also no audit trail of who read what, and no data lineage tracking.
+>
+> **Migration plan:**
+>
+> ```python
+> # Step 1: Inventory all existing mounts
+> for mount in dbutils.fs.mounts():
+>     print(f"Mount: {mount.mountPoint} -> {mount.source}")
+> # Output example:
+> # Mount: /mnt/raw -> s3://company-data-lake/raw/
+> # Mount: /mnt/curated -> s3://company-data-lake/curated/
+> ```
+>
+> **Step 2 — Create UC external locations and volumes:**
+>
+> ```sql
+> -- Map the cloud storage path to a UC-governed external location
+> CREATE EXTERNAL LOCATION raw_data_location
+> URL 's3://company-data-lake/raw/'
+> WITH (STORAGE CREDENTIAL data_lake_cred);
+>
+> -- Create an external volume for file access
+> CREATE EXTERNAL VOLUME prod.bronze.raw_data
+> LOCATION 's3://company-data-lake/raw/';
+> ```
+>
+> **Step 3 — Update notebook paths**: Search and replace across notebooks:
+>
+> ```python
+> # Old pattern (DBFS mount)
+> df = spark.read.csv("dbfs:/mnt/raw/customers.csv")
+>
+> # New pattern (UC volume)
+> df = spark.read.csv("/Volumes/prod/bronze/raw_data/customers.csv")
+> ```
+>
+> **Step 4 — Phased rollout**: Migrate one pipeline at a time. Run the updated pipeline alongside the old one to validate results match. Once validated, decommission the mount with `dbutils.fs.unmount("/mnt/raw")`.
+>
+> The key benefit beyond security is that UC volumes provide `GRANT READ VOLUME` / `GRANT WRITE VOLUME` permissions, audit logging, and lineage — capabilities that mounts simply don't have.
+>
+> ### Follow-up Questions
+>
+> - What happens to running jobs if you unmount a path that notebooks are actively reading from?
+> - Can you use volumes and mounts simultaneously during the migration period?
+> - How do you handle notebooks that use `dbfs:/` paths (not `/mnt/`) — does UC affect those too?
+
+---
+
 **[← Previous: Python Code Quality](./09-python-code-quality.md) | [↑ Back to Interview Prep](./README.md) | [Next: Production Operations →](./11-production-operations.md)**
