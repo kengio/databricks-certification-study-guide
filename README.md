@@ -397,7 +397,7 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 - ✅ **DE Associate topic-folder refresh** for the May 2026 Lakeflow Jobs terminology — complete (added CI/CD and Monitoring folder, refreshed terminology)
 - ✅ **ML Associate / ML Professional folder reorg** to match the Mar 2025 (4-domain) and Sep 2025 (3-domain) blueprints — complete
 - ✅ **Per-cert "final review" file** (20-minute exam-morning scan) modelled on the dp-800 pattern — complete (6 files, one per cert)
-- ⏳ **Per-cert mock-exam debrief files** mapping every question to a topic file and cheat sheet
+- ✅ **Per-cert mock-exam debrief files** mapping every question to a topic file and cheat sheet — complete (12 files, one per mock)
 - ✅ **CONTRIBUTORS.md** listing community contributors — complete (see [`CONTRIBUTORS.md`](./CONTRIBUTORS.md))
 
 ### Q1 2027 (6–12 months out)

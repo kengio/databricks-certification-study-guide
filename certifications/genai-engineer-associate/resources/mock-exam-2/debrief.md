@@ -20,6 +20,63 @@ tags:
 | Evaluation and Monitoring (12 %) | [`05-evaluation-and-monitoring/`](../../05-evaluation-and-monitoring/README.md) | [`mlflow-quick-ref`](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
 | Governance (8 %) | [`06-governance/`](../../06-governance/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 
+## Per-question quick map
+
+Heuristic mapping of every question in this mock to its primary domain + the topic folder and cheat sheet to revisit if you missed it. Classification is keyword-based on the scenario text; an answer-key reviewer should treat ambiguous classifications as "either of these two domains".
+
+| Q# | Difficulty | Domain | Topic folder | Cheat sheet |
+| :---: | :---: | :--- | :--- | :--- |
+| 1 | Medium | Design Applications | [link](../../03-design-applications/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 2 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 3 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 4 | Hard | Evaluation & Monitoring | [link](../../05-evaluation-and-monitoring/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 5 | Medium | Design Applications | [link](../../03-design-applications/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 6 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 7 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 8 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 9 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 10 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 11 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 12 | Medium | Evaluation & Monitoring | [link](../../05-evaluation-and-monitoring/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 13 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 14 | Hard | Evaluation & Monitoring | [link](../../05-evaluation-and-monitoring/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 15 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 16 | Easy | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 17 | Medium | Design Applications | [link](../../03-design-applications/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 18 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 19 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 20 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 21 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 22 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 23 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 24 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 25 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 26 | Hard | Application Development | [link](../../01-application-development/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 27 | Hard | Application Development | [link](../../01-application-development/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 28 | Easy | Assembling & Deploying | [link](../../02-assembling-and-deploying-apps/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 29 | Medium | Design Applications | [link](../../03-design-applications/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 30 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 31 | Hard | Assembling & Deploying | [link](../../02-assembling-and-deploying-apps/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 32 | Hard | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 33 | Medium | Application Development | [link](../../01-application-development/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 34 | Hard | Evaluation & Monitoring | [link](../../05-evaluation-and-monitoring/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 35 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 36 | Medium | Assembling & Deploying | [link](../../02-assembling-and-deploying-apps/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 37 | Medium | Design Applications | [link](../../03-design-applications/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 38 | Medium | Evaluation & Monitoring | [link](../../05-evaluation-and-monitoring/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 39 | Medium | Assembling & Deploying | [link](../../02-assembling-and-deploying-apps/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 40 | Medium | Data Preparation | [link](../../04-data-preparation/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 41 | Hard | Governance | [link](../../06-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 42 | Medium | Assembling & Deploying | [link](../../02-assembling-and-deploying-apps/README.md) | [link](../../../../shared/cheat-sheets/mlflow-quick-ref.md) |
+| 43 | Medium | Design Applications | [link](../../03-design-applications/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| 44 | Hard | Governance | [link](../../06-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 45 | Hard | Design Applications | [link](../../03-design-applications/README.md) | [link](../../../../shared/fundamentals/rag-vector-search-basics.md) |
+| GOV-1 | Medium | Governance | [link](../../06-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| GOV-2 | Medium | Governance | [link](../../06-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| AGENT-1 | Medium | Governance | [link](../../06-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| GW-1 | Medium | Governance | [link](../../06-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| EVAL-1 | Medium | Governance | [link](../../06-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+
 ## Per-section question map
 
 The GenAI mock-exam questions.md is a flat block (one question per scenario). Map missed questions to the 6-domain blueprint by the scenario subject.
