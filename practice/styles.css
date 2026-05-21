@@ -331,6 +331,12 @@ fieldset#quiz-choices .choice-letter {
 
 #quiz-feedback p { margin: 0.4rem 0; }
 #quiz-feedback p:first-of-type { font-weight: 500; }
+#quiz-feedback p.fb-topic {
+  font-weight: normal;
+  font-size: 0.9em;
+  color: var(--color-muted);
+  margin-top: 0;
+}
 
 .session-bar {
   display: flex;

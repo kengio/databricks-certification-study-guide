@@ -339,7 +339,10 @@
     diff.textContent = q.difficulty;
     diff.className = "difficulty " + q.difficulty;
 
-    $("#quiz-title").textContent = q.title;
+    // Note: question title is intentionally NOT rendered on the quiz card —
+    // many titles paraphrase the answer and would give it away. The title is
+    // still used in Stats → "Questions you're working on" and in the feedback
+    // panel shown after the user submits.
 
     const qBody = $("#quiz-question");
     clear(qBody);
@@ -408,6 +411,10 @@
     clear(fb);
     fb.appendChild(el("h4", {},
       correct ? "✓ Correct" : `✗ Incorrect — correct answer: ${q.correctAnswer}`));
+    if (q.title) {
+      fb.appendChild(el("p", { className: "fb-topic" },
+        el("strong", {}, "Topic: "), q.title));
+    }
     if (q.shortAnswer) {
       const p = el("p");
       p.appendChild(renderInlineToFragment(q.shortAnswer));
