@@ -63,6 +63,9 @@ print(dbutils.fs.ls(cdc_path))
 > [!note]
 > The code below lives in a notebook that you'll select when **creating** a pipeline. It is not run directly — Lakeflow Declarative Pipelines parses the `@dlt.*` decorators and builds the DAG.
 
+> [!tip]
+> **API naming.** The `import dlt` + `@dlt.table` names work and are still widely used, but the *current* Databricks naming is `from pyspark import pipelines as dp` with `@dp.table` and `dp.create_auto_cdc_flow(...)` (the new name for `dlt.apply_changes`). Both styles work; use either consistently.
+
 ```python
 import dlt
 from pyspark.sql import functions as F

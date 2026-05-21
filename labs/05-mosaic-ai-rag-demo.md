@@ -77,7 +77,7 @@ endpoint_name = "rag_lab_endpoint"
 if not any(e["name"] == endpoint_name for e in vsc.list_endpoints().get("endpoints", [])):
     vsc.create_endpoint(
         name=endpoint_name,
-        endpoint_type="STANDARD",  # alternatives: STORAGE_OPTIMIZED (cheaper, slower)
+        endpoint_type="STANDARD",  # Standard is the documented default; check current docs for cost-optimised tiers
     )
     print(f"Created endpoint {endpoint_name}; provisioning...")
 else:
@@ -96,7 +96,7 @@ vsc.create_delta_sync_index(
     pipeline_type="TRIGGERED",       # alternatives: CONTINUOUS
     primary_key="doc_id",
     embedding_source_column="content",
-    embedding_model_endpoint_name="databricks-bge-large-en",  # FMAPI-hosted embedding model
+    embedding_model_endpoint_name="databricks-gte-large-en",  # FMAPI-hosted embedding model (current default; BGE remains available)
 )
 
 print(f"Created sync index {index_name}; wait for first sync...")
@@ -131,16 +131,20 @@ Expected: D001 (Auto Loader) ranks first.
 
 ```python
 import mlflow
-from mlflow.pyfunc import ResponsesAgent
+from mlflow.pyfunc import ResponsesAgent, ResponsesAgentRequest, ResponsesAgentResponse
 from databricks.vector_search.client import VectorSearchClient
-from databricks_genai_inference import ChatCompletion
+from databricks_openai import DatabricksOpenAI  # current Databricks chat client
 
 class RagAgent(ResponsesAgent):
     """Compound: retrieve top-k chunks → augment prompt → generate via FMAPI."""
 
-    def predict(self, request):
-        # The last user message is the question
-        user_msg = next(m for m in reversed(request.messages) if m.role == "user").content
+    def predict(self, request: ResponsesAgentRequest) -> ResponsesAgentResponse:
+        # ResponsesAgent puts chat turns in request.input (not .messages)
+        last_user = next(
+            (msg for msg in reversed(request.input) if msg.get("role") == "user"),
+            request.input[-1],
+        )
+        user_msg = last_user["content"]
 
         # Step 1: retrieve top-3 docs
         vsc = VectorSearchClient()
@@ -155,28 +159,30 @@ class RagAgent(ResponsesAgent):
 
         context = "\n\n".join(f"[{r[0]}] {r[1]}" for r in retrieved)
 
-        # Step 2: augment + generate
+        # Step 2: augment + generate via the current Databricks chat client
+        client = DatabricksOpenAI()
         system = (
             "Answer using only the provided context. Cite the doc_id in brackets. "
             "If the context doesn't contain the answer, say you don't know."
         )
-        full_prompt = f"Context:\n{context}\n\nQuestion: {user_msg}"
-
-        response = ChatCompletion.create(
-            model="databricks-meta-llama-3-70b-instruct",
+        completion = client.chat.completions.create(
+            model="databricks-meta-llama-3-3-70b-instruct",  # current pay-per-token Llama
             messages=[
                 {"role": "system", "content": system},
-                {"role": "user",   "content": full_prompt},
+                {"role": "user",   "content": f"Context:\n{context}\n\nQuestion: {user_msg}"},
             ],
             max_tokens=512,
             temperature=0.0,
         )
 
-        return {
-            "choices": [{"message": {"role": "assistant",
-                                     "content": response.choices[0].message.content}}],
-            "usage": response.usage,
-        }
+        # ResponsesAgentResponse expects an `output` list of message-shaped dicts
+        return ResponsesAgentResponse(
+            output=[{
+                "role":    "assistant",
+                "content": completion.choices[0].message.content,
+            }],
+            custom_outputs={"usage": completion.usage.model_dump()},
+        )
 ```
 
 ## Step 6 — Log + register + deploy in one shot

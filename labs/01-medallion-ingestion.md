@@ -123,12 +123,11 @@ CREATE TABLE IF NOT EXISTS main.silver.orders (
 )
 USING DELTA;
 
-MERGE INTO main.silver.orders AS tgt
-USING (
+WITH typed AS (
   SELECT
     order_id,
     CAST(customer_id AS INT) AS customer_id,
-    CAST(amount AS DECIMAL(10, 2)) AS amount,
+    CAST(amount AS DECIMAL(10,2)) AS amount,
     currency,
     CAST(event_ts AS TIMESTAMP) AS event_ts,
     _ingest_ts,
@@ -136,12 +135,19 @@ USING (
   FROM main.bronze.orders
   WHERE order_id IS NOT NULL
     AND TRY_CAST(customer_id AS INT) IS NOT NULL
-    AND TRY_CAST(amount      AS DECIMAL(10, 2)) IS NOT NULL
+    AND TRY_CAST(amount      AS DECIMAL(10,2)) IS NOT NULL
     AND TRY_CAST(event_ts    AS TIMESTAMP) IS NOT NULL
-) AS src
+),
+deduped AS (
+  -- Strip the rn helper column so UPDATE SET * / INSERT * matches the target schema
+  SELECT order_id, customer_id, amount, currency, event_ts, _ingest_ts
+  FROM typed WHERE rn = 1
+)
+MERGE INTO main.silver.orders AS tgt
+USING deduped AS src
 ON tgt.order_id = src.order_id
-WHEN MATCHED AND src.rn = 1 AND src._ingest_ts > tgt._ingest_ts THEN UPDATE SET *
-WHEN NOT MATCHED AND src.rn = 1 THEN INSERT *;
+WHEN MATCHED AND src._ingest_ts > tgt._ingest_ts THEN UPDATE SET *
+WHEN NOT MATCHED THEN INSERT *;
 
 SELECT count(*) AS silver_rows,
        count(DISTINCT order_id) AS distinct_ids

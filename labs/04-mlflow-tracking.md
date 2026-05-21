@@ -180,6 +180,9 @@ w.serving_endpoints.create(
 
 The `auto_capture_config` enables Inference Tables — every request/response lands in `main.ml_lab.ridge_regression_inference_payload`.
 
+> [!note]
+> `auto_capture_config` is the legacy path. Newer endpoints can configure Inference Tables under `ai_gateway.inference_table_config` (same `catalog_name` / `schema_name` / `table_name_prefix` fields). Both forms still work; Databricks is migrating customers to the AI Gateway-managed form.
+
 ## Step 7 — Invoke the endpoint
 
 ```python
