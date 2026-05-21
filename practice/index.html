@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -68,6 +68,7 @@
         <span id="quiz-difficulty" class="difficulty"></span>
       </div>
       <article class="question-card">
+        <span id="quiz-watermark" class="q-watermark" aria-hidden="true"></span>
         <p id="quiz-question"></p>
         <fieldset id="quiz-choices" aria-label="Answer choices"></fieldset>
         <div id="quiz-feedback" hidden role="status" aria-live="polite"></div>
@@ -169,36 +170,15 @@
     </div>
   </div>
 
-  <!-- ============== STICKY BOTTOM ACTION BAR (quiz mode only) ============== -->
+  <!-- ============== STICKY BOTTOM ACTION BAR (quiz mode only) ==============
+       Layout (row 1): [Timer ←]   …   [kbd-hint] [Next/Skip/Submit →]
+       Layout (row 2): [session stats · bank stats · Stats Settings Reset Switch]
+
+       Primary actions live on the RIGHT (thumb-reachable for right-handed
+       users + standard mobile convention). Timer + ambient kbd-hint sit
+       on the left as passive information. -->
   <div class="actionbar" id="actionbar" hidden>
     <div class="actionbar-inner">
-      <div class="actionbar-left">
-        <button type="button" id="btn-submit" class="primary" disabled>Submit</button>
-        <button type="button" id="btn-skip" class="ghost">Skip</button>
-        <button type="button" id="btn-next" class="primary" hidden>Next question</button>
-        <span class="kbd-hint" aria-hidden="true" id="kbd-hint-pre">
-          <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> or <kbd>↑</kbd><kbd>↓</kbd> select &nbsp;
-          <kbd>↵</kbd> / <kbd>Space</kbd> submit &nbsp;
-          <kbd>S</kbd> skip
-        </span>
-        <span class="kbd-hint" aria-hidden="true" id="kbd-hint-post" hidden>
-          <kbd>↵</kbd> / <kbd>Space</kbd> / <kbd>N</kbd> / <kbd>→</kbd> next question
-        </span>
-      </div>
-      <div class="actionbar-right">
-        <span id="session-stats">0/0</span>
-        <span class="rh-sep">·</span>
-        <span id="bank-stats"></span>
-        <span class="actionbar-divider"></span>
-        <button type="button" id="btn-stats" class="link">Stats</button>
-        <button type="button" id="btn-settings" class="link">Settings</button>
-        <button type="button" id="btn-reset-top" class="link danger" title="Reset progress for this bank">Reset</button>
-        <button type="button" id="btn-exit" class="link">Switch bank</button>
-      </div>
-      <!-- Timer is a sibling of .actionbar-left/.actionbar-right so it can
-           live on the SAME row as Submit/Skip (pushed to the far right
-           via margin-left:auto) while the stats + controls wrap to a
-           second row below. -->
       <span id="quiz-timer" class="actionbar-timer" hidden
             role="timer" aria-live="off"
             title="Exam timer remaining" aria-label="Exam timer remaining">
@@ -213,17 +193,49 @@
         </span>
         <span class="timer-value">00:00</span>
       </span>
+      <div class="actionbar-left">
+        <span class="kbd-hint" aria-hidden="true" id="kbd-hint-pre">
+          <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> or <kbd>↑</kbd><kbd>↓</kbd> select &nbsp;
+          <kbd>↵</kbd> / <kbd>Space</kbd> submit &nbsp;
+          <kbd>S</kbd> skip
+        </span>
+        <span class="kbd-hint" aria-hidden="true" id="kbd-hint-post" hidden>
+          <kbd>↵</kbd> / <kbd>Space</kbd> / <kbd>N</kbd> / <kbd>→</kbd> next question
+        </span>
+        <!-- Source order is "Next, Skip, Submit" so the rightmost visible
+             button is always the primary action: Submit before submit,
+             Next after. -->
+        <button type="button" id="btn-next" class="primary" hidden>Next question</button>
+        <button type="button" id="btn-skip" class="ghost">Skip</button>
+        <button type="button" id="btn-submit" class="primary" disabled>Submit</button>
+      </div>
+      <div class="actionbar-right">
+        <span id="session-stats">0/0</span>
+        <span class="rh-sep">·</span>
+        <span id="bank-stats"></span>
+        <span class="actionbar-divider"></span>
+        <button type="button" id="btn-stats" class="link">Stats</button>
+        <button type="button" id="btn-settings" class="link">Settings</button>
+        <button type="button" id="btn-reset-top" class="link danger" title="Reset progress for this bank">Reset</button>
+        <button type="button" id="btn-exit" class="link">Switch bank</button>
+      </div>
     </div>
   </div>
 
   <footer class="page-footer">
-    <p>
-      A study aid, not the official exam.
-      <a href="https://github.com/kengio/databricks-certification-study-guide">View on GitHub</a>
+    <p class="footer-tag">A study aid, not the official exam.</p>
+    <p class="footer-meta">
+      <a href="https://github.com/kengio/databricks-certification-study-guide">Source on GitHub</a>
       <span class="rh-sep">·</span>
       <span class="colophon">MIT</span>
       <span class="rh-sep">·</span>
       © 2026 <a href="https://github.com/kengio">@kengio</a>
+    </p>
+    <p class="footer-colophon">
+      Set in <span class="colophon-mark">Geist</span> &amp;
+      <span class="colophon-mark">Geist Mono</span>
+      &nbsp;·&nbsp; No tracking
+      &nbsp;·&nbsp; Progress stays in your browser
     </p>
   </footer>
 
@@ -232,6 +244,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=29"></script>
+  <script src="app.js?v=31"></script>
 </body>
 </html>

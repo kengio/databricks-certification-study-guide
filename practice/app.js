@@ -26,7 +26,20 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "29";
+  const APP_VERSION = "31";
+
+  // Per-cert confetti palette. Pulled from the same gradients used on
+  // the cert picker cards (--gradient in styles.css) so the burst feels
+  // tied to "the cert you're studying", not a generic celebration. White
+  // is always included as a contrast accent.
+  const CERT_PALETTES = {
+    "data-engineer-associate":    ["#FF4F2C", "#FFAB1F", "#FFD27A", "#FF7A4F", "#FFFFFF"],
+    "data-engineer-professional": ["#6366F1", "#4F46E5", "#8B5CF6", "#A78BFA", "#FFFFFF"],
+    "data-analyst-associate":     ["#10B981", "#14B8A6", "#34D399", "#5EEAD4", "#FFFFFF"],
+    "ml-associate":               ["#A855F7", "#EC4899", "#C084FC", "#F472B6", "#FFFFFF"],
+    "ml-professional":            ["#F59E0B", "#DC2626", "#FBBF24", "#FB923C", "#FFFFFF"],
+    "genai-engineer-associate":   ["#06B6D4", "#3B82F6", "#22D3EE", "#60A5FA", "#FFFFFF"],
+  };
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -314,7 +327,12 @@
   function renderCertPicker(certBanks) {
     const setup = $("#setup");
     clear(setup);
+
+    setup.appendChild(el("p", { className: "eyebrow" }, "Practice quiz"));
     setup.appendChild(el("h2", {}, "Pick a certification"));
+    setup.appendChild(el("p", { className: "lead" },
+      "Drill by topic, take a full-length mock exam, or resume where you left off. " +
+      "Progress is stored locally — nothing leaves your browser."));
 
     if (certBanks.size === 0) {
       const p = el("p", {}, "No JSON banks found under practice/data/. Run ");
@@ -332,12 +350,30 @@
       const blueprint = practice.data.blueprintVersion;
       const totalQ = items.reduce((sum, it) => sum + it.data.questions.length, 0);
       const bankCount = items.length;
+      const mockCount = items.filter(it => it.data.kind === "mock").length;
 
+      // data-cert is the key: it activates the per-cert gradient defined
+      // in styles.css (.cert-card[data-cert="..."] { --gradient: ... }).
+      // Without this, every card defaulted to the orange/yellow fallback.
       const card = el("button", { type: "button", className: "cert-card",
+                                  dataset: { cert: certKey },
                                   onclick: () => renderBankPicker(certKey, items) });
+      card.appendChild(el("span", { className: "cert-card-arrow",
+                                    "aria-hidden": "true" }, "→"));
       card.appendChild(el("strong", {}, title));
+
+      // Big-numeral stat: the headline number is "total questions",
+      // which is the metric the user actually cares about at this step.
+      const stats = el("div", { className: "cert-card-stats" });
+      stats.appendChild(el("span", { className: "stat-num" }, String(totalQ)));
+      stats.appendChild(el("span", { className: "stat-label" },
+        `questions across\n${bankCount} bank${bankCount !== 1 ? "s" : ""}`));
+      card.appendChild(stats);
+
       card.appendChild(el("div", { className: "cert-card-meta" },
-        `${bankCount} bank${bankCount !== 1 ? "s" : ""} · ${totalQ} questions total`));
+        mockCount > 0
+          ? `Practice + ${mockCount} mock exam${mockCount !== 1 ? "s" : ""}`
+          : "Practice bank"));
       card.appendChild(el("div", { className: "cert-card-blueprint" },
         `Blueprint ${blueprint}`));
       list.appendChild(card);
@@ -502,6 +538,11 @@
     $("#quiz-cert").textContent = STATE.bank.certTitle;
     $("#quiz-counter").textContent =
       `Q${STATE.seenThisSession.size} this session · ${STATE.sessionCorrect}/${STATE.sessionTotal} correct`;
+    // Faded "Q.N" watermark in the card's top-right (decoration only).
+    const watermark = $("#quiz-watermark");
+    if (watermark) {
+      watermark.textContent = "Q." + STATE.seenThisSession.size;
+    }
     const domain = STATE.bank.domains.find(d => d.id === q.domain);
     $("#quiz-domain").textContent = domain ? domain.name : q.domain;
     const diff = $("#quiz-difficulty");
@@ -594,7 +635,12 @@
     const ox = rect.left + rect.width / 2;
     const oy = rect.top + rect.height / 2;
 
-    const colors = [
+    // Pick the palette for the cert the user is currently studying so
+    // the burst reads as "the cert's colours celebrating", not a
+    // generic candy-mix.
+    const sourceCert = (STATE.bank && (STATE.bank.sourceCert || STATE.bank.cert)) || "";
+    const baseCert = sourceCert.replace(/-mock-\d+$/i, "");
+    const colors = CERT_PALETTES[baseCert] || [
       "#FF4F2C", "#FFAB1F", "#10B981", "#14B8A6",
       "#3B82F6", "#6366F1", "#A855F7", "#EC4899",
       "#F59E0B", "#FFFFFF",

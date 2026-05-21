@@ -121,12 +121,29 @@ body {
   font-size: 16px;
   line-height: 1.55;
   letter-spacing: -0.005em;
-  background: var(--bg);
+  /* Soft warm glow at the top of the page — keeps the bg from reading
+     as a flat single tone. Layered above the solid --bg so per-theme
+     swapping still works. background-attachment: fixed keeps the glow
+     anchored to the viewport while content scrolls beneath. */
+  background:
+    radial-gradient(ellipse 90% 50% at 50% -10%,
+      color-mix(in srgb, var(--accent) 6%, transparent),
+      transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--fg);
   font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Improve line balance on big display text — keeps headings from
+   leaving a one-word orphan on the last line. Supported in Chrome,
+   Safari, Firefox; gracefully ignored elsewhere. */
+h2, .cert-card strong, .bank-card strong, .modal-title,
+#quiz-feedback h4, .lead {
+  text-wrap: balance;
 }
 
 .skip-link {
@@ -427,6 +444,46 @@ h2 {
   line-height: 1.05;
   margin: 0 0 2rem 0;
   color: var(--fg);
+}
+
+/* Editorial eyebrow — a small accent-coloured kicker that sits above
+   the main heading on picker pages. Establishes "this is curated /
+   sequenced content" before the user reads the title. */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.85rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 1.5px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+/* Lead paragraph — the friendly orientation line under the page title.
+   Generous size, muted colour, balanced wrapping so two-line leads
+   don't leave orphans. */
+.lead {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--fg-soft);
+  margin: -1.25rem 0 2.25rem 0;
+  max-width: 56ch;
+  font-weight: 400;
+}
+@media (max-width: 540px) {
+  .lead { font-size: 0.98rem; margin-top: -1rem; margin-bottom: 1.75rem; }
+  .eyebrow { font-size: 0.65rem; }
 }
 
 /* ---------- Buttons ---------- */
@@ -775,6 +832,36 @@ button.link.danger:hover { color: var(--negative); }
      container. min-width:0 lets the box shrink past its intrinsic width. */
   min-width: 0;
   overflow-wrap: break-word;
+  position: relative;        /* so .q-watermark can absolute-position inside */
+}
+
+/* "Q.N" watermark — a faded oversized numeral in the card's top-right
+   that signals "this is item N in a sequence". Editorial pull-quote
+   feel. Pure decoration, aria-hidden in the markup. */
+.q-watermark {
+  position: absolute;
+  top: 0.85rem;
+  right: 1.25rem;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: clamp(1.8rem, 4.5vw, 2.75rem);   /* smaller — text-paragraph clears it */
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--fg);
+  opacity: 0.035;                              /* fainter so any overlap reads as texture */
+  pointer-events: none;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  z-index: 0;
+}
+:root[data-theme="dark"] .q-watermark,
+:root:not([data-theme]) .q-watermark { opacity: 0.05; }
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] .q-watermark { opacity: 0.05; }
+}
+.question-card > *:not(.q-watermark) { position: relative; z-index: 1; }
+@media (max-width: 540px) {
+  .q-watermark { top: 0.5rem; right: 0.85rem; font-size: 1.5rem; opacity: 0.04; }
 }
 
 #quiz-feedback {
@@ -794,6 +881,13 @@ button.link.danger:hover { color: var(--negative); }
   letter-spacing: -0.012em;
   color: var(--fg);
   margin: 0 0 1.75rem 0;
+  /* Reserve right-side space for the Q.N watermark in the card corner.
+     Without this, long single-line questions wrap into the watermark
+     zone and the two read as a visual collision. */
+  padding-right: 4rem;
+}
+@media (max-width: 540px) {
+  #quiz-question { padding-right: 2.75rem; }
 }
 #quiz-question p { margin: 0.5rem 0; }
 #quiz-question p:first-child { margin-top: 0; }
@@ -935,12 +1029,19 @@ fieldset#quiz-choices label.incorrect .choice-text { color: var(--negative); }
   flex-wrap: wrap;
 }
 
-/* Timer sits on the SAME row as Submit/Skip, pushed to the far right
-   via margin-left:auto. The actionbar-right (stats + controls) wraps to
-   row 2 because of its flex-basis:100%. */
+/* New layout: Timer on the LEFT (passive info), Submit/Skip cluster
+   pushed to the RIGHT (thumb-reach for right-handers). Stats + nav
+   wrap to row 2 below via flex-basis:100%.
+     Row 1: [Timer ←]  …  [kbd-hint] [Next] [Skip] [Submit →]
+     Row 2: [session stats · bank stats · ... · Switch bank]
+*/
 #quiz-timer.actionbar-timer {
-  margin-left: auto;
+  order: 0;
+  margin-left: 0;
+}
+.actionbar-left {
   order: 1;
+  margin-left: auto;     /* push the cluster to the right edge */
 }
 .actionbar-right {
   display: inline-flex;
@@ -1023,16 +1124,26 @@ body.quiz-active .page-footer { display: none; }
 }
 #quiz-feedback.incorrect { border-left-color: var(--negative); }
 
+/* Verdict heading — large + confident sans, not the small mono-uppercase
+   it used to be. Pairs a coloured circular badge with the verdict label
+   so the post-submit moment lands with weight, like a stamp. */
 #quiz-feedback h4 {
-  margin: 0 0 0.85rem 0;
-  font-family: var(--mono);
-  font-size: 0.75rem;
+  margin: 0 0 0.9rem 0;
+  font-family: var(--sans);
+  font-size: 1.35rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--positive);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-transform: none;
 }
 #quiz-feedback.incorrect h4 { color: var(--negative); }
+@media (max-width: 540px) {
+  #quiz-feedback h4 { font-size: 1.15rem; }
+}
 
 #quiz-feedback p { margin: 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
 
@@ -1389,22 +1500,61 @@ pre code, pre[class*="language-"] code {
   :root:not([data-theme]) .token.function { color: #1D4ED8; }
 }
 
-/* ---------- Page footer ---------- */
+/* ---------- Page footer — refined as a colophon ----------
+   Three rhythmic lines of decreasing weight:
+     1. plain-language tagline (what the site is)
+     2. source / license / copyright (the meta line)
+     3. set notes (typeface, privacy)
+   Treated as a printer's mark below the content stream. */
 
 .page-footer {
   max-width: var(--content-w);
-  margin: 4rem auto 0;
-  padding: 1.5rem 2rem 2.5rem;
+  margin: 5rem auto 0;
+  padding: 2rem 2rem 3rem;
   border-top: 1px solid var(--hairline);
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.02em;
   color: var(--muted);
-  line-height: 1.7;
+  line-height: 1.65;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 .page-footer p { margin: 0; }
+.page-footer .footer-tag {
+  color: var(--fg-soft);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  font-family: var(--sans);
+}
+.page-footer .footer-meta { color: var(--muted); }
+.page-footer .footer-meta a {
+  color: var(--fg-soft);
+  text-decoration-color: var(--hairline);
+}
+.page-footer .footer-meta a:hover { text-decoration-color: var(--accent); color: var(--accent); }
+.page-footer .footer-colophon {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-style: italic;
+  letter-spacing: 0.015em;
+}
+.page-footer .footer-colophon .colophon-mark {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--fg-soft);
+  letter-spacing: 0;
+}
 .page-footer .colophon { font-style: italic; }
 .page-footer .rh-sep { color: var(--hairline); padding: 0 0.25rem; }
+@media (max-width: 540px) {
+  .page-footer { padding: 1.5rem 1rem 2.25rem; margin-top: 3.5rem; }
+  .page-footer .footer-tag { font-size: 0.74rem; }
+  .page-footer .footer-colophon { font-size: 0.64rem; }
+}
 
 /* ---------- Focus ---------- */
 
@@ -1737,9 +1887,10 @@ fieldset#quiz-choices input[type=radio]:checked:focus-visible {
   #stats table { font-size: 0.85rem; }
   #stats th, #stats td { padding: 0.6rem 0.55rem; }
 
-  /* Action bar — primary controls fill the row, timer wraps next to them */
+  /* Action bar — Submit/Skip cluster fills the row but stays right-aligned
+     so the thumb-reach side keeps the primary action even when wrapped */
   .actionbar-inner { padding: 0.55rem 0.9rem; gap: 0.5rem; min-height: 56px; }
-  .actionbar-left { gap: 0.5rem; width: 100%; }
+  .actionbar-left { gap: 0.5rem; width: 100%; justify-content: flex-end; }
   .actionbar-left button.primary { padding: 0.75rem 1.1rem; font-size: 0.9rem; }
   .actionbar-left button.ghost { padding: 0.65rem 1rem; font-size: 0.85rem; }
   .actionbar-timer { padding: 0.4rem 0.75rem 0.4rem 0.6rem; }
