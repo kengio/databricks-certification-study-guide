@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Databricks Certification Practice</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <header>
@@ -112,6 +113,13 @@
     <p>This is study material, not the official Databricks exam. Question banks are generated from the markdown practice-question files in this repo. <a href="./README.md">Read the docs</a> · <a href="./format.md">Format spec</a></p>
   </footer>
 
-  <script src="app.js?v=4"></script>
+  <!-- Prism.js for code syntax highlighting (loaded from CDN; data-manual prevents
+       auto-highlight so we can call Prism.highlightElement after dynamic insertion) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
+          data-manual crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

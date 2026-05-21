@@ -183,17 +183,73 @@ button.danger {
 
 button.danger:hover { background: var(--color-incorrect-bg); }
 
-/* Setup */
-#setup h3.bank-group-heading {
-  margin: 1.5rem 0 0.4rem 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+/* Setup — Step 1: certification picker */
+
+#setup .cert-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 700px) {
+  #setup .cert-list { grid-template-columns: 1fr 1fr; }
+}
+
+#setup .cert-card {
+  text-align: left;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-card-bg);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+#setup .cert-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--color-accent);
+}
+
+#setup .cert-card strong {
+  display: block;
+  font-size: 1.15rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+
+#setup .cert-card .cert-card-meta {
+  font-size: 0.92em;
+  color: var(--color-fg);
+  margin-bottom: 0.25rem;
+}
+
+#setup .cert-card .cert-card-blueprint {
+  font-size: 0.85em;
   color: var(--color-muted);
 }
-#setup h3.bank-group-heading:first-of-type {
-  margin-top: 1rem;
+
+/* Setup — Step 2: per-cert bank picker */
+
+#setup .back-button {
+  font-size: 0.85em;
+  padding: 0.25rem 0.6rem;
+  border: none;
+  background: none;
+  color: var(--color-link);
+  margin-bottom: 0.5rem;
+}
+
+#setup .back-button:hover { text-decoration: underline; }
+
+#setup .cert-subtitle {
+  margin: 0 0 1.25rem 0;
+  color: var(--color-muted);
+  font-size: 0.9em;
 }
 
 #setup .bank-list {
@@ -203,9 +259,7 @@ button.danger:hover { background: var(--color-incorrect-bg); }
 }
 
 @media (min-width: 700px) {
-  #setup .bank-list {
-    grid-template-columns: 1fr 1fr;
-  }
+  #setup .bank-list { grid-template-columns: 1fr 1fr 1fr; }
 }
 
 #setup .bank-card {
@@ -216,8 +270,23 @@ button.danger:hover { background: var(--color-incorrect-bg); }
   background: var(--color-card-bg);
 }
 
-#setup .bank-card strong { display: block; font-size: 1.05rem; margin-bottom: 0.25rem; }
-#setup .bank-card .bank-meta { font-size: 0.85em; color: var(--color-muted); }
+#setup .bank-card strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+#setup .bank-card .bank-meta {
+  font-size: 0.85em;
+  color: var(--color-fg);
+  margin-bottom: 0.15rem;
+}
+
+#setup .bank-card .bank-purpose {
+  font-size: 0.78em;
+  color: var(--color-muted);
+  font-style: italic;
+}
 
 /* Quiz */
 .quiz-header {
@@ -424,8 +493,12 @@ code {
   border-radius: 3px;
 }
 
-pre {
-  background: rgba(125,125,125,0.15);
+/* Code blocks — base styling, then override Prism's heavy background.
+   Prism's prism-tomorrow theme paints `pre[class*=language-]` dark; we re-tint
+   it so light-theme users see a light code block, dark-theme users see dark. */
+
+pre, pre[class*="language-"] {
+  background: var(--color-code-bg, rgba(125,125,125,0.12));
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
   overflow-x: auto;
@@ -435,13 +508,60 @@ pre {
   line-height: 1.45;
   white-space: pre;
   border: 1px solid var(--color-border);
+  color: var(--color-fg);
 }
 
-pre code {
+pre code, pre[class*="language-"] code {
   background: none;
   padding: 0;
   font-size: inherit;
   border-radius: 0;
+  color: inherit;
+  text-shadow: none;
+}
+
+/* Light theme: Prism's default token colors over a light background look fine,
+   but the bundled prism-tomorrow uses bright colors meant for dark backgrounds.
+   Tone token colors down on light mode so they don't glow against the soft bg. */
+:root:not([data-theme="dark"]) :not(pre) > code[class*="language-"] .token,
+:root:not([data-theme="dark"]) pre[class*="language-"] .token { text-shadow: none; }
+
+:root[data-theme="light"] {
+  --color-code-bg: #f3f3f3;
+}
+:root[data-theme="light"] .token.comment,
+:root[data-theme="light"] .token.prolog,
+:root[data-theme="light"] .token.doctype,
+:root[data-theme="light"] .token.cdata { color: #6a7480; }
+:root[data-theme="light"] .token.punctuation { color: #4a4a4a; }
+:root[data-theme="light"] .token.keyword,
+:root[data-theme="light"] .token.boolean,
+:root[data-theme="light"] .token.null { color: #a626a4; }
+:root[data-theme="light"] .token.string,
+:root[data-theme="light"] .token.char,
+:root[data-theme="light"] .token.attr-value { color: #50a14f; }
+:root[data-theme="light"] .token.number { color: #986801; }
+:root[data-theme="light"] .token.function,
+:root[data-theme="light"] .token.class-name { color: #4078f2; }
+:root[data-theme="light"] .token.operator { color: #4078f2; }
+
+:root[data-theme="dark"] { --color-code-bg: #1a1a1a; }
+
+/* Auto theme: follow prefers-color-scheme */
+@media (prefers-color-scheme: light) {
+  :root[data-theme="auto"], :root:not([data-theme]) {
+    --color-code-bg: #f3f3f3;
+  }
+  :root[data-theme="auto"] .token.comment,
+  :root:not([data-theme]) .token.comment { color: #6a7480; }
+  :root[data-theme="auto"] .token.keyword,
+  :root:not([data-theme]) .token.keyword { color: #a626a4; }
+  :root[data-theme="auto"] .token.string,
+  :root:not([data-theme]) .token.string { color: #50a14f; }
+  :root[data-theme="auto"] .token.number,
+  :root:not([data-theme]) .token.number { color: #986801; }
+  :root[data-theme="auto"] .token.function,
+  :root:not([data-theme]) .token.function { color: #4078f2; }
 }
 
 #quiz-question pre,

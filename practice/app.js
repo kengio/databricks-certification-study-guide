@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "4";
+  const APP_VERSION = "5";
 
   // Bank groups render as labelled sections in the picker.
   const CERTS = [
@@ -65,6 +65,7 @@
       difficulty: "",
     },
     sequentialIndex: 0,
+    certBanks: null,  // Map<certKey, items[]> from loadAllBankMetadata, cached on first load
   };
 
   // --- DOM helpers ---------------------------------------------------------
@@ -133,15 +134,15 @@
 
   const FENCE_OPEN_RE = /^\s*```(\w*)\s*$/;
   const FENCE_CLOSE_RE = /^\s*```\s*$/;
+  const PRISM_KNOWN_LANGS = new Set(["python", "sql", "scala", "javascript", "json", "bash"]);
 
   function renderMarkdown(s) {
     const frag = document.createDocumentFragment();
     const lines = s.split("\n");
     let buffer = [];
+    const pendingHighlights = [];  // <code> nodes to syntax-highlight after insertion
 
     const flushParagraphs = () => {
-      // `buffer` is a slab of lines; split it into paragraphs by blank lines
-      // and render each as a <p> with inline formatting + <br> for newlines.
       let para = [];
       const emit = () => {
         if (para.length === 0) return;
@@ -166,17 +167,25 @@
       const fence = lines[i].match(FENCE_OPEN_RE);
       if (fence) {
         flushParagraphs();
+        const lang = (fence[1] || "").toLowerCase();
         const codeLines = [];
         i++;
         while (i < lines.length && !FENCE_CLOSE_RE.test(lines[i])) {
           codeLines.push(lines[i]);
           i++;
         }
-        // Skip the closing fence (if present)
-        if (i < lines.length) i++;
+        if (i < lines.length) i++;  // skip closing fence
+
         const code = el("code");
         code.textContent = codeLines.join("\n");
+        if (lang && PRISM_KNOWN_LANGS.has(lang)) {
+          code.className = "language-" + lang;
+          pendingHighlights.push(code);
+        }
         const pre = el("pre");
+        if (lang && PRISM_KNOWN_LANGS.has(lang)) {
+          pre.className = "language-" + lang;
+        }
         pre.appendChild(code);
         frag.appendChild(pre);
         continue;
@@ -185,6 +194,16 @@
       i++;
     }
     flushParagraphs();
+
+    // Run Prism.highlightElement after each code block is in the fragment.
+    // Prism reads textContent on the node, so the node needs to exist (it does,
+    // inside the fragment) but doesn't need to be in the live DOM yet.
+    if (window.Prism && pendingHighlights.length) {
+      for (const code of pendingHighlights) {
+        try { window.Prism.highlightElement(code); }
+        catch (_) { /* Prism failure shouldn't break the quiz */ }
+      }
+    }
     return frag;
   }
 
@@ -200,15 +219,29 @@
     return file + (file.includes("?") ? "&" : "?") + "v=" + APP_VERSION;
   }
 
-  async function probeBanks() {
-    const available = [];
-    for (const b of KNOWN_BANKS) {
+  async function loadAllBankMetadata() {
+    // Fetch every known bank's JSON in parallel; group by sourceCert.
+    // Returns Map<certId, [{bank, data}, ...]> preserving CERTS order.
+    const results = await Promise.all(KNOWN_BANKS.map(async (b) => {
       try {
-        const res = await fetch(bustedUrl(b.file), { method: "HEAD", cache: "no-cache" });
-        if (res.ok) available.push(b);
-      } catch (_) { /* file missing — skip */ }
+        const res = await fetch(bustedUrl(b.file), { cache: "no-cache" });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return { bank: b, data };
+      } catch (_) { return null; }
+    }));
+    const byCert = new Map();
+    for (const c of CERTS) byCert.set(c, []);
+    for (const r of results) {
+      if (!r) continue;
+      const sourceCert = r.data.sourceCert || r.data.cert;
+      if (byCert.has(sourceCert)) byCert.get(sourceCert).push(r);
     }
-    return available;
+    // Drop certs with no available banks
+    for (const c of CERTS) {
+      if (byCert.get(c).length === 0) byCert.delete(c);
+    }
+    return byCert;
   }
 
   async function loadBank(certInfo) {
@@ -222,11 +255,28 @@
     show("quiz");
   }
 
-  function renderSetup(available) {
+  function bankTypeLabel(item) {
+    if (item.data.kind === "mock") {
+      const m = item.data.certTitle.match(/—\s*(Mock Exam \d+)/i);
+      return m ? m[1] : "Mock Exam";
+    }
+    return "Practice questions";
+  }
+
+  function bankTypeSubtitle(item) {
+    return item.data.kind === "mock"
+      ? "full-length · all domains"
+      : "drill by topic · adaptive";
+  }
+
+  // --- Step 1: certification picker ----------------------------------------
+
+  function renderCertPicker(certBanks) {
     const setup = $("#setup");
     clear(setup);
-    setup.appendChild(el("h2", {}, "Pick a question bank"));
-    if (available.length === 0) {
+    setup.appendChild(el("h2", {}, "Pick a certification"));
+
+    if (certBanks.size === 0) {
       const p = el("p", {}, "No JSON banks found under practice/data/. Run ");
       p.appendChild(el("code", {}, "python3 practice/build.py"));
       p.appendChild(document.createTextNode(" first."));
@@ -234,31 +284,61 @@
       return;
     }
 
-    // Group available banks by .group field while preserving insertion order
-    const groups = new Map();
-    for (const b of available) {
-      const key = b.group || "practice";
-      if (!groups.has(key)) groups.set(key, []);
-      groups.get(key).push(b);
-    }
+    const list = el("div", { className: "cert-list" });
+    for (const [certKey, items] of certBanks) {
+      // Use the practice bank for cert metadata; fall back to first available
+      const practice = items.find(it => it.data.kind !== "mock") || items[0];
+      const title = practice.data.certTitle.replace(/\s*—\s*Mock Exam \d+$/i, "");
+      const blueprint = practice.data.blueprintVersion;
+      const totalQ = items.reduce((sum, it) => sum + it.data.questions.length, 0);
+      const bankCount = items.length;
 
-    for (const [groupKey, banks] of groups) {
-      setup.appendChild(el("h3", { className: "bank-group-heading" },
-        GROUP_LABELS[groupKey] || groupKey));
-      const list = el("div", { className: "bank-list" });
-      for (const b of banks) {
-        const button = el("button", { type: "button", className: "bank-card",
-                                      onclick: () => loadBank(b) }, b.cert);
-        fetch(bustedUrl(b.file), { cache: "no-cache" }).then(r => r.json()).then(d => {
-          clear(button);
-          button.appendChild(el("strong", {}, d.certTitle || d.cert));
-          button.appendChild(el("div", { className: "bank-meta" },
-            `${d.questions.length} questions · ${d.domains.length} domains · blueprint ${d.blueprintVersion}`));
-        }).catch(() => { /* keep fallback text */ });
-        list.appendChild(button);
-      }
-      setup.appendChild(list);
+      const card = el("button", { type: "button", className: "cert-card",
+                                  onclick: () => renderBankPicker(certKey, items) });
+      card.appendChild(el("strong", {}, title));
+      card.appendChild(el("div", { className: "cert-card-meta" },
+        `${bankCount} bank${bankCount !== 1 ? "s" : ""} · ${totalQ} questions total`));
+      card.appendChild(el("div", { className: "cert-card-blueprint" },
+        `Blueprint ${blueprint}`));
+      list.appendChild(card);
     }
+    setup.appendChild(list);
+  }
+
+  // --- Step 2: bank picker (per cert) --------------------------------------
+
+  function renderBankPicker(certKey, items) {
+    const setup = $("#setup");
+    clear(setup);
+
+    const practice = items.find(it => it.data.kind !== "mock") || items[0];
+    const title = practice.data.certTitle.replace(/\s*—\s*Mock Exam \d+$/i, "");
+
+    setup.appendChild(el("button", { type: "button", className: "back-button",
+                                     onclick: () => renderCertPicker(STATE.certBanks) },
+      "← All certifications"));
+    setup.appendChild(el("h2", {}, title));
+    setup.appendChild(el("p", { className: "cert-subtitle" },
+      `Blueprint ${practice.data.blueprintVersion}`));
+
+    // Sort items: practice first, then mock-1, then mock-2
+    const sorted = [...items].sort((a, b) => {
+      const order = it => it.data.kind === "mock" ? (it.data.cert.endsWith("-mock-2") ? 2 : 1) : 0;
+      return order(a) - order(b);
+    });
+
+    const list = el("div", { className: "bank-list" });
+    for (const it of sorted) {
+      const card = el("button", { type: "button", className: "bank-card",
+                                  onclick: () => loadBank(it.bank) });
+      card.appendChild(el("strong", {}, bankTypeLabel(it)));
+      card.appendChild(el("div", { className: "bank-meta" },
+        `${it.data.questions.length} questions · ${it.data.domains.length} domains`));
+      card.appendChild(el("div", { className: "bank-purpose" },
+        bankTypeSubtitle(it)));
+      list.appendChild(card);
+    }
+    setup.appendChild(list);
   }
 
   // --- LocalStorage --------------------------------------------------------
@@ -614,10 +694,17 @@
     $("#btn-settings").addEventListener("click", () => show("settings"));
     $("#btn-settings-cancel").addEventListener("click", () => show("quiz"));
     $("#btn-settings-apply").addEventListener("click", applySettings);
-    $("#btn-exit").addEventListener("click", () => location.reload());
+    $("#btn-exit").addEventListener("click", () => {
+      if (STATE.certBanks) renderCertPicker(STATE.certBanks);
+      else location.reload();
+      show("setup");
+    });
     $("#btn-theme").addEventListener("click", cycleTheme);
 
-    probeBanks().then(renderSetup);
+    loadAllBankMetadata().then(certBanks => {
+      STATE.certBanks = certBanks;
+      renderCertPicker(certBanks);
+    });
   }
 
   if (document.readyState === "loading") {
