@@ -252,5 +252,5 @@ df.withColumn("pct", score_to_percent(col("score")))
 
 - [Spark Configurations](spark-configurations.md)
 - [Performance Optimization](performance-optimization.md)
-- [Interview Prep — PySpark API](../interview-prep/08-pyspark-api.md)
+- [Interview Prep — PySpark API](../interview-prep/08-pyspark-sql-patterns.md)
 - [Spark Fundamentals](../fundamentals/spark-fundamentals.md)

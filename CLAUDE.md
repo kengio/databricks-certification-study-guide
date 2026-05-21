@@ -90,7 +90,12 @@ Terminal sections in this exact order:
 7. `## Official Documentation`
 8. `---` separator + navigation link (always last)
 
-**Nav format:** `**[← Previous](./NN-prev.md) | [↑ Back to Section](./README.md) | [Next →](./NN-next.md)**`
+**Nav format:** end each topic file with a three-segment bold line — Previous file link, Back-to-Section link to `./README.md`, Next file link — separated by ` | `. Schematic (replace `<prev>` and `<next>` with the actual sibling filenames):
+
+```text
+**[← Previous: <Prev Topic>](<prev>.md) | [↑ Back to Section](README.md) | [Next: <Next Topic> →](<next>.md)**
+```
+
 
 - Part 1 files: end with only forward link to Part 2
 - Part 2 files: full three-way nav
