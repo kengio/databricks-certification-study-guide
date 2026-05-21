@@ -385,7 +385,7 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 - ✅ **MIT license + open-source release** — complete
 - ✅ **Refresh all 6 cert READMEs to current exam-guide versions** — complete
 - ✅ **2025–2026 update callouts** in the top-level README and per-cert READMEs — complete
-- 🔄 **Topic-folder reorganisation for DE Professional** to match the November 2025 10-domain structure
+- ✅ **Topic-folder reorganisation for DE Professional** to match the November 2025 10-domain structure — complete
 - 🔄 **Topic-folder reorganisation for Data Analyst Associate** to surface AI/BI Genie Spaces as its own folder
 - 🔄 **Topic-folder reorganisation for GenAI Engineer Associate** to match the March 2026 6-domain structure
 - 🔄 **Refreshed mock exams** for the three certifications above
@@ -414,7 +414,7 @@ Legend: ✅ done · 🔄 in progress / next up · ⏳ planned · 🌱 ideas bein
 databricks-certification-study-guide/
 ├── certifications/
 │   ├── data-engineer-associate/         # 5 topic folders + resources/
-│   ├── data-engineer-professional/      # 8 topic folders + resources/
+│   ├── data-engineer-professional/      # 10 topic folders + resources/ (Nov 2025 blueprint)
 │   ├── data-analyst-associate/          # 5 topic folders + resources/
 │   ├── ml-associate/                    # 4 topic folders + resources/
 │   ├── ml-professional/                 # 4 topic folders + resources/

@@ -232,4 +232,4 @@ query.awaitTermination()  # Block until done or error
 - [Auto Loader Quick Reference](./auto-loader-quick-ref.md)
 - [Streaming Examples (Python)](../code-examples/python/streaming_examples.md)
 - [Streaming Fundamentals](../fundamentals/streaming-fundamentals.md)
-- [Structured Streaming (DE Pro)](../../certifications/data-engineer-professional/01-data-processing/03-structured-streaming-part1.md)
+- [Structured Streaming (DE Pro)](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/03-structured-streaming-part1.md)

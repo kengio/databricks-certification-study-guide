@@ -527,7 +527,7 @@ ORDER BY query_count DESC;
 
 - [Access Control and Permissions](./02-access-control-permissions.md)
 - [Unity Catalog Basics](./01-unity-catalog-basics.md)
-- [Data Sharing (DE Professional)](../../data-engineer-professional/04-security-governance/03-data-sharing.md)
+- [Data Sharing (DE Professional)](../../data-engineer-professional/10-data-sharing-and-federation/01-delta-sharing.md)
 
 ## Official Documentation
 

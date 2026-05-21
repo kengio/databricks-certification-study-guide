@@ -16,11 +16,11 @@ aliases:
 >
 > - Restructured from 5 broad topics into **10 explicitly weighted domains**
 > - **Data Sharing and Federation** (Delta Sharing, Lakehouse Federation) is now a first-class domain (5 %)
-> - **Data Modelling** is now a first-class domain (6 %) — previously bundled inside other topics
+> - **Data Modelling** is now a first-class domain (6 %) — renamed and re-weighted; previously a top-level section in the older blueprint
 > - Stronger emphasis on **Cost & Performance Optimization** (13 %)
-> - Pass / fail — **Databricks no longer publishes a numeric passing score**
+> - Pass / fail — **the Nov 30, 2025 exam guide does not publish a numeric passing score**
 >
-> The official source of truth: [Databricks Certified Data Engineer Professional](https://www.databricks.com/learn/certification/data-engineer-professional). Topic folders in this guide track the prior structure; reorganisation to the 10-domain layout is on the [guide roadmap](../../README.md#roadmap-for-the-guide-itself).
+> The official source of truth: [Databricks Certified Data Engineer Professional](https://www.databricks.com/learn/certification/data-engineer-professional) (and the [November 30, 2025 exam guide PDF](https://www.databricks.com/sites/default/files/2025-11/databricks-certified-data-engineer-professional-exam-guide-november-30-2025_0.pdf)). The folder structure in this guide now matches the official 10-domain blueprint 1 : 1.
 
 ## Exam Overview
 
@@ -30,7 +30,7 @@ aliases:
 | **Exam guide**      | November 30, 2025                               |
 | **Scored questions**| 59 multiple-choice                              |
 | **Duration**        | 120 minutes                                     |
-| **Result**          | Pass / fail (no published threshold)            |
+| **Result**          | Pass / fail (no numeric threshold in the Nov 30, 2025 exam guide) |
 | **Languages**       | English, Japanese, Portuguese (BR), Korean      |
 | **Code in stems**   | Python and SQL                                  |
 | **Experience**      | 1+ years building production data pipelines on Databricks (recommended) |
@@ -54,54 +54,38 @@ pie title Exam Topic Distribution (10 domains)
     "Data Sharing and Federation" : 5
 ```
 
-| Domain | Weight |
-| :--- | :---: |
-| Developing Code for Data Processing | 22 % |
-| Cost & Performance Optimization | 13 % |
-| Data Transformation, Cleansing, and Quality | 10 % |
-| Monitoring and Alerting | 10 % |
-| Ensuring Data Security and Compliance | 10 % |
-| Debugging and Deploying | 10 % |
-| Data Ingestion & Acquisition | 7 % |
-| Data Governance | 7 % |
-| Data Modelling | 6 % |
-| Data Sharing and Federation | 5 % |
-
 ## Study Topics
 
-The guide's existing topic folders predate the November 2025 10-domain restructure. Until folder reorganisation lands, the table below cross-references **which folder covers which official domain(s)**.
+The folder structure below matches the November 30, 2025 official 10-domain blueprint. Read in order; each folder's `README.md` has the section contents and key concepts.
 
-### Topic folders in this guide
-
-| Section                                                              | Covers (official domains) |
-| -------------------------------------------------------------------- | ------------------------- |
-| [01-Data Processing](01-data-processing/README.md)                   | Developing Code for Data Processing · Data Transformation · Data Ingestion |
-| [02-Databricks Tooling](02-databricks-tooling/README.md)             | Developing Code for Data Processing · Debugging and Deploying |
-| [03-Data Modeling](03-data-modeling/README.md)                       | Data Modelling |
-| [04-Security & Governance](04-security-governance/README.md)         | Ensuring Data Security and Compliance · Data Governance |
-| [05-Monitoring & Logging](05-monitoring-logging/README.md)           | Monitoring and Alerting · Debugging and Deploying |
-| [06-Testing & Deployment](06-testing-deployment/README.md)           | Debugging and Deploying · Developing Code for Data Processing |
-| [07-Lakeflow Pipelines](07-lakeflow-pipelines/README.md)             | Developing Code for Data Processing · Monitoring and Alerting |
-| [08-Performance Optimization](08-performance-optimization/README.md) | Cost & Performance Optimization |
-
-> [!note]
-> The **Data Sharing and Federation** domain (5 %) — Delta Sharing, Lakehouse Federation — is not yet covered by a dedicated folder. A new folder is planned in the next refresh; in the meantime, see [`shared/cheat-sheets/unity-catalog-quick-ref.md`](../../shared/cheat-sheets/unity-catalog-quick-ref.md) for the basics.
+| Section                                                                                | Weight | Focus |
+| -------------------------------------------------------------------------------------- | :----: | :--- |
+| [01 — Developing Code for Data Processing](./01-developing-code-for-data-processing/README.md) | 22 %   | Batch + streaming code, Delta ops, Lakeflow Declarative Pipelines, Lakeflow Jobs |
+| [02 — Cost & Performance Optimization](./02-cost-and-performance-optimization/README.md) | 13 %   | File sizing, Z-ORDER / liquid clustering, Spark tuning, Photon, compute selection |
+| [03 — Data Transformation, Cleansing, Quality](./03-data-transformation-cleansing-quality/README.md) | 10 % | CDC, deduplication, expectations, `APPLY CHANGES INTO` |
+| [04 — Monitoring and Alerting](./04-monitoring-and-alerting/README.md)                 | 10 %   | System tables, Lakeflow event log, query profiler, streaming monitoring |
+| [05 — Ensuring Data Security and Compliance](./05-ensuring-data-security-and-compliance/README.md) | 10 % | Access control, secrets, audit/lineage, network security |
+| [06 — Debugging and Deploying](./06-debugging-and-deploying/README.md)                 | 10 %   | Asset Bundles, CI/CD, Git folders, unit testing, Spark UI, CLI, REST API |
+| [07 — Data Ingestion & Acquisition](./07-data-ingestion-and-acquisition/README.md)     |  7 %   | Auto Loader, batch ingestion patterns |
+| [08 — Data Governance](./08-data-governance/README.md)                                 |  7 %   | Unity Catalog, UC Volumes vs DBFS |
+| [09 — Data Modelling](./09-data-modelling/README.md)                                   |  6 %   | Medallion architecture, Delta fundamentals, schema management, SCD |
+| [10 — Data Sharing and Federation](./10-data-sharing-and-federation/README.md)         |  5 %   | Delta Sharing, Lakehouse Federation |
 
 ### Practice Exams
 
 | Resource                                                        | Description                              |
 | --------------------------------------------------------------- | ---------------------------------------- |
-| [Mock Exam](resources/mock-exam/README.md)                      | 63-question full-length practice exam    |
-| [Mock Exam 2](resources/mock-exam-2/README.md)                  | 60-question advanced practice exam       |
-| [Practice Questions](resources/practice-questions/README.md)    | 45 section-specific practice questions   |
+| [Mock Exam](./resources/mock-exam/README.md)                    | 63-question full-length practice exam    |
+| [Mock Exam 2](./resources/mock-exam-2/README.md)                | 60-question advanced practice exam       |
+| [Practice Questions](./resources/practice-questions/README.md)  | Section-specific practice questions      |
 
 ### Quick Reference
 
 | Resource                                            | Purpose                                       |
 | --------------------------------------------------- | --------------------------------------------- |
-| [Cheat Sheets](resources/cheat-sheets/README.md)    | Quick reference cards for key topics          |
-| [Exam Tips](resources/exam-tips.md)                 | Exam strategies and common traps              |
-| [Official Links](resources/official-links.md)       | Databricks documentation references           |
+| [Cheat Sheets](./resources/cheat-sheets/README.md)  | Quick reference cards for key topics          |
+| [Exam Tips](./resources/exam-tips.md)               | Exam strategies and common traps              |
+| [Official Links](./resources/official-links.md)     | Databricks documentation references           |
 
 ## Interview Preparation
 
@@ -120,42 +104,49 @@ Before starting this certification, review:
 
 ## Study Progress Tracker
 
-### Phase 1: Foundations
+### Phase 1: Foundations (weeks 1–2)
 
 - [ ] Delta Lake fundamentals
 - [ ] Medallion architecture
 - [ ] Unity Catalog basics
+- [ ] Spark fundamentals
 
-### Phase 2: Core Processing
+### Phase 2: Core Processing (weeks 3–4)
 
-- [ ] Batch ETL patterns
-- [ ] Structured Streaming
-- [ ] Auto Loader
-- [ ] Change Data Capture
+- [ ] Domain 01 — Developing Code for Data Processing
+- [ ] Domain 07 — Data Ingestion & Acquisition
+- [ ] Domain 03 — Data Transformation, Cleansing, Quality
 
-### Phase 3: Advanced Topics
+### Phase 3: Operations & Optimization (weeks 5–6)
 
-- [ ] Lakeflow pipelines (formerly DLT)
-- [ ] Performance optimization
-- [ ] Security & governance
-- [ ] Monitoring & debugging
-- [ ] Delta Sharing & Lakehouse Federation
+- [ ] Domain 02 — Cost & Performance Optimization
+- [ ] Domain 04 — Monitoring and Alerting
+- [ ] Domain 06 — Debugging and Deploying
 
-### Phase 4: Exam Prep
+### Phase 4: Governance & Sharing (week 7)
+
+- [ ] Domain 05 — Ensuring Data Security and Compliance
+- [ ] Domain 08 — Data Governance
+- [ ] Domain 09 — Data Modelling
+- [ ] Domain 10 — Data Sharing and Federation
+
+### Phase 5: Exam Prep (week 8)
 
 - [ ] Review cheat sheets
-- [ ] Complete practice questions
-- [ ] Review weak areas
+- [ ] Complete practice questions (target 70 %+ per domain)
+- [ ] Mock Exam 1 (timed)
+- [ ] Mock Exam 2 (timed)
 
 ## Official Resources
 
 - [Databricks Certification Page](https://www.databricks.com/learn/certification/data-engineer-professional)
+- [November 30, 2025 exam guide (PDF)](https://www.databricks.com/sites/default/files/2025-11/databricks-certified-data-engineer-professional-exam-guide-november-30-2025_0.pdf)
 - [Databricks Documentation](https://docs.databricks.com/)
 - [Databricks Academy](https://www.databricks.com/learn/training)
 
 ## Recommended Courses
 
-1. **Advanced Data Engineering with Databricks** - Primary exam prep course
+1. **Advanced Data Engineering with Databricks** — primary exam-prep course
 2. **Data Management and Governance with Unity Catalog**
 3. **Build Data Pipelines with Lakeflow Declarative Pipelines**
 4. **Automated Deployment with Databricks Asset Bundles**

@@ -179,14 +179,14 @@ After completing an entry certification, choose your specialization.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Data Processing (30%) | [01-data-processing](../certifications/data-engineer-professional/01-data-processing/README.md) |
-| 2 | Databricks Tooling (20%) | [02-databricks-tooling](../certifications/data-engineer-professional/02-databricks-tooling/README.md) |
-| 3 | Data Modeling (15%) | [03-data-modeling](../certifications/data-engineer-professional/03-data-modeling/README.md) |
-| 4 | Security & Governance (10%) | [04-security-governance](../certifications/data-engineer-professional/04-security-governance/README.md) |
-| 5 | Monitoring & Logging (10%) | [05-monitoring-logging](../certifications/data-engineer-professional/05-monitoring-logging/README.md) |
-| 6 | Testing & Deployment (10%) | [06-testing-deployment](../certifications/data-engineer-professional/06-testing-deployment/README.md) |
-| 7 | Lakeflow Pipelines | [07-lakeflow-pipelines](../certifications/data-engineer-professional/07-lakeflow-pipelines/README.md) |
-| 8 | Performance Optimization | [08-performance-optimization](../certifications/data-engineer-professional/08-performance-optimization/README.md) |
+| 1 | Data Processing (30%) | [01-data-processing](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
+| 2 | Databricks Tooling (20%) | [02-databricks-tooling](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
+| 3 | Data Modeling (15%) | [03-data-modeling](../certifications/data-engineer-professional/09-data-modelling/README.md) |
+| 4 | Security & Governance (10%) | [04-security-governance](../certifications/data-engineer-professional/05-ensuring-data-security-and-compliance/README.md) |
+| 5 | Monitoring & Logging (10%) | [05-monitoring-logging](../certifications/data-engineer-professional/04-monitoring-and-alerting/README.md) |
+| 6 | Testing & Deployment (10%) | [06-testing-deployment](../certifications/data-engineer-professional/06-debugging-and-deploying/README.md) |
+| 7 | Lakeflow Pipelines | [07-lakeflow-pipelines](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
+| 8 | Performance Optimization | [08-performance-optimization](../certifications/data-engineer-professional/02-cost-and-performance-optimization/README.md) |
 
 **Practice & Review:**
 

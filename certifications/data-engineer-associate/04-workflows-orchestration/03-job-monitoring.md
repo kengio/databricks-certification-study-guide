@@ -546,7 +546,7 @@ for run in runs:
 
 - [Databricks Jobs](./01-databricks-jobs.md)
 - [Scheduling and Triggers](./02-scheduling-triggers.md)
-- [Spark UI Debugging (DE Professional)](../../data-engineer-professional/05-monitoring-logging/02-spark-ui-debugging.md)
+- [Spark UI Debugging (DE Professional)](../../data-engineer-professional/06-debugging-and-deploying/07-spark-ui-debugging.md)
 
 ## Official Documentation
 

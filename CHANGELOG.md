@@ -4,6 +4,30 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-2] — DE Professional folder reorg to 10-domain blueprint
+
+### Changed
+
+- **`certifications/data-engineer-professional/` restructured to match the November 30, 2025 official 10-domain blueprint** (1 : 1 folder-to-domain mapping). Folder map:
+  - `01-data-processing/` → split across `01-developing-code-for-data-processing/`, `03-data-transformation-cleansing-quality/`, `04-monitoring-and-alerting/`, `07-data-ingestion-and-acquisition/`
+  - `02-databricks-tooling/` → split across `01-developing-code-for-data-processing/`, `02-cost-and-performance-optimization/`, `06-debugging-and-deploying/`, `08-data-governance/`
+  - `03-data-modeling/` → `09-data-modelling/` (+ `partitioning-strategies` moved to `02-cost-and-performance-optimization/`)
+  - `04-security-governance/` → split across `05-ensuring-data-security-and-compliance/`, `08-data-governance/`, `10-data-sharing-and-federation/`
+  - `05-monitoring-logging/` → split across `04-monitoring-and-alerting/`, `06-debugging-and-deploying/`
+  - `06-testing-deployment/` → `06-debugging-and-deploying/`
+  - `07-lakeflow-pipelines/` → split across `01-developing-code-for-data-processing/`, `03-data-transformation-cleansing-quality/`
+  - `08-performance-optimization/` → `02-cost-and-performance-optimization/`
+- 12 cross-folder Next/Previous nav links + 50+ same-folder relative links rewritten to track the new locations
+- 8 cross-folder references in `learning-paths/master-roadmap.md` and `shared/` cheat sheets and fundamentals updated to point at the new folder paths
+- Cert README (`certifications/data-engineer-professional/README.md`) rewritten — Study Topics table now maps each new folder to its official domain weight; "What changed in the Nov 30, 2025 exam guide" callout updated to confirm the folder structure now matches the blueprint 1 : 1
+- `CLAUDE.md` Certification Topic Folders entry updated to list the 10 new folders
+- Top-level `README.md` repository layout updated to say "10 topic folders" for DE Professional, and the guide-itself roadmap entry for this reorg marked complete
+
+### Added
+
+- 10 new folder README index files — one per official domain — each with topics overview, section contents, key concepts, and back/next navigation
+- `10-data-sharing-and-federation/02-lakehouse-federation.md` — new topic file covering the federation half of the domain (was previously not covered)
+
 ## [2026.05.21-1] — Remove local Superset state from the repo
 
 ### Removed
