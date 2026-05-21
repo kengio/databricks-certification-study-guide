@@ -844,24 +844,32 @@ button.link.danger:hover { color: var(--negative); }
   right: 1.25rem;
   font-family: var(--mono);
   font-weight: 500;
-  font-size: clamp(1.8rem, 4.5vw, 2.75rem);   /* smaller — text-paragraph clears it */
+  font-size: clamp(1.8rem, 4.5vw, 2.75rem);
   letter-spacing: -0.05em;
   line-height: 1;
+  /* Light theme: dark ink on a near-white surface — needs more opacity
+     than the dark theme to read at all. 0.035 was visually invisible. */
   color: var(--fg);
-  opacity: 0.035;                              /* fainter so any overlap reads as texture */
+  opacity: 0.08;
   pointer-events: none;
   user-select: none;
   font-variant-numeric: tabular-nums;
   z-index: 0;
 }
-:root[data-theme="dark"] .q-watermark,
-:root:not([data-theme]) .q-watermark { opacity: 0.05; }
+/* Dark theme: bright ink on a near-black surface — same opacity would
+   pop too much, so we dial it back. */
+:root[data-theme="dark"] .q-watermark { opacity: 0.06; }
 @media (prefers-color-scheme: dark) {
-  :root[data-theme="auto"] .q-watermark { opacity: 0.05; }
+  :root[data-theme="auto"] .q-watermark,
+  :root:not([data-theme]) .q-watermark { opacity: 0.06; }
 }
 .question-card > *:not(.q-watermark) { position: relative; z-index: 1; }
 @media (max-width: 540px) {
-  .q-watermark { top: 0.5rem; right: 0.85rem; font-size: 1.5rem; opacity: 0.04; }
+  .q-watermark { top: 0.5rem; right: 0.85rem; font-size: 1.5rem; opacity: 0.07; }
+  :root[data-theme="dark"] .q-watermark { opacity: 0.055; }
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme="auto"] .q-watermark { opacity: 0.055; }
+  }
 }
 
 #quiz-feedback {
