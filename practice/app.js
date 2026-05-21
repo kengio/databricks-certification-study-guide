@@ -26,7 +26,13 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "5";
+  const APP_VERSION = "8";
+
+  // Title patterns that are placeholder fallbacks (mock-exam questions whose
+  // source heading is `## Question N *(Difficulty)*` with no real title text).
+  // We suppress these in the post-submit "Topic" line so it doesn't read
+  // "Topic: Question 5" — useless context.
+  const FALLBACK_TITLE_RE = /^Question \d+(\.\d+)?$/i;
 
   // Bank groups render as labelled sections in the picker.
   const CERTS = [
@@ -66,6 +72,7 @@
     },
     sequentialIndex: 0,
     certBanks: null,  // Map<certKey, items[]> from loadAllBankMetadata, cached on first load
+    streak: 0,        // consecutive-correct counter for the streak toast
   };
 
   // --- DOM helpers ---------------------------------------------------------
@@ -467,12 +474,11 @@
                                      STATE.currentChoice = letter;
                                      $("#btn-submit").disabled = false;
                                    } });
-      const choiceTextSpan = el("span");
+      const choiceTextSpan = el("span", { className: "choice-text" });
       choiceTextSpan.appendChild(renderInlineToFragment(q.choices[letter]));
       const label = el("label", { dataset: { letter } },
         radio,
-        el("span", { className: "choice-letter" }, letter + ")"),
-        document.createTextNode(" "),
+        el("span", { className: "choice-letter" }, letter),
         choiceTextSpan);
       choices.appendChild(label);
     }
@@ -499,21 +505,68 @@
       `Bank: ${attempted} / ${total} attempted · ${correctAll} currently correct on most-recent attempt`;
   }
 
+  function showStreakToast(n) {
+    const existing = document.querySelector(".streak-toast");
+    if (existing) existing.remove();
+    const toast = el("div", { className: "streak-toast" },
+      el("span", { className: "streak-num" }, String(n)),
+      "in a row · keep going");
+    document.body.appendChild(toast);
+    // Force reflow then trigger animation
+    void toast.offsetWidth;
+    toast.classList.add("show");
+    setTimeout(() => toast.remove(), 1800);
+  }
+
+  function showFloatPlus(label) {
+    const plus = el("span", { className: "float-plus" }, "+1");
+    label.style.position = label.style.position || "relative";
+    label.appendChild(plus);
+    setTimeout(() => plus.remove(), 1200);
+  }
+
   function submitAnswer() {
     if (!STATE.currentChoice) return;
     const q = STATE.currentQ;
     const correct = STATE.currentChoice === q.correctAnswer;
     recordAttempt(q.id, correct);
     STATE.sessionTotal++;
-    if (correct) STATE.sessionCorrect++;
+    if (correct) {
+      STATE.sessionCorrect++;
+      STATE.streak++;
+    } else {
+      STATE.streak = 0;
+    }
 
+    let correctLabel = null;
     for (const label of $("#quiz-choices").children) {
       const letter = label.dataset.letter;
       const radio = label.querySelector("input");
       radio.disabled = true;
       label.classList.add("disabled");
-      if (letter === q.correctAnswer) label.classList.add("correct");
-      else if (letter === STATE.currentChoice && !correct) label.classList.add("incorrect");
+      if (letter === q.correctAnswer) {
+        label.classList.add("correct");
+        correctLabel = label;
+      } else if (letter === STATE.currentChoice && !correct) {
+        label.classList.add("incorrect");
+      }
+    }
+
+    // Card-level flash + optional rewards
+    const card = document.querySelector(".question-card");
+    if (card) {
+      card.classList.remove("flash-correct", "flash-incorrect");
+      void card.offsetWidth;  // restart animation
+      card.classList.add(correct ? "flash-correct" : "flash-incorrect");
+      setTimeout(() => card.classList.remove("flash-correct", "flash-incorrect"), 700);
+    }
+    if (correct && correctLabel) {
+      showFloatPlus(correctLabel);
+      // Toast at 3, 5, 7, 10, every 5 thereafter
+      if (STATE.streak === 3 || STATE.streak === 5 || STATE.streak === 7
+          || STATE.streak === 10 || (STATE.streak > 10 && STATE.streak % 5 === 0)) {
+        showStreakToast(STATE.streak);
+      }
     }
 
     const fb = $("#quiz-feedback");
@@ -521,13 +574,16 @@
     fb.className = correct ? "correct" : "incorrect";
     clear(fb);
     fb.appendChild(el("h4", {},
-      correct ? "✓ Correct" : `✗ Incorrect — correct answer: ${q.correctAnswer}`));
-    if (q.title) {
+      correct ? "✓ Correct" : `✗ Incorrect · Correct answer: ${q.correctAnswer}`));
+    // Suppress the Topic line when the title is a placeholder fallback
+    // ("Question 5") — the running head already shows the domain, which is
+    // the meaningful context for mock-exam questions.
+    if (q.title && !FALLBACK_TITLE_RE.test(q.title)) {
       fb.appendChild(el("p", { className: "fb-topic" },
-        el("strong", {}, "Topic: "), q.title));
+        "Topic — ", q.title));
     }
     if (q.shortAnswer) {
-      const p = el("p");
+      const p = el("p", { className: "fb-short" });
       p.appendChild(renderInlineToFragment(q.shortAnswer));
       fb.appendChild(p);
     }
@@ -667,8 +723,10 @@
 
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
-    const iconNode = $("#btn-theme-icon");
-    if (iconNode) iconNode.textContent = THEME_ICONS[theme];
+    const labelNode = $("#btn-theme-label");
+    if (labelNode) {
+      labelNode.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+    }
   }
 
   function cycleTheme() {
@@ -679,6 +737,40 @@
   }
 
   // --- Init ----------------------------------------------------------------
+
+  function handleKeydown(ev) {
+    // Only react when the quiz section is visible
+    if ($("#quiz").hidden) return;
+    // Ignore when the user is typing inside an input (defensive — we don't
+    // currently have any text inputs in the quiz, but cheap safety)
+    if (ev.target.matches && ev.target.matches("input, textarea, select")) return;
+
+    const keyMap = { "1": "A", "2": "B", "3": "C", "4": "D",
+                     "a": "A", "b": "B", "c": "C", "d": "D" };
+    const letter = keyMap[ev.key.toLowerCase()];
+    if (letter && !$("#btn-next").hidden === false) {
+      // After submit; ignore choice keys until next question
+      return;
+    }
+    if (letter) {
+      const radio = document.querySelector(
+        `fieldset#quiz-choices input[value="${letter}"]`);
+      if (radio && !radio.disabled) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event("change", { bubbles: true }));
+        ev.preventDefault();
+      }
+      return;
+    }
+    if (ev.key === "Enter") {
+      if (!$("#btn-next").hidden) {
+        $("#btn-next").click();
+      } else if (!$("#btn-submit").disabled && !$("#btn-submit").hidden) {
+        $("#btn-submit").click();
+      }
+      ev.preventDefault();
+    }
+  }
 
   function init() {
     // Apply persisted theme before anything renders so there's no flash
@@ -700,6 +792,8 @@
       show("setup");
     });
     $("#btn-theme").addEventListener("click", cycleTheme);
+
+    document.addEventListener("keydown", handleKeydown);
 
     loadAllBankMetadata().then(certBanks => {
       STATE.certBanks = certBanks;
