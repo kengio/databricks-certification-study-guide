@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "26";
+  const APP_VERSION = "27";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -871,15 +871,11 @@
     STATE.timerEnd = minutes > 0 ? Date.now() + minutes * 60 * 1000 : null;
   }
 
-  function confirmBackToCertPicker() {
-    const hasActiveSession = STATE.sessionTotal > 0 || STATE.timerEnd != null;
-    if (hasActiveSession) {
-      const msg = STATE.timerEnd
-        ? "Stop this timed exam and go back to certifications? Your timer will reset."
-        : "Go back to certifications? Your session progress will reset (history is kept).";
-      if (!confirm(msg)) return;
-    }
-    // Reset session state (history in localStorage is preserved per-bank)
+  function hasActiveSession() {
+    return STATE.sessionTotal > 0 || STATE.timerEnd != null;
+  }
+
+  function resetSessionState() {
     STATE.sessionCorrect = 0;
     STATE.sessionTotal = 0;
     STATE.seenThisSession.clear();
@@ -887,12 +883,46 @@
     STATE.timerEnd = null;
     STATE.timerExpired = false;
     updateClockAndTimer();
+  }
+
+  function confirmLeaveExam(destination) {
+    if (hasActiveSession()) {
+      const msg = STATE.timerEnd
+        ? "Stop this timed exam and leave? Your timer will reset."
+        : "Leave this session? Your progress will reset (history is kept).";
+      if (!confirm(msg)) return false;
+    }
+    resetSessionState();
+    destination();
+    return true;
+  }
+
+  function goToCertPicker() {
     if (STATE.certBanks) {
       renderCertPicker(STATE.certBanks);
       show("setup");
     } else {
       location.reload();
     }
+  }
+
+  function goToBankPickerForCurrentCert() {
+    if (!STATE.bank || !STATE.certBanks) { goToCertPicker(); return; }
+    const sourceCert = STATE.bank.sourceCert || STATE.bank.cert;
+    const items = STATE.certBanks.get(sourceCert);
+    if (items) {
+      renderBankPicker(sourceCert, items);
+      show("setup");
+    } else {
+      goToCertPicker();
+    }
+  }
+
+  function confirmBackToCertPicker() {
+    confirmLeaveExam(goToCertPicker);
+  }
+  function confirmBackToBankPicker() {
+    confirmLeaveExam(goToBankPickerForCurrentCert);
   }
 
   function showTimerExpiredToast() {
@@ -1079,13 +1109,15 @@
       show("setup");
     });
 
-    // Cert name in the masthead acts as a "back to certifications" link.
-    // Confirm before leaving so the user doesn't accidentally lose their
-    // timer / session counts on a stray click.
+    // Masthead links:
+    //   DBX Practice brand → step 1 (all certifications)
+    //   cert name (e.g. "DATA ENGINEER ASSOCIATE") → step 2 (bank
+    //     picker for that specific cert)
+    // Both confirm() before leaving an in-progress session/timer.
+    const brandLink = $("#brand-link");
+    if (brandLink) brandLink.addEventListener("click", confirmBackToCertPicker);
     const certLink = $("#quiz-cert");
-    if (certLink) {
-      certLink.addEventListener("click", confirmBackToCertPicker);
-    }
+    if (certLink) certLink.addEventListener("click", confirmBackToBankPicker);
     $("#btn-theme").addEventListener("click", cycleTheme);
 
     document.addEventListener("keydown", handleKeydown);
