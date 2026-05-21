@@ -1182,13 +1182,13 @@ The questions below cover the newly elevated **Data Sharing and Federation** dom
 
 A) Export the table to S3 as Parquet and email the partner a presigned URL  
 B) Create a Databricks-to-Databricks (D2D) Delta Share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
-C) Replicate the table to the partner's account using DLT Lakeflow Declarative Pipelines  
+C) Replicate the table to the partner's account using Lakeflow Declarative Pipelines  
 D) Set up a foreign catalog in the partner's workspace pointing at the team's table  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks-to-Databricks Delta Sharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (DLT replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
+> Databricks-to-Databricks Delta Sharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Declarative Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
 
 ---
 
