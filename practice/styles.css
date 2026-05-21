@@ -844,7 +844,10 @@ button.link.danger:hover { color: var(--negative); }
   right: 1.25rem;
   font-family: var(--mono);
   font-weight: 500;
-  font-size: clamp(1.8rem, 4.5vw, 2.75rem);
+  /* Cap the font-size lower so 3-digit Q-numbers (Q.100, Q.150 …) still
+     fit inside the reserved padding zone on #quiz-question without
+     overlapping the wrapped text. */
+  font-size: clamp(1.55rem, 3.2vw, 2.1rem);
   letter-spacing: -0.05em;
   line-height: 1;
   /* Light theme: dark ink on a near-white surface — needs more opacity
@@ -855,6 +858,10 @@ button.link.danger:hover { color: var(--negative); }
   user-select: none;
   font-variant-numeric: tabular-nums;
   z-index: 0;
+  /* Anchor right edge so widths stay bounded as N grows */
+  max-width: 6rem;
+  text-align: right;
+  white-space: nowrap;
 }
 /* Dark theme: bright ink on a near-black surface — same opacity would
    pop too much, so we dial it back. */
@@ -865,7 +872,7 @@ button.link.danger:hover { color: var(--negative); }
 }
 .question-card > *:not(.q-watermark) { position: relative; z-index: 1; }
 @media (max-width: 540px) {
-  .q-watermark { top: 0.5rem; right: 0.85rem; font-size: 1.5rem; opacity: 0.07; }
+  .q-watermark { top: 0.5rem; right: 0.85rem; font-size: 1.3rem; opacity: 0.07; max-width: 4rem; }
   :root[data-theme="dark"] .q-watermark { opacity: 0.055; }
   @media (prefers-color-scheme: dark) {
     :root[data-theme="auto"] .q-watermark { opacity: 0.055; }
@@ -890,12 +897,12 @@ button.link.danger:hover { color: var(--negative); }
   color: var(--fg);
   margin: 0 0 1.75rem 0;
   /* Reserve right-side space for the Q.N watermark in the card corner.
-     Without this, long single-line questions wrap into the watermark
-     zone and the two read as a visual collision. */
-  padding-right: 4rem;
+     Sized to clear up to "Q.150" comfortably (5 chars at the capped
+     watermark font-size + right offset). */
+  padding-right: 6rem;
 }
 @media (max-width: 540px) {
-  #quiz-question { padding-right: 2.75rem; }
+  #quiz-question { padding-right: 4rem; }
 }
 #quiz-question p { margin: 0.5rem 0; }
 #quiz-question p:first-child { margin-top: 0; }
@@ -1019,39 +1026,45 @@ fieldset#quiz-choices label.incorrect .choice-text { color: var(--negative); }
 }
 .actionbar[hidden] { display: none; }
 
+/* 3-column grid for row 1 keeps the kbd-hint optically centred no matter
+   how wide the timer or button cluster grows. Row 2 (actionbar-right)
+   spans all columns via grid-column: 1 / -1. */
 .actionbar-inner {
   max-width: 1080px;
   margin: 0 auto;
   padding: 0.85rem 1.5rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   min-height: 64px;
 }
 
+#quiz-timer.actionbar-timer {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.actionbar-inner > .kbd-hint {
+  grid-column: 2;
+  justify-self: center;
+  text-align: center;
+  margin-left: 0;          /* override the inline-flow margin-left */
+  white-space: nowrap;
+}
+
 .actionbar-left {
+  grid-column: 3;
+  justify-self: end;
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
-/* New layout: Timer on the LEFT (passive info), Submit/Skip cluster
-   pushed to the RIGHT (thumb-reach for right-handers). Stats + nav
-   wrap to row 2 below via flex-basis:100%.
-     Row 1: [Timer ←]  …  [kbd-hint] [Next] [Skip] [Submit →]
-     Row 2: [session stats · bank stats · ... · Switch bank]
-*/
-#quiz-timer.actionbar-timer {
-  order: 0;
-  margin-left: 0;
-}
-.actionbar-left {
-  order: 1;
-  margin-left: auto;     /* push the cluster to the right edge */
-}
 .actionbar-right {
+  grid-column: 1 / -1;     /* row 2 spans the full width */
   display: inline-flex;
   align-items: center;
   gap: 0.85rem;
@@ -1062,8 +1075,6 @@ fieldset#quiz-choices label.incorrect .choice-text { color: var(--negative); }
   letter-spacing: 0.02em;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
-  flex-basis: 100%;
-  order: 2;
 }
 .actionbar-right #session-stats,
 .actionbar-right #bank-stats { color: var(--fg-soft); }
@@ -1895,10 +1906,23 @@ fieldset#quiz-choices input[type=radio]:checked:focus-visible {
   #stats table { font-size: 0.85rem; }
   #stats th, #stats td { padding: 0.6rem 0.55rem; }
 
-  /* Action bar — Submit/Skip cluster fills the row but stays right-aligned
-     so the thumb-reach side keeps the primary action even when wrapped */
-  .actionbar-inner { padding: 0.55rem 0.9rem; gap: 0.5rem; min-height: 56px; }
-  .actionbar-left { gap: 0.5rem; width: 100%; justify-content: flex-end; }
+  /* On mobile the kbd-hint hides (centre column not needed), so the grid
+     collapses to a 2-column layout: timer left + buttons right. When the
+     timer is also off (practice mode), col1 collapses to 0 and buttons
+     get the full width — no awkward empty half. */
+  .actionbar-inner {
+    padding: 0.55rem 0.9rem;
+    gap: 0.5rem;
+    min-height: 56px;
+    grid-template-columns: auto 1fr;
+  }
+  #quiz-timer.actionbar-timer { grid-column: 1; }
+  .actionbar-left {
+    grid-column: 2;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+  .actionbar-right { grid-column: 1 / -1; }
   .actionbar-left button.primary { padding: 0.75rem 1.1rem; font-size: 0.9rem; }
   .actionbar-left button.ghost { padding: 0.65rem 1rem; font-size: 0.85rem; }
   .actionbar-timer { padding: 0.4rem 0.75rem 0.4rem 0.6rem; }

@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=32">
+  <link rel="stylesheet" href="styles.css?v=33">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -171,12 +171,14 @@
   </div>
 
   <!-- ============== STICKY BOTTOM ACTION BAR (quiz mode only) ==============
-       Layout (row 1): [Timer ←]   …   [kbd-hint] [Next/Skip/Submit →]
-       Layout (row 2): [session stats · bank stats · Stats Settings Reset Switch]
+       Row 1 is a 3-column grid:
+         [Timer (left)]   [kbd-hint (center)]   [Next/Skip/Submit (right)]
+       Row 2 spans all columns:
+         [session · bank stats · Stats Settings Reset Switch bank]
 
-       Primary actions live on the RIGHT (thumb-reachable for right-handed
-       users + standard mobile convention). Timer + ambient kbd-hint sit
-       on the left as passive information. -->
+       The kbd-hint sits in the centre column (independent of timer/buttons)
+       so it stays optically centred regardless of timer state. On mobile
+       the centre column is hidden entirely. -->
   <div class="actionbar" id="actionbar" hidden>
     <div class="actionbar-inner">
       <span id="quiz-timer" class="actionbar-timer" hidden
@@ -193,15 +195,15 @@
         </span>
         <span class="timer-value">00:00</span>
       </span>
+      <span class="kbd-hint" aria-hidden="true" id="kbd-hint-pre">
+        <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> or <kbd>↑</kbd><kbd>↓</kbd> select &nbsp;
+        <kbd>↵</kbd> / <kbd>Space</kbd> submit &nbsp;
+        <kbd>S</kbd> skip
+      </span>
+      <span class="kbd-hint" aria-hidden="true" id="kbd-hint-post" hidden>
+        <kbd>↵</kbd> / <kbd>Space</kbd> / <kbd>N</kbd> / <kbd>→</kbd> next question
+      </span>
       <div class="actionbar-left">
-        <span class="kbd-hint" aria-hidden="true" id="kbd-hint-pre">
-          <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> or <kbd>↑</kbd><kbd>↓</kbd> select &nbsp;
-          <kbd>↵</kbd> / <kbd>Space</kbd> submit &nbsp;
-          <kbd>S</kbd> skip
-        </span>
-        <span class="kbd-hint" aria-hidden="true" id="kbd-hint-post" hidden>
-          <kbd>↵</kbd> / <kbd>Space</kbd> / <kbd>N</kbd> / <kbd>→</kbd> next question
-        </span>
         <!-- Source order is "Next, Skip, Submit" so the rightmost visible
              button is always the primary action: Submit before submit,
              Next after. -->
