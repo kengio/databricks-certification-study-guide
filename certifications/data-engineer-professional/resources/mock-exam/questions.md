@@ -888,7 +888,7 @@ D) Query the pipeline's event log table for expectation metrics
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> DLT stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.
+> Lakeflow Declarative Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.
 
 ---
 
@@ -1072,13 +1072,13 @@ D) The materialized view requires a manual REFRESH command
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; DLT handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
+> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Declarative Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
 
 ---
 
 ## Question 59 *(Medium)*
 
-**Scenario**: A DLT pipeline implements CDC from a source database using APPLY CHANGES. Some records are arriving with out-of-order timestamps due to source system behavior.
+**Scenario**: A Lakeflow Declarative Pipelines pipeline implements CDC from a source database using APPLY CHANGES. Some records are arriving with out-of-order timestamps due to source system behavior.
 
 **Question**: How does APPLY CHANGES handle out-of-order records by default?
 
@@ -1096,7 +1096,7 @@ D) The pipeline fails on out-of-order detection
 
 ## Question 60 *(Medium)*
 
-**Scenario**: A DLT pipeline has an expectation `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After processing, the engineer wants to know how many rows were dropped.
+**Scenario**: A Lakeflow Declarative Pipelines pipeline has an expectation `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After processing, the engineer wants to know how many rows were dropped.
 
 **Question**: How can the dropped row count be retrieved?
 
@@ -1108,7 +1108,7 @@ D) Query the pipeline event log for expectation metrics
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> DLT stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; DLT tracks this automatically.
+> Lakeflow Declarative Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Declarative Pipelines tracks this automatically.
 
 ---
 
@@ -1167,3 +1167,47 @@ D) Set `spark.executor.memoryOverhead` to 0 for maximum heap space
 ---
 
 [← Back to Mock Exam](./README.md)
+
+---
+
+## New questions for the November 30, 2025 blueprint refresh
+
+The questions below cover the newly elevated **Data Sharing and Federation** domain. They are tagged so you can self-score them against the new domain weight (5 %).
+
+### Question DSF-1 *(Medium — Data Sharing and Federation)*
+
+**Scenario**: A data engineering team needs to give a partner company read-only access to a Delta table that's updated every hour. The partner uses Databricks too, but is in a different cloud account. The team wants to avoid copying data and wants UC to enforce all access.
+
+**Question**: Which pattern fits best?
+
+A) Export the table to S3 as Parquet and email the partner a presigned URL  
+B) Create a Databricks-to-Databricks (D2D) Delta Share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
+C) Replicate the table to the partner's account using Lakeflow Declarative Pipelines  
+D) Set up a foreign catalog in the partner's workspace pointing at the team's table  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Databricks-to-Databricks Delta Sharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Declarative Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
+
+---
+
+### Question DSF-2 *(Medium — Data Sharing and Federation)*
+
+**Scenario**: An analytics team wants to query a Snowflake `orders` table for ad-hoc analysis without ETL'ing it into Delta. They need filter pushdown to keep performance reasonable, and credentials must be governed centrally.
+
+**Question**: Which combination is correct?
+
+A) Create a Databricks `JDBC` connection in `spark.conf` and read with `spark.read.format("jdbc")`  
+B) Create a Unity Catalog `CONNECTION` of type `SNOWFLAKE`, then `CREATE FOREIGN CATALOG` over it; query as `catalog.schema.table`  
+C) Use Delta Sharing — Snowflake supports being a Delta Share recipient  
+D) Use Auto Loader with the Snowflake source connector  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a Delta Share recipient platform. Option D is for object-store file ingestion, not relational sources.
+
+---
+
+**[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to DE Professional](../../README.md)**

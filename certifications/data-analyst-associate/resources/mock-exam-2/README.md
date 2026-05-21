@@ -8,7 +8,10 @@ tags:
 
 # Mock Exam 2 — Databricks Data Analyst Associate
 
-A second full-length practice exam with different scenarios and edge cases than Mock Exam 1.
+A second timed mock — take after Mock Exam 1.
+
+> [!important]
+> **Refreshed for the October 2025 blueprint.** Domain weighting reflects the current 9-domain structure with AI/BI Genie Spaces (12 %).
 
 ## Exam Instructions
 
@@ -16,36 +19,35 @@ A second full-length practice exam with different scenarios and edge cases than 
 | ------ | ----- |
 | Total Questions | 45 |
 | Time Limit | 90 minutes |
-| Passing Score | 70% (32 or more correct) |
+| Result | Pass / fail (no numeric threshold in the October 2025 exam guide) |
 | Format | Multiple choice, single correct answer |
 
-## Domain Distribution
+## Domain Distribution (refreshed to October 2025 blueprint)
 
-| Domain | Weight | Questions |
-| ------ | ------ | --------- |
-| Databricks SQL | 22% | 10 |
-| Data Management | 20% | 9 |
-| SQL Queries | 29% | 13 |
-| Dashboards & Visualization | 18% | 8 |
-| Analytics Applications | 11% | 5 |
-
-## How to Take This Exam
-
-1. Complete Mock Exam 1 first and review your weak areas
-2. Set a 90-minute timer before opening [questions.md](./questions.md)
-3. Answer all questions without referring to notes or documentation
-4. Expand the `[!success]- Answer` callout only after committing to an answer
-5. Compare your score with [Mock Exam 1](../mock-exam/README.md) to track improvement
+| Domain | Official weight | Questions in this mock |
+| ------ | :---: | :---: |
+| Executing Queries Using Databricks SQL and Warehouses | 20 % | 9 |
+| Creating Dashboards and Visualizations | 16 % | 7 |
+| Analyzing Queries | 15 % | 7 |
+| Developing, Sharing, and Maintaining AI/BI Genie Spaces | 12 % | 5 |
+| Understanding Databricks Data Intelligence Platform | 11 % | 5 |
+| Managing Data | 8 % | 4 |
+| Securing Data | 8 % | 4 |
+| Importing Data | 5 % | 2 |
+| Data Modeling with Databricks SQL | 5 % | 2 |
 
 ## Scoring Guide
 
-| Score | Result | Action |
-| ----- | ------ | ------ |
-| 36–45 (80–100%) | Excellent — ready to sit the exam | Schedule your exam |
-| 32–35 (71–79%) | Passing — review weak areas | Review remaining weak topics |
-| 28–31 (62–70%) | Close — focused study needed | Study weak domains, retry in 1 week |
-| Below 28 (<62%) | Not ready — comprehensive review needed | Review all study material before retrying |
+| Score | Result |
+| ----- | ------ |
+| 36–45 (≥ 80 %) | Excellent |
+| 32–35 (70–79 %) | Likely passing |
+| 27–31 (60–69 %) | Close — focused study needed |
+| Below 27 (< 60 %) | Comprehensive review needed |
+
+> [!note]
+> Databricks does not publish a numeric passing threshold for the current exam guide.
 
 ---
 
-**[Start the Exam →](./questions.md)** | **[← Mock Exam 1](../mock-exam/README.md)** | **[← Back to Resources](../README.md)**
+**[Start the Exam →](./questions.md)** | **[← Back to Resources](../README.md)**
