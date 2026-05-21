@@ -51,6 +51,9 @@ Each certification folder contains numbered topic folders (`01-topic/`, `02-topi
 
 - Run markdownlint on every modified file; blank lines before/after headings (MD022)
 - Language tags on all code blocks (`sql`, `python`, `scala`)
+- **One `#` H1 per file (the title).** Exception: the top-level `README.md` uses a centered `<h1 align="center">` HTML block instead of a markdown `#` to render the banner — this is intentional; do not "fix" it
+- **Callout type names are lowercase**: `> [!note]`, `> [!important]`, `> [!warning]`, `> [!tip]`, `> [!success]-`, `> [!abstract]`, `> [!info]`
+- **Use a non-breaking space before `%`** in weights and percentages (e.g., `24 %`, not `24%`) for visual consistency across cert READMEs
 - **Multi-line Python:** parenthesized expressions, not backslash continuations:
 
   ```python
@@ -118,3 +121,46 @@ Required: YAML frontmatter (`title`, `type: category`, `tags`, `status`), topic 
 - **appendix/**: glossary, comparison-tables, error-messages, performance-troubleshooting, version-history
 - **code-examples/**: python/ (delta_lake_operations, python_patterns, streaming_examples, unity_catalog_setup), sql/ (cte_patterns, delta_lake_operations, window_functions)
 - **interview-prep/**: associate-fundamentals, file-formats-spark-internals, delta-lake-internals, pipeline-architecture, streaming-cdc, data-modeling, performance-optimization, pyspark-sql-patterns, python-code-quality, governance-security, production-operations, data-compliance-quality, system-design, ml-system-design, genai-rag-design
+
+## PR Workflow
+
+This repo uses a **3-round self-review** before squash-merge. Full process in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
+| Round | Focus |
+| :---: | :--- |
+| **1** | Technical correctness — links resolve, code runs, markdownlint passes |
+| **2** | Factual / blueprint accuracy — every change cites a Databricks source |
+| **3** | Style & conventions — terminal sections, callouts, A/B/C/D formatting |
+
+- Branch off `main` with a descriptive name (`fix/`, `feat/`, `docs/`, `chore/`)
+- Commit prefixes: `docs:`, `fix:`, `feat:`, `chore:`, `review(roundN):` for review passes
+- **Squash-merge only.** Merge commits and rebase merges are disabled at the repo level
+- Branch protection: linear history required, force pushes and deletions blocked
+
+## README & CLAUDE.md Sync Rule
+
+Every PR that changes content **must** keep `README.md` and `CLAUDE.md` in sync.
+
+| If the PR… | …also update |
+| :--- | :--- |
+| Adds a new certification | top-level `README.md` (certs table, exam-at-a-glance), `CLAUDE.md` (Repository Structure, Certification Topic Folders) |
+| Renames or restructures a topic folder | `CLAUDE.md` (Certification Topic Folders), the cert's `README.md` (Study Topics table) |
+| Adds a new cheat sheet, interview-prep file, fundamental, code example, or appendix entry | `CLAUDE.md` (Shared Content) |
+| Changes domain weights, fee, duration, or question count | top-level `README.md` (per-cert exam-at-a-glance) AND the cert's `README.md` |
+| Bumps the exam-guide version date for a cert | top-level `README.md` (table + "What changed" callout), `CHANGELOG.md`, the cert's `README.md` |
+| Touches a convention or layout rule | `CLAUDE.md` (Content Guidelines) |
+
+The PR template checkbox enforces this. Do not check the box unless the update is actually in the diff.
+
+## Currency Policy
+
+When Databricks updates the exam guide for any certification:
+
+1. Update the exam-guide version date in the cert's `README.md` Exam Overview table
+2. Update any changed domain weights (Mermaid pie + Study Topics table)
+3. Update / add the "What changed in the latest blueprint" callout at the top of that cert's `README.md`
+4. Update the matching cert row in the top-level `README.md` certifications table and the "What changed in the 2025–2026 exam guides" section
+5. Add an entry to [`CHANGELOG.md`](./CHANGELOG.md) describing the refresh
+6. Mark new practice questions targeting the updated skills with a `*(YYYY blueprint)*` suffix in the question heading
+
+Always cite the new exam-guide PDF URL in the PR description.

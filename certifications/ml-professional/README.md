@@ -11,49 +11,69 @@ aliases:
 
 # Databricks Machine Learning Professional
 
+> [!important]
+> **What changed in the September 2025 exam guide**
+>
+> - Consolidated to **3 domains** (was 4): Model Development, ML Ops, Model Deployment
+> - "Solution & Data Monitoring" responsibilities now sit inside **ML Ops** (44 %)
+> - **Model Development** weighted equally at 44 % — advanced feature engineering, hyperparameter tuning, SparkML pipelines, distributed training
+> - Pass / fail — **Databricks no longer publishes a numeric passing score**
+>
+> The official source of truth: [Databricks Certified Machine Learning Professional](https://www.databricks.com/learn/certification/machine-learning-professional). Topic folders in this guide track the prior 4-domain structure; reorganisation is on the [guide roadmap](../../README.md#roadmap-for-the-guide-itself).
+
 ## Exam Overview
 
-| Detail             | Information                                        |
-| ------------------ | -------------------------------------------------- |
-| **Certification**  | Databricks Certified Machine Learning Professional |
-| **Questions**      | ~60 multiple-choice                                |
-| **Duration**       | 120 minutes                                        |
-| **Passing Score**  | 70%                                                |
-| **Languages**      | Python                                             |
-| **Experience**     | 1+ years with Databricks ML                        |
-| **Recertification**| Every 2 years                                      |
-| **Cost**           | $200 USD                                           |
+| Detail              | Information                                        |
+| ------------------- | -------------------------------------------------- |
+| **Certification**   | Databricks Certified Machine Learning Professional |
+| **Exam guide**      | September 2025                                     |
+| **Scored questions**| 59 multiple-choice                                 |
+| **Duration**        | 120 minutes                                        |
+| **Result**          | Pass / fail (no published threshold)               |
+| **Languages**       | English                                            |
+| **Code in stems**   | Python                                             |
+| **Experience**      | 1+ years building enterprise-scale ML on Databricks (recommended) |
+| **Recertification** | Every 2 years                                      |
+| **Cost**            | $200 USD                                           |
+| **Delivery**        | Online proctored or test center                    |
 
-## Exam Domain Weights
+## Exam Domain Weights (official — September 2025)
 
 ```mermaid
-pie title Exam Topic Distribution
-    "Experimentation" : 30
-    "Model Lifecycle" : 30
-    "Model Deployment" : 25
-    "Solution & Data Monitoring" : 15
+pie title Exam Topic Distribution (3 domains)
+    "Model Development" : 44
+    "ML Ops" : 44
+    "Model Deployment" : 12
 ```
+
+| Domain | Weight |
+| :--- | :---: |
+| Model Development | 44 % |
+| ML Ops | 44 % |
+| Model Deployment | 12 % |
 
 ## Study Topics
 
-### Core Topics (By Exam Weight)
+The guide's existing topic folders predate the September 2025 consolidation. The table below cross-references which folder covers which official domain.
 
-| Section                                                                | Weight | Topics                                          |
-| ---------------------------------------------------------------------- | ------ | ----------------------------------------------- |
-| [01-Advanced Feature Engineering](01-advanced-feature-engineering/README.md) | 20%    | Feature store, optimization, ML operations      |
-| [02-Hyperparameter Optimization](02-hyperparameter-optimization/README.md) | 20%    | Tuning strategies, AutoML, optimization         |
-| [03-Model Production Lifecycle](03-model-production-lifecycle/README.md)   | 30%    | MLflow, registry, versioning, serving           |
-| [04-Model Governance & MLOps](04-model-governance-mlops/README.md)        | 30%    | Monitoring, governance, drift detection, logging |
+### Topic folders in this guide
+
+| Section                                                                | Covers (official domains) |
+| ---------------------------------------------------------------------- | ------------------------- |
+| [01-Advanced Feature Engineering](01-advanced-feature-engineering/README.md) | Model Development (feature engineering, Feature Store) |
+| [02-Hyperparameter Optimization](02-hyperparameter-optimization/README.md)   | Model Development (tuning, AutoML, optimization) |
+| [03-Model Production Lifecycle](03-model-production-lifecycle/README.md)     | ML Ops (MLflow registry, versioning) · Model Deployment (Model Serving) |
+| [04-Model Governance & MLOps](04-model-governance-mlops/README.md)           | ML Ops (monitoring, governance, drift detection, logging) |
 
 ### Practice & Resources
 
-| Resource                                                | Description                              |
-| ------------------------------------------------------- | ---------------------------------------- |
+| Resource                                                        | Description                              |
+| --------------------------------------------------------------- | ---------------------------------------- |
 | [Practice Questions](resources/practice-questions/README.md)    | Topic-specific practice questions        |
 | [Mock Exam 1](resources/mock-exam/README.md)                    | Full-length practice exam                |
 | [Mock Exam 2](resources/mock-exam-2/README.md)                  | Alternative practice exam                |
-| [Exam Tips](resources/exam-tips.md)                    | Exam strategies and tips                 |
-| [Official Links](resources/official-links.md)          | Documentation and resources              |
+| [Exam Tips](resources/exam-tips.md)                             | Exam strategies and tips                 |
+| [Official Links](resources/official-links.md)                   | Documentation and resources              |
 
 ## Interview Preparation
 
@@ -70,11 +90,12 @@ After completing this certification, explore:
 
 ## Study Progress Tracker
 
-- [ ] Advanced feature engineering
-- [ ] MLOps best practices
-- [ ] Model deployment patterns
+- [ ] Advanced feature engineering and Feature Store at scale
+- [ ] Distributed training with SparkML
+- [ ] MLOps best practices (CI/CD for models, automated retraining)
+- [ ] Model deployment patterns (batch, streaming, real-time serving)
 - [ ] Monitoring and drift detection
-- [ ] Production ML systems
+- [ ] Production ML systems and governance with Unity Catalog
 
 ## Official Resources
 
