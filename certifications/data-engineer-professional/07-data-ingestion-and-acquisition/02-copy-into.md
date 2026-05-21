@@ -21,7 +21,7 @@ status: published
 > - **Schema-flexible**: `FORMAT_OPTIONS('inferSchema'='true')` infers; `mergeSchema='true'` evolves; declared target schema validates
 > - **Supports CSV / JSON / Parquet / Avro / ORC / TEXT / BINARYFILE**
 > - **Pattern-based**: `FILES` (explicit list) or `PATTERN` (glob/regex) restricts what's loaded
-> - **Force reload** with `COPY_OPTIONS('force'='true')` re-loads everything (use with care — duplicates if MERGE is not used)
+> - **Force reload** with `COPY_OPTIONS('force' = 'true')` (or the docs' canonical `force = true` boolean inside `COPY_OPTIONS`) re-loads everything (use with care — duplicates if MERGE is not used)
 
 > [!tip] What the Exam Tests
 >

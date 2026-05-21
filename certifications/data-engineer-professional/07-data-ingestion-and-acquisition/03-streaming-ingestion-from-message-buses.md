@@ -24,7 +24,7 @@ Object-storage ingest covers files. Message buses — **Apache Kafka**, **Conflu
 > - **Event Hubs source** — Azure-native; uses the Kafka-compatible endpoint or the dedicated `eventhubs` connector
 > - **Exactly-once writes** via Delta + checkpointing
 > - **Credentials live in UC connections or secret scopes** — never in `spark.conf`
-> - **Lakeflow Declarative Pipelines** wrap the streaming source with `@Dlt.table` + `cloudFiles`-style ergonomics
+> - **Lakeflow Declarative Pipelines** wrap the streaming source with `@dlt.table` + `cloudFiles`-style ergonomics
 
 > [!tip] What the Exam Tests
 >
@@ -93,7 +93,7 @@ kinesis = (
 )
 ```
 
-Kinesis supports **enhanced fan-out** for multi-consumer high-throughput reads (`useEFOConsumer = true`). For single-consumer workloads, polling mode is cheaper.
+Kinesis supports **enhanced fan-out** for multi-consumer high-throughput reads — set `consumerMode = "efo"` (the alternative is `consumerMode = "polling"`, which is cheaper for single-consumer workloads).
 
 ## Event Hubs ingest
 
@@ -143,7 +143,7 @@ Delta + checkpointing gives you exactly-once **into Delta**. The contract:
 
 - **Hard-coded credentials in `spark.conf`** — fails security review and rotates badly. Use secret scopes or UC connections
 - **Checkpoint location not unique per query** — sharing a checkpoint between two queries corrupts both. One checkpoint per `writeStream`
-- **Missing `startingOffsets`** — defaults to `latest`, so the first run skips all existing events. Set to `earliest` for back-fill
+- **Missing `startingOffsets`** — for streaming queries the default is `latest`, so the first run skips all existing events. Set to `earliest` for back-fill. (For *batch* `spark.read.format("kafka")` the default is `earliest`.)
 - **Skew on partition key** — one Kafka partition becomes a hot Spark partition; consider key rebalancing or repartition after read
 - **Kinesis throttling** — the default polling mode shares throughput with other consumers; switch to enhanced fan-out for dedicated bandwidth
 
@@ -154,7 +154,7 @@ Delta + checkpointing gives you exactly-once **into Delta**. The contract:
 > - **Three sources to know**: `kafka`, `kinesis`, `eventhubs` (or Kafka-compatible Event Hubs endpoint).
 > - **Checkpointing + Delta = exactly-once** into the lakehouse. Same pattern for all three sources.
 > - Credentials live in **secret scopes** or **UC connections**, never in code.
-> - `startingOffsets = latest` is the **default** for Kafka — set to `earliest` if you want history.
+> - `startingOffsets = latest` is the **streaming** default for Kafka — set to `earliest` for history. (Batch reads default to `earliest`.)
 > - Lakeflow Declarative Pipelines wrap the streaming source ergonomically and add the pipeline event log; standard `writeStream` gives you more control.
 
 ## Key Takeaways

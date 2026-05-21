@@ -23,11 +23,12 @@ status: published
 > - **Payload logging** — auto-capture into Inference Tables (UC Delta table)
 > - **Usage tracking** — surfaces into `system.serving.endpoint_usage`
 > - **Guardrails** — content-safety / PII filtering for endpoints that support it (depends on the model)
+> - **Fallbacks** — automatic retry against a secondary backend when the primary fails or times out
 
 > [!tip] What the Exam Tests
 >
 > - That Gateway policies live on the *endpoint*, not in the model code
-> - The five officially documented policy categories (rate limit, traffic splitting, payload logging, usage tracking, guardrails)
+> - The six officially documented policy categories (rate limit, traffic splitting, payload logging, usage tracking, guardrails, fallbacks)
 > - That payload logging is the bridge to Inference Tables — they're the same audit trail, configured at the Gateway layer
 > - How to set up A/B traffic splitting between two model versions or two providers
 > - That guardrails availability depends on the model — not every Gateway endpoint has PII detection
@@ -126,7 +127,7 @@ Guardrails are model-dependent. Foundation Model APIs (Llama, Claude, GPT-class)
 
 > [!tip]
 >
-> - Five policy categories: **rate limit, traffic splitting, payload logging, usage tracking, guardrails**. Memorise the list.
+> - Six policy categories: **rate limit, traffic splitting, payload logging, usage tracking, guardrails, fallbacks**. Memorise the list.
 > - Payload logging *is* the bridge to Inference Tables. Same Delta table, configured at the Gateway.
 > - Traffic splitting weights must sum to **100 %**.
 > - Guardrails are **model-dependent** — Gateway exposes the policy surface but the backing model has to support it.
@@ -134,7 +135,7 @@ Guardrails are model-dependent. Foundation Model APIs (Llama, Claude, GPT-class)
 
 ## Key Takeaways
 
-- Unity AI Gateway sits in front of Model Serving endpoints and configures 5 policy categories
+- Unity AI Gateway sits in front of Model Serving endpoints and configures 6 policy categories
 - Configured per endpoint via UI / REST API / SDK / CLI
 - Payload logging → Inference Tables (UC Delta) is the audit-of-record
 - Traffic splitting enables canary deploys and A/B tests behind one endpoint

@@ -71,12 +71,14 @@ from databricks import sql
 
 # Sample 500 recent production requests
 with sql.connect(server_hostname=..., http_path=...) as conn:
-    df = conn.execute("""
-        SELECT request:messages AS messages, response:choices AS response
-        FROM main.serving_logs.customer_support_rag_inference
-        WHERE timestamp_ms >= unix_millis(current_timestamp - INTERVAL 1 DAY)
-        TABLESAMPLE (500 ROWS)
-    """).fetchall_arrow().to_pandas()
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT request:messages AS messages, response:choices AS response
+            FROM main.serving_logs.customer_support_rag_inference
+            WHERE timestamp_ms >= unix_millis(current_timestamp - INTERVAL 1 DAY)
+            TABLESAMPLE (500 ROWS)
+        """)
+        df = cursor.fetchall_arrow().to_pandas()
 
 # Replay through an evaluator chain that judges faithfulness + relevance
 with mlflow.start_run(run_name="prod_backtest_daily"):
