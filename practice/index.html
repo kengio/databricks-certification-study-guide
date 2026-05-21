@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Databricks Certification Practice</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Databricks Certification Practice</h1>
+    <p class="subtitle">Adaptive practice questions with localStorage progress tracking. <a href="https://github.com/kengio/databricks-certification-study-guide">View on GitHub</a></p>
+  </header>
+
+  <main id="app">
+    <section id="setup">
+      <h2>Pick a question bank</h2>
+      <p>Loading…</p>
+    </section>
+
+    <section id="quiz" hidden>
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <span id="quiz-cert"></span>
+          <span class="separator">·</span>
+          <span id="quiz-counter"></span>
+          <span class="separator">·</span>
+          <span id="quiz-domain"></span>
+          <span class="separator">·</span>
+          <span id="quiz-difficulty" class="difficulty"></span>
+        </div>
+        <div class="quiz-controls">
+          <button type="button" id="btn-stats">Stats</button>
+          <button type="button" id="btn-settings">Settings</button>
+          <button type="button" id="btn-exit">Exit</button>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <h3 id="quiz-title"></h3>
+        <p id="quiz-question"></p>
+        <fieldset id="quiz-choices"></fieldset>
+        <div class="quiz-actions">
+          <button type="button" id="btn-submit" disabled>Submit answer</button>
+          <button type="button" id="btn-next" hidden>Next question →</button>
+        </div>
+        <div id="quiz-feedback" hidden></div>
+      </div>
+
+      <div class="session-bar">
+        <span id="session-stats">Session: 0 / 0</span>
+        <span id="bank-stats"></span>
+      </div>
+    </section>
+
+    <section id="stats" hidden>
+      <h2>Stats</h2>
+      <div id="stats-content"></div>
+      <div class="stats-actions">
+        <button type="button" id="btn-stats-back">← Back to quiz</button>
+        <button type="button" id="btn-export">Export progress (JSON)</button>
+        <button type="button" id="btn-reset" class="danger">Reset history (this bank)</button>
+      </div>
+    </section>
+
+    <section id="settings" hidden>
+      <h2>Settings</h2>
+      <label>Mode
+        <select id="setting-mode">
+          <option value="adaptive">Adaptive (default) — weight toward never-seen + recently-wrong</option>
+          <option value="random">Random — uniform sampling, no history weighting</option>
+          <option value="sequential">Sequential — go through every question in order</option>
+        </select>
+      </label>
+      <label>Domain filter
+        <select id="setting-domain">
+          <option value="">All domains</option>
+        </select>
+      </label>
+      <label>Difficulty filter
+        <select id="setting-difficulty">
+          <option value="">All difficulties</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+      <div class="settings-actions">
+        <button type="button" id="btn-settings-apply">Apply</button>
+        <button type="button" id="btn-settings-cancel">Cancel</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>This is study material, not the official Databricks exam. Question banks are generated from the markdown practice-question files in this repo. <a href="./README.md">Read the docs</a> · <a href="./format.md">Format spec</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

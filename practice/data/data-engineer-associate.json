@@ -1,0 +1,1400 @@
+{
+  "cert": "data-engineer-associate",
+  "certTitle": "Data Engineer Associate",
+  "blueprintVersion": "May 2026",
+  "generated": "2026-05-21",
+  "domains": [
+    {
+      "id": "lakehouse-platform",
+      "name": "Domain 1: Databricks Lakehouse Platform",
+      "sourceFile": "certifications/data-engineer-associate/resources/practice-questions/01-lakehouse-platform.md",
+      "questionCount": 12
+    },
+    {
+      "id": "elt-spark-sql-python",
+      "name": "Domain 2: ELT with Spark SQL and Python",
+      "sourceFile": "certifications/data-engineer-associate/resources/practice-questions/02-elt-spark-sql-python.md",
+      "questionCount": 26
+    },
+    {
+      "id": "incremental-processing",
+      "name": "Domain 3: Incremental Data Processing",
+      "sourceFile": "certifications/data-engineer-associate/resources/practice-questions/03-incremental-processing.md",
+      "questionCount": 22
+    },
+    {
+      "id": "production-pipelines",
+      "name": "Domain 4: Production Pipelines",
+      "sourceFile": "certifications/data-engineer-associate/resources/practice-questions/04-production-pipelines.md",
+      "questionCount": 15
+    },
+    {
+      "id": "data-governance",
+      "name": "Domain 5: Data Governance",
+      "sourceFile": "certifications/data-engineer-associate/resources/practice-questions/05-data-governance.md",
+      "questionCount": 10
+    }
+  ],
+  "questions": [
+    {
+      "id": "01-lakehouse-platform-q001",
+      "domain": "lakehouse-platform",
+      "title": "Lakehouse as a Unified Source of Truth",
+      "difficulty": "medium",
+      "question": "A leader in data organization is frustrated because the reports from the data analysis team differ from those of the data engineering team. How might a data lakehouse resolve this issue?",
+      "choices": {
+        "A": "Each team would maintain separate copies of data optimized for their specific workloads",
+        "B": "Both teams would utilize the same source of truth for their tasks",
+        "C": "The data lakehouse would automatically reconcile differences between team reports",
+        "D": "A dedicated ETL pipeline would synchronize data between team-specific databases"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Both teams would utilize the same source of truth for their tasks.",
+      "explanation": "A data lakehouse provides a single, unified platform where all teams access the same underlying data, eliminating discrepancies caused by siloed data systems or separate copies of data maintained by different teams."
+    },
+    {
+      "id": "01-lakehouse-platform-q002",
+      "domain": "lakehouse-platform",
+      "title": "Control Plane Components",
+      "difficulty": "easy",
+      "question": "Which option is entirely hosted within the control plane of the classic Databricks architecture?",
+      "choices": {
+        "A": "Worker nodes and executor processes",
+        "B": "Customer-managed cloud storage buckets",
+        "C": "The Databricks web application",
+        "D": "Driver nodes and cluster compute resources"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The Databricks web application.",
+      "explanation": "The control plane hosts the Databricks web UI, REST APIs, notebook server, and cluster manager — all infrastructure managed by Databricks. Worker nodes and driver nodes reside in the customer's data plane (their cloud account)."
+    },
+    {
+      "id": "01-lakehouse-platform-q003",
+      "domain": "lakehouse-platform",
+      "title": "Delta Lake Advantage for Workloads",
+      "difficulty": "easy",
+      "question": "Which of the following advantages associated with the Databricks Lakehouse Platform is offered by Delta Lake?",
+      "choices": {
+        "A": "The ability to run SQL queries without requiring a compute cluster",
+        "B": "Automatic migration of legacy Hive tables to cloud-native formats",
+        "C": "Built-in machine learning model training on raw data files",
+        "D": "The ability to support both batch and streaming workloads"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "The ability to support both batch and streaming workloads.",
+      "explanation": "Delta Lake's transaction log and Structured Streaming integration allow the same Delta tables to be read and written by both batch jobs and streaming pipelines, eliminating the need for separate storage systems for each workload type."
+    },
+    {
+      "id": "01-lakehouse-platform-q004",
+      "domain": "lakehouse-platform",
+      "title": "Delta Table Storage Organization",
+      "difficulty": "easy",
+      "question": "What describes how a Delta table is organized for storage?",
+      "choices": {
+        "A": "Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes",
+        "B": "Delta tables are stored as a single monolithic binary file containing all rows and metadata",
+        "C": "Delta tables are stored exclusively in the Databricks control plane with pointers to cloud storage",
+        "D": "Delta tables are stored as CSV files with a separate JSON manifest tracking schema changes"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes.",
+      "explanation": "Data is stored in Parquet files, and the `_delta_log` directory contains JSON transaction log files and checkpoint files that track all changes, schema, and table properties."
+    },
+    {
+      "id": "01-lakehouse-platform-q005",
+      "domain": "lakehouse-platform",
+      "title": "VACUUM and Time Travel",
+      "difficulty": "medium",
+      "question": "A data engineer discovered an error while updating a table daily and needs to use Delta time travel to revert the table to a version from three days ago. However, when they try to access the older version, the data files are absent. What explains the absence of the data files?",
+      "choices": {
+        "A": "The table was converted from Parquet to Delta, erasing its version history",
+        "B": "The OPTIMIZE command was run, which compacted and removed older file versions",
+        "C": "The VACUUM command was run on the table",
+        "D": "The Delta transaction log automatically purges entries older than 24 hours"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The VACUUM command was run on the table.",
+      "explanation": "`VACUUM` permanently deletes data files that are outside the retention threshold (default 7 days). Once vacuumed, older versions cannot be restored via time travel because the underlying Parquet files no longer exist."
+    },
+    {
+      "id": "01-lakehouse-platform-q006",
+      "domain": "lakehouse-platform",
+      "title": "Data Quality Feature of a Lakehouse",
+      "difficulty": "easy",
+      "question": "Which feature of a data lakehouse enhances data quality compared to a traditional data lake?",
+      "choices": {
+        "A": "Native support for unstructured binary file formats",
+        "B": "A data lakehouse supports ACID-compliant transactions",
+        "C": "Automatic data replication across multiple cloud regions",
+        "D": "Built-in data visualization and dashboarding tools"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "A data lakehouse supports ACID-compliant transactions.",
+      "explanation": "Traditional data lakes lack transactional guarantees, which can lead to partial writes, inconsistent reads, and data corruption. ACID transactions in Delta Lake ensure atomicity, consistency, isolation, and durability for all operations."
+    },
+    {
+      "id": "01-lakehouse-platform-q007",
+      "domain": "lakehouse-platform",
+      "title": "Gold vs Silver Table Relationship",
+      "difficulty": "easy",
+      "question": "What best explains the connection between Gold tables and Silver tables?",
+      "choices": {
+        "A": "Gold tables store raw data while Silver tables store transformed data",
+        "B": "Gold tables are temporary views derived from permanent Silver tables",
+        "C": "Gold tables and Silver tables always share the same schema and row count",
+        "D": "Gold tables are more likely to contain aggregations than Silver tables"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Gold tables are more likely to contain aggregations than Silver tables.",
+      "explanation": "Gold tables represent business-level aggregates and metrics built for consumption in dashboards and reports. Silver tables contain cleaned and enriched data, but are typically at row-level granularity without the summarizations found in Gold."
+    },
+    {
+      "id": "01-lakehouse-platform-q008",
+      "domain": "lakehouse-platform",
+      "title": "Bronze vs Raw Data Relationship",
+      "difficulty": "easy",
+      "question": "What characterizes the connection between Bronze tables and raw data?",
+      "choices": {
+        "A": "Bronze tables contain only validated and schema-enforced records from source systems",
+        "B": "Bronze tables are external tables pointing directly to raw source files without any transformation",
+        "C": "Bronze tables contain raw data with a schema applied",
+        "D": "Bronze tables store aggregated summaries of raw data for downstream consumption"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Bronze tables contain raw data with a schema applied.",
+      "explanation": "Bronze is the first layer in the medallion architecture. Data is ingested from source systems with minimal transformation, but is captured in a structured Delta table format with metadata columns added (e.g., ingestion timestamp, source file)."
+    },
+    {
+      "id": "01-lakehouse-platform-q009",
+      "domain": "lakehouse-platform",
+      "title": "Open-Source Technology Advantage",
+      "difficulty": "easy",
+      "question": "What is one advantage of the Databricks Lakehouse Platform utilizing open-source technologies?",
+      "choices": {
+        "A": "Avoiding vendor lock-in",
+        "B": "Eliminating the need for cloud infrastructure providers",
+        "C": "Guaranteeing backward compatibility with all legacy data systems",
+        "D": "Providing free unlimited compute resources for open-source users"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Avoiding vendor lock-in.",
+      "explanation": "By building on open standards and formats — Delta Lake (open format), Apache Spark, MLflow — organizations retain the ability to move data and workloads across clouds and platforms without being tied to proprietary, closed formats."
+    },
+    {
+      "id": "01-lakehouse-platform-q010",
+      "domain": "lakehouse-platform",
+      "title": "Delta Lake Underlying File Format",
+      "difficulty": "easy",
+      "question": "Which file formats are primarily used to store data from Delta Lake tables?",
+      "choices": {
+        "A": "Avro",
+        "B": "ORC",
+        "C": "CSV",
+        "D": "Parquet"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Parquet.",
+      "explanation": "Delta Lake stores all data in Parquet files, an open columnar format that provides efficient compression and predicate pushdown. The `_delta_log` directory stores transaction metadata as JSON and Parquet checkpoint files, but data itself is always Parquet."
+    },
+    {
+      "id": "01-lakehouse-platform-q011",
+      "domain": "lakehouse-platform",
+      "title": "Customer Cloud Account Contents",
+      "difficulty": "easy",
+      "question": "What is stored in the cloud account of the Databricks customer?",
+      "choices": {
+        "A": "The Databricks web application and REST APIs",
+        "B": "Data",
+        "C": "Cluster management metadata and job configurations",
+        "D": "Notebook source code and revision history"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Data.",
+      "explanation": "The customer's cloud account (AWS S3, Azure ADLS, GCP GCS) stores the actual data files. Databricks infrastructure — including the web application, cluster management metadata, repos, and notebooks — is managed in the Databricks-controlled plane, not the customer's account."
+    },
+    {
+      "id": "01-lakehouse-platform-q012",
+      "domain": "lakehouse-platform",
+      "title": "Streamlining Data Architectures",
+      "difficulty": "medium",
+      "question": "What methods can help streamline and integrate distinct data architectures tailored for particular applications?",
+      "choices": {
+        "A": "A data lakehouse",
+        "B": "Deploying separate data warehouses for each business unit",
+        "C": "Using a message queue to synchronize data between independent databases",
+        "D": "Building custom ETL pipelines between each pair of data systems"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "A data lakehouse.",
+      "explanation": "The lakehouse architecture unifies the flexibility of a data lake (support for unstructured data, low-cost storage, ML workloads) with the reliability and governance of a data warehouse (ACID transactions, SQL support, schema enforcement) into a single platform."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q001",
+      "domain": "elt-spark-sql-python",
+      "title": "DELETE Syntax",
+      "difficulty": "easy",
+      "question": "Which code block will delete rows from the Delta table `my_table` where the `age` column value exceeds 25?",
+      "choices": {
+        "A": "`REMOVE FROM my_table WHERE age > 25;`",
+        "B": "`DROP ROWS FROM my_table WHERE age > 25;`",
+        "C": "`DELETE FROM my_table WHERE age > 25;`",
+        "D": "`TRUNCATE my_table WHERE age > 25;`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`DELETE FROM my_table WHERE age > 25;`",
+      "explanation": "This standard SQL DML syntax works directly on Delta tables. Delta Lake supports full DML operations including DELETE, UPDATE, and MERGE with ACID guarantees, so the deleted rows are tracked in the transaction log and are recoverable via time travel."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q002",
+      "domain": "elt-spark-sql-python",
+      "title": "PySpark Table Access",
+      "difficulty": "easy",
+      "question": "A data analyst has developed a Delta table `sales` that the entire data analysis team uses. The data engineering team prefers Python. Which command can the engineering team use to access `sales` data in PySpark?",
+      "choices": {
+        "A": "`spark.read.delta(\"sales\")`",
+        "B": "`spark.table(\"sales\")`",
+        "C": "`spark.load(\"sales\")`",
+        "D": "`spark.sql.table(\"sales\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`spark.table(\"sales\")`",
+      "explanation": "This loads the registered Delta table into a PySpark DataFrame, allowing the engineering team to use Python and Spark transformations on the same data the analyst queries with SQL. The table is accessible because it is registered in the shared metastore."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q003",
+      "domain": "elt-spark-sql-python",
+      "title": "Indicating PII in Table Metadata",
+      "difficulty": "medium",
+      "question": "A data engineer intends to create a new table listing customers residing in France and wants to indicate the table contains PII. The incomplete SQL is shown below:\n\n```sql\nCREATE TABLE customerInFrance\n_____ AS\nSELECT id\n      ,firstName\n      ,lastName\nFROM customerLocations\nWHERE country = 'FRANCE';\n```\n\nWhich line of code correctly fills in the blank to add a table property indicating PII?",
+      "choices": {
+        "A": "`TBLPROPERTIES ('contains_pii' = 'true')`",
+        "B": "`COMMENT 'contains_pii = true'`",
+        "C": "`OPTIONS ('contains_pii' = 'true')`",
+        "D": "`METADATA ('contains_pii' = 'true')`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`TBLPROPERTIES ('contains_pii' = 'true')`",
+      "explanation": "`TBLPROPERTIES` adds structured key-value metadata directly to the table definition — these are the actual \"table properties\" in Databricks SQL. `COMMENT` adds a human-readable description but is not a table property. Using `TBLPROPERTIES` to tag sensitivity classifications (e.g., PII, data classification) is the standard approach for policy-driven metadata in Databricks."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q004",
+      "domain": "elt-spark-sql-python",
+      "title": "Array Functions for Nested JSON",
+      "difficulty": "easy",
+      "question": "What benefits do the array functions from Spark SQL offer?",
+      "choices": {
+        "A": "The ability to automatically flatten all nested structures into separate tables",
+        "B": "The ability to convert JSON files into Parquet format without code",
+        "C": "The ability to enforce strict schemas on semi-structured data at write time",
+        "D": "The ability to work with complex, nested data ingested from JSON files"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "The ability to work with complex, nested data ingested from JSON files.",
+      "explanation": "Functions like `explode`, `array_contains`, `transform`, and `filter` allow operations directly on nested array structures without flattening the entire schema first, making them essential for processing hierarchical JSON data at scale."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q005",
+      "domain": "elt-spark-sql-python",
+      "title": "MERGE to Prevent Duplicates",
+      "difficulty": "easy",
+      "question": "What commands can be utilized to insert data into a Delta table while preventing duplicate records?",
+      "choices": {
+        "A": "`INSERT DISTINCT`",
+        "B": "`UPSERT`",
+        "C": "`COPY INTO`",
+        "D": "`MERGE`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`MERGE`.",
+      "explanation": "The `MERGE INTO` statement matches source records against a target table on a key condition and conditionally inserts, updates, or skips records. This is the standard upsert pattern in Delta Lake for ensuring no duplicate rows are added."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q006",
+      "domain": "elt-spark-sql-python",
+      "title": "JDBC Format for SQLite",
+      "difficulty": "easy",
+      "question": "A data engineer needs to create a table in Databricks using data from the organization's SQLite database. They set up a JDBC connection. Which format string correctly identifies the JDBC data source?",
+      "choices": {
+        "A": "`\"sqlite\"`",
+        "B": "`\"jdbc\"`",
+        "C": "`\"database\"`",
+        "D": "`\"odbc\"`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`\"jdbc\"`",
+      "explanation": "This is the format string used with Spark's DataFrameReader to connect to any JDBC-compatible database (including SQLite, MySQL, PostgreSQL). It is specified as `.format(\"jdbc\")` in the DataFrameReader chain, followed by `.option()` calls for the connection URL, driver, and table name."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q007",
+      "domain": "elt-spark-sql-python",
+      "title": "UNION for Unique Records",
+      "difficulty": "medium",
+      "question": "A data engineering team maintains `march_transactions` (all March retail transactions) and `april_transactions` (all April retail transactions) with no overlapping records. What command creates a new table `all_transactions` containing all unique records from both?",
+      "choices": {
+        "A": "`CREATE TABLE all_transactions AS SELECT * FROM march_transactions INTERSECT SELECT * FROM april_transactions;`",
+        "B": "`CREATE TABLE all_transactions AS SELECT * FROM march_transactions UNION ALL SELECT * FROM april_transactions;`",
+        "C": "`CREATE TABLE all_transactions AS SELECT * FROM march_transactions UNION SELECT * FROM april_transactions;`",
+        "D": "`CREATE TABLE all_transactions AS SELECT * FROM march_transactions JOIN april_transactions;`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "```sql\nCREATE TABLE all_transactions AS\nSELECT * FROM march_transactions\nUNION\nSELECT * FROM april_transactions;\n```",
+      "explanation": "`UNION` (without `ALL`) removes duplicate rows across the combined result. Since the two tables share no overlapping records, all rows from both tables are included exactly once in the output."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q008",
+      "domain": "elt-spark-sql-python",
+      "title": "Python Multi-Condition Control Flow",
+      "difficulty": "medium",
+      "question": "A data engineer intends to run the last block of a Python program only if `day_of_week` is set to 1 and `review_period` is `True`. The incomplete code block is shown below:\n\n```python\nday_of_week = get_day_of_week()\nreview_period = check_review_period()\n\n_____\n    run_final_block()\n```\n\nWhat control flow statement should be used to complete the blank?",
+      "choices": {
+        "A": "`if day_of_week == 1 and review_period:`",
+        "B": "`if day_of_week = 1 and review_period == \"True\":`",
+        "C": "`if day_of_week == 1 or review_period:`",
+        "D": "`if day_of_week is 1 and review_period is True:`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`if day_of_week == 1 and review_period:`",
+      "explanation": "In Python, `==` performs equality comparison (not assignment). A boolean variable is truthy when referenced directly — wrapping it in quotes (`\"True\"`) would compare against the string literal, not the boolean value. Using a single `=` would cause a `SyntaxError`."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q009",
+      "domain": "elt-spark-sql-python",
+      "title": "External Table Data Retention After DROP",
+      "difficulty": "medium",
+      "question": "A data engineer drops `my_table` with `DROP TABLE IF EXISTS my_table`. The object no longer appears in `SHOW TABLES`, but the data files still exist on the filesystem. What explains this?",
+      "choices": {
+        "A": "The DROP command failed silently due to insufficient permissions",
+        "B": "The table had active streaming readers that prevented file deletion",
+        "C": "The table was an external table",
+        "D": "The VACUUM command needs to be run separately to remove data files"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The table was an external table.",
+      "explanation": "When an external table is dropped, Databricks removes only the metadata entry from the metastore. The underlying data files are stored at a user-defined location and are not managed by Databricks, so they remain intact after the table is dropped."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q010",
+      "domain": "elt-spark-sql-python",
+      "title": "Persistent Cross-Session Data Entity",
+      "difficulty": "medium",
+      "question": "A data engineer needs a data entity built from several tables that must be accessible to other data engineers in their sessions and stored in a physical location. Which data entity should be created?",
+      "choices": {
+        "A": "A temporary view",
+        "B": "A table (Delta or Spark SQL table)",
+        "C": "A global temporary view",
+        "D": "A Common Table Expression (CTE)"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "A table (Delta or Spark SQL table).",
+      "explanation": "Tables persist data physically at a storage location and are registered in the metastore, making them accessible across all sessions and users. Unlike temporary views (session-scoped) or views (no physical storage), tables outlive any individual session."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q011",
+      "domain": "elt-spark-sql-python",
+      "title": "INSERT INTO a Delta Table",
+      "difficulty": "easy",
+      "question": "A data engineer needs to add a new record `('a1', 6, 9.4)` to the existing Delta table `my_table`. Which SQL command accomplishes this?",
+      "choices": {
+        "A": "`INSERT INTO my_table VALUES ('a1', 6, 9.4);`",
+        "B": "`ADD ROW my_table VALUES ('a1', 6, 9.4);`",
+        "C": "`APPEND INTO my_table VALUES ('a1', 6, 9.4);`",
+        "D": "`MERGE INTO my_table VALUES ('a1', 6, 9.4);`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`INSERT INTO my_table VALUES ('a1', 6, 9.4);`",
+      "explanation": "`INSERT INTO ... VALUES` appends new rows to an existing Delta table without modifying existing records. Delta Lake records this as a new transaction in the log, making it reversible via time travel."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q012",
+      "domain": "elt-spark-sql-python",
+      "title": "CREATE OR REPLACE TABLE",
+      "difficulty": "easy",
+      "question": "A data architect needs to create an empty Delta table in a specified format, regardless of whether a table with that name already exists. Which SQL DDL approach accomplishes this?",
+      "choices": {
+        "A": "`DROP TABLE IF EXISTS table_name; CREATE TABLE table_name (...)`",
+        "B": "`CREATE TABLE IF NOT EXISTS table_name (...)`",
+        "C": "`ALTER TABLE table_name REPLACE COLUMNS (...)`",
+        "D": "`CREATE OR REPLACE TABLE table_name (...column definitions...)`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`CREATE OR REPLACE TABLE table_name (...column definitions...)`",
+      "explanation": "This atomically drops and recreates the table if it exists, or creates it new if it does not. It avoids errors from pre-existing tables and ensures the table always reflects the latest schema definition."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q013",
+      "domain": "elt-spark-sql-python",
+      "title": "PIVOT for Wide Format",
+      "difficulty": "easy",
+      "question": "Which SQL keyword can transform a table from long format to wide format?",
+      "choices": {
+        "A": "`UNPIVOT`",
+        "B": "`LATERAL VIEW`",
+        "C": "`TRANSPOSE`",
+        "D": "`PIVOT`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`PIVOT`.",
+      "explanation": "The `PIVOT` clause rotates distinct row values into column headers, converting a tall/long table (one row per category) into a wide/crosstab format (one column per category). This is commonly used to reshape metrics data for reporting dashboards."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q014",
+      "domain": "elt-spark-sql-python",
+      "title": "Parquet Advantage Over CSV",
+      "difficulty": "medium",
+      "question": "What advantage does creating an external table using Parquet have over CSV in a `CREATE TABLE AS SELECT` statement?",
+      "choices": {
+        "A": "Parquet files are human-readable and can be edited with a text editor",
+        "B": "Parquet files have a well-defined schema",
+        "C": "Parquet files support row-level locking for concurrent writes",
+        "D": "Parquet files are smaller because they use row-based compression"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Parquet files have a well-defined schema.",
+      "explanation": "Unlike CSV (a schema-less text format requiring manual type inference), Parquet embeds column names and data types directly in the file metadata. This enables schema enforcement, efficient columnar reads, and predicate pushdown without a separate schema definition."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q015",
+      "domain": "elt-spark-sql-python",
+      "title": "Temporary View for Single-Session Use",
+      "difficulty": "medium",
+      "question": "A data engineer needs a relational object from two tables that will not be used by other engineers in different sessions. To minimize storage expenses, physical data should not be duplicated. Which relational object should be created?",
+      "choices": {
+        "A": "A materialized view",
+        "B": "A managed Delta table",
+        "C": "An external table",
+        "D": "A temporary view"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "A temporary view.",
+      "explanation": "Temporary views exist only for the current Spark session, are not accessible to other users, and store no physical data — they are just a named query definition. This avoids both storage costs and data duplication while enabling SQL-based access within the session."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q016",
+      "domain": "elt-spark-sql-python",
+      "title": "PySpark SQL Query Execution",
+      "difficulty": "easy",
+      "question": "A data analyst has created a query that operates on a Delta table. They seek assistance from the data engineering team to perform a set of tests to verify that the data returned by the query is accurate and clean. However, the data engineering team utilizes Python for their tests instead of SQL. Which operations can the data engineering team use in PySpark to execute the query and process the results?",
+      "choices": {
+        "A": "`spark.sql(\"SELECT ...\")`",
+        "B": "`spark.query(\"SELECT ...\")`",
+        "C": "`spark.execute(\"SELECT ...\")`",
+        "D": "`spark.run(\"SELECT ...\")`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`spark.sql(\"SELECT ...\")`",
+      "explanation": "`spark.sql()` accepts a SQL query string and executes it, returning the results as a PySpark DataFrame. `spark.table(\"table_name\")` loads an entire table as a DataFrame but does not execute a specific SQL query — it is not the correct tool when the goal is to run a particular SQL statement."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q017",
+      "domain": "elt-spark-sql-python",
+      "title": "count_if for NULL Values",
+      "difficulty": "medium",
+      "question": "Which command shows the count of null values in the `member_id` column?",
+      "choices": {
+        "A": "`SELECT count_if(member_id IS NULL) FROM my_table;`",
+        "B": "`SELECT sum(CASE WHEN member_id IS NULL THEN 0 ELSE 1 END) FROM my_table;`",
+        "C": "`SELECT count(member_id) FROM my_table WHERE member_id IS NULL;`",
+        "D": "`SELECT count(NULL) FROM my_table;`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`SELECT count_if(member_id IS NULL) FROM my_table;`",
+      "explanation": "`count_if` counts rows that satisfy the given boolean condition. `IS NULL` evaluates to true for null values. Standard `count(member_id)` would exclude nulls, returning the opposite of what is needed."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q018",
+      "domain": "elt-spark-sql-python",
+      "title": "FILTER Higher-Order Function",
+      "difficulty": "medium",
+      "question": "A data engineer needs to implement custom logic for the `employees` array column in the `stores` table to find employees with more than 5 years of experience. The result should be a new column `exp_employees` containing only matching employees for each row. The incomplete SQL query is shown below:\n\n```sql\nSELECT store_id,\n       _____ AS exp_employees\nFROM stores\n```\n\nWhich code correctly completes the blank using the FILTER higher-order function?",
+      "choices": {
+        "A": "`FILTER(employees, i -> i.years_exp > 5)`",
+        "B": "`ARRAY_FILTER(employees, i -> i.years_exp > 5)`",
+        "C": "`SELECT_FROM_ARRAY(employees, years_exp > 5)`",
+        "D": "`TRANSFORM(employees, i -> i.years_exp > 5)`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`FILTER(employees, i -> i.years_exp > 5)`",
+      "explanation": "The `FILTER` higher-order function applies a lambda predicate to each element of an array column, returning a new array containing only elements where the condition is true. The arrow syntax (`->`) defines the anonymous function."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q019",
+      "domain": "elt-spark-sql-python",
+      "title": "Python Variable in SQL Query",
+      "difficulty": "easy",
+      "question": "A data engineer has a Python variable `table_name` and wants to execute a SQL query using it in PySpark. The incomplete code block is shown below:\n\n```python\ntable_name = \"sales\"\nresult = _____(f\"SELECT * FROM {table_name}\")\n```\n\nWhich method completes the blank?",
+      "choices": {
+        "A": "`spark.read`",
+        "B": "`spark.sql`",
+        "C": "`spark.query`",
+        "D": "`spark.execute`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`spark.sql(f\"SELECT * FROM {table_name}\")`",
+      "explanation": "`spark.sql()` accepts a SQL string, and Python f-strings embed variables directly into the query using `{variable_name}` syntax. This is the standard way to dynamically reference table names or other values from Python variables in SQL queries."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q020",
+      "domain": "elt-spark-sql-python",
+      "title": "Default Database Storage Location",
+      "difficulty": "easy",
+      "question": "A data engineer has established a new database with this command:\n\n```sql\nCREATE DATABASE IF NOT EXISTS customer360;\n```\n\nWhere will the `customer360` database be situated?",
+      "choices": {
+        "A": "`dbfs:/user/hive/warehouse/customer360.db`",
+        "B": "`dbfs:/user/hive/warehouse/`",
+        "C": "`dbfs:/databricks/databases/customer360/`",
+        "D": "`dbfs:/mnt/default/customer360.db`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`dbfs:/user/hive/warehouse/customer360.db`",
+      "explanation": "When a database is created without specifying a `LOCATION`, Databricks stores it in the default Hive warehouse directory at `dbfs:/user/hive/warehouse/`. A subdirectory named `<database_name>.db` is automatically created for it. Specifying only `dbfs:/user/hive/warehouse` (without the `.db` suffix) is incorrect — that is the parent warehouse directory, not the database's own location."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q021",
+      "domain": "elt-spark-sql-python",
+      "title": "DESCRIBE DATABASE Location",
+      "difficulty": "easy",
+      "question": "Which command retrieves the location of the `customer360` database?",
+      "choices": {
+        "A": "`SHOW DATABASE LOCATION customer360;`",
+        "B": "`SELECT location FROM information_schema.databases WHERE name = 'customer360';`",
+        "C": "`DESCRIBE DATABASE customer360;`",
+        "D": "`LIST DATABASE customer360;`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`DESCRIBE DATABASE customer360;`",
+      "explanation": "This command returns database metadata including the storage location path, owner, comment, and custom properties. It is the standard way to inspect database-level information in Spark SQL and Databricks."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q022",
+      "domain": "elt-spark-sql-python",
+      "title": "Managed Table File Deletion After DROP",
+      "difficulty": "medium",
+      "question": "A data engineer drops `my_table` and observes that both data files and metadata files are deleted from the filesystem. What explains the complete deletion?",
+      "choices": {
+        "A": "The VACUUM command was automatically triggered after the DROP",
+        "B": "The table was stored in a temporary storage location",
+        "C": "The table was a managed table",
+        "D": "The table had a retention policy set to zero days"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The table was a managed table.",
+      "explanation": "When a managed (internal) table is dropped, Databricks deletes both the metastore entry and the underlying data files, because Databricks controls the full lifecycle of managed table data. This is the opposite behavior from external tables."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q023",
+      "domain": "elt-spark-sql-python",
+      "title": "Python Function Definition",
+      "difficulty": "easy",
+      "question": "A data engineer new to Python needs a function that adds two integers and returns their sum. Which code block is correct?",
+      "choices": {
+        "A": "`function add_integers(x, y): return x + y`",
+        "B": "`def add_integers(x, y): print(x + y)`",
+        "C": "`def add_integers(x, y): yield x + y`",
+        "D": "`def add_integers(x, y): return x + y`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "```python\ndef add_integers(x, y):\n    return x + y\n```",
+      "explanation": "In Python, `def` defines a function and `return` outputs the result. Using `print` instead of `return` would output to the console but the function would return `None`, making it unusable in further computation. Using `function` (JavaScript syntax) would cause a `SyntaxError`."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q024",
+      "domain": "elt-spark-sql-python",
+      "title": "MERGE INTO vs INSERT INTO",
+      "difficulty": "medium",
+      "question": "When should a data engineer prefer the `MERGE INTO` command over the `INSERT INTO` command?",
+      "choices": {
+        "A": "When the target table needs to be completely overwritten with new data",
+        "B": "When the target table cannot contain duplicate records",
+        "C": "When inserting data from a streaming source into a batch table",
+        "D": "When the source and target tables have different schemas"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When the target table cannot contain duplicate records.",
+      "explanation": "`MERGE INTO` matches source records against existing rows on a key condition and conditionally inserts, updates, or skips records. `INSERT INTO` always appends all rows regardless of existing data, which would create duplicates if records already exist."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q025",
+      "domain": "elt-spark-sql-python",
+      "title": "GROUP BY Numeric Position in Spark SQL",
+      "difficulty": "medium",
+      "question": "What is wrong with the following SQL query?\n\n```sql\nSELECT name, count(*) FROM people GROUP BY 2\n```",
+      "choices": {
+        "A": "The `count(*)` function requires an alias to be used with `GROUP BY`",
+        "B": "The `SELECT` clause must include all non-aggregated columns after the aggregate function",
+        "C": "`GROUP BY` using a numeric ordinal position is not valid in Spark SQL",
+        "D": "The query is missing a `HAVING` clause to filter the aggregated results"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`GROUP BY` using a numeric ordinal position is not valid in Spark SQL.",
+      "explanation": "Unlike some other SQL dialects (e.g., standard PostgreSQL), Spark SQL requires explicit column names in `GROUP BY` clauses. The correct query is `SELECT name, count(*) FROM people GROUP BY name`. Using column position `2` will raise an `AnalysisException`."
+    },
+    {
+      "id": "02-elt-spark-sql-python-q026",
+      "domain": "elt-spark-sql-python",
+      "title": "OPTIMIZE for File Compaction",
+      "difficulty": "easy",
+      "question": "A data engineer has discovered that the data files related to a Delta table are quite small. They aim to merge these small files into larger ones to enhance performance. Which keywords can be utilized to compact the small files?",
+      "choices": {
+        "A": "VACUUM",
+        "B": "OPTIMIZE",
+        "C": "COMPACT",
+        "D": "DEFRAGMENT"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`OPTIMIZE`.",
+      "explanation": "The `OPTIMIZE` command compacts small files in a Delta table into larger ones, improving read performance by reducing the number of files that need to be scanned. This is different from `VACUUM`, which removes old data files no longer referenced by the transaction log."
+    },
+    {
+      "id": "03-incremental-processing-q001",
+      "domain": "incremental-processing",
+      "title": "COPY INTO Idempotency",
+      "difficulty": "medium",
+      "question": "Every day, a data engineer runs a command to transfer the previous day's sales data into a `transactions` table. Today, after running the command, the record count remains unchanged. Why were no new records copied?",
+      "choices": {
+        "A": "The table's schema rejected the incoming data due to a type mismatch",
+        "B": "The previous day's file has already been copied into the table",
+        "C": "The COPY INTO command only works with streaming sources, not batch files",
+        "D": "The transaction log was full and could not accept new entries"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The previous day's file has already been copied into the table.",
+      "explanation": "`COPY INTO` is idempotent — it maintains an internal record of which files have already been loaded. On subsequent runs, it automatically skips previously processed files, preventing duplicate ingestion. This makes it safe to rerun without creating duplicates."
+    },
+    {
+      "id": "03-incremental-processing-q002",
+      "domain": "incremental-processing",
+      "title": "Tool for Automated Data Quality Monitoring",
+      "difficulty": "easy",
+      "question": "During data ingestion, a data engineer observes that source data quality is declining. They want to automate the process of monitoring the quality level. Which tool addresses this?",
+      "choices": {
+        "A": "Apache Airflow with custom validation DAGs",
+        "B": "Databricks SQL Alerts with scheduled queries",
+        "C": "Lakeflow Declarative Pipelines (formerly DLT)",
+        "D": "Great Expectations library integrated with Spark"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Lakeflow Declarative Pipelines (formerly DLT).",
+      "explanation": "Lakeflow Declarative Pipelines provides built-in data quality monitoring through expectations — declarative constraints that automatically track pass/fail metrics, record violations in the event log, and optionally drop or quarantine bad records. Quality statistics are visible per-table in the pipeline UI."
+    },
+    {
+      "id": "03-incremental-processing-q003",
+      "domain": "incremental-processing",
+      "title": "Lakeflow Declarative Pipelines Continuous Pipeline Behavior",
+      "difficulty": "hard",
+      "question": "A Lakeflow Declarative Pipelines pipeline has two datasets defined with `STREAMING LIVE TABLE` and three datasets using `LIVE TABLE`. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?",
+      "choices": {
+        "A": "Only the two streaming datasets are updated continuously; the three materialized views are updated once and then stop",
+        "B": "All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources",
+        "C": "All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped",
+        "D": "The pipeline fails because streaming and materialized view datasets cannot coexist in Continuous mode"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped.",
+      "explanation": "In Continuous mode, the pipeline runs indefinitely — processing streaming tables as new data arrives and periodically refreshing materialized views. It does not shut down automatically; resources are released only when the pipeline is manually stopped."
+    },
+    {
+      "id": "03-incremental-processing-q004",
+      "domain": "incremental-processing",
+      "title": "Spark Offset Tracking Methods",
+      "difficulty": "easy",
+      "question": "To reliably monitor the precise progress of processing and manage failures through restarting or reprocessing, which two methods does Spark use to log the offset range of the data processed in each trigger?",
+      "choices": {
+        "A": "Checkpointing and Write-ahead Logs (WAL)",
+        "B": "Transaction logs and Delta Lake versioning",
+        "C": "Spark event logs and executor heartbeats",
+        "D": "Watermarking and session windows"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Checkpointing and Write-ahead Logs (WAL).",
+      "explanation": "The checkpoint saves the streaming query's progress (including offsets) to a durable location in cloud storage, while the WAL records each trigger's offset range before the batch is processed. Together, they enable exactly-once semantics and recovery after cluster failure."
+    },
+    {
+      "id": "03-incremental-processing-q005",
+      "domain": "incremental-processing",
+      "title": "Auto Loader Underlying Technology",
+      "difficulty": "easy",
+      "question": "Which tool does Auto Loader use to incrementally process data?",
+      "choices": {
+        "A": "Apache Kafka consumer groups",
+        "B": "Delta Lake Change Data Feed",
+        "C": "COPY INTO with file tracking",
+        "D": "Spark Structured Streaming"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Spark Structured Streaming.",
+      "explanation": "Auto Loader is built on top of Structured Streaming and uses it to incrementally discover and ingest new files as they arrive in cloud storage. It maintains a checkpoint to ensure exactly-once processing and scales automatically with file volume."
+    },
+    {
+      "id": "03-incremental-processing-q006",
+      "domain": "incremental-processing",
+      "title": "Micro-Batch Trigger Every 5 Seconds",
+      "difficulty": "medium",
+      "question": "A data engineer sets up a Structured Streaming job to read from a table, process the data, and subsequently write it to a new table in real-time. The code block is shown below:\n\n```python\n(spark.table(\"sales\")\n  .withColumn(\"avg_price\", col(\"sales\") / col(\"units\"))\n  .writeStream\n  .option(\"checkpointLocation\", checkpointPath)\n  .outputMode(\"complete\")\n  ._____\n  .table(\"new_sales\"))\n```\n\nIf the data engineer aims to run a micro-batch query that processes data every 5 seconds, which line of code should be used to complete the blank?",
+      "choices": {
+        "A": "`.trigger(interval=\"5 seconds\")`",
+        "B": "`.trigger(processingTime=\"5 seconds\")`",
+        "C": "`.trigger(continuous=\"5 seconds\")`",
+        "D": "`.trigger(microBatch=\"5 seconds\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`.trigger(processingTime=\"5 seconds\")`",
+      "explanation": "This fixed-interval trigger causes Spark to kick off a new micro-batch every 5 seconds, processing all data that arrived since the last batch. If processing takes longer than the interval, the next batch starts immediately after completion."
+    },
+    {
+      "id": "03-incremental-processing-q007",
+      "domain": "incremental-processing",
+      "title": "Lakeflow Declarative Pipelines DROP Expectation Behavior",
+      "difficulty": "medium",
+      "question": "A dataset established through Lakeflow Declarative Pipelines has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?",
+      "choices": {
+        "A": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log",
+        "B": "The entire batch is rejected and the pipeline enters a failed state",
+        "C": "Violating records are written to a separate quarantine table for manual review",
+        "D": "The pipeline pauses and waits for manual approval before continuing"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.",
+      "explanation": "The pipeline continues running. Dropped record counts and violation metrics are tracked in the Lakeflow Declarative Pipelines event log and displayed per-table in the pipeline UI under data quality statistics. The `FAIL UPDATE` variant would stop the pipeline instead."
+    },
+    {
+      "id": "03-incremental-processing-q008",
+      "domain": "incremental-processing",
+      "title": "CREATE STREAMING LIVE TABLE vs CREATE LIVE TABLE",
+      "difficulty": "medium",
+      "question": "When should `CREATE STREAMING LIVE TABLE` be used instead of `CREATE LIVE TABLE` for creating Lakeflow Declarative Pipelines in SQL?",
+      "choices": {
+        "A": "When the table needs to support both read and write operations simultaneously",
+        "B": "When the table must be accessible from multiple workspaces",
+        "C": "When the table requires ACID transaction support",
+        "D": "When data needs to be processed incrementally"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`CREATE STREAMING LIVE TABLE` should be used when data needs to be processed incrementally.",
+      "explanation": "It reads from append-only streaming sources (Auto Loader, Kafka, Delta change data feed) and processes only new records since the last run. `CREATE LIVE TABLE` (materialized view) re-processes the full dataset on each update and is suited for static or aggregated data."
+    },
+    {
+      "id": "03-incremental-processing-q009",
+      "domain": "incremental-processing",
+      "title": "Auto Loader for New File Detection",
+      "difficulty": "medium",
+      "question": "A data engineer's source system produces files in a shared directory that accumulate over time. The engineer must recognize which files are new since the last pipeline execution and ingest only those during each run. Which tool addresses this?",
+      "choices": {
+        "A": "COPY INTO with manual file listing",
+        "B": "Auto Loader",
+        "C": "Delta Lake MERGE with file metadata",
+        "D": "Spark batch read with timestamp filtering"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Auto Loader.",
+      "explanation": "Auto Loader uses file notification (cloud storage events) or directory listing to detect new files incrementally. It maintains a checkpoint recording which files have been processed, so only unprocessed files are ingested on each pipeline run — without requiring manual file tracking."
+    },
+    {
+      "id": "03-incremental-processing-q010",
+      "domain": "incremental-processing",
+      "title": "Silver to Gold Streaming Query",
+      "difficulty": "medium",
+      "question": "Which type of Structured Streaming query represents the transition from a Silver table to a Gold table?",
+      "choices": {
+        "A": "A query that reads raw data from cloud storage and applies schema enforcement before writing to a Silver table",
+        "B": "A query that deduplicates and cleanses Bronze data before writing to a Silver table",
+        "C": "A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table",
+        "D": "A query that replicates Silver data to an external data warehouse for reporting"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table.",
+      "explanation": "Gold tables typically contain business-level aggregates. Transforming cleaned Silver data into aggregated Gold data is the defining characteristic of the Silver-to-Gold transition in medallion architecture.\n\n> ⚠️ *This answer was generated by AI — verify against official Databricks documentation.*"
+    },
+    {
+      "id": "03-incremental-processing-q011",
+      "domain": "incremental-processing",
+      "title": "Identifying Which Lakeflow Declarative Pipelines Table Drops Records",
+      "difficulty": "medium",
+      "question": "A data engineer manages three tables in a Lakeflow Declarative Pipelines pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?",
+      "choices": {
+        "A": "Query the Delta transaction log of each table to find DELETE operations",
+        "B": "Add explicit logging statements to each table's transformation code",
+        "C": "Run DESCRIBE HISTORY on each table to check for dropped record counts",
+        "D": "Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics.",
+      "explanation": "The Lakeflow Declarative Pipelines pipeline UI shows per-table expectation metrics, including the number of records that passed, failed, or were dropped for each defined constraint. This makes it straightforward to pinpoint which table's expectation is causing record drops."
+    },
+    {
+      "id": "03-incremental-processing-q012",
+      "domain": "incremental-processing",
+      "title": "Streaming Write Issues",
+      "difficulty": "medium",
+      "question": "What is wrong with the following code?\n\n```python\ndf = spark.read.json(\"data/\")\ndf.write.save(\"output\", format=\"delta\")\n```",
+      "choices": {
+        "A": "The code saves files to a path but does not register the output as a named Delta table in the metastore",
+        "B": "The `spark.read.json()` method cannot be used with Delta format output",
+        "C": "The `.save()` method requires a checkpoint location for Delta format writes",
+        "D": "The code is missing a schema definition, which is required for JSON reads"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The code saves files to a path but does not register the output as a named Delta table in the metastore. To create a queryable Delta table accessible via SQL, use `.write.format(\"delta\").saveAsTable(\"table_name\")` instead.",
+      "explanation": "> ⚠️ *This answer was generated by AI — verify against official Databricks documentation.*"
+    },
+    {
+      "id": "03-incremental-processing-q013",
+      "domain": "incremental-processing",
+      "title": "CREATE TABLE from CSV Keyword",
+      "difficulty": "easy",
+      "question": "A data engineer needs to create a table in Databricks using data from a CSV file. They run a `CREATE TABLE` command that already specifies the CSV path and format in the statement body. Which additional line of code completes the blank?",
+      "choices": {
+        "A": "`USING DELTA`",
+        "B": "`FORMAT_OPTIONS('header' = 'true')`",
+        "C": "No additional line is needed",
+        "D": "`STORED AS TEXTFILE`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "No additional line is needed.",
+      "explanation": "When a `CREATE TABLE` statement already contains `USING CSV LOCATION '/path/to/csv'`, the format and location are fully specified within the command body itself. No extra keyword is required to complete the statement.\n\n> ⚠️ *This answer was generated by AI — verify against official Databricks documentation.*"
+    },
+    {
+      "id": "03-incremental-processing-q014",
+      "domain": "incremental-processing",
+      "title": "Process All Available Data Trigger",
+      "difficulty": "medium",
+      "question": "A data engineer sets up a Structured Streaming job to read from a table and write results to a new table. The code block is shown below:\n\n```python\n(spark.table(\"transactions\")\n  .withColumn(\"total\", col(\"price\") * col(\"qty\"))\n  .writeStream\n  .option(\"checkpointLocation\", checkpointPath)\n  .outputMode(\"append\")\n  ._____\n  .table(\"transactions_gold\"))\n```\n\nIf the data engineer intends for the query to process all available data across as many batches as needed and then stop, which line of code should be used to complete the blank?",
+      "choices": {
+        "A": "`.trigger(once=True)`",
+        "B": "`.trigger(processingTime=\"0 seconds\")`",
+        "C": "`.trigger(continuous=\"1 second\")`",
+        "D": "`.trigger(availableNow=True)`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`.trigger(availableNow=True)`",
+      "explanation": "This trigger processes all data that has arrived since the last checkpoint across one or more micro-batches, then shuts down automatically. It combines the efficiency of micro-batching (processing incrementally) with the convenience of a batch job (terminates when done)."
+    },
+    {
+      "id": "03-incremental-processing-q015",
+      "domain": "incremental-processing",
+      "title": "Auto Loader JSON String Inference",
+      "difficulty": "medium",
+      "question": "A data engineer creates a pipeline to ingest JSON data via Auto Loader with no type inference or schema hints specified. After examining the data, all columns in the target table are of string type, even for fields containing only float or boolean values. Why does Auto Loader infer all columns as string type?",
+      "choices": {
+        "A": "Auto Loader defaults to string type to prevent data loss during schema evolution",
+        "B": "The checkpoint metadata overrides column types to string for safety",
+        "C": "JSON data is a text-based format",
+        "D": "The Delta table's schema enforcement converts all incoming types to strings"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "JSON data is a text-based format.",
+      "explanation": "Without enabling schema inference (`cloudFiles.inferColumnTypes = true`), Auto Loader reads all JSON field values as strings by default. JSON itself does not enforce strict data types at the format level, so without explicit type hints, the safest default is to represent all values as strings."
+    },
+    {
+      "id": "03-incremental-processing-q016",
+      "domain": "incremental-processing",
+      "title": "Lakeflow Declarative Pipelines Pipeline Minimum Requirement",
+      "difficulty": "easy",
+      "question": "What needs to be specified when creating a new Lakeflow Declarative Pipelines pipeline?",
+      "choices": {
+        "A": "A target database and storage location",
+        "B": "At least one notebook library to be executed",
+        "C": "A cluster policy and node type configuration",
+        "D": "An explicit schedule or cron expression"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "At least one notebook library to be executed.",
+      "explanation": "A Lakeflow Declarative Pipelines pipeline must reference one or more notebooks containing the dataset definitions (`CREATE LIVE TABLE` or `CREATE STREAMING LIVE TABLE` statements). Other settings — storage location, target database, cluster configuration — are optional and can use defaults."
+    },
+    {
+      "id": "03-incremental-processing-q017",
+      "domain": "incremental-processing",
+      "title": "STREAM() Function in Lakeflow Declarative Pipelines",
+      "difficulty": "medium",
+      "question": "A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a Lakeflow Declarative Pipelines SQL query. What explains its inclusion?",
+      "choices": {
+        "A": "The referenced table is a streaming live table",
+        "B": "The `STREAM()` function enables parallel reads from the table across multiple clusters",
+        "C": "It converts a batch table into a temporary streaming source for the current query only",
+        "D": "The `STREAM()` function applies watermarking to handle late-arriving data"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The referenced table is a streaming live table.",
+      "explanation": "In Lakeflow Declarative Pipelines, `STREAM(table_name)` indicates that the table should be read as a streaming source — consuming only new records incrementally rather than reprocessing the full table. It is required when the source is a `STREAMING LIVE TABLE` and the consuming dataset needs to process it incrementally."
+    },
+    {
+      "id": "03-incremental-processing-q018",
+      "domain": "incremental-processing",
+      "title": "Auto Loader Compatible Workloads",
+      "difficulty": "easy",
+      "question": "What type of workloads are consistently compatible with Auto Loader?",
+      "choices": {
+        "A": "Both streaming and batch workloads",
+        "B": "Only batch workloads with scheduled triggers",
+        "C": "Only streaming workloads with continuous triggers",
+        "D": "Only interactive notebook workloads"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Both streaming and batch workloads.",
+      "explanation": "Auto Loader natively supports Structured Streaming for continuous incremental ingestion. It also supports triggered batch execution using `.trigger(availableNow=True)` to process all new files at once and then stop. This flexibility makes it suitable for both real-time and scheduled batch pipelines."
+    },
+    {
+      "id": "03-incremental-processing-q019",
+      "domain": "incremental-processing",
+      "title": "Lakeflow Declarative Pipelines Migration Changes",
+      "difficulty": "medium",
+      "question": "A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Lakeflow Declarative Pipelines. What changes are necessary?",
+      "choices": {
+        "A": "The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions",
+        "B": "The SQL code must be rewritten in Python because Lakeflow Declarative Pipelines only supports Python definitions",
+        "C": "The streaming source must be converted to a batch source before migrating to Lakeflow Declarative Pipelines",
+        "D": "No changes are required"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "No changes are required.",
+      "explanation": "Lakeflow Declarative Pipelines natively supports both Python and SQL within the same pipeline. It supports the medallion architecture (Bronze/Silver/Gold layers) and handles streaming sources directly. The existing language mix and multi-hop architecture can migrate to Lakeflow Declarative Pipelines without modification to the underlying logic."
+    },
+    {
+      "id": "03-incremental-processing-q020",
+      "domain": "incremental-processing",
+      "title": "spark.read to spark.readStream",
+      "difficulty": "easy",
+      "question": "A data engineer utilizes this code block within a batch ingestion pipeline to read from a Delta table:\n\n```python\ndf = (spark.read\n      .format(\"delta\")\n      .schema(schema)\n      .load(\"/delta/transactions\"))\n```\n\nWhat single change must be made for this code block to work correctly when the `transactions` table acts as a streaming source?",
+      "choices": {
+        "A": "Replace `.format(\"delta\")` with `.format(\"deltaStream\")`",
+        "B": "Replace `spark.read` with `spark.readStream`",
+        "C": "Add `.option(\"streaming\", \"true\")` to the reader chain",
+        "D": "Replace `.load(\"/delta/transactions\")` with `.stream(\"/delta/transactions\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Replace `spark.read` with `spark.readStream`.",
+      "explanation": "This single change converts the static batch read into an incremental streaming read that consumes new records appended to the Delta table since the last checkpoint. All subsequent transformations on the resulting DataFrame remain unchanged."
+    },
+    {
+      "id": "03-incremental-processing-q021",
+      "domain": "incremental-processing",
+      "title": "Streaming DataFrame Write API Error",
+      "difficulty": "medium",
+      "question": "Why will the following code fail?\n\n```python\ndf = spark.readStream.format(\"delta\").load(\"dbfs:/delta/events\")\ndf.write.csv(\"output\")\n```",
+      "choices": {
+        "A": "`df.write` must be `df.writeStream`",
+        "B": "The `.csv(\"output\")` method is not supported for Delta format reads",
+        "C": "A checkpoint location must be specified before calling `.write`",
+        "D": "The `readStream` API cannot read from Delta format tables"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`df.write` must be `df.writeStream`.",
+      "explanation": "A streaming DataFrame created with `readStream` must be written using the `writeStream` API. Using the batch `.write` API on a streaming DataFrame raises an `AnalysisException: Queries with streaming sources must be executed with writeStream.start()`."
+    },
+    {
+      "id": "03-incremental-processing-q022",
+      "domain": "incremental-processing",
+      "title": "Missing Checkpoint in Streaming Write",
+      "difficulty": "medium",
+      "question": "What is missing from this streaming write?\n\n```python\ndf.writeStream.format(\"delta\").start(\"output\")\n```",
+      "choices": {
+        "A": "An output mode specification (append, complete, or update)",
+        "B": "A schema definition for the output Delta table",
+        "C": "A trigger interval for micro-batch processing",
+        "D": "A checkpoint location is missing"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "A checkpoint location is missing.",
+      "explanation": "Structured Streaming requires `.option(\"checkpointLocation\", \"/path/to/checkpoint\")` to track query progress and enable fault-tolerance. Without a checkpoint, the query cannot recover from failures or track which data has been processed, and Spark will raise an error on startup."
+    },
+    {
+      "id": "04-production-pipelines-q001",
+      "domain": "production-pipelines",
+      "title": "When to Use Cluster Pools",
+      "difficulty": "medium",
+      "question": "When would a data team use cluster pools?",
+      "choices": {
+        "A": "When clusters need to share data between concurrent jobs",
+        "B": "When an automated report needs to be refreshed as quickly as possible",
+        "C": "When reducing cloud storage costs for intermediate data is the priority",
+        "D": "When enforcing uniform cluster configurations across all team members"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When an automated report needs to be refreshed as quickly as possible.",
+      "explanation": "Cluster pools maintain a set of pre-warmed, idle VM instances that can be assigned to clusters immediately on startup. This eliminates the VM provisioning delay (which can take several minutes), reducing cluster startup time to seconds for time-sensitive jobs."
+    },
+    {
+      "id": "04-production-pipelines-q002",
+      "domain": "production-pipelines",
+      "title": "Adding an Upstream Task to an Existing Job",
+      "difficulty": "medium",
+      "question": "A data engineer executes a single-task job each morning. Upon discovering an upstream data issue, they must add a new notebook to run before the original task. What is the correct approach to set up this new upstream task?",
+      "choices": {
+        "A": "Clone the existing Job and add the new notebook as a second task in the clone",
+        "B": "Create a separate Job for the new notebook and schedule it to run 30 minutes before the original Job",
+        "C": "Create a new task in the existing Job, and then add the original task as a dependency of the new task",
+        "D": "Replace the original task's notebook with a wrapper notebook that runs both notebooks sequentially"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Create a new task in the existing Job, and then add the original task as a dependency of the new task.",
+      "explanation": "In Databricks Jobs, task dependencies are defined by specifying which tasks a given task \"depends on.\" To insert an upstream step, the new task should have no dependencies (runs first), and the original task should be configured to depend on the new task (runs after)."
+    },
+    {
+      "id": "04-production-pipelines-q003",
+      "domain": "production-pipelines",
+      "title": "Limiting Query Refresh Schedule Duration",
+      "difficulty": "medium",
+      "question": "An engineering manager wants a query to refresh every minute for the first week after a project launch, with no compute costs after that week. What strategy ensures the query stops refreshing and generating costs beyond week one?",
+      "choices": {
+        "A": "Set the SQL endpoint to auto-stop after one week of total runtime",
+        "B": "Create a Databricks Job to disable the query refresh after seven days",
+        "C": "Manually cancel the refresh schedule at the end of the week",
+        "D": "Set the query's refresh schedule to end on a specific date in the query scheduler"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Set the query's refresh schedule to end on a specific date in the query scheduler.",
+      "explanation": "Databricks SQL query schedulers support an optional end date/time, allowing the refresh to automatically stop once the date is reached. No manual intervention is needed after the initial setup."
+    },
+    {
+      "id": "04-production-pipelines-q004",
+      "domain": "production-pipelines",
+      "title": "SQL Endpoint Performance for Concurrent Queries",
+      "difficulty": "medium",
+      "question": "A data analysis team's Databricks SQL queries perform poorly when multiple members execute small queries simultaneously on an always-on SQL endpoint. All queries use the same endpoint. What strategy improves performance?",
+      "choices": {
+        "A": "Increase the maximum bound of the SQL endpoint's scaling range",
+        "B": "Switch from a Pro to a Classic SQL endpoint type",
+        "C": "Increase the size (T-shirt size) of each individual cluster in the endpoint",
+        "D": "Enable query result caching on the SQL endpoint"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Increase the maximum bound of the SQL endpoint's scaling range.",
+      "explanation": "A SQL endpoint (warehouse) can auto-scale by adding more clusters when concurrent query load increases. Raising the maximum cluster count allows the endpoint to serve more parallel queries simultaneously, reducing wait times during peak concurrent usage."
+    },
+    {
+      "id": "04-production-pipelines-q005",
+      "domain": "production-pipelines",
+      "title": "Reducing SQL Endpoint Cost on Daily Dashboard",
+      "difficulty": "medium",
+      "question": "A data engineer sets a Databricks SQL dashboard to refresh daily and wants the related SQL endpoint to run only when needed. What strategy reduces the overall running time of the SQL endpoint?",
+      "choices": {
+        "A": "Downgrade the SQL endpoint to a smaller cluster size",
+        "B": "Configure the SQL endpoint to start only during business hours",
+        "C": "Switch the dashboard to use a shared all-purpose cluster instead",
+        "D": "Turn on the Auto Stop feature for the SQL endpoint"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Turn on the Auto Stop feature for the SQL endpoint.",
+      "explanation": "Auto Stop automatically terminates the SQL endpoint after a configurable idle period. After the dashboard refresh completes, the endpoint shuts down automatically — avoiding continuous compute charges during the long idle period between daily refreshes."
+    },
+    {
+      "id": "04-production-pipelines-q006",
+      "domain": "production-pipelines",
+      "title": "Webhook Alert for NULL Count",
+      "difficulty": "medium",
+      "question": "A data engineer uses a Databricks SQL dashboard to monitor data quality. When the count of NULL values in a query result reaches 100, the entire team should be alerted via a messaging webhook. What method accomplishes this?",
+      "choices": {
+        "A": "Set up an Alert with a new webhook alert destination",
+        "B": "Add a conditional formatting rule to the dashboard visualization that sends a webhook",
+        "C": "Create a Databricks Job that polls the query results and calls the webhook via Python",
+        "D": "Configure a SQL endpoint event hook that triggers on query result thresholds"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Set up an Alert with a new webhook alert destination.",
+      "explanation": "Databricks SQL Alerts monitor query results against a threshold condition and trigger notifications when the condition is met. Webhook destinations allow alerts to be sent to external messaging services (Slack, Microsoft Teams, PagerDuty) in real-time."
+    },
+    {
+      "id": "04-production-pipelines-q007",
+      "domain": "production-pipelines",
+      "title": "Diagnosing a Slow Job Task",
+      "difficulty": "medium",
+      "question": "A single Job executes two notebooks as distinct tasks. One notebook is performing slowly during the current Job run. What method can a tech lead use to diagnose the cause?",
+      "choices": {
+        "A": "Check the Databricks SQL query history for slow-running queries",
+        "B": "Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook",
+        "C": "Review the cluster event log for resource allocation errors",
+        "D": "Open the Lakeflow Declarative Pipelines pipeline UI to inspect per-table processing metrics"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook.",
+      "explanation": "Clicking into the active run opens a live view of the notebook execution, including links to the Spark UI for the current task. This allows inspection of active stages, task metrics, shuffle data, and memory usage to identify performance bottlenecks."
+    },
+    {
+      "id": "04-production-pipelines-q008",
+      "domain": "production-pipelines",
+      "title": "Faster Cluster Startup for Nightly Jobs",
+      "difficulty": "easy",
+      "question": "A data engineer manages a nightly job with several tasks that run slowly due to long cluster startup times. What action improves cluster startup time?",
+      "choices": {
+        "A": "Increase the driver node memory allocation",
+        "B": "Switch to a single-node cluster to avoid worker provisioning",
+        "C": "Use clusters from a cluster pool",
+        "D": "Enable autoscaling with a higher maximum worker count"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Use clusters from a cluster pool.",
+      "explanation": "Cluster pools pre-provision and maintain idle instances that are immediately available for cluster creation. Tasks using pool-backed clusters skip the VM provisioning step, reducing startup from several minutes to a few seconds."
+    },
+    {
+      "id": "04-production-pipelines-q009",
+      "domain": "production-pipelines",
+      "title": "Programmatic Job Schedule Representation",
+      "difficulty": "medium",
+      "question": "A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?",
+      "choices": {
+        "A": "Databricks Asset Bundles YAML configuration",
+        "B": "Cron syntax",
+        "C": "Apache Airflow DAG definitions",
+        "D": "JSON job templates via the Databricks CLI"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Cron syntax.",
+      "explanation": "Databricks Jobs support quartz cron expressions for scheduling. Cron strings are compact, human-readable, and can be programmatically constructed and submitted via the Jobs API or embedded in Databricks Asset Bundles YAML configuration files."
+    },
+    {
+      "id": "04-production-pipelines-q010",
+      "domain": "production-pipelines",
+      "title": "Job Failure Email Notification",
+      "difficulty": "easy",
+      "question": "What approach should be taken to email the owner of a Databricks Job if it fails?",
+      "choices": {
+        "A": "Write a try/except block in the notebook that sends an email on failure",
+        "B": "Configure an external monitoring tool to watch the Jobs API for failure status",
+        "C": "Set up an Alert in the Job's notification settings (Job page)",
+        "D": "Create a downstream task that runs only on failure and sends the email"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Set up an Alert in the Job's notification settings (Job page).",
+      "explanation": "Databricks Jobs support email notifications for job events (failure, success, or start). The job owner's email address is added directly from the Job's \"Notifications\" section, requiring no custom code or external alerting systems."
+    },
+    {
+      "id": "04-production-pipelines-q011",
+      "domain": "production-pipelines",
+      "title": "Scheduling a Daily SQL Query Refresh",
+      "difficulty": "easy",
+      "question": "An engineering manager reviews a query daily but currently reruns it manually and waits for results. What strategy guarantees the query results are refreshed daily automatically?",
+      "choices": {
+        "A": "Schedule the query to refresh every 1 day from the query's page in Databricks SQL",
+        "B": "Create a Databricks Job that runs the query notebook on a daily cron schedule",
+        "C": "Set up an Apache Airflow DAG to trigger the query execution daily",
+        "D": "Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh the query"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Schedule the query to refresh every 1 day from the query's page in Databricks SQL.",
+      "explanation": "Databricks SQL provides a built-in scheduler accessible directly from the query editor. Setting a recurring daily refresh interval ensures results are always up-to-date without manual intervention or external orchestration tools."
+    },
+    {
+      "id": "04-production-pipelines-q012",
+      "domain": "production-pipelines",
+      "title": "When to Use \"Depends On\" for a Job Task",
+      "difficulty": "easy",
+      "question": "In what situations should a data engineer choose a task in the \"Depends On\" field when creating a new Databricks Job task?",
+      "choices": {
+        "A": "When the new task needs to run on a different cluster than other tasks",
+        "B": "When the new task should only run if a previous task has completed successfully",
+        "C": "When the new task processes data from a different database than other tasks",
+        "D": "When another task needs to successfully complete before the new task begins"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "When another task needs to successfully complete before the new task begins.",
+      "explanation": "The \"Depends On\" field establishes execution order in a Databricks Job DAG. The new task will only start after all specified upstream tasks have completed successfully. If any dependency fails, the downstream task is skipped."
+    },
+    {
+      "id": "04-production-pipelines-q013",
+      "domain": "production-pipelines",
+      "title": "Webhook Alert for Zero-Sales Stores",
+      "difficulty": "medium",
+      "question": "A data engineer tracks store-level records where sales equal zero. When this count exceeds zero, the entire team should be notified via a messaging webhook. What approach accomplishes this?",
+      "choices": {
+        "A": "Configure a Lakeflow Declarative Pipelines expectation that triggers a webhook when zero-sales records appear",
+        "B": "Set up an Alert with a new webhook alert destination",
+        "C": "Build a custom Python script that polls the query results and posts to the webhook",
+        "D": "Add a dashboard filter that highlights zero-sales stores and emails the team"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Set up an Alert with a new webhook alert destination.",
+      "explanation": "Configure the alert condition on the query result (value > 0) and point the destination to the team's webhook URL. Databricks SQL Alerts evaluate the query result on each refresh and trigger the webhook notification when the threshold condition is met."
+    },
+    {
+      "id": "04-production-pipelines-q014",
+      "domain": "production-pipelines",
+      "title": "Minimizing SQL Endpoint Runtime on Hourly Dashboard",
+      "difficulty": "medium",
+      "question": "A data engineer has an hourly Databricks SQL dashboard whose underlying data is managed by an automated Databricks Job. How can they minimize the total running time of the SQL endpoint during the dashboard's hourly refresh?",
+      "choices": {
+        "A": "Reduce the SQL endpoint cluster size to the smallest available",
+        "B": "Use a shared all-purpose cluster instead of a SQL endpoint",
+        "C": "Pre-compute dashboard results in the Databricks Job and cache them",
+        "D": "Turn on the Auto Stop feature for the SQL endpoint"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Turn on the Auto Stop feature for the SQL endpoint.",
+      "explanation": "Auto Stop shuts down the SQL endpoint after a defined idle period following the last query. Since the dashboard only needs the endpoint during the brief refresh window each hour, Auto Stop ensures the endpoint is off for the remaining idle time between refreshes."
+    },
+    {
+      "id": "04-production-pipelines-q015",
+      "domain": "production-pipelines",
+      "title": "Persist to Memory and Disk",
+      "difficulty": "medium",
+      "question": "Which Spark method persists data to both memory and disk when memory is insufficient?",
+      "choices": {
+        "A": "`cache()` with `StorageLevel.MEMORY_ONLY`",
+        "B": "`checkpoint()` with eager evaluation",
+        "C": "`persist()` with `StorageLevel.MEMORY_AND_DISK`",
+        "D": "`broadcast()` with local storage fallback"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`persist()` with `StorageLevel.MEMORY_AND_DISK`.",
+      "explanation": "`persist()` allows specifying a `StorageLevel` such as `MEMORY_AND_DISK`, which stores partitions in memory and spills excess to disk when memory is exhausted. `cache()` is a shortcut for `persist(StorageLevel.MEMORY_ONLY)` and does not spill to disk automatically."
+    },
+    {
+      "id": "05-data-governance-q001",
+      "domain": "data-governance",
+      "title": "Git Operations Outside Databricks Repos",
+      "difficulty": "easy",
+      "question": "Which Git operations need to be completed outside of Databricks Repos?",
+      "choices": {
+        "A": "Commit",
+        "B": "Push",
+        "C": "Merge",
+        "D": "Pull"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Merge.",
+      "explanation": "Databricks Repos supports commit, pull, push, clone, and branch operations within the UI. However, merging branches must be performed in the external Git provider (GitHub, GitLab, Bitbucket, Azure DevOps) where pull requests and merge conflict resolution are handled."
+    },
+    {
+      "id": "05-data-governance-q002",
+      "domain": "data-governance",
+      "title": "Benefit of Databricks Repos Over Notebook Versioning",
+      "difficulty": "medium",
+      "question": "A data engineer must decide between the built-in versioning of Databricks Notebooks and Databricks Repos. What is one benefit of using Repos instead?",
+      "choices": {
+        "A": "Repos automatically back up notebooks to cloud storage every 5 minutes",
+        "B": "Repos eliminates the need for a Git provider by hosting repositories internally",
+        "C": "Repos provides a visual diff tool for comparing notebook cell outputs",
+        "D": "Databricks Repos supports the use of multiple branches"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Databricks Repos supports the use of multiple branches.",
+      "explanation": "Built-in notebook versioning provides only a linear history of auto-saved snapshots. Repos integrates fully with Git, enabling feature branches, pull requests, code reviews, and collaborative development workflows — essential for team-based software engineering practices."
+    },
+    {
+      "id": "05-data-governance-q003",
+      "domain": "data-governance",
+      "title": "Table Ownership Transfer",
+      "difficulty": "medium",
+      "question": "A data engineer has departed from the organization. The data team needs to transfer ownership of the departed engineer's Delta tables to the new lead data engineer. The previous engineer no longer has access. Who can perform this ownership transfer in Data Explorer?",
+      "choices": {
+        "A": "A workspace administrator",
+        "B": "Any user with SELECT privilege on the tables",
+        "C": "The new lead data engineer by running ALTER TABLE SET OWNER",
+        "D": "Any member of the data team with MODIFY privilege"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "A workspace administrator.",
+      "explanation": "Only workspace administrators have the authority to transfer ownership of objects when the original owner is unavailable. Regular users — including the new lead data engineer — cannot reassign ownership to themselves without admin privileges."
+    },
+    {
+      "id": "05-data-governance-q004",
+      "domain": "data-governance",
+      "title": "GRANT ALL PRIVILEGES on a Database",
+      "difficulty": "easy",
+      "question": "A new data engineering team needs full privileges on the `customers` database to manage the project effectively. Which command grants all permissions?",
+      "choices": {
+        "A": "`GRANT FULL ACCESS ON DATABASE customers TO team;`",
+        "B": "`GRANT ALL PRIVILEGES ON DATABASE customers TO team;`",
+        "C": "`GRANT READ, WRITE, ADMIN ON DATABASE customers TO team;`",
+        "D": "`GRANT MANAGE ON DATABASE customers TO team;`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`GRANT ALL PRIVILEGES ON DATABASE customers TO team;`",
+      "explanation": "This grants all available permissions (SELECT, CREATE, MODIFY, USAGE, READ_METADATA, etc.) on the database and its objects to the team. It is the broadest privilege grant, giving the team complete control over the schema."
+    },
+    {
+      "id": "05-data-governance-q005",
+      "domain": "data-governance",
+      "title": "GRANT USAGE on a Database",
+      "difficulty": "medium",
+      "question": "A newly formed data engineering team needs access to browse the `customers` database to identify existing tables. Which GRANT command provides the necessary permission?",
+      "choices": {
+        "A": "`GRANT SELECT ON DATABASE customers TO team;`",
+        "B": "`GRANT READ_METADATA ON DATABASE customers TO team;`",
+        "C": "`GRANT USAGE ON DATABASE customers TO team;`",
+        "D": "`GRANT BROWSE ON DATABASE customers TO team;`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`GRANT USAGE ON DATABASE customers TO team;`",
+      "explanation": "`USAGE` allows users to browse the database and see its contents (tables, views, functions) without granting read or write access to the underlying data. It is the minimum permission required for teams to discover what objects exist in a database."
+    },
+    {
+      "id": "05-data-governance-q006",
+      "domain": "data-governance",
+      "title": "Syncing Databricks Repos with Remote Changes",
+      "difficulty": "easy",
+      "question": "A data engineer's colleague has pushed updates to the central Git repository. The data engineer needs to sync their Databricks Repo with these changes. Which Git operation accomplishes this?",
+      "choices": {
+        "A": "Clone",
+        "B": "Fetch",
+        "C": "Rebase",
+        "D": "Pull"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Pull.",
+      "explanation": "A `git pull` fetches changes from the remote repository and merges them into the current local branch. In Databricks Repos, this is performed via the \"Pull\" action in the Repos UI, keeping the local copy synchronized with the latest upstream changes."
+    },
+    {
+      "id": "05-data-governance-q007",
+      "domain": "data-governance",
+      "title": "Where to Check Table Permissions",
+      "difficulty": "easy",
+      "question": "A data engineer needs to use a Delta table but is unsure whether they have the necessary permissions. Where can they check their table permissions?",
+      "choices": {
+        "A": "The Databricks Admin Console under User Management",
+        "B": "Data Explorer",
+        "C": "The cluster configuration page under Security settings",
+        "D": "The SQL endpoint's access control list"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Data Explorer.",
+      "explanation": "The Data Explorer in Databricks provides a dedicated \"Permissions\" tab for each table, listing which users and groups have access and what privilege levels are granted. It is the primary interface for inspecting and managing object-level permissions."
+    },
+    {
+      "id": "05-data-governance-q008",
+      "domain": "data-governance",
+      "title": "When to Use a Single-Node Cluster",
+      "difficulty": "medium",
+      "question": "What scenario would prompt a data engineer to use a single-node cluster?",
+      "choices": {
+        "A": "When running a distributed join across tables with billions of rows",
+        "B": "When deploying a production Lakeflow Declarative Pipelines pipeline with multiple streaming sources",
+        "C": "When working interactively with a small amount of data",
+        "D": "When maximizing parallelism for a large-scale ETL workload"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "When working interactively with a small amount of data.",
+      "explanation": "Single-node clusters run both the driver and executor on the same machine, making them suitable for development, exploratory data analysis on small datasets, and libraries that do not support distributed execution (e.g., some scikit-learn workflows). They are not appropriate for large-scale production jobs."
+    },
+    {
+      "id": "05-data-governance-q009",
+      "domain": "data-governance",
+      "title": "Using SQL in a Python Notebook Cell",
+      "difficulty": "easy",
+      "question": "A data engineer is working in a Python notebook on Databricks but needs to use SQL for one specific cell. They prefer that all other cells remain Python. How can they incorporate SQL into only that cell?",
+      "choices": {
+        "A": "Add `%sql` to the first line of the cell",
+        "B": "Wrap the SQL query in `spark.sql()` and assign it to a variable",
+        "C": "Change the notebook's default language to SQL and then switch back",
+        "D": "Import the `sql` module and call `sql.execute()`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Add `%sql` to the first line of the cell.",
+      "explanation": "Databricks magic commands (`%sql`, `%python`, `%scala`, `%r`) override the cell language for that individual cell only. All other cells continue using the notebook's default language. This allows mixing languages within a single notebook without changing the global setting."
+    },
+    {
+      "id": "05-data-governance-q010",
+      "domain": "data-governance",
+      "title": "Identifying a Table Owner",
+      "difficulty": "easy",
+      "question": "A data engineer requires access to `new_table` but does not know who owns it. What method can be used to identify the owner?",
+      "choices": {
+        "A": "Run `SHOW GRANT ON TABLE new_table` to list all privilege holders",
+        "B": "Check the cluster logs for the user who last wrote to the table",
+        "C": "Query the `information_schema.tables` view for the table's creator",
+        "D": "Review the Owner field in the table's page in Data Explorer"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Review the Owner field in the table's page in Data Explorer.",
+      "explanation": "Data Explorer displays the table owner in the table details panel. Any user with workspace access can view this field without needing special permissions, making it the standard way to identify who to contact for permission requests."
+    }
+  ]
+}
