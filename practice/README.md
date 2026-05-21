@@ -31,6 +31,12 @@ Banks for the other 3 certs (Data Analyst Associate, ML Professional, GenAI Engi
 
 ## How to run
 
+### Live version
+
+**▶ [https://kengio.github.io/databricks-certification-study-guide/](https://kengio.github.io/databricks-certification-study-guide/)**
+
+Deployed automatically from `main` whenever anything in `practice/` changes. No install, no clone — open the link and start drilling.
+
 ### Local
 
 ```bash
@@ -46,13 +52,22 @@ python3 -m http.server 8080 --directory practice
 > [!tip]
 > Opening `practice/index.html` directly via `file://` won't work because browsers block `fetch()` for local files. Always use a static server (or GitHub Pages).
 
-### GitHub Pages
+### Deploy (for fork maintainers)
 
-The `practice/` folder is self-contained and works as a GitHub Pages publish target. From the repo settings:
+The deploy is driven by [`.github/workflows/deploy-practice.yml`](../.github/workflows/deploy-practice.yml). On every push to `main` that touches `practice/**`, the workflow:
 
-1. **Pages** → **Build and deployment** → **Source: Deploy from a branch**
-2. **Branch: `main`** → **Folder: `/practice`** (or `/` if you want to expose the whole repo, in which case the quiz lives at `/practice/`)
-3. Wait ~1 min for the deploy. The page is live at `https://<user>.github.io/<repo>/practice/`.
+1. Checks out the repo
+2. Uploads `practice/` as a Pages artifact (with `.nojekyll` so HTML/JS pass through unmodified)
+3. Deploys via `actions/deploy-pages@v4`
+
+**First-time setup** (only needed once per fork):
+
+1. Repo → **Settings** → **Pages**
+2. **Build and deployment** → **Source: GitHub Actions**
+3. Push any change under `practice/` to `main` (or trigger the workflow manually via Actions → "Deploy practice quiz to GitHub Pages" → Run workflow)
+4. After ~1 min, the live URL is shown on the workflow run page and in repo Settings → Pages
+
+The published site lives at `https://<user>.github.io/<repo>/` (no `/practice` suffix because the workflow uploads `practice/` as the artifact root).
 
 ## Modes
 
