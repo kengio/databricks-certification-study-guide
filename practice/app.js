@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "10";
+  const APP_VERSION = "11";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -797,6 +797,24 @@
       return;
     }
     const submitted = !$("#btn-next").hidden;
+
+    // ↑ / ↓ — cycle through choices (only meaningful before submit)
+    if ((ev.key === "ArrowUp" || ev.key === "ArrowDown") && !submitted) {
+      const letters = ["A", "B", "C", "D"];
+      const currentIdx = letters.indexOf(STATE.currentChoice);
+      const delta = ev.key === "ArrowDown" ? 1 : -1;
+      const nextIdx = currentIdx === -1
+        ? (ev.key === "ArrowDown" ? 0 : 3)        // no selection → start at top/bottom
+        : (currentIdx + delta + 4) % 4;            // wrap around
+      const radio = document.querySelector(
+        `fieldset#quiz-choices input[value="${letters[nextIdx]}"]`);
+      if (radio && !radio.disabled) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      ev.preventDefault();
+      return;
+    }
 
     // Enter / Space — primary action (submit before answer, next after)
     if (ev.key === "Enter" || ev.key === " ") {
