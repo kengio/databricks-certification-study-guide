@@ -22,7 +22,7 @@ Quick reference guides for common Databricks operations and configurations.
 | [Unity Catalog Quick Reference](./unity-catalog-quick-ref.md) | Permissions, grants, and catalog operations |
 | [MLflow Quick Reference](mlflow-quick-ref.md) | Experiment tracking, model registry, inference APIs |
 | [PySpark API Quick Reference](pyspark-api-quick-ref.md) | DataFrame, aggregation, window, streaming APIs |
-| [DLT / Lakeflow Pipelines Quick Reference](./dlt-quick-ref.md) | Table types, expectations, APPLY CHANGES, pipeline settings |
+| [Lakeflow Declarative Pipelines Quick Reference](./lakeflow-declarative-pipelines-quick-ref.md) | Table types, expectations, `APPLY CHANGES INTO`, pipeline settings (formerly DLT) |
 | [Auto Loader Quick Reference](./auto-loader-quick-ref.md) | cloudFiles options, schema evolution modes, file notification, UC Volumes |
 | [Streaming Quick Reference](./streaming-quick-ref.md) | Triggers, watermarks, stream-stream joins, stateful aggregations, exactly-once |
 

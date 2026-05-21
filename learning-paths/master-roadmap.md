@@ -269,7 +269,7 @@ Choose based on your career direction after Stage 3.
 | [Unity Catalog Quick Ref](../shared/cheat-sheets/unity-catalog-quick-ref.md) | All |
 | [PySpark API Quick Ref](../shared/cheat-sheets/pyspark-api-quick-ref.md) | DEA, DEP, MLA |
 | [Spark Configurations](../shared/cheat-sheets/spark-configurations.md) | DEP |
-| [DLT / Lakeflow Quick Ref](../shared/cheat-sheets/dlt-quick-ref.md) | DEP |
+| [DLT / Lakeflow Quick Ref](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) | DEP |
 | [Auto Loader Quick Ref](../shared/cheat-sheets/auto-loader-quick-ref.md) | DEA, DEP |
 | [Streaming Quick Ref](../shared/cheat-sheets/streaming-quick-ref.md) | DEP |
 | [MLflow Quick Ref](../shared/cheat-sheets/mlflow-quick-ref.md) | MLA, MLP, GenAI |
