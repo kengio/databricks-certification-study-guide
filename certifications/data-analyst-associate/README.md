@@ -44,7 +44,7 @@ pie title Exam Topic Distribution (9 domains)
     "Executing Queries Using Databricks SQL and Warehouses" : 20
     "Creating Dashboards and Visualizations" : 16
     "Analyzing Queries" : 15
-    "Developing AI/BI Genie Spaces" : 12
+    "Developing, Sharing, and Maintaining AI/BI Genie Spaces" : 12
     "Understanding Databricks Data Intelligence Platform" : 11
     "Managing Data" : 8
     "Securing Data" : 8
@@ -76,10 +76,10 @@ The guide's existing topic folders predate the October 2025 9-domain restructure
 | [02-Data Management](02-data-management/README.md)                   | Managing Data · Securing Data · Data Modeling |
 | [03-SQL Queries](03-sql-queries/README.md)                           | Executing Queries · Analyzing Queries · Importing Data |
 | [04-Dashboards & Visualization](04-dashboards-visualization/README.md) | Creating Dashboards and Visualizations |
-| [05-Analytics Applications](05-analytics-applications/README.md)     | Developing AI/BI Genie Spaces · scheduling & sharing |
+| [05-Analytics Applications](05-analytics-applications/README.md)     | Developing, Sharing, and Maintaining AI/BI Genie Spaces · scheduling & sharing |
 
 > [!note]
-> The **Developing AI/BI Genie Spaces** domain (12 %) is partially covered today inside `05-analytics-applications/`. A dedicated folder for Genie Spaces is planned; in the meantime, the [AI/BI documentation](https://docs.databricks.com/en/genie/index.html) is the authoritative reference.
+> The **Developing, Sharing, and Maintaining AI/BI Genie Spaces** domain (12 %) is partially covered today inside `05-analytics-applications/`. A dedicated folder for Genie Spaces is planned; in the meantime, the [AI/BI documentation](https://docs.databricks.com/en/genie/index.html) is the authoritative reference.
 
 ### Practice & Resources
 

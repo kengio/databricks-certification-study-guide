@@ -41,7 +41,7 @@ aliases:
 ## Exam Domain Weights (official — March 1, 2025)
 
 ```mermaid
-pie title Exam Topic Distribution
+pie title Exam Topic Distribution (4 domains)
     "Databricks Machine Learning" : 38
     "Model Development" : 31
     "ML Workflows" : 19

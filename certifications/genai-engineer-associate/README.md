@@ -21,7 +21,7 @@ aliases:
 > - **Evaluation and Monitoring** elevated to 12 %
 > - Pass / fail — **Databricks no longer publishes a numeric passing score**
 >
-> The official source of truth: [Databricks Certified Generative AI Engineer Associate](https://www.databricks.com/learn/certification/generative-ai-engineer-associate). Topic folders in this guide cover the same scope but with different labels; reorganisation to the 6-domain structure is on the [guide roadmap](../../README.md#roadmap-for-the-guide-itself).
+> The official source of truth: [Databricks Certified Generative AI Engineer Associate](https://www.databricks.com/learn/certification/genai-engineer-associate). Topic folders in this guide cover the same scope but with different labels; reorganisation to the 6-domain structure is on the [guide roadmap](../../README.md#roadmap-for-the-guide-itself).
 
 ## Exam Overview
 
@@ -119,7 +119,7 @@ Review these shared fundamentals:
 
 ## Official Resources
 
-- [Databricks Certification Page](https://www.databricks.com/learn/certification/generative-ai-engineer-associate)
+- [Databricks Certification Page](https://www.databricks.com/learn/certification/genai-engineer-associate)
 - [Mosaic AI Documentation](https://docs.databricks.com/generative-ai/)
 - [Vector Search Documentation](https://docs.databricks.com/en/generative-ai/vector-search.html)
 - [Model Serving Documentation](https://docs.databricks.com/en/machine-learning/model-serving/index.html)

@@ -157,5 +157,5 @@ Before starting this certification, review:
 
 1. **Advanced Data Engineering with Databricks** - Primary exam prep course
 2. **Data Management and Governance with Unity Catalog**
-3. **Build Data Pipelines with Lakeflow Spark Declarative Pipelines**
+3. **Build Data Pipelines with Lakeflow Declarative Pipelines**
 4. **Automated Deployment with Databricks Asset Bundles**

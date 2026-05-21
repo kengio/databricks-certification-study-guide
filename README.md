@@ -44,7 +44,7 @@ tags:
   Refreshed against the official Databricks exam guides current as of <b>May 21, 2026</b>.</i>
 </p>
 
-> [!NOTE]
+> [!note]
 > **These are the exam notes I built while preparing for the Databricks certification series.** Cheat sheets, practice questions, mock exams, and end-to-end worked examples — now open-sourced under MIT so the next person doesn't have to start from scratch. Every certification section maps to the current official Databricks exam guide for that credential. If it helped you, ⭐ the repo and pass it on.
 
 ---
@@ -101,7 +101,7 @@ All six certifications:
 - **Multiple choice.** Online or on-site delivery.
 - **Validity: 2 years.** Renew by retaking or sitting an updated version.
 - **No formal prerequisites.** Hands-on experience and the [Databricks Academy](https://www.databricks.com/learn/training) course are strongly recommended.
-- **Languages available:** English on every exam; Japanese / Portuguese (BR) / Korean on most associate exams (see per-certification page for the current language list).
+- **Languages available:** English on every exam. Japanese, Portuguese (BR), and Korean are available on every associate exam **except Data Analyst Associate** (English-only), and on the Data Engineer Professional. The ML Professional and Data Analyst Associate exams are English-only.
 
 ## Per-certification exam details
 
@@ -224,7 +224,7 @@ The current exam guide consolidates the previous four domains into three; "Solut
 
 | Detail | Value |
 | :--- | :--- |
-| **Exam ID / page** | [Databricks Certified Generative AI Engineer Associate](https://www.databricks.com/learn/certification/generative-ai-engineer-associate) |
+| **Exam ID / page** | [Databricks Certified Generative AI Engineer Associate](https://www.databricks.com/learn/certification/genai-engineer-associate) |
 | **Duration** | 90 minutes |
 | **Scored questions** | 45 multiple-choice |
 | **Languages** | English, Japanese, Portuguese (BR), Korean |
@@ -245,7 +245,7 @@ The current exam guide consolidates the previous four domains into three; "Solut
 
 ## What changed in the 2025–2026 exam guides
 
-> [!IMPORTANT]
+> [!important]
 > Several Databricks exam guides were updated in 2025–2026. Highlights to know:
 
 - **Data Engineer Associate (May 2026)** — terminology shifted from "Workflows" to **Lakeflow Jobs**; the guide also clarifies expectations around Delta ingestion patterns and CI/CD with Databricks Asset Bundles. [exam guide PDF](https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026.pdf)
@@ -446,7 +446,7 @@ databricks-certification-study-guide/
 - [Data Analyst Associate](https://www.databricks.com/learn/certification/data-analyst-associate)
 - [Machine Learning Associate](https://www.databricks.com/learn/certification/machine-learning-associate)
 - [Machine Learning Professional](https://www.databricks.com/learn/certification/machine-learning-professional)
-- [Generative AI Engineer Associate](https://www.databricks.com/learn/certification/generative-ai-engineer-associate)
+- [Generative AI Engineer Associate](https://www.databricks.com/learn/certification/genai-engineer-associate)
 - [Databricks Academy](https://www.databricks.com/learn/training) — free + paid courses mapped to each certification
 
 </details>

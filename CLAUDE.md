@@ -51,6 +51,9 @@ Each certification folder contains numbered topic folders (`01-topic/`, `02-topi
 
 - Run markdownlint on every modified file; blank lines before/after headings (MD022)
 - Language tags on all code blocks (`sql`, `python`, `scala`)
+- **One `#` H1 per file (the title).** Exception: the top-level `README.md` uses a centered `<h1 align="center">` HTML block instead of a markdown `#` to render the banner — this is intentional; do not "fix" it
+- **Callout type names are lowercase**: `> [!note]`, `> [!important]`, `> [!warning]`, `> [!tip]`, `> [!success]-`, `> [!abstract]`, `> [!info]`
+- **Use a non-breaking space before `%`** in weights and percentages (e.g., `24 %`, not `24%`) for visual consistency across cert READMEs
 - **Multi-line Python:** parenthesized expressions, not backslash continuations:
 
   ```python

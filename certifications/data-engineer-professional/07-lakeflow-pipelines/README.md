@@ -10,7 +10,7 @@ status: published
 
 # Lakeflow Pipelines (DLT)
 
-Lakeflow Spark Declarative Pipelines (formerly Delta Live Tables) is Databricks' framework for building reliable, maintainable ETL pipelines.
+Lakeflow Declarative Pipelines (formerly Delta Live Tables) is Databricks' framework for building reliable, maintainable ETL pipelines.
 
 ## Topics Overview
 

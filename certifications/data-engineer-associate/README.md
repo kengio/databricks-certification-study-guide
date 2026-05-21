@@ -37,12 +37,12 @@ aliases:
 | **Cost**            | $200 USD                                     |
 | **Delivery**        | Online proctored or test center              |
 
-## Exam Domain Weights
+## Exam Domain Weights (legacy structure — see PDF for May 2026 official)
 
 The guide's existing topic folders track the prior blueprint structure; the weights below are kept for continuity. For the **official May 2026 weighting**, consult the [exam guide PDF](https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026.pdf) — it is the source of truth.
 
 ```mermaid
-pie title Topic folders in this guide (legacy structure)
+pie title Topic folders in this guide (5 domains — legacy)
     "Databricks Lakehouse Platform" : 24
     "ELT with Spark SQL and Python" : 29
     "Incremental Data Processing" : 22
@@ -54,13 +54,13 @@ pie title Topic folders in this guide (legacy structure)
 
 ### Core Topics
 
-| Section                                                          | Legacy weight | Topics                                   |
-| ---------------------------------------------------------------- | ------------- | ---------------------------------------- |
-| [01-Lakehouse Platform](01-lakehouse-platform/README.md)         | 24%           | Architecture, workspace, compute         |
-| [02-ETL with Spark SQL and Python](02-etl-spark-sql/README.md)   | 29%           | SQL, DataFrames, joins, aggregations     |
-| [03-Delta Lake](03-delta-lake/README.md)                         | 22%           | ACID, time travel, optimization          |
-| [04-Workflows & Orchestration](04-workflows-orchestration/README.md) | 16%       | Lakeflow Jobs, scheduling, monitoring    |
-| [05-Data Governance](05-data-governance/README.md)               | 9%            | Unity Catalog, access control, sharing   |
+| Section                                                              | Legacy weight | Topics                                   |
+| -------------------------------------------------------------------- | :-----------: | ---------------------------------------- |
+| [01-Lakehouse Platform](01-lakehouse-platform/README.md)             | 24 %          | Architecture, workspace, compute         |
+| [02-ETL with Spark SQL and Python](02-etl-spark-sql/README.md)       | 29 %          | SQL, DataFrames, joins, aggregations     |
+| [03-Delta Lake](03-delta-lake/README.md)                             | 22 %          | ACID, time travel, optimization          |
+| [04-Workflows & Orchestration](04-workflows-orchestration/README.md) | 16 %          | Lakeflow Jobs, scheduling, monitoring    |
+| [05-Data Governance](05-data-governance/README.md)                   |  9 %          | Unity Catalog, access control, sharing   |
 
 ### Practice & Resources
 
@@ -110,6 +110,13 @@ Before starting this certification, review:
 - [ ] Take Mock Exam 1 (under timed conditions)
 - [ ] Review weak areas
 - [ ] Take Mock Exam 2
+
+## Official Resources
+
+- [Databricks Certification Page](https://www.databricks.com/learn/certification/data-engineer-associate)
+- [May 2026 exam guide (PDF)](https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026.pdf)
+- [Databricks Documentation](https://docs.databricks.com/)
+- [Databricks Academy](https://www.databricks.com/learn/training)
 
 ## Recommended Path
 
