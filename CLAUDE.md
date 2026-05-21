@@ -20,10 +20,23 @@ databricks-certification-study-guide/
 │   ├── code-examples/      # python/ and sql/ (always .md files)
 │   └── interview-prep/     # 15 topic files, 108 open-ended questions
 ├── learning-paths/         # Per-role study paths
+├── i18n/                   # Translations index + th/ (Thai in-tree translation)
+│   ├── README.md           # Index of all language translations
+│   ├── STATUS-TEMPLATE.md  # Template for non-Thai community forks
+│   └── th/                 # Thai translation (README.md, glossary.md, STATUS.md)
 └── images/databricks-ui/   # Screenshots by feature area
 ```
 
 Each certification folder contains numbered topic folders (`01-topic/`, `02-topic/`, …) with a `README.md` index and individual `.md` topic files. Each also has `resources/` with `exam-tips.md`, `official-links.md`, `practice-questions/`, `mock-exam/`, and `mock-exam-2/`.
+
+## Translations
+
+- **English** is the canonical source. All content edits land in English first.
+- **Thai** is the only in-tree translation, at `i18n/th/`. The maintainer reads Thai and reviews Thai PRs.
+- **Other languages** use the fork model — community forks register themselves in `i18n/README.md`. We don't merge non-Thai translations into upstream.
+- Translation policy is in `TRANSLATING.md`; the Thai glossary is `i18n/th/glossary.md`. Thai translations must conform to the glossary.
+- Product names (Delta Lake, Unity Catalog, Lakeflow Jobs, MLflow, etc.) and code blocks stay in English in all translations.
+- When English content changes that has a Thai counterpart, mark the Thai file 🔄 in `i18n/th/STATUS.md` until re-synced.
 
 ## Content Guidelines
 
@@ -162,6 +175,8 @@ Every PR that changes content **must** keep `README.md` and `CLAUDE.md` in sync.
 | Changes domain weights, fee, duration, or question count | top-level `README.md` (per-cert exam-at-a-glance) AND the cert's `README.md` |
 | Bumps the exam-guide version date for a cert | top-level `README.md` (table + "What changed" callout), `CHANGELOG.md`, the cert's `README.md` |
 | Touches a convention or layout rule | `CLAUDE.md` (Content Guidelines) |
+| Edits an English file that has a Thai counterpart under `i18n/th/` | mark the counterpart 🔄 in `i18n/th/STATUS.md` (don't translate in the same PR — Thai catch-up is a separate PR) |
+| Adds a new Databricks-adjacent term to a Thai translation | also add it to `i18n/th/glossary.md` in the same PR |
 
 The PR template checkbox enforces this. Do not check the box unless the update is actually in the diff.
 

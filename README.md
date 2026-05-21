@@ -47,6 +47,9 @@ tags:
 > [!note]
 > **These are the exam notes I built while preparing for the Databricks certification series.** Cheat sheets, practice questions, mock exams, and end-to-end worked examples — now open-sourced under MIT so the next person doesn't have to start from scratch. Every certification section maps to the current official Databricks exam guide for that credential. If it helped you, ⭐ the repo and pass it on.
 
+> [!info]
+> **Read in another language**: 🇹🇭 [ภาษาไทย](./i18n/th/README.md) (in progress) · For other languages and the translation policy, see [`TRANSLATING.md`](./TRANSLATING.md) and [`i18n/README.md`](./i18n/README.md).
+
 ---
 
 ## Contents
@@ -403,8 +406,8 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 ### Q1 2027 (6–12 months out)
 
 - ✅ **Renewal guide** for candidates whose 2-year validity expires in 2027–2028 — complete (see [`shared/appendix/renewal-guide.md`](./shared/appendix/renewal-guide.md))
+- ✅ **Translation scaffolding** — Thai in-tree, other languages via fork model — complete (see [`TRANSLATING.md`](./TRANSLATING.md) + [`i18n/`](./i18n/README.md))
 - 🌱 **Spaced-repetition deck (Anki)** generated from cheat-sheet facts
-- 🌱 **Translation scaffolding** so non-English learners can fork and translate
 - 🌱 **Adaptive practice questions** — JSON-driven question bank with difficulty tagging
 
 Legend: ✅ done · 🔄 in progress / next up · ⏳ planned · 🌱 ideas being explored
@@ -428,10 +431,12 @@ databricks-certification-study-guide/
 │   └── interview-prep/                  # 15 topic files, 108 open-ended design questions
 ├── learning-paths/                      # role-based progression guides
 ├── labs/                                # runnable hands-on lab pack (5 labs)
+├── i18n/                                # translations index + th/ (Thai in-tree translation)
 ├── images/databricks-ui/                # screenshots organised by feature area
 ├── CLAUDE.md                            # repo conventions for AI assistants
 ├── OBSIDIAN-SETUP.md                    # full Obsidian onboarding walkthrough
 ├── CONTRIBUTING.md                      # ground rules + 3-round review workflow
+├── TRANSLATING.md                       # translation policy + Thai contribution flow
 ├── CHANGELOG.md                         # release history per exam-guide version
 ├── LICENSE                              # MIT
 └── README.md                            # this file
