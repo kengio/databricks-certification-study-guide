@@ -305,6 +305,7 @@ No problem. The guide also renders perfectly in:
 5. **Hit the [practice questions](certifications/data-engineer-associate/resources/practice-questions/README.md)** for your cert. Aim for 70 %+ per domain before moving on.
 6. **Sit the [mock exams](certifications/data-engineer-associate/resources/mock-exam/README.md) under timed conditions** when you think you're close.
 7. **Reference the [interview prep](shared/interview-prep/README.md)** if you're using the cert as a stepping stone to a role change — those questions explore system-design depth beyond the exam.
+8. **Run the [hands-on lab pack](labs/README.md)** to exercise the core features end-to-end in a Databricks workspace — labs cover medallion ingestion, UC governance, Lakeflow Declarative Pipelines, MLflow + Model Registry, and a Mosaic AI RAG demo.
 
 ## Study roadmaps
 
@@ -389,7 +390,7 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 - ✅ **Topic-folder reorganisation for Data Analyst Associate** to surface AI/BI Genie Spaces as its own folder — complete
 - ✅ **Topic-folder reorganisation for GenAI Engineer Associate** to match the March 2026 6-domain structure — complete
 - ✅ **Refreshed mock exams** for the three certifications above — complete (terminology + new-domain questions for Data Sharing/Federation, AI/BI Genie Spaces, and GenAI Governance)
-- 🔄 **Hands-on lab pack** — runnable PySpark / SQL / dbutils scripts that walk through medallion ingestion, Unity Catalog setup, Lakeflow Pipelines, MLflow tracking, and a Mosaic AI Vector Search RAG demo
+- ✅ **Hands-on lab pack** — runnable PySpark / SQL / dbutils scripts that walk through medallion ingestion, Unity Catalog setup, Lakeflow Pipelines, MLflow tracking, and a Mosaic AI Vector Search RAG demo — complete (see [`labs/`](labs/README.md))
 
 ### Q4 2026 (3–6 months out)
 
@@ -426,6 +427,7 @@ databricks-certification-study-guide/
 │   ├── code-examples/                   # python/ and sql/ (always .md files)
 │   └── interview-prep/                  # 15 topic files, 108 open-ended design questions
 ├── learning-paths/                      # role-based progression guides
+├── labs/                                # runnable hands-on lab pack (5 labs)
 ├── images/databricks-ui/                # screenshots organised by feature area
 ├── CLAUDE.md                            # repo conventions for AI assistants
 ├── OBSIDIAN-SETUP.md                    # full Obsidian onboarding walkthrough
