@@ -515,8 +515,8 @@ selected_region = ''
 
 ## Related Topics
 
-- [Query Editor & Execution](../01-databricks-sql/02-query-editor.md) - The editor where parameterized queries are written and tested
-- [Dashboards & Dashboard Design](../04-dashboards-visualization/01-dashboards.md) - Dashboards that consume parameterized queries
+- [Query Editor & Execution](../01-executing-queries-databricks-sql-warehouses/02-query-editor.md) - The editor where parameterized queries are written and tested
+- [Dashboards & Dashboard Design](../02-creating-dashboards-and-visualizations/01-dashboards.md) - Dashboards that consume parameterized queries
 - [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts underlying dynamic queries
 
 ## Official Documentation
@@ -526,4 +526,4 @@ selected_region = ''
 
 ---
 
-**[↑ Back to Analytics Applications](./README.md) | [Next: Sharing & Collaboration](./02-sharing-collaboration.md) →**
+**[↑ Back to Analytics Applications](./README.md) | [Next: Sharing & Collaboration](../02-creating-dashboards-and-visualizations/04-sharing-collaboration.md) →**

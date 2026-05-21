@@ -154,11 +154,11 @@ Choose one (or both) based on your path.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Databricks SQL (~25%) | [01-databricks-sql](../certifications/data-analyst-associate/01-databricks-sql/README.md) |
-| 2 | Data Visualization (~20%) | [04-dashboards-visualization](../certifications/data-analyst-associate/04-dashboards-visualization/README.md) |
-| 3 | SQL in the Lakehouse (~20%) | [03-sql-queries](../certifications/data-analyst-associate/03-sql-queries/README.md) |
-| 4 | Dashboard Building (~20%) | [04-dashboards-visualization](../certifications/data-analyst-associate/04-dashboards-visualization/README.md) |
-| 5 | Data Management (~15%) | [02-data-management](../certifications/data-analyst-associate/02-data-management/README.md) |
+| 1 | Databricks SQL (~25%) | [01-databricks-sql](../certifications/data-analyst-associate/01-executing-queries-databricks-sql-warehouses/README.md) |
+| 2 | Data Visualization (~20%) | [04-dashboards-visualization](../certifications/data-analyst-associate/02-creating-dashboards-and-visualizations/README.md) |
+| 3 | SQL in the Lakehouse (~20%) | [03-sql-queries](../certifications/data-analyst-associate/03-analyzing-queries/README.md) |
+| 4 | Dashboard Building (~20%) | [04-dashboards-visualization](../certifications/data-analyst-associate/02-creating-dashboards-and-visualizations/README.md) |
+| 5 | Data Management (~15%) | [02-data-management](../certifications/data-analyst-associate/06-managing-data/README.md) |
 
 **Practice & Review:**
 

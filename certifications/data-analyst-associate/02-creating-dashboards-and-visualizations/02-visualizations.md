@@ -470,7 +470,7 @@ Alternative:
 
 - [Dashboards & Dashboard Design](./01-dashboards.md) - Building dashboards with visualizations
 - [Alerts & Scheduling](./03-alerts-scheduling.md) - Triggering alerts from query results
-- [SQL Query Optimization](../03-sql-queries/README.md) - Writing efficient queries for charts
+- [SQL Query Optimization](../03-analyzing-queries/README.md) - Writing efficient queries for charts
 
 ## Official Documentation
 

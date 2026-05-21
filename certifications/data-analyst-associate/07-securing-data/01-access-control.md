@@ -490,7 +490,7 @@ CREATE TABLE production.meta.pii_columns (
 
 - [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md) - Foundation for understanding access control in Unity Catalog
 - [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md) - Quick reference for permissions and GRANT syntax
-- [Unity Catalog](./02-unity-catalog.md) - The governance platform that powers access control
+- [Unity Catalog](../05-understanding-databricks-platform/01-unity-catalog.md) - The governance platform that powers access control
 
 ## Official Documentation
 
@@ -499,4 +499,4 @@ CREATE TABLE production.meta.pii_columns (
 
 ---
 
-**[← Previous: Unity Catalog](./02-unity-catalog.md) | [↑ Back to Data Management in Databricks](./README.md)**
+**[← Previous: Unity Catalog](../05-understanding-databricks-platform/01-unity-catalog.md) | [↑ Back to Data Management in Databricks](./README.md)**

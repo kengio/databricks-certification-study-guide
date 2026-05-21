@@ -481,7 +481,7 @@ curl -X POST \
 
 - [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts used in the query editor
 - [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md) - Quick reference for common SQL functions
-- [Query Parameters & Dynamic Queries](../05-analytics-applications/01-parameters-queries.md) - Deep dive into parameterized queries
+- [Query Parameters & Dynamic Queries](../03-analyzing-queries/04-parameters-queries.md) - Deep dive into parameterized queries
 
 ## Official Documentation
 
@@ -490,4 +490,4 @@ curl -X POST \
 
 ---
 
-**[← Previous: SQL Warehouses](./01-sql-warehouses.md) | [↑ Back to Databricks SQL](./README.md) | [Next: Connections & Integrations](./03-connections.md) →**
+**[← Previous: SQL Warehouses](./01-sql-warehouses.md) | [↑ Back to Databricks SQL](./README.md) | [Next: Connections & Integrations](../05-understanding-databricks-platform/02-connections.md) →**
