@@ -198,6 +198,17 @@ button.brand-cluster:hover {
 }
 button.brand-cluster:hover .brand-mark { transform: rotate(-8deg) scale(1.08); }
 button.brand-cluster:hover .brand-title { color: var(--accent); }
+/* Custom focus indicator: an OUTLINE here would extend below the
+   masthead boundary and get clipped by the next section's background
+   (sticky masthead has its own stacking context + border-bottom). Using
+   the existing transparent border slot keeps the indicator inside the
+   button's painted area, so nothing ever gets cut off. */
+button.brand-cluster:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface-soft);
+}
+button.brand-cluster:focus-visible .brand-title { color: var(--accent); }
 
 .brand-mark {
   display: inline-flex;
@@ -259,6 +270,16 @@ button.brand-cluster:hover .brand-title { color: var(--accent); }
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
+}
+/* Same reasoning as button.brand-cluster:focus-visible above —
+   keep the focus indicator inside the element so it can't be clipped
+   by the sticky masthead's boundary. */
+.quiz-meta-strip .cert-link:focus-visible {
+  outline: none;
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 .quiz-meta-strip #quiz-domain { color: var(--fg-soft); }
 .quiz-meta-strip .rh-sep { color: var(--hairline); padding: 0 0.15rem; }
@@ -367,6 +388,12 @@ button.brand-cluster:hover .brand-title { color: var(--accent); }
 #btn-theme:hover {
   color: var(--fg);
   border-color: var(--fg-soft);
+}
+#btn-theme:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--fg);
 }
 
 @media (max-width: 720px) {
