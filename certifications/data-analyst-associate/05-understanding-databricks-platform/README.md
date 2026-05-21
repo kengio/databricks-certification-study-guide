@@ -28,7 +28,7 @@ flowchart LR
 | [01-unity-catalog.md](./01-unity-catalog.md) | UC architecture for analysts: three-level namespace, catalogs, schemas, tables | High |
 | [02-connections.md](./02-connections.md) | JDBC / ODBC / Power BI / Tableau connection setup, OAuth + PAT auth | High |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

@@ -27,7 +27,7 @@ flowchart LR
 | :--- | :--- | :--- |
 | [01-importing-data-overview.md](./01-importing-data-overview.md) | UI file upload, `COPY INTO`, simple external-source patterns | High |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

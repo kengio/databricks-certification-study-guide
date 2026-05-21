@@ -31,7 +31,7 @@ flowchart LR
 | [01-genie-spaces-overview.md](./01-genie-spaces-overview.md) | What a Genie Space is, how it builds context from UC tables | High |
 | [02-tuning-genie-spaces.md](./02-tuning-genie-spaces.md) | Instructions, example queries, trusted assets, certified queries | High |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

@@ -29,7 +29,7 @@ flowchart LR
 | [01-sql-warehouses.md](./01-sql-warehouses.md) | SQL Warehouse sizes, Pro vs Serverless vs Classic, autoscaling | High |
 | [02-query-editor.md](./02-query-editor.md) | Query editor UX, snippets, run-as identity, sharing | High |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

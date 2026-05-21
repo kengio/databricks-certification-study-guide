@@ -12,20 +12,20 @@ status: published
 
 ## Overview
 
-A Genie Space gets more accurate as you give it more *context*. Three knobs:
+A Genie Space gets more accurate as you give it more *context*. Four primary knobs (per the official best practices), in roughly the order to reach for them:
 
-1. **Instructions** — plain-English guidance Genie always honours.
-2. **Example queries (few-shot)** — paired natural-language ↔ SQL examples.
-3. **Trusted assets** — explicitly approved queries or functions Genie may use as building blocks.
-
-Each curation step compounds: instructions narrow the interpretation; examples teach the pattern; trusted assets give Genie pre-validated SQL to compose into bigger answers.
+1. **SQL expressions** — reusable, named SQL fragments Genie can call. The recommended *first* tool: more reliable than free-text instructions because the SQL is exact.
+2. **Example SQL queries** — canonical SQL for common analysis patterns; Genie learns to recognise when to emit a similar shape. Parameterised example queries can also generate exact-match "Trusted" responses.
+3. **Text instructions** — plain-English guidance. Official guidance: use as a **last resort** when SQL expressions and examples don't fit.
+4. **Synonyms / metadata descriptions** — column-level synonyms and table/column descriptions that improve term resolution (e.g., "revenue" → `invoice_total`).
 
 > [!abstract]
 >
-> - **Instructions** = "always", "never", definitions of business terms, default filters
-> - **Example queries** = NL prompt + the SQL you'd write for it (Genie learns the mapping)
-> - **Trusted assets** = curated SQL the consumer can rely on (no hallucination)
-> - **Certified queries** = trusted assets with explicit signoff visible to users
+> - **SQL expressions** = named SQL Genie can plug into generated queries (exact, deterministic)
+> - **Example SQL queries** = canonical SQL examples; optional NL prompt annotations describe when to use each
+> - **Text instructions** = free-form guidance — fallback when SQL can't express the rule
+> - **Synonyms** = teach Genie that "revenue" means `invoice_total`, or that "active" means `status = 'ACTIVE' AND deleted_at IS NULL`
+> - **"Trusted asset"** is an informal term in the docs for curated content (SQL expressions + example queries) Genie reliably uses; "certified queries" is community shorthand for the same — neither is a formal first-class object
 
 > [!tip] What the Exam Tests
 >
@@ -47,30 +47,30 @@ Each curation step compounds: instructions narrow the interpretation; examples t
 | **Tie-breaking** | `When asked about "top customers", rank by revenue descending and limit 10 by default.` |
 | **Disambiguate columns** | `Both customers and orders have customer_id. Use customers.customer_id when joining the two.` |
 
-## Example queries (few-shot)
+## Example SQL queries
 
-For each common question pattern in the domain, add an example pair:
+For each common analysis pattern in the domain, add an example SQL query that demonstrates the canonical shape. The SQL is the contract; an optional NL prompt annotation describes when to use it:
 
-```text
-NL:  How many active customers signed up last month?
-SQL: SELECT COUNT(*)
-     FROM main.crm.customers
-     WHERE status = 'ACTIVE'
-       AND signup_date >= date_trunc('month', current_date - INTERVAL 1 MONTH)
-       AND signup_date <  date_trunc('month', current_date);
+```sql
+-- Pattern: "How many active customers signed up in <period>?"
+SELECT COUNT(*)
+FROM main.crm.customers
+WHERE status = 'ACTIVE'
+  AND signup_date >= date_trunc('month', current_date - INTERVAL 1 MONTH)
+  AND signup_date <  date_trunc('month', current_date);
 ```
 
-A handful of well-chosen examples beats a sprawling collection. Cover the common shapes — counts, ranks, trends, joins — and let Genie generalise.
+A handful of well-chosen examples beats a sprawling collection. Cover the common shapes — counts, ranks, trends, joins — and let Genie generalise. **Parameterised** example queries (with `?`-style placeholders) can also generate exact-match "Trusted" answers when a user's question matches the parameterisation closely.
 
-## Trusted assets and certified queries
+## Trusted content (informal term)
 
-A **trusted asset** is a SQL query (or UDF) that's been explicitly approved as a building block Genie can call. A **certified query** is a trusted asset that's visible to consumers as "officially blessed."
+"Trusted asset" and "certified query" are informal shorthand used in the Databricks docs and community for **SQL expressions + example queries** that you've curated explicitly so Genie reliably uses them. They're not separate first-class objects — they ARE the SQL expressions and example queries listed above, with the additional convention that the team treats them as the canonical building blocks for that Genie Space.
 
-Use trusted assets when:
+Use them when:
 
 - The SQL is non-trivial (multi-CTE, complex window logic) and you want Genie to call it rather than re-derive it
-- You want to enforce a particular implementation (e.g., revenue calculation must use this query)
-- You want consumers to see "this answer came from a certified query"
+- You want to enforce a particular implementation (e.g., revenue calculation must use this SQL expression)
+- You want consumers to recognise common answers as coming from a known, vetted source
 
 ## Use Cases
 
@@ -91,12 +91,13 @@ Use trusted assets when:
 > [!tip]
 >
 > - Instructions ≠ permissions. Instructions guide *interpretation*; UC enforces *access*.
-> - Few-shot examples are pairs (NL + SQL), not just SQL.
-> - Certified queries are *visible* to consumers as a trust signal.
+> - **Prefer SQL expressions over text instructions** when both can express the rule — the official guidance is to use text instructions as a last resort.
+> - Example queries are **SQL** (with optional NL annotations describing when each applies).
+> - Synonyms (column-level metadata) are a separate, complementary lever.
 
 ## Key Takeaways
 
-- Three curation primitives: instructions, examples, trusted/certified assets
+- Four curation knobs: SQL expressions, example SQL queries, text instructions (last resort), synonyms/metadata
 - Each improves accuracy independently
 - None of them bypass UC permissions
 - Curate after observing real failures, not pre-emptively

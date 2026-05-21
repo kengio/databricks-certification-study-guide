@@ -17,7 +17,7 @@ An **AI/BI Genie Space** is a curated natural-language analytics surface over a 
 > [!abstract]
 >
 > - **Genie Space** = scoped UC tables + optional instructions + optional example queries + optional trusted assets
-> - Built on top of **Mosaic AI** model serving — Genie generates SQL, doesn't ship the data to the model
+> - Backed by Databricks' partner-powered AI features — Genie generates SQL, doesn't ship the data to the model
 > - Honours UC permissions: a user only sees rows their UC identity is allowed to see (row filters and column masks apply)
 > - Conversational: follow-up questions inherit the prior turn's context
 > - Audit log records every Genie query, including the generated SQL

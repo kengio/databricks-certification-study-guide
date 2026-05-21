@@ -27,7 +27,7 @@ flowchart LR
 | :--- | :--- | :--- |
 | [01-access-control.md](./01-access-control.md) | GRANT / REVOKE, ownership, row filters, column masks | High |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

@@ -31,7 +31,7 @@ flowchart LR
 | [03-window-functions.md](./03-window-functions.md) | `OVER`, `PARTITION BY`, `ORDER BY`, frame clauses, ranking | High |
 | [04-parameters-queries.md](./04-parameters-queries.md) | Parameterised queries in DBSQL, default values, type safety | Medium |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

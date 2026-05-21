@@ -28,7 +28,7 @@ flowchart LR
 | :--- | :--- | :--- |
 | [01-data-modeling-overview.md](./01-data-modeling-overview.md) | Medallion architecture, dimensional modelling vocabulary, when to use views vs MVs | High |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

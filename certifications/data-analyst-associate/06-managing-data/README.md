@@ -26,7 +26,7 @@ flowchart LR
 | :--- | :--- | :--- |
 | [01-tables-schemas.md](./01-tables-schemas.md) | `CREATE / ALTER / DROP` tables and schemas; managed vs external | High |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |

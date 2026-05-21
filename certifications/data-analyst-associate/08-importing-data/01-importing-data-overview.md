@@ -16,7 +16,7 @@ Analysts have three main paths for getting data into a Unity Catalog table: the 
 
 > [!abstract]
 >
-> - **UI upload** — fastest path; CSV / TSV / JSON / Parquet / Avro / Delta; creates a managed Delta table
+> - **UI upload** — fastest path; CSV / TSV / JSON / Parquet / Avro / text; creates a managed Delta table (Delta is the *output* format, not an input the uploader accepts)
 > - **`COPY INTO`** — idempotent SQL command for bulk loads; skips already-processed files
 > - **Lakehouse Federation** — query external sources (Snowflake, BigQuery, …) without copying data
 > - **Auto Loader / Lakeflow Declarative Pipelines** — continuous ingestion; recognise the name, depth covered in DE Pro
@@ -40,7 +40,7 @@ In the workspace: **+ New** → **Add or upload data** → drag the file. The wi
 - Creates a managed Delta table in a UC catalog/schema you pick
 - Shows a preview before committing
 
-Limits: the UI uploader is for files at the order of tens of MB, not GB. For larger loads, use `COPY INTO` or a notebook-driven ingest.
+Limits: the UI uploader supports up to **10 files at a time** and **2 GB total** per upload. For larger loads, use `COPY INTO` or a notebook-driven ingest.
 
 ## Path 2 — `COPY INTO` (idempotent bulk load)
 

@@ -31,7 +31,7 @@ flowchart LR
 | [03-alerts-scheduling.md](./03-alerts-scheduling.md) | SQL alerts, dashboard schedules, subscriptions | High |
 | [04-sharing-collaboration.md](./04-sharing-collaboration.md) | Workspace permissions, public dashboards, collaboration | Medium |
 
-## Key Concepts to Master
+## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |
