@@ -28,6 +28,26 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-6] — Fill content depth gaps in 3 under-covered domains
+
+Three of the domain folders had thin coverage relative to their official weight. This adds 5 new topic files to fill the gaps surfaced in earlier senior-DE reviews.
+
+### Added
+
+- **GenAI Engineer Associate — Assembling and Deploying Apps** (22 %, was 2 files):
+  - `03-compound-ai-apps.md` — compound AI app pattern (retriever + re-ranker + LLM + tools behind one endpoint); MLflow Agent Framework, deployment, streaming, tracing
+  - `04-ai-gateway-endpoint-setup.md` — Unity AI Gateway configuration: rate limits, traffic splitting, payload logging, usage tracking, guardrails
+- **GenAI Engineer Associate — Evaluation and Monitoring** (12 %, was 1 file):
+  - `02-online-monitoring.md` — live-traffic monitoring built on Inference Tables + system tables; latency / cost / quality drift / LLM-as-judge backtests; alerting via DBSQL and Lakeflow Jobs
+- **DE Professional — Data Ingestion & Acquisition** (7 %, was 1 file on Auto Loader only):
+  - `02-copy-into.md` — idempotent batch file ingest; `FORMAT_OPTIONS` vs `COPY_OPTIONS`; `PATTERN` / `FILES`; UC-volume paths
+  - `03-streaming-ingestion-from-message-buses.md` — Kafka / Kinesis / Event Hubs Structured Streaming sources; exactly-once via Delta + checkpointing; Lakeflow Declarative Pipelines wrapper
+
+### Changed
+
+- 3 folder README index files updated to list the new topic files and refresh the "Topics Overview" Mermaid diagrams
+- DE Pro 07 README: the "single deep-dive" caveat note replaced with a "three pillars now covered" framing
+
 ## [2026.05.21-5] — Mock-exam refresh for DE Pro, DA, and GenAI
 
 Refreshed all six mock-exam files (mock-exam + mock-exam-2 across the three certs whose blueprints were updated in 2025–2026) to match the current official structures and product naming.

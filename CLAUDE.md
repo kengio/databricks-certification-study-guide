@@ -53,6 +53,11 @@ Each certification folder contains numbered topic folders (`01-topic/`, `02-topi
 - Language tags on all code blocks (`sql`, `python`, `scala`)
 - **One `#` H1 per file (the title).** Exception: the top-level `README.md` uses a centered `<h1 align="center">` HTML block instead of a markdown `#` to render the banner — this is intentional; do not "fix" it
 - **Callout type names are lowercase**: `> [!note]`, `> [!important]`, `> [!warning]`, `> [!tip]`, `> [!success]-`, `> [!abstract]`, `> [!info]`
+- **Topic-file preamble callouts** (after the `## Overview`): two standard callouts in this order:
+  1. `> [!abstract]` — 2–4 bullets summarising the topic's key concepts (the "what")
+  2. `> [!tip] What the Exam Tests` — 2–4 bullets framing what an exam taker should learn from the topic (the "why study this")
+
+  These are *preamble* / orientation callouts. The terminal `## Exam Tips` section (between Common Issues & Errors and Key Takeaways) is for *cram-style* advice consumed right before the exam, and serves a distinct purpose.
 - **Use a non-breaking space before `%`** in weights and percentages (e.g., `24 %`, not `24%`) for visual consistency across cert READMEs
 - **Multi-line Python:** parenthesized expressions, not backslash continuations:
 

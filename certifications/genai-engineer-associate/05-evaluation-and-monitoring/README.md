@@ -28,6 +28,7 @@ flowchart LR
 | File | Topic | Priority |
 | :--- | :--- | :--- |
 | [01-evaluation-llm-apps.md](./01-evaluation-llm-apps.md) | MLflow evaluation, metrics (answer_correctness, relevance, groundedness), LLM-as-judge | High |
+| [02-online-monitoring.md](./02-online-monitoring.md) | Latency / cost / quality monitoring built on Inference Tables + system tables; alerting via DBSQL + Lakeflow Jobs | High |
 
 ## Key Concepts
 

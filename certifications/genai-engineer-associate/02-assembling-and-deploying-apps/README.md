@@ -21,6 +21,8 @@ flowchart LR
     AD --> MLflow[MLflow for GenAI]
     AD --> Serve[Model Serving endpoints]
     AD --> Gateway[Unity AI Gateway / pay-per-token vs provisioned]
+    AD --> Compound[Compound AI apps]
+    AD --> Setup[AI Gateway endpoint setup]
 ```
 
 ## Section Contents
@@ -29,6 +31,8 @@ flowchart LR
 | :--- | :--- | :--- |
 | [01-mosaic-ai-and-foundation-models.md](./01-mosaic-ai-and-foundation-models.md) | Foundation Model APIs (FMAPI), pay-per-token, provisioned throughput, custom models | High |
 | [02-mlflow-for-genai.md](./02-mlflow-for-genai.md) | MLflow autologging, model signatures, Model Registry in UC, deployment | High |
+| [03-compound-ai-apps.md](./03-compound-ai-apps.md) | Compound AI app pattern: retriever + re-ranker + LLM + tools behind one endpoint; Agent Framework | High |
+| [04-ai-gateway-endpoint-setup.md](./04-ai-gateway-endpoint-setup.md) | Unity AI Gateway policies (rate limits, traffic splitting, payload logging, usage tracking, guardrails) | High |
 
 ## Key Concepts
 
