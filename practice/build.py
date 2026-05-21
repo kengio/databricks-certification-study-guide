@@ -56,11 +56,41 @@ CERT_TITLES = {
     "genai-engineer-associate": ("GenAI Engineer Associate", "Mar 2026"),
 }
 
-H2_QUESTION_RE = re.compile(r"^## Question (\d+)(?:\.\d+)?: (.+)$", re.MULTILINE)
-DIFFICULTY_RE = re.compile(r"\*\*Question\*\* \*\((Easy|Medium|Hard)\)\*:\s*(.+)", re.DOTALL)
-CHOICE_RE = re.compile(r"^([A-D])\)\s*(.+)$")
+# Three heading formats found in the wild:
+#   Format A: `## Question 5: Title`               (difficulty in body via `**Question** *(...)*:`)
+#   Format B: `## Question 5 *(Medium)*: Title`    (difficulty between number and colon)
+#   Format C: `## Question 5: Title *(Medium)*`    (difficulty appended after title)
+# All three are detected from a single heading line; the body may or may not
+# start with `**Question**:` regardless of which heading format is used.
+H2_NUMBER_RE = re.compile(r"^## Question (\d+)(?:\.\d+)?(.*)$")
+HEADING_DIFFICULTY_RE = re.compile(r"\*\(\s*(Easy|Medium|Hard)\s*\)\*", re.IGNORECASE)
+BODY_DIFFICULTY_RE = re.compile(r"\*\*Question\*\* \*\((Easy|Medium|Hard)\)\*:\s*(.+)", re.DOTALL)
+BODY_QUESTION_PREFIX_RE = re.compile(r"\*\*Question\*\*:\s*(.+)", re.DOTALL)
+CHOICE_RE = re.compile(r"^([A-D])\)\s*(.+?)\s*$")
 ANSWER_CALLOUT_RE = re.compile(r"^>\s*\[!success\]-?\s*(?:Answer)?\s*$", re.IGNORECASE)
-CORRECT_ANSWER_RE = re.compile(r"\*\*Correct Answer:\s*([A-D])\*\*", re.IGNORECASE)
+# Correct-answer markers seen in the wild:
+#   **Correct Answer: B**
+#   **Correct Answer: B) full choice text**
+#   **Correct Answer:** B
+CORRECT_ANSWER_RE = re.compile(
+    r"\*\*Correct Answer:?\s*\*?\*?\s*([A-D])\b", re.IGNORECASE)
+
+
+def parse_heading(heading_line: str):
+    """Return (qnum, title, difficulty_from_heading_or_None) or (None, None, None)."""
+    m = H2_NUMBER_RE.match(heading_line)
+    if not m:
+        return None, None, None
+    qnum = m.group(1)
+    rest = m.group(2)  # everything after `## Question N`
+    diff_match = HEADING_DIFFICULTY_RE.search(rest)
+    difficulty = diff_match.group(1).lower() if diff_match else None
+    # Strip the difficulty marker + any leading `: ` to get a clean title
+    title = HEADING_DIFFICULTY_RE.sub("", rest)
+    title = title.strip().lstrip(":").strip()
+    if not title:
+        title = f"Question {qnum}"
+    return qnum, title, difficulty
 
 
 def parse_questions(md_path: Path, domain_id: str) -> list[dict]:
@@ -76,19 +106,27 @@ def parse_questions(md_path: Path, domain_id: str) -> list[dict]:
     for i in range(1, len(blocks), 2):
         heading = blocks[i].strip()
         body = blocks[i + 1] if i + 1 < len(blocks) else ""
-        m = H2_QUESTION_RE.match(heading)
-        if not m:
-            continue
-        qnum = m.group(1)
-        title = m.group(2).strip()
 
-        # Extract stem + difficulty
-        dm = DIFFICULTY_RE.search(body)
-        if not dm:
-            print(f"  ⚠ {md_path.name} Q{qnum}: no difficulty marker — skipped", file=sys.stderr)
+        qnum, title, heading_difficulty = parse_heading(heading)
+        if qnum is None:
             continue
-        difficulty = dm.group(1).lower()
-        stem_block = dm.group(2)
+
+        if heading_difficulty:
+            # Format B or C — difficulty already in heading
+            difficulty = heading_difficulty
+            # Stem: from body after `**Question**:` if present, else whole body
+            # (the choice-detection step below cuts at the first `A)` line either way)
+            sm = BODY_QUESTION_PREFIX_RE.search(body)
+            stem_block = sm.group(1) if sm else body
+        else:
+            # Format A — look for `**Question** *(...)*: stem` in body
+            dm = BODY_DIFFICULTY_RE.search(body)
+            if not dm:
+                print(f"  ⚠ {md_path.name} Q{qnum}: no difficulty marker — skipped",
+                      file=sys.stderr)
+                continue
+            difficulty = dm.group(1).lower()
+            stem_block = dm.group(2)
 
         # The stem ends at the first `A)` choice line
         stem_lines = []

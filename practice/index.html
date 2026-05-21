@@ -4,12 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Databricks Certification Practice</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>Databricks Certification Practice</h1>
-    <p class="subtitle">Adaptive practice questions with localStorage progress tracking. <a href="https://github.com/kengio/databricks-certification-study-guide">View on GitHub</a></p>
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="2" y="2" width="28" height="28" rx="6" fill="#FF3621"/>
+        <path d="M9 16.5 L14 21.5 L23 11.5" stroke="#ffffff" stroke-width="3.2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-text">
+        <h1>Databricks Certification Practice</h1>
+        <p class="subtitle">Adaptive practice questions with localStorage progress tracking. <a href="https://github.com/kengio/databricks-certification-study-guide">View on GitHub</a></p>
+      </div>
+    </div>
+    <div class="brand-actions">
+      <button type="button" id="btn-theme" title="Toggle theme (auto / light / dark)" aria-label="Toggle theme">
+        <span id="btn-theme-icon" aria-hidden="true">🖥️</span>
+      </button>
+    </div>
   </header>
 
   <main id="app">
@@ -32,7 +47,8 @@
         <div class="quiz-controls">
           <button type="button" id="btn-stats">Stats</button>
           <button type="button" id="btn-settings">Settings</button>
-          <button type="button" id="btn-exit">Exit</button>
+          <button type="button" id="btn-reset-top" class="danger" title="Reset all progress for this cert bank">Reset</button>
+          <button type="button" id="btn-exit">Switch bank</button>
         </div>
       </div>
 

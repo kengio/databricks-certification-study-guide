@@ -8,7 +8,7 @@
       "id": "databricks-ml",
       "name": "Practice Questions — Databricks ML (Domain 1)",
       "sourceFile": "certifications/ml-associate/resources/practice-questions/01-databricks-ml.md",
-      "questionCount": 7
+      "questionCount": 13
     },
     {
       "id": "ml-workflows",
@@ -30,6 +30,102 @@
     }
   ],
   "questions": [
+    {
+      "id": "01-databricks-ml-q001",
+      "domain": "databricks-ml",
+      "title": "ML Runtime Pre-installed Libraries",
+      "difficulty": "easy",
+      "question": "Which of the following libraries is pre-installed in the Databricks Runtime for Machine Learning but NOT in the standard Databricks Runtime?",
+      "choices": {
+        "A": "Apache Spark",
+        "B": "MLflow",
+        "C": "pandas",
+        "D": "Delta Lake"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The Databricks Runtime for ML pre-installs MLflow, TensorFlow, PyTorch, and scikit-learn on top of the standard Databricks Runtime. Apache Spark, pandas, and Delta Lake are all included in the standard runtime.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-ml-q002",
+      "domain": "databricks-ml",
+      "title": "Single-Node Cluster Use Case",
+      "difficulty": "medium",
+      "question": "A data scientist is training a scikit-learn model on a 500 MB dataset that fits entirely in memory. Which cluster type is most appropriate?",
+      "choices": {
+        "A": "Multi-node cluster with 4 workers",
+        "B": "Single-node cluster",
+        "C": "High-concurrency cluster",
+        "D": "Multi-node cluster with autoscaling enabled"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Single-node clusters are ideal for workloads that use libraries without native Spark support, such as scikit-learn, and for datasets that fit in memory. Using a multi-node cluster adds distributed computing overhead with no benefit for non-distributed workloads.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-ml-q003",
+      "domain": "databricks-ml",
+      "title": "AutoML Task Types",
+      "difficulty": "easy",
+      "question": "A data scientist wants to use Databricks AutoML to predict customer churn (a binary yes/no outcome). Which AutoML task type should they select?",
+      "choices": {
+        "A": "Regression",
+        "B": "Forecasting",
+        "C": "Classification",
+        "D": "Clustering"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Databricks AutoML supports three task types: classification (for categorical targets), regression (for continuous targets), and forecasting (for time series). Predicting a binary outcome like churn is a classification problem. Clustering is not an AutoML task type in Databricks.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-ml-q004",
+      "domain": "databricks-ml",
+      "title": "AutoML Output",
+      "difficulty": "easy",
+      "question": "After running a Databricks AutoML experiment, where are the results stored?",
+      "choices": {
+        "A": "A Delta table in the default catalog",
+        "B": "A set of Python scripts in a Repos folder",
+        "C": "An MLflow experiment with one run per trial",
+        "D": "A JSON configuration file in DBFS"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "AutoML automatically creates and populates an MLflow experiment. Each trial is logged as a separate MLflow run with its parameters, metrics, and model artifact. The best model is also accompanied by an editable notebook that can be used as a starting point for further experimentation.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-ml-q005",
+      "domain": "databricks-ml",
+      "title": "Cluster Policy Purpose",
+      "difficulty": "medium",
+      "question": "A platform engineer wants to prevent data science teams from launching GPU clusters without explicit approval. What is the best approach?",
+      "choices": {
+        "A": "Document a policy in a wiki and ask teams to follow it",
+        "B": "Create a cluster policy that restricts node type to CPU instance types only",
+        "C": "Set up a budget alert that notifies the engineer when GPU spend exceeds a threshold",
+        "D": "Restrict Unity Catalog permissions for the data science teams"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Cluster policies allow administrators to enforce cluster configuration constraints, including restricting the allowed instance types to non-GPU options. Policies are enforced at the platform level and cannot be bypassed by regular users.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-ml-q006",
+      "domain": "databricks-ml",
+      "title": "ML Runtime Version Selection",
+      "difficulty": "medium",
+      "question": "A data scientist needs to train a deep learning model using PyTorch with GPU acceleration. Which Databricks Runtime variant should they select?",
+      "choices": {
+        "A": "Databricks Runtime (standard)",
+        "B": "Databricks Runtime ML",
+        "C": "Databricks Runtime ML GPU",
+        "D": "Databricks Runtime Photon"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Databricks Runtime ML GPU includes CUDA, cuDNN, and GPU-optimized versions of deep learning libraries such as PyTorch and TensorFlow. The standard ML Runtime does not include GPU drivers. The standard Runtime and Photon Runtime do not include ML-specific pre-installed libraries.",
+      "explanation": ""
+    },
     {
       "id": "01-databricks-ml-q007",
       "domain": "databricks-ml",

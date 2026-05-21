@@ -27,10 +27,16 @@
   const KNOWN_BANKS = [
     { cert: "data-engineer-associate", file: "data/data-engineer-associate.json" },
     { cert: "data-engineer-professional", file: "data/data-engineer-professional.json" },
+    { cert: "data-analyst-associate", file: "data/data-analyst-associate.json" },
     { cert: "ml-associate", file: "data/ml-associate.json" },
+    { cert: "ml-professional", file: "data/ml-professional.json" },
+    { cert: "genai-engineer-associate", file: "data/genai-engineer-associate.json" },
   ];
 
   const STORAGE_PREFIX = "dbx-practice-";
+  const THEME_KEY = "dbx-practice-theme";
+  const THEMES = ["auto", "light", "dark"];
+  const THEME_ICONS = { auto: "🖥️", light: "☀️", dark: "🌙" };
   const STATE = {
     bank: null,
     history: {},
@@ -492,19 +498,46 @@
     show("quiz");
   }
 
+  // --- Theme toggle --------------------------------------------------------
+
+  function loadTheme() {
+    try {
+      const t = localStorage.getItem(THEME_KEY);
+      return THEMES.includes(t) ? t : "auto";
+    } catch (_) { return "auto"; }
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    const iconNode = $("#btn-theme-icon");
+    if (iconNode) iconNode.textContent = THEME_ICONS[theme];
+  }
+
+  function cycleTheme() {
+    const current = loadTheme();
+    const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+    try { localStorage.setItem(THEME_KEY, next); } catch (_) { /* ignore */ }
+    applyTheme(next);
+  }
+
   // --- Init ----------------------------------------------------------------
 
   function init() {
+    // Apply persisted theme before anything renders so there's no flash
+    applyTheme(loadTheme());
+
     $("#btn-submit").addEventListener("click", submitAnswer);
     $("#btn-next").addEventListener("click", renderQuiz);
     $("#btn-stats").addEventListener("click", () => { renderStats(); show("stats"); });
     $("#btn-stats-back").addEventListener("click", () => show("quiz"));
     $("#btn-export").addEventListener("click", exportProgress);
     $("#btn-reset").addEventListener("click", resetHistory);
+    $("#btn-reset-top").addEventListener("click", resetHistory);
     $("#btn-settings").addEventListener("click", () => show("settings"));
     $("#btn-settings-cancel").addEventListener("click", () => show("quiz"));
     $("#btn-settings-apply").addEventListener("click", applySettings);
     $("#btn-exit").addEventListener("click", () => location.reload());
+    $("#btn-theme").addEventListener("click", cycleTheme);
 
     probeBanks().then(renderSetup);
   }
