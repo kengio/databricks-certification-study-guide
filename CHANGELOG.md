@@ -4,6 +4,71 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-23] — Practice quiz polish: all 6 banks + theme + reset + branding + CI Node 24
+
+### Added — all 6 certifications now have a question bank (364 questions total)
+
+The practice quiz now covers every certification:
+
+| Bank | Questions | Domains |
+| :--- | :---: | :---: |
+| Data Engineer Associate | 85 | 5 |
+| Data Engineer Professional | 73 | 8 |
+| **Data Analyst Associate** | **57** | **5** |
+| ML Associate | 46 | 4 |
+| **ML Professional** | **57** | **4** |
+| **GenAI Engineer Associate** | **46** | **4** |
+| **Total** | **364** | **30** |
+
+Previous total: 198 (3 banks). **Net addition: 166 questions across 3 new banks + 6 in the ML Associate bank.**
+
+### Changed — `practice/build.py` parser now handles three heading formats
+
+The three certs previously missing (DA Associate, ML Pro, GenAI Engineer Associate) used a different heading convention. The parser is now format-tolerant:
+
+- **Format A** (existing): `## Question 5: Title` with `**Question** *(Easy|Medium|Hard)*: stem` in body
+- **Format B** (new): `## Question 5 *(Medium)*: Title` with `**Question**: stem` in body
+- **Format C** (new): `## Question 5: Title *(Medium)*` with the stem directly in the body (or `**Question**:` prefix)
+
+The correct-answer regex was also relaxed to accept `**Correct Answer: B**`, `**Correct Answer: B) full choice text**`, and `**Correct Answer:** B`. The choice-line regex permits trailing whitespace (some files use two-space line breaks).
+
+### Added — UI polish
+
+- **Branded header**: SVG checkmark badge in Databricks red (`#FF3621`) alongside the page title; same icon as `favicon.svg` so the browser tab matches the page.
+- **`favicon.svg`**: served from `practice/favicon.svg`, linked from `index.html`.
+- **Theme cycle button** in the top-right of the header: cycles **auto → light → dark → auto**. Persisted in `localStorage` under `dbx-practice-theme`. Applied before any rendering so there's no flash on load.
+- **Reset button** in the quiz header (`class="danger"`) — same `resetHistory()` flow as the existing button in the Stats view, now reachable without navigating away from the quiz. Confirm-dialog protects against accidental clicks.
+- **"Switch bank"** label replaces "Exit" so the button's effect is clearer.
+
+### Changed — CSS theme architecture
+
+`styles.css` switched from a single `@media (prefers-color-scheme: dark)` override to a three-state system:
+
+- `:root` defaults are light
+- `:root[data-theme="dark"]` forces dark regardless of system preference
+- `:root[data-theme="light"]` forces light regardless of system preference
+- `:root[data-theme="auto"]` (and the no-attribute fallback) inherits from `@media (prefers-color-scheme: dark)`
+
+This lets users override their OS preference, which is the common ask for night-mode browsing on a system-light setup.
+
+### Changed — CI/CD opt-in to Node.js 24
+
+Adds `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"` as a workflow-level `env:` to both:
+
+- `.github/workflows/lint.yml`
+- `.github/workflows/deploy-practice.yml`
+
+Eliminates the "Node.js 20 actions are deprecated" annotations on every CI run (effective deprecation June 2026 per the GitHub Actions changelog). All action versions are unchanged; the env var instructs the runner to host them on Node 24 regardless of their declared runtime.
+
+### Verification
+
+- `python3 practice/build.py --check` → **6 banks / 364 questions** parsed cleanly
+- JSON shape validated: all `correctAnswer` letters in A-D, all 4 choices present, all `difficulty` values lowercase easy/medium/hard
+- markdownlint passes
+- lychee passes (favicon.svg is a same-origin file link, all relative paths resolve)
+
+After merge: the practice site auto-redeploys via `.github/workflows/deploy-practice.yml` and the 3 new banks appear on the live page.
+
 ## [2026.05.21-22] — Deploy practice quiz to GitHub Pages
 
 ### Added

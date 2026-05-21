@@ -21,13 +21,16 @@ A browser-based quiz for the practice-question markdown files in this repo. Trac
 
 ## Available banks
 
+All six certifications now have a question bank — **364 questions total**.
+
 | Bank | Source files | Questions |
 | :--- | :---: | :---: |
 | Data Engineer Associate | 5 markdown files in `certifications/data-engineer-associate/resources/practice-questions/` | 85 |
 | Data Engineer Professional | 8 markdown files | 73 |
-| ML Associate | 4 markdown files | 40 |
-
-Banks for the other 3 certs (Data Analyst Associate, ML Professional, GenAI Engineer Associate) need their practice-question markdown to adopt the same difficulty-marker format — see [Adding a cert to the bank](#adding-a-cert-to-the-bank) below.
+| Data Analyst Associate | 5 markdown files | 57 |
+| ML Associate | 4 markdown files | 46 |
+| ML Professional | 4 markdown files | 57 |
+| GenAI Engineer Associate | 4 markdown files | 46 |
 
 ## How to run
 
@@ -108,23 +111,43 @@ A weighted random pick chooses the next question. After a full pass through the 
 
 | File | Purpose |
 | :--- | :--- |
-| `index.html` | App skeleton |
-| `app.js` | Quiz logic, adaptive selector, localStorage, stats |
-| `styles.css` | Minimal styling (light + dark via `prefers-color-scheme`) |
+| `index.html` | App skeleton, branded header with checkmark badge, favicon |
+| `app.js` | Quiz logic, adaptive selector, localStorage, stats, theme cycle |
+| `styles.css` | Minimal styling with theme variables (auto / light / dark) |
+| `favicon.svg` | Browser tab icon (also displayed in the page header) |
 | `build.py` | Markdown → JSON converter (Python 3.9+ stdlib only) |
 | `data/<cert>.json` | Generated question banks (committed so the static page Just Works) |
 | `format.md` | Markdown source format spec that `build.py` parses |
 | `README.md` | This file |
 
+## Theme
+
+The page ships with three theme states: **auto** (follows your OS dark-mode preference), **light**, and **dark**. The button in the top-right of the header cycles through them. Your choice is saved in `localStorage` and applied immediately on every visit.
+
 ## Adding a cert to the bank
 
-The three currently-supported certs all use this exact markdown shape in their practice-question files:
+The parser supports three heading formats, all with the same body shape (choices + answer callout):
 
 ```markdown
+# Format A — difficulty in body
 ## Question 5: Brief title
 
-**Question** *(Easy|Medium|Hard)*: Stem text. Multi-line is OK.
+**Question** *(Easy|Medium|Hard)*: Stem text.
 
+# Format B — difficulty between number and colon
+## Question 5 *(Medium)*: Brief title
+
+**Question**: Stem text.
+
+# Format C — difficulty appended to title
+## Question 5: Brief title *(Medium)*
+
+Stem text (or `**Question**: Stem text.`).
+```
+
+Choices + answer callout (identical across all three formats):
+
+```markdown
 A) First choice
 B) Second choice
 C) Third choice
@@ -140,13 +163,16 @@ D) Fourth choice
 ---
 ```
 
-The unsupported certs (DA Associate, ML Pro, GenAI) use older variants without the `*(Easy|Medium|Hard)*` difficulty marker. To bring one into the bank:
+To add a new cert (e.g., a future Databricks cert):
 
-1. Update the cert's practice-question markdown to match the format above (add a difficulty marker to each question).
-2. Run `python3 practice/build.py --cert <cert-id>` and verify the question count matches your expectation.
+1. Make sure every question in the practice-question files uses one of the three formats above with all four `A) B) C) D)` choices and a `**Correct Answer: <letter>**` line inside the answer callout.
+2. Run `python3 practice/build.py --cert <cert-id>` and check the parsed count.
 3. Add a row to "Available banks" above.
 4. Add the cert to the `KNOWN_BANKS` list at the top of `app.js`.
-5. Open a PR.
+5. Add a tuple to `CERT_TITLES` in `build.py` (display name + blueprint version).
+6. Open a PR.
+
+A handful of questions where a choice contains a multi-line code block are skipped (the parser sees the bare `A)` / `C)` line with no inline content). If that affects your bank, restructure the choice to inline the code or move the code block into the answer explanation.
 
 ## Contributing
 

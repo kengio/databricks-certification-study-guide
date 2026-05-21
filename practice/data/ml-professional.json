@@ -1,0 +1,946 @@
+{
+  "cert": "ml-professional",
+  "certTitle": "ML Professional",
+  "blueprintVersion": "Sep 2025",
+  "generated": "2026-05-21",
+  "domains": [
+    {
+      "id": "feature-engineering",
+      "name": "Advanced Feature Engineering — Practice Questions",
+      "sourceFile": "certifications/ml-professional/resources/practice-questions/01-feature-engineering.md",
+      "questionCount": 15
+    },
+    {
+      "id": "hyperparameter-optimization",
+      "name": "Practice Questions: Hyperparameter Optimization",
+      "sourceFile": "certifications/ml-professional/resources/practice-questions/02-hyperparameter-optimization.md",
+      "questionCount": 12
+    },
+    {
+      "id": "model-lifecycle",
+      "name": "Practice Questions: Model Production Lifecycle",
+      "sourceFile": "certifications/ml-professional/resources/practice-questions/03-model-lifecycle.md",
+      "questionCount": 15
+    },
+    {
+      "id": "model-governance",
+      "name": "Model Governance & MLOps — Practice Questions",
+      "sourceFile": "certifications/ml-professional/resources/practice-questions/04-model-governance.md",
+      "questionCount": 15
+    }
+  ],
+  "questions": [
+    {
+      "id": "01-feature-engineering-q001",
+      "domain": "feature-engineering",
+      "title": "Online vs Offline Feature Store Selection",
+      "difficulty": "medium",
+      "question": "A recommendation model needs to return personalized results within 50ms of a user clicking a product page. Pre-computed user embeddings are updated nightly. Which feature store configuration is most appropriate?",
+      "choices": {
+        "A": "Offline feature store only — read feature values from Delta Lake at request time",
+        "B": "Online feature store — publish features to low-latency key-value store; model reads at serving time",
+        "C": "Recompute features from raw events inside the model serving endpoint",
+        "D": "Cache features in the driver node's memory between requests"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The online feature store is designed for sub-100ms serving latency. It holds a copy of features in a\nlow-latency key-value store (e.g., DynamoDB or Cosmos DB) so the serving endpoint can retrieve them\nin single-digit milliseconds. Reading from Delta Lake (option A) incurs seconds of latency due to file\nI/O and query planning, making it unsuitable for real-time serving requirements.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q002",
+      "domain": "feature-engineering",
+      "title": "Primary Key Requirement for write_table()",
+      "difficulty": "medium",
+      "question": "A data engineer calls `FeatureEngineeringClient.write_table()` to persist a feature DataFrame to the feature store. The call raises a `MlflowException`. What is the most likely cause?",
+      "choices": {
+        "A": "The DataFrame contains null values in non-key columns",
+        "B": "The target feature table does not yet exist in Unity Catalog",
+        "C": "The DataFrame is missing the primary key column defined on the feature table",
+        "D": "The Spark session is not connected to a GPU-enabled cluster"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Every feature table in Databricks Feature Store requires a primary key. When `write_table()` is\ncalled, the client validates that the DataFrame contains the primary key column(s) matching the\ntable's schema. If the primary key is absent or renamed, the write fails. Null values in non-key\ncolumns are permitted, and the table can be created implicitly on first write if it does not exist.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q003",
+      "domain": "feature-engineering",
+      "title": "create_training_set() and lookup_key",
+      "difficulty": "easy",
+      "question": "A data scientist uses `FeatureEngineeringClient.create_training_set()` with a `FeatureLookup` to join user features onto a label DataFrame. The label DataFrame has a column `user_id`. Which parameter on `FeatureLookup` connects the label DataFrame to the feature table?",
+      "choices": {
+        "A": "`join_key`",
+        "B": "`primary_key`",
+        "C": "`lookup_key`",
+        "D": "`entity_key`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`FeatureLookup` uses the `lookup_key` parameter to specify which column(s) in the label DataFrame\ncorrespond to the primary key of the feature table. If the column name in the label DataFrame\nmatches the primary key name on the feature table, `lookup_key` can be omitted — but when names\ndiffer, it must be set explicitly. `join_key` and `entity_key` are not valid parameter names for\nthis API.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q004",
+      "domain": "feature-engineering",
+      "title": "Point-in-Time Correct Feature Retrieval",
+      "difficulty": "medium",
+      "question": "A fraud detection model is trained on historical transactions. Each transaction has an `event_timestamp`. The data scientist wants to ensure that feature values joined to each transaction reflect only information available at the moment the transaction occurred, avoiding future leakage. Which parameter enables this in `FeatureLookup`?",
+      "choices": {
+        "A": "`feature_names` — list only features recorded before the event",
+        "B": "`timestamp_lookup_key` — specifies the column used for point-in-time correct joins",
+        "C": "`as_of_delta_version` — reads the Delta table version at the transaction time",
+        "D": "`max_lookback_days` — limits how far back in time features are retrieved"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Setting `timestamp_lookup_key` on a `FeatureLookup` instructs `create_training_set()` to perform a\npoint-in-time correct join: for each row in the label DataFrame, it retrieves the feature values\nwhose timestamp is the most recent one that does not exceed the value in `timestamp_lookup_key`.\nThis prevents future feature values from leaking into training data. The other options do not exist\nas valid API parameters for this purpose.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q005",
+      "domain": "feature-engineering",
+      "title": "Feature Lineage via log_model()",
+      "difficulty": "easy",
+      "question": "A team wants to track which feature table versions were used to train each model version, enabling them to reproduce training data for any registered model. Which method establishes this lineage automatically in Databricks?",
+      "choices": {
+        "A": "`mlflow.sklearn.log_model()` with `registered_model_name` set",
+        "B": "`FeatureEngineeringClient.log_model()` with the `training_set` parameter",
+        "C": "`mlflow.log_artifact()` with the feature table Delta log path",
+        "D": "`mlflow.set_tag(\"feature_table\", table_name)` before logging the model"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`FeatureEngineeringClient.log_model()` accepts a `training_set` object (the output of\n`create_training_set()`) and records the exact feature tables, primary keys, and feature names used\nduring training as part of the MLflow run metadata. This creates auditable lineage between every\nmodel version and its source features. Using `mlflow.sklearn.log_model()` directly does not capture\nfeature store lineage.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q006",
+      "domain": "feature-engineering",
+      "title": "Automatic Feature Retrieval at Inference Time",
+      "difficulty": "medium",
+      "question": "A model was logged with `FeatureEngineeringClient.log_model()` and deployed to a Databricks Model Serving endpoint. At inference time the client sends only `customer_id` in the request payload. How does the endpoint obtain the full set of feature values needed for prediction?",
+      "choices": {
+        "A": "The client must send all feature values in the request payload alongside `customer_id`",
+        "B": "The endpoint retrains a lightweight feature computation step on every request",
+        "C": "The model's pyfunc wrapper automatically retrieves features from the online store using `customer_id` as the lookup key",
+        "D": "A separate microservice must be called first to hydrate features before hitting the model endpoint"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "When a model is logged via `FeatureEngineeringClient.log_model()`, Databricks packages a pyfunc\nwrapper that knows which features to look up and from which feature tables. At serving time, the\nwrapper uses the lookup key(s) from the request to fetch feature values from the online store and\nassembles the full feature vector before calling the underlying model's predict function. This\neliminates the need for callers to know the feature schema.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q007",
+      "domain": "feature-engineering",
+      "title": "Train-Serving Skew Root Cause",
+      "difficulty": "hard",
+      "question": "A production model shows higher error rates on live data than on the held-out test set, even though the input distribution has not shifted. What is the most likely root cause?",
+      "choices": {
+        "A": "The model was not registered in Unity Catalog before deployment",
+        "B": "The online feature store was not refreshed after training completed",
+        "C": "Feature values are computed differently between training (batch ETL) and serving (online lookup)",
+        "D": "The serving endpoint uses a different Python version than the training cluster"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Train-serving skew occurs when the feature engineering logic applied during training differs from\nthe logic used at serving time — for example, a mean imputation computed on the full dataset during\ntraining versus a hardcoded constant at serving time. Even when the raw input distribution is\nstable, inconsistent feature computation produces systematically different feature vectors, degrading\nmodel accuracy. Using the Feature Engineering Client's `log_model()` and online store helps mitigate\nthis by ensuring the same feature definitions are used in both paths.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q008",
+      "domain": "feature-engineering",
+      "title": "publish_online_features()",
+      "difficulty": "easy",
+      "question": "A team has a feature table stored in Delta Lake (offline store). They want to make those features available for sub-10ms lookups from a model serving endpoint. What is the correct next step?",
+      "choices": {
+        "A": "Copy the Delta table to a Parquet file on object storage accessible to the endpoint",
+        "B": "Call `FeatureEngineeringClient.publish_online_features()` to sync features to the online store",
+        "C": "Register the Delta table as an external table in Unity Catalog",
+        "D": "Mount the Delta table path as a DBFS mount accessible from the serving cluster"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`publish_online_features()` pushes feature data from the offline Delta-backed store into the\nconfigured online store (e.g., DynamoDB or Cosmos DB), which supports single-digit millisecond\nread latency required for real-time serving. The offline Delta table serves as the source of truth\nfor batch training, while the online store serves real-time inference. The other options do not\nprovide the low-latency key-value access pattern that serving requires.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q009",
+      "domain": "feature-engineering",
+      "title": "Feature Table Schema Requirements",
+      "difficulty": "easy",
+      "question": "A data scientist attempts to create a feature table using `FeatureEngineeringClient.create_table()`. Which combination of requirements must be satisfied for the call to succeed?",
+      "choices": {
+        "A": "The table must have at least one primary key column and a numeric data type for all feature columns",
+        "B": "The table must have at least one primary key column; feature columns can be any supported Spark data type",
+        "C": "The table must have a composite primary key of exactly two columns",
+        "D": "The table must include a timestamp column alongside the primary key"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks Feature Store requires at least one primary key column to enable feature lookups. Feature\ncolumns themselves support any Spark SQL data type including strings, arrays, maps, and structs —\nthey are not restricted to numeric types. A timestamp column is optional and only needed when\npoint-in-time correct lookups are required. There is no requirement for a composite key.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q010",
+      "domain": "feature-engineering",
+      "title": "Creating a Training Dataset",
+      "difficulty": "easy",
+      "question": "Which `FeatureEngineeringClient` method generates a training dataset by joining a label DataFrame with feature values from one or more feature tables?",
+      "choices": {
+        "A": "`get_training_set()`",
+        "B": "`join_features()`",
+        "C": "`create_training_set()`",
+        "D": "`build_dataset()`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`create_training_set()` is the designated API for building a training dataset. It accepts a label\nDataFrame, a list of `FeatureLookup` objects (specifying which feature tables and columns to join),\nand optional parameters like `timestamp_lookup_key` for point-in-time joins. The returned\n`TrainingSet` object can then be materialized with `.load_df()` or passed directly to\n`log_model()`. None of the other method names (`get_training_set`, `join_features`,\n`build_dataset`) exist in the Databricks Feature Engineering Client API.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q011",
+      "domain": "feature-engineering",
+      "title": "Delta Lake as the Offline Store",
+      "difficulty": "easy",
+      "question": "A data engineer asks why feature data stored via `FeatureEngineeringClient.write_table()` supports time travel queries. What is the underlying reason?",
+      "choices": {
+        "A": "The Feature Engineering Client maintains a separate audit log table for each feature table",
+        "B": "Feature tables are backed by Delta Lake, which retains a transaction log and data file snapshots",
+        "C": "Databricks automatically creates a history table with `_HIST` suffix for every feature table",
+        "D": "The Feature Engineering Client snapshots feature values to DBFS on each write"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks Feature Store uses Delta Lake as the underlying storage format for offline feature tables.\nDelta Lake's transaction log records every write operation along with the data files associated with\neach version. This means you can query any historical version of a feature table using `VERSION AS OF`\nor `TIMESTAMP AS OF` syntax, which is foundational to point-in-time correct feature retrieval during\ntraining.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q012",
+      "domain": "feature-engineering",
+      "title": "Online Store vs Passing Features Directly",
+      "difficulty": "medium",
+      "question": "A batch scoring pipeline scores 10 million customer records nightly. Features are already computed and stored in a Delta table. A teammate suggests configuring the online store to serve these features. When is this suggestion necessary?",
+      "choices": {
+        "A": "Always — the online store is required for all model serving regardless of latency requirements",
+        "B": "Only when the serving endpoint must retrieve individual feature records in real time with low latency",
+        "C": "Only when the feature table exceeds 1 TB",
+        "D": "Only when Unity Catalog is not enabled"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The online store is designed for real-time, low-latency point lookups (single-digit milliseconds)\nby entity key. For a nightly batch pipeline, the model can read features directly from the offline\nDelta table using Spark — no online store is required. Publishing to the online store adds\noperational complexity (cost, sync pipelines) that is only justified when individual records must\nbe retrieved in sub-100ms for interactive serving.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q013",
+      "domain": "feature-engineering",
+      "title": "Feature Sharing Across Teams with Unity Catalog",
+      "difficulty": "easy",
+      "question": "Team A has created a feature table `catalog_a.features.customer_ltv`. Team B wants to use this feature table to train their own model. What must Team A do to enable this?",
+      "choices": {
+        "A": "Export the feature table to a shared DBFS path that Team B can read",
+        "B": "Grant Team B the appropriate privilege on the feature table in Unity Catalog",
+        "C": "Duplicate the feature table into Team B's catalog",
+        "D": "Convert the feature table to a view and share the view definition"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Feature tables stored in Unity Catalog are governed by UC's fine-grained permission model. Team A\ncan grant `SELECT` (and optionally `USE CATALOG` / `USE SCHEMA`) privileges to Team B's principal\n(user, group, or service principal) without any data duplication. This is one of the key benefits\nof Unity Catalog: centralized governance enables secure, auditable feature sharing across teams\nwithin the same account.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q014",
+      "domain": "feature-engineering",
+      "title": "Avoiding Data Leakage with Point-in-Time Lookups",
+      "difficulty": "hard",
+      "question": "A model predicts whether a customer will churn in the next 30 days. The training data contains churn labels from the past year. A data scientist joins customer activity features without using `timestamp_lookup_key`. What is the likely consequence?",
+      "choices": {
+        "A": "The join will fail because `FeatureLookup` requires a timestamp column",
+        "B": "All feature values will default to zero for historical rows",
+        "C": "Future feature values will leak into the training data, inflating model performance metrics",
+        "D": "The model will train correctly but fail to deploy due to a schema mismatch"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Without `timestamp_lookup_key`, `create_training_set()` uses the latest feature values for every\nrow in the label DataFrame, regardless of when each label was generated. For historical training\nexamples, this means features computed using data from the future (e.g., a customer's total logins\nin the month after the label date) are incorrectly joined. This makes the model appear more accurate\nduring evaluation than it will be in production, a form of data leakage.",
+      "explanation": ""
+    },
+    {
+      "id": "01-feature-engineering-q015",
+      "domain": "feature-engineering",
+      "title": "Feature Versioning via Delta Table Versions",
+      "difficulty": "hard",
+      "question": "A data scientist needs to reproduce the exact training dataset used to train model version 12, which was trained six months ago. The feature table has had many updates since then. How does Databricks enable this?",
+      "choices": {
+        "A": "The Feature Engineering Client stores a snapshot of every training dataset as a compressed artifact in MLflow",
+        "B": "Because feature tables are backed by Delta Lake, the model run's metadata records the Delta table version at training time, enabling `VERSION AS OF` queries",
+        "C": "Databricks automatically creates a read-only clone of the feature table for every `create_training_set()` call",
+        "D": "You must manually checkpoint the Delta table before each training run to enable later reproduction"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When `FeatureEngineeringClient.log_model()` is called with a `training_set`, Databricks records\nthe Delta table version(s) used for each feature table in the MLflow run's metadata. Because Delta\nLake retains its transaction log (subject to the configured VACUUM retention period), a data\nscientist can reconstruct the exact feature DataFrame from six months ago by querying the feature\ntable `VERSION AS OF <recorded_version>`. This makes reproducibility a first-class concern in\nthe feature store design.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q001",
+      "domain": "hyperparameter-optimization",
+      "title": "SparkTrials vs Trials",
+      "difficulty": "easy",
+      "question": "A data scientist wants to parallelize Hyperopt trials across a Spark cluster with multiple worker nodes. Which trials object should they use?",
+      "choices": {
+        "A": "`Trials()` — runs trials sequentially on the driver",
+        "B": "`SparkTrials()` — distributes trials across Spark executors",
+        "C": "`DistributedTrials()` — Hyperopt's built-in cluster mode",
+        "D": "`ParallelTrials(n_jobs=-1)` — uses all available cores"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`SparkTrials` dispatches each trial to a Spark executor, enabling true distributed hyperparameter search across a cluster. `Trials` runs all evaluations sequentially on the driver node and is appropriate only for local, single-machine workloads. Options C and D do not exist in Hyperopt.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q002",
+      "domain": "hyperparameter-optimization",
+      "title": "fmin() Objective Direction",
+      "difficulty": "medium",
+      "question": "A data scientist passes `roc_auc_score` directly as the objective function to `fmin()`. The search completes but the \"best\" model has the lowest AUC in the search. What is the problem?",
+      "choices": {
+        "A": "`fmin()` randomly selects the best trial rather than choosing by metric",
+        "B": "`fmin()` always minimizes the objective; returning raw AUC causes it to minimize AUC instead of maximizing it",
+        "C": "`roc_auc_score` is not a supported metric for Hyperopt",
+        "D": "The model was not serialized correctly during the trial"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Hyperopt's `fmin()` treats the return value of the objective function as a loss to be minimized. To maximize AUC, the objective must return `1 - auc` or `-auc`. Returning the raw AUC score causes Hyperopt to search for hyperparameters that produce the lowest AUC, which is the opposite of the desired behavior.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q003",
+      "domain": "hyperparameter-optimization",
+      "title": "MLflow Autolog Run Structure with Hyperopt",
+      "difficulty": "easy",
+      "question": "A data scientist enables `mlflow.sklearn.autolog()` and runs Hyperopt with `fmin()` for 20 trials. How are the MLflow runs organized?",
+      "choices": {
+        "A": "20 independent top-level runs, one per trial",
+        "B": "1 parent run containing 20 child runs, one per trial",
+        "C": "1 run that logs all 20 trials' metrics in a single record",
+        "D": "20 experiments, each containing one run"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When `mlflow.autolog()` is active and an active MLflow run exists before `fmin()` is called, Hyperopt creates that run as the parent and nests one child run per trial beneath it. Each child run captures that trial's hyperparameters, metrics, and optionally the fitted model artifact. This hierarchy makes it straightforward to compare all trials under a single experiment entry.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q004",
+      "domain": "hyperparameter-optimization",
+      "title": "hp.loguniform vs hp.uniform for Learning Rate",
+      "difficulty": "medium",
+      "question": "A data scientist needs to search learning rate values between `1e-5` and `1e-1`. Which Hyperopt search space expression is most appropriate?",
+      "choices": {
+        "A": "`hp.uniform('lr', 1e-5, 1e-1)`",
+        "B": "`hp.loguniform('lr', np.log(1e-5), np.log(1e-1))`",
+        "C": "`hp.quniform('lr', 1e-5, 1e-1, 0.001)`",
+        "D": "`hp.normal('lr', 1e-3, 1e-4)`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Learning rates span multiple orders of magnitude, so a log-uniform distribution is appropriate: it samples values such that ratios (e.g., 1e-4 to 1e-3) are as likely as (1e-2 to 1e-1). `hp.uniform` samples linearly and would overwhelmingly draw values near the upper end of the range, neglecting the small values that are often optimal. The arguments to `hp.loguniform` are `(label, low, high)` in natural-log space, so both bounds must be wrapped in `np.log()`.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q005",
+      "domain": "hyperparameter-optimization",
+      "title": "SparkTrials parallelism Parameter",
+      "difficulty": "easy",
+      "question": "A data scientist sets `parallelism=8` in `SparkTrials(parallelism=8)`. What does this control?",
+      "choices": {
+        "A": "The number of Spark executor cores allocated to each trial",
+        "B": "The number of trials that run simultaneously across the cluster",
+        "C": "The total number of trials that will be evaluated",
+        "D": "The number of cross-validation folds run per trial"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The `parallelism` argument in `SparkTrials` sets how many trials are dispatched to Spark executors at the same time. With `parallelism=8`, up to 8 trials are in flight concurrently. Higher parallelism increases throughput but can reduce the benefit of Bayesian search because fewer completed results are available to guide the selection of the next batch of trials.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q006",
+      "domain": "hyperparameter-optimization",
+      "title": "Early Stopping in Hyperopt",
+      "difficulty": "medium",
+      "question": "A data scientist wants Hyperopt to stop automatically if no improvement is seen for 50 consecutive trials. Which approach is correct?",
+      "choices": {
+        "A": "Set `max_evals=50` in `fmin()` to cap total trials",
+        "B": "Pass `early_stop_fn=no_progress_loss(50)` to `fmin()`",
+        "C": "Use a `callbacks` argument with an `EarlyStopping` object",
+        "D": "Wrap `fmin()` in a try/except block and raise `StopIteration` after 50 flat trials"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Hyperopt's `fmin()` accepts an `early_stop_fn` parameter for stopping conditions. The `hyperopt.early_stop.no_progress_loss(n)` helper returns a function that signals Hyperopt to stop when the best loss has not improved for `n` consecutive trials. Setting `max_evals` only caps the total count regardless of improvement. Hyperopt does not use a `callbacks` API or `StopIteration`.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q007",
+      "domain": "hyperparameter-optimization",
+      "title": "Bayesian vs Random Search for Limited Budgets",
+      "difficulty": "medium",
+      "question": "A hyperparameter search space contains over 1,000 possible combinations. A team has a compute budget for only 50 trials. Which search strategy is most sample-efficient?",
+      "choices": {
+        "A": "Grid search — evaluates all combinations systematically",
+        "B": "Random search — unbiased sampling across the full space",
+        "C": "Bayesian optimization (TPE) — uses past trial results to guide future selections",
+        "D": "Manual search — a domain expert selects the 50 most promising configurations"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Tree-structured Parzen Estimators (TPE), Hyperopt's default algorithm, builds a probabilistic model of the objective surface and focuses trials in regions likely to improve the result. With only 50 trials available out of 1,000+ combinations, this sample efficiency is critical. Grid search is infeasible at this scale, and random search is unguided. TPE consistently outperforms random search when the trial budget is small relative to the search space.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q008",
+      "domain": "hyperparameter-optimization",
+      "title": "hp.choice for Categorical Hyperparameters",
+      "difficulty": "easy",
+      "question": "A data scientist wants Hyperopt to search over `[\"linear\", \"rbf\", \"poly\"]` for an SVM kernel. Which Hyperopt space function should they use?",
+      "choices": {
+        "A": "`hp.uniform('kernel', 0, 3)`",
+        "B": "`hp.randint('kernel', 3)`",
+        "C": "`hp.choice('kernel', [\"linear\", \"rbf\", \"poly\"])`",
+        "D": "`hp.categorical('kernel', [\"linear\", \"rbf\", \"poly\"])`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`hp.choice` is the correct function for selecting one item from a discrete list of categorical values. It returns the selected element (e.g., `\"rbf\"`) rather than an index, so it plugs directly into model constructors. `hp.uniform` and `hp.randint` produce numeric values, not strings. `hp.categorical` does not exist in Hyperopt.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q009",
+      "domain": "hyperparameter-optimization",
+      "title": "CrossValidator parallelism in Spark ML",
+      "difficulty": "easy",
+      "question": "A data scientist uses Spark ML's `CrossValidator` to perform 5-fold cross-validation over a parameter grid with 10 configurations, training 50 models total. What parameter controls how many models train simultaneously?",
+      "choices": {
+        "A": "`numFolds` — number of cross-validation folds",
+        "B": "`parallelism` — number of models to train in parallel",
+        "C": "`n_jobs` — standard scikit-learn parallel jobs argument",
+        "D": "`sparkContext.setParallelism(10)` — global Spark parallelism setting"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Spark ML's `CrossValidator` and `TrainValidationSplit` both expose a `parallelism` parameter (default `1`) that specifies how many (model, fold) combinations are trained concurrently. Setting it to match the number of available executor cores significantly reduces wall-clock time for large grids. `n_jobs` is a scikit-learn concept not present in Spark ML. `numFolds` controls evaluation strategy, not concurrency.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q010",
+      "domain": "hyperparameter-optimization",
+      "title": "AutoML as a Baseline Before Manual HPO",
+      "difficulty": "easy",
+      "question": "A team is beginning a new classification problem and needs the fastest path to a reasonable baseline model and starting hyperparameters. What should they do first?",
+      "choices": {
+        "A": "Run a random hyperparameter search with 100 trials using Hyperopt",
+        "B": "Manually tune a logistic regression as an interpretable starting point",
+        "C": "Run Databricks AutoML to generate a baseline notebook with hyperparameters automatically",
+        "D": "Train an ensemble of 10 default models and average their predictions"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Databricks AutoML explores multiple algorithms and hyperparameter configurations, then generates an editable Python notebook containing the best model found along with the trial results. This gives teams a well-tuned starting point in minutes rather than hours. The generated notebook can then be used as a base for further refinement with Hyperopt. Running Hyperopt from scratch without a baseline risks spending budget on poorly structured search spaces.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q011",
+      "domain": "hyperparameter-optimization",
+      "title": "Hyperparameter Overfitting Risk",
+      "difficulty": "hard",
+      "question": "A data scientist tunes hyperparameters by running 200 Hyperopt trials evaluated against the test set, selects the best configuration, and reports that test set AUC as the final model performance. What is the primary risk?",
+      "choices": {
+        "A": "Hyperopt cannot evaluate against a test set directly",
+        "B": "The reported AUC is optimistically biased because the test set influenced hyperparameter selection",
+        "C": "200 trials is too few for reliable Bayesian optimization",
+        "D": "The model will underfit because hyperparameters were selected to minimize loss"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When the test set is used to guide any model selection decision — including hyperparameter tuning — it is no longer a held-out, unbiased estimate of generalization performance. The correct practice is to tune on a separate validation set (or use cross-validation), and reserve the test set for a single final evaluation. Using the test set for HPO leads to overfitting to the test distribution and inflated performance estimates.",
+      "explanation": ""
+    },
+    {
+      "id": "02-hyperparameter-optimization-q012",
+      "domain": "hyperparameter-optimization",
+      "title": "Metrics Auto-Logged per Child Run",
+      "difficulty": "easy",
+      "question": "With `mlflow.autolog()` enabled and Hyperopt running 20 trials using a scikit-learn model, what is logged in each child run?",
+      "choices": {
+        "A": "Only the hyperparameter values for that trial",
+        "B": "Only the final loss value returned by the objective function",
+        "C": "Model metrics, hyperparameter values, and the fitted model artifact",
+        "D": "Aggregate statistics across all 20 trials combined"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "When `mlflow.sklearn.autolog()` is active, each child run created by Hyperopt captures: the hyperparameter values passed to the trial, all metrics computed during `fit()` and `score()` (e.g., AUC, accuracy, RMSE depending on estimator type), and the fitted model serialized as an MLflow artifact. This makes each child run a complete, reproducible record of that trial. Aggregate analysis across trials is visible in the parent run.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q001",
+      "domain": "model-lifecycle",
+      "title": "Unity Catalog Registry URI",
+      "difficulty": "medium",
+      "question": "A data scientist registers a model using `mlflow.sklearn.log_model()` without calling `mlflow.set_registry_uri()` first. Where does the model get registered?",
+      "choices": {
+        "A": "Unity Catalog model registry, under the default catalog",
+        "B": "Workspace model registry (legacy), scoped to the current workspace",
+        "C": "The call fails with a `RegistryURINotSetError`",
+        "D": "A local MLflow tracking server on the driver node"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When `set_registry_uri()` is not called, MLflow defaults to the workspace model registry (legacy; UC registry is current) (the legacy, non-UC registry). To target Unity Catalog, you must explicitly call `mlflow.set_registry_uri(\"databricks-uc\")` before registering models. The workspace registry uses stage-based promotion (Staging, Production) while the UC registry uses aliases.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q002",
+      "domain": "model-lifecycle",
+      "title": "Model Alias URI Format",
+      "difficulty": "easy",
+      "question": "A data scientist wants to load the model version tagged with the alias `champion` from a Unity Catalog registered model `ml_catalog.fraud.detector`. Which URI is correct?",
+      "choices": {
+        "A": "`models:/ml_catalog.fraud.detector/champion`",
+        "B": "`models:/ml_catalog.fraud.detector@champion`",
+        "C": "`models://ml_catalog/fraud/detector@champion`",
+        "D": "`uc://ml_catalog.fraud.detector:champion`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "In Unity Catalog, model aliases are referenced with the `@` separator: `models:/<catalog>.<schema>.<model>@<alias>`. The three-part namespace replaces the simple model name used in the workspace registry. Option A uses a slash before the alias, which is the legacy workspace registry syntax for stage-based loading and is not valid for UC aliases. Options C and D use non-existent URI schemes.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q003",
+      "domain": "model-lifecycle",
+      "title": "Legacy Stages in Unity Catalog",
+      "difficulty": "medium",
+      "question": "A team migrates their model registry from the workspace registry to Unity Catalog. A developer calls `client.transition_model_version_stage(name, version, stage=\"Production\")`. What happens?",
+      "choices": {
+        "A": "The model version is promoted to the Production alias in UC",
+        "B": "The call succeeds but the stage is stored as a tag rather than a true stage",
+        "C": "The call raises an error — UC does not support stage-based transitions; use aliases instead",
+        "D": "The model is copied to a separate production catalog automatically"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Unity Catalog's model registry replaces the concept of stages (Staging, Production, Archived) with flexible, user-defined aliases. `transition_model_version_stage()` is a workspace-registry-only method and will raise a `MlflowException` when the registry URI is set to `databricks-uc`. The correct UC equivalent is `client.set_registered_model_alias(name, \"champion\", version)`.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q004",
+      "domain": "model-lifecycle",
+      "title": "spark_udf result_type",
+      "difficulty": "medium",
+      "question": "A regression model returns `float64` predictions. A data scientist loads it as a Spark UDF: `mlflow.pyfunc.spark_udf(spark, model_uri, result_type=???)`. What should `result_type` be?",
+      "choices": {
+        "A": "`\"float\"`",
+        "B": "`\"double\"`",
+        "C": "`\"float64\"`",
+        "D": "`DoubleType()`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The `result_type` parameter accepts Spark SQL type strings or `pyspark.sql.types` objects. Spark's `DoubleType` corresponds to the string `\"double\"`, which maps to Python/numpy `float64`. Using `\"float\"` would give `FloatType` (32-bit), losing precision. `\"float64\"` is a numpy dtype string, not a valid Spark type string. While `DoubleType()` (option D) also works, passing the string `\"double\"` is more concise and equally correct.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q005",
+      "domain": "model-lifecycle",
+      "title": "load_model vs spark_udf Execution Location",
+      "difficulty": "medium",
+      "question": "A team needs to score 50 million rows daily using an MLflow model. One option uses `mlflow.pyfunc.load_model()` followed by `model.predict(pandas_df)`. The other uses `mlflow.pyfunc.spark_udf()` applied to a Spark DataFrame. What is the key architectural difference?",
+      "choices": {
+        "A": "`load_model` loads the model to each executor; `spark_udf` loads it only to the driver",
+        "B": "`load_model` runs inference on the driver node (single machine); `spark_udf` runs on executors (distributed)",
+        "C": "`spark_udf` requires a GPU cluster; `load_model` works on CPU clusters",
+        "D": "There is no meaningful difference — both use all available cluster resources"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`mlflow.pyfunc.load_model()` returns a Python object used for prediction on the driver. For large datasets, the entire DataFrame must be collected to the driver, which is a bottleneck and may cause OOM errors at scale. `spark_udf` serializes the model to each executor and applies inference in parallel across partitions, making it the correct choice for scoring millions of rows efficiently.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q006",
+      "domain": "model-lifecycle",
+      "title": "Scale-to-Zero Cold Start",
+      "difficulty": "medium",
+      "question": "A Databricks Model Serving endpoint is configured with scale-to-zero enabled. A user sends the first request after the endpoint has been idle for two hours. What should they expect?",
+      "choices": {
+        "A": "The request fails with a 503 error and must be retried manually",
+        "B": "The request is queued and fulfilled after a 60–120 second cold start while new compute spins up",
+        "C": "The request is served instantly from a cached model artifact on disk",
+        "D": "Scale-to-zero is not available on Databricks Model Serving"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When scale-to-zero is enabled, the serving endpoint shuts down its compute when idle to reduce cost. The first request after an idle period triggers provisioning of new compute, loading the model into memory, and then serving the request — a process that typically takes 60–120 seconds. Applications that cannot tolerate this latency should keep a minimum of one replica active or use a warm-up strategy.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q007",
+      "domain": "model-lifecycle",
+      "title": "Model Signature Enforcement",
+      "difficulty": "medium",
+      "question": "A model is registered in MLflow with a signature requiring a `float` column named `age`. An incoming serving request sends `age` as a `string`. What happens at serving time?",
+      "choices": {
+        "A": "The serving endpoint silently coerces the string to float before inference",
+        "B": "The serving endpoint logs a warning but proceeds with inference using the raw string",
+        "C": "The serving endpoint returns a 400 error due to input schema validation failure",
+        "D": "The model ignores the signature at serving time; signatures are informational only"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "MLflow model signatures are enforced at serving time in Databricks Model Serving. When an incoming request does not match the expected input schema — wrong type, missing required column, or unexpected column — the endpoint returns an HTTP 400 (Bad Request) with a schema validation error message before the model ever runs inference. This protects models from unexpected input shapes that could cause silent failures or incorrect predictions.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q008",
+      "domain": "model-lifecycle",
+      "title": "Traffic Split Totals",
+      "difficulty": "easy",
+      "question": "A team configures a Model Serving endpoint with `champion` receiving 80% of traffic and `challenger` receiving 10%. What is the result?",
+      "choices": {
+        "A": "The remaining 10% is automatically routed to the default model",
+        "B": "The configuration is invalid — all traffic percentages must sum to exactly 100%",
+        "C": "The endpoint accepts the configuration and drops the unallocated 10% of requests",
+        "D": "The challenger receives the full remaining 20% at runtime despite the 10% configuration"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks Model Serving requires that the traffic split across all served model versions adds up to exactly 100%. If the total is less than or greater than 100%, the endpoint update is rejected with a validation error. To run an A/B test with champion at 80%, the challenger must be assigned the full remaining 20% to satisfy the constraint.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q009",
+      "domain": "model-lifecycle",
+      "title": "Inference Table Configuration Timing",
+      "difficulty": "medium",
+      "question": "A team launches a Model Serving endpoint without configuring inference table logging. Six months later they realize they need historical request and response data. Can they retroactively capture it?",
+      "choices": {
+        "A": "Yes — Databricks retains all inference data for 90 days and can backfill on request",
+        "B": "Yes — enabling inference tables at any point will back-populate from endpoint creation",
+        "C": "No — inference tables must be configured before deployment; retroactive logging is not possible",
+        "D": "No — inference tables are only available for endpoints using GPU compute"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Inference table logging captures raw request payloads and model responses to a Delta table in real time. This logging must be configured when the endpoint is created or updated; Databricks does not retain historical payloads for later backfill. Teams planning to use inference data for monitoring, drift detection, or retraining should enable inference tables before going to production.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q010",
+      "domain": "model-lifecycle",
+      "title": "Shadow Deployment",
+      "difficulty": "easy",
+      "question": "In a shadow deployment, a challenger model runs alongside the champion. Who receives the challenger's predictions?",
+      "choices": {
+        "A": "10% of real users, as a canary group",
+        "B": "Internal QA engineers only, via a separate API endpoint",
+        "C": "No users — the challenger runs in parallel but its predictions are logged only, not returned to callers",
+        "D": "All users, with results hidden unless they opt in"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Shadow mode (also called shadow testing or dark launching) routes live production traffic to both the champion and challenger simultaneously. Only the champion's predictions are returned to users. The challenger's predictions are captured in logs or inference tables for offline comparison. This allows safety evaluation of the challenger on real traffic without any user-facing risk.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q011",
+      "domain": "model-lifecycle",
+      "title": "Canary vs A/B Testing",
+      "difficulty": "medium",
+      "question": "A team wants to detect whether a new model is statistically significantly better than the current champion at the same metric. Which deployment strategy is designed for this?",
+      "choices": {
+        "A": "Canary deployment — gradually increases traffic from 5% to 100%",
+        "B": "Shadow deployment — runs challenger in parallel with no user exposure",
+        "C": "A/B testing — splits traffic (typically 50/50) to enable statistical comparison",
+        "D": "Blue-green deployment — keeps both versions live and switches instantly on cutover"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "A/B testing deliberately splits traffic between champion and challenger (often 50/50) to collect comparable sample sizes for statistical hypothesis testing. The goal is to determine with confidence whether the performance difference is significant. Canary deployments roll out gradually (5% → 25% → 100%) to limit blast radius during release, not to run controlled experiments. Shadow deployments collect no user-observable signal because users only see the champion's output.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q012",
+      "domain": "model-lifecycle",
+      "title": "Multi-Task Job run_if for Integration Tests",
+      "difficulty": "medium",
+      "question": "A CI/CD pipeline is a Databricks multi-task job: Task A trains the model, Task B evaluates it against a gate threshold, and Task C runs integration tests. Integration tests should only execute if evaluation passes. How should Task C be configured?",
+      "choices": {
+        "A": "Set `depends_on: [B]` with no condition — tasks always run after dependencies complete",
+        "B": "Set `depends_on: [B]` with `run_if: ALL_SUCCESS` — only runs if Task B succeeded",
+        "C": "Set `depends_on: [A, B]` with `run_if: AT_LEAST_ONE_SUCCESS`",
+        "D": "Use a `try/except` block inside Task B to call Task C conditionally"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks multi-task jobs support `run_if` conditions on each task. `ALL_SUCCESS` means all upstream dependency tasks must have completed with a success status. If Task B (the evaluation gate) fails — because the model did not meet the threshold — Task C is skipped automatically. This is the standard pattern for conditional pipeline stages without needing custom control-flow code inside the tasks themselves.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q013",
+      "domain": "model-lifecycle",
+      "title": "Promoting Challenger to Champion via Alias",
+      "difficulty": "easy",
+      "question": "A challenger model (version 7) has passed all evaluation gates and must be promoted to the champion alias, replacing version 5. Which operation is correct?",
+      "choices": {
+        "A": "`client.delete_registered_model_alias(name, \"champion\")` then re-register version 7 as champion",
+        "B": "`client.set_registered_model_alias(name, \"champion\", 7)` — reassigns the alias to version 7",
+        "C": "`client.transition_model_version_stage(name, 7, stage=\"Production\")`",
+        "D": "Delete version 5 from the registry, then the alias automatically moves to the latest version"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "In Unity Catalog, aliases are pointers that can be freely reassigned. Calling `set_registered_model_alias` with the same alias name and a new version number atomically moves the pointer from version 5 to version 7. The previous version (5) remains in the registry and is unaffected — it simply no longer holds the `champion` alias. No deletion is required, and `transition_model_version_stage` is a workspace-registry-only method.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q014",
+      "domain": "model-lifecycle",
+      "title": "Custom pyfunc — When to Use PythonModel",
+      "difficulty": "medium",
+      "question": "A team trains a model using an internal proprietary framework that MLflow does not have a built-in flavor for. They also need custom preprocessing steps bundled with inference. Which MLflow capability is appropriate?",
+      "choices": {
+        "A": "Use `mlflow.sklearn.log_model()` with a custom wrapper class",
+        "B": "Log the model weights as a generic artifact using `mlflow.log_artifact()`",
+        "C": "Implement `mlflow.pyfunc.PythonModel` to create a custom MLflow flavor",
+        "D": "Write the model to Delta as a binary column and load it at serving time"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`mlflow.pyfunc.PythonModel` is MLflow's extension point for frameworks without a native flavor. By subclassing `PythonModel` and implementing `load_context()` and `predict()`, teams can bundle arbitrary model artifacts, dependencies, and pre/post-processing logic into a single deployable package. The resulting model is loadable via `mlflow.pyfunc.load_model()` and deployable to Databricks Model Serving like any other MLflow model.",
+      "explanation": ""
+    },
+    {
+      "id": "03-model-lifecycle-q015",
+      "domain": "model-lifecycle",
+      "title": "Drift-Triggered Retraining",
+      "difficulty": "hard",
+      "question": "A Databricks Lakehouse Monitoring alert detects that the model's AUC on recent data has dropped below the threshold. Which retraining trigger type best describes this scenario, and what is the recommended mechanism to invoke retraining?",
+      "choices": {
+        "A": "Scheduled retraining — a cron job retriggers the training pipeline weekly regardless of performance",
+        "B": "Drift-triggered retraining — the monitoring alert fires a webhook that calls the Databricks Jobs API to start the training job",
+        "C": "Manual retraining — a data scientist reviews the alert and kicks off the pipeline by hand",
+        "D": "Event-triggered retraining — new data arriving in cloud storage automatically starts retraining"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Drift-triggered (or performance-triggered) retraining responds to observed degradation rather than a fixed schedule, making it both timely and resource-efficient. Databricks Lakehouse Monitoring supports alert conditions on monitored metrics; when a threshold is breached, a notification can call a webhook that in turn invokes the Databricks Jobs REST API to start a retraining pipeline. This creates a closed-loop MLOps system where production monitoring directly drives model refresh.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q001",
+      "domain": "model-governance",
+      "title": "Data Drift vs Concept Drift",
+      "difficulty": "medium",
+      "question": "**A model's input features have shifted distribution, but AUC remains stable at 0.93. Which drift type has occurred?**",
+      "choices": {
+        "A": "Concept drift — the model relationship changed",
+        "B": "Data drift only — input distributions changed but model still generalizes",
+        "C": "Prediction drift — outputs changed",
+        "D": "Label drift — target variable shifted"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Data drift occurred (feature distributions shifted), but because AUC is stable, there is no concept drift. The model still correctly captures the input-output relationship despite the distribution change.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q002",
+      "domain": "model-governance",
+      "title": "PSI Threshold — No Action",
+      "difficulty": "easy",
+      "question": "**A feature's PSI is calculated as 0.07. What is the recommended action?**",
+      "choices": {
+        "A": "Immediate retraining",
+        "B": "Investigate the data pipeline",
+        "C": "No action — within acceptable range (PSI < 0.10)",
+        "D": "Roll back to previous model"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "PSI < 0.10 indicates the population is stable. No immediate action is needed, though continued monitoring is recommended.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q003",
+      "domain": "model-governance",
+      "title": "PSI Threshold — Investigate",
+      "difficulty": "easy",
+      "question": "**A feature's PSI score is 0.14 this week. What does this indicate?**",
+      "choices": {
+        "A": "No significant change — continue monitoring",
+        "B": "Slight population shift — investigate but retraining not yet mandatory",
+        "C": "Significant drift — retrain immediately",
+        "D": "Model is performing well"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "PSI between 0.10 and 0.20 indicates a slight but notable shift. Investigate the source of change; retraining may not be needed if model performance is unaffected.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q004",
+      "domain": "model-governance",
+      "title": "Chi-Square for Categorical Drift",
+      "difficulty": "easy",
+      "question": "**A team monitors the `payment_method` feature (values: card, cash, wallet). Which statistical test detects distribution drift in this feature?**",
+      "choices": {
+        "A": "Kolmogorov-Smirnov test",
+        "B": "Chi-square test",
+        "C": "t-test",
+        "D": "PSI with continuous binning"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Chi-square test compares observed categorical frequencies to expected (baseline) frequencies. KS test requires continuous distributions.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q005",
+      "domain": "model-governance",
+      "title": "KS Test Applicability",
+      "difficulty": "easy",
+      "question": "**A data scientist wants to detect drift in the `transaction_amount` feature (continuous, numeric). Which test is appropriate?**",
+      "choices": {
+        "A": "Chi-square test",
+        "B": "Fisher's exact test",
+        "C": "Kolmogorov-Smirnov test",
+        "D": "Shapiro-Wilk test"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "KS test compares two continuous distributions and is the standard choice for detecting numeric feature drift.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q006",
+      "domain": "model-governance",
+      "title": "Lakehouse Monitoring Monitor Type",
+      "difficulty": "easy",
+      "question": "**A team creates a monitor on an ML serving endpoint's inference table with prediction and label columns. Which monitor type should they select?**",
+      "choices": {
+        "A": "TimeSeries",
+        "B": "Snapshot",
+        "C": "InferenceLog",
+        "D": "DriftProfile"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "InferenceLog is the specialized monitor type for ML inference tables. It computes model performance metrics (accuracy, AUC, RMSE) in addition to drift metrics.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q007",
+      "domain": "model-governance",
+      "title": "Baseline Table Requirement",
+      "difficulty": "medium",
+      "question": "**Why does Databricks Lakehouse Monitoring require a baseline table when computing drift metrics?**",
+      "choices": {
+        "A": "Drift is always compared against the previous day's data",
+        "B": "Drift metrics compare the current window's statistics against the baseline — without it, no relative comparison is possible",
+        "C": "The baseline table stores model hyperparameters",
+        "D": "Databricks uses the baseline to retrain models automatically"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "LHM computes drift by comparing the current monitoring window's profile against the baseline table (typically training data or an established reference period).",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q008",
+      "domain": "model-governance",
+      "title": "Inference Table Timing",
+      "difficulty": "easy",
+      "question": "**A model goes to production on Monday without inference tables configured. On Thursday the team enables inference tables. Which requests are captured?**",
+      "choices": {
+        "A": "All requests from Monday onward",
+        "B": "Only requests from Thursday onward",
+        "C": "Requests from the past 7 days are backfilled",
+        "D": "Requests from the past 24 hours are backfilled"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Inference tables are prospective only. They capture requests after configuration; retroactive logging of past traffic is not possible.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q009",
+      "domain": "model-governance",
+      "title": "UC Audit Logs Location",
+      "difficulty": "easy",
+      "question": "**A compliance team needs to audit all MLflow model alias changes over the past 30 days. Where should they query?**",
+      "choices": {
+        "A": "`system.runtime.query_history`",
+        "B": "`system.access.audit` table",
+        "C": "`mlflow.runs` experiment table",
+        "D": "Databricks model serving logs"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Unity Catalog audit events including `updateModelVersionAlias` are logged to `system.access.audit` in UC-enabled workspaces.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q010",
+      "domain": "model-governance",
+      "title": "SHAP for Regulatory Compliance",
+      "difficulty": "medium",
+      "question": "**A financial institution must explain why a specific loan application was denied by an ML model. Which technical control satisfies GDPR Article 22's right to explanation?**",
+      "choices": {
+        "A": "Show the model's overall accuracy",
+        "B": "Show the model version number and training date",
+        "C": "Provide SHAP values showing each feature's contribution to the denial decision",
+        "D": "Show the prediction probability score only"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "SHAP values provide local, instance-level explanations showing which features drove the prediction. This satisfies the \"meaningful information about the logic involved\" requirement of GDPR Article 22.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q011",
+      "domain": "model-governance",
+      "title": "Disparate Impact Rule",
+      "difficulty": "hard",
+      "question": "**A credit scoring model has an approval rate of 65% for Group A and 84% for Group B. What is the disparate impact ratio and what does it indicate?**",
+      "choices": {
+        "A": "0.77 — below the four-fifths (0.80) threshold, indicates potential discrimination",
+        "B": "0.77 — above the minimum threshold, no concern",
+        "C": "1.29 — above 1.0, model is biased toward Group B",
+        "D": "0.65 — the minority group's raw approval rate"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Disparate impact = 65% / 84% = 0.774. This is below the four-fifths rule threshold of 0.80, indicating potential discriminatory impact requiring investigation.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q012",
+      "domain": "model-governance",
+      "title": "UC EXECUTE Permission",
+      "difficulty": "easy",
+      "question": "**A serving endpoint service principal needs to load and serve a model from `ml_catalog.fraud_models.fraud_classifier`. Which permission is required?**",
+      "choices": {
+        "A": "`SELECT ON MODEL`",
+        "B": "`MODIFY ON MODEL`",
+        "C": "`EXECUTE ON MODEL`",
+        "D": "`USE CATALOG`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`EXECUTE ON MODEL` grants the right to load and serve a model. `MODIFY` allows registering versions and setting aliases, but not serving.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q013",
+      "domain": "model-governance",
+      "title": "Prediction Drift as Proxy",
+      "difficulty": "medium",
+      "question": "**Ground truth labels are available only after 14 days. What monitoring approach detects potential model degradation before labels arrive?**",
+      "choices": {
+        "A": "Wait 14 days and compute AUC retroactively",
+        "B": "Monitor prediction score distributions for drift using PSI",
+        "C": "Disable monitoring until labels arrive",
+        "D": "Use the model's training metrics as the current performance estimate"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Prediction drift (monitoring output distribution changes) serves as a leading indicator. Significant PSI on prediction scores often precedes measurable AUC degradation once labels arrive.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q014",
+      "domain": "model-governance",
+      "title": "Feature Importance Drift",
+      "difficulty": "medium",
+      "question": "**A team suspects that some features have become less informative in production compared to training. How should they investigate?**",
+      "choices": {
+        "A": "Compare training AUC vs production AUC",
+        "B": "Compare mean absolute SHAP values from training vs production data",
+        "C": "Re-run hyperparameter optimization",
+        "D": "Check the feature table's Delta version"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Comparing SHAP value distributions between training and production data reveals which features have changed importance. A feature that was highly important during training but has low SHAP values in production indicates distribution shift in that feature.",
+      "explanation": ""
+    },
+    {
+      "id": "04-model-governance-q015",
+      "domain": "model-governance",
+      "title": "Concept Drift Detection Requirement",
+      "difficulty": "medium",
+      "question": "**Which of the following is REQUIRED to detect concept drift (not just data drift)?**",
+      "choices": {
+        "A": "Feature distribution statistics from production",
+        "B": "Model training logs from MLflow",
+        "C": "Ground truth labels from production",
+        "D": "SHAP values from the model"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Concept drift means the relationship between inputs and the target has changed. Detecting it requires comparing predictions against actual outcomes (ground truth). Without labels, you can only detect data drift or prediction drift.",
+      "explanation": ""
+    }
+  ]
+}

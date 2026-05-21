@@ -17,6 +17,13 @@ on:
       - 'lychee.toml'
       - '.github/workflows/lint.yml'
 
+env:
+  # Opt into Node.js 24 for all JavaScript actions ahead of the June 2026
+  # deprecation deadline. Eliminates the "Node.js 20 actions are deprecated"
+  # annotations and lets us keep using current action versions until each
+  # vendor publishes a Node-24-native release.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: read
 

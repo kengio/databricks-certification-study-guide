@@ -1,3 +1,7 @@
+/* Theme variables.
+ * Default = light. `[data-theme="dark"]` forces dark.
+ * `[data-theme="auto"]` (default if no manual override) uses prefers-color-scheme. */
+
 :root {
   --color-bg: #fafafa;
   --color-fg: #1a1a1a;
@@ -10,14 +14,17 @@
   --color-incorrect-bg: #fbeaea;
   --color-card-bg: #ffffff;
   --color-link: #0066cc;
+  --color-medium-bg: #fff2cc;
+  --color-medium-fg: #8a6a00;
   --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
   --radius: 6px;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+/* System dark mode: only applied when theme = auto (no manual override) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root[data-theme="auto"], :root:not([data-theme]) {
     --color-bg: #161616;
     --color-fg: #f0f0f0;
     --color-muted: #aaa;
@@ -26,8 +33,41 @@
     --color-correct-bg: #16341e;
     --color-incorrect-bg: #3a1717;
     --color-link: #5cb3ff;
+    --color-medium-bg: #3a3105;
+    --color-medium-fg: #e7c83e;
     --shadow-card: 0 1px 3px rgba(0,0,0,0.5);
   }
+}
+
+/* Manual dark override: works regardless of system preference */
+:root[data-theme="dark"] {
+  --color-bg: #161616;
+  --color-fg: #f0f0f0;
+  --color-muted: #aaa;
+  --color-border: #333;
+  --color-card-bg: #1f1f1f;
+  --color-correct-bg: #16341e;
+  --color-incorrect-bg: #3a1717;
+  --color-link: #5cb3ff;
+  --color-medium-bg: #3a3105;
+  --color-medium-fg: #e7c83e;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Manual light override: defaults already light, but explicit for completeness
+   so the toggle reaches a stable third state regardless of system preference */
+:root[data-theme="light"] {
+  --color-bg: #fafafa;
+  --color-fg: #1a1a1a;
+  --color-muted: #666;
+  --color-border: #d0d0d0;
+  --color-card-bg: #ffffff;
+  --color-correct-bg: #e8f6ed;
+  --color-incorrect-bg: #fbeaea;
+  --color-link: #0066cc;
+  --color-medium-bg: #fff2cc;
+  --color-medium-fg: #8a6a00;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 * { box-sizing: border-box; }
@@ -40,28 +80,67 @@ body {
   line-height: 1.55;
 }
 
-header, footer {
+header {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 footer {
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--color-border);
-  border-bottom: none;
   font-size: 0.85em;
   color: var(--color-muted);
   margin-top: 2rem;
 }
 
-header h1 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.4rem;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
 }
 
-header .subtitle {
+.brand-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+
+.brand-text { min-width: 0; }
+
+.brand h1 {
+  margin: 0 0 0.15rem 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.brand .subtitle {
   margin: 0;
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: var(--color-muted);
+}
+
+.brand-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+#btn-theme {
+  font-size: 1.15rem;
+  padding: 0.3rem 0.55rem;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .brand h1 { font-size: 1.15rem; }
+  .brand .subtitle { font-size: 0.8em; }
 }
 
 a { color: var(--color-link); }
@@ -85,6 +164,7 @@ button {
   color: var(--color-fg);
   border-radius: var(--radius);
   cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 button:hover:not(:disabled) {
@@ -133,6 +213,12 @@ button.danger:hover { background: var(--color-incorrect-bg); }
   margin-bottom: 0.75rem;
 }
 
+.quiz-controls {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
 .quiz-controls button {
   padding: 0.3rem 0.6rem;
   font-size: 0.85em;
@@ -148,11 +234,8 @@ button.danger:hover { background: var(--color-incorrect-bg); }
   text-transform: capitalize;
 }
 .difficulty.easy { background: var(--color-correct-bg); color: var(--color-correct); }
-.difficulty.medium { background: #fff2cc; color: #8a6a00; }
+.difficulty.medium { background: var(--color-medium-bg); color: var(--color-medium-fg); }
 .difficulty.hard { background: var(--color-incorrect-bg); color: var(--color-incorrect); }
-@media (prefers-color-scheme: dark) {
-  .difficulty.medium { background: #3a3105; color: #e7c83e; }
-}
 
 .question-card {
   background: var(--color-card-bg);
@@ -170,7 +253,14 @@ button.danger:hover { background: var(--color-incorrect-bg); }
 .question-card #quiz-question {
   font-size: 1.05rem;
   font-weight: 500;
-  white-space: pre-wrap;
+}
+
+.question-card #quiz-question p {
+  margin: 0.5rem 0;
+}
+
+.question-card #quiz-question p:first-child {
+  margin-top: 0;
 }
 
 fieldset#quiz-choices {
@@ -190,7 +280,7 @@ fieldset#quiz-choices label {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 fieldset#quiz-choices label:hover {
@@ -241,6 +331,12 @@ fieldset#quiz-choices .choice-letter {
 
 #quiz-feedback p { margin: 0.4rem 0; }
 #quiz-feedback p:first-of-type { font-weight: 500; }
+#quiz-feedback p.fb-topic {
+  font-weight: normal;
+  font-size: 0.9em;
+  color: var(--color-muted);
+  margin-top: 0;
+}
 
 .session-bar {
   display: flex;
@@ -248,6 +344,8 @@ fieldset#quiz-choices .choice-letter {
   font-size: 0.85em;
   color: var(--color-muted);
   margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 /* Stats */
@@ -306,4 +404,29 @@ code {
   background: rgba(125,125,125,0.15);
   padding: 0.1rem 0.3rem;
   border-radius: 3px;
+}
+
+pre {
+  background: rgba(125,125,125,0.15);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.88em;
+  margin: 0.75rem 0;
+  font-family: var(--font-mono);
+  line-height: 1.45;
+  white-space: pre;
+  border: 1px solid var(--color-border);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+}
+
+#quiz-question pre,
+#quiz-feedback pre {
+  white-space: pre;
 }

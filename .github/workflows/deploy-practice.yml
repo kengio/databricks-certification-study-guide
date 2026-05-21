@@ -8,6 +8,11 @@ on:
       - '.github/workflows/deploy-practice.yml'
   workflow_dispatch:
 
+env:
+  # Opt into Node.js 24 for all JavaScript actions ahead of the June 2026
+  # deprecation deadline. See lint.yml for the same rationale.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: read
   pages: write

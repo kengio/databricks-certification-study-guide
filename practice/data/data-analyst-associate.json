@@ -1,0 +1,952 @@
+{
+  "cert": "data-analyst-associate",
+  "certTitle": "Data Analyst Associate",
+  "blueprintVersion": "Oct 2025",
+  "generated": "2026-05-21",
+  "domains": [
+    {
+      "id": "databricks-sql",
+      "name": "Databricks SQL Practice Questions",
+      "sourceFile": "certifications/data-analyst-associate/resources/practice-questions/01-databricks-sql.md",
+      "questionCount": 10
+    },
+    {
+      "id": "data-management",
+      "name": "Data Management Practice Questions",
+      "sourceFile": "certifications/data-analyst-associate/resources/practice-questions/02-data-management.md",
+      "questionCount": 12
+    },
+    {
+      "id": "sql-queries",
+      "name": "SQL Queries Practice Questions",
+      "sourceFile": "certifications/data-analyst-associate/resources/practice-questions/03-sql-queries.md",
+      "questionCount": 18
+    },
+    {
+      "id": "dashboards-visualization",
+      "name": "Dashboards & Visualization Practice Questions",
+      "sourceFile": "certifications/data-analyst-associate/resources/practice-questions/04-dashboards-visualization.md",
+      "questionCount": 10
+    },
+    {
+      "id": "analytics-applications",
+      "name": "Analytics Applications Practice Questions",
+      "sourceFile": "certifications/data-analyst-associate/resources/practice-questions/05-analytics-applications.md",
+      "questionCount": 7
+    }
+  ],
+  "questions": [
+    {
+      "id": "01-databricks-sql-q001",
+      "domain": "databricks-sql",
+      "title": "SQL Warehouse Type for High Concurrency",
+      "difficulty": "medium",
+      "question": "A team has 50 analysts running simultaneous queries at unpredictable times. Which SQL warehouse type best handles this?",
+      "choices": {
+        "A": "Classic warehouse — most cost-effective",
+        "B": "Pro warehouse — supports up to 10 clusters for auto-scaling",
+        "C": "Serverless warehouse — instant start, auto-scales compute",
+        "D": "Personal cluster — dedicated resources per user"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Serverless warehouses auto-scale compute instantly based on demand, with no cold start delay\nand per-second billing. Ideal for bursty, unpredictable analyst workloads.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q002",
+      "domain": "databricks-sql",
+      "title": "Serverless vs Pro Warehouse — Start Time",
+      "difficulty": "easy",
+      "question": "A product team needs a SQL warehouse that starts within seconds for morning dashboards. Which type should they choose?",
+      "choices": {
+        "A": "Classic — standard option",
+        "B": "Pro — fastest of the dedicated types",
+        "C": "Serverless — starts in seconds, no warmup needed",
+        "D": "All warehouse types start in seconds"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Serverless warehouses are instantly available because compute is managed by Databricks\ninfrastructure. Classic and Pro warehouses take 2-5 minutes to start.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q003",
+      "domain": "databricks-sql",
+      "title": "SQL Warehouse Auto-Stop Default",
+      "difficulty": "easy",
+      "question": "What is the default auto-stop idle time for a Databricks SQL warehouse?",
+      "choices": {
+        "A": "30 minutes",
+        "B": "60 minutes",
+        "C": "120 minutes",
+        "D": "Auto-stop is disabled by default"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The default idle auto-stop time is 120 minutes (2 hours). Admins can configure this value\nor disable it for always-on warehouses.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q004",
+      "domain": "databricks-sql",
+      "title": "Connecting External BI Tools",
+      "difficulty": "easy",
+      "question": "A team uses Tableau to connect to Databricks SQL data. Which connection method should they use?",
+      "choices": {
+        "A": "JDBC/ODBC driver with warehouse connection details",
+        "B": "Delta Lake Python SDK",
+        "C": "Direct S3 bucket access",
+        "D": "REST API polling every 5 minutes"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Databricks SQL provides JDBC and ODBC drivers for standard BI tool connectivity. The\nconnection string includes warehouse hostname, HTTP path, and authentication token.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q005",
+      "domain": "databricks-sql",
+      "title": "Query History Purpose",
+      "difficulty": "medium",
+      "question": "A data engineer notices a query is running slower than expected in Databricks SQL. Which feature helps diagnose the performance issue?",
+      "choices": {
+        "A": "MLflow experiment logs",
+        "B": "Query History — shows query duration, rows processed, and a visual query plan",
+        "C": "Cluster event logs",
+        "D": "Delta transaction log"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks SQL Query History provides execution time, rows scanned, the executed SQL, and\na link to the query plan for performance analysis.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q006",
+      "domain": "databricks-sql",
+      "title": "Pro Warehouse Unique Feature",
+      "difficulty": "medium",
+      "question": "Which capability is available in Pro and Serverless SQL warehouses but NOT in Classic warehouses?",
+      "choices": {
+        "A": "SQL query execution",
+        "B": "Delta Lake integration",
+        "C": "Row-level security and column masking via Unity Catalog",
+        "D": "Auto-stop configuration"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Row-level security (row access policies) and column masking policies in Unity Catalog\nrequire Pro or Serverless SQL warehouses. Classic warehouses don't support these\nfine-grained data access controls.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q007",
+      "domain": "databricks-sql",
+      "title": "Partner Connect",
+      "difficulty": "easy",
+      "question": "A team wants to connect a third-party ETL tool directly to Databricks without manual credential setup. Which feature should they use?",
+      "choices": {
+        "A": "Databricks REST API",
+        "B": "Partner Connect — pre-built integrations with one-click setup",
+        "C": "Delta Sharing",
+        "D": "Unity Catalog External Locations"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Partner Connect provides pre-built, guided integrations with partner tools (dbt, Fivetran,\nTableau, etc.), automating credential setup and warehouse configuration.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q008",
+      "domain": "databricks-sql",
+      "title": "Multi-Cluster Warehouse",
+      "difficulty": "medium",
+      "question": "A Classic SQL warehouse is overloaded during peak hours, causing queue buildup. What change would allow multiple concurrent query streams?",
+      "choices": {
+        "A": "Increase warehouse size (Small → Large)",
+        "B": "Upgrade to Pro warehouse and enable auto-scaling with Max Clusters > 1",
+        "C": "Enable query caching",
+        "D": "Add a second Classic warehouse"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Classic warehouses are single-cluster. Pro warehouses support multi-cluster auto-scaling\n(1 to 10 clusters), allowing multiple concurrent query streams without queue buildup.",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q009",
+      "domain": "databricks-sql",
+      "title": "Serverless Warehouse Billing",
+      "difficulty": "easy",
+      "question": "Which billing model applies to Serverless SQL warehouses?",
+      "choices": {
+        "A": "Per DBU-hour — billed for the full hour whenever active",
+        "B": "Per DBU-second — billed only for actual compute seconds used",
+        "C": "Flat monthly fee",
+        "D": "Per query executed"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Serverless warehouses bill per DBU-second, making them cost-efficient for intermittent\nworkloads. Classic and Pro warehouses bill per DBU-hour (rounded up).",
+      "explanation": ""
+    },
+    {
+      "id": "01-databricks-sql-q010",
+      "domain": "databricks-sql",
+      "title": "Warehouse Size Selection",
+      "difficulty": "medium",
+      "question": "A data analyst runs complex aggregate queries over 500 GB of Delta Lake data daily. Which warehouse size is most appropriate?",
+      "choices": {
+        "A": "X-Small — smallest cost",
+        "B": "Small — good for individual users",
+        "C": "Large or X-Large — complex queries over large data benefit from more cores",
+        "D": "Size doesn't matter — all sizes produce the same result"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Larger warehouse sizes have more CPU and memory. For complex aggregation over large\ndatasets, a larger size reduces query time significantly. X-Small is suitable for light,\nexploratory queries only.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q001",
+      "domain": "data-management",
+      "title": "Unity Catalog Three-Level Namespace",
+      "difficulty": "easy",
+      "question": "Which format correctly refers to a table in Unity Catalog?",
+      "choices": {
+        "A": "`schema.table`",
+        "B": "`catalog.schema.table`",
+        "C": "`workspace.catalog.table`",
+        "D": "`database.table`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Unity Catalog uses a three-level namespace: `catalog.schema.table`. The two-level\n`schema.table` format was used with the legacy Hive metastore.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q002",
+      "domain": "data-management",
+      "title": "Managed vs External Table DROP",
+      "difficulty": "medium",
+      "question": "A data engineer drops a managed Delta table and then drops an external Delta table. What happens in each case?",
+      "choices": {
+        "A": "Both operations delete data files and metadata",
+        "B": "Both operations delete only metadata",
+        "C": "Managed: deletes data AND metadata. External: deletes metadata only, data files remain",
+        "D": "External: deletes data AND metadata. Managed: deletes metadata only"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "This is the defining difference: dropping a managed table removes both the Delta files and\nthe table definition. Dropping an external table removes only the Hive metastore entry;\nfiles stay in external storage.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q003",
+      "domain": "data-management",
+      "title": "GRANT SELECT on a Table",
+      "difficulty": "easy",
+      "question": "Which SQL statement correctly grants read access to a table in Unity Catalog?",
+      "choices": {
+        "A": "`GRANT READ ON TABLE catalog.schema.table TO 'user@company.com'`",
+        "B": "`GRANT SELECT ON TABLE catalog.schema.table TO 'user@company.com'`",
+        "C": "`GRANT ACCESS ON TABLE catalog.schema.table TO 'user@company.com'`",
+        "D": "`GRANT VIEW ON TABLE catalog.schema.table TO 'user@company.com'`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`SELECT` is the correct privilege for read access in Unity Catalog. `READ` and `ACCESS`\nare not valid UC privilege names.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q004",
+      "domain": "data-management",
+      "title": "CREATE TABLE in UC",
+      "difficulty": "medium",
+      "question": "Which statement creates a managed table in the `gold` schema of the `ml_catalog` catalog?",
+      "choices": {
+        "A": "`CREATE TABLE gold.transactions AS SELECT ...`",
+        "B": "`CREATE TABLE ml_catalog.gold.transactions AS SELECT ...`",
+        "C": "`USE CATALOG ml_catalog; CREATE TABLE gold.transactions AS SELECT ...`",
+        "D": "Both B and C are correct"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Both a fully-qualified name and `USE CATALOG` + two-level reference create the table in\nthe correct location.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q005",
+      "domain": "data-management",
+      "title": "Schema Evolution — mergeSchema",
+      "difficulty": "medium",
+      "question": "An analyst appends data with a new column to an existing Delta table using `df.write.format(\"delta\").mode(\"append\").save(path)`. The new column is not in the table schema. What happens?",
+      "choices": {
+        "A": "The new column is automatically added to the table schema",
+        "B": "An error is raised — new columns are not allowed without explicit schema evolution",
+        "C": "The new column is silently dropped",
+        "D": "The write succeeds and the column is stored as a nested JSON string"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Delta Lake enforces schema-on-write by default. To add new columns, use\n`.option(\"mergeSchema\", \"true\")` or set\n`spark.databricks.delta.schema.autoMerge.enabled = true`.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q006",
+      "domain": "data-management",
+      "title": "overwriteSchema Option",
+      "difficulty": "easy",
+      "question": "What does the `overwriteSchema` option do in a Delta Lake write?",
+      "choices": {
+        "A": "Adds new columns to the existing schema",
+        "B": "Replaces the existing schema entirely with the new DataFrame's schema",
+        "C": "Validates the DataFrame schema matches the table schema",
+        "D": "Enables automatic type casting"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`overwriteSchema=true` (combined with `mode(\"overwrite\")`) replaces the entire table\nschema. This is necessary when columns are renamed or dropped, not just added.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q007",
+      "domain": "data-management",
+      "title": "REVOKE Privilege",
+      "difficulty": "easy",
+      "question": "A data analyst's access to `finance.transactions` must be removed. Which statement is correct?",
+      "choices": {
+        "A": "`DELETE GRANT SELECT ON TABLE finance.transactions FROM 'analyst@co.com'`",
+        "B": "`REVOKE SELECT ON TABLE finance.transactions FROM 'analyst@co.com'`",
+        "C": "`DROP GRANT SELECT ON TABLE finance.transactions FROM 'analyst@co.com'`",
+        "D": "`REMOVE ACCESS ON TABLE finance.transactions FROM 'analyst@co.com'`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`REVOKE` is the correct SQL command to remove privileges in Unity Catalog.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q008",
+      "domain": "data-management",
+      "title": "Metastore vs Catalog",
+      "difficulty": "medium",
+      "question": "In Unity Catalog, what is the relationship between a metastore and a catalog?",
+      "choices": {
+        "A": "They are the same thing — different names for the same object",
+        "B": "A metastore is the top-level account-level container; a catalog is an object within the metastore",
+        "C": "A catalog contains multiple metastores",
+        "D": "A metastore is created per workspace; a catalog is account-level"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "A Unity Catalog metastore is created once per region at the account level. Multiple\ncatalogs exist within a metastore. Workspaces are attached to the metastore.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q009",
+      "domain": "data-management",
+      "title": "Delta Lake TBLPROPERTIES",
+      "difficulty": "easy",
+      "question": "Which statement sets a custom property on a Delta table?",
+      "choices": {
+        "A": "`SET TABLE finance.transactions PROPERTIES (owner = 'finance-team')`",
+        "B": "`ALTER TABLE finance.transactions SET TBLPROPERTIES ('owner' = 'finance-team')`",
+        "C": "`UPDATE TABLE finance.transactions SET PROPERTY owner = 'finance-team'`",
+        "D": "`CONFIGURE TABLE finance.transactions WITH PROPERTIES (owner = 'finance-team')`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`ALTER TABLE ... SET TBLPROPERTIES` is the correct syntax. Properties are key-value\nstring pairs.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q010",
+      "domain": "data-management",
+      "title": "Data Lineage in UC Explorer",
+      "difficulty": "medium",
+      "question": "A compliance team wants to see which dashboards read from the `gold.revenue_metrics` table. Which UC feature provides this?",
+      "choices": {
+        "A": "MLflow experiment tracking",
+        "B": "Delta transaction log",
+        "C": "Unity Catalog data lineage graph in the Catalog Explorer UI",
+        "D": "SQL warehouse query history"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Unity Catalog automatically captures column-level and table-level lineage. The Catalog\nExplorer UI shows upstream (sources) and downstream (consumers) for any table.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q011",
+      "domain": "data-management",
+      "title": "External Location",
+      "difficulty": "hard",
+      "question": "An analyst creates an external table pointing to `s3://company-data/raw/sales/`. The underlying S3 files are deleted by a pipeline mistake. What happens when the table is queried?",
+      "choices": {
+        "A": "The table returns empty results",
+        "B": "An error is raised — the files referenced by the external table no longer exist",
+        "C": "Delta Lake automatically restores the files from the transaction log",
+        "D": "The table is automatically dropped"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "External tables point to external storage. If the files are deleted, queries fail with a\nfile-not-found error. Delta can only restore files if they were managed and within VACUUM\nretention.",
+      "explanation": ""
+    },
+    {
+      "id": "02-data-management-q012",
+      "domain": "data-management",
+      "title": "USE CATALOG Statement",
+      "difficulty": "medium",
+      "question": "A data analyst runs `USE CATALOG analytics; USE SCHEMA reporting;`. What does `SELECT * FROM revenue` query?",
+      "choices": {
+        "A": "`main.default.revenue`",
+        "B": "`analytics.reporting.revenue`",
+        "C": "`analytics.default.revenue`",
+        "D": "`default.reporting.revenue`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`USE CATALOG` sets the default catalog and `USE SCHEMA` sets the default schema.\nUnqualified table references use these defaults: `analytics.reporting.revenue`.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q001",
+      "domain": "sql-queries",
+      "title": "INNER JOIN vs LEFT JOIN",
+      "difficulty": "medium",
+      "question": "A query needs all employees and their department names, including employees without a department.\nWhich JOIN type should be used?",
+      "choices": {
+        "A": "INNER JOIN — returns only matching rows",
+        "B": "LEFT JOIN — returns all rows from the left table, NULL for unmatched right rows",
+        "C": "CROSS JOIN — all combinations",
+        "D": "SEMI JOIN — checks for existence only"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "LEFT JOIN preserves all rows from the left table (employees). Employees without a department\nget NULL in the department name column. INNER JOIN would exclude employees with no department.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q002",
+      "domain": "sql-queries",
+      "title": "Window Function — ROW_NUMBER",
+      "difficulty": "medium",
+      "question": "A query must return one row per customer with the highest purchase amount. Which window function\nassigns a unique rank per customer?",
+      "choices": {
+        "A": "`RANK() OVER (PARTITION BY customer_id ORDER BY amount DESC)`",
+        "B": "`DENSE_RANK() OVER (PARTITION BY customer_id ORDER BY amount DESC)`",
+        "C": "`ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC)`",
+        "D": "`NTILE(1) OVER (PARTITION BY customer_id ORDER BY amount DESC)`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`ROW_NUMBER()` assigns 1 to the top row per partition with no ties (always unique). Filter\n`WHERE rn = 1` to get one row per customer. `RANK()` and `DENSE_RANK()` can produce duplicates\nwhen there are ties.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q003",
+      "domain": "sql-queries",
+      "title": "RANK vs DENSE_RANK",
+      "difficulty": "hard",
+      "question": "Sales figures are: Alice=100, Bob=100, Carol=90. Using `RANK()` and `DENSE_RANK()`, what are\nCarol's values?",
+      "choices": {
+        "A": "`RANK()` = 2, `DENSE_RANK()` = 2",
+        "B": "`RANK()` = 3, `DENSE_RANK()` = 2",
+        "C": "`RANK()` = 2, `DENSE_RANK()` = 3",
+        "D": "`RANK()` = 3, `DENSE_RANK()` = 3"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "With two tied rows at rank 1, `RANK()` skips to 3 for the next row (gaps exist). `DENSE_RANK()`\nassigns 2 (no gaps). Alice and Bob both get rank 1 in both functions.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q004",
+      "domain": "sql-queries",
+      "title": "LAG Function",
+      "difficulty": "medium",
+      "question": "A query calculates the change in monthly sales vs the previous month. Which function retrieves the\nprevious month's value?",
+      "choices": {
+        "A": "`PREV(sales) OVER (ORDER BY month)`",
+        "B": "`LAG(sales, 1) OVER (ORDER BY month)`",
+        "C": "`LEAD(sales, -1) OVER (ORDER BY month)`",
+        "D": "`OFFSET(sales, 1) OVER (ORDER BY month)`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`LAG(column, offset)` returns the value from `offset` rows before the current row within the\nwindow. `LEAD` looks forward; `LAG` looks backward. `PREV` and `OFFSET` are not valid Databricks\nSQL functions.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q005",
+      "domain": "sql-queries",
+      "title": "QUALIFY Clause",
+      "difficulty": "hard",
+      "question": "An analyst wants to return only the top-ranked product per category (based on revenue), using\nwindow functions. Which clause filters on the window function result?",
+      "choices": {
+        "A": "`HAVING rank = 1`",
+        "B": "`WHERE rank = 1`",
+        "C": "`QUALIFY ROW_NUMBER() OVER (PARTITION BY category ORDER BY revenue DESC) = 1`",
+        "D": "`FILTER (WHERE rank = 1)`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`QUALIFY` filters on window function expressions directly. `WHERE` executes before window\nfunctions; `HAVING` filters on aggregates after GROUP BY. `QUALIFY` is the correct clause for\nfiltering window results without wrapping in a subquery.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q006",
+      "domain": "sql-queries",
+      "title": "Running Total",
+      "difficulty": "medium",
+      "question": "An analyst needs a running total of sales, ordered by date, within each region. Which expression\ncomputes this?",
+      "choices": {
+        "A": "`SUM(sales) OVER (PARTITION BY region)`",
+        "B": "`SUM(sales) OVER (PARTITION BY region ORDER BY date)`",
+        "C": "`SUM(sales) GROUP BY region, date`",
+        "D": "`CUMSUM(sales) OVER (PARTITION BY region ORDER BY date)`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`SUM(sales) OVER (PARTITION BY region ORDER BY date)` computes a cumulative sum within each\nregion, increasing with each row sorted by date. Without `ORDER BY`, it returns the total sum\nfor the entire partition. `CUMSUM` is not a valid Databricks SQL function.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q007",
+      "domain": "sql-queries",
+      "title": "CTE vs Subquery",
+      "difficulty": "easy",
+      "question": "Which statement about CTEs (Common Table Expressions) is TRUE?",
+      "choices": {
+        "A": "CTEs are always faster than equivalent subqueries",
+        "B": "CTEs improve readability and can be referenced multiple times in the same query",
+        "C": "CTEs cannot be used in SELECT statements",
+        "D": "CTEs are materialized by default in Databricks SQL"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "CTEs improve readability by naming intermediate result sets. They can be referenced multiple\ntimes in the same query without repeating logic. Performance is typically equivalent to\nsubqueries — both are logical constructs, not necessarily materialized.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q008",
+      "domain": "sql-queries",
+      "title": "EXPLODE for Arrays",
+      "difficulty": "easy",
+      "question": "A table has a `tags` column of type `ARRAY<STRING>`. A query needs one row per tag. Which function\nproduces this?",
+      "choices": {
+        "A": "`FLATTEN(tags)`",
+        "B": "`UNNEST(tags)`",
+        "C": "`EXPLODE(tags)`",
+        "D": "`SPLIT(tags, ',')`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`EXPLODE(array_column)` creates one row per array element. `FLATTEN` combines nested arrays into\na flat array without exploding rows. `UNNEST` is PostgreSQL syntax, not used in Databricks SQL.\n`SPLIT` converts a string to an array but does not expand rows.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q009",
+      "domain": "sql-queries",
+      "title": "COLLECT_LIST Aggregation",
+      "difficulty": "easy",
+      "question": "Which aggregate function combines multiple row values into an array?",
+      "choices": {
+        "A": "`ARRAY_AGG` or `COLLECT_LIST`",
+        "B": "`GROUP_CONCAT`",
+        "C": "`STRING_AGG`",
+        "D": "`CONCAT_WS`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Both `COLLECT_LIST` (Spark SQL) and `ARRAY_AGG` (SQL standard alias) aggregate multiple values\ninto an array column. `GROUP_CONCAT` and `STRING_AGG` produce a delimited string, not an array.\n`CONCAT_WS` concatenates strings with a separator but is not an aggregate.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q010",
+      "domain": "sql-queries",
+      "title": "ANTI JOIN",
+      "difficulty": "medium",
+      "question": "A query needs all customers who have NOT made a purchase. Which JOIN type filters for non-matches?",
+      "choices": {
+        "A": "`LEFT JOIN ... WHERE purchase_id IS NULL`",
+        "B": "`LEFT ANTI JOIN`",
+        "C": "Both A and B are correct approaches",
+        "D": "`OUTER JOIN ... WHERE purchase_id IS NULL`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Both approaches work. `LEFT ANTI JOIN` is the explicit syntax for returning only non-matching\nleft rows. `LEFT JOIN ... WHERE right_key IS NULL` is the equivalent filter approach. The\nexplicit `ANTI JOIN` syntax is often clearer in intent.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q011",
+      "domain": "sql-queries",
+      "title": "PIVOT Syntax",
+      "difficulty": "medium",
+      "question": "An analyst wants to pivot monthly sales into columns (Jan, Feb, Mar). Which SQL feature\naccomplishes this?",
+      "choices": {
+        "A": "`CASE WHEN month = 'Jan' THEN sales END` in SELECT",
+        "B": "`PIVOT (SUM(sales) FOR month IN ('Jan', 'Feb', 'Mar'))`",
+        "C": "`GROUP BY month HAVING month IN ('Jan', 'Feb', 'Mar')`",
+        "D": "`TRANSPOSE(sales, month)`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`PIVOT` reshapes rows into columns. Both conditional aggregation (A) and PIVOT (B) produce the\nsame result, but `PIVOT` syntax is more concise. Full syntax:\n`FROM table PIVOT (agg(col) FOR pivot_col IN (values))`. `TRANSPOSE` is not a valid Databricks\nSQL function.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q012",
+      "domain": "sql-queries",
+      "title": "HAVING vs WHERE",
+      "difficulty": "medium",
+      "question": "An analyst writes a query with `WHERE COUNT(*) > 5` and gets an error. What is the correct\napproach?",
+      "choices": {
+        "A": "Replace `WHERE` with `QUALIFY`",
+        "B": "Replace `WHERE` with `HAVING` after a `GROUP BY`",
+        "C": "Replace `WHERE COUNT(*)` with `WHERE SUM(1)`",
+        "D": "Add `ORDER BY COUNT(*)` after WHERE"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`WHERE` filters individual rows before aggregation; aggregate functions like `COUNT()` cannot\nappear in a `WHERE` clause. `HAVING` filters after GROUP BY aggregation and supports aggregate\nexpressions. `QUALIFY` filters window function results, not aggregate results.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q013",
+      "domain": "sql-queries",
+      "title": "Date Function",
+      "difficulty": "easy",
+      "question": "Which function returns the number of days between `order_date` and today?",
+      "choices": {
+        "A": "`DATE_DIFF(current_date(), order_date)`",
+        "B": "`DATEDIFF(current_date(), order_date)`",
+        "C": "`DAYS_BETWEEN(order_date, current_date())`",
+        "D": "`TIMESTAMPDIFF('day', order_date, current_date())`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`DATEDIFF(end_date, start_date)` is the Databricks SQL function for date difference in days.\nNote the argument order: end date first, then start date. `DATE_DIFF` (with underscore) is not\nthe standard Databricks function name. `DAYS_BETWEEN` does not exist in Databricks SQL.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q014",
+      "domain": "sql-queries",
+      "title": "String Function — SUBSTRING",
+      "difficulty": "hard",
+      "question": "Which expression extracts characters 2 through 5 from the `product_code` column?",
+      "choices": {
+        "A": "`SUBSTR(product_code, 2, 4)`",
+        "B": "`LEFT(product_code, 5)`",
+        "C": "`SUBSTRING(product_code, 2, 5)`",
+        "D": "`MID(product_code, 2, 4)`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`SUBSTR(string, start_pos, length)` where start is 1-indexed. Starting at position 2 with\nlength 4 extracts characters 2, 3, 4, 5. Option C has the wrong length parameter — starting at\nposition 2 with length 5 would extract characters 2 through 6. `MID` is MySQL syntax not used\nin Databricks SQL.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q015",
+      "domain": "sql-queries",
+      "title": "EXPLAIN Statement",
+      "difficulty": "easy",
+      "question": "A data analyst wants to understand why a SQL query is performing slowly. Which statement provides\nthe query execution plan?",
+      "choices": {
+        "A": "`DESCRIBE query_name`",
+        "B": "`PROFILE SELECT ...`",
+        "C": "`EXPLAIN SELECT ...`",
+        "D": "`ANALYZE SELECT ...`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`EXPLAIN SELECT ...` shows the logical and physical query plan including joins, scans, and\nfilters. In Databricks SQL, the query history UI also shows a visual plan for completed queries.\n`DESCRIBE` describes table schemas, not query plans. `PROFILE` and `ANALYZE SELECT` are not\nvalid Databricks SQL statements.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q016",
+      "domain": "sql-queries",
+      "title": "NULL Handling in Aggregations",
+      "difficulty": "medium",
+      "question": "A column `revenue` has some NULL values. What does `SUM(revenue)` return?",
+      "choices": {
+        "A": "NULL — if any value is NULL, the aggregate is NULL",
+        "B": "The sum of non-NULL values",
+        "C": "An error — cannot aggregate columns with NULLs",
+        "D": "0 — NULLs are treated as 0 in aggregations"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "SQL aggregate functions (SUM, AVG, COUNT, MIN, MAX) ignore NULL values by default. Only\n`COUNT(*)` counts NULLs; `COUNT(column)` ignores them. `SUM` returns NULL only if ALL values\nin the column are NULL. NULLs are never silently treated as 0.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q017",
+      "domain": "sql-queries",
+      "title": "SEMI JOIN",
+      "difficulty": "medium",
+      "question": "A query returns all products that have at least one review. Which JOIN type is most appropriate?",
+      "choices": {
+        "A": "INNER JOIN on reviews",
+        "B": "LEFT JOIN on reviews",
+        "C": "LEFT SEMI JOIN — returns left rows where match exists, no duplication",
+        "D": "CROSS JOIN"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`LEFT SEMI JOIN` returns rows from the left table (products) where a match exists in the right\ntable (reviews), without producing duplicate product rows. INNER JOIN can produce multiple rows\nper product when a product has multiple reviews, requiring a DISTINCT or GROUP BY to deduplicate.",
+      "explanation": ""
+    },
+    {
+      "id": "03-sql-queries-q018",
+      "domain": "sql-queries",
+      "title": "Subquery in WHERE",
+      "difficulty": "medium",
+      "question": "Which query returns employees earning more than the average salary?",
+      "choices": {
+        "A": "`SELECT * FROM employees WHERE salary > AVG(salary)`",
+        "B": "`SELECT * FROM employees WHERE salary > (SELECT AVG(salary) FROM employees)`",
+        "C": "`SELECT * FROM employees HAVING salary > AVG(salary)`",
+        "D": "`SELECT * FROM employees WHERE salary > MEAN(salary)`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Aggregate functions cannot appear in `WHERE` clauses of the outer query. A scalar subquery in\nthe `WHERE` clause computes the average separately and passes it as a value for comparison.\n`MEAN` is not a standard SQL aggregate function in Databricks SQL — use `AVG`.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q001",
+      "domain": "dashboards-visualization",
+      "title": "Dashboard Widget Types",
+      "difficulty": "easy",
+      "question": "Which widget type displays a single aggregated number prominently (e.g., total revenue)?",
+      "choices": {
+        "A": "Table widget",
+        "B": "Counter widget",
+        "C": "Chart widget — line chart",
+        "D": "Text widget"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Counter widgets display a single prominent metric value, ideal for KPIs and summary stats on\ndashboards. Table widgets display multi-column rows, line charts show trends over time, and\ntext widgets display static markdown content.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q002",
+      "domain": "dashboards-visualization",
+      "title": "Lakeview vs Legacy Dashboards",
+      "difficulty": "easy",
+      "question": "What is the primary advantage of Lakeview Dashboards over legacy dashboards in Databricks SQL?",
+      "choices": {
+        "A": "Lakeview supports more SQL functions",
+        "B": "Lakeview has a modern drag-and-drop canvas UI with improved layout flexibility",
+        "C": "Lakeview runs queries faster",
+        "D": "Lakeview automatically applies row-level security"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Lakeview Dashboards (introduced in 2024) provide a modernized canvas-based editor with flexible\nlayout, improved sharing, and better visualization options compared to the legacy dashboard\neditor. Performance depends on the underlying queries and warehouse, not the dashboard type.\nRow-level security is a Unity Catalog feature independent of dashboard type.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q003",
+      "domain": "dashboards-visualization",
+      "title": "Dashboard Refresh Schedule",
+      "difficulty": "medium",
+      "question": "A business stakeholder needs a dashboard to refresh automatically every morning at 8 AM. How\nshould this be configured?",
+      "choices": {
+        "A": "The dashboard refreshes automatically when opened — no configuration needed",
+        "B": "Set a schedule on the dashboard using a SQL warehouse for execution",
+        "C": "Create a Databricks Job that triggers a notebook to refresh the dashboard",
+        "D": "Dashboards cannot be scheduled — only individual queries can"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Dashboards can have a scheduled refresh in Databricks SQL. Configure the schedule (cron or\ninterval) and assign a SQL warehouse to run the underlying queries at the specified time.\nThe warehouse must be running or set to auto-start for scheduled refresh to succeed.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q004",
+      "domain": "dashboards-visualization",
+      "title": "SQL Alert Condition",
+      "difficulty": "medium",
+      "question": "An analyst creates a SQL alert on a query that returns the count of failed transactions. The alert\nshould fire when the count exceeds 100. How should the alert condition be configured?",
+      "choices": {
+        "A": "WHEN VALUE IS NULL",
+        "B": "WHEN VALUE > 100",
+        "C": "WHEN VALUE = 100",
+        "D": "WHEN VALUE >= 100 AND VALUE < 200"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "SQL alerts support `>`, `<`, `=`, `>=`, `<=`, and `IS NULL` as threshold conditions. Setting\n`> 100` causes the alert to fire whenever the query result exceeds 100. Option D is not a valid\nsingle alert condition — alerts support one condition at a time.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q005",
+      "domain": "dashboards-visualization",
+      "title": "Alert Notification Destination",
+      "difficulty": "medium",
+      "question": "A SQL alert needs to send a message to a Slack channel when triggered. Which configuration enables\nthis?",
+      "choices": {
+        "A": "Add a Slack webhook URL as a notification destination in the alert settings",
+        "B": "Write a Python script that polls the alert status",
+        "C": "Configure a Databricks Job to check the alert query result",
+        "D": "Slack integration is not supported — use email only"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Databricks SQL alerts support multiple notification destinations: email, Slack (via webhook),\nPagerDuty, and custom webhooks. Add the Slack incoming webhook URL in the alert's notification\nsettings. No custom scripting is required for this native integration.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q006",
+      "domain": "dashboards-visualization",
+      "title": "Dashboard Sharing",
+      "difficulty": "medium",
+      "question": "A manager wants to share a Databricks SQL dashboard with external stakeholders who don't have\nDatabricks accounts. Which sharing option allows this?",
+      "choices": {
+        "A": "Grant the stakeholders workspace access",
+        "B": "Publish the dashboard and share the public URL (if enabled by admin)",
+        "C": "Export to PDF and email it",
+        "D": "Use Delta Sharing to expose the dashboard data"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks SQL dashboards can be published to create a shareable URL that allows viewing without\na Databricks login (requires admin to enable anonymous access or external sharing). Granting\nworkspace access requires creating user accounts. PDF export is a manual workaround and does not\nstay up to date. Delta Sharing exposes data, not dashboards.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q007",
+      "domain": "dashboards-visualization",
+      "title": "Chart Visualization — Bar vs Line",
+      "difficulty": "easy",
+      "question": "Sales data needs to show trend over time for 12 months. Which visualization type is most\nappropriate?",
+      "choices": {
+        "A": "Bar chart — best for time series trends",
+        "B": "Line chart — shows trends and changes over time clearly",
+        "C": "Scatter plot — shows correlations",
+        "D": "Pie chart — shows proportions"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Line charts are ideal for time series data, clearly showing trends, peaks, and patterns over\ntime. Bar charts work better for comparing discrete categories. Scatter plots show the\nrelationship between two variables. Pie charts show part-to-whole proportions.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q008",
+      "domain": "dashboards-visualization",
+      "title": "Table Widget Use Case",
+      "difficulty": "easy",
+      "question": "Which scenario is best suited for a table widget in a Databricks SQL dashboard?",
+      "choices": {
+        "A": "Showing total revenue as a KPI number",
+        "B": "Showing sales trend over 12 months",
+        "C": "Showing the top 20 products with their revenue, units sold, and rank",
+        "D": "Showing the proportion of sales by region"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Table widgets display tabular data with multiple columns and rows, ideal for detailed lists and\ncomparisons. KPIs use counter widgets (A), trends over time use line charts (B), and proportions\nuse pie or donut charts (D).",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q009",
+      "domain": "dashboards-visualization",
+      "title": "Alert Schedule",
+      "difficulty": "medium",
+      "question": "A SQL alert monitors inventory below a reorder threshold. The business needs notification within\n1 hour of the condition occurring. What schedule frequency is appropriate?",
+      "choices": {
+        "A": "Refresh every 24 hours",
+        "B": "Refresh every 1 hour",
+        "C": "Real-time streaming alerts",
+        "D": "Manual refresh only"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Set the alert refresh to 1-hour intervals so that an inventory drop below threshold is detected\nand notified within one hour of occurring. Databricks SQL alerts are not real-time streaming;\nthey run on a polling schedule. 24-hour refresh would miss the SLA. Manual refresh provides no\nautomation.",
+      "explanation": ""
+    },
+    {
+      "id": "04-dashboards-visualization-q010",
+      "domain": "dashboards-visualization",
+      "title": "Dashboard Parameter Syntax",
+      "difficulty": "easy",
+      "question": "A dashboard has a date range filter that passes the selected date to multiple queries. Which syntax\nis used in SQL queries to accept dashboard parameters?",
+      "choices": {
+        "A": "`:date_range` (colon prefix)",
+        "B": "`@date_range` (at prefix)",
+        "C": "`{{date_range}}` (double curly braces)",
+        "D": "`$date_range` (dollar sign prefix)"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Databricks SQL uses `{{parameter_name}}` (double curly braces, also called mustache syntax) for\nquery parameters and dashboard filters. The parameter name inside the braces must match the\nparameter widget name configured on the dashboard.",
+      "explanation": ""
+    },
+    {
+      "id": "05-analytics-applications-q001",
+      "domain": "analytics-applications",
+      "title": "Query Parameter Type",
+      "difficulty": "easy",
+      "question": "A dashboard has a dropdown for selecting a region that filters all queries. What is the parameter\nwidget type?",
+      "choices": {
+        "A": "Text box — allows free-form input",
+        "B": "Dropdown list — allows selection from predefined values",
+        "C": "Date picker — for calendar selection",
+        "D": "Number input — for numeric values"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Dropdown list parameters let users choose from a predefined set of values (e.g., regions). The\nselected value is substituted into `{{region}}` in the SQL query. Text boxes allow any input,\ndate pickers are for calendar dates, and number inputs are for numeric ranges.",
+      "explanation": ""
+    },
+    {
+      "id": "05-analytics-applications-q002",
+      "domain": "analytics-applications",
+      "title": "Multi-Value Parameter",
+      "difficulty": "medium",
+      "question": "An analyst needs a filter that allows selecting multiple product categories at once. Which SQL\nsyntax handles multiple values from a multi-select dropdown?",
+      "choices": {
+        "A": "`WHERE category = '{{categories}}'`",
+        "B": "`WHERE category IN ({{categories}})`",
+        "C": "`WHERE category LIKE '{{categories}}%'`",
+        "D": "`WHERE category CONTAINS '{{categories}}'`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When a parameter supports multiple values, they are substituted as a comma-separated list.\n`IN ({{categories}})` correctly handles single or multiple selected values. Using `= '{{...}}'`\nonly matches a single value. `LIKE` and `CONTAINS` do not handle multi-value substitution.",
+      "explanation": ""
+    },
+    {
+      "id": "05-analytics-applications-q003",
+      "domain": "analytics-applications",
+      "title": "Scheduled Query Use Case",
+      "difficulty": "hard",
+      "question": "A data team runs a heavy aggregation query daily to populate a summary table for analyst\ndashboards. Which approach reduces dashboard load time?",
+      "choices": {
+        "A": "Have each dashboard query run the aggregation when opened",
+        "B": "Schedule the aggregation query to run nightly and write results to a Delta table; dashboard",
+        "C": "Use a larger SQL warehouse so aggregation runs faster on-demand",
+        "D": "Enable query caching on the dashboard"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Pre-computing aggregates with a scheduled query and storing results in a summary Delta table\ndramatically reduces dashboard query time. On-demand aggregation of raw data slows every user's\nexperience. A larger warehouse (C) reduces run time but still runs the expensive query per\nsession. Query caching (D) helps for repeated identical queries but does not help when underlying\ndata changes.",
+      "explanation": ""
+    },
+    {
+      "id": "05-analytics-applications-q004",
+      "domain": "analytics-applications",
+      "title": "Row-Level Security",
+      "difficulty": "hard",
+      "question": "A sales dashboard must show each sales rep only their own region's data. Which feature implements\nthis transparently without requiring separate dashboards?",
+      "choices": {
+        "A": "Dashboard-level filter set by each user",
+        "B": "A WHERE clause hardcoded for each user in the dashboard query",
+        "C": "Row-level security (row access policy) on the underlying Delta table via Unity Catalog",
+        "D": "Separate dashboard per region"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Row-level security in Unity Catalog applies dynamic filters based on the current user's identity,\ntransparently enforcing data access without requiring separate objects or manual filter\nconfiguration. This works at the table level, so the policy applies to all queries regardless\nof how the table is accessed. Available with Pro or Serverless SQL warehouses.",
+      "explanation": ""
+    },
+    {
+      "id": "05-analytics-applications-q005",
+      "domain": "analytics-applications",
+      "title": "Dashboard Embedding",
+      "difficulty": "medium",
+      "question": "A company wants to embed a Databricks SQL dashboard in their internal web portal for non-Databricks\nusers. Which capability enables this?",
+      "choices": {
+        "A": "Delta Sharing",
+        "B": "REST API polling for dashboard screenshots",
+        "C": "Dashboard embedding using the published URL or iFrame embedding (if enabled by admin)",
+        "D": "Export to HTML and host separately"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Published Databricks dashboards can be embedded in external applications via iFrame using the\npublic URL. Admin must enable external sharing or anonymous access in workspace settings. Delta\nSharing (A) exposes data, not dashboards. REST API polling (B) is not a supported embedding\nmethod. HTML export (D) would produce a static snapshot, not a live dashboard.",
+      "explanation": ""
+    },
+    {
+      "id": "05-analytics-applications-q006",
+      "domain": "analytics-applications",
+      "title": "Alert Refresh vs Query Refresh",
+      "difficulty": "medium",
+      "question": "What is the difference between refreshing a dashboard query and refreshing a SQL alert?",
+      "choices": {
+        "A": "They are the same — both use the same schedule configuration",
+        "B": "Dashboard refresh updates visualization data; SQL alert refresh evaluates the alert condition",
+        "C": "Dashboard refresh is automatic; SQL alerts never auto-refresh",
+        "D": "SQL alerts only work on scheduled queries, not dashboard queries"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Dashboard refresh updates the data shown in visualizations. SQL alert refresh runs the alert\nquery and checks whether the trigger condition is met, sending notifications if true. They are\nindependently configured objects in Databricks SQL and can have different schedules.",
+      "explanation": ""
+    },
+    {
+      "id": "05-analytics-applications-q007",
+      "domain": "analytics-applications",
+      "title": "Query Result Caching",
+      "difficulty": "medium",
+      "question": "Databricks SQL query result caching can improve performance. Under which condition does the cache\nNOT apply?",
+      "choices": {
+        "A": "The query runs within 24 hours of the last execution",
+        "B": "The underlying Delta table has been modified since the last query execution",
+        "C": "The same query text is used",
+        "D": "The same SQL warehouse is used"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks SQL caches query results but invalidates the cache when the underlying data changes.\nIf new data was written to the Delta table, the cache is stale and the query runs fresh against\nthe current data. Cache hits require identical query text, the same warehouse, and no data\nchanges in the source table.",
+      "explanation": ""
+    }
+  ]
+}
