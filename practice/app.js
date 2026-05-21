@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "11";
+  const APP_VERSION = "12";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -798,18 +798,21 @@
     }
     const submitted = !$("#btn-next").hidden;
 
-    // ↑ / ↓ — cycle through choices (only meaningful before submit)
+    // ↑ / ↓ — cycle through choices (only meaningful before submit).
+    // Move both `checked` AND keyboard focus so the visible focus ring on
+    // the choice label stays in sync with which radio is selected.
     if ((ev.key === "ArrowUp" || ev.key === "ArrowDown") && !submitted) {
       const letters = ["A", "B", "C", "D"];
       const currentIdx = letters.indexOf(STATE.currentChoice);
       const delta = ev.key === "ArrowDown" ? 1 : -1;
       const nextIdx = currentIdx === -1
-        ? (ev.key === "ArrowDown" ? 0 : 3)        // no selection → start at top/bottom
+        ? (ev.key === "ArrowDown" ? 0 : 3)        // no selection → top/bottom
         : (currentIdx + delta + 4) % 4;            // wrap around
       const radio = document.querySelector(
         `fieldset#quiz-choices input[value="${letters[nextIdx]}"]`);
       if (radio && !radio.disabled) {
         radio.checked = true;
+        radio.focus({ preventScroll: false });   // <-- this is the fix
         radio.dispatchEvent(new Event("change", { bubbles: true }));
       }
       ev.preventDefault();

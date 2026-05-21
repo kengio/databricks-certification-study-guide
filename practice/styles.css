@@ -98,6 +98,12 @@
 
 * { box-sizing: border-box; }
 
+/* The HTML `hidden` attribute must always win, even against button.primary
+   { display: inline-flex } which has higher specificity than the built-in
+   `[hidden] { display: none }` user-agent rule. Without this, btn-next
+   stays visually clickable before the user submits. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
