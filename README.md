@@ -398,7 +398,7 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 - ✅ **ML Associate / ML Professional folder reorg** to match the Mar 2025 (4-domain) and Sep 2025 (3-domain) blueprints — complete
 - ✅ **Per-cert "final review" file** (20-minute exam-morning scan) modelled on the dp-800 pattern — complete (6 files, one per cert)
 - ⏳ **Per-cert mock-exam debrief files** mapping every question to a topic file and cheat sheet
-- ⏳ **CONTRIBUTORS.md** listing community contributors
+- ✅ **CONTRIBUTORS.md** listing community contributors — complete (see [`CONTRIBUTORS.md`](./CONTRIBUTORS.md))
 
 ### Q1 2027 (6–12 months out)
 
@@ -495,6 +495,8 @@ Found an error, a stale link, or a topic that needs deeper coverage? PRs are wel
 - **Blueprint changes** — Databricks updates the exam guides periodically; PRs that bring sections in line with the latest exam-guide PDF for a certification are especially appreciated
 
 Every PR goes through a **3-round self-review** (technical, factual, style) before squash-merge. The PR template walks you through the checklist. Full details in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
+Contributors are credited in [`CONTRIBUTORS.md`](./CONTRIBUTORS.md) — your PR description can ask to be listed (or to be skipped if you'd prefer to stay anonymous).
 
 Conventions live in [`CLAUDE.md`](./CLAUDE.md).
 
