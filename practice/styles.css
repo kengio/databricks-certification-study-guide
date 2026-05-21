@@ -16,6 +16,8 @@
   --hairline-soft: #EFEFED;
   --accent:        #FF4F2C;
   --accent-soft:   rgba(255,79,44,0.08);
+  --selected:      #2563EB;                /* blue — "I picked this" */
+  --selected-soft: rgba(37,99,235,0.08);
   --positive:      #15803D;
   --positive-soft: #E0F2E7;
   --negative:      #B91C1C;
@@ -48,6 +50,8 @@
     --hairline-soft: #1D1D22;
     --accent:        #FF6240;
     --accent-soft:   rgba(255,98,64,0.12);
+    --selected:      #60A5FA;
+    --selected-soft: rgba(96,165,250,0.14);
     --positive:      #4ADE80;
     --positive-soft: rgba(74,222,128,0.12);
     --negative:      #F87171;
@@ -70,6 +74,8 @@
   --hairline-soft: #1D1D22;
   --accent:        #FF6240;
   --accent-soft:   rgba(255,98,64,0.12);
+  --selected:      #60A5FA;
+  --selected-soft: rgba(96,165,250,0.14);
   --positive:      #4ADE80;
   --positive-soft: rgba(74,222,128,0.12);
   --negative:      #F87171;
@@ -91,6 +97,8 @@
   --hairline-soft: #EFEFED;
   --accent:        #FF4F2C;
   --accent-soft:   rgba(255,79,44,0.08);
+  --selected:      #2563EB;
+  --selected-soft: rgba(37,99,235,0.08);
   --code-bg:       #F1F1ED;
 }
 
@@ -797,12 +805,12 @@ fieldset#quiz-choices label {
    into a pointer on hover, which is enough affordance that the row is
    clickable. */
 
-/* Selected — the only state that changes a row's color. Accent-tinted
-   background + accent border, identical regardless of how the user
-   picked (click, arrow keys, or number key). */
+/* Selected — uses a distinct blue (not the red accent) so the
+   "I picked this" state can never be confused with the red "incorrect"
+   state after submit. Green = correct, red = incorrect, blue = picked. */
 fieldset#quiz-choices label:has(input[type=radio]:checked):not(.correct):not(.incorrect) {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: var(--selected);
+  background: var(--selected-soft);
 }
 fieldset#quiz-choices label.disabled {
   cursor: default;
@@ -1088,35 +1096,99 @@ body.quiz-active .page-footer { display: none; }
 
 /* ---------- Settings ---------- */
 
-.settings-fields { display: grid; gap: 1.25rem; margin: 1.5rem 0; }
-
-.settings-fields label { display: block; }
-.settings-fields .field-label {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+#settings .section-intro {
+  margin: -1rem 0 1.75rem 0;
   color: var(--muted);
-  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
-.settings-fields select {
+
+.settings-panel {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 360px);
+  gap: 2rem;
+  padding: 1.5rem 1.75rem;
+  align-items: center;
+  border-bottom: 1px solid var(--hairline);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row-meta { min-width: 0; }
+.settings-row-meta h4 {
+  margin: 0 0 0.3rem 0;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+.settings-row-meta p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+/* Custom-styled select — native chevron replaced with a CSS arrow so
+   it picks up the theme color and stays consistent across browsers. */
+.settings-field {
+  position: relative;
+}
+.settings-field::after {
+  content: "";
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--fg-soft);
+  border-bottom: 1.5px solid var(--fg-soft);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+  transition: border-color 0.15s;
+}
+.settings-field:hover::after { border-color: var(--fg); }
+
+.settings-field select {
   display: block;
   width: 100%;
-  padding: 0.7rem 0.85rem;
+  padding: 0.7rem 2.5rem 0.7rem 0.95rem;
   font: inherit;
   font-family: var(--sans);
   font-size: 0.92rem;
-  background: var(--surface);
+  background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
-  transition: border-color 0.15s var(--ease);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s, background 0.15s;
 }
-.settings-fields select:focus {
+.settings-field select:hover {
+  border-color: var(--fg-soft);
+  background: var(--surface);
+}
+.settings-field select:focus {
   outline: none;
-  border-color: var(--fg);
+  border-color: var(--selected);
+  box-shadow: 0 0 0 3px var(--selected-soft);
+}
+
+@media (max-width: 700px) {
+  .settings-row {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    padding: 1.25rem 1.25rem;
+  }
 }
 
 /* ---------- Code blocks (Prism syntax highlighting) ---------- */

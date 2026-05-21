@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -87,46 +87,85 @@
     <section id="settings" hidden>
       <button type="button" id="btn-settings-cancel" class="back-button">← Back to quiz</button>
       <h2>Settings</h2>
-      <div class="settings-fields">
-        <label>
-          <span class="field-label">Selection mode</span>
-          <select id="setting-mode">
-            <option value="adaptive">Adaptive — weight toward gaps</option>
-            <option value="random">Random — uniform</option>
-            <option value="sequential">Sequential — in order</option>
-          </select>
-        </label>
-        <label>
-          <span class="field-label">Filter by domain</span>
-          <select id="setting-domain">
-            <option value="">All domains</option>
-          </select>
-        </label>
-        <label>
-          <span class="field-label">Filter by difficulty</span>
-          <select id="setting-difficulty">
-            <option value="">All difficulties</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </label>
-        <label>
-          <span class="field-label">Exam timer</span>
-          <select id="setting-timer">
-            <option value="0">None — practice mode</option>
-            <option value="30">30 minutes</option>
-            <option value="60">60 minutes</option>
-            <option value="90">90 minutes — Associate exam length</option>
-            <option value="120">120 minutes — Professional exam length</option>
-          </select>
-        </label>
+      <p class="section-intro">Customize how you practice — selection order, filters, and exam timing.</p>
+
+      <div class="settings-panel">
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4>Selection mode</h4>
+            <p>Adaptive surfaces questions you've missed; sequential walks the bank in order.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-mode">
+              <option value="adaptive">Adaptive — weight toward gaps</option>
+              <option value="random">Random — uniform sampling</option>
+              <option value="sequential">Sequential — in source order</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4>Filter by domain</h4>
+            <p>Drill a specific exam domain instead of the whole bank.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-domain">
+              <option value="">All domains</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4>Filter by difficulty</h4>
+            <p>Restrict to easy, medium, or hard questions only.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-difficulty">
+              <option value="">All difficulties</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4>Exam timer</h4>
+            <p>Simulate the real exam by setting a countdown timer. Timer resets when you switch banks.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-timer">
+              <option value="0">None — practice mode</option>
+              <option value="30">30 minutes</option>
+              <option value="60">60 minutes</option>
+              <option value="90">90 minutes — Associate exam length</option>
+              <option value="120">120 minutes — Professional exam length</option>
+            </select>
+          </div>
+        </div>
       </div>
+
       <div class="settings-actions">
-        <button type="button" id="btn-settings-apply" class="primary">Apply</button>
+        <button type="button" id="btn-settings-cancel-2" class="ghost">Cancel</button>
+        <button type="button" id="btn-settings-apply" class="primary">Apply settings</button>
       </div>
     </section>
   </main>
+
+  <!-- ============== CONFIRM MODAL ============== -->
+  <div class="modal-backdrop" id="modal-backdrop" hidden role="presentation">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h3 id="modal-title" class="modal-title">Confirm</h3>
+      <p id="modal-message" class="modal-message"></p>
+      <div class="modal-actions">
+        <button type="button" id="modal-cancel" class="ghost">Cancel</button>
+        <button type="button" id="modal-confirm" class="primary">Confirm</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ============== STICKY BOTTOM ACTION BAR (quiz mode only) ============== -->
   <div class="actionbar" id="actionbar" hidden>
@@ -182,6 +221,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=27"></script>
+  <script src="app.js?v=28"></script>
 </body>
 </html>

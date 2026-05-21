@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "27";
+  const APP_VERSION = "28";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -1102,6 +1102,8 @@
     $("#btn-reset-top").addEventListener("click", resetHistory);
     $("#btn-settings").addEventListener("click", () => show("settings"));
     $("#btn-settings-cancel").addEventListener("click", () => show("quiz"));
+    const cancel2 = $("#btn-settings-cancel-2");
+    if (cancel2) cancel2.addEventListener("click", () => show("quiz"));
     $("#btn-settings-apply").addEventListener("click", applySettings);
     $("#btn-exit").addEventListener("click", () => {
       if (STATE.certBanks) renderCertPicker(STATE.certBanks);
