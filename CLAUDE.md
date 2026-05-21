@@ -28,6 +28,10 @@ databricks-certification-study-guide/
 │   ├── README.md, format.md, build.py     # Workflow, spec, builder
 │   ├── decks/                              # Markdown source (committed)
 │   └── build/                              # TSV output (gitignored)
+├── practice/               # Static adaptive practice quiz
+│   ├── README.md, format.md, build.py     # Workflow, spec, markdown→JSON builder
+│   ├── index.html, app.js, styles.css     # Vanilla JS quiz UI (no deps)
+│   └── data/<cert>.json                    # Generated question banks (committed for static hosting)
 └── images/databricks-ui/   # Screenshots by feature area
 ```
 
@@ -182,6 +186,8 @@ Every PR that changes content **must** keep `README.md` and `CLAUDE.md` in sync.
 | Edits an English file that has a Thai counterpart under `i18n/th/` | mark the counterpart 🔄 in `i18n/th/STATUS.md` (don't translate in the same PR — Thai catch-up is a separate PR) |
 | Adds a new Databricks-adjacent term to a Thai translation | also add it to `i18n/th/glossary.md` in the same PR |
 | Adds or modifies an Anki deck under `anki/decks/` | update the "Available decks" table in `anki/README.md`; run `python3 anki/build.py --check` before committing |
+| Edits a `certifications/<cert>/resources/practice-questions/*.md` file | re-run `python3 practice/build.py --cert <cert>` and commit the regenerated `practice/data/<cert>.json` in the same PR |
+| Adds a new cert to the practice quiz | run `python3 practice/build.py`, update the "Available banks" table in `practice/README.md`, and add the cert to `KNOWN_BANKS` in `practice/app.js` |
 
 The PR template checkbox enforces this. Do not check the box unless the update is actually in the diff.
 

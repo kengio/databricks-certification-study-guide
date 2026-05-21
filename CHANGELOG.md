@@ -4,6 +4,41 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-21] — Adaptive practice question quiz (static site + 3 cert banks)
+
+### Added
+
+- **`practice/index.html` + `practice/app.js` + `practice/styles.css`** — a static, dependency-free browser quiz. Loads a JSON question bank, presents one multiple-choice question at a time, records every attempt in `localStorage`, and (in adaptive mode) weights question selection toward never-attempted + recently-wrong items. Includes per-domain accuracy stats, a "questions you're working on" list, JSON export of progress, and a domain/difficulty filter. Works on GitHub Pages out of the box.
+- **`practice/build.py`** — Python 3.9+ stdlib-only converter that parses `certifications/<cert>/resources/practice-questions/*.md` files into `practice/data/<cert>.json` banks. Supports `--cert <id>` and `--check` modes. 198 questions across 3 certs parse cleanly; the other 3 certs use an older markdown variant without a difficulty marker and are deferred to a follow-up.
+- **`practice/README.md`** — workflow doc (local + GitHub Pages), modes explanation, adaptive-selector math, privacy notes, "Adding a cert to the bank" guide.
+- **`practice/format.md`** — markdown source format spec + JSON output schema + parser rules + things-that-cause-a-skip table.
+- **`practice/data/data-engineer-associate.json`** — 85 questions across 5 domains
+- **`practice/data/data-engineer-professional.json`** — 73 questions across 8 domains
+- **`practice/data/ml-associate.json`** — 40 questions across 4 domains
+
+### Changed
+
+- **Top-level `README.md`**:
+  - Q1 2027 roadmap entry "Adaptive practice questions" marked ✅ complete
+  - Repository layout includes `practice/`
+- **`CLAUDE.md`**:
+  - Repository Structure section adds the `practice/` tree
+  - README & CLAUDE.md Sync Rule table adds 2 rows: re-run `practice/build.py` when practice-question source files change, and the cert-onboarding checklist for adding a new bank
+
+### Architecture decisions
+
+- **Static site, no backend**: progress is per-browser in `localStorage`. Trade-off: no cross-device sync. The "Export progress (JSON)" button gives users an out if they want it.
+- **JSON committed, not built in CI**: GitHub Pages serves `practice/data/*.json` directly. Auto-building in CI would require a commit-back step that's overkill for a sub-second deterministic build. Maintainers re-run `build.py` and commit the diff when source markdown changes; the README & CLAUDE sync rule codifies this.
+- **No innerHTML with dynamic content**: `app.js` renders markdown into the DOM via `document.createElement` + `textContent`, never via `innerHTML` interpolation. Untrusted bytes from the JSON cannot become script tags. Static initialization-time innerHTML calls (clearing nodes) use empty strings only.
+- **Adaptive math is a simple heuristic, not full SM-2**: `never_seen → 10`, `recently_correct → 0.5 + days * 0.3` capped at 5, `recently_wrong → 8 - days * 0.3` floored at 3, then weighted random pick. Users who want true spaced-repetition scheduling should use the [Anki decks](./anki/README.md).
+- **3 certs in, 3 deferred**: the missing certs' practice-question markdown lacks the `*(Easy|Medium|Hard)*` difficulty marker. Updating their markdown is a separate follow-up that doesn't block this PR.
+
+### Verification
+
+- `python3 practice/build.py --check` parses all 3 supported certs cleanly (198 questions / 17 domains across 3 banks)
+- markdownlint passes
+- lychee link-check passes (all cross-references inside `practice/` resolve)
+
 ## [2026.05.21-20] — Anki deck scaffolding + 2 starter decks (Delta Lake, Unity Catalog)
 
 ### Added
