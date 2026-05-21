@@ -871,3 +871,43 @@ D) Partner Connect integration with an email tool
 ---
 
 [← Back to Mock Exam 2](./README.md) | [Practice Questions](../practice-questions/README.md)
+
+---
+
+## New questions for the October 2025 blueprint refresh
+
+The questions below cover the newly added **Developing, Sharing, and Maintaining AI/BI Genie Spaces** domain (12 %).
+
+### Question GS-1 *(Medium — AI/BI Genie Spaces)*
+
+**Scenario**: An analytics team has been asked to give the customer-success organisation a self-serve way to ask plain-English questions over a curated set of UC tables. The CS users do not write SQL. The team also needs to ensure that CS users cannot see PII columns even though those columns exist in the underlying tables.
+
+**Question**: Which approach is the documented and safest fit?
+
+A) Build a Streamlit app that calls a fine-tuned LLM trained on the schema and let CS users authenticate with PATs  
+B) Create an AI/BI Genie Space scoped to the curated UC tables; rely on UC column masks and row filters to enforce PII restrictions; grant the CS group access to the space  
+C) Schedule daily exports of the curated tables to a separate UC schema with PII columns dropped, then grant access to that schema  
+D) Use Mosaic AI Vector Search to embed each row and let CS users query semantically  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Genie Spaces is the documented natural-language analytics surface for exactly this use case. UC permissions, including column masks and row filters, apply to every Genie-generated SQL query — so CS users physically cannot see PII columns they're not granted on, regardless of how Genie phrases the question. Option A reinvents Genie poorly. Option C duplicates data and creates a refresh / drift problem. Option D is a retrieval-augmentation pattern, not an analytics surface.
+
+---
+
+### Question GS-2 *(Medium — AI/BI Genie Spaces)*
+
+**Scenario**: A Genie Space frequently misinterprets the term "revenue" — sometimes summing `invoice_total`, sometimes `paid_amount`. The data team wants the space to *always* use `SUM(invoice_total)` for any question about revenue.
+
+**Question**: Which curation lever is the *officially recommended first choice* per Databricks best practice?
+
+A) Add a free-text instruction: "Revenue means invoice_total"  
+B) Add a **SQL expression** named `revenue` defined as `SUM(invoice_total)` so Genie can call it directly  
+C) Train a custom embedding model on the team's vocabulary  
+D) Add a column comment on `invoice_total` saying "this is revenue"  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The official Databricks Genie best-practice guidance is to **prefer SQL expressions over text instructions** when both could express the rule. A named SQL expression is exact and deterministic — Genie will compose it into the generated query verbatim. Free-text instructions (Option A) are the documented *last resort*. Option C is irrelevant — Genie generates SQL, not embeddings. Option D (column comments / metadata) is a complementary lever but less precise than a SQL expression for an aggregation rule.

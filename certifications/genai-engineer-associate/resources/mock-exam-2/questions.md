@@ -810,3 +810,43 @@ D) A developer who needs the absolute lowest latency for a single high-traffic e
 **End of Mock Exam 2 — 45 Questions**
 
 [← Back to Mock Exam 2 Instructions](./README.md) | [← Mock Exam 1](../mock-exam/questions.md)
+
+---
+
+## New questions for the March 2026 blueprint refresh
+
+The questions below cover the newly elevated **Governance** domain (8 %).
+
+### Question GOV-1 *(Medium — Governance)*
+
+**Scenario**: A team is preparing to deploy a RAG application that retrieves from a vector index built over a Delta table containing customer support tickets. The tickets include customer email addresses and account numbers. The compliance team requires that PII never appear in retrieved chunks shown to users.
+
+**Question**: Where in the pipeline should PII redaction happen?
+
+A) At retrieval time — apply a UC column mask to the embedding column to hide the vector when PII was detected  
+B) After generation — post-process the LLM output with a regex to strip PII before returning to the user  
+C) At chunk / embed time — redact PII *before* the chunks are embedded, so the vector index never contains reconstructible PII  
+D) At the Unity AI Gateway layer — enable the "PII detection" policy on the serving endpoint  
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> PII must be redacted **before embedding**. Once a PII string is embedded into a vector, that vector lives in the index — and embeddings preserve enough information that the original content can sometimes be reconstructed. UC column masks (A) work for SQL access but not for the vector representation. Post-generation regex (B) is brittle and lossy. Unity AI Gateway PII guardrails (D) are a useful defence-in-depth perimeter but do not address PII *inside the index itself*; the safe pattern is to redact at chunk time AND apply gateway / output filters on top.
+
+---
+
+### Question GOV-2 *(Medium — Governance)*
+
+**Scenario**: A team has a Model Serving endpoint hosting a customer-facing GenAI app. The security and compliance team needs an audit trail: every prompt and every response, with timestamps and request IDs, retained for at least 90 days and queryable from SQL.
+
+**Question**: Which Databricks capability satisfies this requirement with the least custom code?
+
+A) Add a logging callback inside the LLM chain that writes each request/response to a Delta table  
+B) Enable **Inference Tables** on the Model Serving endpoint — Databricks auto-captures `request`, `response`, `timestamp_ms`, and `databricks_request_id` into a Delta table in UC  
+C) Stream the endpoint's stderr to a CloudWatch / Cloud Logging sink and parse logs nightly  
+D) Configure a Unity AI Gateway "audit" policy that emails a daily digest to the compliance team  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Inference Tables are the documented audit-of-record for Model Serving endpoints. Enabling them auto-captures every request/response into a Delta table in UC (columns: `request`, `response`, `timestamp_ms`, `databricks_request_id`), giving you SQL-queryable retention out of the box. Option A is the "build it yourself" version and is unnecessary. Option C is brittle and out-of-band. Option D is not how Unity AI Gateway works — its logging feature surfaces into Inference Tables, it doesn't email digests.

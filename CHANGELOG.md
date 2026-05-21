@@ -28,6 +28,28 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-5] — Mock-exam refresh for DE Pro, DA, and GenAI
+
+Refreshed all six mock-exam files (mock-exam + mock-exam-2 across the three certs whose blueprints were updated in 2025–2026) to match the current official structures and product naming.
+
+### Changed
+
+- **Terminology refresh** across all six `questions.md` files:
+  - "Delta Live Tables" / "DLT pipeline" → "Lakeflow Declarative Pipelines" (formerly DLT)
+  - "Databricks Workflows" / "Workflows UI" → "Lakeflow Jobs" / "Lakeflow Jobs UI"
+- **All six mock-exam README files rewritten** with:
+  - Refreshed domain-distribution tables matching each cert's current official blueprint (DE Pro 10 domains / DA 9 domains / GenAI 6 domains)
+  - Result wording changed from "Passing: 70 % (44/63)" to "Pass / fail (no numeric threshold in the [version] exam guide)" since Databricks no longer publishes a threshold
+  - "What's refreshed" callout at the top of each
+- Top-level README roadmap entry for refreshed mock exams marked complete
+
+### Added
+
+- **12 new questions** appended to the six mock-exam `questions.md` files covering newly-added blueprint domains:
+  - DE Pro: 2 questions per mock on **Data Sharing and Federation** (Delta Sharing D2D + Lakehouse Federation with Snowflake)
+  - DA: 2 questions per mock on **AI/BI Genie Spaces** (Genie Space creation with UC permissions + curation via SQL expressions)
+  - GenAI: 2 questions per mock on **Governance** (PII redaction at chunk time + Inference Tables as audit-of-record)
+
 ## [2026.05.21-4] — GenAI Engineer Associate folder reorg to 6-domain blueprint
 
 ### Changed

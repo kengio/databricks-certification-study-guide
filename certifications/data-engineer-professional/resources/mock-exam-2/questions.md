@@ -858,11 +858,11 @@ D) The driver node is running out of memory from collecting results; increase dr
 
 ## Question 47 *(Hard)*
 
-**Scenario**: A Delta Live Tables (DLT) pipeline ingests clickstream events from Kafka and materializes several streaming tables. The pipeline has been running for several hours but the gold-layer aggregation table is lagging significantly behind the bronze ingestion layer. The data engineer needs to quantify the exact backlog at each stage to identify which flow is the bottleneck.
+**Scenario**: A Lakeflow Declarative Pipelines (formerly DLT) pipeline ingests clickstream events from Kafka and materializes several streaming tables. The pipeline has been running for several hours but the gold-layer aggregation table is lagging significantly behind the bronze ingestion layer. The data engineer needs to quantify the exact backlog at each stage to identify which flow is the bottleneck.
 
-**Question**: What is the most effective method to identify backlog metrics across individual flows in the DLT pipeline?
+**Question**: What is the most effective method to identify backlog metrics across individual flows in the Lakeflow Declarative Pipelines pipeline?
 
-A) Check the DLT pipeline UI graph view and look for red-highlighted tables indicating failures
+A) Check the Lakeflow Declarative Pipelines pipeline UI graph view and look for red-highlighted tables indicating failures
 B) Query `system.billing.usage` filtered by the pipeline ID to find the slowest compute phase
 C) Query the pipeline's event log for `flow_progress` events and examine the `metrics.backlog_bytes` field for each flow
 D) Examine the Spark UI Streaming tab for each cluster to view micro-batch processing rates
@@ -870,7 +870,7 @@ D) Examine the Spark UI Streaming tab for each cluster to view micro-batch proce
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> The DLT event log stores `flow_progress` event types that include detailed metrics such as `backlog_bytes` and `num_output_rows` for each individual flow in the pipeline. Querying these events lets you pinpoint exactly which flow has the largest backlog and is causing downstream lag. Option A shows status but not quantitative backlog metrics, Option B provides cost data not pipeline throughput, and Option D is not directly accessible for DLT-managed clusters.
+> The Lakeflow Declarative Pipelines event log stores `flow_progress` event types that include detailed metrics such as `backlog_bytes` and `num_output_rows` for each individual flow in the pipeline. Querying these events lets you pinpoint exactly which flow has the largest backlog and is causing downstream lag. Option A shows status but not quantitative backlog metrics, Option B provides cost data not pipeline throughput, and Option D is not directly accessible for DLT-managed clusters.
 
 ---
 
@@ -883,7 +883,7 @@ D) Examine the Spark UI Streaming tab for each cluster to view micro-batch proce
 A) Export the cluster activity logs from the Admin Console and aggregate compute hours per workspace
 B) Review the Databricks account billing dashboard to compare high-level totals by workspace
 C) Query `system.billing.usage` to aggregate DBU consumption by `sku_name`, `workspace_id`, and `usage_date`, then compare month-over-month
-D) Check each job's run history in the Workflows UI and manually calculate DBU usage from cluster uptime
+D) Check each job's run history in the Lakeflow Jobs UI and manually calculate DBU usage from cluster uptime
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -986,7 +986,7 @@ D) Databricks converts the GitHub OIDC token into a workspace-level API key that
 
 ## Question 54 *(Medium)*
 
-**Scenario**: A team is deploying a new version of a production DLT pipeline that processes 500 million records per day. They need to validate the new pipeline version with real production data before fully switching over, while ensuring zero downtime and the ability to instantly revert if issues are detected.
+**Scenario**: A team is deploying a new version of a production Lakeflow Declarative Pipelines pipeline that processes 500 million records per day. They need to validate the new pipeline version with real production data before fully switching over, while ensuring zero downtime and the ability to instantly revert if issues are detected.
 
 **Question**: Which deployment strategy best meets these requirements?
 
@@ -1004,19 +1004,19 @@ D) Feature flag deployment: wrap all new transformation logic in feature flags a
 
 ## Question 55 *(Hard)*
 
-**Scenario**: A CI/CD pipeline runs automated tests against a DLT pipeline that uses expectations such as `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After the test pipeline run completes, the team needs to programmatically verify that no more than 0.1% of rows were dropped by expectations before promoting the code to production.
+**Scenario**: A CI/CD pipeline runs automated tests against a Lakeflow Declarative Pipelines pipeline that uses expectations such as `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After the test pipeline run completes, the team needs to programmatically verify that no more than 0.1% of rows were dropped by expectations before promoting the code to production.
 
 **Question**: How should the team validate the expectation results in their CI/CD pipeline?
 
-A) Parse the DLT pipeline logs from the cluster driver output to count dropped rows
-B) Query the DLT event log for expectation metrics using `expectations.dropped_records` and compare the drop rate against the 0.1% threshold
+A) Parse the Lakeflow Declarative Pipelines pipeline logs from the cluster driver output to count dropped rows
+B) Query the Lakeflow Declarative Pipelines event log for expectation metrics using `expectations.dropped_records` and compare the drop rate against the 0.1% threshold
 C) Add a downstream notebook that reads the target table's row count and compares it to the source table's row count
-D) Configure a DLT alert that sends an email notification if the drop rate exceeds 0.1%
+D) Configure a Lakeflow Declarative Pipelines alert that sends an email notification if the drop rate exceeds 0.1%
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> The DLT event log captures detailed metrics for each expectation, including the number of records that passed, failed, and were dropped. By querying the event log for `expectations` events, the CI/CD pipeline can programmatically extract the drop counts, calculate the drop rate, and fail the pipeline promotion if the rate exceeds the defined threshold. This approach is precise, automatable, and uses the purpose-built observability layer rather than indirect row-count comparisons or non-programmatic alerts.
+> The Lakeflow Declarative Pipelines event log captures detailed metrics for each expectation, including the number of records that passed, failed, and were dropped. By querying the event log for `expectations` events, the CI/CD pipeline can programmatically extract the drop counts, calculate the drop rate, and fail the pipeline promotion if the rate exceeds the defined threshold. This approach is precise, automatable, and uses the purpose-built observability layer rather than indirect row-count comparisons or non-programmatic alerts.
 
 ---
 
@@ -1062,7 +1062,7 @@ D) Navigate to the Databricks workspace UI, locate each deployed resource, and m
 
 **Scenario**: A data engineering team is building a Lakeflow (DLT) pipeline that ingests clickstream events from Kafka and produces aggregated session metrics consumed by two downstream systems. A real-time dashboard queries the latest session data every 30 seconds, and a nightly batch process generates a daily summary report from the same session metrics.
 
-**Question**: How should the team define the session metrics dataset in the DLT pipeline to best serve both downstream consumers?
+**Question**: How should the team define the session metrics dataset in the Lakeflow Declarative Pipelines pipeline to best serve both downstream consumers?
 
 A) Define it as a materialized view so that both the dashboard and batch process always read a consistent, pre-computed result
 B) Define it as a streaming table with Change Data Feed enabled so the batch process can read incremental changes
@@ -1113,3 +1113,43 @@ D) OPTIMIZE incrementally clusters only the files that need reorganization, avoi
 ---
 
 [← Back to Mock Exam 2](./README.md)
+
+---
+
+## New questions for the November 30, 2025 blueprint refresh
+
+The questions below cover the newly elevated **Data Sharing and Federation** domain. They are tagged so you can self-score them against the new domain weight (5 %).
+
+### Question DSF-1 *(Medium — Data Sharing and Federation)*
+
+**Scenario**: A data engineering team needs to give a partner company read-only access to a Delta table that's updated every hour. The partner uses Databricks too, but is in a different cloud account. The team wants to avoid copying data and wants UC to enforce all access.
+
+**Question**: Which pattern fits best?
+
+A) Export the table to S3 as Parquet and email the partner a presigned URL  
+B) Create a Databricks-to-Databricks (D2D) Delta Share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
+C) Replicate the table to the partner's account using DLT Lakeflow Declarative Pipelines  
+D) Set up a foreign catalog in the partner's workspace pointing at the team's table  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Databricks-to-Databricks Delta Sharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C creates a parallel pipeline you have to maintain. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
+
+---
+
+### Question DSF-2 *(Medium — Data Sharing and Federation)*
+
+**Scenario**: An analytics team wants to query a Snowflake `orders` table for ad-hoc analysis without ETL'ing it into Delta. They need filter pushdown to keep performance reasonable, and credentials must be governed centrally.
+
+**Question**: Which combination is correct?
+
+A) Create a Databricks `JDBC` connection in `spark.conf` and read with `spark.read.format("jdbc")`  
+B) Create a Unity Catalog `CONNECTION` of type `SNOWFLAKE`, then `CREATE FOREIGN CATALOG` over it; query as `catalog.schema.table`  
+C) Use Delta Sharing — Snowflake supports being a Delta Share recipient  
+D) Use Auto Loader with the Snowflake source connector  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a Delta Share recipient platform. Option D is for object-store file ingestion, not relational sources.
