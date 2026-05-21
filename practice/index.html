@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -20,16 +20,18 @@
   <!-- ============== STICKY TOP BAR ============== -->
   <header class="masthead" id="masthead">
     <div class="masthead-inner">
-      <div class="brand-cluster">
-        <a class="brand-mark" href="./" aria-label="Home">
-          <svg viewBox="0 0 40 40" aria-hidden="true">
+      <button type="button" class="brand-cluster" id="brand-link"
+              title="Back to all certifications"
+              aria-label="Back to all certifications">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40">
             <rect x="1" y="1" width="38" height="38" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
             <path d="M11 21 L17 27 L29 13" stroke="currentColor" stroke-width="2" fill="none"
                   stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </a>
+        </span>
         <span class="brand-title">DBX Practice</span>
-      </div>
+      </button>
 
       <!-- Quiz meta strip: only visible while a quiz is active.
            The cert name doubles as a "back to certifications" link
@@ -151,13 +153,16 @@
         <button type="button" id="btn-settings" class="link">Settings</button>
         <button type="button" id="btn-reset-top" class="link danger" title="Reset progress for this bank">Reset</button>
         <button type="button" id="btn-exit" class="link">Switch bank</button>
-        <span class="actionbar-divider"></span>
-        <span id="quiz-timer" class="actionbar-timer" hidden
-              title="Exam timer remaining" aria-label="Exam timer remaining">
-          <span class="timer-icon" aria-hidden="true">⏱</span>
-          <span class="timer-value">00:00</span>
-        </span>
       </div>
+      <!-- Timer is a sibling of .actionbar-left/.actionbar-right so it can
+           live on the SAME row as Submit/Skip (pushed to the far right
+           via margin-left:auto) while the stats + controls wrap to a
+           second row below. -->
+      <span id="quiz-timer" class="actionbar-timer" hidden
+            title="Exam timer remaining" aria-label="Exam timer remaining">
+        <span class="timer-icon" aria-hidden="true">⏱</span>
+        <span class="timer-value">00:00</span>
+      </span>
     </div>
   </div>
 
@@ -177,6 +182,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=25"></script>
+  <script src="app.js?v=26"></script>
 </body>
 </html>

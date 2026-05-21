@@ -168,12 +168,28 @@ a:hover { text-decoration-color: var(--accent); }
   min-height: 52px;
 }
 
-.brand-cluster {
+/* Brand cluster doubles as "back to all certifications" link. Hover
+   tints the title and rotates the mark; confirm dialog handled in JS. */
+button.brand-cluster {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   flex-shrink: 0;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: background 0.15s, border-color 0.15s;
 }
+button.brand-cluster:hover {
+  background: var(--surface-soft);
+  border-color: var(--hairline);
+}
+button.brand-cluster:hover .brand-mark { transform: rotate(-8deg) scale(1.08); }
+button.brand-cluster:hover .brand-title { color: var(--accent); }
 
 .brand-mark {
   display: inline-flex;
@@ -183,11 +199,10 @@ a:hover { text-decoration-color: var(--accent); }
   height: 28px;
   flex-shrink: 0;
   color: var(--accent);
-  text-decoration: none;
   transition: transform 0.2s var(--ease);
 }
-.brand-mark:hover { transform: rotate(-8deg) scale(1.08); }
 .brand-mark svg { width: 22px; height: 22px; display: block; }
+.brand-title { transition: color 0.15s; }
 
 .brand-title {
   font-family: var(--sans);
@@ -885,11 +900,17 @@ fieldset#quiz-choices label.incorrect .choice-text { color: var(--negative); }
   flex-wrap: wrap;
 }
 
+/* Timer sits on the SAME row as Submit/Skip, pushed to the far right
+   via margin-left:auto. The actionbar-right (stats + controls) wraps to
+   row 2 because of its flex-basis:100%. */
+#quiz-timer.actionbar-timer {
+  margin-left: auto;
+  order: 1;
+}
 .actionbar-right {
   display: inline-flex;
   align-items: center;
   gap: 0.85rem;
-  margin-left: auto;
   flex-wrap: wrap;
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -897,6 +918,8 @@ fieldset#quiz-choices label.incorrect .choice-text { color: var(--negative); }
   letter-spacing: 0.02em;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+  flex-basis: 100%;
+  order: 2;
 }
 .actionbar-right #session-stats,
 .actionbar-right #bank-stats { color: var(--fg-soft); }
