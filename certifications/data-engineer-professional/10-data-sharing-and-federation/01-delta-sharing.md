@@ -606,9 +606,9 @@ WITH PARTITION (region = 'US');
 
 ## Related Topics
 
-- [Unity Catalog](01-unity-catalog.md) - Governance foundation
-- [Access Control](02-access-control.md) - Internal access patterns
-- [Secret Management](04-secret-management.md) - Credential security
+- [Unity Catalog](../08-data-governance/01-unity-catalog.md) - Governance foundation
+- [Access Control](../05-ensuring-data-security-and-compliance/01-access-control.md) - Internal access patterns
+- [Secret Management](../05-ensuring-data-security-and-compliance/02-secret-management.md) - Credential security
 
 ## Official Documentation
 

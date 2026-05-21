@@ -151,7 +151,7 @@ df = (spark.readStream
     .load("/path/to/files"))
 ```
 
-See [Auto Loader](04-auto-loader.md) for detailed coverage.
+See [Auto Loader](../07-data-ingestion-and-acquisition/01-auto-loader.md) for detailed coverage.
 
 ### Rate Source (Testing)
 

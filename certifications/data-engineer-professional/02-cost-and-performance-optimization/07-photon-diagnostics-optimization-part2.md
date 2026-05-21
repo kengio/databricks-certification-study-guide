@@ -422,10 +422,10 @@ D) `EXPLAIN COST`
 
 ## Related Topics
 
-- [Spark Tuning](03-spark-tuning.md) - Core Spark configurations, AQE, and shuffle optimization
+- [Spark Tuning](./04-spark-tuning.md) - Core Spark configurations, AQE, and shuffle optimization
 - [File Sizing](01-file-sizing.md) - File compaction and OPTIMIZE for scan performance
 - [Z-ORDER Indexing](02-zorder-indexing.md) - Data layout optimization and data skipping
-- [Cost Optimization](04-cost-optimization.md) - Cluster selection, Photon cost/benefit analysis
+- [Cost Optimization](./05-cost-optimization.md) - Cluster selection, Photon cost/benefit analysis
 
 ## Official Documentation
 

@@ -743,9 +743,9 @@ GRANT USE CATALOG ON CATALOG prod TO `data-team`;
 
 ## Related Topics
 
-- [Access Control](02-access-control.md) - Row/column level security
+- [Access Control](../05-ensuring-data-security-and-compliance/01-access-control.md) - Row/column level security
 - [Data Sharing](../10-data-sharing-and-federation/01-delta-sharing.md) - Delta Sharing
-- [Secret Management](04-secret-management.md) - Secure credentials
+- [Secret Management](../05-ensuring-data-security-and-compliance/02-secret-management.md) - Secure credentials
 
 ## Official Documentation
 

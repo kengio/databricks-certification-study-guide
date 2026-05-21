@@ -360,8 +360,8 @@ DESCRIBE DETAIL table_name;
 
 ## Related Topics
 
-- [Change Data Capture](05-change-data-capture-part1.md) - MERGE generates CDF records
-- [Data Deduplication](07-data-deduplication.md) - MERGE for dedup patterns
+- [Change Data Capture](../03-data-transformation-cleansing-quality/01-change-data-capture-part1.md) - MERGE generates CDF records
+- [Data Deduplication](../03-data-transformation-cleansing-quality/02-data-deduplication.md) - MERGE for dedup patterns
 - [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md)
 
 ## Official Documentation

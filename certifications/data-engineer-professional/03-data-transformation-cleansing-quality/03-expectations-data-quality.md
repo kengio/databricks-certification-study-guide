@@ -628,8 +628,8 @@ CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 
 ## Related Topics
 
-- [Declarative Pipelines](01-declarative-pipelines.md) - Pipeline basics
-- [APPLY CHANGES API](03-apply-changes-api.md) - CDC processing
+- [Declarative Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) - Pipeline basics
+- [APPLY CHANGES API](./04-apply-changes-api.md) - CDC processing
 - [Event Logs](../04-monitoring-and-alerting/02-lakeflow-event-logs.md) - Monitoring expectations
 
 ## Official Documentation

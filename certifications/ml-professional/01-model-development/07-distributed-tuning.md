@@ -519,8 +519,8 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 
 ## Related Topics
 
-- [Tuning Fundamentals](01-tuning-fundamentals.md)
-- [Bayesian Optimization](02-bayesian-optimization.md)
+- [Tuning Fundamentals](./05-tuning-fundamentals.md)
+- [Bayesian Optimization](./06-bayesian-optimization.md)
 
 ---
 

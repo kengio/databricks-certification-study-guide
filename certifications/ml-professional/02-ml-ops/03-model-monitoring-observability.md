@@ -351,7 +351,7 @@ Alert configuration steps:
 
 ## Related Topics
 
-- [Drift Detection & Remediation](02-drift-detection-remediation.md)
+- [Drift Detection & Remediation](./04-drift-detection-remediation.md)
 - [Model Versioning & Registry](../02-ml-ops/01-model-versioning-registry.md)
 - [MLflow Basics](../../../shared/fundamentals/mlflow-basics.md)
 

@@ -518,7 +518,7 @@ OPTIMIZE catalog.schema.orders;
 ## Related Topics
 
 - [File Sizing](01-file-sizing.md) - OPTIMIZE for compaction
-- [Spark Tuning](03-spark-tuning.md) - Query optimization
+- [Spark Tuning](./04-spark-tuning.md) - Query optimization
 - [Partitioning Strategies](../02-cost-and-performance-optimization/03-partitioning-strategies.md) - Partition design
 
 ## Official Documentation

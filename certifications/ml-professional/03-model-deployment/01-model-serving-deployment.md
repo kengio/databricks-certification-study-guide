@@ -473,9 +473,9 @@ unfairly skew latency comparisons.
 
 ## Related Topics
 
-- [Model Versioning & Registry](01-model-versioning-registry.md)
-- [A/B Testing & Canary Deployments](03-ab-testing-canary.md)
-- [Model Lifecycle Orchestration](04-model-lifecycle-orchestration.md)
+- [Model Versioning & Registry](../02-ml-ops/01-model-versioning-registry.md)
+- [A/B Testing & Canary Deployments](./02-ab-testing-canary.md)
+- [Model Lifecycle Orchestration](../02-ml-ops/02-model-lifecycle-orchestration.md)
 
 ---
 

@@ -583,8 +583,8 @@ WHERE event_time >= current_timestamp() - INTERVAL 7 DAYS
 
 ## Related Topics
 
-- [Spark UI Debugging](02-spark-ui-debugging.md) - Job-level monitoring
-- [Query Profiler](04-query-profiler.md) - Query optimization
+- [Spark UI Debugging](../06-debugging-and-deploying/07-spark-ui-debugging.md) - Job-level monitoring
+- [Query Profiler](./03-query-profiler.md) - Query optimization
 - [Access Control](../05-ensuring-data-security-and-compliance/01-access-control.md) - Audit for compliance
 
 ## Official Documentation

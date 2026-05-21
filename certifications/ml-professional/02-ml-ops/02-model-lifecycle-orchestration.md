@@ -468,7 +468,7 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 ## Related Topics
 
 - [Model Versioning & Registry](01-model-versioning-registry.md)
-- [A/B Testing & Canary Deployments](03-ab-testing-canary.md)
+- [A/B Testing & Canary Deployments](../03-model-deployment/02-ab-testing-canary.md)
 - [Model Monitoring & Observability](../02-ml-ops/03-model-monitoring-observability.md)
 - [Hyperparameter Optimization](../01-model-development/README.md)
 

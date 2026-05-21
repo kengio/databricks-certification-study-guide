@@ -733,9 +733,9 @@ print(query.status)
 
 ## Related Topics
 
-- [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals
-- [Incremental Processing](02-incremental-processing.md) - Incremental patterns
-- [Change Data Capture](05-change-data-capture-part1.md) - CDC from files
+- [Structured Streaming](../01-developing-code-for-data-processing/03-structured-streaming-part1.md) - Streaming fundamentals
+- [Incremental Processing](../01-developing-code-for-data-processing/02-incremental-processing.md) - Incremental patterns
+- [Change Data Capture](../03-data-transformation-cleansing-quality/01-change-data-capture-part1.md) - CDC from files
 
 ## Official Documentation
 

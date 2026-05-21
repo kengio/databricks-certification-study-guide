@@ -684,7 +684,7 @@ OPTIMIZE orders ZORDER BY (customer_id);  -- If filtering by customer
 
 ## Related Topics
 
-- [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - OPTIMIZE and VACUUM
+- [Delta Lake Fundamentals](../09-data-modelling/02-delta-lake-fundamentals.md) - OPTIMIZE and VACUUM
 - [Performance Optimization](../02-cost-and-performance-optimization/README.md) - Query tuning
 - [Z-Order Indexing](../02-cost-and-performance-optimization/02-zorder-indexing.md) - Deep dive
 

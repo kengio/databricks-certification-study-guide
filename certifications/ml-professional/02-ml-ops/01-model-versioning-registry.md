@@ -445,8 +445,8 @@ service principals.
 
 ## Related Topics
 
-- [Model Serving & Deployment](02-model-serving-deployment.md)
-- [A/B Testing & Canary Deployments](03-ab-testing-canary.md)
+- [Model Serving & Deployment](../03-model-deployment/01-model-serving-deployment.md)
+- [A/B Testing & Canary Deployments](../03-model-deployment/02-ab-testing-canary.md)
 - [MLflow Basics](../../../shared/fundamentals/mlflow-basics.md)
 
 ---

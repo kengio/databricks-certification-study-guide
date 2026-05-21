@@ -558,7 +558,7 @@ Spark History Server:
 
 ## Related Topics
 
-- [Query Profiler](04-query-profiler.md) - Query plan analysis
+- [Query Profiler](../04-monitoring-and-alerting/03-query-profiler.md) - Query plan analysis
 - [Performance Optimization](../02-cost-and-performance-optimization/04-spark-tuning.md) - Tuning strategies
 - [Structured Streaming](../01-developing-code-for-data-processing/03-structured-streaming-part1.md) - Streaming UI
 

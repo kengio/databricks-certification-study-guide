@@ -718,10 +718,10 @@ D) GRANT OPTION
 
 ## Related Topics
 
-- [Unity Catalog](01-unity-catalog.md) - UC basics, hierarchy, metastore, permissions
-- [Access Control](02-access-control.md) - Row/column security, dynamic views
+- [Unity Catalog](../08-data-governance/01-unity-catalog.md) - UC basics, hierarchy, metastore, permissions
+- [Access Control](./01-access-control.md) - Row/column security, dynamic views
 - [Data Sharing](../10-data-sharing-and-federation/01-delta-sharing.md) - Delta Sharing
-- [Secret Management](04-secret-management.md) - Secrets, Key Vault
+- [Secret Management](./02-secret-management.md) - Secrets, Key Vault
 
 ---
 

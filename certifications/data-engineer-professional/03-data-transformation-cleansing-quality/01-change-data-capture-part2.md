@@ -451,9 +451,9 @@ CREATE TABLE cdc_monitoring.metrics (
 
 ## Related Topics
 
-- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE patterns
-- [Structured Streaming](03-structured-streaming-part1.md) - Streaming CDC
-- [Data Deduplication](07-data-deduplication.md) - Dedup before CDC apply
+- [Delta Lake Operations](../01-developing-code-for-data-processing/04-delta-lake-operations-part1.md) - MERGE patterns
+- [Structured Streaming](../01-developing-code-for-data-processing/03-structured-streaming-part1.md) - Streaming CDC
+- [Data Deduplication](./02-data-deduplication.md) - Dedup before CDC apply
 - [Lakeflow Pipelines](../01-developing-code-for-data-processing/README.md) - APPLY CHANGES API
 
 ## Official Documentation

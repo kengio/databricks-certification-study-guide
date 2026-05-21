@@ -535,9 +535,9 @@ GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
 
 ## Related Topics
 
-- [Unity Catalog](01-unity-catalog.md) - Governance foundation
+- [Unity Catalog](../08-data-governance/01-unity-catalog.md) - Governance foundation
 - [Data Sharing](../10-data-sharing-and-federation/01-delta-sharing.md) - Sharing with external parties
-- [Secret Management](04-secret-management.md) - Credential security
+- [Secret Management](./02-secret-management.md) - Credential security
 
 ## Official Documentation
 

@@ -476,10 +476,10 @@ spark.conf.set(
 
 ## Related Topics
 
-- [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals, triggers, output modes, basic watermarking
-- [Auto Loader](04-auto-loader.md) - File ingestion with schema inference and evolution
+- [Structured Streaming](../01-developing-code-for-data-processing/03-structured-streaming-part1.md) - Streaming fundamentals, triggers, output modes, basic watermarking
+- [Auto Loader](../07-data-ingestion-and-acquisition/01-auto-loader.md) - File ingestion with schema inference and evolution
 - [Performance Optimization](../02-cost-and-performance-optimization/04-spark-tuning.md) - Spark tuning for streaming workloads
-- [Data Deduplication](07-data-deduplication.md) - Batch and streaming dedup patterns
+- [Data Deduplication](../03-data-transformation-cleansing-quality/02-data-deduplication.md) - Batch and streaming dedup patterns
 - [Streaming Optimization](../02-cost-and-performance-optimization/08-streaming-optimization.md) - File sizing, trigger tuning, checkpoint optimization
 
 ## Official Documentation

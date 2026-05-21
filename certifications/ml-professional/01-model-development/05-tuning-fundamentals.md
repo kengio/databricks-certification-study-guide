@@ -467,8 +467,8 @@ pipeline = Pipeline(stages=[
 
 ## Related Topics
 
-- [Bayesian Optimization](02-bayesian-optimization.md)
-- [Distributed Tuning](03-distributed-tuning.md)
+- [Bayesian Optimization](./06-bayesian-optimization.md)
+- [Distributed Tuning](./07-distributed-tuning.md)
 
 ---
 
