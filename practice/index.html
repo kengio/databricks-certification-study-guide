@@ -16,7 +16,7 @@
   <!-- Prism.js for code syntax highlighting in question stems and answers -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -70,11 +70,14 @@
           <button type="button" id="btn-submit" class="primary" disabled>
             Submit answer
           </button>
+          <button type="button" id="btn-skip" class="ghost">
+            Skip
+          </button>
           <button type="button" id="btn-next" class="primary" hidden>
             Next question
           </button>
           <span class="kbd-hint" aria-hidden="true">
-            <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> select &nbsp; <kbd>↵</kbd> submit
+            <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> select &nbsp; <kbd>↵</kbd> submit &nbsp; <kbd>S</kbd> skip
           </span>
         </div>
         <div id="quiz-feedback" hidden></div>
@@ -157,6 +160,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

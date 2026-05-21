@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "8";
+  const APP_VERSION = "9";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -469,6 +469,7 @@
     const choices = $("#quiz-choices");
     clear(choices);
     for (const letter of ["A", "B", "C", "D"]) {
+      const num = LETTER_TO_NUM[letter];
       const radio = el("input", { type: "radio", name: "choice", value: letter,
                                    onchange: () => {
                                      STATE.currentChoice = letter;
@@ -478,13 +479,14 @@
       choiceTextSpan.appendChild(renderInlineToFragment(q.choices[letter]));
       const label = el("label", { dataset: { letter } },
         radio,
-        el("span", { className: "choice-letter" }, letter),
+        el("span", { className: "choice-letter" }, num),
         choiceTextSpan);
       choices.appendChild(label);
     }
 
     $("#btn-submit").hidden = false;
     $("#btn-submit").disabled = true;
+    $("#btn-skip").hidden = false;
     $("#btn-next").hidden = true;
     $("#quiz-feedback").hidden = true;
     updateSessionBar();
@@ -573,8 +575,9 @@
     fb.hidden = false;
     fb.className = correct ? "correct" : "incorrect";
     clear(fb);
+    const correctNum = LETTER_TO_NUM[q.correctAnswer] || q.correctAnswer;
     fb.appendChild(el("h4", {},
-      correct ? "✓ Correct" : `✗ Incorrect · Correct answer: ${q.correctAnswer}`));
+      correct ? "✓ Correct" : `✗ Incorrect · Correct answer: ${correctNum}`));
     // Suppress the Topic line when the title is a placeholder fallback
     // ("Question 5") — the running head already shows the domain, which is
     // the meaningful context for mock-exam questions.
@@ -592,8 +595,18 @@
     }
 
     $("#btn-submit").hidden = true;
+    $("#btn-skip").hidden = true;
     $("#btn-next").hidden = false;
     updateSessionBar();
+  }
+
+  // Skip — moves to the next question without recording an attempt.
+  // The question is added to seenThisSession so it doesn't immediately repeat,
+  // but in adaptive mode it'll come back in a future session.
+  function skipQuestion() {
+    // Don't double-fire if already past submit
+    if ($("#btn-next").hidden === false) return;
+    renderQuiz();
   }
 
   // --- Stats view ----------------------------------------------------------
@@ -738,21 +751,28 @@
 
   // --- Init ----------------------------------------------------------------
 
+  // UI shows 1-4 but data uses A-D (matches source markdown). These maps
+  // bridge the two consistently throughout the quiz UI + keyboard handler.
+  const NUM_TO_LETTER = { "1": "A", "2": "B", "3": "C", "4": "D" };
+  const LETTER_TO_NUM = { "A": "1", "B": "2", "C": "3", "D": "4" };
+
   function handleKeydown(ev) {
     // Only react when the quiz section is visible
     if ($("#quiz").hidden) return;
-    // Ignore when the user is typing inside an input (defensive — we don't
-    // currently have any text inputs in the quiz, but cheap safety)
+    // Ignore when the user is typing inside an input/select
     if (ev.target.matches && ev.target.matches("input, textarea, select")) return;
+    // Ignore when a modifier key is held (let browser shortcuts pass through)
+    if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
 
-    const keyMap = { "1": "A", "2": "B", "3": "C", "4": "D",
-                     "a": "A", "b": "B", "c": "C", "d": "D" };
-    const letter = keyMap[ev.key.toLowerCase()];
-    if (letter && !$("#btn-next").hidden === false) {
-      // After submit; ignore choice keys until next question
-      return;
-    }
+    const key = ev.key.toLowerCase();
+    // Choice keys: 1/2/3/4 (primary) + a/b/c/d (alias)
+    const letter = NUM_TO_LETTER[key]
+                 || { "a": "A", "b": "B", "c": "C", "d": "D" }[key];
+
     if (letter) {
+      // After submit (btn-next visible): ignore choice keys
+      const submitted = !$("#btn-next").hidden;
+      if (submitted) return;
       const radio = document.querySelector(
         `fieldset#quiz-choices input[value="${letter}"]`);
       if (radio && !radio.disabled) {
@@ -769,6 +789,15 @@
         $("#btn-submit").click();
       }
       ev.preventDefault();
+      return;
+    }
+    if (key === "s") {
+      // Skip — only available before submit
+      const submitted = !$("#btn-next").hidden;
+      if (!submitted) {
+        skipQuestion();
+        ev.preventDefault();
+      }
     }
   }
 
@@ -777,6 +806,7 @@
     applyTheme(loadTheme());
 
     $("#btn-submit").addEventListener("click", submitAnswer);
+    $("#btn-skip").addEventListener("click", skipQuestion);
     $("#btn-next").addEventListener("click", renderQuiz);
     $("#btn-stats").addEventListener("click", () => { renderStats(); show("stats"); });
     $("#btn-stats-back").addEventListener("click", () => show("quiz"));
