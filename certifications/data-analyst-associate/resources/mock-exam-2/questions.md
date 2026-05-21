@@ -912,7 +912,7 @@ D) Add a column comment on `invoice_total` saying "this is revenue"
 >
 > The official Databricks Genie best-practice guidance is to **prefer SQL expressions over text instructions** when both could express the rule. A named SQL expression is exact and deterministic — Genie will compose it into the generated query verbatim. Free-text instructions (Option A) are the documented *last resort*. Option C is irrelevant — Genie generates SQL, not embeddings. Option D (column comments / metadata) is a complementary lever but less precise than a SQL expression for an aggregation rule.
 
-
+---
 
 ### Question GS-3 *(Medium — AI/BI Genie Spaces)*
 
@@ -932,6 +932,8 @@ D) Train a custom embedding model on the team's vocabulary
 
 ---
 
+---
+
 ### Question DASH-1 *(Medium — Creating Dashboards and Visualizations)*
 
 **Scenario**: An analyst needs to notify the operations team when the daily backlog of unprocessed orders exceeds 10,000. The notification should fire within minutes of crossing the threshold and go to a Slack channel.
@@ -947,6 +949,8 @@ D) Use a Lakeflow Job that runs the SQL nightly and emails a digest
 > **Correct Answer: B**
 >
 > Databricks SQL Alerts are the documented path for threshold-based notifications: they evaluate a query result on a schedule (down to 1 minute), apply a comparator (`>`, `<`, `==`), and route to email, Slack, or any webhook destination. A and C are passive — they require someone to look. D is too slow (nightly) and not threshold-based.
+
+---
 
 ---
 

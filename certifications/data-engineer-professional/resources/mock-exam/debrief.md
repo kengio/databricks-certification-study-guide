@@ -79,4 +79,4 @@ The original mock has 63 questions plus the new-domain refresh additions at the 
 
 ---
 
-**[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to DE Professional](../../README.md)**
+**[← Back to Mock Exam](./README.md)** | **[↑ Back to Resources](../README.md)** | **[← Back to DE Professional](../../README.md)**

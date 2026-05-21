@@ -1208,7 +1208,7 @@ D) Use Auto Loader with the Snowflake source connector
 >
 > Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a Delta Share recipient platform. Option D is for object-store file ingestion, not relational sources.
 
-
+---
 
 ### Question PERF-1 *(Hard — Cost & Performance Optimization)*
 
@@ -1228,6 +1228,8 @@ D) Switch to bucketing on `customer_id` with 100 buckets
 
 ---
 
+---
+
 ### Question COST-1 *(Medium — Cost & Performance Optimization)*
 
 **Scenario**: A nightly Lakeflow Job runs a Spark batch pipeline that takes 45 minutes on a Standard (DBR) all-purpose cluster of 8 i3.xlarge workers. The team wants to halve the cost.
@@ -1243,6 +1245,8 @@ D) Switch to spot instances AND disable autoscaling
 > **Correct Answer: A**
 >
 > Two independent levers, both safe: (1) Job clusters cost ~50 % less per DBU than all-purpose clusters because they're not designed for shared interactive use; (2) autoscaling drops idle nodes so you only pay for what you use during low-throughput phases of the job. B caps capacity (may slow the job → cost trade-off neutralised). C may help but Photon depends on workload shape and single-user mode is unrelated to cost. D introduces spot-eviction risk and removes elasticity.
+
+---
 
 ---
 

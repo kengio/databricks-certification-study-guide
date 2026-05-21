@@ -793,7 +793,7 @@ D) Configure a Unity AI Gateway "audit" policy that emails a daily digest to the
 >
 > Inference Tables are the documented audit-of-record for Model Serving endpoints. Enabling them auto-captures every request/response into a Delta table in UC. The exact schema depends on the endpoint type: **Model Serving inference tables** use `request`, `response`, `timestamp_ms`, `databricks_request_id`; **AI Gateway inference tables** (the unified schema for Gateway-wrapped endpoints) use `request_time` and a slightly different layout — both give you the same audit guarantee. giving you SQL-queryable retention out of the box. Option A is the "build it yourself" version and is unnecessary. Option C is brittle and out-of-band. Option D is not how Unity AI Gateway works. The Gateway's logging *policy* auto-routes into Inference Tables (which is exactly the correct answer here, framed differently); there is no built-in email-digest feature.
 
-
+---
 
 ### Question AGENT-1 *(Medium — Assembling and Deploying Apps)*
 
@@ -813,39 +813,43 @@ D) Use a Databricks notebook task scheduled to run the chain
 
 ---
 
+---
+
 ### Question GW-1 *(Medium — Assembling and Deploying Apps)*
 
 **Scenario**: A team wants to deploy v3 of a RAG app while keeping v2 live for fallback. They need 10 % of traffic going to v3 and 90 % to v2, with the ability to ramp v3 to 100 % gradually based on quality metrics from Inference Tables.
 
-**Question**: Which Unity AI Gateway policy implements this?
+**Question**: Which feature of a Mosaic AI Model Serving endpoint implements this canary pattern?
 
-A) Rate limits — set a limit on v2 so traffic naturally spills to v3  
-B) Traffic splitting — configure a `traffic_config` with weighted `routes` (10 % to v3, 90 % to v2) and update the weights as you ramp  
-C) Guardrails — block v2 requests when v3 is healthy  
-D) Payload logging — log every request and let the consumer choose the version  
+A) Rate limits on the Unity AI Gateway — set a limit on v2 so traffic naturally spills to v3  
+B) **Multi-model endpoint traffic config** — register both `v2` and `v3` as `served_entities` on the same endpoint and set `traffic_config = {"routes": [{"served_model_name": "v3", "traffic_percentage": 10}, {"served_model_name": "v2", "traffic_percentage": 90}]}`  
+C) Unity AI Gateway guardrails — block v2 requests when v3 is healthy  
+D) Inference Tables payload logging — log every request and let the consumer choose the version  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Unity AI Gateway's **traffic splitting** policy is the documented canary / A-B-deploy mechanism. Configure `traffic_config = {"routes": [{"served_model_name": "v3", "traffic_percentage": 10}, {"served_model_name": "v2", "traffic_percentage": 90}]}`. Weights must sum to 100. Update the percentages over time to ramp. A misuses rate limits. C misuses guardrails. D is unrelated.
+> **Traffic splitting is a Mosaic AI Model Serving feature**, not a Unity AI Gateway policy. You register multiple `served_entities` on a single endpoint and assign weighted `routes` via `traffic_config`. Weights must sum to 100; update the percentages over time to ramp. Unity AI Gateway wraps the endpoint for governance (rate limits, payload logging, guardrails, usage tracking, fallbacks) — it observes the split but doesn't define it. A misuses rate limits. C misuses guardrails. D is unrelated.
+
+---
 
 ---
 
 ### Question EVAL-1 *(Medium — Evaluation and Monitoring)*
 
-**Scenario**: A team wants to measure quality drift in a production RAG app. They have 30 days of Inference Table data (one row per request, with the full prompt and response). They want a *weekly* faithfulness score across a sample of production traffic, scored by a stronger LLM.
+**Scenario**: A team wants to measure quality drift in a production RAG app. They have 30 days of Inference Table data (one row per request, with the full prompt and response). They want a *weekly* groundedness score across a sample of production traffic, scored by a stronger LLM.
 
-**Question**: Which approach matches the documented MLflow LLM-as-judge pattern?
+**Question**: Which approach matches the documented Databricks Agent Evaluation pattern?
 
-A) Sample N recent rows from the Inference Table; run `mlflow.evaluate(model=judge_chain, data=sample, evaluators=["llm_as_judge"], evaluator_config={"metrics": ["faithfulness"]})`; schedule weekly  
+A) Sample N recent rows from the Inference Table into a Spark DataFrame; run `mlflow.evaluate(data=sample, model_type="databricks-agent")` so the built-in Databricks RAG judges (groundedness, relevance, correctness, safety) score the sample; schedule via a Lakeflow Job  
 B) Manually read 100 random conversations every week  
-C) Compute a faithfulness score with a regex over the response text  
+C) Compute a groundedness score with a regex over the response text  
 D) Train a custom classifier on production data  
 
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> `mlflow.evaluate(...)` with the `llm_as_judge` evaluator is the documented pattern. You pass an evaluator chain (a stronger LLM) and a list of metrics (`faithfulness`, `relevance`, `groundedness`, `answer_correctness`). Each evaluation creates an MLflow run — over time you get a tracked time-series of quality. Schedule via a Lakeflow Job. B doesn't scale. C is brittle. D is a months-long project and overkill.
+> Databricks' Agent Evaluation framework plugs into `mlflow.evaluate(...)` via `model_type="databricks-agent"`. The built-in RAG judges include **groundedness** (does the answer follow from retrieved context?), **answer relevance**, **answer correctness**, and **safety**. Each `mlflow.evaluate` call creates an MLflow run, giving a tracked time-series of quality across weeks. Schedule via a Lakeflow Job. B doesn't scale. C is brittle. D is months of work and overkill.
 
 ---
 

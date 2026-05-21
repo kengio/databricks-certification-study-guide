@@ -23,6 +23,25 @@ tags:
 | Importing Data (5 %) | [`08-importing-data/`](../../08-importing-data/README.md) | [`auto-loader-quick-ref`](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
 | Data Modeling with DBSQL (5 %) | [`09-data-modeling-with-databricks-sql/`](../../09-data-modeling-with-databricks-sql/README.md) | — |
 
+## Per-section question map
+
+The DA mock-exam questions.md is structured as a single flat block (no domain sub-sections); each question covers one domain end-to-end. Use the table below to map your missed questions to the new 9-domain blueprint by reading the scenario.
+
+| Topic in the scenario | Maps to official domain (weight) |
+| :--- | :--- |
+| SQL Warehouse setup / sizing / connectivity | Executing Queries (20 %) |
+| AI/BI Dashboard, visualisation, alerts, sharing | Creating Dashboards (16 %) |
+| Joins / aggregations / window / parameters | Analyzing Queries (15 %) |
+| AI/BI Genie Space creation / curation / permissions | Genie Spaces (12 %) |
+| UC namespace, JDBC/ODBC, Power BI/Tableau connections | Understanding Platform (11 %) |
+| `CREATE/ALTER/DROP` table, managed vs external | Managing Data (8 %) |
+| GRANT/REVOKE, row filters, column masks | Securing Data (8 %) |
+| UI upload / `COPY INTO` / Lakehouse Federation read | Importing Data (5 %) |
+| Star vs snowflake, view vs MV, medallion | Data Modeling with DBSQL (5 %) |
+| Refresh: GS-1, GS-2, GS-3 | Genie Spaces (12 %) |
+| Refresh: DASH-1 | Creating Dashboards (16 %) |
+| Refresh: DM-1 | Data Modeling with DBSQL (5 %) |
+
 ## Study plan by miss count (45-question mock)
 
 | Missed | Status | Action |
@@ -41,4 +60,4 @@ tags:
 
 ---
 
-**[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to Data Analyst Associate](../../README.md)**
+**[← Back to Mock Exam](./README.md)** | **[↑ Back to Resources](../README.md)** | **[← Back to Data Analyst Associate](../../README.md)**

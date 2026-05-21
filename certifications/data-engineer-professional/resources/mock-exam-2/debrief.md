@@ -28,7 +28,8 @@ Same as Mock Exam 1's debrief — see [`../mock-exam/debrief.md`](../mock-exam/d
 | Section 4: Security & Governance | Security & Compliance + Data Governance | ~6 |
 | Section 5: Monitoring & Logging | Monitoring and Alerting | ~6 |
 | Section 6: Testing & Deployment | Debugging and Deploying | ~6 |
-| Section 7+8: Lakeflow + Performance | Developing Code + Cost & Performance | ~4 |
+| Section 7: Lakeflow Pipelines | Developing Code + Data Transformation | ~3 |
+| Section 8: Performance Optimization | Cost & Performance Optimization | ~3 |
 | Refresh: Data Sharing & Federation (DSF-1, DSF-2) | Data Sharing and Federation | 2+ |
 
 ## Study plan by miss count (60-question mock)
@@ -50,4 +51,4 @@ Same as Mock Exam 1's debrief — see [`../mock-exam/debrief.md`](../mock-exam/d
 
 ---
 
-**[← Back to Mock Exam 2](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to DE Professional](../../README.md)**
+**[← Back to Mock Exam 2](./README.md)** | **[↑ Back to Resources](../README.md)** | **[← Back to DE Professional](../../README.md)**
