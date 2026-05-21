@@ -1,0 +1,1062 @@
+{
+  "cert": "data-engineer-professional-mock-1",
+  "certTitle": "Data Engineer Professional — Mock Exam 1",
+  "blueprintVersion": "Nov 30, 2025",
+  "generated": "2026-05-21",
+  "domains": [
+    {
+      "id": "section-1-data-processing",
+      "name": "Section 1: Data Processing",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam/questions.md",
+      "questionCount": 18
+    },
+    {
+      "id": "section-2-databricks-tooling",
+      "name": "Section 2: Databricks Tooling",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam/questions.md",
+      "questionCount": 12
+    },
+    {
+      "id": "section-3-data-modeling",
+      "name": "Section 3: Data Modeling",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam/questions.md",
+      "questionCount": 9
+    },
+    {
+      "id": "section-4-security-governance",
+      "name": "Section 4: Security & Governance",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam/questions.md",
+      "questionCount": 6
+    },
+    {
+      "id": "section-5-monitoring-logging",
+      "name": "Section 5: Monitoring & Logging",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam/questions.md",
+      "questionCount": 6
+    },
+    {
+      "id": "section-6-testing-deployment",
+      "name": "Section 6: Testing & Deployment",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam/questions.md",
+      "questionCount": 6
+    },
+    {
+      "id": "section-7-lakeflow-pipelines-performance",
+      "name": "Section 7: Lakeflow Pipelines & Performance",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam/questions.md",
+      "questionCount": 6
+    }
+  ],
+  "questions": [
+    {
+      "id": "data-engineer-professional-mock-1-q001",
+      "domain": "section-1-data-processing",
+      "title": "Question 1",
+      "difficulty": "easy",
+      "question": "Which Auto Loader configuration will automatically detect and add new columns to the target Delta table?",
+      "choices": {
+        "A": "`cloudFiles.inferColumnTypes = true`",
+        "B": "`cloudFiles.format = json` with `rescuedDataColumn`",
+        "C": "`cloudFiles.schemaLocation` with `mergeSchema = true`",
+        "D": "`cloudFiles.schemaEvolutionMode = addNewColumns`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`cloudFiles.schemaEvolutionMode = addNewColumns` is the Auto Loader configuration that automatically detects and adds new columns to the target schema. Option A only controls type inference, not schema evolution. Option C uses `schemaLocation` for storing schema but `mergeSchema` is a Delta write option, not Auto Loader. Option B captures unparseable data but doesn't handle schema evolution.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q002",
+      "domain": "section-1-data-processing",
+      "title": "Question 2",
+      "difficulty": "medium",
+      "question": "Which trigger configuration balances latency and file size for this workload?",
+      "choices": {
+        "A": "`trigger(availableNow=True)`",
+        "B": "`trigger(processingTime=\"1 second\")`",
+        "C": "`trigger(processingTime=\"1 minute\")`",
+        "D": "`trigger(once=True)`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "A 1-minute processing time trigger allows sufficient data to accumulate for larger file writes while maintaining reasonable latency. Option A processes all available data at once (batch-like). Option B writes too frequently, creating small files. Option D is for one-time batch processing, not continuous streaming.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q003",
+      "domain": "section-1-data-processing",
+      "title": "Question 3",
+      "difficulty": "hard",
+      "question": "Which approach correctly implements this SCD Type 2 pattern using Delta Lake?",
+      "choices": {
+        "A": "Use `MERGE INTO` with `WHEN MATCHED AND target.is_current = true THEN UPDATE` to close the old record, then `INSERT` the new record",
+        "B": "Use `MERGE INTO` with `WHEN MATCHED THEN UPDATE` to update the existing record",
+        "C": "Use `INSERT OVERWRITE` to replace all records for the customer",
+        "D": "Use `DELETE` followed by `INSERT` to replace the customer record"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "SCD Type 2 requires closing the current record (setting end_date and is_current=false) and inserting a new record. The MERGE statement with a condition on `is_current = true` ensures only the active record is updated. Options B and D implement SCD Type 1 (overwrite). Option C would lose history.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q004",
+      "domain": "section-1-data-processing",
+      "title": "Question 4",
+      "difficulty": "medium",
+      "question": "Which Auto Loader configuration achieves both requirements?",
+      "choices": {
+        "A": "Set `cloudFiles.schemaLocation` and `cloudFiles.schemaEvolutionMode = rescue`",
+        "B": "Set `cloudFiles.inferColumnTypes = true` and `badRecordsPath`",
+        "C": "Set `cloudFiles.schemaHints` with all expected columns",
+        "D": "Set `cloudFiles.format = json` with `mode = PERMISSIVE`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`cloudFiles.schemaLocation` persists the inferred schema to a directory so it's reused across restarts. `schemaEvolutionMode = rescue` captures data that doesn't match the schema into a `_rescued_data` column instead of failing. Option B's `badRecordsPath` is for batch reads. Option C provides hints but doesn't persist schema or rescue data. Option D uses invalid configuration syntax.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q005",
+      "domain": "section-1-data-processing",
+      "title": "Question 5",
+      "difficulty": "medium",
+      "question": "Which combination ensures exactly-once processing guarantees?",
+      "choices": {
+        "A": "`outputMode(\"append\")` with checkpointing enabled",
+        "B": "`outputMode(\"complete\")` with `foreachBatch()` and manual deduplication",
+        "C": "`outputMode(\"append\")` with checkpointing and idempotent Delta writes",
+        "D": "`outputMode(\"update\")` with watermarking"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Exactly-once semantics require checkpointing (for tracking progress) combined with idempotent writes (Delta Lake's transaction log ensures writes are atomic and can be retried safely). Option A lacks idempotency mention. Option B requires manual handling. Option D is for stateful aggregations.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q006",
+      "domain": "section-1-data-processing",
+      "title": "Question 6",
+      "difficulty": "medium",
+      "question": "Which code correctly reads incremental changes from the CDF-enabled table?",
+      "choices": {
+        "A": "`spark.read.format(\"delta\").option(\"readChangeFeed\", \"true\").table(\"bronze\")`",
+        "B": "`spark.readStream.format(\"delta\").option(\"ignoreChanges\", \"true\").table(\"bronze\")`",
+        "C": "`spark.read.format(\"delta\").option(\"startingVersion\", last_version).table(\"bronze\")`",
+        "D": "`spark.readStream.format(\"delta\").option(\"readChangeFeed\", \"true\").table(\"bronze\")`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Using `readStream` with `readChangeFeed = true` creates a streaming source that automatically tracks progress and reads only new changes. Option A is batch read (would need version parameters). Option C reads snapshots, not change records. Option B ignores changes rather than reading them.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q007",
+      "domain": "section-1-data-processing",
+      "title": "Question 7",
+      "difficulty": "medium",
+      "question": "What is the most effective optimization for this MERGE operation?",
+      "choices": {
+        "A": "Increase `spark.sql.shuffle.partitions` to 1000",
+        "B": "Add a Z-ORDER on `customer_id`",
+        "C": "Partition the table by `customer_id`",
+        "D": "Enable `spark.databricks.delta.merge.enableLowShuffle`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Z-ORDER on `customer_id` co-locates data with similar customer_id values, enabling file pruning during MERGE and dramatically reducing files scanned. Option A adds parallelism but doesn't reduce data scanned. Option C is impractical for high-cardinality columns. Option D is not a valid configuration.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q008",
+      "domain": "section-1-data-processing",
+      "title": "Question 8",
+      "difficulty": "medium",
+      "question": "What is the expected behavior and how should the engineer address this?",
+      "choices": {
+        "A": "Increase the watermark to 20 minutes to capture more late data",
+        "B": "This is expected behavior; events beyond the watermark are intentionally dropped",
+        "C": "Set `spark.sql.streaming.stateStore.providerClass` to handle late data",
+        "D": "Use `outputMode(\"complete\")` to include all data"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Watermarking intentionally drops data arriving after the threshold to bound state store size. Events 15 minutes late with a 10-minute watermark will be dropped by design. Option A could work but increases state size. Options C and D don't address late data handling. The engineer should evaluate if 10 minutes is the right threshold for their use case.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q009",
+      "domain": "section-1-data-processing",
+      "title": "Question 9",
+      "difficulty": "medium",
+      "question": "Which approach correctly handles multiple topics with independent schemas?",
+      "choices": {
+        "A": "Read all topics in one stream and use `filter()` to split by topic before writing",
+        "B": "Use `foreachBatch()` to route records to different tables based on topic",
+        "C": "Create separate streaming queries for each topic with independent checkpoints",
+        "D": "Use `readStream.format(\"kafka\").option(\"subscribe\", \"topic1,topic2\")` with schema registry"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Separate streaming queries with independent checkpoints provide isolation for different schemas and independent failure handling. Option A requires a common schema. Option B complicates checkpoint management. Option D subscribes to multiple topics but doesn't handle different schemas well.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q010",
+      "domain": "section-1-data-processing",
+      "title": "Question 10",
+      "difficulty": "easy",
+      "question": "What must be done to reclaim storage space after DELETE operations?",
+      "choices": {
+        "A": "Run `OPTIMIZE` to compact files",
+        "B": "Recreate the table using `CREATE TABLE AS SELECT`",
+        "C": "Run `FSCK REPAIR TABLE` to fix storage",
+        "D": "Run `VACUUM` with an appropriate retention period"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "DELETE in Delta Lake marks records as removed but doesn't physically delete files (to support time travel). VACUUM removes files older than the retention period that are no longer referenced. Option A compacts but doesn't remove old files. Option C checks table integrity. Option B is inefficient.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q011",
+      "domain": "section-1-data-processing",
+      "title": "Question 11",
+      "difficulty": "medium",
+      "question": "Which configuration ensures accurate aggregations while bounding state store growth?",
+      "choices": {
+        "A": "Set `outputMode(\"complete\")` to recompute all windows",
+        "B": "Add `withWatermark(\"timestamp\", \"2 hours\")` before the aggregation",
+        "C": "Use `outputMode(\"append\")` without watermarking",
+        "D": "Set `spark.sql.streaming.stateStore.maintenanceInterval` to \"1 hour\""
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Watermarking allows Spark to handle late data within the threshold (2 hours) while cleaning up state for windows that can no longer receive updates. Option A recomputes but doesn't bound state. Option C would drop late data immediately. Option D controls maintenance frequency, not late data handling.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q012",
+      "domain": "section-1-data-processing",
+      "title": "Question 12",
+      "difficulty": "hard",
+      "question": "What is the most likely cause of this issue?",
+      "choices": {
+        "A": "The checkpoint location is full",
+        "B": "Auto Loader's `cloudFiles.maxFilesPerTrigger` is set too low",
+        "C": "The source files are being written to a different path than configured",
+        "D": "The stream is waiting for the trigger interval"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "A stream showing ACTIVE with 0 rows processed while files are arriving typically indicates the configured source path doesn't match where files are being written. Option A would cause errors, not zero processing. Option B would limit throughput but not stop it entirely. Option D wouldn't show persistent zero processing.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q013",
+      "domain": "section-1-data-processing",
+      "title": "Question 13",
+      "difficulty": "hard",
+      "question": "Which approach correctly handles this deduplication requirement?",
+      "choices": {
+        "A": "Use `dropDuplicates()` on the source DataFrame before MERGE",
+        "B": "Use multiple MERGE statements with different conditions",
+        "C": "Set `spark.databricks.delta.merge.repartitionBeforeWrite.enabled = true`",
+        "D": "Deduplicate within the MERGE using `ROW_NUMBER()` in a subquery"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Using `ROW_NUMBER()` partitioned by key and ordered by timestamp DESC in a subquery, then filtering for row_number = 1, deduplicates source data correctly within the MERGE while ensuring the latest record is kept. Option A (`dropDuplicates()`) is non-deterministic and doesn't guarantee keeping the record with the latest timestamp. Option C affects write performance, not deduplication. Option B is unnecessarily complex.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q014",
+      "domain": "section-1-data-processing",
+      "title": "Question 14",
+      "difficulty": "easy",
+      "question": "Which configuration captures malformed records while allowing the pipeline to continue?",
+      "choices": {
+        "A": "Set `cloudFiles.ignoreCorruptFiles = true`",
+        "B": "Set `badRecordsPath` to a storage location",
+        "C": "Use `cloudFiles.rescuedDataColumn` to capture unparseable data",
+        "D": "Wrap the read in a try-catch block"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`rescuedDataColumn` creates a column containing data that couldn't be parsed according to the schema, allowing analysis of bad records. Option A ignores corrupt files entirely. Option B is for batch operations. Option D doesn't work with streaming transformations.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q015",
+      "domain": "section-1-data-processing",
+      "title": "Question 15",
+      "difficulty": "medium",
+      "question": "Which code pattern correctly implements incremental processing using CDF?",
+      "choices": {
+        "A": "Read with `option(\"readChangeFeed\", \"true\").option(\"startingVersion\", last_processed_version)`",
+        "B": "Read with `option(\"versionAsOf\", last_processed_version)` and compare with current version",
+        "C": "Use `CHANGES` table-valued function in SQL",
+        "D": "Read the `_delta_log` directly to find changed files"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Reading CDF with `startingVersion` returns all changes (inserts, updates, deletes) since that version, including `_change_type` column. Option B reads snapshots, not changes. Option C is not valid syntax. Option D is fragile and not recommended.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q016",
+      "domain": "section-1-data-processing",
+      "title": "Question 16",
+      "difficulty": "easy",
+      "question": "How does Delta Lake ensure consistent reads during concurrent writes?",
+      "choices": {
+        "A": "Delta uses table-level locks to prevent reads during writes",
+        "B": "Delta uses snapshot isolation; readers see consistent snapshots regardless of concurrent writes",
+        "C": "Delta queues read requests until writes complete",
+        "D": "Configure `delta.isolationLevel = serializable` to ensure consistency"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Delta Lake provides snapshot isolation by default. Readers see a consistent snapshot based on the transaction log at query start time, regardless of concurrent writes. Option A is incorrect; Delta doesn't use table locks. Option C is incorrect; reads aren't queued. Option D is not a valid setting.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q017",
+      "domain": "section-1-data-processing",
+      "title": "Question 17",
+      "difficulty": "medium",
+      "question": "Which MERGE clause correctly implements this conditional update logic?",
+      "choices": {
+        "A": "`WHEN MATCHED AND source.timestamp > target.timestamp THEN UPDATE SET *`",
+        "B": "`WHEN MATCHED THEN UPDATE SET * WHERE source.timestamp > target.timestamp`",
+        "C": "`WHEN MATCHED THEN UPDATE SET target.* = source.* IF source.timestamp > target.timestamp`",
+        "D": "`WHEN MATCHED THEN UPDATE SET * HAVING source.timestamp > target.timestamp`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The condition in `WHEN MATCHED AND condition` filters which matched rows receive the update. Rows not meeting the condition are skipped. Option B has invalid syntax (WHERE after UPDATE SET). Options C and D use invalid syntax.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q018",
+      "domain": "section-1-data-processing",
+      "title": "Question 18",
+      "difficulty": "hard",
+      "question": "How can the engineer achieve atomic writes across multiple tables in `foreachBatch()`?",
+      "choices": {
+        "A": "Wrap all writes in a single Spark transaction using `spark.sql(\"BEGIN TRANSACTION\")`",
+        "B": "Use Delta Lake's multi-table transactions with `spark.databricks.delta.multiTableTransaction.enabled`",
+        "C": "This cannot be achieved directly; implement idempotent writes with manual rollback logic",
+        "D": "Use `foreachPartition()` instead for transactional guarantees"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Delta Lake doesn't support multi-table transactions. The recommended approach is to make each write idempotent (using merge keys or batch IDs) so failed batches can be safely reprocessed. Options A and B describe non-existent features. Option D doesn't provide multi-table atomicity.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q019",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 19",
+      "difficulty": "medium",
+      "question": "Which approach correctly implements parameterization for both use cases?",
+      "choices": {
+        "A": "Use `dbutils.widgets.text()` with defaults that can be overridden by job parameters",
+        "B": "Use environment variables set at cluster startup",
+        "C": "Use `spark.conf.get()` to read parameters from cluster configuration",
+        "D": "Hard-code values and create separate notebooks for each environment"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`dbutils.widgets` creates parameters with defaults for interactive use that can be overridden when called from jobs using the notebook task parameters. Option B requires cluster configuration. Option C requires cluster-level settings. Option D is unmaintainable.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q020",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 20",
+      "difficulty": "medium",
+      "question": "Which approach correctly captures SQL results in a Python variable?",
+      "choices": {
+        "A": "Use `%sql` and reference the `_sqldf` variable",
+        "B": "Use `%sql` with `INTO :variable_name` syntax",
+        "C": "Use `spark.sql()` and assign to a variable",
+        "D": "Use `%run` to execute a SQL notebook and capture results"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`spark.sql(\"SELECT ...\")` returns a DataFrame that can be assigned to a variable for further processing in Python. This is the recommended programmatic approach. Option A's `_sqldf` does exist in Databricks notebooks (it captures the last %sql result) but is implicit and less reliable for production code. Option B has invalid syntax. Option D doesn't capture SQL results.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q021",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 21",
+      "difficulty": "easy",
+      "question": "Which approach correctly implements secure credential management?",
+      "choices": {
+        "A": "Store the token in a notebook cell and delete it after running",
+        "B": "Store the token in a Delta table with restricted access",
+        "C": "Use environment variables on the cluster",
+        "D": "Use `dbutils.secrets.get(scope=\"api_scope\", key=\"api_token\")`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Databricks Secrets provides secure credential storage with access control. Secrets are encrypted at rest and redacted in logs. Option A exposes secrets in notebook history. Option B is not designed for secrets. Option C requires cluster admin access and isn't as secure.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q022",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 22",
+      "difficulty": "easy",
+      "question": "Which approach provides centralized code sharing with automatic updates?",
+      "choices": {
+        "A": "Copy utility functions into each notebook",
+        "B": "Use `%run /Workspace/Shared/utilities` at the start of each notebook",
+        "C": "Package utilities as a wheel file and install via `%pip install`",
+        "D": "Store utilities in a Delta table and read them at runtime"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`%run` executes another notebook in the current notebook's context, making all its functions available. Changes to the shared notebook are immediately available to all callers. Option A requires manual updates. Option C requires reinstallation for updates. Option D is impractical for code.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q023",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 23",
+      "difficulty": "medium",
+      "question": "Which authentication method is most appropriate for this CI/CD scenario?",
+      "choices": {
+        "A": "OAuth user-to-machine authentication",
+        "B": "Personal access token stored in `DATABRICKS_TOKEN` environment variable",
+        "C": "Service principal with `DATABRICKS_CLIENT_ID` and `DATABRICKS_CLIENT_SECRET`",
+        "D": "Username and password authentication"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Service principals with OAuth are the recommended approach for CI/CD automation. They provide machine identity without personal credentials and can be scoped with specific permissions. Option A requires user interaction. Option B uses personal tokens that expire. Option D is deprecated.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q024",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 24",
+      "difficulty": "medium",
+      "question": "What is the most likely cause and solution?",
+      "choices": {
+        "A": "The cluster creation is asynchronous; poll the cluster status until it's RUNNING",
+        "B": "The API token doesn't have permission to access the cluster",
+        "C": "The cluster_id was not properly formatted in the job request",
+        "D": "Rate limiting is preventing the second API call"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Cluster creation via API returns immediately with a cluster_id, but the cluster takes time to provision. The job API call failed because the cluster wasn't ready yet. The solution is to poll `GET /api/2.0/clusters/get` until state is RUNNING. Options B-D are possible but less likely given the described sequence.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q025",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 25",
+      "difficulty": "medium",
+      "question": "Which recommendation optimizes for cost while maintaining reliability?",
+      "choices": {
+        "A": "Use all-purpose clusters with auto-termination to save costs",
+        "B": "Use a shared all-purpose cluster across all jobs to maximize utilization",
+        "C": "Use serverless compute for all jobs regardless of workload characteristics",
+        "D": "Use job clusters which are automatically created and terminated per job run"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Job clusters are created for each job run and terminated afterward, providing cost savings (lower DBU rates) and isolation between runs. Option A still has higher DBU rates. Option B risks resource contention and failures affecting multiple jobs. Option C may not be cost-effective for predictable scheduled workloads.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q026",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 26",
+      "difficulty": "medium",
+      "question": "Which approach correctly accesses Unity Catalog volumes?",
+      "choices": {
+        "A": "`dbutils.fs.ls(\"dbfs:/Volumes/catalog/schema/volume\")`",
+        "B": "`dbutils.fs.ls(\"/Volumes/catalog/schema/volume\")`",
+        "C": "`spark.read.format(\"binaryFile\").load(\"dbfs:/Volumes/catalog/schema/volume\")`",
+        "D": "`os.listdir(\"/dbfs/Volumes/catalog/schema/volume\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Unity Catalog volumes are accessed via the `/Volumes` path without the `dbfs:` prefix. Option A uses the wrong path format. Option C reads file content, not metadata. Option D may work but `dbutils.fs` is the recommended approach for Databricks.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q027",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 27",
+      "difficulty": "easy",
+      "question": "How should the job task be configured to pass the parameter?",
+      "choices": {
+        "A": "In the notebook task configuration, set `base_parameters: {\"env\": \"prod\"}`",
+        "B": "Set cluster environment variable `ENV=prod`",
+        "C": "Use `spark.conf.set(\"env\", \"prod\")` in the job configuration",
+        "D": "Create a separate notebook for production without widgets"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The notebook task's `base_parameters` map directly to widget values, overriding defaults when the notebook runs as a job. Option B doesn't connect to widgets. Option C sets Spark config, not widget values. Option D is unmaintainable.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q028",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 28",
+      "difficulty": "medium",
+      "question": "Which API endpoint and request body correctly submits this job run?",
+      "choices": {
+        "A": "POST `/api/2.1/jobs/create` with `notebook_params` in the request",
+        "B": "PUT `/api/2.1/jobs/update` with `notebook_params` in the settings",
+        "C": "POST `/api/2.1/jobs/runs/submit` with `notebook_params` in the task configuration",
+        "D": "POST `/api/2.1/jobs/run-now` with `notebook_params` in the request"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`run-now` triggers an existing job with parameter overrides via `notebook_params`. Option A creates a job definition but doesn't run it. Option C submits a one-time run (requires full job spec). Option B updates job definition, doesn't run it.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q029",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 29",
+      "difficulty": "medium",
+      "question": "What is the recommended migration approach for accessing cloud storage with Unity Catalog?",
+      "choices": {
+        "A": "Update all paths to use `abfss://` or `s3://` URLs directly",
+        "B": "Create external locations in Unity Catalog and use `/Volumes/` paths",
+        "C": "Keep using mounts but register them as external locations",
+        "D": "Use storage credentials to access cloud storage via `dbutils.fs`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Unity Catalog volumes provide governed access to cloud storage with paths like `/Volumes/catalog/schema/volume/`. External locations and volumes replace the ungoverned mount pattern. Option A bypasses governance. Option C mixes patterns incorrectly. Option D doesn't leverage Unity Catalog.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q030",
+      "domain": "section-2-databricks-tooling",
+      "title": "Question 30",
+      "difficulty": "medium",
+      "question": "Which CLI command correctly executes a SQL query and formats output as JSON?",
+      "choices": {
+        "A": "`databricks sql execute --query \"SELECT * FROM table\" --format JSON`",
+        "B": "`databricks workspace execute-sql --statement \"SELECT * FROM table\" --output json`",
+        "C": "`databricks sql-cli -e \"SELECT * FROM table\" -o json`",
+        "D": "`databricks api post /api/2.0/sql/statements -d '{\"statement\": \"SELECT * FROM table\"}'`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "The Databricks CLI can make arbitrary API calls. The SQL Statement Execution API (`/api/2.0/sql/statements`) executes SQL queries programmatically. Options A-C use non-existent CLI commands. The actual implementation may vary by CLI version, but the API approach always works.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q031",
+      "domain": "section-3-data-modeling",
+      "title": "Question 31",
+      "difficulty": "easy",
+      "question": "Which layer should handle flattening the nested JSON structure into a relational format?",
+      "choices": {
+        "A": "Bronze layer - ingest and flatten immediately",
+        "B": "Gold layer - create denormalized tables for analytics",
+        "C": "Silver layer - transform raw data into cleaned, conformed structures",
+        "D": "A separate staging layer before bronze"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The silver layer is responsible for data cleansing and conforming, including flattening nested structures. Bronze should preserve raw data as-is for auditability. Gold focuses on business aggregations. Option D adds unnecessary complexity.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q032",
+      "domain": "section-3-data-modeling",
+      "title": "Question 32",
+      "difficulty": "easy",
+      "question": "What happens when this data is written to the table?",
+      "choices": {
+        "A": "Null values are converted to empty strings",
+        "B": "The write fails with a constraint violation error",
+        "C": "Records with null emails are silently dropped",
+        "D": "The NOT NULL constraint is automatically removed"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Delta Lake enforces NOT NULL constraints at write time. Attempting to write null values to a NOT NULL column causes the entire write operation to fail with an error. Options A, C, and D describe behaviors that don't occur.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q033",
+      "domain": "section-3-data-modeling",
+      "title": "Question 33",
+      "difficulty": "medium",
+      "question": "Which statement correctly adds this column?",
+      "choices": {
+        "A": "`ALTER TABLE customers ADD COLUMN loyalty_tier STRING AFTER customer_id`",
+        "B": "`ALTER TABLE customers ADD COLUMNS (loyalty_tier STRING AFTER customer_id)`",
+        "C": "`ALTER TABLE customers ADD COLUMN loyalty_tier STRING` (column position cannot be specified)",
+        "D": "Table must be recreated to add a column at a specific position"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Delta Lake supports column positioning with `FIRST` or `AFTER` clauses in ADD COLUMN statements. The syntax `ALTER TABLE ADD COLUMN column_name TYPE AFTER existing_column` correctly positions the new column. Option B uses incorrect syntax (COLUMNS instead of COLUMN with positioning). Option C is incorrect because position CAN be specified. Option D is unnecessary since ADD COLUMN with AFTER is supported.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q034",
+      "domain": "section-3-data-modeling",
+      "title": "Question 34",
+      "difficulty": "easy",
+      "question": "How many rows should be affected by this single address change?",
+      "choices": {
+        "A": "1 row (update the existing record)",
+        "B": "2 rows (close old record, insert new record)",
+        "C": "3 rows (update old, insert new, update audit table)",
+        "D": "Depends on the number of historical records for that customer"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "SCD Type 2 handles changes by: (1) closing the current record (setting end_date and is_current=false) and (2) inserting a new record with the new address (is_current=true). This affects exactly 2 rows. Option A describes SCD Type 1. Options C and D describe non-standard implementations.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q035",
+      "domain": "section-3-data-modeling",
+      "title": "Question 35",
+      "difficulty": "hard",
+      "question": "What modification would most improve query performance?",
+      "choices": {
+        "A": "Add more partitions by also partitioning on `customer_id`",
+        "B": "Remove date partitioning and use Z-ORDER on `customer_id, product_id`",
+        "C": "Keep date partitioning and add Z-ORDER on `customer_id, product_id`",
+        "D": "Convert to Liquid Clustering on `customer_id, product_id`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Liquid Clustering on the frequently filtered columns provides automatic data organization and maintenance. Since queries rarely filter on date, date partitioning provides little benefit. Option B loses time-based data management benefits. Option C combines both but has more maintenance overhead than liquid clustering. Option A creates too many small partitions.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q036",
+      "domain": "section-3-data-modeling",
+      "title": "Question 36",
+      "difficulty": "medium",
+      "question": "Which Delta Lake feature and configuration supports this requirement?",
+      "choices": {
+        "A": "Enable Change Data Feed to track all changes",
+        "B": "Create a separate history table with trigger-based logging",
+        "C": "Time travel with default retention (30 days log retention)",
+        "D": "Use Delta Lake versioning with `delta.logRetentionDuration = 30 days`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Delta Lake's time travel allows querying historical versions using `VERSION AS OF` or `TIMESTAMP AS OF`. The default 30-day log retention supports this requirement. Option A tracks changes but doesn't provide point-in-time queries. Option B is unnecessary given Delta's built-in capabilities. Option D describes the feature partially but misses that it's the default behavior.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q037",
+      "domain": "section-3-data-modeling",
+      "title": "Question 37",
+      "difficulty": "medium",
+      "question": "What is the default behavior in Delta Lake and how can it be controlled?",
+      "choices": {
+        "A": "Delta is case-insensitive by default; both names map to the same column",
+        "B": "Delta is case-sensitive by default; they become separate columns",
+        "C": "Delta throws an error on case conflicts",
+        "D": "Delta automatically renames conflicting columns with suffixes"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "By default, Delta Lake (following Spark SQL) treats column names as case-insensitive. \"CustomerId\" and \"customerid\" refer to the same column. This behavior can be changed with `spark.sql.caseSensitive = true`. Options B, C, and D describe non-default behaviors.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q038",
+      "domain": "section-3-data-modeling",
+      "title": "Question 38",
+      "difficulty": "easy",
+      "question": "How do changes to the production table affect the cloned table?",
+      "choices": {
+        "A": "Changes automatically propagate to the clone",
+        "B": "Changes propagate until the clone is modified, then it becomes independent",
+        "C": "Only schema changes propagate; data changes don't",
+        "D": "The clone is completely independent; changes don't propagate"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Deep clone creates a completely independent copy with its own data files. After cloning, both tables evolve independently. No changes propagate between them. Option A describes linked tables, not clones. Options B and C describe behaviors that don't exist.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q039",
+      "domain": "section-3-data-modeling",
+      "title": "Question 39",
+      "difficulty": "medium",
+      "question": "Which SCD type best supports this requirement?",
+      "choices": {
+        "A": "SCD Type 1 with a separate audit log table",
+        "B": "SCD Type 2 with effective dates",
+        "C": "SCD Type 3 with previous value columns",
+        "D": "SCD Type 6 (hybrid) with Type 1, 2, and 3 elements"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "For corrections (not legitimate changes), SCD Type 1 updates the current value while a separate audit log table preserves the history of corrections. Type 2 is for legitimate business changes, not error corrections. Type 3 only tracks one previous value. Type 6 is complex and not specifically designed for corrections.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q040",
+      "domain": "section-4-security-governance",
+      "title": "Question 40",
+      "difficulty": "medium",
+      "question": "Which Unity Catalog permission model correctly implements this requirement?",
+      "choices": {
+        "A": "Grant SELECT on each table individually as they're created",
+        "B": "Create a view for each table and grant SELECT on views only",
+        "C": "Grant SELECT on the catalog to give access to all schemas and tables",
+        "D": "Grant USE SCHEMA and SELECT on SCHEMA to give access to all current and future tables"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Granting SELECT at the schema level provides access to all current and future tables in that schema. USE SCHEMA is required to access objects within the schema. Option A requires ongoing maintenance. Option C is too broad. Option B is unnecessarily complex.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q041",
+      "domain": "section-4-security-governance",
+      "title": "Question 41",
+      "difficulty": "medium",
+      "question": "Which Unity Catalog feature implements this column-level security requirement?",
+      "choices": {
+        "A": "Create separate tables for HR and managers with different columns",
+        "B": "Use dynamic views with `is_account_group_member()` to filter columns",
+        "C": "Use column masks to hide salary for non-HR users",
+        "D": "Implement application-level security in the BI tool"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Column masks in Unity Catalog apply functions to column values based on the querying user's permissions, showing the real value to authorized users and masked/null values to others. Option A creates data duplication. Option B requires view maintenance. Option D doesn't protect data at the source.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q042",
+      "domain": "section-4-security-governance",
+      "title": "Question 42",
+      "difficulty": "easy",
+      "question": "Which feature enables secure data sharing with external organizations?",
+      "choices": {
+        "A": "Create a service principal for the partner to access via API",
+        "B": "Use Delta Sharing to share data via open protocol",
+        "C": "Export data daily to a shared cloud storage location",
+        "D": "Create a Databricks workspace for the partner with access to the dataset"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Delta Sharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q043",
+      "domain": "section-4-security-governance",
+      "title": "Question 43",
+      "difficulty": "easy",
+      "question": "Which code correctly retrieves the database password?",
+      "choices": {
+        "A": "`dbutils.secrets.get(scope=\"keyvault-scope\", key=\"db-password\")`",
+        "B": "`spark.conf.get(\"azure.keyvault.db-password\")`",
+        "C": "`dbutils.credentials.get(\"keyvault-scope\", \"db-password\")`",
+        "D": "`%keyvault get db-password`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "When Azure Key Vault is configured as a secret scope backend, secrets are accessed through `dbutils.secrets.get()` using the scope name and key name. The Key Vault integration is transparent to the code. Options B, C, and D use invalid syntax.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q044",
+      "domain": "section-4-security-governance",
+      "title": "Question 44",
+      "difficulty": "easy",
+      "question": "What permissions does the user have on that table in Workspace B?",
+      "choices": {
+        "A": "No permissions; grants are workspace-specific",
+        "B": "Same SELECT permission; Unity Catalog permissions are centralized",
+        "C": "Read-only permissions with a warning about cross-workspace access",
+        "D": "Permissions depend on workspace-level settings"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Unity Catalog provides centralized governance across all workspaces attached to the same metastore. Permissions granted on objects apply regardless of which workspace is used to access them. This is a key benefit of Unity Catalog over legacy Hive metastore.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q045",
+      "domain": "section-4-security-governance",
+      "title": "Question 45",
+      "difficulty": "hard",
+      "question": "Which approach correctly implements this row-level security in Unity Catalog?",
+      "choices": {
+        "A": "Add a row filter using `ROW FILTER filter_function ON (patient_id)`",
+        "B": "Create dynamic views with `WHERE doctor_id = current_user()`",
+        "C": "Use column masks to hide rows from unauthorized users",
+        "D": "Implement filtering in the application layer only"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Unity Catalog row filters apply a function that determines which rows each user can access based on their identity. The filter function can join with assignment tables to implement complex rules. Option B works but requires view maintenance. Option C is for column security, not row security. Option D doesn't protect data at the source.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q046",
+      "domain": "section-5-monitoring-logging",
+      "title": "Question 46",
+      "difficulty": "easy",
+      "question": "Which system table provides this billing information?",
+      "choices": {
+        "A": "`system.compute.clusters`",
+        "B": "`system.access.audit`",
+        "C": "`system.billing.usage`",
+        "D": "`system.workflow.jobs`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The `system.billing.usage` table contains detailed DBU consumption data by workspace, cluster, and SKU. It's the primary source for cost analysis. Option A has cluster metadata. Option B has security audit logs. Option D has job definitions, not cost data.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q047",
+      "domain": "section-5-monitoring-logging",
+      "title": "Question 47",
+      "difficulty": "medium",
+      "question": "What does this pattern indicate and what is the recommended solution?",
+      "choices": {
+        "A": "Insufficient executors; increase cluster size",
+        "B": "Data skew; enable AQE skew join handling or salt the skewed key",
+        "C": "Memory pressure; increase executor memory",
+        "D": "Network bottleneck; check cluster networking"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "One slow task with idle executors is the classic sign of data skew--one partition has much more data than others. AQE can automatically split skewed partitions, or you can manually salt keys. Option A wouldn't help if executors are idle. Options C and D show different symptoms.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q048",
+      "domain": "section-5-monitoring-logging",
+      "title": "Question 48",
+      "difficulty": "medium",
+      "question": "Which approach retrieves the expectation violation details?",
+      "choices": {
+        "A": "Check the cluster driver logs",
+        "B": "Review the pipeline settings in the UI",
+        "C": "Use `dbutils.pipelines.getLatestUpdate()` API",
+        "D": "Query the pipeline's event log table for expectation metrics"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Lakeflow Declarative Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q049",
+      "domain": "section-5-monitoring-logging",
+      "title": "Question 49",
+      "difficulty": "medium",
+      "question": "Which tool reveals whether partition pruning is occurring?",
+      "choices": {
+        "A": "Run `ANALYZE TABLE` to update statistics",
+        "B": "Check the Query History for execution time breakdown",
+        "C": "Run `EXPLAIN` and check for `PartitionFilters` in the plan",
+        "D": "Review the table's `DESCRIBE DETAIL` output"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`EXPLAIN` shows the query execution plan including `PartitionFilters` (pruned partitions) and `PushedFilters` (filters pushed to scan). Empty `PartitionFilters` indicates no pruning occurred. Option A updates statistics but doesn't show the plan. Options B and D don't show execution details.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q050",
+      "domain": "section-5-monitoring-logging",
+      "title": "Question 50",
+      "difficulty": "easy",
+      "question": "Which system table contains this access information?",
+      "choices": {
+        "A": "`system.billing.usage`",
+        "B": "`system.access.audit`",
+        "C": "`system.information_schema.tables`",
+        "D": "`system.compute.clusters`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The `system.access.audit` table contains audit logs of actions including table reads, with user identity and timestamp. Filter by `action_name` and `request_params` for table access events. Option A has billing data. Option C has table metadata. Option D has cluster info.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q051",
+      "domain": "section-5-monitoring-logging",
+      "title": "Question 51",
+      "difficulty": "medium",
+      "question": "Which factors should be investigated first?",
+      "choices": {
+        "A": "Data volume growth and partition sizing",
+        "B": "Cluster hardware degradation",
+        "C": "Changes to Databricks Runtime",
+        "D": "Network latency to cloud storage"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Gradual performance degradation with unchanged code typically indicates data volume growth or small file accumulation (affecting read performance). Check table sizes, file counts, and partition strategies. Option B is unlikely to be gradual. Options C and D would cause immediate changes, not gradual.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q052",
+      "domain": "section-6-testing-deployment",
+      "title": "Question 52",
+      "difficulty": "easy",
+      "question": "Which `databricks.yml` structure correctly defines these environments?",
+      "choices": {
+        "A": "Create separate `databricks-dev.yml`, `databricks-staging.yml`, `databricks-prod.yml` files",
+        "B": "Use `environments:` section with runtime variable substitution",
+        "C": "Use `targets:` section with `dev:`, `staging:`, and `prod:` subsections",
+        "D": "Create separate bundles for each environment in different directories"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "DAB uses a `targets:` section to define environment-specific configurations. Each target can override bundle settings like workspace host, cluster configs, and variables. Option A doesn't support DAB's inheritance model. Option B uses invalid syntax. Option D duplicates code.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q053",
+      "domain": "section-6-testing-deployment",
+      "title": "Question 53",
+      "difficulty": "medium",
+      "question": "Which testing approach is most appropriate?",
+      "choices": {
+        "A": "Deploy code to a Databricks cluster and run tests remotely",
+        "B": "Skip unit tests and rely on integration tests only",
+        "C": "Use Nutter framework with Databricks Connect",
+        "D": "Use local Spark session in pytest with mocked data"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Local Spark sessions in pytest allow fast unit tests without cluster costs or dependencies. Mock DataFrames test transformation logic efficiently. Option A is slow and costly for unit tests. Option C still requires cluster resources. Option B misses the value of unit testing.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q054",
+      "domain": "section-6-testing-deployment",
+      "title": "Question 54",
+      "difficulty": "easy",
+      "question": "What is the recommended workflow for making changes?",
+      "choices": {
+        "A": "Create a feature branch, commit changes, and create a pull request",
+        "B": "Disable branch protection temporarily to push changes",
+        "C": "Use `%git` magic commands to force push to main",
+        "D": "Make changes in a separate notebook outside Git folders"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The standard Git workflow with branch protection: create a feature branch, make changes, push, create PR for review, then merge to main after approval. This ensures code review and testing. Options B and C bypass protections. Option D loses version control benefits.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q055",
+      "domain": "section-6-testing-deployment",
+      "title": "Question 55",
+      "difficulty": "medium",
+      "question": "Which authentication method is recommended for GitHub Actions?",
+      "choices": {
+        "A": "Store personal access token in GitHub Secrets",
+        "B": "Configure OIDC federation between GitHub and Databricks with service principal",
+        "C": "Use username and password stored in GitHub Secrets",
+        "D": "Create a dedicated user account for GitHub Actions"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "OIDC federation with service principals is the recommended approach for CI/CD authentication. GitHub Actions can authenticate using short-lived tokens without storing long-lived credentials. Option A uses personal tokens that expire. Option C is deprecated. Option D creates management overhead.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q056",
+      "domain": "section-6-testing-deployment",
+      "title": "Question 56",
+      "difficulty": "medium",
+      "question": "Which Nutter pattern correctly implements this test case?",
+      "choices": {
+        "A": "Create an empty table in `before_all()` and clean up in `after_all()`",
+        "B": "Use `assertion_empty_table()` with the expected result",
+        "C": "Mock the Delta table read using `unittest.mock`",
+        "D": "Use Nutter's built-in empty table generator"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Nutter's `before_all()` runs setup before tests (create empty test table), and `after_all()` runs cleanup (drop table). The actual test verifies behavior with the empty table. Option B isn't a Nutter method. Option C is complex within Nutter. Option D doesn't exist.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q057",
+      "domain": "section-6-testing-deployment",
+      "title": "Question 57",
+      "difficulty": "medium",
+      "question": "What is the correct approach to resolve this and complete the deployment?",
+      "choices": {
+        "A": "Manually delete the resource and redeploy",
+        "B": "Update the resource name in databricks.yml to avoid conflict",
+        "C": "Run `databricks bundle destroy` then `databricks bundle deploy`",
+        "D": "Run `databricks bundle deploy --force` to overwrite"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "The `--force` flag allows DAB to take ownership of and update existing resources that match the bundle definition. This handles partial deployments gracefully. Option A risks missing dependent resources. Option C destroys everything unnecessarily. Option B changes the deployment, not fixing it.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q058",
+      "domain": "section-7-lakeflow-pipelines-performance",
+      "title": "Question 58",
+      "difficulty": "medium",
+      "question": "What is the most likely cause?",
+      "choices": {
+        "A": "The pipeline is configured for triggered execution, not continuous",
+        "B": "Materialized views don't automatically refresh from streaming tables",
+        "C": "There's a data type mismatch between the tables",
+        "D": "The materialized view requires a manual REFRESH command"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Declarative Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q059",
+      "domain": "section-7-lakeflow-pipelines-performance",
+      "title": "Question 59",
+      "difficulty": "medium",
+      "question": "How does APPLY CHANGES handle out-of-order records by default?",
+      "choices": {
+        "A": "Records are processed in arrival order, ignoring timestamps",
+        "B": "Records are processed by sequence column; out-of-order records are dropped",
+        "C": "Records are processed by sequence column; out-of-order records update if sequence is higher",
+        "D": "The pipeline fails on out-of-order detection"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "APPLY CHANGES uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q060",
+      "domain": "section-7-lakeflow-pipelines-performance",
+      "title": "Question 60",
+      "difficulty": "medium",
+      "question": "How can the dropped row count be retrieved?",
+      "choices": {
+        "A": "Check the `dropped_records` column in the target table",
+        "B": "Dropped rows are not tracked; add manual logging",
+        "C": "Run `DESCRIBE HISTORY` on the target table",
+        "D": "Query the pipeline event log for expectation metrics"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Lakeflow Declarative Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Declarative Pipelines tracks this automatically.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q061",
+      "domain": "section-7-lakeflow-pipelines-performance",
+      "title": "Question 61",
+      "difficulty": "medium",
+      "question": "What is the optimal compaction strategy?",
+      "choices": {
+        "A": "Run `OPTIMIZE` to compact files to the default 1GB target size",
+        "B": "Run `VACUUM` to remove small files",
+        "C": "Enable auto-compaction for future writes and run `OPTIMIZE` for existing files",
+        "D": "Repartition the table with `spark.sql.shuffle.partitions = 2000`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`OPTIMIZE` compacts existing small files into larger ones (target ~1GB). Enabling auto-compaction (`spark.databricks.delta.autoCompact.enabled`) prevents small files in future writes. Option B removes old files, not compaction. Option D affects partitions in processing, not file sizes.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q062",
+      "domain": "section-7-lakeflow-pipelines-performance",
+      "title": "Question 62",
+      "difficulty": "medium",
+      "question": "Which optimization would most improve this join performance?",
+      "choices": {
+        "A": "Increase `spark.sql.shuffle.partitions` to 1000",
+        "B": "Enable broadcast join by setting `spark.sql.autoBroadcastJoinThreshold = 100MB`",
+        "C": "Z-ORDER the fact table by the join key",
+        "D": "Partition both tables by the join key"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "A 50MB dimension table is a good candidate for broadcast join (eliminates shuffle of the large fact table). Increasing the threshold from 10MB default to 100MB enables automatic broadcast. Option A doesn't reduce shuffle. Option C helps filters, not joins. Option D requires data redistribution.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-professional-mock-1-q063",
+      "domain": "section-7-lakeflow-pipelines-performance",
+      "title": "Question 63",
+      "difficulty": "medium",
+      "question": "Which configuration change most likely resolves this issue?",
+      "choices": {
+        "A": "Configure Lakeflow Jobs notifications (email + webhook to PagerDuty) for failures AND query `system.lakeflow.job_run_timeline` for historical failure analytics",
+        "B": "Add a Slack webhook inside the job's last task that fires on success; absence of message indicates failure",
+        "C": "Set up a SQL Alert that polls `SHOW JOBS` every 5 minutes",
+        "D": "Rely on Databricks support to surface failures automatically"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "OOM during shuffle typically means individual partitions are too large. Increasing shuffle partitions creates smaller partitions that fit in memory. Option B reduces available memory. Option C helps with small partitions, not OOM. Option D can cause off-heap OOM errors.",
+      "explanation": ""
+    }
+  ],
+  "kind": "mock",
+  "sourceCert": "data-engineer-professional"
+}

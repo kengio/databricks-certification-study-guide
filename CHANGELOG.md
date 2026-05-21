@@ -4,6 +4,55 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-24] — Mock exams in practice quiz + auto-rebuild on source edits (931 q / 18 banks)
+
+### Added
+
+- **12 mock exam banks** in the practice quiz — each cert now has two full-length, exam-feel mock banks alongside its topic-organised practice bank:
+
+  | Cert | Practice | Mock 1 | Mock 2 |
+  | :--- | :---: | :---: | :---: |
+  | Data Engineer Associate | 85 | 45 | 45 |
+  | Data Engineer Professional | 73 | 63 | 60 |
+  | Data Analyst Associate | 57 | 45 | 45 |
+  | ML Associate | 46 | 43 | 44 |
+  | ML Professional | 57 | 45 | 45 |
+  | GenAI Engineer Associate | 46 | 45 | 42 |
+  | **Total** | **364** | **286** | **281** |
+
+  Grand total: **931 questions across 18 banks**.
+
+- **Grouped bank picker** in the quiz UI: practice and mock banks render under labelled section headings ("Practice questions — drill by topic" and "Mock exams — full-length, exam-feel sets") so the user can choose intent before picking a cert. Two-column grid on screens ≥ 700 px wide.
+
+### Changed — `practice/build.py`
+
+- New `build_mock(cert, exam_n)` function parses `certifications/<cert>/resources/mock-exam{,-2}/questions.md`. Pre-scans the file linearly to map each `## Question N` heading to the most recent `## <Domain> (Questions X-Y)` domain section, then reuses the existing `parse_questions()` and overlays the per-question domain. Output JSON includes `kind: "mock"` and `sourceCert: <cert>` fields for downstream tooling.
+- New `--kind {practice,mock,all}` flag (default `all`) lets you build just one kind. `--cert <id>` still filters to a single cert across both kinds.
+
+### Changed — auto-rebuild + auto-deploy from cert markdown edits
+
+`.github/workflows/deploy-practice.yml` now:
+
+- Triggers on push to `main` whenever ANY of these change:
+  - `practice/**`
+  - `certifications/**/practice-questions/**`
+  - `certifications/**/mock-exam/**`
+  - `certifications/**/mock-exam-2/**`
+  - the workflow file itself
+- Runs `python3 practice/build.py` as a step before uploading the Pages artifact so the live JSON is always fresh from current cert markdown — no need to run `build.py` locally and re-commit before pushing.
+
+The committed `practice/data/*.json` files stay (for local dev convenience and quick PR diff review) but are no longer the source of truth at deploy time. Edit a question, push, the live site reflects it within ~1 min.
+
+### Changed — UI cache versioning
+
+`APP_VERSION` bumped to `"4"`. `<script src="app.js?v=4">` and `<link href="styles.css?v=4">` in `index.html`. JSON fetches pass through `bustedUrl()` to inherit the same version query so browsers don't serve stale banks after a deploy.
+
+### Verification
+
+- `python3 practice/build.py --check` → **18 banks / 931 questions** parsed cleanly
+- Practice = 364 q (unchanged from previous PR); Mock = 567 q across 12 new bank files
+- 4 mock-exam questions skipped due to multi-line-code-fence choices that the parser doesn't handle (same edge case as the practice banks; documented in `practice/README.md`)
+
 ## [2026.05.21-23] — Practice quiz polish: all 6 banks + theme + reset + branding + CI Node 24
 
 ### Added — all 6 certifications now have a question bank (364 questions total)

@@ -184,10 +184,28 @@ button.danger {
 button.danger:hover { background: var(--color-incorrect-bg); }
 
 /* Setup */
+#setup h3.bank-group-heading {
+  margin: 1.5rem 0 0.4rem 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+#setup h3.bank-group-heading:first-of-type {
+  margin-top: 1rem;
+}
+
 #setup .bank-list {
   display: grid;
   gap: 0.75rem;
-  margin-top: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 700px) {
+  #setup .bank-list {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 #setup .bank-card {

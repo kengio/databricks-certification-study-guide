@@ -1,0 +1,756 @@
+{
+  "cert": "ml-professional-mock-1",
+  "certTitle": "ML Professional — Mock Exam 1",
+  "blueprintVersion": "Sep 2025",
+  "generated": "2026-05-21",
+  "domains": [
+    {
+      "id": "feature-engineering",
+      "name": "Feature Engineering",
+      "sourceFile": "certifications/ml-professional/resources/mock-exam/questions.md",
+      "questionCount": 9
+    },
+    {
+      "id": "hyperparameter-optimization",
+      "name": "Hyperparameter Optimization",
+      "sourceFile": "certifications/ml-professional/resources/mock-exam/questions.md",
+      "questionCount": 9
+    },
+    {
+      "id": "model-production-lifecycle",
+      "name": "Model Production Lifecycle",
+      "sourceFile": "certifications/ml-professional/resources/mock-exam/questions.md",
+      "questionCount": 14
+    },
+    {
+      "id": "model-governance-mlops",
+      "name": "Model Governance & MLOps",
+      "sourceFile": "certifications/ml-professional/resources/mock-exam/questions.md",
+      "questionCount": 13
+    }
+  ],
+  "questions": [
+    {
+      "id": "ml-professional-mock-1-q001",
+      "domain": "feature-engineering",
+      "title": "Question 1",
+      "difficulty": "easy",
+      "question": "**What primary key constraint must a feature table have for Databricks Feature Engineering in UC?**",
+      "choices": {
+        "A": "No constraint — any column can serve as the key",
+        "B": "Must declare a primary key column to enable point-in-time lookups and online serving",
+        "C": "Must be named `entity_id`",
+        "D": "Must be a numeric integer type"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Feature tables in UC require a declared primary key column. This enables entity-based lookups at serving time and supports point-in-time correct joins during training set creation.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q002",
+      "domain": "feature-engineering",
+      "title": "Question 2",
+      "difficulty": "easy",
+      "question": "**A team wants to compute and register features for reuse across multiple ML projects. Which API should they use?**",
+      "choices": {
+        "A": "`mlflow.MlflowClient`",
+        "B": "`databricks.feature_engineering.FeatureEngineeringClient`",
+        "C": "`pyspark.ml.Pipeline`",
+        "D": "`databricks.sdk.WorkspaceClient`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`FeatureEngineeringClient` is the correct API for managing Databricks Feature Engineering in Unity Catalog feature tables.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q003",
+      "domain": "feature-engineering",
+      "title": "Question 3",
+      "difficulty": "easy",
+      "question": "**`FeatureEngineeringClient.create_training_set()` returns which object?**",
+      "choices": {
+        "A": "A Spark DataFrame directly",
+        "B": "A `FeatureEngineeringTrainingSet` that must be converted with `.load_df()`",
+        "C": "An MLflow dataset object",
+        "D": "A pandas DataFrame"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`create_training_set()` returns a `FeatureEngineeringTrainingSet`. Call `.load_df()` on it to get the actual training DataFrame.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q004",
+      "domain": "feature-engineering",
+      "title": "Question 4",
+      "difficulty": "medium",
+      "question": "**A model deployed via `fe.log_model()` is served from an endpoint. How does the endpoint retrieve feature values for incoming requests?**",
+      "choices": {
+        "A": "The client application must include all feature values in every request",
+        "B": "The endpoint automatically retrieves features from the online store using the entity key in the request",
+        "C": "A separate feature computation pipeline must run before each prediction",
+        "D": "Features are cached at endpoint startup"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Feature Engineering in UC automatically links the model to its feature tables; at serving time, the endpoint retrieves features from the online store using only the entity key.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q005",
+      "domain": "feature-engineering",
+      "title": "Question 5",
+      "difficulty": "easy",
+      "question": "**What is \"point-in-time correct\" feature retrieval?**",
+      "choices": {
+        "A": "Retrieving the most recently computed feature values",
+        "B": "Retrieving feature values that were available at the time of each label's event timestamp, preventing future data leakage",
+        "C": "Retrieving features refreshed within the past hour",
+        "D": "Retrieving features at exactly midnight each day"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Point-in-time correct retrieval joins features to labels using timestamps so that only data available before the label's event time is used, preventing data leakage.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q006",
+      "domain": "feature-engineering",
+      "title": "Question 6",
+      "difficulty": "easy",
+      "question": "**Which `FeatureLookup` parameter enables point-in-time correct retrieval?**",
+      "choices": {
+        "A": "`lookup_key`",
+        "B": "`feature_names`",
+        "C": "`timestamp_lookup_key`",
+        "D": "`event_time_col`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`timestamp_lookup_key` specifies the column to use as the event timestamp for point-in-time joins.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q007",
+      "domain": "feature-engineering",
+      "title": "Question 7",
+      "difficulty": "easy",
+      "question": "**A feature requires < 10ms retrieval latency for real-time serving. Where should the feature values be published?**",
+      "choices": {
+        "A": "Delta Lake offline store only",
+        "B": "Online store (Redis-backed)",
+        "C": "Parquet files in ADLS",
+        "D": "MLflow artifact store"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The online store provides millisecond-latency access required for real-time inference. The Delta offline store is suitable for batch and training, not real-time serving.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q008",
+      "domain": "feature-engineering",
+      "title": "Question 8",
+      "difficulty": "medium",
+      "question": "**Train-serving skew is caused by:**",
+      "choices": {
+        "A": "The model being retrained too frequently",
+        "B": "Feature computation logic differing between the training pipeline and the serving pipeline",
+        "C": "The online store going offline during serving",
+        "D": "Using a stale version of the model"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Train-serving skew occurs when features are computed differently at training time vs serving time, causing the model to see different data distributions than it was trained on.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q009",
+      "domain": "feature-engineering",
+      "title": "Question 9",
+      "difficulty": "easy",
+      "question": "**A data scientist calls `fe.write_table(df=features_df, name=\"catalog.schema.user_features\")` and the table does not yet exist. What happens?**",
+      "choices": {
+        "A": "An error is raised — must call `create_table()` first",
+        "B": "The feature table is created automatically with schema inferred from the DataFrame",
+        "C": "The DataFrame is written as a regular unmanaged Delta table",
+        "D": "The call fails unless the online store is configured"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`write_table` creates the feature table if it doesn't exist, inferring the schema from the DataFrame.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q010",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 10",
+      "difficulty": "easy",
+      "question": "**A data scientist runs Hyperopt with `Trials()` on a 20-node Databricks cluster. How many trials run in parallel?**",
+      "choices": {
+        "A": "20 — one per worker",
+        "B": "1 — `Trials` runs locally on the driver node only",
+        "C": "Based on number of CPU cores on the driver",
+        "D": "Based on the `parallelism` parameter"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`Trials` is a local, single-process object. Use `SparkTrials` to distribute Hyperopt across the cluster.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q011",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 11",
+      "difficulty": "medium",
+      "question": "**What must the Hyperopt objective function return to signal a failed trial?**",
+      "choices": {
+        "A": "`None`",
+        "B": "`{'loss': float('inf'), 'status': STATUS_OK}`",
+        "C": "`{'status': STATUS_FAIL}`",
+        "D": "Raise an exception"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Return `{'status': STATUS_FAIL}` to signal a failed trial without crashing the entire search. The trial is skipped and the next configuration is tried.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q012",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 12",
+      "difficulty": "medium",
+      "question": "**Which `hp.*` function is best for tuning a learning rate over the range 1e-5 to 1e-1?**",
+      "choices": {
+        "A": "`hp.uniform('lr', 1e-5, 1e-1)`",
+        "B": "`hp.loguniform('lr', np.log(1e-5), np.log(1e-1))`",
+        "C": "`hp.choice('lr', [1e-5, 1e-4, 1e-3, 1e-2, 1e-1])`",
+        "D": "`hp.randint('lr', 5)`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Log-uniform search allocates equal probability to each order of magnitude. `hp.uniform` would concentrate most trials near the upper end of the range.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q013",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 13",
+      "difficulty": "easy",
+      "question": "**`mlflow.autolog()` is enabled and Hyperopt runs 50 trials with `SparkTrials`. How are MLflow runs organized?**",
+      "choices": {
+        "A": "50 separate top-level runs",
+        "B": "1 parent run with 50 child runs (one per trial)",
+        "C": "1 run with 50 nested metrics",
+        "D": "No runs created — autolog doesn't support Hyperopt"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "MLflow autolog with Hyperopt creates a parent run for the `fmin()` call and a child run for each individual trial.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q014",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 14",
+      "difficulty": "easy",
+      "question": "**A `CrossValidator` with `numFolds=5` evaluates a parameter grid with 12 combinations. How many models are trained total?**",
+      "choices": {
+        "A": "12",
+        "B": "5",
+        "C": "60",
+        "D": "17"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Each of the 12 parameter combinations is trained on 5 folds = 60 models total.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q015",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 15",
+      "difficulty": "medium",
+      "question": "**When does Bayesian optimization (TPE) outperform random search most significantly?**",
+      "choices": {
+        "A": "When the search space is very small (< 10 combinations)",
+        "B": "When compute budget is limited relative to the search space size",
+        "C": "When all hyperparameters are categorical",
+        "D": "When the objective function is convex"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Bayesian optimization shines when you have limited trials: it uses results from past trials to prioritize promising regions, whereas random search wastes budget on unpromising areas.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q016",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 16",
+      "difficulty": "easy",
+      "question": "**What does `parallelism=8` in `SparkTrials(parallelism=8)` control?**",
+      "choices": {
+        "A": "Number of Spark partitions per trial",
+        "B": "Number of trials that run simultaneously across the cluster",
+        "C": "Number of MLflow child runs per trial",
+        "D": "Number of cross-validation folds"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`parallelism` in SparkTrials controls how many Hyperopt trials execute concurrently across the Spark cluster.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q017",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 17",
+      "difficulty": "easy",
+      "question": "**The `early_stop_fn` parameter in `fmin()` allows:**",
+      "choices": {
+        "A": "Stopping individual trials that exceed a time limit",
+        "B": "Stopping the entire search early if improvement has stalled",
+        "C": "Stopping cluster auto-scaling during tuning",
+        "D": "Stopping MLflow logging mid-search"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`early_stop_fn` is called after each trial and can signal `fmin()` to stop searching early based on custom logic (e.g., no improvement in last N trials).",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q018",
+      "domain": "hyperparameter-optimization",
+      "title": "Question 18",
+      "difficulty": "medium",
+      "question": "**A team has budget for 30 trials to tune 6 hyperparameters. Which strategy is most efficient?**",
+      "choices": {
+        "A": "Grid search — guarantees coverage",
+        "B": "Random search",
+        "C": "Bayesian optimization (TPE via Hyperopt)",
+        "D": "Manual search based on intuition"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "With 30 trials over 6 parameters, Bayesian optimization uses previous results to guide the search, typically finding better configurations than random search in the same budget.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q019",
+      "domain": "model-production-lifecycle",
+      "title": "Question 19",
+      "difficulty": "easy",
+      "question": "**Which URI loads a model from the UC registry by alias?**",
+      "choices": {
+        "A": "`models:/fraud_classifier@champion`",
+        "B": "`models:/ml_catalog.fraud_models.fraud_classifier@champion`",
+        "C": "`uc://ml_catalog/fraud_models/fraud_classifier@champion`",
+        "D": "`mlflow://ml_catalog.fraud_models.fraud_classifier:champion`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "UC model URIs use the full three-level namespace followed by `@alias`.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q020",
+      "domain": "model-production-lifecycle",
+      "title": "Question 20",
+      "difficulty": "medium",
+      "question": "**A serving endpoint with `scale_to_zero_enabled=True` hasn't received traffic for 45 minutes. What happens to the next request?**",
+      "choices": {
+        "A": "The request fails with a 503 error",
+        "B": "The request succeeds after a 60-120 second cold start delay",
+        "C": "The request returns from cache immediately",
+        "D": "Auto-scaling resumes within 1 second"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Scale-to-zero deprovisions compute when idle. The first request after idle must wait for cluster startup, typically 60-120 seconds.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q021",
+      "domain": "model-production-lifecycle",
+      "title": "Question 21",
+      "difficulty": "easy",
+      "question": "**`mlflow.pyfunc.spark_udf()` runs inference on which Spark component?**",
+      "choices": {
+        "A": "Driver node only",
+        "B": "Spark executors (distributed across the cluster)",
+        "C": "Databricks SQL warehouse",
+        "D": "A dedicated GPU cluster"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`spark_udf` distributes inference across Spark executors, enabling parallel scoring of millions of rows.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q022",
+      "domain": "model-production-lifecycle",
+      "title": "Question 22",
+      "difficulty": "medium",
+      "question": "**A model is registered to the workspace registry (no `set_registry_uri` call). Which UC feature is unavailable?**",
+      "choices": {
+        "A": "Model aliases",
+        "B": "Version tags",
+        "C": "UC lineage tracking and cross-catalog permissions",
+        "D": "Model descriptions"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "UC lineage and GRANT/REVOKE on model objects require the UC registry. The workspace registry supports aliases and tags but not UC governance features.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q023",
+      "domain": "model-production-lifecycle",
+      "title": "Question 23",
+      "difficulty": "medium",
+      "question": "**Which statement about model aliases is TRUE?**",
+      "choices": {
+        "A": "Each model can have only one alias at a time",
+        "B": "Aliases are named pointers — changing the pointed-to version doesn't require updating application code",
+        "C": "Aliases replace version numbers entirely",
+        "D": "Aliases are equivalent to legacy lifecycle stages"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "This is the core value of aliases: application code uses `models:/name@champion`, and promotion is just reassigning the alias to a different version.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q024",
+      "domain": "model-production-lifecycle",
+      "title": "Question 24",
+      "difficulty": "easy",
+      "question": "**An endpoint has champion at 80% and challenger at 10% traffic. Is this a valid configuration?**",
+      "choices": {
+        "A": "Yes — challenger traffic below 50% is fine",
+        "B": "No — percentages must sum to exactly 100%",
+        "C": "Yes — Databricks distributes the remaining 10% randomly",
+        "D": "No — only two served models are allowed per endpoint"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Traffic config percentages must sum to exactly 100%. The configuration described (80% + 10% = 90%) is invalid.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q025",
+      "domain": "model-production-lifecycle",
+      "title": "Question 25",
+      "difficulty": "easy",
+      "question": "**Which deployment pattern runs the challenger model in parallel without serving its predictions to users?**",
+      "choices": {
+        "A": "Canary deployment",
+        "B": "Blue-green deployment",
+        "C": "Shadow deployment",
+        "D": "A/B testing"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Shadow deployment sends all traffic to the champion but also runs the challenger silently, logging its predictions for offline comparison with zero user impact.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q026",
+      "domain": "model-production-lifecycle",
+      "title": "Question 26",
+      "difficulty": "medium",
+      "question": "**What enables automatic logging of all requests and responses from a serving endpoint to a Delta table?**",
+      "choices": {
+        "A": "`MonitorInferenceLog` in Lakehouse Monitoring",
+        "B": "`AutoCaptureConfigInput` in the endpoint configuration",
+        "C": "`mlflow.langchain.autolog()`",
+        "D": "Delta Streaming from the endpoint logs"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`AutoCaptureConfigInput` (inference tables) is configured on the serving endpoint and automatically logs all request/response payloads to a Delta table.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q027",
+      "domain": "model-production-lifecycle",
+      "title": "Question 27",
+      "difficulty": "medium",
+      "question": "**A `PythonModel` subclass needs to load a pre-trained tokenizer at serving time. The tokenizer is stored locally as a file. How should it be packaged with the model?**",
+      "choices": {
+        "A": "Hardcode the file path in the `predict()` method",
+        "B": "Pass it as an environment variable",
+        "C": "Include it in the `artifacts` dict in `mlflow.pyfunc.log_model()` and load it in `load_context()`",
+        "D": "Store it in DBFS and access it from the model"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The `artifacts` dict in `log_model()` specifies local files to bundle with the model; `load_context()` receives the resolved paths via `context.artifacts`.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q028",
+      "domain": "model-production-lifecycle",
+      "title": "Question 28",
+      "difficulty": "medium",
+      "question": "**Which task dependency setting ensures an integration test task runs only if the evaluation gate task succeeds?**",
+      "choices": {
+        "A": "`depends_on: [evaluation_gate]` only",
+        "B": "`run_if: ALL_SUCCESS` with `depends_on: [evaluation_gate]`",
+        "C": "`run_if: AT_LEAST_ONE_SUCCESS`",
+        "D": "No special configuration — tasks always wait for predecessors"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`run_if: ALL_SUCCESS` plus the `depends_on` dependency ensures the task runs only when all upstream tasks have completed successfully.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q029",
+      "domain": "model-production-lifecycle",
+      "title": "Question 29",
+      "difficulty": "medium",
+      "question": "**Drift-triggered retraining uses which mechanism to start a Databricks Job?**",
+      "choices": {
+        "A": "Scheduled cron expression",
+        "B": "SQL alert → webhook → Databricks Jobs REST API",
+        "C": "Auto-trigger based on MLflow metric threshold",
+        "D": "Git push to the model training branch"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Monitoring alerts (Databricks SQL alerts or Lakehouse Monitoring alerts) fire webhooks to external systems; the webhook calls the Databricks Jobs REST API to trigger a retraining run.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q030",
+      "domain": "model-production-lifecycle",
+      "title": "Question 30",
+      "difficulty": "medium",
+      "question": "**For real-time fraud detection requiring < 50ms response time, which deployment mode is correct?**",
+      "choices": {
+        "A": "Batch scoring with `spark_udf`",
+        "B": "REST endpoint with `scale_to_zero_enabled=False`",
+        "C": "Streaming inference with a 30-second trigger",
+        "D": "Scheduled scoring job every 5 minutes"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "REST endpoint provides sub-100ms latency; disabling scale_to_zero eliminates cold start risk for latency-sensitive workloads.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q031",
+      "domain": "model-production-lifecycle",
+      "title": "Question 31",
+      "difficulty": "hard",
+      "question": "**A custom pyfunc model returns predictions as a DataFrame with columns `[score, label]`. What should `result_type` be in `spark_udf()`?**",
+      "choices": {
+        "A": "`\"double\"`",
+        "B": "`\"string\"`",
+        "C": "`StructType([StructField(\"score\", DoubleType()), StructField(\"label\", StringType())])`",
+        "D": "`\"array<double>\"`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "When the pyfunc returns a multi-column DataFrame, `result_type` must be a Spark `StructType` matching the output columns.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q032",
+      "domain": "model-production-lifecycle",
+      "title": "Question 32",
+      "difficulty": "medium",
+      "question": "**What is the purpose of archiving the previous `champion` alias as `previous_champion` during promotion?**",
+      "choices": {
+        "A": "Required by MLflow API",
+        "B": "Enables quick rollback by setting `champion` back to the `previous_champion` version",
+        "C": "Prevents the old version from being deleted",
+        "D": "Required for UC audit compliance"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Keeping a `previous_champion` alias allows one-command rollback: `client.set_registered_model_alias(name, \"champion\", prev_version)`.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q033",
+      "domain": "model-governance-mlops",
+      "title": "Question 33",
+      "difficulty": "easy",
+      "question": "**Feature PSI = 0.05 this week. What action should you take?**",
+      "choices": {
+        "A": "Retrain the model immediately",
+        "B": "Investigate the upstream data pipeline",
+        "C": "No action — PSI < 0.10 indicates stable population",
+        "D": "Enable Lakehouse Monitoring"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "PSI < 0.10 means no significant population shift. Continue regular monitoring cadence.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q034",
+      "domain": "model-governance-mlops",
+      "title": "Question 34",
+      "difficulty": "medium",
+      "question": "**A model's AUC dropped from 0.92 to 0.84 over 3 weeks with ground truth labels available. Which drift type explains this?**",
+      "choices": {
+        "A": "Data drift — features changed",
+        "B": "Prediction drift — outputs changed",
+        "C": "Concept drift — the input-output relationship changed",
+        "D": "Label drift — target class balance shifted"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Measurable performance degradation (AUC drop) with ground truth labels indicates concept drift: the relationship between features and the target has changed.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q035",
+      "domain": "model-governance-mlops",
+      "title": "Question 35",
+      "difficulty": "medium",
+      "question": "**Which column in a Databricks inference table identifies which model version handled each request (for A/B analysis)?**",
+      "choices": {
+        "A": "`model_version`",
+        "B": "`served_model_name`",
+        "C": "`databricks_request_id`",
+        "D": "`endpoint_name`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The `served_model_name` field (extracted from the request JSON) identifies which served model configuration handled each request.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q036",
+      "domain": "model-governance-mlops",
+      "title": "Question 36",
+      "difficulty": "easy",
+      "question": "**Which Lakehouse Monitoring monitor type is appropriate for a static, snapshot Delta table with no timestamp column?**",
+      "choices": {
+        "A": "TimeSeries",
+        "B": "InferenceLog",
+        "C": "Snapshot",
+        "D": "DriftProfile"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Snapshot monitors compute statistics on the entire table as-is, without time-window partitioning.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q037",
+      "domain": "model-governance-mlops",
+      "title": "Question 37",
+      "difficulty": "easy",
+      "question": "**UC audit logs capture which ML-related event?**",
+      "choices": {
+        "A": "Model training duration",
+        "B": "Hyperopt trial results",
+        "C": "`updateModelVersionAlias` — alias changes (model promotions)",
+        "D": "MLflow autolog metrics"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "UC audit logs capture governance events including alias updates (promotions), permission grants, and model registrations.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q038",
+      "domain": "model-governance-mlops",
+      "title": "Question 38",
+      "difficulty": "easy",
+      "question": "**The GDPR Article 22 requirement that affects ML models is:**",
+      "choices": {
+        "A": "Data must be encrypted at rest",
+        "B": "Models must be retrained every 6 months",
+        "C": "Individuals have the right to meaningful explanation of automated decisions affecting them",
+        "D": "Predictions must be stored for 7 years"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Article 22 grants individuals the right to not be subject to solely automated decisions and requires meaningful explanation. SHAP values are the standard technical control.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q039",
+      "domain": "model-governance-mlops",
+      "title": "Question 39",
+      "difficulty": "medium",
+      "question": "**Equalized odds as a fairness metric requires:**",
+      "choices": {
+        "A": "Equal accuracy across demographic groups",
+        "B": "Equal true positive rates and equal false positive rates across groups",
+        "C": "Equal approval rates across groups",
+        "D": "Equal training data representation across groups"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Equalized odds (Hardt et al.) requires both TPR and FPR to be equal across protected groups, making it stricter than demographic parity (which only requires equal positive prediction rates).",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q040",
+      "domain": "model-governance-mlops",
+      "title": "Question 40",
+      "difficulty": "medium",
+      "question": "**A model has PSI = 0.28 on prediction scores (not features). What does this indicate?**",
+      "choices": {
+        "A": "The model is stable",
+        "B": "Input features have drifted",
+        "C": "Model output distribution has shifted significantly — potential concept drift or upstream data change",
+        "D": "The online store is returning stale values"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "High PSI on prediction scores indicates the model is producing very different outputs than it did against the baseline. Investigate whether upstream data or the concept has changed.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q041",
+      "domain": "model-governance-mlops",
+      "title": "Question 41",
+      "difficulty": "hard",
+      "question": "**Which UC permission allows a data scientist to register new model versions but NOT change the `champion` alias?**",
+      "choices": {
+        "A": "`EXECUTE ON MODEL`",
+        "B": "`SELECT ON MODEL`",
+        "C": "`MODIFY ON MODEL` (both registering and alias setting require MODIFY — use process controls)",
+        "D": "`CREATE ON SCHEMA`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Both registering new versions and setting aliases require `MODIFY`. There is no separate UC permission to separate these; process-level controls (PR review, approval workflows) enforce the distinction.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q042",
+      "domain": "model-governance-mlops",
+      "title": "Question 42",
+      "difficulty": "medium",
+      "question": "**A Delta table contains PII (email addresses) that must be hidden from data scientists but visible to the ML platform team. Which control should be used?**",
+      "choices": {
+        "A": "Row-level security",
+        "B": "Delta column masking policy",
+        "C": "Separate Delta table without PII",
+        "D": "Encrypt the column with a user-specific key"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Delta column masking applies a masking function at query time, showing masked values to unauthorized users while platform team queries see real values.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q043",
+      "domain": "model-governance-mlops",
+      "title": "Question 43",
+      "difficulty": "easy",
+      "question": "**Databricks Lakehouse Monitoring outputs a `_drift_metrics` table. What columns does this table contain?**",
+      "choices": {
+        "A": "Raw feature values from production",
+        "B": "Statistical drift measures (e.g., KS statistic, chi-square, PSI) per feature per time window compared to baseline",
+        "C": "Model hyperparameters",
+        "D": "MLflow run IDs for the monitored model"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The drift metrics table contains per-feature, per-window drift statistics comparing the current window profile to the baseline profile.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q044",
+      "domain": "model-governance-mlops",
+      "title": "Question 44",
+      "difficulty": "medium",
+      "question": "**After retraining a model and promoting it to champion, what must be updated in Lakehouse Monitoring?**",
+      "choices": {
+        "A": "The monitor type",
+        "B": "The baseline table — update it to reflect the new model's training distribution",
+        "C": "The alert thresholds",
+        "D": "Nothing — LHM automatically detects the new champion"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The baseline table should be updated after a significant model change (new training data, new features) so that drift metrics compare against the new model's expected distribution, not the old one.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-professional-mock-1-q045",
+      "domain": "model-governance-mlops",
+      "title": "Question 45",
+      "difficulty": "medium",
+      "question": "**A compliance evidence package for a high-risk ML model must include which item?**",
+      "choices": {
+        "A": "Source code for all Spark jobs",
+        "B": "Bias test results demonstrating the model meets fairness thresholds",
+        "C": "A list of all MLflow experiments in the workspace",
+        "D": "Cloud infrastructure cost reports"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Bias and fairness test results are critical compliance evidence for high-risk models, demonstrating that the model was evaluated for discriminatory impact before deployment.",
+      "explanation": ""
+    }
+  ],
+  "kind": "mock",
+  "sourceCert": "ml-professional"
+}

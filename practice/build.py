@@ -204,6 +204,114 @@ def parse_questions(md_path: Path, domain_id: str) -> list[dict]:
     return questions
 
 
+# Section heading inside a mock-exam questions.md, e.g.
+#   "## Databricks Lakehouse Platform (Questions 1–11)"
+DOMAIN_SECTION_RE = re.compile(
+    r"^## (.+?)\s*\(Questions?\s+[\d\-–—]+\)\s*$")
+# Lightweight Q-heading detector for the mock pre-scan
+SIMPLE_Q_HEADING_RE = re.compile(r"^## Question (\d+)(?:\.\d+)?")
+
+
+def slugify(name: str) -> str:
+    s = re.sub(r"[^\w\s-]", "", name).strip().lower()
+    return re.sub(r"[-\s]+", "-", s) or "section"
+
+
+def build_mock(cert: str, exam_n: int, check_only: bool = False) -> dict:
+    """Build a mock-exam bank for `cert` exam number `exam_n` (1 or 2).
+
+    Mock-exam files contain all questions in one `questions.md`, with
+    intra-file H2 section headings demarcating domains, e.g.
+
+        ## Databricks Lakehouse Platform (Questions 1–11)
+        ## Question 1 *(Medium)*
+        ...
+
+    We first scan the file linearly to build a qnum→domain map, then reuse
+    parse_questions() and overlay the per-question domain from the map.
+    """
+    folder = "mock-exam" if exam_n == 1 else f"mock-exam-{exam_n}"
+    md_path = CERTS_DIR / cert / "resources" / folder / "questions.md"
+    bank_id = f"{cert}-mock-{exam_n}"
+    cert_title_base, blueprint = CERT_TITLES.get(cert, (cert, ""))
+    cert_title = f"{cert_title_base} — Mock Exam {exam_n}"
+
+    if not md_path.exists():
+        return {"cert": bank_id, "questions": []}
+
+    text = md_path.read_text(encoding="utf-8")
+    if text.startswith("---"):
+        end = text.find("\n---", 3)
+        if end != -1:
+            text = text[end + 4:]
+
+    # Pre-scan for domain boundaries
+    current_domain_id = "general"
+    current_domain_name = "General"
+    domain_order: list[tuple[str, str]] = []
+    qnum_to_domain: dict[str, str] = {}
+    for line in text.splitlines():
+        d_match = DOMAIN_SECTION_RE.match(line)
+        if d_match:
+            current_domain_name = d_match.group(1).strip()
+            current_domain_id = slugify(current_domain_name)
+            if not any(d[0] == current_domain_id for d in domain_order):
+                domain_order.append((current_domain_id, current_domain_name))
+            continue
+        q_match = SIMPLE_Q_HEADING_RE.match(line)
+        if q_match:
+            qnum_to_domain[q_match.group(1)] = current_domain_id
+
+    # Reuse the standard question parser, then overlay per-question domain
+    raw_questions = parse_questions(md_path, "mock")
+    for q in raw_questions:
+        # Original id is "questions-q005" — rewrite to include cert + mock #
+        original_qnum = q["id"].rsplit("-q", 1)[-1]
+        try:
+            qnum_int = str(int(original_qnum))
+        except ValueError:
+            qnum_int = original_qnum
+        q["id"] = f"{bank_id}-q{original_qnum}"
+        q["domain"] = qnum_to_domain.get(qnum_int, "general")
+
+    domains: list[dict] = []
+    for did, dname in domain_order:
+        count = sum(1 for q in raw_questions if q["domain"] == did)
+        if count > 0:
+            domains.append({
+                "id": did,
+                "name": dname,
+                "sourceFile": str(md_path.relative_to(ROOT)),
+                "questionCount": count,
+            })
+
+    bank = {
+        "cert": bank_id,
+        "certTitle": cert_title,
+        "blueprintVersion": blueprint,
+        "generated": date.today().isoformat(),
+        "domains": domains,
+        "questions": raw_questions,
+        "kind": "mock",
+        "sourceCert": cert,
+    }
+
+    if not check_only:
+        if not raw_questions:
+            print(f"  {bank_id}: 0 questions")
+            return bank
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        out_path = DATA_DIR / f"{bank_id}.json"
+        out_path.write_text(json.dumps(bank, indent=2, ensure_ascii=False) + "\n",
+                            encoding="utf-8")
+        print(f"  {bank_id}: {len(raw_questions)} questions across {len(domains)} domains "
+              f"→ {out_path.relative_to(ROOT)}")
+    else:
+        print(f"  {bank_id}: {len(raw_questions)} questions across {len(domains)} domains (ok)")
+
+    return bank
+
+
 def build_cert(cert: str, check_only: bool = False) -> dict:
     cert_dir = CERTS_DIR / cert / "resources" / "practice-questions"
     if not cert_dir.exists():
@@ -263,20 +371,35 @@ def main() -> int:
     parser.add_argument("--cert", help="Build only this cert (e.g., data-engineer-associate)")
     parser.add_argument("--check", action="store_true",
                         help="Parse-only; don't write JSON. Non-zero exit if any parse fails.")
+    parser.add_argument("--kind", choices=["practice", "mock", "all"], default="all",
+                        help="Which question banks to build: practice-questions, mock exams, or both (default).")
     args = parser.parse_args()
 
     targets = [args.cert] if args.cert else sorted(CERT_TITLES.keys())
 
     total_qs = 0
-    total_certs = 0
-    for cert in targets:
-        bank = build_cert(cert, check_only=args.check)
-        n = len(bank.get("questions", []))
-        if n:
-            total_qs += n
-            total_certs += 1
+    total_banks = 0
 
-    print(f"\n{'Checked' if args.check else 'Built'} {total_certs} cert bank(s), "
+    if args.kind in ("practice", "all"):
+        print("Practice question banks:")
+        for cert in targets:
+            bank = build_cert(cert, check_only=args.check)
+            n = len(bank.get("questions", []))
+            if n:
+                total_qs += n
+                total_banks += 1
+
+    if args.kind in ("mock", "all"):
+        print("\nMock exam banks:")
+        for cert in targets:
+            for exam_n in (1, 2):
+                bank = build_mock(cert, exam_n, check_only=args.check)
+                n = len(bank.get("questions", []))
+                if n:
+                    total_qs += n
+                    total_banks += 1
+
+    print(f"\n{'Checked' if args.check else 'Built'} {total_banks} bank(s), "
           f"{total_qs} question(s) total")
     if not args.check:
         print(f"Output: {DATA_DIR}")

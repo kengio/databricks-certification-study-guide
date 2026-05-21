@@ -21,16 +21,33 @@ A browser-based quiz for the practice-question markdown files in this repo. Trac
 
 ## Available banks
 
-All six certifications now have a question bank — **364 questions total**.
+**18 banks · 931 questions total** — every cert has practice questions plus two full-length mock exams.
 
-| Bank | Source files | Questions |
+### Practice questions (6 banks · 364 questions)
+
+Topic-organised question sets sourced from each cert's `practice-questions/` folder. Best for drilling a specific domain.
+
+| Bank | Source | Q |
+| :--- | :--- | :---: |
+| Data Engineer Associate | `certifications/data-engineer-associate/resources/practice-questions/` | 85 |
+| Data Engineer Professional | `certifications/data-engineer-professional/resources/practice-questions/` | 73 |
+| Data Analyst Associate | `certifications/data-analyst-associate/resources/practice-questions/` | 57 |
+| ML Associate | `certifications/ml-associate/resources/practice-questions/` | 46 |
+| ML Professional | `certifications/ml-professional/resources/practice-questions/` | 57 |
+| GenAI Engineer Associate | `certifications/genai-engineer-associate/resources/practice-questions/` | 46 |
+
+### Mock exams (12 banks · 567 questions)
+
+Full-length exam-feel sets sourced from each cert's `mock-exam/` and `mock-exam-2/` folders. Each is a single `questions.md` covering every domain. Best for end-to-end timing practice.
+
+| Cert | Mock 1 | Mock 2 |
 | :--- | :---: | :---: |
-| Data Engineer Associate | 5 markdown files in `certifications/data-engineer-associate/resources/practice-questions/` | 85 |
-| Data Engineer Professional | 8 markdown files | 73 |
-| Data Analyst Associate | 5 markdown files | 57 |
-| ML Associate | 4 markdown files | 46 |
-| ML Professional | 4 markdown files | 57 |
-| GenAI Engineer Associate | 4 markdown files | 46 |
+| Data Engineer Associate | 45 | 45 |
+| Data Engineer Professional | 63 | 60 |
+| Data Analyst Associate | 45 | 45 |
+| ML Associate | 43 | 44 |
+| ML Professional | 45 | 45 |
+| GenAI Engineer Associate | 45 | 42 |
 
 ## How to run
 
@@ -57,11 +74,21 @@ python3 -m http.server 8080 --directory practice
 
 ### Deploy (for fork maintainers)
 
-The deploy is driven by [`.github/workflows/deploy-practice.yml`](../.github/workflows/deploy-practice.yml). On every push to `main` that touches `practice/**`, the workflow:
+The deploy is driven by [`.github/workflows/deploy-practice.yml`](../.github/workflows/deploy-practice.yml). It runs on every push to `main` that touches **any of**:
+
+- `practice/**` (the quiz app itself)
+- `certifications/**/practice-questions/**` (source markdown for practice banks)
+- `certifications/**/mock-exam/**` or `mock-exam-2/**` (source markdown for mock banks)
+- `.github/workflows/deploy-practice.yml`
+
+The workflow:
 
 1. Checks out the repo
-2. Uploads `practice/` as a Pages artifact (with `.nojekyll` so HTML/JS pass through unmodified)
-3. Deploys via `actions/deploy-pages@v4`
+2. **Re-runs `python3 practice/build.py`** so `practice/data/*.json` is rebuilt fresh from current cert markdown — even if the author forgot to regenerate locally
+3. Uploads `practice/` as a Pages artifact (with `.nojekyll` so HTML/JS pass through unmodified)
+4. Deploys via `actions/deploy-pages@v4`
+
+**This means**: edit a question in `certifications/<cert>/resources/practice-questions/*.md` (or any mock-exam file), commit, push to `main`, and the live site updates within ~1 min. No need to run `build.py` locally before pushing — the committed JSON is just a convenience for local dev / quick PR review, not the source of truth at deploy time.
 
 **First-time setup** (only needed once per fork):
 

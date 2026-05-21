@@ -26,16 +26,26 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "3";
+  const APP_VERSION = "4";
 
-  const KNOWN_BANKS = [
-    { cert: "data-engineer-associate", file: "data/data-engineer-associate.json" },
-    { cert: "data-engineer-professional", file: "data/data-engineer-professional.json" },
-    { cert: "data-analyst-associate", file: "data/data-analyst-associate.json" },
-    { cert: "ml-associate", file: "data/ml-associate.json" },
-    { cert: "ml-professional", file: "data/ml-professional.json" },
-    { cert: "genai-engineer-associate", file: "data/genai-engineer-associate.json" },
+  // Bank groups render as labelled sections in the picker.
+  const CERTS = [
+    "data-engineer-associate",
+    "data-engineer-professional",
+    "data-analyst-associate",
+    "ml-associate",
+    "ml-professional",
+    "genai-engineer-associate",
   ];
+  const KNOWN_BANKS = [
+    ...CERTS.map(c => ({ cert: c, file: `data/${c}.json`, group: "practice" })),
+    ...CERTS.map(c => ({ cert: `${c}-mock-1`, file: `data/${c}-mock-1.json`, group: "mock" })),
+    ...CERTS.map(c => ({ cert: `${c}-mock-2`, file: `data/${c}-mock-2.json`, group: "mock" })),
+  ];
+  const GROUP_LABELS = {
+    practice: "Practice questions — drill by topic, adaptive selector",
+    mock: "Mock exams — full-length, exam-feel sets",
+  };
 
   const STORAGE_PREFIX = "dbx-practice-";
   const THEME_KEY = "dbx-practice-theme";
@@ -223,19 +233,32 @@
       setup.appendChild(p);
       return;
     }
-    const list = el("div", { className: "bank-list" });
+
+    // Group available banks by .group field while preserving insertion order
+    const groups = new Map();
     for (const b of available) {
-      const button = el("button", { type: "button", className: "bank-card",
-                                    onclick: () => loadBank(b) }, b.cert);
-      fetch(bustedUrl(b.file), { cache: "no-cache" }).then(r => r.json()).then(d => {
-        clear(button);
-        button.appendChild(el("strong", {}, d.certTitle || d.cert));
-        button.appendChild(el("div", { className: "bank-meta" },
-          `${d.questions.length} questions · ${d.domains.length} domains · blueprint ${d.blueprintVersion}`));
-      }).catch(() => { /* keep fallback text */ });
-      list.appendChild(button);
+      const key = b.group || "practice";
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(b);
     }
-    setup.appendChild(list);
+
+    for (const [groupKey, banks] of groups) {
+      setup.appendChild(el("h3", { className: "bank-group-heading" },
+        GROUP_LABELS[groupKey] || groupKey));
+      const list = el("div", { className: "bank-list" });
+      for (const b of banks) {
+        const button = el("button", { type: "button", className: "bank-card",
+                                      onclick: () => loadBank(b) }, b.cert);
+        fetch(bustedUrl(b.file), { cache: "no-cache" }).then(r => r.json()).then(d => {
+          clear(button);
+          button.appendChild(el("strong", {}, d.certTitle || d.cert));
+          button.appendChild(el("div", { className: "bank-meta" },
+            `${d.questions.length} questions · ${d.domains.length} domains · blueprint ${d.blueprintVersion}`));
+        }).catch(() => { /* keep fallback text */ });
+        list.appendChild(button);
+      }
+      setup.appendChild(list);
+    }
   }
 
   // --- LocalStorage --------------------------------------------------------
