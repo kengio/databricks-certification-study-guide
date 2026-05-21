@@ -1877,6 +1877,10 @@ body.timer-paused main {
   min-width: 200px;
   padding: 0.85rem 1.75rem;
   font-size: 0.95rem;
+  /* button.primary is inline-flex with default justify-content:flex-start,
+     so "Resume exam" sat against the left edge and the min-width padding
+     showed as visible empty space on the right. Centre the label. */
+  justify-content: center;
 }
 .pause-hint {
   font-family: var(--mono);
