@@ -227,6 +227,46 @@ a:hover { text-decoration-color: var(--accent); }
   gap: 0.5rem;
   flex-shrink: 0;
   margin-left: auto;
+  align-items: center;
+}
+
+.meta-pill {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  background: var(--surface);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  display: inline-block;
+}
+.meta-pill.timer {
+  color: var(--fg);
+  font-weight: 600;
+}
+.meta-pill.timer.warning {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+.meta-pill.timer.expired {
+  color: var(--negative);
+  border-color: var(--negative);
+  background: var(--negative-soft);
+  animation: none;
+}
+@keyframes timer-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+@media (max-width: 720px) {
+  #quiz-clock { display: none; }  /* save room — timer is more important */
 }
 
 #btn-theme {
@@ -670,17 +710,18 @@ fieldset#quiz-choices label {
   transition: all 0.15s var(--ease);
   position: relative;
 }
-/* Hover — just darken the border, no background. Keeps hover visually
-   distinct from the cream-tinted "selected" state below so the user
-   can always tell at a glance which row they've actually picked. */
-fieldset#quiz-choices label:hover:not(.disabled) {
-  border-color: var(--fg-soft);
-}
-/* Selected — cream tint + dark border. Same look whether the user
-   clicked or used ↑/↓ keys; clearly distinct from plain hover. */
+/* Hover gives no visual cue — only an actual selection (click, arrow
+   keys, or 1-4) changes a row's appearance. This prevents leftover
+   mouse position from looking like a selection. The mouse cursor turns
+   into a pointer on hover, which is enough affordance that the row is
+   clickable. */
+
+/* Selected — the only state that changes a row's color. Accent-tinted
+   background + accent border, identical regardless of how the user
+   picked (click, arrow keys, or number key). */
 fieldset#quiz-choices label:has(input[type=radio]:checked):not(.correct):not(.incorrect) {
-  border-color: var(--fg);
-  background: var(--surface-soft);
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 fieldset#quiz-choices label.disabled {
   cursor: default;
@@ -1140,6 +1181,25 @@ fieldset#quiz-choices input[type=radio]:focus-visible { outline: none; }
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Question-to-question slide transition. Applied via a class toggle in
+   renderQuiz() so the animation re-fires for each new question even
+   though the .question-card element itself is reused. */
+@media (prefers-reduced-motion: no-preference) {
+  .question-card.slide-in {
+    animation: question-slide 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+@keyframes question-slide {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes pulse-correct {

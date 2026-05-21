@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "18";
+  const APP_VERSION = "19";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -55,6 +55,7 @@
 
   const STORAGE_PREFIX = "dbx-practice-";
   const THEME_KEY = "dbx-practice-theme";
+  const TIMER_KEY = "dbx-practice-timer-minutes";
   const THEMES = ["auto", "light", "dark"];
   const THEME_ICONS = { auto: "🖥️", light: "☀️", dark: "🌙" };
   const STATE = {
@@ -71,8 +72,11 @@
       difficulty: "",
     },
     sequentialIndex: 0,
-    certBanks: null,  // Map<certKey, items[]> from loadAllBankMetadata, cached on first load
-    streak: 0,        // consecutive-correct counter for the streak toast
+    certBanks: null,
+    streak: 0,
+    timerMinutes: 0,   // 0 = no timer; >0 = exam timer total length in minutes
+    timerEnd: null,    // absolute epoch ms when the timer expires, or null
+    timerExpired: false,
   };
 
   // --- DOM helpers ---------------------------------------------------------
@@ -282,6 +286,11 @@
     const data = await res.json();
     STATE.bank = data;
     STATE.history = loadHistory(data.cert);
+    // Start the configured timer fresh when entering a new bank
+    if (STATE.timerMinutes > 0) {
+      startTimer(STATE.timerMinutes);
+      updateClockAndTimer();
+    }
     populateSettings();
     renderQuiz();
     show("quiz");
@@ -479,6 +488,13 @@
         && document.activeElement !== document.body
         && typeof document.activeElement.blur === "function") {
       try { document.activeElement.blur(); } catch (_) { /* no-op */ }
+    }
+    // Re-trigger the slide-in animation on every render
+    const card = document.querySelector(".question-card");
+    if (card) {
+      card.classList.remove("slide-in");
+      void card.offsetWidth;     // force reflow so animation restarts
+      card.classList.add("slide-in");
     }
 
     $("#quiz-cert").textContent = STATE.bank.certTitle;
@@ -814,16 +830,96 @@
     $("#setting-mode").value = STATE.settings.mode;
     $("#setting-domain").value = STATE.settings.domain;
     $("#setting-difficulty").value = STATE.settings.difficulty;
+    $("#setting-timer").value = String(STATE.timerMinutes || 0);
   }
 
   function applySettings() {
     STATE.settings.mode = $("#setting-mode").value;
     STATE.settings.domain = $("#setting-domain").value;
     STATE.settings.difficulty = $("#setting-difficulty").value;
+    const tmin = parseInt($("#setting-timer").value, 10) || 0;
+    if (tmin !== STATE.timerMinutes || tmin > 0) {
+      saveTimerMinutes(tmin);
+      startTimer(tmin);
+      updateClockAndTimer();
+    }
     STATE.sequentialIndex = 0;
     STATE.seenThisSession.clear();
     renderQuiz();
     show("quiz");
+  }
+
+  // --- Clock + timer -------------------------------------------------------
+
+  function loadTimerMinutes() {
+    try {
+      const v = parseInt(localStorage.getItem(TIMER_KEY) || "0", 10);
+      return Number.isFinite(v) && v >= 0 ? v : 0;
+    } catch (_) { return 0; }
+  }
+
+  function saveTimerMinutes(min) {
+    try { localStorage.setItem(TIMER_KEY, String(min)); } catch (_) { /* no-op */ }
+  }
+
+  function startTimer(minutes) {
+    STATE.timerMinutes = minutes;
+    STATE.timerExpired = false;
+    STATE.timerEnd = minutes > 0 ? Date.now() + minutes * 60 * 1000 : null;
+  }
+
+  function showTimerExpiredToast() {
+    const existing = document.querySelector(".streak-toast");
+    if (existing) existing.remove();
+    const toast = el("div", { className: "streak-toast" },
+      el("span", { className: "streak-num",
+                   style: "background:var(--negative);color:#fff" }, "Time's up"),
+      " · review your stats or keep going");
+    document.body.appendChild(toast);
+    void toast.offsetWidth;
+    toast.classList.add("show");
+    setTimeout(() => toast.remove(), 3200);
+  }
+
+  function updateClockAndTimer() {
+    // Wall clock
+    const clockEl = $("#quiz-clock");
+    if (clockEl) {
+      const now = new Date();
+      clockEl.textContent = now.toLocaleTimeString([], {
+        hour: "2-digit", minute: "2-digit", hour12: false,
+      });
+    }
+    // Timer
+    const timerEl = $("#quiz-timer");
+    if (!timerEl) return;
+    if (STATE.timerExpired) {
+      timerEl.textContent = "00:00";
+      timerEl.classList.add("expired");
+      timerEl.classList.remove("warning");
+      timerEl.hidden = false;
+      return;
+    }
+    if (!STATE.timerEnd) {
+      timerEl.hidden = true;
+      timerEl.classList.remove("warning", "expired");
+      return;
+    }
+    const remainMs = Math.max(0, STATE.timerEnd - Date.now());
+    const totalSec = Math.floor(remainMs / 1000);
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    timerEl.textContent =
+      String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    timerEl.hidden = false;
+    timerEl.classList.toggle("warning",
+      remainMs > 0 && remainMs <= 5 * 60 * 1000);
+    if (remainMs === 0) {
+      STATE.timerExpired = true;
+      timerEl.classList.add("expired");
+      timerEl.classList.remove("warning");
+      showTimerExpiredToast();
+    }
   }
 
   // --- Theme toggle --------------------------------------------------------
@@ -957,6 +1053,12 @@
     $("#btn-theme").addEventListener("click", cycleTheme);
 
     document.addEventListener("keydown", handleKeydown);
+
+    // Load timer preference + start the clock interval. The clock pill
+    // updates every second whether a timer is active or not.
+    STATE.timerMinutes = loadTimerMinutes();
+    updateClockAndTimer();
+    setInterval(updateClockAndTimer, 1000);
 
     // Observe actionbar height — content wrapping (kbd hint long/short,
     // viewport resize, etc.) changes how many rows the actionbar uses.

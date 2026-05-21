@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -43,6 +43,9 @@
       </div>
 
       <div class="masthead-actions">
+        <span id="quiz-clock" class="meta-pill" title="Current time" aria-label="Current time"></span>
+        <span id="quiz-timer" class="meta-pill timer" hidden
+              title="Exam timer remaining" aria-label="Exam timer remaining"></span>
         <button type="button" id="btn-theme"
                 title="Cycle theme — auto, light, dark"
                 aria-label="Cycle theme">
@@ -103,6 +106,16 @@
             <option value="hard">Hard</option>
           </select>
         </label>
+        <label>
+          <span class="field-label">Exam timer</span>
+          <select id="setting-timer">
+            <option value="0">None — practice mode</option>
+            <option value="30">30 minutes</option>
+            <option value="60">60 minutes</option>
+            <option value="90">90 minutes — Associate exam length</option>
+            <option value="120">120 minutes — Professional exam length</option>
+          </select>
+        </label>
       </div>
       <div class="settings-actions">
         <button type="button" id="btn-settings-apply" class="primary">Apply</button>
@@ -155,6 +168,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>
