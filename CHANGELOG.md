@@ -28,6 +28,31 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-17] — GitHub Action for markdownlint + lychee link-check
+
+### Added
+
+- **`.github/workflows/lint.yml`** — CI workflow that runs on every PR (and push to `main`) with two jobs:
+  - `markdownlint` — runs `DavidAnson/markdownlint-cli2-action@v19` against all repo `.md` files using `.markdownlint-cli2.jsonc` (which extends `.markdownlint.json`)
+  - `link-check` — runs `lycheeverse/lychee-action@v2` against all repo `.md` files using `lychee.toml` (checks internal links; external URLs intentionally skipped — their health is a manual PR-review concern)
+- **`.markdownlint-cli2.jsonc`** — globs + ignore patterns for markdownlint-cli2 (excludes `.obsidian/`, `docs/superpowers/`, `node_modules/`, `.git/`)
+- **`lychee.toml`** — link-check configuration: exclude `^https?://`, `^mailto:`, `^tel:`, `^ftp://`, `^data:`, `^javascript:`; exclude `.obsidian/`, `docs/superpowers/`, `node_modules/`, `.git/`; enable cache
+- **`.gitignore`** — adds `.lycheecache` to the ignore list
+- **`CONTRIBUTING.md`** — new "Automated checks (CI)" section documenting the two checks + how to reproduce locally
+
+### Changed (markdownlint fixes — making the existing repo pass)
+
+- **`.markdownlint.json`** — relaxed `MD026` (no-trailing-punctuation in headings) since several intentional sentence-style headings end in periods (e.g., "Eat. Hydrate. Breathe." in final-review files); enabled `MD034` (no-bare-urls) explicitly
+- **6 cert `resources/README.md` files** — fixed a table-row break introduced by the PR 13 final-review link insertion (the link was inserted as a list inside a table cell, breaking MD055/MD056/MD032). Each Final-Review link is now its own table row.
+- **2 GenAI topic files** — removed malformed inline `ChatModel *(deprecated…)*` annotations that broke a code span (MD038). The top-of-file deprecation callout from PR 18 already documents the deprecation, so the inline annotation is redundant.
+- **`CLAUDE.md`** — collapsed multiple consecutive blank lines (MD012)
+- **`certifications/genai-engineer-associate/06-governance/01-governance-overview.md`** — wrapped a bare URL in a markdown link (MD034)
+
+### Verification
+
+- `markdownlint-cli2` on the working tree: **377 files linted, 0 errors**
+- Repo-wide broken-link scan: 0
+
 ## [2026.05.21-16] — Topic-file content audit (legacy terminology)
 
 ### Changed

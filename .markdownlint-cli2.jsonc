@@ -1,0 +1,16 @@
+// markdownlint-cli2 configuration for the Databricks Certification Study Guide.
+// Inherits rule settings from .markdownlint.json and adds the glob set + ignore list.
+{
+  "config": {
+    "extends": ".markdownlint.json"
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    ".obsidian/**",
+    "docs/superpowers/**",
+    "node_modules/**",
+    ".git/**"
+  ]
+}

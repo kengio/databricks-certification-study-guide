@@ -423,7 +423,7 @@ D) Add metadata filters to narrow the search space
 > window usage. Euclidean distance (C) does not address the embedding mismatch.
 > Metadata filters (D) narrow scope but cannot fix semantic embedding distance issues.
 
-**Question 2**: An agentic RAG model using `mlflow.pyfunc.ChatModel *(deprecated in MLflow 3.0+; use `ResponsesAgent` / `ChatAgent`)*` makes a tool call to
+**Question 2**: An agentic RAG model using `mlflow.pyfunc.ChatModel` makes a tool call to
 the vector search function. What is the correct next step in the tool-calling loop?
 
 A) Return the tool result directly to the user without a second LLM call

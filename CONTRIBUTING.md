@@ -142,6 +142,25 @@ Use Obsidian-flavoured callouts (also render on GitHub). Standard types:
 - Language tags on all code blocks (`sql`, `python`, `scala`, `bash`, `yaml`)
 - Multi-line Python: parenthesised expressions, not backslash continuations
 
+## Automated checks (CI)
+
+Every PR is automatically checked by GitHub Actions (`.github/workflows/lint.yml`):
+
+| Check | Tool | What it verifies |
+| :--- | :--- | :--- |
+| **Markdown style** | [`markdownlint-cli2`](https://github.com/DavidAnson/markdownlint-cli2) | Heading hierarchy, blank lines around headings/lists, code-block language tags, table column counts, no bare URLs, etc. Configuration: `.markdownlint.json` + `.markdownlint-cli2.jsonc`. |
+| **Internal link integrity** | [`lychee`](https://github.com/lycheeverse/lychee) | Every relative `.md` / image / file link resolves. External HTTP/HTTPS URLs are skipped intentionally (their health is verified manually during the 4-round PR review). Configuration: `lychee.toml`. |
+
+Both checks must pass before a PR can be squash-merged. To reproduce locally:
+
+```bash
+# markdownlint
+npx markdownlint-cli2
+
+# lychee
+docker run --rm -v "$PWD":/repo -w /repo lycheeverse/lychee --config lychee.toml './**/*.md'
+```
+
 ## What to do if you find a bug in the practice questions
 
 This is the most exam-impactful category. Please:
