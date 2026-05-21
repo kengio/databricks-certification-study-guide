@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "24";
+  const APP_VERSION = "25";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -871,6 +871,30 @@
     STATE.timerEnd = minutes > 0 ? Date.now() + minutes * 60 * 1000 : null;
   }
 
+  function confirmBackToCertPicker() {
+    const hasActiveSession = STATE.sessionTotal > 0 || STATE.timerEnd != null;
+    if (hasActiveSession) {
+      const msg = STATE.timerEnd
+        ? "Stop this timed exam and go back to certifications? Your timer will reset."
+        : "Go back to certifications? Your session progress will reset (history is kept).";
+      if (!confirm(msg)) return;
+    }
+    // Reset session state (history in localStorage is preserved per-bank)
+    STATE.sessionCorrect = 0;
+    STATE.sessionTotal = 0;
+    STATE.seenThisSession.clear();
+    STATE.streak = 0;
+    STATE.timerEnd = null;
+    STATE.timerExpired = false;
+    updateClockAndTimer();
+    if (STATE.certBanks) {
+      renderCertPicker(STATE.certBanks);
+      show("setup");
+    } else {
+      location.reload();
+    }
+  }
+
   function showTimerExpiredToast() {
     const existing = document.querySelector(".streak-toast");
     if (existing) existing.remove();
@@ -1054,6 +1078,14 @@
       else location.reload();
       show("setup");
     });
+
+    // Cert name in the masthead acts as a "back to certifications" link.
+    // Confirm before leaving so the user doesn't accidentally lose their
+    // timer / session counts on a stray click.
+    const certLink = $("#quiz-cert");
+    if (certLink) {
+      certLink.addEventListener("click", confirmBackToCertPicker);
+    }
     $("#btn-theme").addEventListener("click", cycleTheme);
 
     document.addEventListener("keydown", handleKeydown);

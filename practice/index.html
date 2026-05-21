@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -31,20 +31,16 @@
         <span class="brand-title">DBX Practice</span>
       </div>
 
-      <!-- Quiz meta strip: only visible while a quiz is active -->
+      <!-- Quiz meta strip: only visible while a quiz is active.
+           The cert name doubles as a "back to certifications" link
+           with a confirm prompt. -->
       <div class="quiz-meta-strip" id="quiz-meta-strip" hidden>
-        <span id="quiz-cert"></span>
+        <button type="button" id="quiz-cert" class="cert-link"
+                title="Back to certifications"
+                aria-label="Back to certifications"></button>
         <span class="rh-sep">/</span>
         <span id="quiz-domain"></span>
       </div>
-
-      <!-- Exam timer — sibling of the strip (not inside, so the strip's
-           overflow:hidden + ellipsis can't clip it). Sits visually right
-           next to the question counter. -->
-      <span id="quiz-timer" class="meta-timer" hidden
-            title="Exam timer remaining" aria-label="Exam timer remaining">
-        <span class="timer-value">00:00</span>
-      </span>
 
       <div class="masthead-actions">
         <span id="quiz-clock" title="Current time" aria-label="Current time"></span>
@@ -155,6 +151,12 @@
         <button type="button" id="btn-settings" class="link">Settings</button>
         <button type="button" id="btn-reset-top" class="link danger" title="Reset progress for this bank">Reset</button>
         <button type="button" id="btn-exit" class="link">Switch bank</button>
+        <span class="actionbar-divider"></span>
+        <span id="quiz-timer" class="actionbar-timer" hidden
+              title="Exam timer remaining" aria-label="Exam timer remaining">
+          <span class="timer-icon" aria-hidden="true">⏱</span>
+          <span class="timer-value">00:00</span>
+        </span>
       </div>
     </div>
   </div>
@@ -175,6 +177,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=24"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>
