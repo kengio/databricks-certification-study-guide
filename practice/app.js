@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "9";
+  const APP_VERSION = "10";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -109,6 +109,14 @@
     for (const id of ["setup", "quiz", "stats", "settings"]) {
       $("#" + id).hidden = id !== sectionId;
     }
+    // Sticky bottom actionbar + masthead quiz-meta-strip belong to the quiz
+    // section only; hide them everywhere else.
+    const inQuiz = sectionId === "quiz";
+    const actionbar = $("#actionbar");
+    const metaStrip = $("#quiz-meta-strip");
+    if (actionbar) actionbar.hidden = !inQuiz;
+    if (metaStrip) metaStrip.hidden = !inQuiz;
+    document.body.classList.toggle("quiz-active", inQuiz);
   }
 
   // --- Safe markdown → DOM rendering --------------------------------------
@@ -489,6 +497,9 @@
     $("#btn-skip").hidden = false;
     $("#btn-next").hidden = true;
     $("#quiz-feedback").hidden = true;
+    const preHint = $("#kbd-hint-pre"), postHint = $("#kbd-hint-post");
+    if (preHint) preHint.hidden = false;
+    if (postHint) postHint.hidden = true;
     updateSessionBar();
   }
 
@@ -597,6 +608,9 @@
     $("#btn-submit").hidden = true;
     $("#btn-skip").hidden = true;
     $("#btn-next").hidden = false;
+    const preHint = $("#kbd-hint-pre"), postHint = $("#kbd-hint-post");
+    if (preHint) preHint.hidden = true;
+    if (postHint) postHint.hidden = false;
     updateSessionBar();
   }
 
@@ -782,8 +796,11 @@
       }
       return;
     }
-    if (ev.key === "Enter") {
-      if (!$("#btn-next").hidden) {
+    const submitted = !$("#btn-next").hidden;
+
+    // Enter / Space — primary action (submit before answer, next after)
+    if (ev.key === "Enter" || ev.key === " ") {
+      if (submitted) {
         $("#btn-next").click();
       } else if (!$("#btn-submit").disabled && !$("#btn-submit").hidden) {
         $("#btn-submit").click();
@@ -791,13 +808,16 @@
       ev.preventDefault();
       return;
     }
-    if (key === "s") {
-      // Skip — only available before submit
-      const submitted = !$("#btn-next").hidden;
-      if (!submitted) {
-        skipQuestion();
-        ev.preventDefault();
-      }
+    // Right arrow / N — explicitly next, only after submit
+    if ((ev.key === "ArrowRight" || key === "n") && submitted) {
+      $("#btn-next").click();
+      ev.preventDefault();
+      return;
+    }
+    // S — skip, only before submit
+    if (key === "s" && !submitted) {
+      skipQuestion();
+      ev.preventDefault();
     }
   }
 
