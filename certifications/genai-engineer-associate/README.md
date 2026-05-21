@@ -17,11 +17,11 @@ aliases:
 > - Refactored into **6 explicitly weighted domains** (was 4)
 > - **Application Development** is the largest block at 30 %
 > - **Assembling and Deploying Apps** is now a first-class 22 % domain
-> - **Governance** is broken out as its own 8 % domain — Unity Catalog for AI assets, PII handling, content safety
+> - **Governance** is broken out as its own 8 % domain — Unity Catalog for AI assets, PII handling, content safety, AI Gateway
 > - **Evaluation and Monitoring** elevated to 12 %
-> - Pass / fail — **Databricks no longer publishes a numeric passing score**
+> - Pass / fail — **the March 2026 exam guide does not publish a numeric passing score**
 >
-> The official source of truth: [Databricks Certified Generative AI Engineer Associate](https://www.databricks.com/learn/certification/genai-engineer-associate). Topic folders in this guide cover the same scope but with different labels; reorganisation to the 6-domain structure is on the [guide roadmap](../../README.md#roadmap-for-the-guide-itself).
+> The official source of truth: [Databricks Certified Generative AI Engineer Associate](https://www.databricks.com/learn/certification/genai-engineer-associate). The folder structure in this guide now matches the official 6-domain blueprint 1 : 1.
 
 ## Exam Overview
 
@@ -31,7 +31,7 @@ aliases:
 | **Exam guide**      | March 2026                                            |
 | **Scored questions**| 45 multiple-choice                                    |
 | **Duration**        | 90 minutes                                            |
-| **Result**          | Pass / fail (no published threshold)                  |
+| **Result**          | Pass / fail (no numeric threshold in the March 2026 exam guide) |
 | **Languages**       | English, Japanese, Portuguese (BR), Korean            |
 | **Code in stems**   | Python                                                |
 | **Experience**      | 6+ months hands-on building GenAI solutions on Databricks (recommended) |
@@ -62,27 +62,26 @@ pie title Exam Topic Distribution (6 domains)
 
 ## Study Topics
 
-### Topic folders in this guide
+The folder structure below matches the March 2026 official 6-domain blueprint. Read in order; each folder's `README.md` has the section contents and key concepts.
 
-| Section                                                                | Covers (official domains) |
-| ---------------------------------------------------------------------- | ------------------------- |
-| [01-RAG Architecture](01-rag-architecture/README.md)                   | Design Applications · Data Preparation |
-| [02-Vector Search & Embeddings](02-vector-search-embeddings/README.md) | Data Preparation · Application Development (retrieval) |
-| [03-LLM Application Development](03-llm-application-development/README.md) | Application Development · Evaluation and Monitoring |
-| [04-Databricks GenAI Tools](04-databricks-genai-tools/README.md)       | Assembling and Deploying · Governance |
-
-> [!note]
-> The **Governance** domain (8 %) is partially covered today inside `04-databricks-genai-tools/`. Expanded Unity Catalog governance and content safety material is planned; in the meantime, see the [Mosaic AI governance documentation](https://docs.databricks.com/en/generative-ai/index.html) and the [`shared/cheat-sheets/unity-catalog-quick-ref.md`](../../shared/cheat-sheets/unity-catalog-quick-ref.md).
+| Section                                                                                | Weight | Focus |
+| -------------------------------------------------------------------------------------- | :----: | :--- |
+| [01 — Application Development](./01-application-development/README.md)                 | 30 %   | Prompt engineering, chains/agents, retrieval augmentation, vector search runtime |
+| [02 — Assembling and Deploying Apps](./02-assembling-and-deploying-apps/README.md)     | 22 %   | Mosaic AI FMAPI, MLflow for GenAI, Model Serving |
+| [03 — Design Applications](./03-design-applications/README.md)                         | 14 %   | RAG design patterns, naive vs advanced RAG |
+| [04 — Data Preparation](./04-data-preparation/README.md)                               | 14 %   | Chunking, embeddings, Vector Search index creation |
+| [05 — Evaluation and Monitoring](./05-evaluation-and-monitoring/README.md)             | 12 %   | MLflow eval, LLM-as-judge, Inference Tables |
+| [06 — Governance](./06-governance/README.md)                                           |  8 %   | UC for AI assets, PII handling, content safety, AI Gateway |
 
 ### Practice & Resources
 
 | Resource                                                        | Description                              |
 | --------------------------------------------------------------- | ---------------------------------------- |
-| [Practice Questions](resources/practice-questions/README.md)    | Topic-specific practice questions        |
-| [Mock Exam 1](resources/mock-exam/README.md)                    | Full-length practice exam                |
-| [Mock Exam 2](resources/mock-exam-2/README.md)                  | Alternative practice exam                |
-| [Exam Tips](resources/exam-tips.md)                             | Exam strategies and tips                 |
-| [Official Links](resources/official-links.md)                   | Documentation and resources              |
+| [Practice Questions](./resources/practice-questions/README.md)  | Topic-specific practice questions        |
+| [Mock Exam 1](./resources/mock-exam/README.md)                  | Full-length practice exam                |
+| [Mock Exam 2](./resources/mock-exam-2/README.md)                | Alternative practice exam                |
+| [Exam Tips](./resources/exam-tips.md)                           | Exam strategies and tips                 |
+| [Official Links](./resources/official-links.md)                 | Documentation and resources              |
 
 ## Interview Preparation
 
@@ -94,8 +93,9 @@ After completing this certification, explore:
 
 - **Mosaic AI** — Foundation Model APIs and Model Serving
 - **Mosaic AI Vector Search** — Databricks-native vector store
-- **MLflow** — LLM tracking, evaluation, and deployment
-- **Unity Catalog** — governance for embeddings, models, and prompt assets
+- **Mosaic AI Gateway** — guardrails, rate limit, multi-provider routing
+- **MLflow** — LLM tracking, evaluation, deployment
+- **Unity Catalog** — governance for embeddings, models, prompt assets, agents
 - **LangChain / LlamaIndex** — LLM application frameworks
 
 ## Prerequisites
@@ -111,11 +111,11 @@ Review these shared fundamentals:
 
 - [ ] Understand LLM fundamentals and prompt engineering
 - [ ] Learn RAG architecture patterns and design trade-offs
-- [ ] Practice Vector Search index design and chunking
-- [ ] Build LLM chains and agents with Mosaic AI
-- [ ] Deploy GenAI apps via Model Serving
-- [ ] Set up evaluation, monitoring, and content-safety guardrails
-- [ ] Govern AI assets with Unity Catalog (PII handling, lineage)
+- [ ] Practice Vector Search index creation, chunking, embedding choice
+- [ ] Build LLM chains and agents with Mosaic AI FMAPI
+- [ ] Deploy GenAI apps via Model Serving (provisioned vs pay-per-token)
+- [ ] Set up MLflow evaluation, LLM-as-judge, inference tables
+- [ ] Govern AI assets with Unity Catalog (PII handling, content safety, AI Gateway)
 
 ## Official Resources
 
@@ -123,3 +123,4 @@ Review these shared fundamentals:
 - [Mosaic AI Documentation](https://docs.databricks.com/generative-ai/)
 - [Vector Search Documentation](https://docs.databricks.com/en/generative-ai/vector-search.html)
 - [Model Serving Documentation](https://docs.databricks.com/en/machine-learning/model-serving/index.html)
+- [AI Gateway Documentation](https://docs.databricks.com/en/ai-gateway/index.html)

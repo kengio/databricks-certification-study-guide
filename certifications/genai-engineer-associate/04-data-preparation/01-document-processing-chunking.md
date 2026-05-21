@@ -393,4 +393,4 @@ D) Add more metadata fields to improve filtering accuracy
 
 ---
 
-**[← Previous: RAG Design Patterns](./01-rag-design-patterns.md) | [↑ Back to RAG Architecture](./README.md) | [Next: Retrieval & Augmentation Strategies](./03-retrieval-augmentation-strategies.md) →**
+**[← Previous: RAG Design Patterns](../03-design-applications/01-rag-design-patterns.md) | [↑ Back to RAG Architecture](./README.md) | [Next: Retrieval & Augmentation Strategies](../01-application-development/03-retrieval-augmentation-strategies.md) →**

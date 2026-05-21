@@ -244,10 +244,10 @@ Choose based on your career direction after Stage 3.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Build RAG Solutions (40%) | [01-rag-architecture](../certifications/genai-engineer-associate/01-rag-architecture/README.md) |
-| 2 | Design RAG Solutions (30%) | [02-vector-search-embeddings](../certifications/genai-engineer-associate/02-vector-search-embeddings/README.md) |
-| 3 | Evaluate & Govern (15%) | [03-llm-application-development](../certifications/genai-engineer-associate/03-llm-application-development/README.md) |
-| 4 | Assemble & Deploy (15%) | [04-databricks-genai-tools](../certifications/genai-engineer-associate/04-databricks-genai-tools/README.md) |
+| 1 | Build RAG Solutions (40%) | [01-rag-architecture](../certifications/genai-engineer-associate/03-design-applications/README.md) |
+| 2 | Design RAG Solutions (30%) | [02-vector-search-embeddings](../certifications/genai-engineer-associate/04-data-preparation/README.md) |
+| 3 | Evaluate & Govern (15%) | [03-llm-application-development](../certifications/genai-engineer-associate/01-application-development/README.md) |
+| 4 | Assemble & Deploy (15%) | [04-databricks-genai-tools](../certifications/genai-engineer-associate/02-assembling-and-deploying-apps/README.md) |
 
 **Practice & Review:**
 
