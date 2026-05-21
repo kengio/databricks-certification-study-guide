@@ -4,6 +4,31 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-18] — Renewal Guide
+
+### Added
+
+- **`shared/appendix/renewal-guide.md`** — a cross-cert renewal playbook covering:
+  - The 2-year validity clock (when it starts, where to verify it)
+  - A day −365 → day +1 timeline checklist
+  - Two renewal paths: full retake vs. dedicated recertification exam (where offered)
+  - Per-certification snapshot table linking the highest-yield delta-study areas for each of the 6 certs against the May 2026 / Nov 30 2025 / Oct 2025 / Mar 2026 blueprints
+  - Step-by-step "what to actually study for renewal" workflow (diff the exam-guide PDFs, prioritize renamed products, run the repo's mocks, cram with `final-review.md`)
+  - Cost considerations, after-renewal actions, FAQ (8 common questions)
+  - Official sources list (Certification Hub, credential portal, Academy, blog, docs)
+
+### Changed
+
+- **`shared/appendix/README.md`** — adds the Renewal Guide to the appendix table and a new "Before your 2-year expiry" usage hint
+- **All 6 cert `README.md` files** — the `Recertification` row in the exam-overview table now links to the new Renewal Guide instead of just saying "Every 2 years"
+- **Top-level `README.md`** — Q1 2027 roadmap entry "Renewal guide" marked ✅ complete
+- **`CLAUDE.md`** — `appendix/` Shared Content list adds `renewal-guide`
+
+### Verification
+
+- All cross-cert links resolve (verified via lychee CI)
+- markdownlint passes (0 errors)
+
 ## [v1.0.0] — 2026-05-21 — Initial public release
 
 First tagged release of the open-sourced Databricks Certification Study Guide. Covers six Databricks certifications, each refreshed to the latest official exam blueprint (Oct 2025 – Mar 2026).

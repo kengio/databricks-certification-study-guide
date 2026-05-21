@@ -33,7 +33,7 @@ aliases:
 | **Languages**       | English                                            |
 | **Code in stems**   | Python                                             |
 | **Experience**      | 1+ years building enterprise-scale ML on Databricks (recommended) |
-| **Recertification** | Every 2 years                                      |
+| **Recertification** | Every 2 years — see [Renewal Guide](../../shared/appendix/renewal-guide.md) |
 | **Cost**            | $200 USD                                           |
 | **Delivery**        | Online proctored or test center                    |
 

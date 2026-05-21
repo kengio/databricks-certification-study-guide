@@ -34,7 +34,7 @@ aliases:
 | **Languages**       | English, Japanese, Portuguese (BR), Korean      |
 | **Code in stems**   | Python and SQL                                  |
 | **Experience**      | 1+ years building production data pipelines on Databricks (recommended) |
-| **Recertification** | Every 2 years                                   |
+| **Recertification** | Every 2 years — see [Renewal Guide](../../shared/appendix/renewal-guide.md) |
 | **Cost**            | $200 USD                                        |
 | **Delivery**        | Online proctored or test center                 |
 
