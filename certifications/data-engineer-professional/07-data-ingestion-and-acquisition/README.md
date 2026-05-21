@@ -17,7 +17,8 @@ Landing data into the lakehouse from object stores, message buses, and external 
 ```mermaid
 flowchart LR
     Ing[Data Ingestion] --> AL[Auto Loader]
-    Ing --> Batch[Batch Ingestion]
+    Ing --> COPY[COPY INTO]
+    Ing --> MB[Message Buses: Kafka / Kinesis / Event Hubs]
     Ing --> Conn[External Connectors]
 ```
 
@@ -26,6 +27,8 @@ flowchart LR
 | File | Topic | Priority |
 | :--- | :--- | :--- |
 | [01-auto-loader.md](./01-auto-loader.md) | Schema inference, evolution, file notification mode | High |
+| [02-copy-into.md](./02-copy-into.md) | Idempotent batch file ingest into Delta — `FORMAT_OPTIONS` vs `COPY_OPTIONS`, `PATTERN` / `FILES` | High |
+| [03-streaming-ingestion-from-message-buses.md](./03-streaming-ingestion-from-message-buses.md) | Kafka / Kinesis / Event Hubs Structured Streaming sources; exactly-once via Delta + checkpointing | High |
 
 ## Key Concepts to Master
 
@@ -46,7 +49,7 @@ flowchart LR
 - [Lakeflow Declarative Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) — `@Dlt.table` + `cloudFiles` is the canonical declarative ingestion pattern
 
 > [!note]
-> This domain is currently represented by a single deep-dive on Auto Loader, the most-tested ingestion mechanism. Expanded coverage of **batch ingestion patterns** (`COPY INTO`, JDBC/ODBC ingestion, partner connectors) is on the [guide roadmap](../../../README.md#roadmap-for-the-guide-itself).
+> Three pillars of ingestion now covered: **Auto Loader** (continuous file ingest), **`COPY INTO`** (idempotent batch file ingest), and **streaming from message buses** (Kafka / Kinesis / Event Hubs). Partner connectors (Fivetran / Lakeflow Connect) remain a [follow-up](../../../README.md#roadmap-for-the-guide-itself).
 
 ---
 
