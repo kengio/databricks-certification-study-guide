@@ -28,6 +28,20 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-13] — Cheat-sheet terminology refresh
+
+### Changed
+
+- **`shared/cheat-sheets/dlt-quick-ref.md` → `lakeflow-declarative-pipelines-quick-ref.md`** (rename) to reflect the current product name (formerly Delta Live Tables / DLT)
+- The old `dlt-quick-ref.md` is preserved as a one-line back-compat redirect stub so existing bookmarks and inbound links keep resolving
+- Cheat-sheet content updated: title, intro paragraph, frontmatter tags, and a new `> [!important]` currency callout documenting the `dlt` Python module name vs the `pyspark.pipelines as dp` newer canonical
+- 6 repo-wide references updated from `dlt-quick-ref.md` → `lakeflow-declarative-pipelines-quick-ref.md`
+- `shared/cheat-sheets/README.md` link refreshed
+
+### Notes
+
+Other cheat sheets (`auto-loader-quick-ref`, `delta-lake-commands`, `mlflow-quick-ref`, `performance-optimization`, `pyspark-api-quick-ref`, `spark-configurations`, `sql-functions`, `streaming-quick-ref`, `unity-catalog-quick-ref`, `describe-show-commands`) were audited — no Delta Live Tables / DLT / Workflows legacy terminology found in their bodies.
+
 ## [2026.05.21-12] — Add CONTRIBUTORS.md
 
 ### Added

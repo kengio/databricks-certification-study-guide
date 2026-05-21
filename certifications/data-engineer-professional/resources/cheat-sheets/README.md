@@ -9,7 +9,7 @@ Quick reference cards for key exam topics.
 | [Delta Lake Quick Reference](delta-lake-quick-ref.md) | Delta Lake commands, optimization, and maintenance |
 | [Streaming Quick Reference](./streaming-quick-ref.md) | Structured Streaming, triggers, and checkpointing |
 | [Auto Loader Quick Reference](./auto-loader-quick-ref.md) | Cloud Files, schema inference, and file notifications |
-| [DLT Quick Reference](./dlt-quick-ref.md) | Delta Live Tables syntax and expectations |
+| [Lakeflow Declarative Pipelines Quick Reference](../../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) | `@dlt.*` decorators, expectations, `APPLY CHANGES INTO` (formerly DLT) |
 | [Unity Catalog Quick Reference](./unity-catalog-quick-ref.md) | Namespaces, grants, and data governance |
 
 ## Shared Cheat Sheets

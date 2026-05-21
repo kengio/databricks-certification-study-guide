@@ -213,7 +213,7 @@ dbutils.fs.rm("/Volumes/main/bronze/landing/customers_cdc/", recurse=True)
 
 ## Related Study Material
 
-- [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../shared/cheat-sheets/dlt-quick-ref.md)
+- [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
 - [DE Pro — Declarative Pipelines](../certifications/data-engineer-professional/01-developing-code-for-data-processing/06-declarative-pipelines.md)
 - [DE Pro — Expectations and Data Quality](../certifications/data-engineer-professional/03-data-transformation-cleansing-quality/03-expectations-data-quality.md)
 - [DE Pro — `APPLY CHANGES INTO`](../certifications/data-engineer-professional/03-data-transformation-cleansing-quality/04-apply-changes-api.md)

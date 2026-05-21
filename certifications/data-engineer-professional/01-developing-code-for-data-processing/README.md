@@ -59,7 +59,7 @@ flowchart TD
 - [Spark Fundamentals (shared)](../../../shared/fundamentals/spark-fundamentals.md)
 - [Delta Lake Basics (shared)](../../../shared/fundamentals/delta-lake-basics.md)
 - [Streaming Fundamentals (shared)](../../../shared/fundamentals/streaming-fundamentals.md)
-- [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/dlt-quick-ref.md)
+- [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
 - [PySpark API cheat sheet (shared)](../../../shared/cheat-sheets/pyspark-api-quick-ref.md)
 
 ---
