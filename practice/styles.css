@@ -615,6 +615,15 @@ button.link.danger:hover { color: var(--negative); }
   border-radius: var(--radius-lg);
   padding: 2rem;
   box-shadow: var(--shadow-2);
+  /* Prevent unbreakable inline content from making the card wider than its
+     container. min-width:0 lets the box shrink past its intrinsic width. */
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+#quiz-feedback {
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: 640px) {
@@ -785,8 +794,13 @@ fieldset#quiz-choices label.incorrect .choice-text { color: var(--negative); }
 }
 
 /* When quiz is active, leave room at the bottom of main so the fixed
-   actionbar doesn't cover the last few choices / feedback rows */
-body.quiz-active main { padding-bottom: 6rem; }
+   actionbar doesn't cover the last few choices / feedback rows.
+   --actionbar-h is updated by a ResizeObserver in app.js whenever the
+   actionbar's height changes (wrap onto a second row, viewport resize,
+   feedback visibility, etc). +1.5rem of breathing room. */
+body.quiz-active main {
+  padding-bottom: calc(var(--actionbar-h, 7rem) + 1.5rem);
+}
 body.quiz-active .page-footer { display: none; }
 
 .kbd-hint {
@@ -823,7 +837,6 @@ body.quiz-active .page-footer { display: none; }
   .actionbar-right .actionbar-divider { display: none; }
   .actionbar-right #bank-stats { display: none; }  /* save room */
   .kbd-hint { display: none; }  /* hide kbd hints on small screens */
-  body.quiz-active main { padding-bottom: 10rem; }
 }
 
 /* ---------- Feedback ---------- */
@@ -978,6 +991,20 @@ code {
   padding: 0.12rem 0.4rem;
   border-radius: 4px;
   color: var(--fg);
+  /* Long unbroken strings like spark.sql.streaming.stateStore.providerClass
+     are a single "word" with no word-break points. Allow the renderer to
+     break anywhere when there's no better option, otherwise the inline
+     code overflows the right edge of the question/feedback container. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Code blocks (pre > code) handle long lines with horizontal scroll
+   instead — preserving whitespace + indentation is more important there
+   than fitting in the container. */
+pre code, pre[class*="language-"] code {
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 pre, pre[class*="language-"] {

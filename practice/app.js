@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "13";
+  const APP_VERSION = "14";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -117,6 +117,23 @@
     if (actionbar) actionbar.hidden = !inQuiz;
     if (metaStrip) metaStrip.hidden = !inQuiz;
     document.body.classList.toggle("quiz-active", inQuiz);
+    syncActionbarHeight();
+  }
+
+  // Keep `--actionbar-h` CSS var in sync with the actionbar's actual
+  // rendered height. The actionbar wraps onto multiple rows when content
+  // doesn't fit; if we hard-coded padding-bottom on main, the last
+  // explanation line would get hidden under the bar.
+  function syncActionbarHeight() {
+    const ab = $("#actionbar");
+    if (!ab || ab.hidden) {
+      document.body.style.removeProperty("--actionbar-h");
+      return;
+    }
+    const h = ab.getBoundingClientRect().height;
+    if (h > 0) {
+      document.body.style.setProperty("--actionbar-h", h + "px");
+    }
   }
 
   // --- Safe markdown → DOM rendering --------------------------------------
@@ -870,6 +887,15 @@
     $("#btn-theme").addEventListener("click", cycleTheme);
 
     document.addEventListener("keydown", handleKeydown);
+
+    // Observe actionbar height — content wrapping (kbd hint long/short,
+    // viewport resize, etc.) changes how many rows the actionbar uses.
+    const actionbar = $("#actionbar");
+    if (actionbar && typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(() => syncActionbarHeight());
+      ro.observe(actionbar);
+    }
+    window.addEventListener("resize", syncActionbarHeight);
 
     loadAllBankMetadata().then(certBanks => {
       STATE.certBanks = certBanks;
