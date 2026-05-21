@@ -4,6 +4,46 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [v1.0.0] — 2026-05-21 — Initial public release
+
+First tagged release of the open-sourced Databricks Certification Study Guide. Covers six Databricks certifications, each refreshed to the latest official exam blueprint (Oct 2025 – Mar 2026).
+
+### Certifications covered (all at current blueprint)
+
+| Certification | Blueprint date | Domains |
+| :--- | :--- | :--: |
+| Data Engineer Associate | May 2026 refresh | 6 |
+| Data Engineer Professional | Nov 30, 2025 | 10 |
+| Data Analyst Associate | Oct 2025 | 9 |
+| ML Associate | Mar 1, 2025 | 4 |
+| ML Professional | Sep 2025 | 3 |
+| GenAI Engineer Associate | Mar 2026 | 6 |
+
+### What's in the box
+
+- **183 topic content files** across the six certifications, structured 1:1 with each official domain
+- **573 mock-exam questions** across 12 full mock exams (2 per cert), with answer keys and per-question debrief tables that map every question to a topic file + cheat sheet
+- **36 practice-question files** for spaced repetition between mocks
+- **6 hands-on labs** in `labs/` covering medallion ingestion, Unity Catalog setup, Lakeflow Declarative Pipelines, MLflow tracking, and Mosaic AI RAG
+- **6 cert-specific final-review files** — 20-minute exam-morning cram scans
+- **16 fundamentals + 13 cheat sheets + 16 interview-prep files** in `shared/` for cross-cert reuse
+- **CI**: markdownlint + lychee internal-link integrity checks on every PR
+- **Branch protection**: linear history, squash-merge only, force-push and deletion blocked on `main`
+
+### Contributor experience
+
+- `CONTRIBUTING.md` — 4-round PR review process, commit-message conventions, local CI reproduction commands
+- `CODE_OF_CONDUCT.md` — Contributor Covenant 2.1
+- `CONTRIBUTORS.md` — attribution list
+- PR + issue templates
+- MIT License
+
+### Currency commitment
+
+- Every cert tracks its current Databricks exam-guide PDF and cites the version date in the cert README
+- Top-level README "What changed in the 2025–2026 exam guides" callouts surface blueprint deltas
+- Currency policy in `CLAUDE.md` codifies the refresh workflow for future blueprint updates
+
 ## [2026.05.21-3] — Data Analyst Associate folder reorg to 9-domain blueprint
 
 ### Changed
