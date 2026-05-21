@@ -1,12 +1,21 @@
-# Required Screenshots: Workflows
+# Screenshots: Lakeflow Jobs (formerly Databricks Workflows)
 
-This folder is intended to hold screenshots related to Databricks Jobs and Workflows scheduling.
+Screenshots for the Databricks Jobs scheduling product (now **Lakeflow Jobs**, formerly Databricks Workflows). The folder name `workflows/` and the `workflow_*.png` file prefixes are preserved for back-compat with existing references.
 
-Please add the following screenshots and name them appropriately:
+## Inventory
 
-- `workflow_dag_view.png`: The DAG visualizer interface inside a Databricks Job showing task dependencies and relationships.
-- `workflow_task_types.png`: The Job task creation sidebar highlighting the different available task types (Notebook, Python script, dbt, SQL, DLT).
-- `workflow_trigger_schedule.png`: The Job scheduling UI showing Cron configuration or continuous/file arrival triggers.
-- `workflow_run_matrix.png`: The Job Runs screen matrix view tracking historical success/failure status across multiple executions.
+| File | Purpose | Referenced from |
+| :--- | :--- | :--- |
+| `workflow_dag_view.png` | Job DAG visualizer showing task dependencies | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part1.md` |
+| `workflow_task_types.png` | Job task creation sidebar — Notebook, Python, dbt, SQL, Pipeline task types | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part1.md` |
+| `workflow_trigger_schedule.png` | Job scheduling UI — Cron, continuous, file-arrival triggers | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part2.md` |
+| `workflow_run_matrix.png` | Job Runs matrix view tracking historical success/failure | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part2.md` |
 
-Once these images are added, they can be referenced in the `07-lakeflow-pipelines` markdown files and execution operations study guide.
+## Contributing new screenshots
+
+When adding new screenshots:
+
+- Keep them ≤ 800 px wide (CLAUDE.md convention)
+- Use `snake_case.png` matching this folder's existing convention
+- Reference them from the appropriate topic file with `![Alt text](../../../images/databricks-ui/workflows/<file>.png)` and an italic caption
+- Update the inventory table above
