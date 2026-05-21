@@ -166,6 +166,9 @@ SELECT * FROM main.gold.daily_revenue ORDER BY event_date DESC, currency;
 
 ## Step 5 — File management
 
+> [!tip]
+> For **new** Delta tables in 2026, prefer **liquid clustering** (`CLUSTER BY` on table creation, then `OPTIMIZE table FULL`) over Z-ORDER. Z-ORDER is non-adaptive and locks you into the columns you Z-ORDERed by; liquid clustering adapts as your data grows. The `OPTIMIZE` example below works for both layouts.
+
 ```sql
 -- Compact small files in the Silver layer
 OPTIMIZE main.silver.orders;

@@ -40,8 +40,8 @@ CREATE CATALOG IF NOT EXISTS lab_uc COMMENT 'UC lab catalog';
 USE CATALOG lab_uc;
 
 CREATE SCHEMA IF NOT EXISTS hr
-  COMMENT 'Employee data — restricted'
-  WITH MANAGED LOCATION = NULL;  -- managed by UC
+  COMMENT 'Employee data — restricted';
+-- UC uses the catalog's default managed location when MANAGED LOCATION is omitted.
 
 CREATE VOLUME IF NOT EXISTS lab_uc.hr.docs;
 ```
