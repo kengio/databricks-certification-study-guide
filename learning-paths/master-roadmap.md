@@ -244,10 +244,12 @@ Choose based on your career direction after Stage 3.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Build RAG Solutions (40%) | [01-rag-architecture](../certifications/genai-engineer-associate/03-design-applications/README.md) |
-| 2 | Design RAG Solutions (30%) | [02-vector-search-embeddings](../certifications/genai-engineer-associate/04-data-preparation/README.md) |
-| 3 | Evaluate & Govern (15%) | [03-llm-application-development](../certifications/genai-engineer-associate/01-application-development/README.md) |
-| 4 | Assemble & Deploy (15%) | [04-databricks-genai-tools](../certifications/genai-engineer-associate/02-assembling-and-deploying-apps/README.md) |
+| 1 | Application Development (30%) | [01-application-development](../certifications/genai-engineer-associate/01-application-development/README.md) |
+| 2 | Assembling and Deploying Apps (22%) | [02-assembling-and-deploying-apps](../certifications/genai-engineer-associate/02-assembling-and-deploying-apps/README.md) |
+| 3 | Design Applications (14%) | [03-design-applications](../certifications/genai-engineer-associate/03-design-applications/README.md) |
+| 4 | Data Preparation (14%) | [04-data-preparation](../certifications/genai-engineer-associate/04-data-preparation/README.md) |
+| 5 | Evaluation and Monitoring (12%) | [05-evaluation-and-monitoring](../certifications/genai-engineer-associate/05-evaluation-and-monitoring/README.md) |
+| 6 | Governance (8%) | [06-governance](../certifications/genai-engineer-associate/06-governance/README.md) |
 
 **Practice & Review:**
 

@@ -17,7 +17,7 @@ aliases:
 > - Refactored into **6 explicitly weighted domains** (was 4)
 > - **Application Development** is the largest block at 30 %
 > - **Assembling and Deploying Apps** is now a first-class 22 % domain
-> - **Governance** is broken out as its own 8 % domain — Unity Catalog for AI assets, PII handling, content safety, AI Gateway
+> - **Governance** is broken out as its own 8 % domain — Unity Catalog for AI assets, PII handling, content safety, Unity AI Gateway
 > - **Evaluation and Monitoring** elevated to 12 %
 > - Pass / fail — **the March 2026 exam guide does not publish a numeric passing score**
 >
@@ -71,7 +71,7 @@ The folder structure below matches the March 2026 official 6-domain blueprint. R
 | [03 — Design Applications](./03-design-applications/README.md)                         | 14 %   | RAG design patterns, naive vs advanced RAG |
 | [04 — Data Preparation](./04-data-preparation/README.md)                               | 14 %   | Chunking, embeddings, Vector Search index creation |
 | [05 — Evaluation and Monitoring](./05-evaluation-and-monitoring/README.md)             | 12 %   | MLflow eval, LLM-as-judge, Inference Tables |
-| [06 — Governance](./06-governance/README.md)                                           |  8 %   | UC for AI assets, PII handling, content safety, AI Gateway |
+| [06 — Governance](./06-governance/README.md)                                           |  8 %   | UC for AI assets, PII handling, content safety, Unity AI Gateway |
 
 ### Practice & Resources
 
@@ -93,7 +93,7 @@ After completing this certification, explore:
 
 - **Mosaic AI** — Foundation Model APIs and Model Serving
 - **Mosaic AI Vector Search** — Databricks-native vector store
-- **Mosaic AI Gateway** — guardrails, rate limit, multi-provider routing
+- **Unity AI Gateway** — guardrails, rate limit, traffic splitting
 - **MLflow** — LLM tracking, evaluation, deployment
 - **Unity Catalog** — governance for embeddings, models, prompt assets, agents
 - **LangChain / LlamaIndex** — LLM application frameworks
@@ -115,7 +115,7 @@ Review these shared fundamentals:
 - [ ] Build LLM chains and agents with Mosaic AI FMAPI
 - [ ] Deploy GenAI apps via Model Serving (provisioned vs pay-per-token)
 - [ ] Set up MLflow evaluation, LLM-as-judge, inference tables
-- [ ] Govern AI assets with Unity Catalog (PII handling, content safety, AI Gateway)
+- [ ] Govern AI assets with Unity Catalog (PII handling, content safety, Unity AI Gateway)
 
 ## Official Resources
 
@@ -123,4 +123,4 @@ Review these shared fundamentals:
 - [Mosaic AI Documentation](https://docs.databricks.com/generative-ai/)
 - [Vector Search Documentation](https://docs.databricks.com/en/generative-ai/vector-search.html)
 - [Model Serving Documentation](https://docs.databricks.com/en/machine-learning/model-serving/index.html)
-- [AI Gateway Documentation](https://docs.databricks.com/en/ai-gateway/index.html)
+- [Unity AI Gateway Documentation](https://docs.databricks.com/en/ai-gateway/index.html)

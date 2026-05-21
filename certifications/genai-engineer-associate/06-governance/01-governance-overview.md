@@ -13,21 +13,21 @@ status: published
 
 ## Overview
 
-The March 2026 blueprint elevates governance to a first-class 8 % domain. In Databricks, GenAI governance lives at four layers: **Unity Catalog** governs the *assets* (embeddings, models, prompts, agents, vector indexes), **PII handling** governs the *data flowing through* the pipeline, **content safety** governs the *prompts and generations*, and **Mosaic AI Gateway** governs the *endpoints* themselves. Inference Tables provide the audit trail underneath all four.
+The March 2026 blueprint elevates governance to a first-class 8 % domain. In Databricks, GenAI governance lives at four layers: **Unity Catalog** governs the *assets* (embeddings, models, prompts, agents, vector indexes), **PII handling** governs the *data flowing through* the pipeline, **content safety** governs the *prompts and generations*, and **Unity AI Gateway** governs the *endpoints* themselves. Inference Tables provide the audit trail underneath all four.
 
 > [!abstract]
 >
 > - **UC AI assets** — embeddings tables, vector indexes, registered models, prompt templates, agents — all UC-securable with `GRANT/REVOKE`
 > - **PII handling** — strip / hash / mask before embedding; tag PII columns with UC tags; use column masks for retrieval-time enforcement
 > - **Content safety** — input / output classifiers detect unsafe prompts and unsafe outputs
-> - **Mosaic AI Gateway** — per-endpoint policies for rate limit, content filtering, prompt-injection detection
+> - **Unity AI Gateway** — per-endpoint policies for rate limit, content filtering, prompt-injection detection
 > - **Inference Tables** — auto-captured Delta tables of every request/response on a Model Serving endpoint
 
 > [!tip] What the Exam Tests
 >
 > - Which UC objects are governable (embeddings tables, vector indexes, registered models — yes; in-memory prompts — no)
 > - Why PII must be handled before embedding, not after retrieval
-> - Which guardrails sit in Mosaic AI Gateway vs in the model itself
+> - Which guardrails sit in Unity AI Gateway vs in the model itself
 > - That Inference Tables are the audit-of-record for served endpoints
 
 ---
@@ -73,17 +73,17 @@ Two-sided:
 
 Databricks-provided classifiers integrate with Model Serving; you can also bring your own.
 
-## Layer 4 — Mosaic AI Gateway
+## Layer 4 — Unity AI Gateway
 
-Per-endpoint policies that wrap any served LLM:
+Per-endpoint policies that wrap any served LLM. Officially documented capabilities (https://docs.databricks.com/aws/en/ai-gateway/):
 
 | Policy | What it does |
 | :--- | :--- |
-| **Rate limit** | Tokens/sec or requests/sec per user / app |
-| **PII detection** | Block requests containing detected PII |
-| **Content filtering** | Apply safety classifiers (input and output) |
-| **Logging** | Force every request/response into Inference Tables |
-| **Multi-provider routing** | Same endpoint, multiple backends (Llama / Claude / GPT) with weighted routing |
+| **Rate limits** | Tokens/sec or requests/sec per user / app |
+| **Traffic splitting** | Same endpoint, multiple backends (Llama / Claude / GPT) with weighted routing |
+| **Payload logging** | Auto-capture every request/response into Inference Tables |
+| **Usage tracking** | Endpoint usage metrics surfaced through system tables |
+| **Guardrails** *(where supported)* | Content-safety filtering and PII detection — availability depends on the underlying model/endpoint and may be a Mosaic AI Model Serving feature rather than a Gateway-core feature |
 
 ## Layer 5 — Inference Tables
 
@@ -91,13 +91,13 @@ Every Model Serving endpoint can be configured to capture request and response d
 
 ```sql
 SELECT
-  timestamp,
-  request_payload :> 'prompt' AS prompt,
-  response_payload :> 'choices[0].message.content' AS answer,
-  latency_ms
+  timestamp_ms,
+  request:prompt           AS prompt,
+  response:choices[0].message.content AS answer,
+  databricks_request_id
 FROM main.serving_logs.my_genai_app_inference
 WHERE date >= current_date - INTERVAL 7 DAYS
-ORDER BY timestamp DESC;
+ORDER BY timestamp_ms DESC;
 ```
 
 This is the audit-of-record. It feeds drift monitoring, retrospective evaluation, and compliance reporting.
@@ -113,7 +113,7 @@ This is the audit-of-record. It feeds drift monitoring, retrospective evaluation
 
 - **Embedding PII without redaction** — the vector index now contains reconstructible PII; redact at chunk time, not retrieval time
 - **Forgetting to enable Inference Tables on a new endpoint** — no audit trail = no compliance story
-- **Confusing Mosaic AI Gateway content filtering with model-side safety** — gateway is the outer perimeter; the model may still generate unsafe content on its own. Use both
+- **Confusing Unity AI Gateway content filtering with model-side safety** — gateway is the outer perimeter; the model may still generate unsafe content on its own. Use both
 - **GRANT on the embedding table but not the vector index** — users can read raw embeddings but can't query the index, or vice versa
 
 ## Exam Tips
@@ -122,16 +122,16 @@ This is the audit-of-record. It feeds drift monitoring, retrospective evaluation
 >
 > - **UC governs AI assets** the same way it governs tables — GRANT/REVOKE/row filters/column masks all apply.
 > - **PII must be handled before embedding.** Once embedded, it lives in the index.
-> - **Mosaic AI Gateway = perimeter** policies (rate limit, content filter, routing). Model-side safety = the model's own refusal behaviour.
+> - **Unity AI Gateway = perimeter** policies (rate limit, content filter, routing). Model-side safety = the model's own refusal behaviour.
 > - **Inference Tables are the audit-of-record** for served endpoints.
 
 ## Key Takeaways
 
-- Governance has 5 layers: UC assets, PII handling, content safety, Mosaic AI Gateway, Inference Tables
+- Governance has 5 layers: UC assets, PII handling, content safety, Unity AI Gateway, Inference Tables
 - All persistent AI artifacts are UC-securable
 - PII redaction happens at chunk / embed time, not at retrieval
 - Inference Tables capture every served request/response — enable on every prod endpoint
-- Mosaic AI Gateway wraps the endpoint with rate limit + content filtering + logging policies
+- Unity AI Gateway wraps the endpoint with rate limit + content filtering + logging policies
 
 ## Related Topics
 
@@ -142,7 +142,7 @@ This is the audit-of-record. It feeds drift monitoring, retrospective evaluation
 ## Official Documentation
 
 - [Unity Catalog for ML and AI](https://docs.databricks.com/en/data-governance/unity-catalog/index.html)
-- [Mosaic AI Gateway](https://docs.databricks.com/en/ai-gateway/index.html)
+- [Unity AI Gateway](https://docs.databricks.com/en/ai-gateway/index.html)
 - [Inference Tables](https://docs.databricks.com/en/machine-learning/model-serving/inference-tables.html)
 - [Model Serving guardrails](https://docs.databricks.com/en/ai-gateway/configure-guardrails.html)
 
