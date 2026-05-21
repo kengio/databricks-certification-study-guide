@@ -230,8 +230,8 @@ DROP SCHEMA IF EXISTS main.ml_lab CASCADE;
 
 - [MLflow basics (shared)](../shared/fundamentals/mlflow-basics.md)
 - [MLflow cheat sheet (shared)](../shared/cheat-sheets/mlflow-quick-ref.md)
-- [ML Associate — MLflow Deployment](../certifications/ml-associate/04-mlflow-deployment/README.md)
-- [ML Professional — Model Production Lifecycle](../certifications/ml-professional/03-model-production-lifecycle/README.md)
+- [ML Associate — MLflow Deployment](../certifications/ml-associate/04-model-deployment/README.md)
+- [ML Professional — Model Production Lifecycle](../certifications/ml-professional/03-model-deployment/README.md)
 
 ---
 

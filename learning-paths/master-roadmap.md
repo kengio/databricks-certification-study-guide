@@ -202,10 +202,10 @@ After completing an entry certification, choose your specialization.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Feature Engineering / Spark ML (33%) | [03-feature-engineering](../certifications/ml-associate/03-feature-engineering/README.md) |
-| 2 | Databricks ML (29%) | [01-databricks-ml](../certifications/ml-associate/01-databricks-ml/README.md) |
-| 3 | ML Workflows (29%) | [02-ml-workflows](../certifications/ml-associate/02-ml-workflows/README.md) |
-| 4 | MLflow Deployment (9%) | [04-mlflow-deployment](../certifications/ml-associate/04-mlflow-deployment/README.md) |
+| 1 | Feature Engineering / Spark ML (33%) | [03-feature-engineering](../certifications/ml-associate/02-model-development/README.md) |
+| 2 | Databricks ML (29%) | [01-databricks-ml](../certifications/ml-associate/01-databricks-machine-learning/README.md) |
+| 3 | ML Workflows (29%) | [02-ml-workflows](../certifications/ml-associate/03-ml-workflows/README.md) |
+| 4 | MLflow Deployment (9%) | [04-mlflow-deployment](../certifications/ml-associate/04-model-deployment/README.md) |
 
 **Practice & Review:**
 
@@ -226,10 +226,10 @@ Choose based on your career direction after Stage 3.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Deployment (35%) | [03-model-production-lifecycle](../certifications/ml-professional/03-model-production-lifecycle/README.md) |
-| 2 | Monitoring (25%) | [04-model-governance-mlops](../certifications/ml-professional/04-model-governance-mlops/README.md) |
-| 3 | Solution Design (20%) | [01-advanced-feature-engineering](../certifications/ml-professional/01-advanced-feature-engineering/README.md) |
-| 4 | Experimentation (20%) | [02-hyperparameter-optimization](../certifications/ml-professional/02-hyperparameter-optimization/README.md) |
+| 1 | Deployment (35%) | [03-model-production-lifecycle](../certifications/ml-professional/03-model-deployment/README.md) |
+| 2 | Monitoring (25%) | [04-model-governance-mlops](../certifications/ml-professional/02-ml-ops/README.md) |
+| 3 | Solution Design (20%) | [01-advanced-feature-engineering](../certifications/ml-professional/01-model-development/README.md) |
+| 4 | Experimentation (20%) | [02-hyperparameter-optimization](../certifications/ml-professional/01-model-development/README.md) |
 
 **Practice & Review:**
 
