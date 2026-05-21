@@ -97,6 +97,8 @@ Terminal sections in this exact order:
 
 **Lab files** (`type: lab` under `labs/`) are exercises, not topic files. They follow a different terminal pattern: `## Verification` (or fold verification into the last numbered step) → `## Cleanup` → `## Related Study Material` → `---` + nav. The Use Cases / Common Issues / Exam Tips / Key Takeaways sections do not apply.
 
+**Final-review files** (`type: final-review` under each cert's `resources/final-review.md`) are exam-morning cram scans, also not topic files. Standard structure: a `> [!important]` framing callout (optional), `## 2-minute facts ...`, `## 5-minute per-domain quick-fire`, `## Common-trap reminders` (table), `## Today's exam — <N>-minute time budget`, optional motivational close, `---` + nav. No Use Cases / Common Issues / Key Takeaways terminal sections — the whole file IS the cram material.
+
 **Nav format:** end each topic file with a three-segment bold line — Previous file link, Back-to-Section link to `./README.md`, Next file link — separated by ` | `. Schematic (replace `<prev>` and `<next>` with the actual sibling filenames):
 
 ```text

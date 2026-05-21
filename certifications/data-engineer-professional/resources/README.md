@@ -18,7 +18,8 @@ Preparation materials for the Databricks Certified Data Engineer Professional ex
 | [Mock Exam](./mock-exam/README.md) | Full-length practice exam (63 questions) |
 | [Mock Exam 2](./mock-exam-2/README.md) | Alternative practice exam (60 questions) |
 | [Cheat Sheets](./cheat-sheets/README.md) | Quick reference cards for key topics |
-| [Exam Tips](./exam-tips.md) | Strategies, time management, common pitfalls |
+| [Exam Tips](./exam-tips.md)
+- **[Final Review](./final-review.md)** — 20-minute exam-morning cram scan | Strategies, time management, common pitfalls |
 | [Official Links](./official-links.md) | Databricks documentation and registration |
 
 ---
