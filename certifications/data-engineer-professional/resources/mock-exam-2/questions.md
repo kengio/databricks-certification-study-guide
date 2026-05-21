@@ -1156,4 +1156,62 @@ D) Use Auto Loader with the Snowflake source connector
 
 ---
 
+### Question PERF-1 *(Hard — Cost & Performance Optimization)*
+
+**Scenario**: A 2 TB Delta table is partitioned by `event_date` and Z-ORDERed by `customer_id`. Queries filter on both `event_date` (high selectivity) and `region` (low cardinality, 5 distinct values). The team is considering migrating to liquid clustering.
+
+**Question**: Which migration approach gives the best query performance with the least operational disruption?
+
+A) Run `OPTIMIZE table ZORDER BY (customer_id, region, event_date)` to add `region` to the Z-ORDER  
+B) Drop the table and recreate it with `CLUSTER BY (customer_id, event_date, region)` and a one-time `OPTIMIZE` to materialise clustering  
+C) Run `ALTER TABLE table CLUSTER BY (customer_id, event_date, region)` and let liquid clustering organise data incrementally on subsequent writes; back-fill with `OPTIMIZE table FULL`  
+D) Switch to bucketing on `customer_id` with 100 buckets  
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> Liquid clustering supports **`ALTER TABLE ... CLUSTER BY`** for migration without recreating the table. New writes adopt the clustering; an explicit `OPTIMIZE table FULL` triggers a one-time reorganisation of existing data. This avoids the disruption of B (recreate) and the partitioning lock-in of A (Z-ORDER is non-adaptive and partition columns can't be Z-ORDERed). D is a Hive-era pattern not relevant to Delta on Databricks.
+
+---
+
+---
+
+### Question COST-1 *(Medium — Cost & Performance Optimization)*
+
+**Scenario**: A nightly Lakeflow Job runs a Spark batch pipeline that takes 45 minutes on a Standard (DBR) all-purpose cluster of 8 i3.xlarge workers. The team wants to halve the cost.
+
+**Question**: Which two changes typically yield the biggest cost reduction with the least risk?
+
+A) Switch to a Job cluster (cheaper DBU rate per node) AND enable autoscaling 2–8 workers  
+B) Reduce worker count to 4 and keep the cluster as all-purpose  
+C) Move to Photon-enabled instance type AND enable single-user access mode  
+D) Switch to spot instances AND disable autoscaling  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Two independent levers, both safe: (1) Job clusters cost ~50 % less per DBU than all-purpose clusters because they're not designed for shared interactive use; (2) autoscaling drops idle nodes so you only pay for what you use during low-throughput phases of the job. B caps capacity (may slow the job → cost trade-off neutralised). C may help but Photon depends on workload shape and single-user mode is unrelated to cost. D introduces spot-eviction risk and removes elasticity.
+
+---
+
+---
+
+### Question MON-1 *(Medium — Monitoring and Alerting)*
+
+**Scenario**: A Lakeflow Job that processes daily orders has been failing intermittently for the past week. The team needs both proactive alerting (so on-call is paged before downstream teams notice) AND a way to query historical failure patterns to identify the root cause.
+
+**Question**: Which combination satisfies both requirements?
+
+A) Configure Lakeflow Jobs notifications (email + webhook to PagerDuty) for failures AND query `system.lakeflow.job_run_timeline` for historical failure analytics  
+B) Add a Slack webhook inside the job's last task that fires on success; absence of message indicates failure  
+C) Set up a SQL Alert that polls `SHOW JOBS` every 5 minutes  
+D) Rely on Databricks support to surface failures automatically  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Lakeflow Jobs notifications fire on success/failure/duration thresholds and route via email or webhook (PagerDuty, Slack, custom HTTP). For historical analytics, system tables under `system.lakeflow.*` expose job run history queryable in SQL. B is anti-pattern ("absence of signal" alerts are notoriously unreliable). C `SHOW JOBS` doesn't surface run-level state; the system tables do. D is not how Databricks works.
+
+---
+
 **[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to DE Professional](../../README.md)**

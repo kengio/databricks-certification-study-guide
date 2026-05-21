@@ -914,4 +914,62 @@ D) Add a column comment on `invoice_total` saying "this is revenue"
 
 ---
 
+### Question GS-3 *(Medium — AI/BI Genie Spaces)*
+
+**Scenario**: A Genie Space has been live for three months. Usage analytics show 15 % of user questions get answers that the data team manually verifies as incorrect. The lead analyst wants to systematically improve accuracy.
+
+**Question**: Which workflow best addresses recurring incorrect answers?
+
+A) Increase the model temperature so Genie produces more varied answers  
+B) Review the audit log of recent generated SQL, identify recurring failure patterns, add a SQL expression or example query for each pattern, monitor the next two weeks  
+C) Disable Genie and replace it with hand-curated DBSQL dashboards  
+D) Train a custom embedding model on the team's vocabulary  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The official Genie best-practices workflow is: audit log → identify failure patterns → curate (SQL expressions are preferred over text instructions) → monitor. The audit log captures every Genie-generated SQL so you can see exactly what failed. A makes answers worse, not better (temperature is for creativity, not accuracy). C abandons the value of natural-language analytics. D doesn't apply — Genie generates SQL, not embeddings.
+
+---
+
+---
+
+### Question DASH-1 *(Medium — Creating Dashboards and Visualizations)*
+
+**Scenario**: An analyst needs to notify the operations team when the daily backlog of unprocessed orders exceeds 10,000. The notification should fire within minutes of crossing the threshold and go to a Slack channel.
+
+**Question**: Which feature fits best?
+
+A) Schedule the dashboard to refresh hourly and rely on team members to check it  
+B) Create a SQL alert on a query that returns `unprocessed_order_count` and configure it to evaluate every 5 minutes with a threshold of `> 10000`; route to a Slack webhook destination  
+C) Build a dashboard with a red KPI tile that turns red when the count exceeds 10,000  
+D) Use a Lakeflow Job that runs the SQL nightly and emails a digest  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Databricks SQL Alerts are the documented path for threshold-based notifications: they evaluate a query result on a schedule (down to 1 minute), apply a comparator (`>`, `<`, `==`), and route to email, Slack, or any webhook destination. A and C are passive — they require someone to look. D is too slow (nightly) and not threshold-based.
+
+---
+
+---
+
+### Question DM-1 *(Medium — Data Modeling with Databricks SQL)*
+
+**Scenario**: An analyst builds a daily revenue dashboard that runs an aggregate query over a Silver `orders` Delta table (~500 GB). The aggregate takes 90 seconds and the dashboard is viewed by 50+ users per day. The analyst wants sub-second dashboard loads.
+
+**Question**: Which approach is the documented best fit?
+
+A) Standard view: `CREATE VIEW gold.daily_revenue AS SELECT date, SUM(amount) ... GROUP BY date`  
+B) Materialized view: `CREATE MATERIALIZED VIEW gold.daily_revenue AS ...` with an hourly refresh schedule  
+C) Pin the dashboard to a Pro SQL Warehouse with result caching enabled  
+D) Convert the orders table to bucketing on date  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Materialised views (MVs) pre-compute the aggregate and persist it as Delta data; subsequent dashboard reads are reads of the materialised result (sub-second). For a 90-second aggregate that's read 50+ times/day, MV is the canonical pattern — storage cost is trivial compared to the compute saved. A re-runs the aggregate on every read. C helps a bit (result cache returns cached results when query+data hash matches), but cache is invalidated on every write to `orders` and doesn't help the *first* viewer of each day. D is irrelevant (bucketing is for joins).
+
+---
+
 **[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to Data Analyst Associate](../../README.md)**

@@ -20,7 +20,7 @@ Offline evaluation tells you whether the app *would* work on a frozen dataset. *
 > - **Inference Tables** are the raw data — every prompt and every response auto-captured to a UC Delta table
 > - **Latency / cost dashboards** built on top of Inference Tables + `system.serving.endpoint_usage`
 > - **Drift detection** — monitor the input distribution (prompt topic, length, language) and the output distribution (refusal rate, length, faithfulness score)
-> - **LLM-as-judge backtests** — periodically replay a sample of captured production requests through an evaluator chain
+> - **Databricks Agent Evaluation backtests** — periodically replay a sample of captured production requests through the built-in RAG judges (groundedness, relevance, correctness, safety)
 > - **Alerting** — DBSQL alerts + Lakeflow Jobs notifications on threshold breaches
 
 > [!tip] What the Exam Tests
@@ -80,14 +80,12 @@ with sql.connect(server_hostname=..., http_path=...) as conn:
         """)
         df = cursor.fetchall_arrow().to_pandas()
 
-# Replay through an evaluator chain that judges faithfulness + relevance
+# Use the Databricks Agent Evaluation framework: built-in RAG judges
+# (groundedness, answer relevance, correctness, safety) scored by a stronger LLM
 with mlflow.start_run(run_name="prod_backtest_daily"):
     results = mlflow.evaluate(
-        model=judge_chain,
         data=df,
-        model_type="text",
-        evaluators=["llm_as_judge"],
-        evaluator_config={"metrics": ["faithfulness", "relevance"]},
+        model_type="databricks-agent",
     )
 ```
 

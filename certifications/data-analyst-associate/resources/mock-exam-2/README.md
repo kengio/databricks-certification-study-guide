@@ -48,6 +48,10 @@ A second timed mock — take after Mock Exam 1.
 > [!note]
 > Databricks does not publish a numeric passing threshold for the current exam guide.
 
+## After the exam — debrief
+
+When you've finished the timed sitting, see [`debrief.md`](./debrief.md) for the domain-to-resource map, the per-section question breakdown, and a study plan tailored to your miss count.
+
 ---
 
-**[Start the Exam →](./questions.md)** | **[← Back to Resources](../README.md)**
+**[Start the Exam →](./questions.md)** | **[Debrief →](./debrief.md)** | **[← Back to Resources](../README.md)**

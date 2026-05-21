@@ -853,4 +853,62 @@ D) Configure a Unity AI Gateway "audit" policy that emails a daily digest to the
 
 ---
 
+### Question AGENT-1 *(Medium — Assembling and Deploying Apps)*
+
+**Scenario**: A team has built a RAG chain in LangChain. They need to deploy it as a single Model Serving endpoint with streaming responses, MLflow tracing, and automatic Inference Table capture.
+
+**Question**: Which deployment path is the documented best fit?
+
+A) Subclass `mlflow.pyfunc.ResponsesAgent`, wrap the chain inside `predict()`, log via `mlflow.pyfunc.log_model`, register in UC, then call `databricks.agents.deploy(uc_model_name, version)`  
+B) Pickle the chain and write a custom Flask app that runs in Docker on the workspace  
+C) Log the chain with `mlflow.langchain.log_model` and manually create a Model Serving endpoint via the workspace UI  
+D) Use a Databricks notebook task scheduled to run the chain  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> The Mosaic AI Agent Framework `ResponsesAgent` + `databricks.agents.deploy()` is the documented one-step path that gives you streaming, MLflow tracing, and Inference Tables auto-enabled — the third pillar (Inference Tables) directly enables the EVAL-1 / online-monitoring story. `databricks.agents.deploy()` provisions the Model Serving endpoint, registers the version, and wires all three features in one call. B is the "build it yourself" path that loses the framework benefits. C works but is two-step (no streaming or auto-tracing unless wrapped). D is for batch processing, not serving.
+
+---
+
+---
+
+### Question GW-1 *(Medium — Assembling and Deploying Apps)*
+
+**Scenario**: A team wants to deploy v3 of a RAG app while keeping v2 live for fallback. They need 10 % of traffic going to v3 and 90 % to v2, with the ability to ramp v3 to 100 % gradually based on quality metrics from Inference Tables.
+
+**Question**: Which feature of a Mosaic AI Model Serving endpoint implements this canary pattern?
+
+A) Rate limits on the Unity AI Gateway — set a limit on v2 so traffic naturally spills to v3  
+B) **Multi-model endpoint traffic config** — register both `v2` and `v3` as `served_entities` on the same endpoint and set `traffic_config = {"routes": [{"served_model_name": "v3", "traffic_percentage": 10}, {"served_model_name": "v2", "traffic_percentage": 90}]}`  
+C) Unity AI Gateway guardrails — block v2 requests when v3 is healthy  
+D) Inference Tables payload logging — log every request and let the consumer choose the version  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> **Traffic splitting is a Mosaic AI Model Serving feature**, not a Unity AI Gateway policy. You register multiple `served_entities` on a single endpoint and assign weighted `routes` via `traffic_config`. Weights must sum to 100; update the percentages over time to ramp. Unity AI Gateway wraps the endpoint for governance (rate limits, payload logging, guardrails, usage tracking, fallbacks) — it observes the split but doesn't define it. A misuses rate limits. C misuses guardrails. D is unrelated.
+
+---
+
+---
+
+### Question EVAL-1 *(Medium — Evaluation and Monitoring)*
+
+**Scenario**: A team wants to measure quality drift in a production RAG app. They have 30 days of Inference Table data (one row per request, with the full prompt and response). They want a *weekly* groundedness score across a sample of production traffic, scored by a stronger LLM.
+
+**Question**: Which approach matches the documented Databricks Agent Evaluation pattern?
+
+A) Sample N recent rows from the Inference Table into a Spark DataFrame; run `mlflow.evaluate(data=sample, model_type="databricks-agent")` so the built-in Databricks RAG judges (groundedness, relevance, correctness, safety) score the sample; schedule via a Lakeflow Job  
+B) Manually read 100 random conversations every week  
+C) Compute a groundedness score with a regex over the response text  
+D) Train a custom classifier on production data  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Databricks' Agent Evaluation framework plugs into `mlflow.evaluate(...)` via `model_type="databricks-agent"`. The built-in RAG judges include **groundedness** (does the answer follow from retrieved context?), **answer relevance**, **answer correctness**, and **safety**. Each `mlflow.evaluate` call creates an MLflow run, giving a tracked time-series of quality across weeks. Schedule via a Lakeflow Job. B doesn't scale. C is brittle. D is months of work and overkill.
+
+---
+
 **[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to GenAI Engineer Associate](../../README.md)**
