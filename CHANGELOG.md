@@ -4,6 +4,39 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-20] — Anki deck scaffolding + 2 starter decks (Delta Lake, Unity Catalog)
+
+### Added
+
+- **`anki/build.py`** — Python 3.9+ stdlib-only converter that parses the markdown deck source format into Anki-importable TSV. Two modes: full build (`python3 anki/build.py`) and parse-check (`python3 anki/build.py --check`, used in CI / pre-commit to validate format without writing output). No `pip install` required.
+- **`anki/README.md`** — workflow documentation for learners (how to install Anki + import) and contributors (how to add a new deck), card-writing principles, "what this isn't" framing.
+- **`anki/format.md`** — exact contract that `build.py` parses: required frontmatter (`deck`, `tags`), card boundaries (`## ` heading + `> [!success]- Answer` callout), what survives the markdown → Anki conversion, tag conventions, complete worked example.
+- **`anki/decks/shared/delta-lake.md`** — 27-card starter deck covering ACID semantics, OPTIMIZE / VACUUM / Z-order / Liquid Clustering, Time Travel, CDF, Deletion Vectors, MERGE INTO, schema evolution, idempotent streaming writes, UniForm, Auto Optimize. Tagged for DE Associate + DE Professional.
+- **`anki/decks/shared/unity-catalog.md`** — 22-card starter deck covering the three-level namespace, managed vs external tables, External Locations + Storage Credentials, privilege model, row filters + column masks, Volumes, lineage, Tags, service principals, account groups, UC Model Registry, Feature Engineering in UC, Lakehouse Federation, catalog binding. Tagged for all 6 certs.
+
+### Changed
+
+- **`.gitignore`** — adds `anki/build/` (TSV output is regenerated locally; only source markdown is committed)
+- **Top-level `README.md`**:
+  - Q1 2027 roadmap entry "Spaced-repetition deck (Anki)" marked ✅ complete
+  - Repository layout updated to include `anki/`
+- **`CLAUDE.md`**:
+  - Repository Structure section adds the `anki/` tree
+  - README & CLAUDE.md Sync Rule table adds row: update `anki/README.md` "Available decks" table + run `--check` on every deck add/edit
+
+### Architecture decisions
+
+- **Markdown source, TSV output**: source is human-readable in Obsidian + GitHub (the `> [!success]-` callout doubles as a foldable in-place quiz); output is regenerated, not committed, so the repo stays text-only.
+- **Stdlib-only builder**: avoids `pip install genanki` or any other dependency. The trade-off: TSV instead of `.apkg`. Acceptable because Anki's TSV import is first-class and supports `#deck:` / `#html:true` / `#columns:` metadata headers that drive deck hierarchy and HTML rendering.
+- **49 starter cards, not 500**: ships quality over quantity. Community contributions expand the deck library; the format spec + builder + two worked examples are the leverage point.
+
+### Verification
+
+- `python3 anki/build.py --check` parses both decks cleanly (49 cards total)
+- `python3 anki/build.py` produces valid Anki-importable TSV with proper `#separator:tab`, `#html:true`, `#deck:` headers
+- markdownlint passes (no new violations)
+- lychee link-check passes (all cross-references inside `anki/` resolve)
+
 ## [2026.05.21-19] — Translation scaffolding (Thai in-tree + fork model for other languages)
 
 ### Added

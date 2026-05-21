@@ -24,6 +24,10 @@ databricks-certification-study-guide/
 │   ├── README.md           # Index of all language translations
 │   ├── STATUS-TEMPLATE.md  # Template for non-Thai community forks
 │   └── th/                 # Thai translation (README.md, glossary.md, STATUS.md)
+├── anki/                   # Spaced-repetition Anki decks
+│   ├── README.md, format.md, build.py     # Workflow, spec, builder
+│   ├── decks/                              # Markdown source (committed)
+│   └── build/                              # TSV output (gitignored)
 └── images/databricks-ui/   # Screenshots by feature area
 ```
 
@@ -177,6 +181,7 @@ Every PR that changes content **must** keep `README.md` and `CLAUDE.md` in sync.
 | Touches a convention or layout rule | `CLAUDE.md` (Content Guidelines) |
 | Edits an English file that has a Thai counterpart under `i18n/th/` | mark the counterpart 🔄 in `i18n/th/STATUS.md` (don't translate in the same PR — Thai catch-up is a separate PR) |
 | Adds a new Databricks-adjacent term to a Thai translation | also add it to `i18n/th/glossary.md` in the same PR |
+| Adds or modifies an Anki deck under `anki/decks/` | update the "Available decks" table in `anki/README.md`; run `python3 anki/build.py --check` before committing |
 
 The PR template checkbox enforces this. Do not check the box unless the update is actually in the diff.
 

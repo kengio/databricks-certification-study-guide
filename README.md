@@ -407,7 +407,7 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 
 - ✅ **Renewal guide** for candidates whose 2-year validity expires in 2027–2028 — complete (see [`shared/appendix/renewal-guide.md`](./shared/appendix/renewal-guide.md))
 - ✅ **Translation scaffolding** — Thai in-tree, other languages via fork model — complete (see [`TRANSLATING.md`](./TRANSLATING.md) + [`i18n/`](./i18n/README.md))
-- 🌱 **Spaced-repetition deck (Anki)** generated from cheat-sheet facts
+- ✅ **Spaced-repetition deck (Anki)** — markdown-source decks + stdlib-only builder, two starter decks (Delta Lake 27 cards, Unity Catalog 22 cards) — complete (see [`anki/README.md`](./anki/README.md))
 - 🌱 **Adaptive practice questions** — JSON-driven question bank with difficulty tagging
 
 Legend: ✅ done · 🔄 in progress / next up · ⏳ planned · 🌱 ideas being explored
@@ -432,6 +432,7 @@ databricks-certification-study-guide/
 ├── learning-paths/                      # role-based progression guides
 ├── labs/                                # runnable hands-on lab pack (5 labs)
 ├── i18n/                                # translations index + th/ (Thai in-tree translation)
+├── anki/                                # spaced-repetition decks (markdown source + stdlib builder)
 ├── images/databricks-ui/                # screenshots organised by feature area
 ├── CLAUDE.md                            # repo conventions for AI assistants
 ├── OBSIDIAN-SETUP.md                    # full Obsidian onboarding walkthrough

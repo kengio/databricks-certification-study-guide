@@ -28,3 +28,6 @@ node_modules/
 
 # Lychee link-check cache
 .lycheecache
+
+# Anki build output (regenerated locally via `python3 anki/build.py`)
+anki/build/
