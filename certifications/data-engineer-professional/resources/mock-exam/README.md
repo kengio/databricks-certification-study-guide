@@ -11,7 +11,7 @@ tags:
 Simulate the real exam under timed conditions before your test date.
 
 > [!important]
-> **Refreshed for the November 30, 2025 blueprint.** Terminology updated to current product names (Lakeflow Jobs, Lakeflow Declarative Pipelines). Domain weighting and section labels now match the 10-domain official structure. Newly-added domain coverage (Data Sharing & Federation, Data Modelling as a standalone domain) included. See [exam guide PDF](https://www.databricks.com/sites/default/files/2025-11/databricks-certified-data-engineer-professional-exam-guide-november-30-2025_0.pdf) for the official skill list.
+> **Refreshed for the November 30, 2025 blueprint.** Terminology updated to current product names (Lakeflow Jobs, Lakeflow Declarative Pipelines). Domain weighting and section labels now match the 10-domain official structure.
 
 ## Exam Instructions
 
@@ -37,25 +37,17 @@ Simulate the real exam under timed conditions before your test date.
 | Data Modelling | 6 % | 4 |
 | Data Sharing and Federation | 5 % | 4 |
 
-## How to Take This Exam
-
-1. Set a 120-minute timer before opening [questions.md](./questions.md)
-2. Answer all questions without referring to notes or documentation
-3. Expand the `[!success]- Answer` callout only after committing to an answer
-4. Score yourself per domain to identify weak areas
-5. Review [exam-tips.md](../exam-tips.md) and the relevant topic folder if scoring poorly in a domain
-
 ## Scoring Guide
 
-| Score | Result | Action |
-| ----- | ------ | ------ |
-| 50–63 (≥ 80 %) | Excellent — ready to sit the exam | Schedule your exam |
-| 44–49 (70–79 %) | Likely passing — review weak areas | Review missed topics, attempt Mock Exam 2 |
-| 38–43 (60–69 %) | Close — focused study needed | Study weak domains, retry in 1 week |
-| Below 38 (< 60 %) | Not ready — comprehensive review needed | Review all study material before retrying |
+| Score | Result |
+| ----- | ------ |
+| 50–63 (≥ 80 %) | Excellent |
+| 44–49 (70–79 %) | Likely passing |
+| 38–43 (60–69 %) | Close — focused study needed |
+| Below 38 (< 60 %) | Comprehensive review needed |
 
 > [!note]
-> Databricks does not publish a numeric passing threshold for the November 30, 2025 exam guide. The thresholds above are guidance based on community reports and your own readiness, not the official score line.
+> Databricks does not publish a numeric passing threshold for the current exam guide.
 
 ---
 
