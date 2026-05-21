@@ -1191,6 +1191,97 @@ body.quiz-active .page-footer { display: none; }
   }
 }
 
+/* ---------- Custom confirm modal (theme-aware, focus-trapped) ----------
+   Replaces native window.confirm() with a styled dialog that matches the
+   rest of the design. Backdrop blur + scale-in animation; respects
+   prefers-reduced-motion. Focus is trapped between Cancel/Confirm and
+   restored to the trigger element on close (see customConfirm in app.js). */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;            /* above masthead (50) + actionbar (50) + toasts (1000) */
+  background: color-mix(in srgb, var(--fg) 38%, transparent);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: modal-backdrop-in 0.16s var(--ease);
+}
+.modal-backdrop[hidden] { display: none !important; }
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 1px 0 var(--hairline),
+    0 20px 60px -20px rgba(0,0,0,0.4),
+    0 8px 16px -8px rgba(0,0,0,0.2);
+  padding: 1.5rem 1.5rem 1.25rem;
+  transform-origin: center;
+  animation: modal-pop 0.2s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.modal:focus { outline: none; }
+
+.modal-title {
+  margin: 0 0 0.5rem 0;
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  line-height: 1.3;
+}
+
+.modal-message {
+  margin: 0 0 1.5rem 0;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--fg-soft);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+.modal-actions button {
+  min-height: 44px;            /* touch target */
+}
+/* Danger-flavored primary button (used for destructive confirms like
+   "Reset progress?" and "Leave timed exam?"). Keeps the same shape as
+   the regular primary but tinted red. */
+.modal-actions .primary.danger {
+  background: var(--negative);
+  color: #FFFFFF;
+}
+@media (hover: hover) {
+  .modal-actions .primary.danger:hover:not(:disabled) {
+    background: var(--negative);
+    filter: brightness(1.08);
+    box-shadow: 0 8px 24px -10px var(--negative);
+  }
+}
+
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modal-pop {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal { animation: none; }
+}
+
 /* ---------- Code blocks (Prism syntax highlighting) ---------- */
 
 code {
@@ -1299,9 +1390,28 @@ button:focus-visible { outline-offset: 3px; }
 
 /* The choice label uses a subtle background tint (matching hover) for both
    mouse-click and keyboard-arrow selection — see :has(input:checked) above.
-   Drop the loud orange focus outline so they look consistent. */
-fieldset#quiz-choices label:focus-within { outline: none; }
-fieldset#quiz-choices input[type=radio]:focus-visible { outline: none; }
+   Drop the loud orange focus outline so the choice row never looks "stuck"
+   after keyboard navigation. The `!important` is intentional: it overrides
+   the global `:focus-visible` rule plus any browser-default focus indicator
+   the UA might draw on appearance:none radios. */
+fieldset#quiz-choices label:focus-within,
+fieldset#quiz-choices label:focus-within * {
+  outline: none !important;
+}
+fieldset#quiz-choices input[type=radio]:focus,
+fieldset#quiz-choices input[type=radio]:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none;
+}
+/* Preserve the filled-center indicator on the currently-checked radio
+   even while it has keyboard focus (the rule above stripped its
+   box-shadow). */
+fieldset#quiz-choices input[type=radio]:checked,
+fieldset#quiz-choices input[type=radio]:checked:focus,
+fieldset#quiz-choices input[type=radio]:checked:focus-visible {
+  box-shadow: inset 0 0 0 4px var(--surface);
+}
 
 /* ---------- Motion & micro-interactions ---------- */
 
@@ -1508,4 +1618,129 @@ fieldset#quiz-choices input[type=radio]:focus-visible { outline: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .confetti-container { display: none; }
+}
+
+/* ============================================================
+   Touch device safeguards — prevent "sticky hover" lingering on
+   mobile after a tap. Coarse-pointer devices don't have real hover,
+   but :hover styles get applied briefly on tap and stay until
+   another tap elsewhere, which looks like a glitchy selection.
+   ============================================================ */
+@media (hover: none) {
+  .cert-card:hover { transform: none; box-shadow: var(--shadow-2); border-color: var(--hairline); }
+  .cert-card:hover::after { opacity: 0; }
+  .cert-card:hover .cert-card-arrow { transform: none; color: var(--muted); }
+  .bank-card:hover { transform: none; background: var(--surface); border-color: var(--hairline); }
+  button.primary:hover:not(:disabled) { transform: none; background: var(--fg); color: var(--bg); box-shadow: none; }
+  button.ghost:hover { background: transparent; border-color: var(--hairline); }
+  button.brand-cluster:hover { background: none; border-color: transparent; }
+  button.brand-cluster:hover .brand-mark { transform: none; }
+  button.brand-cluster:hover .brand-title { color: var(--fg); }
+  .quiz-meta-strip .cert-link:hover { color: var(--fg); text-decoration: none; }
+  #btn-theme:hover { color: var(--fg-soft); border-color: var(--hairline); }
+  button.link:hover { color: var(--muted); }
+  .back-button:hover { color: var(--muted); }
+}
+
+/* ============================================================
+   Mobile portrait + small phones — touch targets, font sizes,
+   spacing reductions. Stacks the actionbar so primary controls
+   stay reachable with the thumb.
+   ============================================================ */
+
+@media (max-width: 720px) {
+  /* All "link"-style buttons in the actionbar need ≥44px tap area */
+  button.link {
+    padding: 0.7rem 0.5rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Theme pill stays compact but reaches 36px minimum */
+  #btn-theme { padding: 0.55rem 0.85rem; min-height: 36px; }
+  /* Brand cluster gets a real tap area even though the title hides */
+  button.brand-cluster {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.5rem;
+    justify-content: center;
+  }
+  /* Cert-link button (back to bank picker) — bigger tap area */
+  .quiz-meta-strip .cert-link {
+    padding: 0.45rem 0;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Difficulty pill slightly larger so the colour band reads clearly */
+  .difficulty { padding: 0.2rem 0.55rem; font-size: 0.65rem; }
+}
+
+@media (max-width: 540px) {
+  main { padding: 1.75rem 1rem 2.5rem; }
+  h2 { font-size: 1.65rem; margin-bottom: 1.5rem; letter-spacing: -0.025em; }
+
+  /* Cert picker cards — full-width, slightly less padding, but still
+     visually distinct with the gradient bar at the top */
+  .cert-card { padding: 1.4rem 1.25rem; }
+  .cert-card strong { font-size: 1.2rem; margin-bottom: 1rem; padding-right: 1rem; }
+  .cert-card .cert-card-meta { font-size: 0.68rem; }
+  .cert-card .cert-card-blueprint { font-size: 0.66rem; padding-top: 0.85rem; margin-top: 0.85rem; }
+
+  /* Bank cards — denser */
+  .bank-card { padding: 1.15rem 1rem; }
+  .bank-card strong { font-size: 1rem; margin-bottom: 0.65rem; }
+  .bank-card .bank-meta { font-size: 0.72rem; }
+  .bank-card .bank-purpose { font-size: 0.78rem; }
+
+  /* Question card — tighter padding, 16px choice text to prevent iOS
+     auto-zoom on focus and improve readability at arm's length */
+  .question-card { padding: 1.25rem 1rem; border-radius: 10px; }
+  #quiz-question { font-size: 1.05rem; margin-bottom: 1.5rem; }
+  fieldset#quiz-choices label { padding: 0.95rem 0.95rem; gap: 0.75rem; }
+  fieldset#quiz-choices label .choice-text { font-size: 1rem; }    /* 16px — readable + no iOS zoom */
+  fieldset#quiz-choices .choice-letter { font-size: 0.9rem; min-width: 1.5em; }
+
+  /* Feedback panel — match card padding */
+  #quiz-feedback { padding: 1.15rem 1rem; }
+  #quiz-feedback p.fb-short { font-size: 0.98rem; }
+
+  /* Stats table — horizontal scroll instead of squishing */
+  #stats { overflow-x: auto; }
+  #stats table { font-size: 0.85rem; }
+  #stats th, #stats td { padding: 0.6rem 0.55rem; }
+
+  /* Action bar — primary controls fill the row, timer wraps next to them */
+  .actionbar-inner { padding: 0.55rem 0.9rem; gap: 0.5rem; min-height: 56px; }
+  .actionbar-left { gap: 0.5rem; width: 100%; }
+  .actionbar-left button.primary { padding: 0.75rem 1.1rem; font-size: 0.9rem; }
+  .actionbar-left button.ghost { padding: 0.65rem 1rem; font-size: 0.85rem; }
+  .actionbar-timer { padding: 0.4rem 0.75rem 0.4rem 0.6rem; }
+  .actionbar-timer .timer-value { font-size: 0.95rem; }
+  .actionbar-right { gap: 0.4rem; font-size: 0.6rem; }
+  .actionbar-right .actionbar-divider,
+  .actionbar-right #bank-stats,
+  .actionbar-right .rh-sep { display: none; }   /* only session-stats + nav controls fit */
+
+  /* Question header — tighter */
+  .question-header { font-size: 0.65rem; gap: 0.4rem; margin-bottom: 0.7rem; }
+}
+
+@media (max-width: 380px) {
+  main { padding: 1.25rem 0.85rem 2rem; }
+  .masthead-inner { padding: 0.5rem 0.85rem; gap: 0.5rem; }
+  .quiz-meta-strip { font-size: 0.6rem; }
+  .quiz-meta-strip .rh-sep { display: none; }     /* gain a few precious pixels */
+  .quiz-meta-strip #quiz-domain { display: none; } /* keep just the cert name */
+  .actionbar-inner { padding: 0.5rem 0.7rem; }
+  .actionbar-right #session-stats { font-size: 0.7rem; }
+}
+
+/* Landscape phones — keep the actionbar slim so most of the viewport
+   is for the question card. */
+@media (max-width: 920px) and (orientation: landscape) and (max-height: 500px) {
+  .masthead-inner { min-height: 44px; padding: 0.4rem 1rem; }
+  .actionbar-inner { padding: 0.5rem 1rem; min-height: 52px; }
+  main { padding: 1.25rem 1.25rem 2rem; }
+  .streak-toast { top: 3rem; }
 }

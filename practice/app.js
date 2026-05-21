@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "28";
+  const APP_VERSION = "29";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -57,7 +57,6 @@
   const THEME_KEY = "dbx-practice-theme";
   const TIMER_KEY = "dbx-practice-timer-minutes";
   const THEMES = ["auto", "light", "dark"];
-  const THEME_ICONS = { auto: "🖥️", light: "☀️", dark: "🌙" };
   const STATE = {
     bank: null,
     history: {},
@@ -810,8 +809,15 @@
     URL.revokeObjectURL(url);
   }
 
-  function resetHistory() {
-    if (!confirm(`Reset all progress for "${STATE.bank.certTitle}"? This can't be undone.`)) return;
+  async function resetHistory() {
+    const ok = await customConfirm({
+      title: "Reset all progress?",
+      message: `This erases your saved attempts and accuracy for “${STATE.bank.certTitle}”. This can't be undone — but the questions themselves stay available.`,
+      confirmLabel: "Reset progress",
+      cancelLabel: "Cancel",
+      danger: true,
+    });
+    if (!ok) return;
     STATE.history = {};
     STATE.seenThisSession.clear();
     STATE.sessionCorrect = 0;
@@ -885,12 +891,18 @@
     updateClockAndTimer();
   }
 
-  function confirmLeaveExam(destination) {
+  async function confirmLeaveExam(destination) {
     if (hasActiveSession()) {
-      const msg = STATE.timerEnd
-        ? "Stop this timed exam and leave? Your timer will reset."
-        : "Leave this session? Your progress will reset (history is kept).";
-      if (!confirm(msg)) return false;
+      const ok = await customConfirm({
+        title: STATE.timerEnd ? "Stop timed exam?" : "Leave this session?",
+        message: STATE.timerEnd
+          ? "Your timer will reset and the session-level stats will be cleared. Your long-term saved history isn't affected."
+          : "Your session-level stats (correct/total) will reset. Your long-term saved history isn't affected.",
+        confirmLabel: STATE.timerEnd ? "Stop & leave" : "Leave",
+        cancelLabel: "Keep going",
+        danger: true,
+      });
+      if (!ok) return false;
     }
     resetSessionState();
     destination();
@@ -980,6 +992,96 @@
     }
   }
 
+  // --- Custom confirm modal -----------------------------------------------
+  //
+  // Replaces window.confirm() with a theme-aware dialog. Returns a Promise
+  // that resolves to true (confirmed) or false (cancelled, ESC, or
+  // backdrop-click). Focus is trapped between the two buttons and restored
+  // to the trigger element when the dialog closes.
+  //
+  // Usage:
+  //   const ok = await customConfirm({ title, message, confirmLabel,
+  //                                    cancelLabel, danger });
+
+  function customConfirm({
+    title = "Confirm",
+    message = "",
+    confirmLabel = "Confirm",
+    cancelLabel = "Cancel",
+    danger = false,
+  } = {}) {
+    return new Promise((resolve) => {
+      const backdrop = $("#modal-backdrop");
+      const dialog   = backdrop.querySelector(".modal");
+      const titleEl  = $("#modal-title");
+      const msgEl    = $("#modal-message");
+      const okBtn    = $("#modal-confirm");
+      const cancelBtn = $("#modal-cancel");
+
+      titleEl.textContent  = title;
+      msgEl.textContent    = message;
+      okBtn.textContent    = confirmLabel;
+      cancelBtn.textContent = cancelLabel;
+      okBtn.classList.toggle("danger", !!danger);
+
+      const prevFocus = document.activeElement;
+
+      const cleanup = (result) => {
+        backdrop.hidden = true;
+        okBtn.removeEventListener("click", onOk);
+        cancelBtn.removeEventListener("click", onCancel);
+        backdrop.removeEventListener("mousedown", onBackdropDown);
+        document.removeEventListener("keydown", onKey, true);
+        if (prevFocus && typeof prevFocus.focus === "function"
+            && document.body.contains(prevFocus)) {
+          try { prevFocus.focus({ preventScroll: true }); } catch (_) { /* no-op */ }
+        }
+        resolve(result);
+      };
+      const onOk     = () => cleanup(true);
+      const onCancel = () => cleanup(false);
+      // Use mousedown (not click) on backdrop so a drag-release outside the
+      // dialog doesn't fire onCancel mid-text-selection.
+      const onBackdropDown = (e) => { if (e.target === backdrop) cleanup(false); };
+      const onKey = (e) => {
+        if (e.key === "Escape") {
+          e.preventDefault(); e.stopPropagation();
+          cleanup(false);
+        } else if (e.key === "Enter") {
+          // Enter activates whichever button is focused; default = Confirm
+          if (document.activeElement === cancelBtn) return;
+          e.preventDefault(); e.stopPropagation();
+          cleanup(true);
+        } else if (e.key === "Tab") {
+          // Trap focus between Cancel and Confirm
+          const next = e.shiftKey
+            ? (document.activeElement === cancelBtn ? okBtn : cancelBtn)
+            : (document.activeElement === okBtn     ? cancelBtn : okBtn);
+          e.preventDefault();
+          next.focus({ preventScroll: true });
+        }
+      };
+
+      okBtn.addEventListener("click", onOk);
+      cancelBtn.addEventListener("click", onCancel);
+      backdrop.addEventListener("mousedown", onBackdropDown);
+      // Capture phase so modal swallows keys before the global quiz handler
+      document.addEventListener("keydown", onKey, true);
+
+      backdrop.hidden = false;
+      // Defer focus so the appear animation doesn't snap; preventScroll so
+      // the page doesn't jump.
+      setTimeout(() => okBtn.focus({ preventScroll: true }), 0);
+    });
+  }
+
+  // Is a confirmation modal currently visible? Used to gate global quiz
+  // keyboard shortcuts so they don't leak through to the underlying screen.
+  function modalIsOpen() {
+    const m = document.getElementById("modal-backdrop");
+    return !!(m && !m.hidden);
+  }
+
   // --- Theme toggle --------------------------------------------------------
 
   function loadTheme() {
@@ -1014,6 +1116,11 @@
   function handleKeydown(ev) {
     // Only react when the quiz section is visible
     if ($("#quiz").hidden) return;
+    // Don't process quiz shortcuts while a confirm modal is up — the
+    // modal owns its own keyboard handler (ESC/Enter/Tab) registered
+    // in capture phase, but a "1"/"2"/etc keypress would otherwise
+    // bubble through and select an answer in the background quiz.
+    if (modalIsOpen()) return;
     // Ignore when the user is typing in a real input. Radios + checkboxes
     // are explicitly NOT excluded — we still want Space/Enter/arrows to work
     // when focus is on a choice's radio (which is normal after ↑/↓ or click).
