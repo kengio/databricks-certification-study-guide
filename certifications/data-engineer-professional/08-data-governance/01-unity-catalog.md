@@ -298,7 +298,7 @@ SELECT
 FROM prod.silver.orders
 GROUP BY customer_id;
 
--- Materialized view (DLT only)
+-- Materialized view (Lakeflow Declarative Pipelines only)
 -- See Lakeflow Pipelines section
 ```
 

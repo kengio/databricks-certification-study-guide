@@ -74,7 +74,7 @@ For depth, see the DE Pro [Lakehouse Federation](../../data-engineer-professiona
 Names to recognise:
 
 - **Auto Loader** (`cloudFiles`) — incremental file ingestion from cloud object stores
-- **Lakeflow Declarative Pipelines** — declarative ETL framework (formerly Delta Live Tables)
+- **Lakeflow Declarative Pipelines** — declarative ETL framework (formerly Lakeflow Declarative Pipelines)
 
 If a question asks "which Databricks tool would a data engineer use to continuously ingest new files as they land," the answer is **Auto Loader** (inside a streaming job or a Lakeflow Declarative Pipeline).
 

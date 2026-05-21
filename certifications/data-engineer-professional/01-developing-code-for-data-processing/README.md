@@ -51,15 +51,15 @@ flowchart TD
 | **Checkpointing** | Streaming queries persist state to durable storage for fault tolerance |
 | **Watermarking** | Bounds how long state is kept for late-arriving data in streaming joins/aggregations |
 | **Delta MERGE** | Single-statement upsert that handles inserts, updates, and deletes atomically |
-| **Lakeflow Declarative Pipelines** | Declarative ETL framework (formerly Delta Live Tables) — define the *what*, not the *how* |
-| **Lakeflow Jobs** | Orchestration layer (formerly Databricks Workflows) for scheduling notebooks, pipelines, and Python wheels |
+| **Lakeflow Declarative Pipelines** | Declarative ETL framework (formerly Lakeflow Declarative Pipelines) — define the *what*, not the *how* |
+| **Lakeflow Jobs** | Orchestration layer (formerly Lakeflow Jobs) for scheduling notebooks, pipelines, and Python wheels |
 
 ## Related Resources
 
 - [Spark Fundamentals (shared)](../../../shared/fundamentals/spark-fundamentals.md)
 - [Delta Lake Basics (shared)](../../../shared/fundamentals/delta-lake-basics.md)
 - [Streaming Fundamentals (shared)](../../../shared/fundamentals/streaming-fundamentals.md)
-- [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
+- [Lakeflow Declarative Pipelines / Lakeflow Declarative Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
 - [PySpark API cheat sheet (shared)](../../../shared/cheat-sheets/pyspark-api-quick-ref.md)
 
 ---

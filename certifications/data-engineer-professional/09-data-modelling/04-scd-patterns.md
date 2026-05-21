@@ -512,9 +512,9 @@ WHERE s.city != d.current_city
   );
 ```
 
-## DLT APPLY CHANGES for SCD Type 2
+## Lakeflow Declarative Pipelines APPLY CHANGES for SCD Type 2
 
-Delta Live Tables provides built-in SCD Type 2 support.
+Lakeflow Declarative Pipelines provides built-in SCD Type 2 support.
 
 ```python
 import dlt
@@ -547,7 +547,7 @@ dlt.apply_changes(
 
 ```
 
-### DLT SCD Type 1
+### Lakeflow Declarative Pipelines SCD Type 1
 
 ```python
 dlt.create_streaming_table("dim_customer_scd1")
@@ -578,7 +578,7 @@ WHEN MATCHED THEN UPDATE SET
     target.deleted_at = current_timestamp();
 ```
 
-### DLT with Deletes
+### Lakeflow Declarative Pipelines with Deletes
 
 ```python
 dlt.apply_changes(
@@ -714,7 +714,7 @@ result = fact_df.join(broadcast(current_df), "customer_id")
 4. **Type 4** - Separate mini-dimension for rapidly changing attributes
 5. **Type 6** - Hybrid of 1, 2, 3 for maximum flexibility
 6. **MERGE** - Primary mechanism for SCD implementation in Delta Lake
-7. **DLT APPLY CHANGES** - Built-in SCD support with `stored_as_scd_type`
+7. **Lakeflow Declarative Pipelines APPLY CHANGES** - Built-in SCD support with `stored_as_scd_type`
 8. **End date convention** - Often `9999-12-31` for current records
 9. **Point-in-time query** - `effective_date <= date AND end_date >= date`
 10. **Surrogate vs Natural key** - Type 2 requires surrogate key for uniqueness
@@ -727,19 +727,19 @@ result = fact_df.join(broadcast(current_df), "customer_id")
 - **SCD Type 3**: adds `previous_<attr>` columns to track only the immediately prior value; limited to one change of history per tracked attribute
 - **SCD Type 4**: extracts rapidly changing attributes into a separate mini-dimension table; the fact table holds a foreign key to the mini-dimension at transaction time
 - **SCD Type 6**: hybrid of Types 1 + 2 + 3; stores full Type 2 history rows AND carries a `current_<attr>` column (Type 1 update) and a `previous_<attr>` column (Type 3) on every row
-- **DLT APPLY CHANGES**: `dlt.apply_changes(..., stored_as_scd_type=2)` generates Type 2 history automatically; the resulting table adds `__START_AT` and `__END_AT` metadata columns; `stored_as_scd_type=1` does a simple upsert
+- **Lakeflow Declarative Pipelines APPLY CHANGES**: `dlt.apply_changes(..., stored_as_scd_type=2)` generates Type 2 history automatically; the resulting table adds `__START_AT` and `__END_AT` metadata columns; `stored_as_scd_type=1` does a simple upsert
 - **MERGE as primary SCD mechanism**: MERGE is the standard DML for all SCD types in Delta Lake; two-step MERGE (expire then insert) is common for Type 2 to avoid ambiguous row matching
 
 ## Related Topics
 
 - [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - MERGE operations
 - [Medallion Architecture](01-medallion-architecture.md) - Where dimensions fit
-- [Apply Changes API](../03-data-transformation-cleansing-quality/04-apply-changes-api.md) - DLT SCD support
+- [Apply Changes API](../03-data-transformation-cleansing-quality/04-apply-changes-api.md) - Lakeflow Declarative Pipelines SCD support
 
 ## Official Documentation
 
 - [Delta Lake MERGE](https://docs.databricks.com/delta/merge.html)
-- [DLT APPLY CHANGES](https://docs.databricks.com/delta-live-tables/cdc.html)
+- [Lakeflow Declarative Pipelines APPLY CHANGES](https://docs.databricks.com/delta-live-tables/cdc.html)
 - [Slowly Changing Dimensions](https://docs.databricks.com/delta-live-tables/slowly-changing-dimensions.html)
 
 ---

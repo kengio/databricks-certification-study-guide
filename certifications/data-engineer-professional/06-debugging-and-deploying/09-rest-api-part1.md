@@ -204,7 +204,7 @@ flowchart LR
     Task --> Python[python_wheel_task]
     Task --> Spark[spark_python_task]
     Task --> SQL[sql_task]
-    Task --> DLT[pipeline_task]
+    Task --> LDPipeline[pipeline_task]
     Task --> DBT[dbt_task]
 ```
 
@@ -214,7 +214,7 @@ flowchart LR
 | `spark_python_task` | Run Python file | `python_file`, `parameters` |
 | `python_wheel_task` | Run Python wheel | `package_name`, `entry_point` |
 | `sql_task` | Run SQL query | `query`, `warehouse_id` |
-| `pipeline_task` | Run DLT pipeline | `pipeline_id` |
+| `pipeline_task` | Run Lakeflow Declarative Pipelines pipeline | `pipeline_id` |
 | `dbt_task` | Run dbt project | `project_directory`, `commands` |
 
 ### Run Job (run-now)

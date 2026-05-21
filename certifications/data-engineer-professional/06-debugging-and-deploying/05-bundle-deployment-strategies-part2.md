@@ -343,7 +343,7 @@ az ad app federated-credential create \
 - [CI/CD Integration](./02-cicd-integration-part1.md) - Platform-specific CI/CD configuration
 - [CI/CD Integration Part 2](./02-cicd-integration-part2.md) - Testing and secret management patterns
 - [Asset Bundles](./01-asset-bundles-part1.md) - Core DAB configuration reference
-- [Advanced Testing & Operations](./06-advanced-testing-operations-part1.md) - Property-based and DLT testing
+- [Advanced Testing & Operations](./06-advanced-testing-operations-part1.md) - Property-based and Lakeflow Declarative Pipelines testing
 
 ## Official Documentation
 

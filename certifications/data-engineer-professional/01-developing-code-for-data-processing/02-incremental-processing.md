@@ -429,7 +429,7 @@ query.awaitTermination()
 ### Scheduled Pipeline Example
 
 ```python
-# Run daily via Databricks Workflows
+# Run daily via Lakeflow Jobs
 
 def daily_incremental_job():
     # Read stream from source

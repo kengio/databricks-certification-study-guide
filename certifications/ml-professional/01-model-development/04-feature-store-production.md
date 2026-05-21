@@ -27,7 +27,7 @@ flowchart TB
 
     subgraph Compute["Feature Computation"]
         Spark["Spark Jobs"]
-        Workflows["Databricks Workflows"]
+        Workflows["Lakeflow Jobs"]
     end
 
     subgraph Store["Feature Store Layer"]

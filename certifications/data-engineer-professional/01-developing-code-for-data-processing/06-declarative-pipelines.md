@@ -9,7 +9,7 @@ status: published
 
 # Declarative Pipelines
 
-Lakeflow Declarative Pipelines (formerly Delta Live Tables/DLT) provide a declarative approach to building reliable ETL pipelines. Understanding the core concepts and syntax is essential for building production data pipelines.
+Lakeflow Declarative Pipelines (formerly Lakeflow Declarative Pipelines/Lakeflow Declarative Pipelines) provide a declarative approach to building reliable ETL pipelines. Understanding the core concepts and syntax is essential for building production data pipelines.
 
 ## Overview
 
@@ -38,9 +38,9 @@ flowchart TB
     Execute --> Output
 ```
 
-![DLT Pipeline DAG View](../../../images/databricks-ui/dlt/dlt_pipeline_graph.png)
+![Lakeflow Declarative Pipelines Pipeline DAG View](../../../images/databricks-ui/dlt/dlt_pipeline_graph.png)
 
-*DLT pipeline DAG showing Bronze → Silver → Gold data flow between tables.*
+*Lakeflow Declarative Pipelines pipeline DAG showing Bronze → Silver → Gold data flow between tables.*
 
 ## Table Types
 
@@ -403,15 +403,15 @@ def mv_from_jdbc():
 
 ## Pipeline Configuration
 
-![DLT Pipeline Settings](../../../images/databricks-ui/dlt/dlt_pipeline_settings.png)
+![Lakeflow Declarative Pipelines Pipeline Settings](../../../images/databricks-ui/dlt/dlt_pipeline_settings.png)
 
-*DLT pipeline settings panel showing target schema, development mode, and trigger type.*
+*Lakeflow Declarative Pipelines pipeline settings panel showing target schema, development mode, and trigger type.*
 
-![DLT Cluster Autoscale](../../../images/databricks-ui/dlt/dlt_cluster_autoscale.png)
+![Lakeflow Declarative Pipelines Cluster Autoscale](../../../images/databricks-ui/dlt/dlt_cluster_autoscale.png)
 
-*DLT pipeline cluster settings showing enhanced autoscaling configuration.*
+*Lakeflow Declarative Pipelines pipeline cluster settings showing enhanced autoscaling configuration.*
 
-### databricks.yml for DLT
+### databricks.yml for Lakeflow Declarative Pipelines
 
 ```yaml
 resources:
@@ -718,7 +718,7 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 ## Exam Tips
 
 1. **Table types** - Streaming Table (incremental), Materialized View (full), View (temporary)
-2. **LIVE keyword** - Reference DLT tables with `LIVE.table_name`
+2. **LIVE keyword** - Reference Lakeflow Declarative Pipelines tables with `LIVE.table_name`
 3. **STREAM function** - Use `STREAM(LIVE.table)` for streaming reads
 4. **Auto Loader** - `cloud_files()` for incremental file ingestion
 5. **Development mode** - Single node, stops on error
@@ -731,7 +731,7 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 ## Key Takeaways
 
 - **Three table types**: Streaming Tables process data incrementally and maintain checkpoints; Materialized Views fully recompute on each run; Views are temporary and store nothing.
-- **LIVE keyword**: Reference other DLT tables using the `LIVE.table_name` prefix in SQL; without it the reference resolves to an external table instead of the pipeline dataset.
+- **LIVE keyword**: Reference other Lakeflow Declarative Pipelines tables using the `LIVE.table_name` prefix in SQL; without it the reference resolves to an external table instead of the pipeline dataset.
 - **STREAM function in SQL**: Use `STREAM(LIVE.table_name)` to read from an upstream Streaming Table as a streaming source in SQL syntax.
 - **Auto Loader integration**: Use `cloud_files()` in SQL or `spark.readStream.format("cloudFiles")` in Python for incremental file ingestion into Bronze Streaming Tables.
 - **Continuous vs Triggered**: Continuous mode (`continuous: true`) keeps the cluster always running for near real-time latency; Triggered mode (`continuous: false`) processes available data in a batch and terminates.
@@ -748,9 +748,9 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 
 ## Official Documentation
 
-- [Delta Live Tables](https://docs.databricks.com/delta-live-tables/index.html)
-- [DLT SQL Reference](https://docs.databricks.com/delta-live-tables/sql-ref.html)
-- [DLT Python Reference](https://docs.databricks.com/delta-live-tables/python-ref.html)
+- [Lakeflow Declarative Pipelines](https://docs.databricks.com/delta-live-tables/index.html)
+- [Lakeflow Declarative Pipelines SQL Reference](https://docs.databricks.com/delta-live-tables/sql-ref.html)
+- [Lakeflow Declarative Pipelines Python Reference](https://docs.databricks.com/delta-live-tables/python-ref.html)
 - [Auto Loader](https://docs.databricks.com/ingestion/auto-loader/index.html)
 
 ---

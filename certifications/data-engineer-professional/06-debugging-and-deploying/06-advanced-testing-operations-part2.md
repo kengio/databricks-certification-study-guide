@@ -14,7 +14,7 @@ status: published
 
 This file covers deployment validation, automated rollback, GitOps patterns, and common troubleshooting scenarios.
 
-> For property-based testing, DLT testing, streaming tests, and integration patterns, see [Part 1](./06-advanced-testing-operations-part1.md).
+> For property-based testing, Lakeflow Declarative Pipelines testing, streaming tests, and integration patterns, see [Part 1](./06-advanced-testing-operations-part1.md).
 
 ## Deployment Validation
 
@@ -463,12 +463,12 @@ D) SSH keys stored in the repository
 >
 > OIDC (OpenID Connect) federation allows GitHub Actions to authenticate with Databricks using short-lived JWT tokens. The CI runner requests a token from GitHub's OIDC provider, and Databricks validates it against a federation policy configured on the service principal. This eliminates storing long-lived secrets entirely.
 
-**Question 3:** A data engineer needs to test DLT pipeline transformation logic in a local pytest environment. What is the correct approach?
+**Question 3:** A data engineer needs to test Lakeflow Declarative Pipelines pipeline transformation logic in a local pytest environment. What is the correct approach?
 
-A) Install the DLT runtime locally and import `dlt` decorators in tests
+A) Install the Lakeflow Declarative Pipelines runtime locally and import `dlt` decorators in tests
 B) Extract transformation logic into plain PySpark functions and test those
-C) Run `databricks bundle run` from within pytest to execute DLT tests
-D) Use `unittest.mock` to fully mock the DLT runtime
+C) Run `databricks bundle run` from within pytest to execute Lakeflow Declarative Pipelines tests
+D) Use `unittest.mock` to fully mock the Lakeflow Declarative Pipelines runtime
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -645,7 +645,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 2. **Bundle includes** - Know that `include` merges YAML files and paths are relative to the bundle root (databricks.yml location)
 3. **Lookup references** - `${resources.jobs.my_job.id}` resolves after deployment; cannot be used before the resource is created
 4. **Blue/green vs canary** - Blue/green swaps entire environments; canary routes a subset of traffic to the new version
-5. **Testing DLT** - Extract transformation logic into plain functions; test those with local SparkSession; DLT decorators cannot run outside the DLT runtime
+5. **Testing Lakeflow Declarative Pipelines** - Extract transformation logic into plain functions; test those with local SparkSession; Lakeflow Declarative Pipelines decorators cannot run outside the Lakeflow Declarative Pipelines runtime
 6. **Test isolation** - Use unique schemas per test run (`test_<uuid>`) and `DROP SCHEMA CASCADE` in teardown
 7. **Coverage gating** - Use `--cov-fail-under=80` in pytest to enforce minimum coverage in CI
 8. **Rollback with DAB** - Checkout previous commit and `databricks bundle deploy`; Delta Time Travel for data-level rollback
@@ -679,7 +679,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 - [CI/CD Best Practices](https://docs.databricks.com/dev-tools/ci-cd/index.html)
 - [Delta Lake Time Travel](https://docs.databricks.com/delta/history.html)
 - [Great Expectations with Databricks](https://docs.databricks.com/integrations/great-expectations.html)
-- [DLT Pipeline Testing](https://docs.databricks.com/delta-live-tables/testing.html)
+- [Lakeflow Declarative Pipelines Pipeline Testing](https://docs.databricks.com/delta-live-tables/testing.html)
 
 ---
 

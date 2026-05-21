@@ -231,7 +231,7 @@ def daily_feature_sync():
         mode="merge"
     )
 
-# Schedule this job in Databricks Workflows
+# Schedule this job in Lakeflow Jobs
 
 ```
 

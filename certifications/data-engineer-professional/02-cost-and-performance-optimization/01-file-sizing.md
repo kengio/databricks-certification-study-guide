@@ -445,12 +445,12 @@ WHERE order_date >= '2024-01-01'
 ZORDER BY (customer_id);
 ```
 
-## DLT and File Sizing
+## Lakeflow Declarative Pipelines and File Sizing
 
-### DLT Auto Optimize
+### Lakeflow Declarative Pipelines Auto Optimize
 
 ```text
-Delta Live Tables automatically:
+Lakeflow Declarative Pipelines automatically:
 - Enables optimized writes
 - Manages file sizes
 - Handles streaming compaction
@@ -458,7 +458,7 @@ Delta Live Tables automatically:
 No manual configuration needed for basic use.
 ```
 
-### DLT Table Properties
+### Lakeflow Declarative Pipelines Table Properties
 
 ```python
 @dlt.table(
@@ -560,7 +560,7 @@ spark.sql("""
 6. **Streaming** - Enable optimized writes, schedule periodic OPTIMIZE
 7. **Partitioning** - Target at least 1 GB per partition
 8. **OPTIMIZE predicate** - Use WHERE clause to limit scope
-9. **DLT** - Auto-manages file sizes, no manual OPTIMIZE needed
+9. **Lakeflow Declarative Pipelines** - Auto-manages file sizes, no manual OPTIMIZE needed
 10. **Monitoring** - DESCRIBE DETAIL shows numFiles and sizeInBytes
 
 ## Key Takeaways
@@ -570,7 +570,7 @@ spark.sql("""
 - **optimizeWrite vs autoCompact**: `optimizeWrite` bin-packs files during the write operation; `autoCompact` runs a background compaction job after writes complete — both are disabled by default.
 - **VACUUM removes old files**: `VACUUM` deletes files no longer referenced by the Delta log; the default retention is 7 days (168 hours) — never vacuum below this unless time travel is not needed.
 - **Over-partitioning causes small files**: Partitioning by too many high-cardinality columns (e.g., date + hour + region + store) creates millions of tiny partitions, each with very small files.
-- **DLT auto-manages file sizes**: Delta Live Tables automatically enables `optimizeWrite` and manages file sizing — manual `OPTIMIZE` commands are not needed for DLT-managed tables.
+- **Lakeflow Declarative Pipelines auto-manages file sizes**: Lakeflow Declarative Pipelines automatically enables `optimizeWrite` and manages file sizing — manual `OPTIMIZE` commands are not needed for Lakeflow Declarative Pipelines-managed tables.
 - **Streaming compaction strategy**: Enable both `optimizeWrite` and `autoCompact` on streaming output tables, or schedule a periodic `OPTIMIZE` job every N batches using `foreachBatch`.
 - **DESCRIBE DETAIL for diagnosis**: `DESCRIBE DETAIL table_name` returns `numFiles` and `sizeInBytes`, making it easy to calculate average file size and identify tables needing compaction.
 

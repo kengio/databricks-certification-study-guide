@@ -48,7 +48,7 @@ my-databricks-project/
 ├── databricks.yml              # Main bundle configuration
 ├── resources/
 │   ├── jobs.yml               # Job definitions
-│   ├── pipelines.yml          # DLT pipeline definitions
+│   ├── pipelines.yml          # Lakeflow Declarative Pipeline definitions
 │   └── clusters.yml           # Cluster configurations
 ├── src/
 │   ├── notebooks/             # Notebook source files
@@ -191,7 +191,7 @@ resources:
               spark.databricks.delta.preview.enabled: "true"
 ```
 
-### DLT Pipeline Configuration
+### Lakeflow Declarative Pipelines Pipeline Configuration
 
 ```yaml
 # resources/pipelines.yml
