@@ -244,14 +244,16 @@ a:hover { text-decoration-color: var(--accent); }
   padding-right: 0.25rem;
 }
 
-/* Exam timer in the actionbar — prominent, labelled, lives next to
-   the Submit/Skip buttons because it's part of the "active session"
-   state, not ambient awareness. */
-.actionbar-timer {
+/* Exam timer in the masthead quiz-meta-strip — lives RIGHT AFTER the
+   question counter so "Q6 this session · 22:27 remaining" reads as a
+   single line of session state. Subtle pill with monospace value;
+   warning state pulses accent-coloured, expired locks negative-red. */
+.meta-timer {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 0.85rem 0.45rem 0.65rem;
+  gap: 0.35rem;
+  padding: 0.18rem 0.55rem;
+  margin-left: 0.4rem;
   border: 1px solid var(--hairline);
   border-radius: 99px;
   background: var(--surface);
@@ -260,31 +262,32 @@ a:hover { text-decoration-color: var(--accent); }
   white-space: nowrap;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.actionbar-timer .timer-label {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+.meta-timer::before {
+  content: "⏱";
+  font-size: 0.78rem;
   color: var(--muted);
+  text-transform: none;
 }
-.actionbar-timer .timer-value {
-  font-size: 0.95rem;
+.meta-timer .timer-value {
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--fg);
+  letter-spacing: 0;
 }
-.actionbar-timer.warning {
+.meta-timer.warning {
   border-color: var(--accent);
   background: var(--accent-soft);
   animation: timer-pulse 1s ease-in-out infinite;
 }
-.actionbar-timer.warning .timer-label,
-.actionbar-timer.warning .timer-value { color: var(--accent); }
-.actionbar-timer.expired {
+.meta-timer.warning::before,
+.meta-timer.warning .timer-value { color: var(--accent); }
+.meta-timer.expired {
   border-color: var(--negative);
   background: var(--negative-soft);
   animation: none;
 }
-.actionbar-timer.expired .timer-label,
-.actionbar-timer.expired .timer-value { color: var(--negative); }
+.meta-timer.expired::before,
+.meta-timer.expired .timer-value { color: var(--negative); }
 @keyframes timer-pulse {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0.6; }
@@ -292,8 +295,6 @@ a:hover { text-decoration-color: var(--accent); }
 
 @media (max-width: 720px) {
   #quiz-clock { display: none; }  /* save room on mobile */
-  .actionbar-timer .timer-label { display: none; }  /* keep just MM:SS */
-  .actionbar-timer { padding: 0.4rem 0.7rem; }
 }
 
 #btn-theme {

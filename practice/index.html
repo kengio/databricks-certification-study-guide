@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -40,6 +40,10 @@
         <span id="quiz-difficulty" class="difficulty"></span>
         <span class="rh-sep">·</span>
         <span id="quiz-counter"></span>
+        <span id="quiz-timer" class="meta-timer" hidden
+              title="Exam timer remaining" aria-label="Exam timer remaining">
+          <span class="timer-value">00:00</span>
+        </span>
       </div>
 
       <div class="masthead-actions">
@@ -146,12 +150,6 @@
         <button type="button" id="btn-settings" class="link">Settings</button>
         <button type="button" id="btn-reset-top" class="link danger" title="Reset progress for this bank">Reset</button>
         <button type="button" id="btn-exit" class="link">Switch bank</button>
-        <span class="actionbar-divider"></span>
-        <span id="quiz-timer" class="actionbar-timer" hidden
-              title="Exam timer remaining" aria-label="Exam timer remaining">
-          <span class="timer-label">TIMER</span>
-          <span class="timer-value">00:00</span>
-        </span>
       </div>
     </div>
   </div>
@@ -172,6 +170,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=21"></script>
+  <script src="app.js?v=22"></script>
 </body>
 </html>
