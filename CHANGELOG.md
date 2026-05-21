@@ -28,6 +28,25 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-7] — Mock-exam debrief files + further new-domain questions
+
+After completing a timed sitting, learners now have a structured debrief covering domain-to-resource mapping, per-section breakdown, and a study plan tailored to miss count. Each cert also gets 3 more new-domain practice questions on top of the 2 added in the earlier mock-exam refresh.
+
+### Added
+
+- **6 new mock-exam debrief files** — one per mock (`debrief.md`):
+  - DE Pro Mock 1 + Mock 2 — full 10-domain → resource table with cheat-sheet cross-links, per-section question map bridging the legacy section headers to the Nov 30 2025 official domains, study plan by miss count, "when most misses cluster in one domain" focus actions
+  - DA Mock 1 + Mock 2 — 9-domain → resource table, study plan by miss count, highest-leverage traps (Genie respects UC permissions; Dashboards vs SQL alerts)
+  - GenAI Mock 1 + Mock 2 — 6-domain → resource table, study plan by miss count, highest-leverage traps (compound = one endpoint; `ResponsesAgent` + `agents.deploy()` is current; 6 Gateway policy categories; PII before embedding; Inference Tables = audit-of-record)
+- **9 more new-domain practice questions per cert (18 question instances appended across the 6 mocks)**:
+  - DE Pro: PERF-1 (liquid-clustering migration), COST-1 (Job-cluster + autoscaling), MON-1 (Lakeflow Jobs notifications + `system.lakeflow.job_run_timeline`)
+  - DA: GS-3 (Genie audit-log → curation workflow), DASH-1 (SQL Alerts → Slack), DM-1 (materialized view for dashboard backing)
+  - GenAI: AGENT-1 (`ResponsesAgent` + `agents.deploy()`), GW-1 (Unity AI Gateway traffic splitting), EVAL-1 (`mlflow.evaluate` LLM-as-judge faithfulness backtest)
+
+### Changed
+
+- 6 mock-exam README files updated with an "After the exam — debrief" section pointing to the new `debrief.md` plus a debrief link in the navigation line at the bottom
+
 ## [2026.05.21-6] — Fill content depth gaps in 3 under-covered domains
 
 Three of the domain folders had thin coverage relative to their official weight. This adds 5 new topic files to fill the gaps surfaced in earlier senior-DE reviews.
