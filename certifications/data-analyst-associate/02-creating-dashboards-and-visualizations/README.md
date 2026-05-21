@@ -45,6 +45,7 @@ flowchart LR
 
 - [AI/BI Dashboards documentation](https://docs.databricks.com/en/dashboards/index.html)
 - [SQL alerts documentation](https://docs.databricks.com/en/sql/user/alerts/index.html)
+- [Query parameters (Analyzing Queries domain)](../03-analyzing-queries/04-parameters-queries.md) — dashboard parameters bind to underlying parameterised queries
 
 ---
 

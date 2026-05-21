@@ -82,6 +82,7 @@ Genie cannot bypass UC. If a user lacks `SELECT` on a column, Genie won't surfac
 - [Tuning Genie Spaces](./02-tuning-genie-spaces.md)
 - [Unity Catalog (platform domain)](../05-understanding-databricks-platform/01-unity-catalog.md)
 - [Securing Data](../07-securing-data/01-access-control.md)
+- [Creating Dashboards](../02-creating-dashboards-and-visualizations/README.md) — Genie can be embedded as a widget alongside curated dashboard visuals
 
 ## Official Documentation
 

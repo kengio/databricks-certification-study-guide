@@ -56,6 +56,9 @@ COPY_OPTIONS ('mergeSchema' = 'true');
 
 Idempotency: `COPY INTO` records which files have been ingested in the target table's history. Re-running with the same `FROM` clause is a no-op for files already loaded.
 
+> [!note]
+> The example uses a **UC volume path** (`/Volumes/main/landing/orders/`) — the modern, governed location for non-tabular files. Legacy **DBFS paths** (`/mnt/...`) still work but are deprecated for new ingestion paths. Prefer UC volumes.
+
 ## Path 3 — Lakehouse Federation (no copy)
 
 **When**: you want to query an external database (Snowflake, BigQuery, PostgreSQL, …) without ETL'ing the data into Delta first.

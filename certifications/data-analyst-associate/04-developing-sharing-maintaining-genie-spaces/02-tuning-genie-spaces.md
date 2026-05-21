@@ -45,6 +45,7 @@ Each curation step compounds: instructions narrow the interpretation; examples t
 | **Calculation rule** | `Revenue is sum(invoice_total) — do not deduct refunds.` |
 | **Date semantics** | `"Last quarter" means the previous full calendar quarter, not the trailing 90 days.` |
 | **Tie-breaking** | `When asked about "top customers", rank by revenue descending and limit 10 by default.` |
+| **Disambiguate columns** | `Both customers and orders have customer_id. Use customers.customer_id when joining the two.` |
 
 ## Example queries (few-shot)
 

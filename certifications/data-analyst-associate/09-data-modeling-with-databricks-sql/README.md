@@ -37,6 +37,7 @@ flowchart LR
 | **Snowflake schema** | Star with normalised dimension tables — more joins, more flexibility |
 | **Standard view** | Lightweight saved query; runs on read |
 | **Materialised view** | Pre-computed result, refreshed on a schedule or on change — costs storage, saves compute on read |
+| **Incremental MV refresh** | When the source is Delta and the query is expressible incrementally, Databricks SQL refreshes only the changed rows — cheaper than full recompute |
 | **`CREATE STREAMING TABLE` (Lakeflow Declarative Pipelines)** | Refreshing pattern that combines view semantics with Delta-backed storage; for analyst awareness, see DE Pro for depth |
 
 ## Related Resources
