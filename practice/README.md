@@ -19,6 +19,20 @@ A browser-based quiz for the practice-question markdown files in this repo. Trac
 - **Per-cert localStorage state**: your progress for each certification is kept independently. No cross-device sync — `Export progress (JSON)` downloads it if you want to back it up or move it.
 - **Source: the existing practice-question markdown files** — no parallel content to maintain. When the practice-question files change, re-run the converter and the bank refreshes.
 
+## Features
+
+- **Two-step picker** — pick a certification card (per-cert colour gradient + total-questions hero) → pick a bank (practice or one of two mock exams).
+- **Adaptive question selector** weighted toward never-attempted + recently-wrong questions; switchable to Random or Sequential.
+- **Domain + difficulty filters** so you can drill a specific exam domain or just hard questions.
+- **Exam timer** (30 / 60 / 90 / 120 min presets) with a 5-minute warning state and an expired toast. **Pause/resume** with backdrop blur — step away mid-exam without losing the run; paused time is subtracted from the session's elapsed-time figure.
+- **Completion summary screen** when you finish every question in the (filtered) bank: hero score, verdict (PASS/BELOW for mocks at 70 %, descriptive label for practice), per-module progress bars, weak-area callout ("Focus next on these modules"), time stats (when timer was used), best streak, confetti on ≥ 80 %.
+- **Attempt history** — every completed session is saved per-bank in `localStorage` (50-record ring buffer). Browse past attempts on the summary + Stats screens; click any row to reopen its full summary in read-only mode.
+- **Export** the current summary as standalone **HTML** (printable, self-contained) or **CSV** (opens in Excel / Numbers / Sheets) for sharing or longitudinal tracking.
+- **Keyboard-first**: `1`-`4` / `A`-`D` / `↑↓` select · `Enter` / `Space` submit · `S` skip · `N` / `→` next · `P` pause (when a timer is set).
+- **Light / Dark / Auto theme** with `prefers-color-scheme` integration; choice persisted in `localStorage`.
+- **WCAG AAA contrast** across every text token (≥ 7:1 normal text, ≥ 4.5:1 large), `prefers-reduced-motion` respected, focus indicators that don't get clipped by `backdrop-filter` regions.
+- **Mobile-responsive** down to 380 px; primary action cluster pinned to the right edge for thumb reach; pause-glyph stays surfaced on touch devices.
+
 ## Available banks
 
 **18 banks · 931 questions total** — every cert has practice questions plus two full-length mock exams.
@@ -129,9 +143,12 @@ A weighted random pick chooses the next question. After a full pass through the 
 
 ## Privacy
 
-- All state lives in your browser's `localStorage` under keys like `dbx-practice-data-engineer-associate`.
+- All state lives in your browser's `localStorage` under two key families per bank:
+  - `dbx-practice-<cert>` — per-question attempt log (used by the adaptive selector)
+  - `dbx-practice-sessions-<cert>` — completed-session history (used by the summary + Stats history list, ring-buffered at 50 records)
+  - Plus singletons `dbx-practice-theme` and `dbx-practice-timer-minutes`.
 - Nothing is sent to a server — there's no server.
-- Clearing browser storage or using a different browser / device wipes progress. The **Export progress (JSON)** button lets you back it up.
+- Clearing browser storage or using a different browser / device wipes progress. **Export progress (JSON)** in Stats backs up the per-question log; **Export summary (HTML / CSV)** on the summary screen exports an individual completed attempt.
 - Importing progress isn't built yet; if you need it, open an issue.
 
 ## Files in this folder
@@ -209,7 +226,8 @@ PRs welcome for: more cert banks, UI improvements, additional adaptive strategie
 
 - This isn't an official Databricks practice exam. It's static study material derived from the markdown files in this repo. Quality matches the quality of those files.
 - The adaptive selector is a simple weighted-random heuristic, not a full spaced-repetition algorithm like SM-2 or FSRS. It's good enough for cert prep; if you want SM-2-level scheduling, use Anki (see [`anki/README.md`](../anki/README.md)).
-- The 198 questions live alongside, not inside, the 12 mock-exam files (573 questions). The mocks remain the canonical end-to-end exam simulation; this practice app is for between-mock drilling.
+- 364 topic-drill practice questions + 567 questions across 12 full-length mock-exam banks = **931 total**. The mocks remain the canonical end-to-end exam simulation; the practice banks are for between-mock drilling. The summary screen handles both kinds (PASS/BELOW verdict for mocks, descriptive labels for practice).
+- A handful of mock-exam questions whose choices contain multi-line code fences are skipped during build (the parser sees a bare `A)` / `C)` line). Same edge case as the practice banks — fix by inlining the code on the choice line or moving it into the answer explanation.
 
 ---
 

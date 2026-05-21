@@ -48,7 +48,7 @@ tags:
 > **These are the exam notes I built while preparing for the Databricks certification series.** Cheat sheets, practice questions, mock exams, and end-to-end worked examples — now open-sourced under MIT so the next person doesn't have to start from scratch. Every certification section maps to the current official Databricks exam guide for that credential. If it helped you, ⭐ the repo and pass it on.
 
 > [!tip]
-> **▶ [Try the practice quiz live](https://kengio.github.io/databricks-certification-study-guide/)** — adaptive multiple-choice quiz, **931 questions across 18 banks** (6 practice + 12 mock exams, all 6 cert tracks). Runs in your browser, progress saved locally. No install, no signup. Light/dark/auto theme + accessible reset.
+> **▶ [Try the practice quiz live](https://kengio.github.io/databricks-certification-study-guide/)** — adaptive multiple-choice quiz, **931 questions across 18 banks** (6 practice + 12 mock exams, all 6 cert tracks). Runs in your browser, progress saved locally. No install, no signup. Exam timer with pause / resume, completion summary with per-module breakdown + weak-area highlight, attempt history, HTML / CSV export, keyboard-first navigation, light / dark / auto theme, WCAG AAA contrast.
 
 > [!info]
 > **Read in another language**: 🇹🇭 [ภาษาไทย](./i18n/th/README.md) (in progress) · For other languages and the translation policy, see [`TRANSLATING.md`](./TRANSLATING.md) and [`i18n/README.md`](./i18n/README.md).
