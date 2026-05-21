@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "23";
+  const APP_VERSION = "24";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -489,12 +489,15 @@
         && typeof document.activeElement.blur === "function") {
       try { document.activeElement.blur(); } catch (_) { /* no-op */ }
     }
-    // Re-trigger the slide-in animation on every render
-    const card = document.querySelector(".question-card");
-    if (card) {
-      card.classList.remove("slide-in");
-      void card.offsetWidth;     // force reflow so animation restarts
-      card.classList.add("slide-in");
+    // Re-trigger the slide-in animation on every render. The Q-header
+    // (counter + difficulty) animates alongside the card so the whole
+    // row reads as one unit arriving from the right.
+    for (const sel of [".question-header", ".question-card"]) {
+      const node = document.querySelector(sel);
+      if (!node) continue;
+      node.classList.remove("slide-in");
+      void node.offsetWidth;   // force reflow so animation restarts
+      node.classList.add("slide-in");
     }
 
     $("#quiz-cert").textContent = STATE.bank.certTitle;

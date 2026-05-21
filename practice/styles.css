@@ -659,7 +659,27 @@ button.link.danger:hover { color: var(--negative); }
   font-weight: 400;
 }
 
-/* ---------- Difficulty pill (used in masthead quiz-meta-strip) ---------- */
+/* ---------- Question header (above the question card) ---------- */
+
+.question-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.question-header .q-counter {
+  color: var(--fg);
+  font-weight: 600;
+}
+.question-header .rh-sep { color: var(--hairline); }
+
+/* ---------- Difficulty pill ---------- */
 
 .difficulty {
   padding: 0.15rem 0.5rem;
@@ -1211,22 +1231,24 @@ fieldset#quiz-choices input[type=radio]:focus-visible { outline: none; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Question-to-question slide transition. 0.55s is slow enough to be
-   clearly perceptible without being annoying — the user can see "okay,
-   new question" before reading. The card travels a bit further (28px)
-   so the motion registers even at this longer duration. */
+/* Question-to-question slide transition. 0.85s — slow enough that you
+   clearly see "new question arriving from the right". Both the
+   question-header (Q# · difficulty) and the question-card animate
+   together so the whole row reads as a single unit moving in. */
 @media (prefers-reduced-motion: no-preference) {
-  .question-card.slide-in {
-    animation: question-slide 0.55s cubic-bezier(0.16, 0.84, 0.32, 1);
+  .question-card.slide-in,
+  .question-header.slide-in {
+    animation: question-slide 0.85s cubic-bezier(0.16, 0.84, 0.32, 1);
   }
+  .question-header.slide-in { animation-duration: 0.7s; }  /* arrives slightly earlier */
 }
 @keyframes question-slide {
   0% {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(40px);
   }
-  30% {
-    opacity: 0.4;
+  20% {
+    opacity: 0.25;
   }
   100% {
     opacity: 1;
