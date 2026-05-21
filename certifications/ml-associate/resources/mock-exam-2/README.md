@@ -45,6 +45,10 @@ A second full-length practice exam with different scenarios, edge cases, and int
 | 28–31 (62–70%) | Close — focused study needed | Study weak domains, retry in 1 week |
 | Below 28 (<62%) | Not ready — comprehensive review needed | Review all study material before retrying |
 
+## After the exam — debrief
+
+When you've finished the timed sitting, see [`debrief.md`](./debrief.md) for the per-question domain map and a study plan tailored to your miss count.
+
 ---
 
-**[Start the Exam →](./questions.md)** | **[← Mock Exam 1](../mock-exam/README.md)** | **[← Back to Resources](../README.md)**
+**[Start the Exam →](./questions.md)** | **[Debrief →](./debrief.md)** | **[← Mock Exam 1](../mock-exam/README.md)** | **[← Back to Resources](../README.md)**

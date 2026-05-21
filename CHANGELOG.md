@@ -28,6 +28,27 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-15] — Per-question debrief tables (all 12 mocks)
+
+### Changed
+
+- **6 existing debrief files** (DE Pro / DA / GenAI mock-1 + mock-2) — replaced the high-level per-section question map with a **per-question table** that maps every single question to its primary domain, topic folder, and cheat sheet
+- Per-question tables use heuristic keyword classification of each question's scenario text — a starting point that learners can sanity-check against the actual answer key
+
+### Added
+
+- **6 new debrief files** for DE Associate, ML Associate, and ML Professional (mock-1 + mock-2 each):
+  - `certifications/data-engineer-associate/resources/mock-exam{,-2}/debrief.md`
+  - `certifications/ml-associate/resources/mock-exam{,-2}/debrief.md`
+  - `certifications/ml-professional/resources/mock-exam{,-2}/debrief.md`
+- Each new debrief follows the established structure: introduction + how-to-use, Domain → study-resource mapping, **per-question quick map**, study plan by miss count, nav
+- All 6 new mock-exam READMEs link the new `debrief.md`
+
+### Counts
+
+- 12 mock files, ~789 questions classified (DE Pro mocks include the new-domain questions from earlier PRs, hence higher counts)
+- 12 debrief files total — every cert now has a debrief for both mocks
+
 ## [2026.05.21-14] — Practice-questions terminology refresh
 
 ### Changed
