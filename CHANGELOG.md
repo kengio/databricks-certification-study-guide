@@ -4,6 +4,38 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-19] — Translation scaffolding (Thai in-tree + fork model for other languages)
+
+### Added
+
+- **`TRANSLATING.md`** — translation policy at the repo root. Sets the rules: English is canonical, Thai is in-tree at `i18n/th/`, other languages use the fork model. Lists what stays English (product names, code, file/folder names, exam-guide titles) vs. what gets translated (prose, callouts, captions). Documents the sync model, glossary discipline, and PR flow for Thai contributions vs. fork registration for other languages.
+- **`i18n/README.md`** — translations index. Tracks in-tree translations (English + Thai) and community translation forks for other languages. Empty fork table for now; first community fork sets the pattern.
+- **`i18n/STATUS-TEMPLATE.md`** — copy-paste template that non-Thai community forks can use to track per-file translation progress against an English upstream tag.
+- **`i18n/th/README.md`** — Thai-language landing page covering all six certifications, with a clear "ข้อสอบจริงเป็นภาษาอังกฤษ" callout reminding readers that product names stay English even in the Thai translation.
+- **`i18n/th/glossary.md`** — Thai translation glossary, ~80 standardised term mappings across four categories (Databricks product names — keep English; data engineering / Spark / SQL; ML / GenAI; UI / workflow). Plus a writing-style section codifying space-between-Thai-and-English, `%` spacing, and tone conventions.
+- **`i18n/th/STATUS.md`** — populated Thai translation status checklist covering 374 files in scope (per cert, per shared folder, top-level), with a recommended translation-priority ordering (Top-level README → fundamentals → DE Associate → cheat sheets → renewal guide → other certs).
+
+### Changed
+
+- **Top-level `README.md`**:
+  - Added "Read in another language" info callout near the top linking to `i18n/th/README.md` and `TRANSLATING.md`
+  - Q1 2027 roadmap entry "Translation scaffolding" marked ✅ complete
+  - Repository layout updated to include `i18n/` and `TRANSLATING.md`
+- **`CLAUDE.md`**:
+  - Repository Structure section adds the `i18n/` tree
+  - New "Translations" section codifying the English-canonical / Thai-in-tree / fork-for-others policy
+  - README & CLAUDE.md Sync Rule table adds two rows: marking Thai counterparts 🔄 when English upstream changes, and updating `i18n/th/glossary.md` when adding new Databricks-adjacent terms in Thai translations
+
+### Scope clarification (vs. the original roadmap entry)
+
+The Q1 2027 roadmap entry originally read "Translation scaffolding so non-English learners can fork and translate". This PR explicitly narrows the in-tree commitment to **Thai only** (English source + Thai translation), with all other languages still served by the fork model. Reasoning is in `TRANSLATING.md` → "Why Thai in-tree, others as forks?" — the maintainer reads Thai and English, can review Thai PRs for accuracy, but can't meaningfully review other-language translations.
+
+### Verification
+
+- markdownlint passes (no new violations)
+- lychee link-check passes (every cross-link inside `TRANSLATING.md`, `i18n/README.md`, `i18n/STATUS-TEMPLATE.md`, `i18n/th/README.md`, `i18n/th/glossary.md`, `i18n/th/STATUS.md` resolves)
+- 0 English content was changed; this PR is additive only
+
 ## [2026.05.21-18] — Renewal Guide
 
 ### Added
