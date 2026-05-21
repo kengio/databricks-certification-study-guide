@@ -394,7 +394,7 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 
 ### Q4 2026 (3–6 months out)
 
-- ⏳ **DE Associate topic-folder reorg** for the May 2026 Lakeflow Jobs terminology
+- ✅ **DE Associate topic-folder refresh** for the May 2026 Lakeflow Jobs terminology — complete (added CI/CD and Monitoring folder, refreshed terminology)
 - ⏳ **ML Associate / ML Professional content refresh** against the next blueprint update (when published)
 - ⏳ **Per-cert "final review" file** (20-minute exam-morning scan) modelled on the dp-800 pattern
 - ⏳ **Per-cert mock-exam debrief files** mapping every question to a topic file and cheat sheet
@@ -414,7 +414,7 @@ Legend: ✅ done · 🔄 in progress / next up · ⏳ planned · 🌱 ideas bein
 ```text
 databricks-certification-study-guide/
 ├── certifications/
-│   ├── data-engineer-associate/         # 5 topic folders + resources/
+│   ├── data-engineer-associate/         # 6 topic folders + resources/ (May 2026 blueprint refresh)
 │   ├── data-engineer-professional/      # 10 topic folders + resources/ (Nov 2025 blueprint)
 │   ├── data-analyst-associate/          # 9 topic folders + resources/ (Oct 2025 blueprint)
 │   ├── ml-associate/                    # 4 topic folders + resources/

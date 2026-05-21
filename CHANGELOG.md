@@ -28,6 +28,23 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-9] — DE Associate May 2026 blueprint refresh
+
+The May 2026 DE Associate exam guide explicitly tests CI/CD practices (Databricks Asset Bundles, Git folders) and basic monitoring (Lakeflow Jobs notifications, Spark UI, system tables) on top of the prior 5-domain content. This commit adds the new content without restructuring the existing 5 folders.
+
+### Added
+
+- **`certifications/data-engineer-associate/06-cicd-and-monitoring/`** — new domain folder with:
+  - `README.md` — index, key concepts, Topics Overview
+  - `01-asset-bundles-and-git-folders.md` — bundle YAML anatomy, dev / prod modes, Git-folder workflow, deployment commands, exam tips
+  - `02-monitoring-basics.md` — Lakeflow Jobs notifications, repair runs, Spark UI Stages tab, system-table family (`system.lakeflow.*`, `system.access.*`, `system.billing.*`)
+
+### Changed
+
+- DE Associate cert README — Study Topics table now lists the new 06-cicd-and-monitoring folder; "What changed in the May 2026 exam guide" callout updated
+- `CLAUDE.md` — DE Associate entry in Certification Topic Folders updated with the 6 folders
+- Top-level `README.md` — repo-layout entry updated to "6 topic folders + resources/"; guide-itself roadmap entry for the May 2026 refresh marked complete
+
 ## [2026.05.21-8] — Hands-on lab pack
 
 ### Added
