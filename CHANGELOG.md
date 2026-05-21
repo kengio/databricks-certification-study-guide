@@ -4,6 +4,30 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-22] — Deploy practice quiz to GitHub Pages
+
+### Added
+
+- **`.github/workflows/deploy-practice.yml`** — auto-deploys `practice/` to GitHub Pages on every push to `main` that touches `practice/**`. Uses `actions/configure-pages@v5` + `actions/upload-pages-artifact@v3` + `actions/deploy-pages@v4`. Adds `.nojekyll` to disable Jekyll processing so HTML/JS pass through unmodified. Manual trigger via `workflow_dispatch` also supported.
+- **Live URL**: `https://kengio.github.io/databricks-certification-study-guide/` — open the link, pick a cert bank, start drilling. No clone or install needed.
+
+### Changed
+
+- **Top-level `README.md`** — adds a prominent "▶ Try the practice quiz live" tip callout near the top + live URL in the Q1 2027 roadmap entry
+- **`practice/README.md`** — replaces the (incorrect) "Deploy from a branch + /practice folder" instructions with the actual Actions-based deploy flow, including the one-time `Settings → Pages → Source: GitHub Actions` toggle a fork maintainer needs to set
+
+### One-time fork-maintainer setup
+
+For a fresh fork (or this repo before its first deploy), the workflow runs only after:
+
+1. **Settings** → **Pages** → **Source: GitHub Actions**
+
+Then any push under `practice/` (or a manual workflow_dispatch) deploys the live site. The published URL appears on the workflow run page and in Settings → Pages.
+
+### Architecture decision: why a workflow instead of "Deploy from a branch + /practice"?
+
+Classic Pages can only publish from `/` (repo root) or `/docs`. It can't pick the `/practice` folder. To publish only the quiz (and not the entire study guide repo, whose 374 markdown files would be slow + ugly under Jekyll), we need the Actions-based deploy path. Trade-off: one workflow file + one settings toggle vs. exposing the whole repo on Pages. Worth it.
+
 ## [2026.05.21-21] — Adaptive practice question quiz (static site + 3 cert banks)
 
 ### Added

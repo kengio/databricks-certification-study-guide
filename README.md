@@ -47,6 +47,9 @@ tags:
 > [!note]
 > **These are the exam notes I built while preparing for the Databricks certification series.** Cheat sheets, practice questions, mock exams, and end-to-end worked examples — now open-sourced under MIT so the next person doesn't have to start from scratch. Every certification section maps to the current official Databricks exam guide for that credential. If it helped you, ⭐ the repo and pass it on.
 
+> [!tip]
+> **▶ [Try the practice quiz live](https://kengio.github.io/databricks-certification-study-guide/)** — adaptive multiple-choice quiz, 198 questions across 3 cert tracks, runs in your browser, progress saved locally. No install, no signup.
+
 > [!info]
 > **Read in another language**: 🇹🇭 [ภาษาไทย](./i18n/th/README.md) (in progress) · For other languages and the translation policy, see [`TRANSLATING.md`](./TRANSLATING.md) and [`i18n/README.md`](./i18n/README.md).
 
@@ -408,7 +411,7 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 - ✅ **Renewal guide** for candidates whose 2-year validity expires in 2027–2028 — complete (see [`shared/appendix/renewal-guide.md`](./shared/appendix/renewal-guide.md))
 - ✅ **Translation scaffolding** — Thai in-tree, other languages via fork model — complete (see [`TRANSLATING.md`](./TRANSLATING.md) + [`i18n/`](./i18n/README.md))
 - ✅ **Spaced-repetition deck (Anki)** — markdown-source decks + stdlib-only builder, two starter decks (Delta Lake 27 cards, Unity Catalog 22 cards) — complete (see [`anki/README.md`](./anki/README.md))
-- ✅ **Adaptive practice questions** — static-only web quiz with localStorage progress tracking + adaptive selector across 3 cert banks (198 questions) — complete (see [`practice/README.md`](./practice/README.md))
+- ✅ **Adaptive practice questions** — static-only web quiz with localStorage progress tracking + adaptive selector across 3 cert banks (198 questions). **Live at [kengio.github.io/databricks-certification-study-guide](https://kengio.github.io/databricks-certification-study-guide/)** — complete (see [`practice/README.md`](./practice/README.md))
 
 Legend: ✅ done · 🔄 in progress / next up · ⏳ planned · 🌱 ideas being explored
 
