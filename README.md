@@ -402,9 +402,9 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 
 ### Q1 2027 (6–12 months out)
 
+- ✅ **Renewal guide** for candidates whose 2-year validity expires in 2027–2028 — complete (see [`shared/appendix/renewal-guide.md`](./shared/appendix/renewal-guide.md))
 - 🌱 **Spaced-repetition deck (Anki)** generated from cheat-sheet facts
 - 🌱 **Translation scaffolding** so non-English learners can fork and translate
-- 🌱 **Renewal guide** for candidates whose 2-year validity expires in 2027–2028
 - 🌱 **Adaptive practice questions** — JSON-driven question bank with difficulty tagging
 
 Legend: ✅ done · 🔄 in progress / next up · ⏳ planned · 🌱 ideas being explored

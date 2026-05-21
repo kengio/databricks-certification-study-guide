@@ -33,7 +33,7 @@ aliases:
 | **Languages**       | English, Japanese, Portuguese (BR), Korean      |
 | **Code in stems**   | Python (ML); SQL for non-ML supporting tasks    |
 | **Experience**      | 6+ months hands-on ML on Databricks (recommended) |
-| **Recertification** | Every 2 years                                   |
+| **Recertification** | Every 2 years — see [Renewal Guide](../../shared/appendix/renewal-guide.md) |
 | **Cost**            | $200 USD                                        |
 | **Delivery**        | Online proctored or test center                 |
 

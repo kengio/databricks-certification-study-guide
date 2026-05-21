@@ -34,7 +34,7 @@ aliases:
 | **Languages**       | English                                     |
 | **Code in stems**   | SQL (ANSI-compliant)                        |
 | **Experience**      | 6+ months hands-on with Databricks SQL (recommended) |
-| **Recertification** | Every 2 years                               |
+| **Recertification** | Every 2 years — see [Renewal Guide](../../shared/appendix/renewal-guide.md) |
 | **Cost**            | $200 USD                                    |
 | **Delivery**        | Online proctored or test center             |
 
