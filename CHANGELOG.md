@@ -28,6 +28,22 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-12] — Add CONTRIBUTORS.md
+
+### Added
+
+- **`CONTRIBUTORS.md`** — attribution list for everyone who contributes to the guide. Documents:
+  - How to get added (follow-up PR or mention in the original)
+  - Attribution format (Markdown bullet with GitHub handle + short description ≤ 100 chars)
+  - Opt-out option for contributors who don't want public attribution
+  - Maintainer entry
+  - Special-thanks section (Databricks for the source-of-truth exam guides, dp-800 community for the open-source pattern)
+
+### Changed
+
+- Top-level `README.md` — Contributing section now mentions `CONTRIBUTORS.md` and points contributors to it; repo-layout updated; Q4 roadmap entry for CONTRIBUTORS.md marked complete
+- `CONTRIBUTING.md` — links `CONTRIBUTORS.md` and notes the opt-out option
+
 ## [2026.05.21-11] — Per-cert final review files (6 new)
 
 ### Added

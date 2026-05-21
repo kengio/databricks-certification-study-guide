@@ -166,4 +166,6 @@ By contributing, you agree your contribution is released under the [MIT License]
 
 ---
 
+Contributors are credited in [`CONTRIBUTORS.md`](./CONTRIBUTORS.md). When your PR merges, either open a follow-up PR adding yourself or mention it in the PR description — see the attribution format and opt-out note in that file.
+
 If something is unclear about contributing, [open an issue](https://github.com/kengio/databricks-certification-study-guide/issues/new) and we'll iterate on this guide.
