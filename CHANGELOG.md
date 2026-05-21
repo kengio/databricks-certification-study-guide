@@ -28,6 +28,24 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-11] — Per-cert final review files (6 new)
+
+### Added
+
+- **`certifications/<cert>/resources/final-review.md`** for all 6 certs — 20-minute exam-morning cram scan:
+  - DE Associate, DE Professional, Data Analyst Associate, ML Associate, ML Professional, GenAI Engineer Associate
+- Each final review covers:
+  - 2-minute "facts that show up most often" — the top current-blueprint facts
+  - 5-minute per-domain quick-fire — one bullet block per official domain
+  - Common-trap reminders — table of "if the stem says X, the answer is Y"
+  - Today's exam time budget tailored to question count / duration
+- 6 cert `resources/README.md` files updated to link the new `final-review.md`
+
+### Notes on style
+
+- Final reviews follow a cram-style format distinct from regular topic files — no Use Cases / Common Issues / Exam Tips terminal sections; the entire file IS exam-tips
+- Each file ends with a one-line nav back to Resources and the cert root
+
 ## [2026.05.21-10] — ML Associate + ML Professional folder reorgs to current blueprints
 
 ### Changed
