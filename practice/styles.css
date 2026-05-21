@@ -1086,9 +1086,16 @@ pre code, pre[class*="language-"] code {
   border-radius: 4px;
 }
 button:focus-visible { outline-offset: 3px; }
+
+/* The label gets the focus ring via :focus-within when the radio inside
+   is keyboard-focused — that's the visible "selected row" indicator.
+   Suppress the radio's own :focus-visible outline so we don't double up. */
 fieldset#quiz-choices label:focus-within {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+fieldset#quiz-choices input[type=radio]:focus-visible {
+  outline: none;
 }
 
 /* ---------- Motion & micro-interactions ---------- */
