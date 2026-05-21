@@ -269,6 +269,6 @@ ORDER BY count DESC;
 
 ## Related Topics
 
-- [Lakeflow Pipelines (DE Pro)](../../certifications/data-engineer-professional/07-lakeflow-pipelines/README.md)
-- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture-part1.md)
+- [Lakeflow Pipelines (DE Pro)](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md)
+- [Change Data Capture](../../certifications/data-engineer-professional/03-data-transformation-cleansing-quality/01-change-data-capture-part1.md)
 - [Streaming Fundamentals](../fundamentals/streaming-fundamentals.md)

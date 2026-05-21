@@ -233,6 +233,6 @@ df = (spark.readStream.format("cloudFiles")
 ## Related Topics
 
 - [Streaming Quick Reference](./streaming-quick-ref.md)
-- [Auto Loader (DE Pro)](../../certifications/data-engineer-professional/01-data-processing/04-auto-loader.md)
+- [Auto Loader (DE Pro)](../../certifications/data-engineer-professional/07-data-ingestion-and-acquisition/01-auto-loader.md)
 - [Streaming Examples](../code-examples/python/streaming_examples.md)
 - [Streaming Fundamentals](../fundamentals/streaming-fundamentals.md)

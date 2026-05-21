@@ -424,7 +424,7 @@ D) Storage-level file access patterns
 
 - [Delta Lake Basics](delta-lake-basics.md)
 - [Databricks Workspace](databricks-workspace.md)
-- [Security and Governance](../../certifications/data-engineer-professional/04-security-governance/README.md)
+- [Security and Governance](../../certifications/data-engineer-professional/05-ensuring-data-security-and-compliance/README.md)
 
 ## Official Documentation
 

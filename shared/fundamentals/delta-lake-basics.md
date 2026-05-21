@@ -262,7 +262,7 @@ ALTER TABLE orders CLUSTER BY NONE;
 | Streaming workloads | Liquid Clustering preferred |
 | Stable query patterns | Z-ORDER still works |
 
-For advanced Liquid Clustering topics including migration patterns, see [Z-ORDER Indexing and Data Skipping](../../certifications/data-engineer-professional/08-performance-optimization/02-zorder-indexing.md).
+For advanced Liquid Clustering topics including migration patterns, see [Z-ORDER Indexing and Data Skipping](../../certifications/data-engineer-professional/02-cost-and-performance-optimization/02-zorder-indexing.md).
 
 ## Change Data Feed (CDF)
 
@@ -327,7 +327,7 @@ deletes = changes_df.filter(col("_change_type") == "delete")
 - Use `update_postimage` for the new values (not `preimage`)
 - CDF works with both batch and streaming reads
 
-For comprehensive CDC patterns including APPLY CHANGES, SCD types, and multi-hop propagation, see [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture-part1.md).
+For comprehensive CDC patterns including APPLY CHANGES, SCD types, and multi-hop propagation, see [Change Data Capture](../../certifications/data-engineer-professional/03-data-transformation-cleansing-quality/01-change-data-capture-part1.md).
 
 ## Use Cases
 
@@ -438,9 +438,9 @@ D) It eliminates the need for VACUUM
 ## Related Topics
 
 - [Open Table Formats](open-table-formats.md) - UniForm, Iceberg, Hudi comparison
-- [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-data-processing/06-delta-lake-operations-part1.md) - OPTIMIZE, VACUUM, Z-ordering
+- [Delta Lake Operations (Advanced)](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/04-delta-lake-operations-part1.md) - OPTIMIZE, VACUUM, Z-ordering
 - [Medallion Architecture](medallion-architecture.md) - Bronze/Silver/Gold pattern
-- [Change Data Capture](../../certifications/data-engineer-professional/01-data-processing/05-change-data-capture-part1.md) - CDC patterns
+- [Change Data Capture](../../certifications/data-engineer-professional/03-data-transformation-cleansing-quality/01-change-data-capture-part1.md) - CDC patterns
 
 ## Official Documentation
 

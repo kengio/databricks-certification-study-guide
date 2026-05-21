@@ -423,7 +423,7 @@ D) Customer-Managed Keys
 
 - [Databricks Workspace](databricks-workspace.md) - UI and workspace features
 - [Unity Catalog Basics](unity-catalog-basics.md) - Data governance architecture
-- [Security & Governance](../../certifications/data-engineer-professional/04-security-governance/README.md) - Advanced security topics
+- [Security & Governance](../../certifications/data-engineer-professional/05-ensuring-data-security-and-compliance/README.md) - Advanced security topics
 
 ## Official Documentation
 

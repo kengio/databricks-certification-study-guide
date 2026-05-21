@@ -383,7 +383,7 @@ D) Source -> Bronze -> Gold -> Silver
 
 - [Delta Lake Basics](delta-lake-basics.md)
 - [Unity Catalog Basics](unity-catalog-basics.md)
-- [Data Processing](../../certifications/data-engineer-professional/01-data-processing/README.md)
+- [Data Processing](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md)
 
 ## Official Documentation
 

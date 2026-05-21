@@ -400,7 +400,7 @@ D) Write Optimized
 ## Related Topics
 
 - [Delta Lake Basics](delta-lake-basics.md) - Core Delta Lake concepts
-- [Delta Lake Operations](../../certifications/data-engineer-professional/01-data-processing/06-delta-lake-operations-part1.md) - Advanced operations
+- [Delta Lake Operations](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/04-delta-lake-operations-part1.md) - Advanced operations
 - [Version History](../appendix/version-history.md) - Delta Lake version features
 
 ## Official Documentation
