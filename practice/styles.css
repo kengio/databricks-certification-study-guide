@@ -674,6 +674,14 @@ fieldset#quiz-choices label:hover:not(.disabled) {
   border-color: var(--fg-soft);
   background: var(--surface-soft);
 }
+/* Selected state — same subtle tint as hover so mouse-click and
+   keyboard-arrow selections look identical. (Was orange focus-within
+   outline for keyboard only, which felt jarring next to the gentle
+   mouse-click highlight.) */
+fieldset#quiz-choices label:has(input[type=radio]:checked):not(.correct):not(.incorrect) {
+  border-color: var(--fg-soft);
+  background: var(--surface-soft);
+}
 fieldset#quiz-choices label.disabled {
   cursor: default;
   pointer-events: none;
@@ -1087,16 +1095,11 @@ pre code, pre[class*="language-"] code {
 }
 button:focus-visible { outline-offset: 3px; }
 
-/* The label gets the focus ring via :focus-within when the radio inside
-   is keyboard-focused — that's the visible "selected row" indicator.
-   Suppress the radio's own :focus-visible outline so we don't double up. */
-fieldset#quiz-choices label:focus-within {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-fieldset#quiz-choices input[type=radio]:focus-visible {
-  outline: none;
-}
+/* The choice label uses a subtle background tint (matching hover) for both
+   mouse-click and keyboard-arrow selection — see :has(input:checked) above.
+   Drop the loud orange focus outline so they look consistent. */
+fieldset#quiz-choices label:focus-within { outline: none; }
+fieldset#quiz-choices input[type=radio]:focus-visible { outline: none; }
 
 /* ---------- Motion & micro-interactions ---------- */
 
