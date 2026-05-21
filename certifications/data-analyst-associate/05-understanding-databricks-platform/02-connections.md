@@ -519,4 +519,4 @@ Ports required:
 
 ---
 
-**[← Previous: Query Editor & Execution](./02-query-editor.md) | [↑ Back to Databricks SQL](./README.md)**
+**[← Previous: Query Editor & Execution](../01-executing-queries-databricks-sql-warehouses/02-query-editor.md) | [↑ Back to Databricks SQL](./README.md)**

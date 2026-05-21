@@ -474,7 +474,7 @@ TO `engineer@company.com`;
 
 - [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md) - Shared fundamentals for Unity Catalog across certifications
 - [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md) - Quick reference for UC commands and permissions
-- [Access Control & Security](./03-access-control.md) - Deep dive into permissions and RBAC
+- [Access Control & Security](../07-securing-data/01-access-control.md) - Deep dive into permissions and RBAC
 
 ## Official Documentation
 
@@ -483,4 +483,4 @@ TO `engineer@company.com`;
 
 ---
 
-**[← Previous: Tables & Schemas](./01-tables-schemas.md) | [↑ Back to Data Management in Databricks](./README.md) | [Next: Access Control & Security](./03-access-control.md) →**
+**[← Previous: Tables & Schemas](../06-managing-data/01-tables-schemas.md) | [↑ Back to Data Management in Databricks](./README.md) | [Next: Access Control & Security](../07-securing-data/01-access-control.md) →**

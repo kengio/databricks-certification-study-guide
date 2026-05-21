@@ -4,6 +4,30 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-3] — Data Analyst Associate folder reorg to 9-domain blueprint
+
+### Changed
+
+- **`certifications/data-analyst-associate/` restructured to match the October 2025 official 9-domain blueprint** (1 : 1 folder-to-domain mapping). Folder map:
+  - `01-databricks-sql/` → split across `01-executing-queries-databricks-sql-warehouses/` and `05-understanding-databricks-platform/`
+  - `02-data-management/` → split across `06-managing-data/`, `05-understanding-databricks-platform/` (UC), `07-securing-data/`
+  - `03-sql-queries/` → `03-analyzing-queries/`
+  - `04-dashboards-visualization/` → `02-creating-dashboards-and-visualizations/`
+  - `05-analytics-applications/` → split across `03-analyzing-queries/` (parameters) and `02-creating-dashboards-and-visualizations/` (sharing)
+- 14 file moves via git mv (history preserved)
+- Cert README rewritten with new Study Topics table reflecting all 9 official domains
+- `CLAUDE.md` Certification Topic Folders entry updated to list the 9 new folders
+- Top-level `README.md` repo layout entry updated; guide-itself roadmap entry marked complete
+
+### Added
+
+- 9 new folder README index files — one per official domain — each with topics overview, section contents, key concepts, and back/next navigation
+- 4 new topic files for previously-uncovered domains:
+  - `04-developing-sharing-maintaining-genie-spaces/01-genie-spaces-overview.md`
+  - `04-developing-sharing-maintaining-genie-spaces/02-tuning-genie-spaces.md`
+  - `08-importing-data/01-importing-data-overview.md`
+  - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
+
 ## [2026.05.21-2] — DE Professional folder reorg to 10-domain blueprint
 
 ### Changed

@@ -109,7 +109,7 @@ Required: YAML frontmatter (`title`, `type: category`, `tags`, `status`), topic 
 
 - **DE Associate:** 01-lakehouse-platform, 02-etl-spark-sql, 03-delta-lake, 04-workflows-orchestration, 05-data-governance
 - **DE Professional:** 01-developing-code-for-data-processing, 02-cost-and-performance-optimization, 03-data-transformation-cleansing-quality, 04-monitoring-and-alerting, 05-ensuring-data-security-and-compliance, 06-debugging-and-deploying, 07-data-ingestion-and-acquisition, 08-data-governance, 09-data-modelling, 10-data-sharing-and-federation *(matches Nov 30, 2025 official 10-domain blueprint)*
-- **Data Analyst:** 01-databricks-sql, 02-data-management, 03-sql-queries, 04-dashboards-visualization, 05-analytics-applications
+- **Data Analyst:** 01-executing-queries-databricks-sql-warehouses, 02-creating-dashboards-and-visualizations, 03-analyzing-queries, 04-developing-sharing-maintaining-genie-spaces, 05-understanding-databricks-platform, 06-managing-data, 07-securing-data, 08-importing-data, 09-data-modeling-with-databricks-sql *(matches Oct 2025 official 9-domain blueprint)*
 - **ML Associate:** 01-databricks-ml, 02-ml-workflows, 03-feature-engineering, 04-mlflow-deployment
 - **ML Professional:** 01-advanced-feature-engineering, 02-hyperparameter-optimization, 03-model-production-lifecycle, 04-model-governance-mlops
 - **GenAI Engineer:** 01-rag-architecture, 02-vector-search-embeddings, 03-llm-application-development, 04-databricks-genai-tools

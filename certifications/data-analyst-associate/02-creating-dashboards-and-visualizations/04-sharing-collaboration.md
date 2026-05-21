@@ -486,9 +486,9 @@ Subscribe to Alerts:
 
 ## Related Topics
 
-- [Access Control & Security](../02-data-management/03-access-control.md) - Detailed RBAC and permission management
+- [Access Control & Security](../07-securing-data/01-access-control.md) - Detailed RBAC and permission management
 - [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md) - Governance framework that underpins sharing controls
-- [Dashboards & Dashboard Design](../04-dashboards-visualization/01-dashboards.md) - Creating dashboards to share with teams
+- [Dashboards & Dashboard Design](../02-creating-dashboards-and-visualizations/01-dashboards.md) - Creating dashboards to share with teams
 
 ## Official Documentation
 
@@ -497,4 +497,4 @@ Subscribe to Alerts:
 
 ---
 
-**[← Previous: Query Parameters & Dynamic Queries](./01-parameters-queries.md) | [↑ Back to Analytics Applications](./README.md)**
+**[← Previous: Query Parameters & Dynamic Queries](../03-analyzing-queries/04-parameters-queries.md) | [↑ Back to Analytics Applications](./README.md)**

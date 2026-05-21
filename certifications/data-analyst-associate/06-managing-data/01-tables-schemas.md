@@ -489,4 +489,4 @@ AND status = 'active';
 
 ---
 
-**[↑ Back to Data Management in Databricks](./README.md) | [Next: Unity Catalog](./02-unity-catalog.md) →**
+**[↑ Back to Data Management in Databricks](./README.md) | [Next: Unity Catalog](../05-understanding-databricks-platform/01-unity-catalog.md) →**
