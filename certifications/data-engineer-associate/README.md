@@ -19,7 +19,7 @@ aliases:
 > - Continued emphasis on Unity Catalog as the default governance layer
 > - Pass / fail — **Databricks no longer publishes a numeric passing score**
 >
-> Topic folders in this guide preserve the previous structure; the official PDF is the source of truth: [May 2026 exam guide (PDF)](https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026.pdf). A topic-folder reorganisation to match the new terminology is on the [guide roadmap](../../README.md#roadmap-for-the-guide-itself).
+> Topic folders preserve the previous structure plus a new **06-CI/CD and Monitoring** folder covering the explicitly tested CI/CD + monitoring skills. The official PDF remains the source of truth: [May 2026 exam guide (PDF)](https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026.pdf).
 
 ## Exam Overview
 
@@ -61,6 +61,7 @@ pie title Topic folders in this guide (5 domains — legacy)
 | [03-Delta Lake](03-delta-lake/README.md)                             | 22 %          | ACID, time travel, optimization          |
 | [04-Workflows & Orchestration](04-workflows-orchestration/README.md) | 16 %          | Lakeflow Jobs, scheduling, monitoring    |
 | [05-Data Governance](05-data-governance/README.md)                   |  9 %          | Unity Catalog, access control, sharing   |
+| [06-CI/CD and Monitoring](06-cicd-and-monitoring/README.md)          | new domain *(May 2026)*    | Asset Bundles, Git folders, Lakeflow Jobs notifications, Spark UI, system tables |
 
 ### Practice & Resources
 
