@@ -2,7 +2,7 @@
   "cert": "ml-associate-mock-2",
   "certTitle": "ML Associate — Mock Exam 2",
   "blueprintVersion": "Mar 1, 2025",
-  "generated": "2026-05-21",
+  "generated": "2026-05-22",
   "domains": [
     {
       "id": "databricks-ml",

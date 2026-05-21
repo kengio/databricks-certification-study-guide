@@ -5,23 +5,30 @@
    ============================================================ */
 
 :root {
-  /* Light theme */
+  /* Light theme — WCAG AAA contrast tokens (≥7:1 normal text, ≥4.5:1 large).
+     --muted bumped from #71717A (4.45:1, AA Large only) to #52525B (7.1:1
+     AAA pass). --positive / --negative likewise darkened for small-text
+     contexts. --accent stays vivid for graphic/large-display use only —
+     small-text usages of accent route through --accent-text. */
   --bg:            #FAFAF7;
   --surface:       #FFFFFF;
   --surface-soft:  #F4F3EF;
-  --fg:            #18181B;
-  --fg-soft:       #3F3F46;
-  --muted:         #71717A;
+  --fg:            #18181B;            /* 17:1 on bg  — AAA */
+  --fg-soft:       #3F3F46;            /* 10:1 on bg  — AAA */
+  --muted:         #52525B;            /* 7.1:1 on bg — AAA */
   --hairline:      #E5E5E2;
   --hairline-soft: #EFEFED;
-  --accent:        #FF4F2C;
+  --accent:        #FF4F2C;            /* graphic only — 3.8:1 on bg */
+  --accent-text:   #9A3412;            /* 7.1:1 on bg — for accent-coloured small text */
   --accent-soft:   rgba(255,79,44,0.08);
-  --selected:      #2563EB;                /* blue — "I picked this" */
-  --selected-soft: rgba(37,99,235,0.08);
-  --positive:      #15803D;
-  --positive-soft: #E0F2E7;
-  --negative:      #B91C1C;
+  --selected:      #1D4ED8;            /* 8.6:1 on bg — was #2563EB at 5.7:1 */
+  --selected-soft: rgba(29,78,216,0.08);
+  --positive:      #14532D;            /* 9.0:1 on bg — was #15803D at 4.6:1 */
+  --positive-soft: #DCFCE7;
+  --negative:      #991B1B;            /* 8.2:1 on bg — was #B91C1C at 6.4:1 */
   --negative-soft: #FBEAEA;
+  --warn:          #92400E;            /* 7.5:1 on bg — new token for AAA warn text */
+  --warn-soft:     rgba(217,119,6,0.10);
   --code-bg:       #F1F1ED;
 
   --shadow-1: 0 1px 0 var(--hairline);
@@ -43,19 +50,22 @@
     --bg:            #0A0A0C;
     --surface:       #131316;
     --surface-soft:  #1B1B1F;
-    --fg:            #FAFAFA;
-    --fg-soft:       #D4D4D8;
-    --muted:         #8B8B95;
+    --fg:            #FAFAFA;            /* 18:1 on bg — AAA */
+    --fg-soft:       #D4D4D8;            /* 13:1 on bg — AAA */
+    --muted:         #A1A1AA;            /* 7.4:1 on bg — AAA (was #8B8B95 at 5.8:1) */
     --hairline:      #26262C;
     --hairline-soft: #1D1D22;
-    --accent:        #FF6240;
-    --accent-soft:   rgba(255,98,64,0.12);
-    --selected:      #60A5FA;
-    --selected-soft: rgba(96,165,250,0.14);
-    --positive:      #4ADE80;
-    --positive-soft: rgba(74,222,128,0.12);
-    --negative:      #F87171;
-    --negative-soft: rgba(248,113,113,0.12);
+    --accent:        #FF7A5C;            /* graphic — was #FF6240 */
+    --accent-text:   #FFA88B;            /* 7.2:1 on bg — for accent text */
+    --accent-soft:   rgba(255,122,92,0.14);
+    --selected:      #93C5FD;            /* 10.4:1 on bg — AAA */
+    --selected-soft: rgba(147,197,253,0.14);
+    --positive:      #6EE7B7;            /* 11.2:1 on bg — AAA */
+    --positive-soft: rgba(110,231,183,0.12);
+    --negative:      #FCA5A5;            /* 9.7:1 on bg — AAA */
+    --negative-soft: rgba(252,165,165,0.12);
+    --warn:          #FBBF24;            /* 11.5:1 on bg — AAA */
+    --warn-soft:     rgba(251,191,36,0.14);
     --code-bg:       #1A1A1F;
 
     --shadow-2: 0 1px 0 var(--hairline), 0 12px 36px -16px rgba(0,0,0,0.6);
@@ -69,17 +79,20 @@
   --surface-soft:  #1B1B1F;
   --fg:            #FAFAFA;
   --fg-soft:       #D4D4D8;
-  --muted:         #8B8B95;
+  --muted:         #A1A1AA;            /* 7.4:1 on bg — AAA */
   --hairline:      #26262C;
   --hairline-soft: #1D1D22;
-  --accent:        #FF6240;
-  --accent-soft:   rgba(255,98,64,0.12);
-  --selected:      #60A5FA;
-  --selected-soft: rgba(96,165,250,0.14);
-  --positive:      #4ADE80;
-  --positive-soft: rgba(74,222,128,0.12);
-  --negative:      #F87171;
-  --negative-soft: rgba(248,113,113,0.12);
+  --accent:        #FF7A5C;
+  --accent-text:   #FFA88B;            /* 7.2:1 on bg — AAA */
+  --accent-soft:   rgba(255,122,92,0.14);
+  --selected:      #93C5FD;            /* 10.4:1 on bg — AAA */
+  --selected-soft: rgba(147,197,253,0.14);
+  --positive:      #6EE7B7;            /* 11.2:1 on bg — AAA */
+  --positive-soft: rgba(110,231,183,0.12);
+  --negative:      #FCA5A5;            /* 9.7:1 on bg — AAA */
+  --negative-soft: rgba(252,165,165,0.12);
+  --warn:          #FBBF24;            /* 11.5:1 on bg — AAA */
+  --warn-soft:     rgba(251,191,36,0.14);
   --code-bg:       #1A1A1F;
 
   --shadow-2: 0 1px 0 var(--hairline), 0 12px 36px -16px rgba(0,0,0,0.6);
@@ -92,13 +105,20 @@
   --surface-soft:  #F4F3EF;
   --fg:            #18181B;
   --fg-soft:       #3F3F46;
-  --muted:         #71717A;
+  --muted:         #52525B;            /* 7.1:1 on bg — AAA */
   --hairline:      #E5E5E2;
   --hairline-soft: #EFEFED;
   --accent:        #FF4F2C;
+  --accent-text:   #9A3412;            /* 7.1:1 on bg — AAA */
   --accent-soft:   rgba(255,79,44,0.08);
-  --selected:      #2563EB;
-  --selected-soft: rgba(37,99,235,0.08);
+  --selected:      #1D4ED8;            /* 8.6:1 on bg — AAA */
+  --selected-soft: rgba(29,78,216,0.08);
+  --positive:      #14532D;            /* 9.0:1 on bg — AAA */
+  --positive-soft: #DCFCE7;
+  --negative:      #991B1B;            /* 8.2:1 on bg — AAA */
+  --negative-soft: #FBEAEA;
+  --warn:          #92400E;            /* 7.5:1 on bg — AAA */
+  --warn-soft:     rgba(217,119,6,0.10);
   --code-bg:       #F1F1ED;
 }
 
@@ -214,7 +234,7 @@ button.brand-cluster:hover {
   border-color: var(--hairline);
 }
 button.brand-cluster:hover .brand-mark { transform: rotate(-8deg) scale(1.08); }
-button.brand-cluster:hover .brand-title { color: var(--accent); }
+button.brand-cluster:hover .brand-title { color: var(--accent-text); }
 /* Custom focus indicator: an OUTLINE here would extend below the
    masthead boundary and get clipped by the next section's background
    (sticky masthead has its own stacking context + border-bottom). Using
@@ -283,7 +303,7 @@ button.brand-cluster:focus-visible .brand-title { color: var(--accent); }
   transition: color 0.15s;
 }
 .quiz-meta-strip .cert-link:hover {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
@@ -293,7 +313,7 @@ button.brand-cluster:focus-visible .brand-title { color: var(--accent); }
    by the sticky masthead's boundary. */
 .quiz-meta-strip .cert-link:focus-visible {
   outline: none;
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
@@ -359,7 +379,7 @@ button.brand-cluster:focus-visible .brand-title { color: var(--accent); }
   animation: timer-pulse 1s ease-in-out infinite;
 }
 .actionbar-timer.warning .timer-icon,
-.actionbar-timer.warning .timer-value { color: var(--accent); }
+.actionbar-timer.warning .timer-value { color: var(--accent-text); }
 .actionbar-timer.expired {
   border-color: var(--negative);
   background: var(--negative-soft);
@@ -382,6 +402,16 @@ button.actionbar-timer:disabled { cursor: default; }
   /* On hover, surface the pause glyph as an affordance */
   button.actionbar-timer:not(.expired):not(.paused):hover .timer-pause-glyph { display: inline-flex; }
   button.actionbar-timer:not(.expired):not(.paused):hover { border-color: var(--fg-soft); }
+}
+@media (hover: none) {
+  /* Touch devices have no hover state — surface the pause glyph faded so
+     mobile users can discover the timer is interactive without tapping
+     blind. Full opacity on press feedback. */
+  button.actionbar-timer:not(.expired):not(.paused) .timer-pause-glyph {
+    display: inline-flex;
+    opacity: 0.45;
+  }
+  button.actionbar-timer:not(.expired):not(.paused):active .timer-pause-glyph { opacity: 1; }
 }
 button.actionbar-timer.paused {
   border-color: var(--fg-soft);
@@ -476,15 +506,16 @@ h2 {
 }
 
 /* Editorial eyebrow — a small accent-coloured kicker that sits above
-   the main heading on picker pages. Establishes "this is curated /
-   sequenced content" before the user reads the title. */
+   the main heading on picker pages. Uses --accent-text (the AAA-safe
+   darker variant) for the type itself; the decorative dash keeps the
+   vivid --accent since it's a graphic. */
 .eyebrow {
   font-family: var(--mono);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-text);
   margin: 0 0 0.85rem 0;
   display: inline-flex;
   align-items: center;
@@ -527,27 +558,28 @@ button {
 
 button.primary {
   background: var(--fg);
-  color: var(--bg);
+  color: var(--bg);              /* AAA — black-on-white / inverted in dark */
   padding: 0.85rem 1.5rem;
   border-radius: 99px;
   font-family: var(--sans);
   font-size: 0.92rem;
   font-weight: 500;
   letter-spacing: -0.005em;
-  transition: all 0.15s var(--ease);
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
+/* Hover keeps the idle (AAA-strong) background and just adds elevation
+   + an accent-coloured glow. Swapping the bg to vivid accent broke AAA
+   because white-on-coral is ~2.7:1 in dark mode and ~3.8:1 in light. */
 button.primary:hover:not(:disabled) {
-  background: var(--accent);
-  color: #FFFFFF;
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px -8px var(--accent);
+  box-shadow: 0 10px 28px -10px var(--accent);
 }
-button.primary:active:not(:disabled) { transform: translateY(0); }
+button.primary:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
 button.primary:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
@@ -846,7 +878,7 @@ button.link.danger:hover { color: var(--negative); }
   display: inline-block;
 }
 .difficulty.easy    { background: var(--positive-soft); color: var(--positive); }
-.difficulty.medium  { background: var(--accent-soft);   color: var(--accent); }
+.difficulty.medium  { background: var(--accent-soft);   color: var(--accent-text); }
 .difficulty.hard    { background: var(--negative-soft); color: var(--negative); }
 
 /* ---------- Question card ---------- */
@@ -1429,7 +1461,7 @@ body.quiz-active .page-footer { display: none; }
 }
 .summary-hero[data-tone="great"]::before { background: linear-gradient(90deg, var(--positive), #14B8A6); }
 .summary-hero[data-tone="good"]::before  { background: var(--positive); }
-.summary-hero[data-tone="warn"]::before  { background: #D97706; }
+.summary-hero[data-tone="warn"]::before  { background: var(--warn); }
 .summary-hero[data-tone="weak"]::before  { background: var(--negative); }
 
 .summary-num-wrap {
@@ -1448,7 +1480,7 @@ body.quiz-active .page-footer { display: none; }
 }
 .summary-hero[data-tone="great"] .summary-num { color: var(--positive); }
 .summary-hero[data-tone="good"]  .summary-num { color: var(--positive); }
-.summary-hero[data-tone="warn"]  .summary-num { color: #D97706; }
+.summary-hero[data-tone="warn"]  .summary-num { color: var(--warn); }
 .summary-hero[data-tone="weak"]  .summary-num { color: var(--negative); }
 .summary-num-pct {
   font-size: 1.75rem;
@@ -1481,7 +1513,7 @@ body.quiz-active .page-footer { display: none; }
 }
 .summary-verdict[data-tone="great"] { color: var(--positive); }
 .summary-verdict[data-tone="good"]  { color: var(--positive); }
-.summary-verdict[data-tone="warn"]  { color: #D97706; }
+.summary-verdict[data-tone="warn"]  { color: var(--warn); }
 .summary-verdict[data-tone="weak"]  { color: var(--negative); }
 .summary-verdict-sub {
   font-family: var(--sans);
@@ -1606,7 +1638,7 @@ body.quiz-active .page-footer { display: none; }
 }
 .summary-meter-fill[data-tone="great"] { background: linear-gradient(90deg, var(--positive), #14B8A6); }
 .summary-meter-fill[data-tone="good"]  { background: var(--positive); }
-.summary-meter-fill[data-tone="warn"]  { background: #D97706; }
+.summary-meter-fill[data-tone="warn"]  { background: var(--warn); }
 .summary-meter-fill[data-tone="weak"]  { background: var(--negative); }
 
 /* --- Stats grid (time / streak metric cards) --- */
@@ -1691,7 +1723,7 @@ body.quiz-active .page-footer { display: none; }
 }
 .summary-export button.link:hover {
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-text);
   background: var(--accent-soft);
 }
 
@@ -1738,7 +1770,7 @@ body.quiz-active .page-footer { display: none; }
 }
 .attempt-pct[data-tone="great"] { color: var(--positive); }
 .attempt-pct[data-tone="good"]  { color: var(--positive); }
-.attempt-pct[data-tone="warn"]  { color: #D97706; }
+.attempt-pct[data-tone="warn"]  { color: var(--warn); }
 .attempt-pct[data-tone="weak"]  { color: var(--negative); }
 .attempt-fraction, .attempt-duration { font-variant-numeric: tabular-nums; color: var(--muted); }
 .attempt-duration.muted { color: var(--hairline); }
@@ -1944,17 +1976,18 @@ body.timer-paused main {
   min-height: 44px;            /* touch target */
 }
 /* Danger-flavored primary button (used for destructive confirms like
-   "Reset progress?" and "Leave timed exam?"). Keeps the same shape as
-   the regular primary but tinted red. */
+   "Reset progress?" and "Leave timed exam?"). Hardcoded dark red so
+   white text stays ≥8:1 contrast in BOTH themes — the semantic
+   `--negative` token is too light in dark mode (it's calibrated for
+   text on dark bg, not button bg). */
 .modal-actions .primary.danger {
-  background: var(--negative);
+  background: #991B1B;
   color: #FFFFFF;
 }
 @media (hover: hover) {
   .modal-actions .primary.danger:hover:not(:disabled) {
-    background: var(--negative);
-    filter: brightness(1.08);
-    box-shadow: 0 8px 24px -10px var(--negative);
+    background: #7F1D1D;
+    box-shadow: 0 8px 24px -10px rgba(153, 27, 27, 0.5);
   }
 }
 
@@ -2084,7 +2117,7 @@ pre code, pre[class*="language-"] code {
   color: var(--fg-soft);
   text-decoration-color: var(--hairline);
 }
-.page-footer .footer-meta a:hover { text-decoration-color: var(--accent); color: var(--accent); }
+.page-footer .footer-meta a:hover { text-decoration-color: var(--accent); color: var(--accent-text); }
 .page-footer .footer-colophon {
   margin-top: 0.5rem;
   color: var(--muted);

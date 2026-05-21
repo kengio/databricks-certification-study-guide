@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=34">
+  <link rel="stylesheet" href="styles.css?v=35">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -98,11 +98,13 @@
       <div class="settings-panel">
         <div class="settings-row">
           <div class="settings-row-meta">
-            <h4>Selection mode</h4>
-            <p>Adaptive surfaces questions you've missed; sequential walks the bank in order.</p>
+            <h4 id="lbl-setting-mode">Selection mode</h4>
+            <p id="lbl-setting-mode-desc">Adaptive surfaces questions you've missed; sequential walks the bank in order.</p>
           </div>
           <div class="settings-field">
-            <select id="setting-mode">
+            <select id="setting-mode"
+                    aria-labelledby="lbl-setting-mode"
+                    aria-describedby="lbl-setting-mode-desc">
               <option value="adaptive">Adaptive — weight toward gaps</option>
               <option value="random">Random — uniform sampling</option>
               <option value="sequential">Sequential — in source order</option>
@@ -112,11 +114,13 @@
 
         <div class="settings-row">
           <div class="settings-row-meta">
-            <h4>Filter by domain</h4>
-            <p>Drill a specific exam domain instead of the whole bank.</p>
+            <h4 id="lbl-setting-domain">Filter by domain</h4>
+            <p id="lbl-setting-domain-desc">Drill a specific exam domain instead of the whole bank.</p>
           </div>
           <div class="settings-field">
-            <select id="setting-domain">
+            <select id="setting-domain"
+                    aria-labelledby="lbl-setting-domain"
+                    aria-describedby="lbl-setting-domain-desc">
               <option value="">All domains</option>
             </select>
           </div>
@@ -124,11 +128,13 @@
 
         <div class="settings-row">
           <div class="settings-row-meta">
-            <h4>Filter by difficulty</h4>
-            <p>Restrict to easy, medium, or hard questions only.</p>
+            <h4 id="lbl-setting-difficulty">Filter by difficulty</h4>
+            <p id="lbl-setting-difficulty-desc">Restrict to easy, medium, or hard questions only.</p>
           </div>
           <div class="settings-field">
-            <select id="setting-difficulty">
+            <select id="setting-difficulty"
+                    aria-labelledby="lbl-setting-difficulty"
+                    aria-describedby="lbl-setting-difficulty-desc">
               <option value="">All difficulties</option>
               <option value="easy">Easy</option>
               <option value="medium">Medium</option>
@@ -139,11 +145,13 @@
 
         <div class="settings-row">
           <div class="settings-row-meta">
-            <h4>Exam timer</h4>
-            <p>Simulate the real exam by setting a countdown timer. Timer resets when you switch banks.</p>
+            <h4 id="lbl-setting-timer">Exam timer</h4>
+            <p id="lbl-setting-timer-desc">Simulate the real exam by setting a countdown timer. Timer resets when you switch banks.</p>
           </div>
           <div class="settings-field">
-            <select id="setting-timer">
+            <select id="setting-timer"
+                    aria-labelledby="lbl-setting-timer"
+                    aria-describedby="lbl-setting-timer-desc">
               <option value="0">None — practice mode</option>
               <option value="30">30 minutes</option>
               <option value="60">60 minutes</option>
@@ -282,6 +290,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=34"></script>
+  <script src="app.js?v=35"></script>
 </body>
 </html>

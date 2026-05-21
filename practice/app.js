@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "34";
+  const APP_VERSION = "35";
 
   // Per-cert confetti palette. Pulled from the same gradients used on
   // the cert picker cards (--gradient in styles.css) so the burst feels
@@ -1252,7 +1252,19 @@
     const list = el("div", { className: "attempt-list" });
     for (const r of records) {
       const ts = formatDateTime(r.ts);
+      // Rich aria-label so screen readers announce the full row context in
+      // one phrase instead of reading each cell separately ("85 percent")
+      // → ("View attempt from 21 May 2026 at 14:35, scored 85 percent,
+      //    38 of 45 correct, took 24 minutes 15 seconds, passed").
+      const parts = [
+        `View attempt from ${ts.date} at ${ts.time}`,
+        `scored ${r.pct} percent`,
+        `${r.correct} of ${r.total} correct`,
+      ];
+      if (r.durationMs != null) parts.push(`took ${formatDuration(r.durationMs)}`);
+      if (r.isMock) parts.push(r.passed ? "passed" : "below passing threshold");
       const row = el("button", { type: "button", className: "attempt-row",
+                                  "aria-label": parts.join(", "),
                                   onclick: () => { renderSummary(r, { past: true }); show("summary"); } });
       row.appendChild(el("span", { className: "attempt-when" },
         el("span", { className: "attempt-date" }, ts.date),
@@ -1344,8 +1356,8 @@
 <html lang="en"><head><meta charset="utf-8">
 <title>${escapeHtml(record.certTitle)} — ${escapeHtml(ts.full)}</title>
 <style>
-  :root { --fg:#18181B; --muted:#71717A; --hairline:#E5E5E2; --bg:#FAFAF7; --surface:#fff;
-          --good:#15803D; --warn:#D97706; --weak:#B91C1C; --great:#0F766E; }
+  :root { --fg:#18181B; --muted:#52525B; --hairline:#E5E5E2; --bg:#FAFAF7; --surface:#fff;
+          --good:#14532D; --warn:#92400E; --weak:#991B1B; --great:#065F46; }
   * { box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
          background: var(--bg); color: var(--fg); margin: 0; padding: 2.5rem 1.5rem; font-size: 15px; line-height: 1.55; }
