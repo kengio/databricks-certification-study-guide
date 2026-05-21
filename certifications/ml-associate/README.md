@@ -14,13 +14,12 @@ aliases:
 > [!important]
 > **What changed in the March 1, 2025 exam guide**
 >
-> - **Databricks Machine Learning** is the largest domain at 38 % — covers AutoML, Unity Catalog for ML, select MLflow features
-> - **Model Development** weighted at 31 % — feature engineering, training, evaluation, regression vs classification, scaling
-> - **ML Workflows** (19 %) and **Model Deployment** (12 %) round out the blueprint
-> - All ML code is **Python**; non-ML supporting tasks may include SQL
-> - Pass / fail — **Databricks no longer publishes a numeric passing score**
+> - **4 domains** with explicit weights: Databricks ML 38 %, Model Development 31 %, ML Workflows 19 %, Model Deployment 12 %
+> - Stronger emphasis on **Unity Catalog for ML** (model registry, feature tables, inference tables)
+> - **AutoML** as a first-class skill within Databricks ML
+> - Pass / fail — **the March 1, 2025 exam guide does not publish a numeric passing score**
 >
-> The official source of truth: [Databricks Certified Machine Learning Associate](https://www.databricks.com/learn/certification/machine-learning-associate). Topic folders in this guide cover the same scope but with different labels.
+> The official source of truth: [Databricks Certified Machine Learning Associate](https://www.databricks.com/learn/certification/machine-learning-associate). The folder structure in this guide now matches the official 4-domain blueprint 1 : 1.
 
 ## Exam Overview
 
@@ -30,7 +29,7 @@ aliases:
 | **Exam guide**      | March 1, 2025                                   |
 | **Scored questions**| 48 multiple-choice                              |
 | **Duration**        | 90 minutes                                      |
-| **Result**          | Pass / fail (no published threshold)            |
+| **Result**          | Pass / fail (no numeric threshold in the March 1, 2025 exam guide) |
 | **Languages**       | English, Japanese, Portuguese (BR), Korean      |
 | **Code in stems**   | Python (ML); SQL for non-ML supporting tasks    |
 | **Experience**      | 6+ months hands-on ML on Databricks (recommended) |
@@ -48,33 +47,24 @@ pie title Exam Topic Distribution (4 domains)
     "Model Deployment" : 12
 ```
 
-| Domain | Weight |
-| :--- | :---: |
-| Databricks Machine Learning | 38 % |
-| Model Development | 31 % |
-| ML Workflows | 19 % |
-| Model Deployment | 12 % |
-
 ## Study Topics
 
-### Topic folders in this guide
-
-| Section                                                     | Covers (official domains) |
-| ----------------------------------------------------------- | ------------------------- |
-| [01-Databricks ML](01-databricks-ml/README.md)              | Databricks Machine Learning (AutoML, UC for ML, MLflow basics) |
-| [02-ML Workflows](02-ml-workflows/README.md)                | ML Workflows (experiments, tracking, MLflow lifecycle) |
-| [03-Feature Engineering](03-feature-engineering/README.md)  | Model Development (Spark ML, pipelines, Feature Store) |
-| [04-MLflow Deployment](04-mlflow-deployment/README.md)      | Model Deployment (Model Registry, Model Serving) |
+| Section | Weight | Focus |
+| :--- | :---: | :--- |
+| [01 — Databricks Machine Learning](./01-databricks-machine-learning/README.md) | 38 % | ML workspace, compute, AutoML, UC for ML |
+| [02 — Model Development](./02-model-development/README.md) | 31 % | Spark ML pipelines, feature engineering, Feature Store |
+| [03 — ML Workflows](./03-ml-workflows/README.md) | 19 % | MLflow tracking, experiments, end-to-end loop |
+| [04 — Model Deployment](./04-model-deployment/README.md) | 12 % | Model Registry in UC, Model Serving, Inference Tables |
 
 ### Practice & Resources
 
 | Resource                                                        | Description                              |
 | --------------------------------------------------------------- | ---------------------------------------- |
-| [Practice Questions](resources/practice-questions/README.md)    | Topic-specific practice questions        |
-| [Mock Exam 1](resources/mock-exam/README.md)                    | Full-length practice exam                |
-| [Mock Exam 2](resources/mock-exam-2/README.md)                  | Alternative practice exam                |
-| [Exam Tips](resources/exam-tips.md)                             | Exam strategies and tips                 |
-| [Official Links](resources/official-links.md)                   | Documentation and resources              |
+| [Practice Questions](./resources/practice-questions/README.md)  | Topic-specific practice questions        |
+| [Mock Exam 1](./resources/mock-exam/README.md)                  | Full-length practice exam                |
+| [Mock Exam 2](./resources/mock-exam-2/README.md)                | Alternative practice exam                |
+| [Exam Tips](./resources/exam-tips.md)                           | Exam strategies and tips                 |
+| [Official Links](./resources/official-links.md)                 | Documentation and resources              |
 
 ## Interview Preparation
 
@@ -92,11 +82,11 @@ Review these shared fundamentals:
 
 ## Study Progress Tracker
 
-- [ ] Understand Databricks ML workspace and AutoML
-- [ ] Learn MLflow tracking and experiments
-- [ ] Practice Spark ML pipelines and feature engineering
-- [ ] Explore Unity Catalog for ML assets
-- [ ] Review Model Registry and basic Model Serving
+- [ ] Domain 01 — Databricks Machine Learning (AutoML, UC for ML)
+- [ ] Domain 02 — Model Development (Spark ML, feature engineering, Feature Store)
+- [ ] Domain 03 — ML Workflows (MLflow tracking, experiments)
+- [ ] Domain 04 — Model Deployment (Model Registry, Model Serving)
+- [ ] Run Hands-on Lab 04 (MLflow + Model Registry in UC)
 
 ## Official Resources
 

@@ -28,6 +28,30 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-10] — ML Associate + ML Professional folder reorgs to current blueprints
+
+### Changed
+
+- **`certifications/ml-associate/` restructured to match the March 1, 2025 official 4-domain blueprint** (1 : 1 folder-to-domain mapping):
+  - `01-databricks-ml/` → `01-databricks-machine-learning/`
+  - `03-feature-engineering/` → `02-model-development/`
+  - `02-ml-workflows/` → `03-ml-workflows/`
+  - `04-mlflow-deployment/` → `04-model-deployment/`
+  - 11 file moves via git mv (history preserved)
+  - 14 same-folder + 15 cross-folder intra-cert links + 5 repo-wide refs rewritten
+- **`certifications/ml-professional/` restructured to match the September 2025 official 3-domain blueprint** (4 folders → 3):
+  - `01-advanced-feature-engineering/` (4 files) + `02-hyperparameter-optimization/` (3 files) → `01-model-development/` (7 files)
+  - `03-model-production-lifecycle/` split + `04-model-governance-mlops/` (4 files) → `02-ml-ops/` (6 files) and `03-model-deployment/` (2 files)
+  - 15 file moves via git mv (history preserved)
+  - 22 same-folder + 6 cross-folder intra-cert links + 5 repo-wide refs rewritten
+- Both cert READMEs rewritten with new Study Topics tables matching official domains
+- `CLAUDE.md` Certification Topic Folders entries for ML Associate and ML Pro updated
+- Top-level `README.md` repo-layout entries updated; guide-itself roadmap entry for ML cert refresh marked complete
+
+### Added
+
+- 7 new folder README index files (4 ML Associate + 3 ML Pro), each with Topics Overview Mermaid, Section Contents table, Key Concepts, Related Resources, back/next navigation
+
 ## [2026.05.21-9] — DE Associate May 2026 blueprint refresh
 
 The May 2026 DE Associate exam guide explicitly tests CI/CD practices (Databricks Asset Bundles, Git folders) and basic monitoring (Lakeflow Jobs notifications, Spark UI, system tables) on top of the prior 5-domain content. This commit adds the new content without restructuring the existing 5 folders.
