@@ -1560,7 +1560,13 @@
   }
 
   function hasActiveSession() {
-    return STATE.sessionTotal > 0 || STATE.timerEnd != null;
+    // A completed session that's already been written to history isn't
+    // "active" anymore — the user is on the summary screen and shouldn't
+    // be asked to confirm leaving. Likewise an expired timer means the
+    // exam is over.
+    if (STATE.summarySaved) return false;
+    if (STATE.timerExpired) return false;
+    return STATE.sessionTotal > 0 || STATE.timerEnd != null || STATE.timerPaused;
   }
 
   function resetSessionState() {
