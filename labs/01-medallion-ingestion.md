@@ -49,7 +49,9 @@ CREATE VOLUME IF NOT EXISTS main.bronze.landing;
 
 ```python
 from pyspark.sql import functions as F
-import json, uuid, random
+import json
+import uuid
+import random
 from datetime import datetime, timezone, timedelta
 
 # Build 1,000 synthetic order events as JSON lines
@@ -186,7 +188,7 @@ RESET spark.databricks.delta.retentionDurationCheck.enabled;
 > [!warning]
 > `VACUUM ... RETAIN 0 HOURS` is unsafe in production — it can delete files needed by concurrent readers / time-travel queries. The default 7-day retention exists for a reason. The code above is lab-only.
 
-## Verification
+## Step 6 — Verify the medallion
 
 ```sql
 -- Row counts at each layer
@@ -212,7 +214,7 @@ DROP TABLE IF EXISTS main.bronze.orders;
 -- DROP SCHEMA main.gold   CASCADE;
 ```
 
-## Related study material
+## Related Study Material
 
 - [Medallion Architecture (shared)](../shared/fundamentals/medallion-architecture.md)
 - [Delta Lake basics (shared)](../shared/fundamentals/delta-lake-basics.md)

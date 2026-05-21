@@ -204,7 +204,9 @@ agents.deploy(
 ## Step 7 — Invoke and observe
 
 ```python
-import requests, json, os
+import requests
+import json
+import os
 
 endpoint = "https://<workspace>/serving-endpoints/docs_agent/invocations"
 headers = {
@@ -272,7 +274,7 @@ DROP TABLE IF EXISTS main.rag_lab.documents;
 DROP SCHEMA IF EXISTS main.rag_lab CASCADE;
 ```
 
-## Related study material
+## Related Study Material
 
 - [RAG / Vector Search basics (shared)](../shared/fundamentals/rag-vector-search-basics.md)
 - [GenAI — Application Development](../certifications/genai-engineer-associate/01-application-development/README.md)

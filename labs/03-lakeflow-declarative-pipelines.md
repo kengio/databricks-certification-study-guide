@@ -208,7 +208,7 @@ DROP TABLE IF EXISTS main.silver.customers_bronze;
 dbutils.fs.rm("/Volumes/main/bronze/landing/customers_cdc/", recurse=True)
 ```
 
-## Related study material
+## Related Study Material
 
 - [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../shared/cheat-sheets/dlt-quick-ref.md)
 - [DE Pro — Declarative Pipelines](../certifications/data-engineer-professional/01-developing-code-for-data-processing/06-declarative-pipelines.md)

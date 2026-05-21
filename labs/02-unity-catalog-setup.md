@@ -115,8 +115,8 @@ RETURN CASE
 ALTER TABLE lab_uc.hr.employees
   ALTER COLUMN email SET MASK lab_uc.hr.mask_email;
 
-CREATE OR REPLACE FUNCTION lab_uc.hr.mask_salary(salary_col DECIMAL(10, 2))
-RETURNS DECIMAL(10, 2)
+CREATE OR REPLACE FUNCTION lab_uc.hr.mask_salary(salary_col DECIMAL(10,2))
+RETURNS DECIMAL(10,2)
 RETURN CASE
          WHEN is_account_group_member('hr-comp-admins') THEN salary_col
          ELSE NULL
@@ -201,7 +201,7 @@ DROP SCHEMA IF EXISTS lab_uc.hr CASCADE;
 -- Optionally: DROP CATALOG lab_uc CASCADE;
 ```
 
-## Related study material
+## Related Study Material
 
 - [Unity Catalog basics (shared)](../shared/fundamentals/unity-catalog-basics.md)
 - [Unity Catalog cheat sheet (shared)](../shared/cheat-sheets/unity-catalog-quick-ref.md)

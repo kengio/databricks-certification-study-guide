@@ -183,7 +183,9 @@ The `auto_capture_config` enables Inference Tables — every request/response la
 ## Step 7 — Invoke the endpoint
 
 ```python
-import requests, os, json
+import requests
+import os
+import json
 
 endpoint = "https://<workspace-hostname>/serving-endpoints/ridge-regression/invocations"
 headers = {
@@ -221,7 +223,7 @@ DROP TABLE IF EXISTS main.ml_lab.ridge_regression_inference_payload;
 DROP SCHEMA IF EXISTS main.ml_lab CASCADE;
 ```
 
-## Related study material
+## Related Study Material
 
 - [MLflow basics (shared)](../shared/fundamentals/mlflow-basics.md)
 - [MLflow cheat sheet (shared)](../shared/cheat-sheets/mlflow-quick-ref.md)

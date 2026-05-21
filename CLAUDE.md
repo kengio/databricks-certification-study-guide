@@ -95,6 +95,8 @@ Terminal sections in this exact order:
 7. `## Official Documentation`
 8. `---` separator + navigation link (always last)
 
+**Lab files** (`type: lab` under `labs/`) are exercises, not topic files. They follow a different terminal pattern: `## Verification` (or fold verification into the last numbered step) → `## Cleanup` → `## Related Study Material` → `---` + nav. The Use Cases / Common Issues / Exam Tips / Key Takeaways sections do not apply.
+
 **Nav format:** end each topic file with a three-segment bold line — Previous file link, Back-to-Section link to `./README.md`, Next file link — separated by ` | `. Schematic (replace `<prev>` and `<next>` with the actual sibling filenames):
 
 ```text
