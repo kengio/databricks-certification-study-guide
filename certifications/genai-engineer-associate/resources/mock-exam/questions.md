@@ -792,3 +792,7 @@ D) Configure a Unity AI Gateway "audit" policy that emails a daily digest to the
 > **Correct Answer: B**
 >
 > Inference Tables are the documented audit-of-record for Model Serving endpoints. Enabling them auto-captures every request/response into a Delta table in UC (columns: `request`, `response`, `timestamp_ms`, `databricks_request_id`), giving you SQL-queryable retention out of the box. Option A is the "build it yourself" version and is unnecessary. Option C is brittle and out-of-band. Option D is not how Unity AI Gateway works. The Gateway's logging *policy* auto-routes into Inference Tables (which is exactly the correct answer here, framed differently); there is no built-in email-digest feature.
+
+---
+
+**[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to GenAI Engineer Associate](../../README.md)**

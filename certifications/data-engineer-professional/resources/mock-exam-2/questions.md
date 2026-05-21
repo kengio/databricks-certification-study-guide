@@ -1153,3 +1153,7 @@ D) Use Auto Loader with the Snowflake source connector
 > **Correct Answer: B**
 >
 > Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a Delta Share recipient platform. Option D is for object-store file ingestion, not relational sources.
+
+---
+
+**[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to DE Professional](../../README.md)**

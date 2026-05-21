@@ -911,3 +911,7 @@ D) Add a column comment on `invoice_total` saying "this is revenue"
 > **Correct Answer: B**
 >
 > The official Databricks Genie best-practice guidance is to **prefer SQL expressions over text instructions** when both could express the rule. A named SQL expression is exact and deterministic — Genie will compose it into the generated query verbatim. Free-text instructions (Option A) are the documented *last resort*. Option C is irrelevant — Genie generates SQL, not embeddings. Option D (column comments / metadata) is a complementary lever but less precise than a SQL expression for an aggregation rule.
+
+---
+
+**[← Back to Mock Exam](./README.md)** | **[← Back to Resources](../README.md)** | **[← Back to Data Analyst Associate](../../README.md)**
