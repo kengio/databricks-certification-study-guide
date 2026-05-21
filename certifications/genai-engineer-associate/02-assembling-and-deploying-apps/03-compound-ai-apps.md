@@ -52,29 +52,29 @@ Everything inside `EP_internal` runs in one Model Serving replica per request. A
 
 ```python
 import mlflow
-from databricks.agents import agent
 from langchain.chains import RetrievalQA
 
 # Build the compound: retriever + LLM
 retriever = vector_search_index.as_retriever(k=5)
-chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)
-
-# Wrap with Agent Framework — adds tracing, streaming, eval-ready signatures
-my_agent = agent(
-    name="customer_support_rag",
-    chain=chain,
-    input_schema={"messages": "ARRAY<STRUCT<role STRING, content STRING>>"},
-    output_schema={"choices": "ARRAY<STRUCT<message STRUCT<role STRING, content STRING>>>"},
+chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    retriever=retriever,
+    return_source_documents=True,
 )
 
-# Log + register in UC
+# Log the chain as an MLflow model + register in UC.
+# For tracing, streaming, and tool calling, wrap the chain in a
+# Mosaic AI Agent Framework `Agent` (see the docs link below) before logging.
 with mlflow.start_run():
     mlflow.langchain.log_model(
-        my_agent,
+        chain,
         artifact_path="agent",
         registered_model_name="main.genai.customer_support_rag",
     )
 ```
+
+> [!note]
+> The exact wrapping API for the Mosaic AI Agent Framework has evolved; consult the [Agent Framework docs](https://docs.databricks.com/en/generative-ai/agent-framework/) for the current `Agent` constructor signature. The pattern is the same — wrap your chain, log it via MLflow, register in UC, serve via Model Serving.
 
 ## Serving the compound app
 

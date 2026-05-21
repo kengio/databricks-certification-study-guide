@@ -47,6 +47,7 @@ Offline evaluation tells you whether the app *would* work on a frozen dataset. *
 
 ```sql
 -- Latency + cost roll-up by hour for the past 7 days
+-- Schema: Model Serving inference-table layout (Gateway-unified schema uses request_time + a different layout)
 SELECT
   date_trunc('hour', timestamp_ms / 1000) AS hour,
   COUNT(*)                                  AS requests,

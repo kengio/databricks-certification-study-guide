@@ -17,7 +17,7 @@ status: published
 
 > [!abstract]
 >
-> - **Idempotent**: each file is loaded at most once, tracked in the target table's `_change_data` / commit log
+> - **Idempotent**: each file is loaded at most once, tracked in the target table's Delta transaction log (commit log)
 > - **Schema-flexible**: `FORMAT_OPTIONS('inferSchema'='true')` infers; `mergeSchema='true'` evolves; declared target schema validates
 > - **Supports CSV / JSON / Parquet / Avro / ORC / TEXT / BINARYFILE**
 > - **Pattern-based**: `FILES` (explicit list) or `PATTERN` (glob/regex) restricts what's loaded
@@ -97,7 +97,7 @@ Databricks tracks the files-already-loaded set in the target table's commit log.
 - **Schema mismatch without `mergeSchema`** — `COPY INTO` defaults to schema validation; new columns in source cause errors unless `mergeSchema = true`
 - **`force = true` creates duplicates** — when re-loading processed files, all rows are appended again unless the target uses a MERGE step downstream
 - **DBFS mount paths are deprecated** — use UC volume paths (`/Volumes/...`) for new pipelines
-- **`COPY INTO` reading Delta** — not supported; `COPY INTO` reads *files*, not other Delta tables. For Delta-to-Delta, use `INSERT INTO ... SELECT FROM`
+- **`COPY INTO` reading Delta** — not supported; `COPY INTO` reads *files*, not other Delta tables. For Delta-to-Delta copies use `INSERT INTO ... SELECT FROM`, `CREATE TABLE ... AS SELECT`, or a Lakeflow Declarative Pipeline with a streaming-table source
 - **`PATTERN` matches against full path, not just basename** — be explicit, e.g., `PATTERN = '*.parquet'` matches files anywhere under the source path
 
 ## Exam Tips
