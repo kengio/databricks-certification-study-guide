@@ -670,16 +670,16 @@ fieldset#quiz-choices label {
   transition: all 0.15s var(--ease);
   position: relative;
 }
+/* Hover — just darken the border, no background. Keeps hover visually
+   distinct from the cream-tinted "selected" state below so the user
+   can always tell at a glance which row they've actually picked. */
 fieldset#quiz-choices label:hover:not(.disabled) {
   border-color: var(--fg-soft);
-  background: var(--surface-soft);
 }
-/* Selected state — same subtle tint as hover so mouse-click and
-   keyboard-arrow selections look identical. (Was orange focus-within
-   outline for keyboard only, which felt jarring next to the gentle
-   mouse-click highlight.) */
+/* Selected — cream tint + dark border. Same look whether the user
+   clicked or used ↑/↓ keys; clearly distinct from plain hover. */
 fieldset#quiz-choices label:has(input[type=radio]:checked):not(.correct):not(.incorrect) {
-  border-color: var(--fg-soft);
+  border-color: var(--fg);
   background: var(--surface-soft);
 }
 fieldset#quiz-choices label.disabled {

@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "17";
+  const APP_VERSION = "18";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -472,6 +472,14 @@
     }
     STATE.currentQ = q;
     STATE.currentChoice = null;
+    // Defensive: blur any leftover focus from the previous question so
+    // a residual :focus-within / :hover style doesn't carry over to a
+    // choice in the new question (which would look like a stuck selection).
+    if (document.activeElement
+        && document.activeElement !== document.body
+        && typeof document.activeElement.blur === "function") {
+      try { document.activeElement.blur(); } catch (_) { /* no-op */ }
+    }
 
     $("#quiz-cert").textContent = STATE.bank.certTitle;
     $("#quiz-counter").textContent =
