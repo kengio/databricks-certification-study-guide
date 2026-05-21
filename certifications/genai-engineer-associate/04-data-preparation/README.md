@@ -46,6 +46,7 @@ flowchart LR
 - [RAG / Vector Search Basics (shared)](../../../shared/fundamentals/rag-vector-search-basics.md)
 - [Application Development (retrieval at runtime)](../01-application-development/README.md)
 - [Mosaic AI Vector Search documentation](https://docs.databricks.com/en/generative-ai/vector-search.html)
+- [Vector Search runtime (Application Development domain)](../01-application-development/04-vector-search-runtime.md) — the query-time half of vector search; this file covers index *creation*, that file covers retrieval *at runtime*
 
 ---
 

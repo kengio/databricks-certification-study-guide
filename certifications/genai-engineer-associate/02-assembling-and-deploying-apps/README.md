@@ -11,7 +11,7 @@ status: published
 
 # Assembling and Deploying Apps (22 % of Exam)
 
-How to package, deploy, and operate GenAI applications on Databricks. Covers Mosaic AI Foundation Model APIs, MLflow for GenAI (logging, signatures, registry), Model Serving endpoints, AI Gateway / pay-per-token vs provisioned throughput, and the compound-AI app structure (chains, agents, retrievers all served behind one endpoint).
+How to package, deploy, and operate GenAI applications on Databricks. Covers Mosaic AI Foundation Model APIs, MLflow for GenAI (logging, signatures, registry), Model Serving endpoints, Mosaic AI Gateway / pay-per-token vs provisioned throughput, and the compound-AI app structure (chains, agents, retrievers all served behind one endpoint).
 
 ## Topics Overview
 
@@ -20,7 +20,7 @@ flowchart LR
     AD[Assembling & Deploying] --> Mosaic[Mosaic AI FM APIs]
     AD --> MLflow[MLflow for GenAI]
     AD --> Serve[Model Serving endpoints]
-    AD --> Gateway[AI Gateway / pay-per-token vs provisioned]
+    AD --> Gateway[Mosaic AI Gateway / pay-per-token vs provisioned]
 ```
 
 ## Section Contents
@@ -36,8 +36,8 @@ flowchart LR
 | :--- | :--- |
 | **Foundation Model APIs (FMAPI)** | Databricks-hosted access to popular LLMs (Llama, Claude, GPT-class) — no infra to manage |
 | **Pay-per-token vs Provisioned throughput** | Pay-per-token = pay per request, no capacity reserved. Provisioned = reserved tokens/sec, predictable latency |
-| **MLflow ChatModel / Agent flavors** | Standard MLflow flavours for logging chains and agents — produces a callable artifact for Model Serving |
-| **AI Gateway** | Standardises auth, rate-limit, logging across multiple LLM providers — also enforces guardrails |
+| **MLflow `ChatModel` + Mosaic AI Agent Framework** | `mlflow.pyfunc.ChatModel` (built-in) is the standard flavour for chat-shaped LLM apps; the Mosaic AI Agent Framework (`databricks.agents`) is the compound-AI / agent path. Both produce a callable artifact for Model Serving |
+| **Mosaic AI Gateway** | Standardises auth, rate-limit, logging across multiple LLM providers — also enforces guardrails |
 | **Compound AI app** | A single served endpoint that orchestrates retriever + reranker + LLM + tool calls |
 | **Model Serving endpoint** | The serving surface — CPU or GPU, auto-scales, integrates with UC for governance |
 
@@ -46,7 +46,7 @@ flowchart LR
 - [MLflow Basics (shared)](../../../shared/fundamentals/mlflow-basics.md)
 - [Mosaic AI Model Serving documentation](https://docs.databricks.com/en/machine-learning/model-serving/index.html)
 - [Foundation Model APIs documentation](https://docs.databricks.com/en/machine-learning/foundation-models/index.html)
-- [AI Gateway documentation](https://docs.databricks.com/en/ai-gateway/index.html)
+- [Mosaic AI Gateway documentation](https://docs.databricks.com/en/ai-gateway/index.html)
 
 ---
 

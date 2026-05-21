@@ -13,21 +13,21 @@ status: published
 
 ## Overview
 
-The March 2026 blueprint elevates governance to a first-class 8 % domain. In Databricks, GenAI governance lives at four layers: **Unity Catalog** governs the *assets* (embeddings, models, prompts, agents, vector indexes), **PII handling** governs the *data flowing through* the pipeline, **content safety** governs the *prompts and generations*, and **AI Gateway** governs the *endpoints* themselves. Inference Tables provide the audit trail underneath all four.
+The March 2026 blueprint elevates governance to a first-class 8 % domain. In Databricks, GenAI governance lives at four layers: **Unity Catalog** governs the *assets* (embeddings, models, prompts, agents, vector indexes), **PII handling** governs the *data flowing through* the pipeline, **content safety** governs the *prompts and generations*, and **Mosaic AI Gateway** governs the *endpoints* themselves. Inference Tables provide the audit trail underneath all four.
 
 > [!abstract]
 >
 > - **UC AI assets** — embeddings tables, vector indexes, registered models, prompt templates, agents — all UC-securable with `GRANT/REVOKE`
 > - **PII handling** — strip / hash / mask before embedding; tag PII columns with UC tags; use column masks for retrieval-time enforcement
 > - **Content safety** — input / output classifiers detect unsafe prompts and unsafe outputs
-> - **AI Gateway** — per-endpoint policies for rate limit, content filtering, prompt-injection detection
+> - **Mosaic AI Gateway** — per-endpoint policies for rate limit, content filtering, prompt-injection detection
 > - **Inference Tables** — auto-captured Delta tables of every request/response on a Model Serving endpoint
 
 > [!tip] What the Exam Tests
 >
 > - Which UC objects are governable (embeddings tables, vector indexes, registered models — yes; in-memory prompts — no)
 > - Why PII must be handled before embedding, not after retrieval
-> - Which guardrails sit in AI Gateway vs in the model itself
+> - Which guardrails sit in Mosaic AI Gateway vs in the model itself
 > - That Inference Tables are the audit-of-record for served endpoints
 
 ---
@@ -73,7 +73,7 @@ Two-sided:
 
 Databricks-provided classifiers integrate with Model Serving; you can also bring your own.
 
-## Layer 4 — AI Gateway
+## Layer 4 — Mosaic AI Gateway
 
 Per-endpoint policies that wrap any served LLM:
 
@@ -113,7 +113,7 @@ This is the audit-of-record. It feeds drift monitoring, retrospective evaluation
 
 - **Embedding PII without redaction** — the vector index now contains reconstructible PII; redact at chunk time, not retrieval time
 - **Forgetting to enable Inference Tables on a new endpoint** — no audit trail = no compliance story
-- **Confusing AI Gateway content filtering with model-side safety** — gateway is the outer perimeter; the model may still generate unsafe content on its own. Use both
+- **Confusing Mosaic AI Gateway content filtering with model-side safety** — gateway is the outer perimeter; the model may still generate unsafe content on its own. Use both
 - **GRANT on the embedding table but not the vector index** — users can read raw embeddings but can't query the index, or vice versa
 
 ## Exam Tips
@@ -122,16 +122,16 @@ This is the audit-of-record. It feeds drift monitoring, retrospective evaluation
 >
 > - **UC governs AI assets** the same way it governs tables — GRANT/REVOKE/row filters/column masks all apply.
 > - **PII must be handled before embedding.** Once embedded, it lives in the index.
-> - **AI Gateway = perimeter** policies (rate limit, content filter, routing). Model-side safety = the model's own refusal behaviour.
+> - **Mosaic AI Gateway = perimeter** policies (rate limit, content filter, routing). Model-side safety = the model's own refusal behaviour.
 > - **Inference Tables are the audit-of-record** for served endpoints.
 
 ## Key Takeaways
 
-- Governance has 5 layers: UC assets, PII handling, content safety, AI Gateway, Inference Tables
+- Governance has 5 layers: UC assets, PII handling, content safety, Mosaic AI Gateway, Inference Tables
 - All persistent AI artifacts are UC-securable
 - PII redaction happens at chunk / embed time, not at retrieval
 - Inference Tables capture every served request/response — enable on every prod endpoint
-- AI Gateway wraps the endpoint with rate limit + content filtering + logging policies
+- Mosaic AI Gateway wraps the endpoint with rate limit + content filtering + logging policies
 
 ## Related Topics
 

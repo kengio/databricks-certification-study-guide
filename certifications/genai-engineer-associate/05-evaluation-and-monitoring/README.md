@@ -45,6 +45,7 @@ flowchart LR
 - [MLflow Basics (shared)](../../../shared/fundamentals/mlflow-basics.md)
 - [MLflow evaluation documentation](https://mlflow.org/docs/latest/llms/llm-evaluate/index.html)
 - [Inference Tables documentation](https://docs.databricks.com/en/machine-learning/model-serving/inference-tables.html)
+- [Governance — Inference Tables as audit-of-record](../06-governance/01-governance-overview.md#layer-5--inference-tables) — same feature, governance lens (audit + drift + cost attribution)
 
 ---
 
