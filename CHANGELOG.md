@@ -28,6 +28,19 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-8] — Hands-on lab pack
+
+### Added
+
+- **`labs/` directory** with a `README.md` index and 5 runnable labs:
+  - `01-medallion-ingestion.md` — Bronze / Silver / Gold layering with `COPY INTO`, `MERGE`, `OPTIMIZE`, `VACUUM`
+  - `02-unity-catalog-setup.md` — catalog / schema / volume DDL, GRANT / REVOKE / DENY, row filters, column masks, lineage + audit system tables
+  - `03-lakeflow-declarative-pipelines.md` — `@dlt.table`, `expect_or_drop` / `expect_or_fail`, `APPLY CHANGES INTO` for SCD Type 2, event log inspection
+  - `04-mlflow-tracking.md` — autologging, registering in UC (`databricks-uc` registry URI), `Production` / `Challenger` aliases, Model Serving + Inference Tables
+  - `05-mosaic-ai-rag-demo.md` — Vector Search Delta Sync Index, `ResponsesAgent` subclass, `databricks.agents.deploy()`, Databricks Agent Evaluation with built-in RAG judges
+- Each lab includes setup, step-by-step prose, runnable code blocks (PySpark / SQL / Python), verification queries, and a Cleanup section
+- Top-level `README.md` repo-layout, How-to-use list, and Q3 2026 roadmap entry for hands-on lab pack updated; `CLAUDE.md` Repository Structure updated
+
 ## [2026.05.21-7] — Mock-exam debrief files + further new-domain questions
 
 After completing a timed sitting, learners now have a structured debrief covering domain-to-resource mapping, per-section breakdown, and a study plan tailored to miss count. Each cert also gets 3 more new-domain practice questions on top of the 2 added in the earlier mock-exam refresh.
