@@ -488,4 +488,4 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 
 ---
 
-**[↑ Back to RAG Architecture](./README.md) | [Next: Document Processing & Chunking](./02-document-processing-chunking.md) →**
+**[↑ Back to RAG Architecture](./README.md) | [Next: Document Processing & Chunking](../04-data-preparation/01-document-processing-chunking.md) →**

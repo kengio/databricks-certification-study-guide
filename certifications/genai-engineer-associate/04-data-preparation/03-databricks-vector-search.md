@@ -395,4 +395,4 @@ D) Update the `embedding_model_endpoint_name` field in the index configuration
 
 ---
 
-**[← Previous: Embedding Models](./01-embeddings-models.md) | [↑ Back to Vector Search & Embeddings](./README.md) | [Next: Vector Search in Production](./03-vector-search-production.md) →**
+**[← Previous: Embedding Models](./02-embeddings-models.md) | [↑ Back to Vector Search & Embeddings](./README.md) | [Next: Vector Search in Production](../01-application-development/04-vector-search-runtime.md) →**

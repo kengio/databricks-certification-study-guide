@@ -465,4 +465,4 @@ D) Increase max_tokens so the LLM has room to fully explain its reasoning
 
 ---
 
-**[← Previous: Document Processing & Chunking](./02-document-processing-chunking.md) | [↑ Back to RAG Architecture](./README.md)**
+**[← Previous: Document Processing & Chunking](../04-data-preparation/01-document-processing-chunking.md) | [↑ Back to RAG Architecture](./README.md)**

@@ -387,4 +387,4 @@ quality assessment.
 
 ---
 
-**[← Previous: LLM Chains & Agents](./02-chains-agents.md) | [↑ Back to LLM Application Development](./README.md)**
+**[← Previous: LLM Chains & Agents](../01-application-development/02-chains-agents.md) | [↑ Back to LLM Application Development](./README.md)**

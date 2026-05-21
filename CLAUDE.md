@@ -112,7 +112,7 @@ Required: YAML frontmatter (`title`, `type: category`, `tags`, `status`), topic 
 - **Data Analyst:** 01-executing-queries-databricks-sql-warehouses, 02-creating-dashboards-and-visualizations, 03-analyzing-queries, 04-developing-sharing-maintaining-genie-spaces, 05-understanding-databricks-platform, 06-managing-data, 07-securing-data, 08-importing-data, 09-data-modeling-with-databricks-sql *(matches Oct 2025 official 9-domain blueprint)*
 - **ML Associate:** 01-databricks-ml, 02-ml-workflows, 03-feature-engineering, 04-mlflow-deployment
 - **ML Professional:** 01-advanced-feature-engineering, 02-hyperparameter-optimization, 03-model-production-lifecycle, 04-model-governance-mlops
-- **GenAI Engineer:** 01-rag-architecture, 02-vector-search-embeddings, 03-llm-application-development, 04-databricks-genai-tools
+- **GenAI Engineer:** 01-application-development, 02-assembling-and-deploying-apps, 03-design-applications, 04-data-preparation, 05-evaluation-and-monitoring, 06-governance *(matches March 2026 official 6-domain blueprint)*
 
 ## Shared Content
 

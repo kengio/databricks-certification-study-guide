@@ -28,6 +28,26 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-4] — GenAI Engineer Associate folder reorg to 6-domain blueprint
+
+### Changed
+
+- **`certifications/genai-engineer-associate/` restructured to match the March 2026 official 6-domain blueprint** (1 : 1 folder-to-domain mapping). Folder map:
+  - `01-rag-architecture/` → split across `03-design-applications/` (design), `04-data-preparation/` (chunking), `01-application-development/` (retrieval-augmentation strategies)
+  - `02-vector-search-embeddings/` → split across `04-data-preparation/` (index creation, embeddings) and `01-application-development/` (vector search runtime, renamed from `03-vector-search-production.md`)
+  - `03-llm-application-development/` → split across `01-application-development/` (prompt engineering, chains/agents) and `05-evaluation-and-monitoring/` (evaluation)
+  - `04-databricks-genai-tools/` → `02-assembling-and-deploying-apps/` (Mosaic AI FMAPI, MLflow for GenAI)
+- 11 file moves via git mv (history preserved)
+- 14 intra-cert links rewritten; 4 repo-wide cross-references updated
+- Cert README rewritten with new Study Topics table reflecting the 6 official domains and weights
+- `CLAUDE.md` Certification Topic Folders entry updated for GenAI
+- Top-level `README.md` repo layout updated; guide-itself roadmap entry marked complete
+
+### Added
+
+- 6 new folder README index files — one per official domain — each with topics overview, section contents, key concepts, and back/next navigation
+- New topic file `06-governance/01-governance-overview.md` covering the new 8 % Governance domain (UC for AI assets, PII handling, content safety, AI Gateway, Inference Tables) — was previously not covered
+
 ## [2026.05.21-2] — DE Professional folder reorg to 10-domain blueprint
 
 ### Changed

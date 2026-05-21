@@ -423,4 +423,4 @@ D) The `num_results` parameter is too low to include the new documents
 
 ---
 
-**[← Previous: Databricks Vector Search](./02-databricks-vector-search.md) | [↑ Back to Vector Search & Embeddings](./README.md)**
+**[← Previous: Databricks Vector Search](../04-data-preparation/03-databricks-vector-search.md) | [↑ Back to Vector Search & Embeddings](./README.md)**
