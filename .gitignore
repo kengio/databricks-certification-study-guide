@@ -12,3 +12,13 @@ Thumbs.db
 
 # Python virtual environments
 .venv/
+
+# Internal planning / superpowers artifacts (not for public)
+docs/superpowers/
+
+# Node
+node_modules/
+
+# IDE
+.idea/
+.vscode/

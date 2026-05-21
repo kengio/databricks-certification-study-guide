@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Databricks certifications (official)
+    url: https://www.databricks.com/learn/certification
+    about: The official certifications hub. Always check the per-certification page for the current exam guide PDF — that is the source of truth.
+  - name: Databricks documentation
+    url: https://docs.databricks.com/
+    about: For questions about Databricks features (Delta Lake, Unity Catalog, MLflow, Lakeflow, Mosaic AI, etc.) rather than this guide.
+  - name: Databricks Community
+    url: https://community.databricks.com/
+    about: For exam-policy / scheduling / accommodation questions, or to discuss study strategy with other candidates.
