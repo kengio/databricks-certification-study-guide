@@ -29,7 +29,7 @@ flowchart TD
 | [01-access-control.md](./01-access-control.md) | GRANT / REVOKE / DENY, row filters, column masks | High |
 | [02-secret-management.md](./02-secret-management.md) | Databricks secret scopes, Azure Key Vault / AWS Secrets Manager integration | High |
 | [03-audit-lineage-network-security.md](./03-audit-lineage-network-security.md) | Audit log, lineage in UC, IP access lists, PrivateLink / Private Service Connect | High |
-| [04-classification-compliance-permissions.md](./04-classification-compliance-permissions.md) | Sensitive-data tagging, compliance frameworks (HIPAA, PCI), permission patterns | Medium |
+| [04-classification-compliance-permissions.md](./04-classification-compliance-permissions.md) | Sensitive-data tagging, anonymisation / pseudonymisation (hashing, tokenisation, suppression, generalisation), batch + streaming PII masking, data purging for retention | Medium |
 
 ## Key Concepts to Master
 

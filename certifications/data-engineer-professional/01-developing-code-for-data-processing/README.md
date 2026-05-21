@@ -64,4 +64,4 @@ flowchart TD
 
 ---
 
-**[↑ Back to DE Professional](../README.md) | [Next: Cost & Performance Optimization →](../02-cost-and-performance-optimization/README.md)**
+**[↑ Back to DE Professional](../README.md) | [Next: Cost & Performance Optimization →](../02-cost-and-performance-optimization/README.md)** *(first domain — no previous)*

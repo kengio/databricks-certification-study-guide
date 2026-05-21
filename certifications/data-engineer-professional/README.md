@@ -16,9 +16,9 @@ aliases:
 >
 > - Restructured from 5 broad topics into **10 explicitly weighted domains**
 > - **Data Sharing and Federation** (Delta Sharing, Lakehouse Federation) is now a first-class domain (5 %)
-> - **Data Modelling** is now a first-class domain (6 %) — previously bundled inside other topics
+> - **Data Modelling** is now a first-class domain (6 %) — renamed and re-weighted; previously a top-level section in the older blueprint
 > - Stronger emphasis on **Cost & Performance Optimization** (13 %)
-> - Pass / fail — **Databricks no longer publishes a numeric passing score**
+> - Pass / fail — **the Nov 30, 2025 exam guide does not publish a numeric passing score**
 >
 > The official source of truth: [Databricks Certified Data Engineer Professional](https://www.databricks.com/learn/certification/data-engineer-professional) (and the [November 30, 2025 exam guide PDF](https://www.databricks.com/sites/default/files/2025-11/databricks-certified-data-engineer-professional-exam-guide-november-30-2025_0.pdf)). The folder structure in this guide now matches the official 10-domain blueprint 1 : 1.
 
@@ -30,7 +30,7 @@ aliases:
 | **Exam guide**      | November 30, 2025                               |
 | **Scored questions**| 59 multiple-choice                              |
 | **Duration**        | 120 minutes                                     |
-| **Result**          | Pass / fail (no published threshold)            |
+| **Result**          | Pass / fail (no numeric threshold in the Nov 30, 2025 exam guide) |
 | **Languages**       | English, Japanese, Portuguese (BR), Korean      |
 | **Code in stems**   | Python and SQL                                  |
 | **Experience**      | 1+ years building production data pipelines on Databricks (recommended) |

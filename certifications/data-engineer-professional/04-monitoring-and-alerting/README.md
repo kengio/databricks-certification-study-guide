@@ -10,7 +10,7 @@ status: published
 
 # Monitoring and Alerting (10 % of Exam)
 
-Observability for Lakeflow Jobs, Lakeflow Declarative Pipelines, and Databricks SQL — using **system tables**, the **Lakeflow event log**, the **query profiler**, and structured-streaming progress metrics.
+Observability *and* alerting for Lakeflow Jobs, Lakeflow Declarative Pipelines, and Databricks SQL — using **system tables**, the **Lakeflow event log**, the **query profiler**, structured-streaming progress metrics, **SQL Alerts**, and **Lakeflow Jobs notifications** (email + webhook).
 
 ## Topics Overview
 
@@ -38,7 +38,9 @@ flowchart LR
 | **System tables** | Unity Catalog tables in `system.*` schemas that expose audit, access, compute, billing, and lineage events |
 | **Lakeflow event log** | Append-only Delta table per pipeline that records every operator event, including expectations |
 | **Query profiler** | DBSQL-native graphical profiler — shows shuffle, spill, time per stage |
-| **Lakeflow alerts** | Email / webhook alerts on job-level success/failure, run duration, repair attempts |
+| **Lakeflow Jobs notifications** | Email / webhook alerts on job-level success/failure, run duration, repair attempts — configured per job, delivered via the Jobs UI or Jobs API |
+| **SQL Alerts** | Databricks SQL alerts trigger on query-result thresholds (e.g., row count > N, value < threshold) — used for data-quality and freshness checks against Delta tables |
+| **Databricks CLI / REST API for monitoring** | The `databricks` CLI and Jobs REST API expose run state, task results, and event-log queries from outside the workspace — useful for external dashboards and on-call tooling |
 | **System table latency** | Most system tables refresh within minutes; some up to ~1 hour — plan dashboards accordingly |
 
 ## Related Resources

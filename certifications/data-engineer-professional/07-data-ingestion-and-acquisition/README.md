@@ -42,6 +42,8 @@ flowchart LR
 - [Auto Loader cheat sheet (shared)](../../../shared/cheat-sheets/auto-loader-quick-ref.md)
 - [Streaming Fundamentals (shared)](../../../shared/fundamentals/streaming-fundamentals.md)
 - [Auto Loader documentation](https://docs.databricks.com/en/ingestion/auto-loader/index.html)
+- [Structured Streaming — Part 1 (developing code domain)](../01-developing-code-for-data-processing/03-structured-streaming-part1.md) — Auto Loader is most often consumed as a streaming source via `cloudFiles`
+- [Lakeflow Declarative Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) — `@Dlt.table` + `cloudFiles` is the canonical declarative ingestion pattern
 
 > [!note]
 > This domain is currently represented by a single deep-dive on Auto Loader, the most-tested ingestion mechanism. Expanded coverage of **batch ingestion patterns** (`COPY INTO`, JDBC/ODBC ingestion, partner connectors) is on the [guide roadmap](../../../README.md#roadmap-for-the-guide-itself).

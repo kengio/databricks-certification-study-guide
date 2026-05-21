@@ -12,13 +12,14 @@ status: published
 
 ## Overview
 
-**Lakehouse Federation** lets you query data in external databases — Snowflake, BigQuery, Redshift, MySQL, PostgreSQL, SQL Server, Azure Synapse, Salesforce Data Cloud, and others — without ETL. Data stays in the source system; Databricks issues queries through Unity Catalog using a **foreign connection** and a **foreign catalog**.
+**Lakehouse Federation** lets you query data in external databases — Snowflake, BigQuery, Redshift, MySQL, PostgreSQL, SQL Server, Azure Synapse, Oracle, Teradata, Salesforce Data 360 (formerly Data Cloud), and others — without ETL. Data stays in the source system; Databricks issues queries through Unity Catalog using a **foreign connection** and a **foreign catalog**. The list of supported connectors grows quarterly — check the [supported sources docs](https://docs.databricks.com/en/query-federation/index.html#supported-data-sources) for the current set.
 
 > [!abstract]
 >
 > - **Foreign connection** — a UC securable storing connection details (host, port, credential) to an external database
 > - **Foreign catalog** — a UC catalog that mirrors an external database's schemas, queryable like any UC catalog
 > - **Query pushdown** — Databricks pushes filters, projections, and aggregations to the source where supported
+> - **Read-mostly** — `INSERT` / `UPDATE` / `DELETE` against foreign tables is not supported for most connectors; treat federation as a read path
 > - **Credentials live in UC** — not in notebooks or `spark.conf` — making federation auditable like any other UC access
 
 > [!tip] What the Exam Tests
@@ -75,7 +76,9 @@ FROM postgres_prod.public.orders
 WHERE order_date >= current_date - INTERVAL 7 DAYS;
 ```
 
-## When to federate vs ingest
+## Use Cases
+
+When to federate vs ingest:
 
 | Scenario | Recommendation |
 | :--- | :--- |
@@ -93,11 +96,19 @@ WHERE order_date >= current_date - INTERVAL 7 DAYS;
 
 ## Exam Tips
 
-> [!tip] Exam Tips
+> [!tip]
 >
 > - If a question mentions an analyst wanting to query Snowflake / BigQuery / Postgres "without copying data," the answer almost always involves **Lakehouse Federation**.
 > - Federation creates a **read-only** view of the source — writes (`INSERT`, `UPDATE`) against federated tables aren't supported for every connector.
 > - Pushdown is best-effort. **Join + aggregate** queries across federation and Delta tables run partly in the source, partly in Databricks.
+
+## Key Takeaways
+
+- **Federation = query path, not data path.** Data stays in the source system; you query through UC. Use it for low-effort access, not for analytic workloads where Delta-on-Photon is faster.
+- **Credentials live in UC `CREATE CONNECTION`**, not in notebooks. The auditing and lineage benefits come from that.
+- **Pushdown is best-effort.** Inspect the query profile in DBSQL to confirm filters and aggregations actually pushed.
+- **`CREATE CONNECTION` + `CREATE FOREIGN CATALOG`** is the two-step DDL — remember the order on the exam.
+- **Read-mostly.** Most connectors do not support write-back; treat federation as a read path.
 
 ## Related Topics
 

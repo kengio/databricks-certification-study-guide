@@ -42,8 +42,12 @@ flowchart LR
 | **SCD Type 2** | Insert new row with effective-from / -to dates — preserves history |
 | **Deep vs shallow clone** | Deep clone copies data and metadata; shallow clone copies only metadata (fast, but original data must remain) |
 
+> [!tip]
+> **SCD in production = `APPLY CHANGES INTO`**, not hand-written MERGE. The declarative-pipeline implementation lives in [`../03-data-transformation-cleansing-quality/04-apply-changes-api.md`](../03-data-transformation-cleansing-quality/04-apply-changes-api.md). Study `04-scd-patterns.md` here to understand SCD Type 1 / 2 semantics, then study `apply-changes-api.md` for the production-grade implementation.
+
 ## Related Resources
 
+- [APPLY CHANGES INTO — the modern declarative SCD](../03-data-transformation-cleansing-quality/04-apply-changes-api.md)
 - [Delta Lake Basics (shared)](../../../shared/fundamentals/delta-lake-basics.md)
 - [Medallion Architecture (shared)](../../../shared/fundamentals/medallion-architecture.md)
 - [Delta Lake cheat sheet (shared)](../../../shared/cheat-sheets/delta-lake-commands.md)

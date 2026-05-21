@@ -63,6 +63,7 @@ flowchart TD
 
 - [Databricks Asset Bundles documentation](https://docs.databricks.com/en/dev-tools/bundles/index.html)
 - [Performance Troubleshooting appendix (shared)](../../../shared/appendix/performance-troubleshooting.md)
+- [Compute selection (cost & performance domain)](../02-cost-and-performance-optimization/09-databricks-compute.md) — picking the right cluster is also a debugging concern (which cluster is the failing job on?)
 
 ---
 
