@@ -35,6 +35,7 @@ In UC, what's the relationship between metastores and workspaces?
 What's the storage difference between a managed and an external table in UC?
 
 > [!success]- Answer
+>
 > - **Managed** — UC owns the data files. Stored in the catalog's / schema's default storage location. `DROP TABLE` deletes data.
 > - **External** — UC tracks metadata; you own the storage path (set via `LOCATION`). `DROP TABLE` deletes metadata only — files remain.
 
@@ -43,6 +44,7 @@ What's the storage difference between a managed and an external table in UC?
 What are the two UC primitives that govern access to cloud storage, and how do they relate?
 
 > [!success]- Answer
+>
 > - **Storage Credential** — auth (IAM role / service principal / managed identity)
 > - **External Location** — a path (e.g., `s3://bucket/prefix/`) + a Storage Credential it uses
 >
@@ -53,9 +55,11 @@ What are the two UC primitives that govern access to cloud storage, and how do t
 What's the syntax to grant SELECT on a table to a group?
 
 > [!success]- Answer
+>
 > ```sql
 > GRANT SELECT ON TABLE prod.sales.orders TO `analysts`;
 > ```
+>
 > Backticks around the group name aren't strictly required, but recommended for names with special characters.
 
 ## Privilege hierarchy
@@ -85,11 +89,13 @@ How do you restrict which rows a user sees in a table without creating a separat
 
 > [!success]- Answer
 > Create a SQL UDF that returns a boolean, then attach it as a row filter:
+>
 > ```sql
 > CREATE FUNCTION region_filter(region STRING)
 >   RETURN region = current_user_region();
 > ALTER TABLE sales SET ROW FILTER region_filter ON (region);
 > ```
+>
 > Filter runs transparently on every read.
 
 ## Column masks
@@ -144,6 +150,7 @@ Where do groups live in UC, and why does it matter?
 What's the difference between `USE CATALOG` and `USAGE` on a catalog?
 
 > [!success]- Answer
+>
 > - `USE CATALOG` — lets you reference the catalog in queries (`SELECT * FROM catalog.schema.table`). Required just to "see" objects within.
 > - `USAGE` — legacy / Hive-metastore privilege still recognised; superseded by `USE CATALOG` + `USE SCHEMA` for UC objects.
 >
@@ -172,11 +179,13 @@ Where do features live in UC, and what's the function that creates a feature tab
 
 > [!success]- Answer
 > Features live as regular UC tables — typically under a `<catalog>.features.<table>` schema. Create via:
+>
 > ```python
 > from databricks.feature_engineering import FeatureEngineeringClient
 > fe = FeatureEngineeringClient()
 > fe.create_table(name="prod.features.customer", primary_keys=["customer_id"], schema=df.schema)
 > ```
+>
 > No separate "Feature Store" — it's just UC tables with feature-engineering APIs over them.
 
 ## Foreign catalogs — Lakehouse Federation

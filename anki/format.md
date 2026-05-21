@@ -24,7 +24,7 @@ tags:
 
 # Deck Title (Topic — Anki Deck)
 
-Optional preamble. Anything before the first `## ` heading is ignored by the
+Optional preamble. Anything before the first H2 heading is ignored by the
 builder, so use it for an intro callout, source citations, scope notes, etc.
 
 ## Card title (front context)
@@ -55,13 +55,13 @@ Another question...
 
 ## Card boundaries
 
-- **`## ` heading** = start of a new card. The heading text becomes the bolded title at the top of the front.
+- **H2 heading** (`##` followed by a space) = start of a new card. The heading text becomes the bolded title at the top of the front.
 - **`> [!success]- Answer`** (or `> [!success]-` without the word "Answer") = start of the back.
-- The back continues until either the next `## ` heading or a non-blockquote line.
+- The back continues until either the next H2 heading or a non-blockquote line.
 
 ## What gets ignored
 
-- The H1 title (`# …`) and everything before the first `## ` — preamble only.
+- The H1 title (`#` followed by a space) and everything before the first H2 — preamble only.
 - Comments (HTML or YAML `#` style) — passed through to Anki as-is, so avoid.
 - Multiple blank lines between cards — the builder is whitespace-tolerant.
 
@@ -69,7 +69,7 @@ Another question...
 
 The builder warns (and skips the card) when:
 
-- A `## ` heading has no `> [!success]-` callout below it
+- An H2 heading has no `> [!success]-` callout below it
 - The front or back is empty after stripping whitespace
 
 Run `python3 anki/build.py --check` to validate without writing output.
@@ -95,15 +95,15 @@ Anki imports cards as HTML, and the builder converts source newlines to `<br>`. 
 
 ## TSV output format (for reference)
 
-The build output is tab-separated with these special header lines Anki recognises:
+The build output is tab-separated with these special header lines Anki recognises (`[TAB]` below denotes a literal tab character):
 
 ```text
 #separator:tab
 #html:true
 #deck:Databricks::DE Associate::Delta Lake
-#columns:Front	Back	Tags
-<front HTML>	<back HTML>	<space-separated tags>
-<front HTML>	<back HTML>	<space-separated tags>
+#columns:Front[TAB]Back[TAB]Tags
+<front HTML>[TAB]<back HTML>[TAB]<space-separated tags>
+<front HTML>[TAB]<back HTML>[TAB]<space-separated tags>
 …
 ```
 

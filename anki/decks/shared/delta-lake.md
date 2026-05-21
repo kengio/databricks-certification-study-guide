@@ -30,6 +30,7 @@ A Delta table at `s3://bucket/sales/` keeps its transaction log where exactly?
 What does each letter in ACID guarantee in Delta Lake?
 
 > [!success]- Answer
+>
 > - **A**tomicity — a write either fully commits or doesn't appear at all (no partial states)
 > - **C**onsistency — readers see a valid table state at every version
 > - **I**solation — concurrent writers can't see each other's uncommitted data (snapshot isolation)
@@ -136,6 +137,7 @@ What does `DESCRIBE HISTORY <table>` show, and how is it useful in incident resp
 Write the canonical upsert pattern with MERGE INTO.
 
 > [!success]- Answer
+>
 > ```sql
 > MERGE INTO target t
 > USING source s
@@ -179,6 +181,7 @@ What's a Generated Column and what's a common use case?
 What do `delta.autoOptimize.optimizeWrite` and `delta.autoOptimize.autoCompact` do, and when do you turn each on?
 
 > [!success]- Answer
+>
 > - `optimizeWrite = true` — Spark rebalances data across files **at write time** for better file sizing. Lower write latency cost; recommended for most workloads.
 > - `autoCompact = true` — Spark runs a *small* OPTIMIZE **after** every write that produces many small files. More expensive per write; turn on for streaming sinks producing micro-batches.
 
@@ -201,6 +204,7 @@ What does enabling UniForm do, and what's it for?
 How do you stream the CDF of a Delta table as a Structured Streaming source?
 
 > [!success]- Answer
+>
 > ```python
 > spark.readStream
 >     .format("delta")
@@ -208,6 +212,7 @@ How do you stream the CDF of a Delta table as a Structured Streaming source?
 >     .option("startingVersion", 10)
 >     .table("sales")
 > ```
+>
 > Emits the CDF rows (with `_change_type`, `_commit_version`, etc.) as a stream — useful for incremental downstream processing.
 
 ## CONVERT TO DELTA
