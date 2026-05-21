@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=33">
+  <link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -83,6 +83,11 @@
         <button type="button" id="btn-export" class="ghost">Export progress</button>
         <button type="button" id="btn-reset" class="ghost danger">Reset history</button>
       </div>
+    </section>
+
+    <section id="summary" hidden>
+      <!-- Populated by renderSummary() in app.js. Shown when the user has
+           answered every question in the current bank (or timer expired). -->
     </section>
 
     <section id="settings" hidden>
@@ -156,6 +161,26 @@
     </section>
   </main>
 
+  <!-- ============== PAUSE OVERLAY ==============
+       Shown when the user pauses the exam timer. Blurs the background
+       so the page isn't readable while the user steps away, and offers
+       a Resume button + Esc/Enter/Space keyboard return path. -->
+  <div class="pause-overlay" id="pause-overlay" hidden
+       role="alertdialog" aria-modal="true" aria-labelledby="pause-title">
+    <div class="pause-card">
+      <p class="pause-eyebrow">Exam on hold</p>
+      <h2 id="pause-title" class="pause-title">Paused</h2>
+      <p class="pause-message">
+        Your timer is frozen and the questions are blurred. Take your time —
+        nothing counts against your effort while you're away.
+      </p>
+      <button type="button" id="btn-resume" class="primary">Resume exam</button>
+      <p class="pause-hint">
+        <kbd>Esc</kbd> / <kbd>Enter</kbd> / <kbd>Space</kbd> · or tap anywhere
+      </p>
+    </div>
+  </div>
+
   <!-- ============== CONFIRM MODAL (theme-aware, focus-trapped) ============== -->
   <div class="modal-backdrop" id="modal-backdrop" hidden>
     <div class="modal" role="alertdialog" aria-modal="true"
@@ -181,9 +206,9 @@
        the centre column is hidden entirely. -->
   <div class="actionbar" id="actionbar" hidden>
     <div class="actionbar-inner">
-      <span id="quiz-timer" class="actionbar-timer" hidden
-            role="timer" aria-live="off"
-            title="Exam timer remaining" aria-label="Exam timer remaining">
+      <button type="button" id="quiz-timer" class="actionbar-timer" hidden
+              title="Click to pause / resume the exam timer (P)"
+              aria-label="Exam timer — click to pause or resume">
         <span class="timer-icon" aria-hidden="true">
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none"
                stroke="currentColor" stroke-width="1.5"
@@ -194,7 +219,18 @@
           </svg>
         </span>
         <span class="timer-value">00:00</span>
-      </span>
+        <span class="timer-pause-glyph" aria-hidden="true">
+          <svg viewBox="0 0 12 12" width="10" height="10" fill="currentColor">
+            <rect x="2.5" y="2" width="2.5" height="8" rx="0.5"/>
+            <rect x="7" y="2" width="2.5" height="8" rx="0.5"/>
+          </svg>
+        </span>
+        <span class="timer-resume-glyph" aria-hidden="true">
+          <svg viewBox="0 0 12 12" width="10" height="10" fill="currentColor">
+            <path d="M3 2 L10 6 L3 10 Z"/>
+          </svg>
+        </span>
+      </button>
       <span class="kbd-hint" aria-hidden="true" id="kbd-hint-pre">
         <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> or <kbd>↑</kbd><kbd>↓</kbd> select &nbsp;
         <kbd>↵</kbd> / <kbd>Space</kbd> submit &nbsp;
@@ -246,6 +282,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=31"></script>
+  <script src="app.js?v=34"></script>
 </body>
 </html>

@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "31";
+  const APP_VERSION = "34";
 
   // Per-cert confetti palette. Pulled from the same gradients used on
   // the cert picker cards (--gradient in styles.css) so the burst feels
@@ -67,8 +67,11 @@
   };
 
   const STORAGE_PREFIX = "dbx-practice-";
+  const SESSION_HISTORY_PREFIX = "dbx-practice-sessions-";   // per-bank completed-session log
+  const SESSION_HISTORY_CAP = 50;                             // ring-buffer cap per bank
   const THEME_KEY = "dbx-practice-theme";
   const TIMER_KEY = "dbx-practice-timer-minutes";
+  const PASS_THRESHOLD = 70;                                  // % to pass a Databricks mock exam
   const THEMES = ["auto", "light", "dark"];
   const STATE = {
     bank: null,
@@ -86,9 +89,17 @@
     sequentialIndex: 0,
     certBanks: null,
     streak: 0,
+    bestStreak: 0,     // highest streak achieved this session — for the summary card
     timerMinutes: 0,   // 0 = no timer; >0 = exam timer total length in minutes
     timerEnd: null,    // absolute epoch ms when the timer expires, or null
     timerExpired: false,
+    sessionStart: null,    // epoch ms when this session of answering began
+    sessionElapsed: null,  // frozen elapsed-ms snapshot at completion time
+    summarySaved: false,   // guard so the completed-session record is written exactly once
+    timerPaused: false,    // true while the user has the timer on hold
+    pausedRemainingMs: null,  // ms left on the exam timer when pause started
+    totalPausedMs: 0,      // accumulated pause time (subtracted from elapsed for summary)
+    pauseStart: null,      // epoch ms when the current pause began
   };
 
   // --- DOM helpers ---------------------------------------------------------
@@ -122,7 +133,7 @@
   const clear = (node) => { while (node.firstChild) node.removeChild(node.firstChild); };
 
   function show(sectionId) {
-    for (const id of ["setup", "quiz", "stats", "settings"]) {
+    for (const id of ["setup", "quiz", "stats", "settings", "summary"]) {
       $("#" + id).hidden = id !== sectionId;
     }
     // Sticky bottom actionbar + masthead quiz-meta-strip belong to the quiz
@@ -298,9 +309,18 @@
     const data = await res.json();
     STATE.bank = data;
     STATE.history = loadHistory(data.cert);
-    // Start the configured timer fresh when entering a new bank
+    // Fresh session bookkeeping every time we enter a bank — needed for
+    // the summary screen (elapsed time + average per Q + best streak).
+    STATE.sessionCorrect = 0;
+    STATE.sessionTotal = 0;
+    STATE.seenThisSession.clear();
+    STATE.streak = 0;
+    STATE.bestStreak = 0;
+    STATE.sessionStart = null;
+    STATE.sessionElapsed = null;
+    STATE.summarySaved = false;
     if (STATE.timerMinutes > 0) {
-      startTimer(STATE.timerMinutes);
+      startTimer(STATE.timerMinutes);    // also sets sessionStart
       updateClockAndTimer();
     }
     populateSettings();
@@ -508,6 +528,14 @@
   // --- Rendering -----------------------------------------------------------
 
   function renderQuiz() {
+    // Bank-complete short-circuit: if the user has visited every question
+    // in the (filtered) bank and answered at least one, show the summary
+    // screen instead of looping back to the start.
+    if (isSessionComplete()) {
+      renderSummary();
+      show("summary");
+      return;
+    }
     const q = pickNext();
     if (!q) {
       $("#quiz-question").textContent = "No questions match your filters.";
@@ -697,6 +725,7 @@
     if (correct) {
       STATE.sessionCorrect++;
       STATE.streak++;
+      if (STATE.streak > STATE.bestStreak) STATE.bestStreak = STATE.streak;
     } else {
       STATE.streak = 0;
     }
@@ -838,6 +867,31 @@
       }
       c.appendChild(ul);
     }
+
+    // Past attempts on this bank — clickable rows reopen each summary
+    const past = loadSessionHistory(STATE.bank.cert).slice().reverse();
+    if (past.length > 0) {
+      const headRow = el("div", { className: "stats-history-head" });
+      headRow.appendChild(el("h3", { style: "margin:2rem 0 0.75rem" },
+        `Past attempts (${past.length})`));
+      headRow.appendChild(el("button", { type: "button", className: "link danger",
+        onclick: () => clearSessionHistoryConfirm(STATE.bank.cert) }, "Clear history"));
+      c.appendChild(headRow);
+      c.appendChild(renderAttemptList(past));
+    }
+  }
+
+  async function clearSessionHistoryConfirm(certKey) {
+    const ok = await customConfirm({
+      title: "Clear attempt history?",
+      message: `This removes every saved completed-session record for this bank. Your in-progress per-question history isn't affected.`,
+      confirmLabel: "Clear history",
+      cancelLabel: "Cancel",
+      danger: true,
+    });
+    if (!ok) return;
+    clearSessionHistoryForCert(certKey);
+    renderStats();
   }
 
   function exportProgress() {
@@ -870,6 +924,538 @@
     STATE.sessionTotal = 0;
     saveHistory();
     renderStats();
+  }
+
+  // --- Session summary + history ------------------------------------------
+  //
+  // When the user has visited every question in the (filtered) bank and
+  // answered at least one, renderQuiz redirects to the summary screen
+  // instead of looping back. The summary screen:
+  //   • shows overall score + per-domain breakdown + weak-area callout
+  //   • includes time stats ONLY when a timer was running
+  //   • persists a record of the completed attempt to localStorage so the
+  //     user can compare attempts over time
+  //   • lets the user export the attempt as a printable HTML report or CSV
+  //
+  // Each bank keeps its own ring buffer of completed sessions under
+  // `dbx-practice-sessions-<cert>` (cap = SESSION_HISTORY_CAP).
+
+  function isSessionComplete() {
+    const total = filteredQuestions().length;
+    if (total === 0) return false;
+    return STATE.seenThisSession.size >= total && STATE.sessionTotal > 0;
+  }
+
+  function loadSessionHistory(certKey) {
+    try {
+      const raw = localStorage.getItem(SESSION_HISTORY_PREFIX + certKey);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) { return []; }
+  }
+
+  function saveSessionRecord(record) {
+    try {
+      const list = loadSessionHistory(record.cert);
+      list.push(record);
+      while (list.length > SESSION_HISTORY_CAP) list.shift();
+      localStorage.setItem(SESSION_HISTORY_PREFIX + record.cert, JSON.stringify(list));
+    } catch (e) { console.warn("Failed to save session record:", e); }
+  }
+
+  function clearSessionHistoryForCert(certKey) {
+    try { localStorage.removeItem(SESSION_HISTORY_PREFIX + certKey); }
+    catch (_) { /* ignore */ }
+  }
+
+  function buildSessionRecord() {
+    const pct = STATE.sessionTotal === 0 ? 0
+              : Math.round((STATE.sessionCorrect / STATE.sessionTotal) * 100);
+    const isMock = STATE.bank.kind === "mock";
+    const domains = STATE.bank.domains.map(d => {
+      const qs = STATE.bank.questions.filter(q => q.domain === d.id);
+      const answered = qs.filter(q =>
+        STATE.seenThisSession.has(q.id)
+        && (STATE.history[q.id]?.attempts.length || 0) > 0);
+      const correct = answered.filter(q => {
+        const last = STATE.history[q.id].attempts.slice(-1)[0];
+        return last && last.correct;
+      });
+      return {
+        id: d.id,
+        name: d.name,
+        total: answered.length,
+        correct: correct.length,
+        pct: answered.length === 0 ? null
+           : Math.round((correct.length / answered.length) * 100),
+      };
+    });
+    return {
+      id: Date.now(),
+      ts: Date.now(),
+      cert: STATE.bank.cert,
+      certTitle: STATE.bank.certTitle,
+      isMock,
+      total: STATE.sessionTotal,
+      correct: STATE.sessionCorrect,
+      pct,
+      durationMs: STATE.sessionElapsed,
+      avgPerQMs: STATE.sessionElapsed && STATE.sessionTotal > 0
+                ? Math.round(STATE.sessionElapsed / STATE.sessionTotal) : null,
+      bestStreak: STATE.bestStreak,
+      passed: isMock ? pct >= PASS_THRESHOLD : null,
+      threshold: isMock ? PASS_THRESHOLD : null,
+      domains,
+    };
+  }
+
+  function formatDuration(ms) {
+    if (!Number.isFinite(ms) || ms < 0) return "—";
+    const totalSec = Math.round(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    if (h > 0) {
+      return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    }
+    return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+  }
+
+  function formatDateTime(ts) {
+    const d = new Date(ts);
+    const date = d.toLocaleDateString(undefined, {
+      year: "numeric", month: "short", day: "2-digit",
+    });
+    const time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+    return { date, time, full: date + " · " + time };
+  }
+
+  // Toneband for a percentage. Used for verdict text + meter colors.
+  function toneFor(pct) {
+    if (pct == null) return "muted";
+    if (pct >= 90) return "great";
+    if (pct >= 80) return "good";
+    if (pct >= PASS_THRESHOLD) return "good";
+    if (pct >= 60) return "warn";
+    if (pct >= 40) return "warn";
+    return "weak";
+  }
+
+  function getVerdict(record) {
+    const pct = record.pct;
+    if (record.isMock) {
+      return {
+        title: record.passed ? "PASS" : "BELOW PASSING",
+        sub: `Passing threshold: ${record.threshold}%`,
+        tone: record.passed ? "good" : "weak",
+      };
+    }
+    if (pct === 100) return { title: "Perfect score", sub: "Every question correct", tone: "great" };
+    if (pct >= 90)   return { title: "Excellent",      sub: "Mastery level",          tone: "great" };
+    if (pct >= 80)   return { title: "Great work",     sub: "Strong understanding",   tone: "good"  };
+    if (pct >= 70)   return { title: "Solid",          sub: "Above the typical bar",  tone: "good"  };
+    if (pct >= 60)   return { title: "Getting close",  sub: "Review your weak areas", tone: "warn"  };
+    if (pct >= 40)   return { title: "Keep practicing", sub: "Focus on the gaps below", tone: "warn"  };
+    return                  { title: "More practice needed", sub: "Start with the weakest module", tone: "weak"  };
+  }
+
+  // Weak areas = domains attempted with pct strictly below 70% (the
+  // Databricks passing line), sorted by pct ascending so the most
+  // urgent gap is first. "Not attempted" domains are excluded.
+  function getWeakDomains(domains) {
+    return domains
+      .filter(d => d.pct != null && d.pct < PASS_THRESHOLD)
+      .sort((a, b) => a.pct - b.pct);
+  }
+
+  function metricBlock(label, value, sub) {
+    const node = el("div", { className: "summary-metric" });
+    node.appendChild(el("div", { className: "summary-metric-label" }, label));
+    node.appendChild(el("div", { className: "summary-metric-value" }, value));
+    if (sub) node.appendChild(el("div", { className: "summary-metric-sub" }, sub));
+    return node;
+  }
+
+  // record:    a session record. If omitted, builds from current STATE +
+  //            persists it (live mode).
+  // opts.past: true → render in "viewing past attempt" mode (different
+  //            action buttons; no confetti).
+  function renderSummary(record, opts) {
+    opts = opts || {};
+    let data;
+    if (record) {
+      data = record;
+    } else {
+      // Freeze elapsed time at completion. Subtract paused time so the
+      // figure reflects effort, not wall-clock.
+      if (STATE.sessionElapsed == null && STATE.sessionStart != null) {
+        STATE.sessionElapsed = Math.max(0,
+          Date.now() - STATE.sessionStart - (STATE.totalPausedMs || 0));
+      }
+      data = buildSessionRecord();
+      if (!STATE.summarySaved) {
+        saveSessionRecord(data);
+        STATE.summarySaved = true;
+      }
+      // Stop the running timer — the session is over
+      STATE.timerEnd = null;
+      STATE.timerPaused = false;
+      const ov = $("#pause-overlay");
+      if (ov) ov.hidden = true;
+      document.body.classList.remove("timer-paused");
+      updateClockAndTimer();
+    }
+    const isPast = !!opts.past;
+
+    const summary = $("#summary");
+    clear(summary);
+
+    summary.appendChild(el("p", { className: "eyebrow" },
+      isPast ? "Past attempt" : "Session complete"));
+    summary.appendChild(el("h2", {}, data.certTitle));
+    const ts = formatDateTime(data.ts);
+    summary.appendChild(el("p", { className: "summary-timestamp" }, ts.full));
+
+    // ---- Hero: big number + verdict ----
+    const hero = el("div", { className: "summary-hero", dataset: { tone: toneFor(data.pct) } });
+    const numWrap = el("div", { className: "summary-num-wrap" });
+    numWrap.appendChild(el("span", { className: "summary-num" }, String(data.pct)));
+    numWrap.appendChild(el("span", { className: "summary-num-pct" }, "%"));
+    hero.appendChild(numWrap);
+
+    const heroMeta = el("div", { className: "summary-hero-meta" });
+    heroMeta.appendChild(el("div", { className: "summary-fraction" },
+      `${data.correct} / ${data.total} correct`));
+    const verdict = getVerdict(data);
+    heroMeta.appendChild(el("div", { className: "summary-verdict",
+                                      dataset: { tone: verdict.tone } },
+      verdict.title));
+    heroMeta.appendChild(el("div", { className: "summary-verdict-sub" }, verdict.sub));
+    hero.appendChild(heroMeta);
+    summary.appendChild(hero);
+
+    // ---- Weak-area callout ----
+    const weak = getWeakDomains(data.domains);
+    if (weak.length > 0) {
+      const callout = el("div", { className: "summary-callout weak" });
+      callout.appendChild(el("div", { className: "summary-callout-title" },
+        weak.length === 1 ? "Focus next on this module"
+                          : `Focus next on these ${weak.length} modules`));
+      const ul = el("ul", { className: "summary-callout-list" });
+      for (const d of weak.slice(0, 4)) {
+        ul.appendChild(el("li", {},
+          el("span", { className: "wk-name" }, d.name),
+          el("span", { className: "wk-pct" }, `${d.correct}/${d.total} · ${d.pct}%`)));
+      }
+      callout.appendChild(ul);
+      summary.appendChild(callout);
+    }
+
+    // ---- Per-domain breakdown ----
+    summary.appendChild(el("h3", { className: "summary-section-title" }, "By module"));
+    const domainList = el("div", { className: "summary-domains" });
+    for (const d of data.domains) {
+      const row = el("div", { className: "summary-domain-row" });
+      const head = el("div", { className: "summary-domain-head" });
+      head.appendChild(el("span", { className: "summary-domain-name" }, d.name));
+      head.appendChild(el("span", { className: "summary-domain-stat" },
+        d.total === 0 ? "Not attempted" : `${d.correct}/${d.total} · ${d.pct}%`));
+      row.appendChild(head);
+
+      const meter = el("div", { className: "summary-meter" });
+      if (d.total > 0) {
+        meter.appendChild(el("div", { className: "summary-meter-fill",
+                                       dataset: { tone: toneFor(d.pct) },
+                                       style: `width: ${d.pct}%` }));
+      }
+      row.appendChild(meter);
+      domainList.appendChild(row);
+    }
+    summary.appendChild(domainList);
+
+    // ---- Stats grid (time only when timer was used; best streak always) ----
+    const gridItems = [];
+    if (data.durationMs != null) {
+      gridItems.push(metricBlock("Total time", formatDuration(data.durationMs)));
+      gridItems.push(metricBlock("Average / question", formatDuration(data.avgPerQMs)));
+    }
+    if (data.bestStreak > 0) {
+      gridItems.push(metricBlock("Best streak", String(data.bestStreak), "correct in a row"));
+    }
+    if (gridItems.length > 0) {
+      summary.appendChild(el("h3", { className: "summary-section-title" },
+        data.durationMs != null ? "Time & streak" : "Streak"));
+      const grid = el("div", { className: "summary-stats-grid" });
+      gridItems.forEach(node => grid.appendChild(node));
+      summary.appendChild(grid);
+    }
+
+    // ---- Past attempts (only on live summary; comparing to history) ----
+    if (!isPast) {
+      const history = loadSessionHistory(data.cert);
+      // Don't include the just-saved record (it's already the hero)
+      const previous = history.filter(r => r.id !== data.id).slice(-6).reverse();
+      if (previous.length > 0) {
+        summary.appendChild(el("h3", { className: "summary-section-title" }, "Past attempts"));
+        summary.appendChild(renderAttemptList(previous, { compact: true }));
+      }
+    }
+
+    // ---- Actions ----
+    const actions = el("div", { className: "summary-actions" });
+    if (isPast) {
+      actions.appendChild(el("button", { type: "button", className: "primary",
+        onclick: () => { renderStats(); show("stats"); } }, "← Back to history"));
+    } else {
+      actions.appendChild(el("button", { type: "button", className: "primary",
+        onclick: () => {
+          resetSessionState();
+          if (STATE.timerMinutes > 0) startTimer(STATE.timerMinutes);
+          renderQuiz();
+          show("quiz");
+        }
+      }, "Try again"));
+    }
+    actions.appendChild(el("button", { type: "button", className: "ghost",
+      onclick: () => { renderStats(); show("stats"); } }, "Detailed stats"));
+    actions.appendChild(el("button", { type: "button", className: "ghost",
+      onclick: () => goToBankPickerForCurrentCert() }, "Switch bank"));
+    summary.appendChild(actions);
+
+    // ---- Export bar ----
+    const exportBar = el("div", { className: "summary-export" });
+    exportBar.appendChild(el("span", { className: "summary-export-label" },
+      "Export this summary —"));
+    exportBar.appendChild(el("button", { type: "button", className: "link",
+      onclick: () => exportSummaryAsHTML(data) }, "HTML"));
+    exportBar.appendChild(el("button", { type: "button", className: "link",
+      onclick: () => exportSummaryAsCSV(data) }, "CSV"));
+    summary.appendChild(exportBar);
+
+    // ---- Confetti on high scores (live summaries only) ----
+    if (!isPast && data.pct >= 80) {
+      setTimeout(() => {
+        const num = summary.querySelector(".summary-num-wrap");
+        if (num) fireConfetti(num);
+      }, 280);
+    }
+
+    // Scroll to top so the hero is in view
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // --- Attempt history list (rendered into summary + stats) ---------------
+
+  function renderAttemptList(records, opts) {
+    opts = opts || {};
+    const list = el("div", { className: "attempt-list" });
+    for (const r of records) {
+      const ts = formatDateTime(r.ts);
+      const row = el("button", { type: "button", className: "attempt-row",
+                                  onclick: () => { renderSummary(r, { past: true }); show("summary"); } });
+      row.appendChild(el("span", { className: "attempt-when" },
+        el("span", { className: "attempt-date" }, ts.date),
+        el("span", { className: "attempt-time" }, ts.time)));
+      row.appendChild(el("span", { className: "attempt-pct", dataset: { tone: toneFor(r.pct) } },
+        r.pct + "%"));
+      row.appendChild(el("span", { className: "attempt-fraction" },
+        `${r.correct}/${r.total}`));
+      if (r.durationMs != null) {
+        row.appendChild(el("span", { className: "attempt-duration" },
+          formatDuration(r.durationMs)));
+      } else {
+        row.appendChild(el("span", { className: "attempt-duration muted" }, "—"));
+      }
+      if (r.isMock) {
+        row.appendChild(el("span", { className: "attempt-verdict",
+                                      dataset: { tone: r.passed ? "good" : "weak" } },
+          r.passed ? "PASS" : "BELOW"));
+      } else if (!opts.compact) {
+        row.appendChild(el("span", { className: "attempt-verdict muted" }, "practice"));
+      } else {
+        row.appendChild(el("span"));
+      }
+      row.appendChild(el("span", { className: "attempt-arrow", "aria-hidden": "true" }, "→"));
+      list.appendChild(row);
+    }
+    return list;
+  }
+
+  // --- Export: HTML + CSV --------------------------------------------------
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Plain-text escape for embedding inside an HTML export. NOT used for
+  // building DOM nodes anywhere — only for writing the standalone HTML file.
+  function escapeHtml(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function exportSummaryAsHTML(record) {
+    const ts = formatDateTime(record.ts);
+    const verdict = getVerdict(record);
+    const weak = getWeakDomains(record.domains);
+    const safeName = record.cert.replace(/[^a-z0-9-]/gi, "");
+    const stamp = new Date(record.ts).toISOString().replace(/[:.]/g, "-").slice(0, 16);
+
+    const domainRowsHtml = record.domains.map(d => {
+      const pct = d.total === 0 ? "—" : d.pct + "%";
+      const stat = d.total === 0 ? "Not attempted" : `${d.correct}/${d.total} · ${pct}`;
+      const width = d.total === 0 ? 0 : d.pct;
+      const tone = toneFor(d.pct);
+      return `
+        <tr>
+          <td class="dn">${escapeHtml(d.name)}</td>
+          <td class="ds">${escapeHtml(stat)}</td>
+          <td class="db"><div class="bar"><div class="bf tone-${tone}" style="width:${width}%"></div></div></td>
+        </tr>`;
+    }).join("");
+
+    const weakHtml = weak.length === 0 ? "" : `
+      <div class="callout">
+        <h3>Focus areas</h3>
+        <ul>${weak.slice(0, 4).map(d =>
+          `<li><strong>${escapeHtml(d.name)}</strong> — ${d.correct}/${d.total} · ${d.pct}%</li>`).join("")}</ul>
+      </div>`;
+
+    const timeRowsHtml = record.durationMs == null ? "" : `
+      <tr><th>Total time</th><td>${escapeHtml(formatDuration(record.durationMs))}</td></tr>
+      <tr><th>Average / question</th><td>${escapeHtml(formatDuration(record.avgPerQMs))}</td></tr>`;
+    const streakRow = record.bestStreak > 0
+      ? `<tr><th>Best streak</th><td>${record.bestStreak} correct in a row</td></tr>` : "";
+
+    const passLine = record.isMock
+      ? `<p class="threshold">Passing threshold: ${record.threshold}%</p>` : "";
+
+    const html = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>${escapeHtml(record.certTitle)} — ${escapeHtml(ts.full)}</title>
+<style>
+  :root { --fg:#18181B; --muted:#71717A; --hairline:#E5E5E2; --bg:#FAFAF7; --surface:#fff;
+          --good:#15803D; --warn:#D97706; --weak:#B91C1C; --great:#0F766E; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+         background: var(--bg); color: var(--fg); margin: 0; padding: 2.5rem 1.5rem; font-size: 15px; line-height: 1.55; }
+  main { max-width: 720px; margin: 0 auto; }
+  .eyebrow { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; font-weight: 600;
+             letter-spacing: 0.12em; text-transform: uppercase; color: var(--weak); margin: 0 0 0.6rem; }
+  h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; line-height: 1.1; }
+  .when { color: var(--muted); font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; letter-spacing: 0.04em; margin: 0 0 2rem; }
+  .hero { background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px;
+          padding: 2rem; display: flex; align-items: center; gap: 2rem; margin-bottom: 1.5rem; }
+  .hero .pct { font-size: 5rem; font-weight: 600; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+  .hero .pct.tone-great { color: var(--great); } .hero .pct.tone-good { color: var(--good); }
+  .hero .pct.tone-warn { color: var(--warn); }   .hero .pct.tone-weak { color: var(--weak); }
+  .hero .pct::after { content: "%"; font-size: 1.5rem; color: var(--muted); font-weight: 500; margin-left: 0.1em; }
+  .hero .meta .fraction { font-size: 1.25rem; font-weight: 500; margin-bottom: 0.4rem; }
+  .hero .meta .verdict { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.85rem; font-weight: 600;
+                          letter-spacing: 0.08em; text-transform: uppercase; }
+  .hero .meta .verdict.tone-good { color: var(--good); } .hero .meta .verdict.tone-weak { color: var(--weak); }
+  .hero .meta .verdict.tone-great { color: var(--great); } .hero .meta .verdict.tone-warn { color: var(--warn); }
+  .threshold { font-family: ui-monospace, "SF Mono", Menlo, monospace; color: var(--muted); font-size: 0.8rem; margin: 0.3rem 0 0; }
+  .callout { background: rgba(185,28,28,0.06); border: 1px solid rgba(185,28,28,0.25); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .callout h3 { margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--weak); font-weight: 600; letter-spacing: -0.005em; }
+  .callout ul { margin: 0; padding-left: 1.1rem; } .callout li { margin: 0.2rem 0; }
+  h2 { font-size: 0.85rem; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 600;
+       letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 2rem 0 0.85rem; }
+  table.domains { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; }
+  table.domains td { padding: 0.7rem 0.9rem; border-top: 1px solid var(--hairline); vertical-align: middle; }
+  table.domains tr:first-child td { border-top: 0; }
+  td.dn { font-weight: 500; width: 40%; } td.ds { color: var(--muted); font-family: ui-monospace, monospace; font-size: 0.82rem; width: 22%; }
+  td.db { width: 38%; }
+  .bar { background: var(--hairline); height: 6px; border-radius: 99px; overflow: hidden; }
+  .bf { height: 100%; border-radius: 99px; }
+  .bf.tone-great { background: var(--great); } .bf.tone-good { background: var(--good); }
+  .bf.tone-warn  { background: var(--warn);  } .bf.tone-weak { background: var(--weak); }
+  table.stats { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; }
+  table.stats th, table.stats td { padding: 0.7rem 0.9rem; text-align: left; border-top: 1px solid var(--hairline); }
+  table.stats tr:first-child th, table.stats tr:first-child td { border-top: 0; }
+  table.stats th { font-weight: 500; color: var(--muted); font-size: 0.85rem; width: 40%; }
+  table.stats td { font-variant-numeric: tabular-nums; }
+  .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--hairline); color: var(--muted); font-size: 0.75rem; font-family: ui-monospace, monospace; }
+  @media print { body { padding: 1rem; } .hero, table.domains, table.stats { box-shadow: none; } }
+</style></head>
+<body><main>
+  <p class="eyebrow">${record.isMock ? "Mock exam" : "Practice"} · attempt summary</p>
+  <h1>${escapeHtml(record.certTitle)}</h1>
+  <p class="when">Completed ${escapeHtml(ts.full)}</p>
+
+  <div class="hero">
+    <div class="pct tone-${toneFor(record.pct)}">${record.pct}</div>
+    <div class="meta">
+      <div class="fraction">${record.correct} / ${record.total} correct</div>
+      <div class="verdict tone-${verdict.tone}">${escapeHtml(verdict.title)}</div>
+      ${passLine}
+    </div>
+  </div>
+
+  ${weakHtml}
+
+  <h2>By module</h2>
+  <table class="domains"><tbody>${domainRowsHtml}</tbody></table>
+
+  ${timeRowsHtml || streakRow ? `<h2>Stats</h2><table class="stats"><tbody>${timeRowsHtml}${streakRow}</tbody></table>` : ""}
+
+  <p class="footer">Exported from Databricks Certification Practice — a study aid, not the official exam.</p>
+</main></body></html>`;
+
+    downloadBlob(new Blob([html], { type: "text/html;charset=utf-8" }),
+      `dbx-${safeName}-${stamp}.html`);
+  }
+
+  function exportSummaryAsCSV(record) {
+    const ts = formatDateTime(record.ts);
+    const safeName = record.cert.replace(/[^a-z0-9-]/gi, "");
+    const stamp = new Date(record.ts).toISOString().replace(/[:.]/g, "-").slice(0, 16);
+
+    const q = (v) => {
+      const s = String(v == null ? "" : v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows = [];
+    rows.push(["Field", "Value"].join(","));
+    rows.push(["Certification", record.certTitle].map(q).join(","));
+    rows.push(["Type", record.isMock ? "Mock exam" : "Practice"].map(q).join(","));
+    rows.push(["Completed", ts.full].map(q).join(","));
+    rows.push(["Score (%)", record.pct].map(q).join(","));
+    rows.push(["Correct", record.correct].map(q).join(","));
+    rows.push(["Total questions", record.total].map(q).join(","));
+    if (record.isMock) {
+      rows.push(["Passing threshold (%)", record.threshold].map(q).join(","));
+      rows.push(["Verdict", record.passed ? "PASS" : "BELOW PASSING"].map(q).join(","));
+    }
+    if (record.durationMs != null) {
+      rows.push(["Total time", formatDuration(record.durationMs)].map(q).join(","));
+      rows.push(["Average per question", formatDuration(record.avgPerQMs)].map(q).join(","));
+    }
+    if (record.bestStreak > 0) {
+      rows.push(["Best streak", record.bestStreak].map(q).join(","));
+    }
+    rows.push("");
+    rows.push(["Module", "Correct", "Total", "Percentage"].join(","));
+    for (const d of record.domains) {
+      rows.push([
+        d.name,
+        d.correct,
+        d.total,
+        d.total === 0 ? "" : d.pct,
+      ].map(q).join(","));
+    }
+    downloadBlob(new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" }),
+      `dbx-${safeName}-${stamp}.csv`);
   }
 
   // --- Settings ------------------------------------------------------------
@@ -921,6 +1507,56 @@
     STATE.timerMinutes = minutes;
     STATE.timerExpired = false;
     STATE.timerEnd = minutes > 0 ? Date.now() + minutes * 60 * 1000 : null;
+    // Session clock is only meaningful when there's an exam timer running.
+    // In free-practice mode we deliberately don't track time — see the
+    // summary screen, which hides the time stats when sessionStart is null.
+    STATE.sessionStart = minutes > 0 ? Date.now() : null;
+    STATE.sessionElapsed = null;
+    STATE.timerPaused = false;
+    STATE.pausedRemainingMs = null;
+    STATE.totalPausedMs = 0;
+    STATE.pauseStart = null;
+  }
+
+  // --- Pause / resume the exam timer --------------------------------------
+  //
+  // Pausing freezes the countdown, blurs the screen behind a Resume overlay
+  // so the user can step away without losing their seat, and accumulates
+  // the off-clock time in STATE.totalPausedMs so the summary's "Total time"
+  // accurately reflects effort (not wall-clock).
+
+  function pauseTimer() {
+    if (STATE.timerPaused || !STATE.timerEnd || STATE.timerExpired) return;
+    STATE.pausedRemainingMs = Math.max(0, STATE.timerEnd - Date.now());
+    STATE.pauseStart = Date.now();
+    STATE.timerPaused = true;
+    STATE.timerEnd = null;
+    const ov = $("#pause-overlay");
+    if (ov) ov.hidden = false;
+    document.body.classList.add("timer-paused");
+    updateClockAndTimer();
+    // Move focus to the Resume button so Enter/Space resumes immediately.
+    const r = $("#btn-resume");
+    if (r) setTimeout(() => r.focus({ preventScroll: true }), 0);
+  }
+
+  function resumeTimer() {
+    if (!STATE.timerPaused) return;
+    const remain = STATE.pausedRemainingMs || 0;
+    STATE.totalPausedMs += STATE.pauseStart ? (Date.now() - STATE.pauseStart) : 0;
+    STATE.pauseStart = null;
+    STATE.pausedRemainingMs = null;
+    STATE.timerPaused = false;
+    STATE.timerEnd = remain > 0 ? Date.now() + remain : null;
+    const ov = $("#pause-overlay");
+    if (ov) ov.hidden = true;
+    document.body.classList.remove("timer-paused");
+    updateClockAndTimer();
+  }
+
+  function toggleTimerPause() {
+    if (STATE.timerPaused) resumeTimer();
+    else pauseTimer();
   }
 
   function hasActiveSession() {
@@ -932,8 +1568,19 @@
     STATE.sessionTotal = 0;
     STATE.seenThisSession.clear();
     STATE.streak = 0;
+    STATE.bestStreak = 0;
     STATE.timerEnd = null;
     STATE.timerExpired = false;
+    STATE.sessionStart = null;
+    STATE.sessionElapsed = null;
+    STATE.summarySaved = false;
+    STATE.timerPaused = false;
+    STATE.pausedRemainingMs = null;
+    STATE.totalPausedMs = 0;
+    STATE.pauseStart = null;
+    const ov = $("#pause-overlay");
+    if (ov) ov.hidden = true;
+    document.body.classList.remove("timer-paused");
     updateClockAndTimer();
   }
 
@@ -1013,13 +1660,23 @@
     if (STATE.timerExpired) {
       setValue("00:00");
       timerEl.classList.add("expired");
-      timerEl.classList.remove("warning");
+      timerEl.classList.remove("warning", "paused");
+      timerEl.hidden = false;
+      return;
+    }
+    if (STATE.timerPaused) {
+      const remain = STATE.pausedRemainingMs || 0;
+      const m = Math.floor(remain / 60000);
+      const s = Math.floor((remain % 60000) / 1000);
+      setValue(String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0"));
+      timerEl.classList.add("paused");
+      timerEl.classList.remove("warning", "expired");
       timerEl.hidden = false;
       return;
     }
     if (!STATE.timerEnd) {
       timerEl.hidden = true;
-      timerEl.classList.remove("warning", "expired");
+      timerEl.classList.remove("warning", "expired", "paused");
       return;
     }
     const remainMs = Math.max(0, STATE.timerEnd - Date.now());
@@ -1028,6 +1685,7 @@
     const s = totalSec % 60;
     setValue(String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0"));
     timerEl.hidden = false;
+    timerEl.classList.remove("paused");
     timerEl.classList.toggle("warning",
       remainMs > 0 && remainMs <= 5 * 60 * 1000);
     if (remainMs === 0) {
@@ -1167,6 +1825,22 @@
     // in capture phase, but a "1"/"2"/etc keypress would otherwise
     // bubble through and select an answer in the background quiz.
     if (modalIsOpen()) return;
+    // P key toggles pause — works whether the bar is paused or not.
+    if ((ev.key === "p" || ev.key === "P") && STATE.timerMinutes > 0
+        && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
+      ev.preventDefault();
+      toggleTimerPause();
+      return;
+    }
+    // Esc + Enter + Space resume from a paused state; ignore all other
+    // shortcuts while the screen is on hold.
+    if (STATE.timerPaused) {
+      if (ev.key === "Escape" || ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault();
+        resumeTimer();
+      }
+      return;
+    }
     // Ignore when the user is typing in a real input. Radios + checkboxes
     // are explicitly NOT excluded — we still want Space/Enter/arrows to work
     // when focus is on a choice's radio (which is normal after ↑/↓ or click).
@@ -1274,6 +1948,20 @@
     const certLink = $("#quiz-cert");
     if (certLink) certLink.addEventListener("click", confirmBackToBankPicker);
     $("#btn-theme").addEventListener("click", cycleTheme);
+
+    // Timer pill → pause when active; pause overlay button → resume.
+    const timerBtn = $("#quiz-timer");
+    if (timerBtn) timerBtn.addEventListener("click", () => {
+      if (!STATE.timerEnd && !STATE.timerPaused) return;  // no-op when no exam timer
+      if (STATE.timerExpired) return;
+      toggleTimerPause();
+    });
+    const resumeBtn = $("#btn-resume");
+    if (resumeBtn) resumeBtn.addEventListener("click", resumeTimer);
+    const pauseBackdrop = $("#pause-overlay");
+    if (pauseBackdrop) pauseBackdrop.addEventListener("mousedown", (e) => {
+      if (e.target === pauseBackdrop) resumeTimer();
+    });
 
     document.addEventListener("keydown", handleKeydown);
 
