@@ -4,6 +4,12 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-1] — Remove local Superset state from the repo
+
+### Removed
+
+- `.superset/config.json` — local-only state that was accidentally committed before the open-source release. Not needed by readers; added to `.gitignore` so it stays out.
+
 ## [2026.05.21] — Open-source release, refreshed to current exam guides
 
 First public release under MIT. Refreshed exam metadata across all six certifications against the official Databricks exam guides current as of **2026-05-21**.

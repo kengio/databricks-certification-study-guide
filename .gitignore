@@ -16,6 +16,9 @@ Thumbs.db
 # Internal planning / superpowers artifacts (not for public)
 docs/superpowers/
 
+# Local Superset state — not for public
+.superset/
+
 # Node
 node_modules/
 
