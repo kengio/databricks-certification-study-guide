@@ -102,15 +102,15 @@ D) Materialized view
 
 **Question** *(Medium)*: How does Unity Catalog capture this lineage information?
 
-A) Lineage is automatically captured from Spark jobs, DLT pipelines, and SQL queries without additional configuration
+A) Lineage is automatically captured from Spark jobs, Lakeflow Declarative Pipelines pipelines, and SQL queries without additional configuration
 B) Engineers must manually register lineage by calling `dbutils.lineage.register()` after each transformation
-C) Lineage is only available for DLT pipelines, not for general Spark jobs
+C) Lineage is only available for Lakeflow Declarative Pipelines pipelines, not for general Spark jobs
 D) Lineage requires enabling a separate "Lineage Tracking" feature at the metastore level
 
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> Unity Catalog automatically captures column-level and table-level lineage from Spark operations, DLT pipelines, and SQL queries. No manual registration is needed. The lineage is available in the Catalog Explorer UI and via REST API. It works across notebooks, jobs, and DLT pipelines.
+> Unity Catalog automatically captures column-level and table-level lineage from Spark operations, Lakeflow Declarative Pipelines pipelines, and SQL queries. No manual registration is needed. The lineage is available in the Catalog Explorer UI and via REST API. It works across notebooks, jobs, and Lakeflow Declarative Pipelines pipelines.
 
 ---
 

@@ -30,21 +30,21 @@ D) The transaction log was full and could not accept new entries
 
 A) Apache Airflow with custom validation DAGs
 B) Databricks SQL Alerts with scheduled queries
-C) Delta Live Tables (DLT)
+C) Lakeflow Declarative Pipelines (formerly DLT)
 D) Great Expectations library integrated with Spark
 
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> Delta Live Tables (DLT).
+> Lakeflow Declarative Pipelines (formerly DLT).
 >
-> DLT provides built-in data quality monitoring through expectations — declarative constraints that automatically track pass/fail metrics, record violations in the event log, and optionally drop or quarantine bad records. Quality statistics are visible per-table in the pipeline UI.
+> Lakeflow Declarative Pipelines provides built-in data quality monitoring through expectations — declarative constraints that automatically track pass/fail metrics, record violations in the event log, and optionally drop or quarantine bad records. Quality statistics are visible per-table in the pipeline UI.
 
 ---
 
-## Question 3: DLT Continuous Pipeline Behavior
+## Question 3: Lakeflow Declarative Pipelines Continuous Pipeline Behavior
 
-**Question** *(Hard)*: A DLT pipeline has two datasets defined with `STREAMING LIVE TABLE` and three datasets using `LIVE TABLE`. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?
+**Question** *(Hard)*: A Lakeflow Declarative Pipelines pipeline has two datasets defined with `STREAMING LIVE TABLE` and three datasets using `LIVE TABLE`. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?
 
 A) Only the two streaming datasets are updated continuously; the three materialized views are updated once and then stop
 B) All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources
@@ -126,9 +126,9 @@ D) `.trigger(microBatch="5 seconds")`
 
 ---
 
-## Question 7: DLT DROP Expectation Behavior
+## Question 7: Lakeflow Declarative Pipelines DROP Expectation Behavior
 
-**Question** *(Medium)*: A dataset established through Delta Live Tables has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?
+**Question** *(Medium)*: A dataset established through Lakeflow Declarative Pipelines has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?
 
 A) Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log
 B) The entire batch is rejected and the pipeline enters a failed state
@@ -140,13 +140,13 @@ D) The pipeline pauses and waits for manual approval before continuing
 >
 > Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.
 >
-> The pipeline continues running. Dropped record counts and violation metrics are tracked in the DLT event log and displayed per-table in the pipeline UI under data quality statistics. The `FAIL UPDATE` variant would stop the pipeline instead.
+> The pipeline continues running. Dropped record counts and violation metrics are tracked in the Lakeflow Declarative Pipelines event log and displayed per-table in the pipeline UI under data quality statistics. The `FAIL UPDATE` variant would stop the pipeline instead.
 
 ---
 
 ## Question 8: CREATE STREAMING LIVE TABLE vs CREATE LIVE TABLE
 
-**Question** *(Medium)*: When should `CREATE STREAMING LIVE TABLE` be used instead of `CREATE LIVE TABLE` for creating Delta Live Tables in SQL?
+**Question** *(Medium)*: When should `CREATE STREAMING LIVE TABLE` be used instead of `CREATE LIVE TABLE` for creating Lakeflow Declarative Pipelines in SQL?
 
 A) When the table needs to support both read and write operations simultaneously
 B) When the table must be accessible from multiple workspaces
@@ -200,21 +200,21 @@ D) A query that replicates Silver data to an external data warehouse for reporti
 
 ---
 
-## Question 11: Identifying Which DLT Table Drops Records
+## Question 11: Identifying Which Lakeflow Declarative Pipelines Table Drops Records
 
-**Question** *(Medium)*: A data engineer manages three tables in a DLT pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?
+**Question** *(Medium)*: A data engineer manages three tables in a Lakeflow Declarative Pipelines pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?
 
 A) Query the Delta transaction log of each table to find DELETE operations
 B) Add explicit logging statements to each table's transformation code
 C) Run DESCRIBE HISTORY on each table to check for dropped record counts
-D) Navigate to the DLT pipeline page, click on each table, and view the data quality statistics
+D) Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics
 
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Navigate to the DLT pipeline page, click on each table, and view the data quality statistics.
+> Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics.
 >
-> The DLT pipeline UI shows per-table expectation metrics, including the number of records that passed, failed, or were dropped for each defined constraint. This makes it straightforward to pinpoint which table's expectation is causing record drops.
+> The Lakeflow Declarative Pipelines pipeline UI shows per-table expectation metrics, including the number of records that passed, failed, or were dropped for each defined constraint. This makes it straightforward to pinpoint which table's expectation is causing record drops.
 
 ---
 
@@ -309,9 +309,9 @@ D) The Delta table's schema enforcement converts all incoming types to strings
 
 ---
 
-## Question 16: DLT Pipeline Minimum Requirement
+## Question 16: Lakeflow Declarative Pipelines Pipeline Minimum Requirement
 
-**Question** *(Easy)*: What needs to be specified when creating a new Delta Live Tables pipeline?
+**Question** *(Easy)*: What needs to be specified when creating a new Lakeflow Declarative Pipelines pipeline?
 
 A) A target database and storage location
 B) At least one notebook library to be executed
@@ -323,13 +323,13 @@ D) An explicit schedule or cron expression
 >
 > At least one notebook library to be executed.
 >
-> A DLT pipeline must reference one or more notebooks containing the dataset definitions (`CREATE LIVE TABLE` or `CREATE STREAMING LIVE TABLE` statements). Other settings — storage location, target database, cluster configuration — are optional and can use defaults.
+> A Lakeflow Declarative Pipelines pipeline must reference one or more notebooks containing the dataset definitions (`CREATE LIVE TABLE` or `CREATE STREAMING LIVE TABLE` statements). Other settings — storage location, target database, cluster configuration — are optional and can use defaults.
 
 ---
 
-## Question 17: STREAM() Function in DLT
+## Question 17: STREAM() Function in Lakeflow Declarative Pipelines
 
-**Question** *(Medium)*: A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a DLT SQL query. What explains its inclusion?
+**Question** *(Medium)*: A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a Lakeflow Declarative Pipelines SQL query. What explains its inclusion?
 
 A) The referenced table is a streaming live table
 B) The `STREAM()` function enables parallel reads from the table across multiple clusters
@@ -341,7 +341,7 @@ D) The `STREAM()` function applies watermarking to handle late-arriving data
 >
 > The referenced table is a streaming live table.
 >
-> In DLT, `STREAM(table_name)` indicates that the table should be read as a streaming source — consuming only new records incrementally rather than reprocessing the full table. It is required when the source is a `STREAMING LIVE TABLE` and the consuming dataset needs to process it incrementally.
+> In Lakeflow Declarative Pipelines, `STREAM(table_name)` indicates that the table should be read as a streaming source — consuming only new records incrementally rather than reprocessing the full table. It is required when the source is a `STREAMING LIVE TABLE` and the consuming dataset needs to process it incrementally.
 
 ---
 
@@ -363,13 +363,13 @@ D) Only interactive notebook workloads
 
 ---
 
-## Question 19: DLT Migration Changes
+## Question 19: Lakeflow Declarative Pipelines Migration Changes
 
-**Question** *(Medium)*: A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Delta Live Tables. What changes are necessary?
+**Question** *(Medium)*: A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Lakeflow Declarative Pipelines. What changes are necessary?
 
-A) The Python code must be rewritten in SQL because DLT only supports SQL definitions
-B) The SQL code must be rewritten in Python because DLT only supports Python definitions
-C) The streaming source must be converted to a batch source before migrating to DLT
+A) The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions
+B) The SQL code must be rewritten in Python because Lakeflow Declarative Pipelines only supports Python definitions
+C) The streaming source must be converted to a batch source before migrating to Lakeflow Declarative Pipelines
 D) No changes are required
 
 > [!success]- Answer
@@ -377,7 +377,7 @@ D) No changes are required
 >
 > No changes are required.
 >
-> DLT natively supports both Python and SQL within the same pipeline. It supports the medallion architecture (Bronze/Silver/Gold layers) and handles streaming sources directly. The existing language mix and multi-hop architecture can migrate to DLT without modification to the underlying logic.
+> Lakeflow Declarative Pipelines natively supports both Python and SQL within the same pipeline. It supports the medallion architecture (Bronze/Silver/Gold layers) and handles streaming sources directly. The existing language mix and multi-hop architecture can migrate to Lakeflow Declarative Pipelines without modification to the underlying logic.
 
 ---
 

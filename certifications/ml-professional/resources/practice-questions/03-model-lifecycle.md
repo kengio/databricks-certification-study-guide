@@ -28,7 +28,7 @@ D) A local MLflow tracking server on the driver node
 > [!success]- Answer
 > **Correct Answer: B) Workspace model registry (legacy), scoped to the current workspace**
 >
-> When `set_registry_uri()` is not called, MLflow defaults to the workspace model registry (the legacy, non-UC registry). To target Unity Catalog, you must explicitly call `mlflow.set_registry_uri("databricks-uc")` before registering models. The workspace registry uses stage-based promotion (Staging, Production) while the UC registry uses aliases.
+> When `set_registry_uri()` is not called, MLflow defaults to the workspace model registry (legacy; UC registry is current) (the legacy, non-UC registry). To target Unity Catalog, you must explicitly call `mlflow.set_registry_uri("databricks-uc")` before registering models. The workspace registry uses stage-based promotion (Staging, Production) while the UC registry uses aliases.
 
 ---
 

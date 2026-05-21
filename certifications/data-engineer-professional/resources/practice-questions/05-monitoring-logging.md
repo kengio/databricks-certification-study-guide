@@ -42,9 +42,9 @@ D) Insufficient disk space
 
 ---
 
-## Question 5.3: DLT Event Log
+## Question 5.3: Lakeflow Declarative Pipelines Event Log
 
-**Scenario**: A DLT pipeline ran with data quality issues. The team needs to find how many records failed expectations.
+**Scenario**: A Lakeflow Declarative Pipelines pipeline ran with data quality issues. The team needs to find how many records failed expectations.
 
 **Question** *(Easy)*: How can this information be retrieved?
 
@@ -56,7 +56,7 @@ D) Review the cluster logs
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> The DLT event log contains expectation metrics including passed/failed record counts. Query it using `event_log(TABLE(pipeline))` or access via the system tables. The event log provides detailed pipeline observability.
+> The Lakeflow Declarative Pipelines event log contains expectation metrics including passed/failed record counts. Query it using `event_log(TABLE(pipeline))` or access via the system tables. The event log provides detailed pipeline observability.
 
 ---
 

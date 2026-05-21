@@ -31,7 +31,7 @@ D) The query will fail with a dimension mismatch error
 
 ## Question 2 *(Easy)*: Delta Sync vs Direct Access Index
 
-**Question**: A data engineering team already has a managed Delta table of product descriptions that is updated nightly via a Delta Live Tables pipeline. They want to build a Vector Search index on this table with minimal operational overhead. Which index type should they use?
+**Question**: A data engineering team already has a managed Delta table of product descriptions that is updated nightly via a Lakeflow Declarative Pipelines pipeline. They want to build a Vector Search index on this table with minimal operational overhead. Which index type should they use?
 
 A) Direct Access Index — gives full programmatic control over upsert operations  
 B) Delta Sync Index — automatically syncs from the source Delta table  
