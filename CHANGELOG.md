@@ -30,7 +30,7 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
 - **Static site, no backend**: progress is per-browser in `localStorage`. Trade-off: no cross-device sync. The "Export progress (JSON)" button gives users an out if they want it.
 - **JSON committed, not built in CI**: GitHub Pages serves `practice/data/*.json` directly. Auto-building in CI would require a commit-back step that's overkill for a sub-second deterministic build. Maintainers re-run `build.py` and commit the diff when source markdown changes; the README & CLAUDE sync rule codifies this.
 - **No innerHTML with dynamic content**: `app.js` renders markdown into the DOM via `document.createElement` + `textContent`, never via `innerHTML` interpolation. Untrusted bytes from the JSON cannot become script tags. Static initialization-time innerHTML calls (clearing nodes) use empty strings only.
-- **Adaptive math is a simple heuristic, not full SM-2**: `never_seen → 10`, `recently_correct → 0.5 + days * 0.3` capped at 5, `recently_wrong → 8 - days * 0.3` floored at 3, then weighted random pick. Users who want true spaced-repetition scheduling should use the [Anki decks](../anki/README.md).
+- **Adaptive math is a simple heuristic, not full SM-2**: `never_seen → 10`, `recently_correct → 0.5 + days * 0.3` capped at 5, `recently_wrong → 8 - days * 0.3` floored at 3, then weighted random pick. Users who want true spaced-repetition scheduling should use the [Anki decks](./anki/README.md).
 - **3 certs in, 3 deferred**: the missing certs' practice-question markdown lacks the `*(Easy|Medium|Hard)*` difficulty marker. Updating their markdown is a separate follow-up that doesn't block this PR.
 
 ### Verification
