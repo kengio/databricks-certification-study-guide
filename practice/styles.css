@@ -252,8 +252,7 @@ a:hover { text-decoration-color: var(--accent); }
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.18rem 0.55rem;
-  margin-left: 0.4rem;
+  padding: 0.25rem 0.65rem;
   border: 1px solid var(--hairline);
   border-radius: 99px;
   background: var(--surface);
@@ -261,6 +260,7 @@ a:hover { text-decoration-color: var(--accent); }
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
+  flex-shrink: 0;  /* never let it shrink/clip when the cert name is long */
 }
 .meta-timer::before {
   content: "⏱";
