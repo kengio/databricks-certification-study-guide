@@ -1184,6 +1184,11 @@ body.quiz-active .page-footer { display: none; }
   font-size: 0.7rem;
   text-align: center;
 }
+/* The P-key pause hint inside kbd-hint-pre/post is only meaningful
+   when a timer is configured. JS toggles `body.has-timer` whenever
+   STATE.timerMinutes changes; CSS shows the segment in sync. */
+.kbd-pause-hint { display: none; }
+body.has-timer .kbd-pause-hint { display: inline; }
 
 @media (max-width: 720px) {
   .actionbar-inner { padding: 0.65rem 1rem; gap: 0.6rem; }
@@ -1877,7 +1882,18 @@ body.timer-paused main {
   min-width: 200px;
   padding: 0.85rem 1.75rem;
   font-size: 0.95rem;
+  /* button.primary is inline-flex with default justify-content:flex-start,
+     so "Resume exam" sat against the left edge and the min-width padding
+     showed as visible empty space on the right. Centre the label. */
+  justify-content: center;
 }
+/* The pause overlay auto-focuses Resume on open, which triggers the
+   global :focus-visible accent outline. Drop it — the dark pill on a
+   white card is already the dominant visual element and the overlay
+   has multiple unambiguous resume paths (click anywhere, Esc, Enter,
+   Space, P). */
+.pause-card #btn-resume:focus,
+.pause-card #btn-resume:focus-visible { outline: none; }
 .pause-hint {
   font-family: var(--mono);
   font-size: 0.72rem;

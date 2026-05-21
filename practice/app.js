@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "35";
+  const APP_VERSION = "37";
 
   // Per-cert confetti palette. Pulled from the same gradients used on
   // the cert picker cards (--gradient in styles.css) so the burst feels
@@ -1528,6 +1528,9 @@
     STATE.pausedRemainingMs = null;
     STATE.totalPausedMs = 0;
     STATE.pauseStart = null;
+    // Drives the "P pause" hint visibility in the kbd-hint strip via
+    // CSS: `body.has-timer .kbd-pause-hint { display: inline }`.
+    document.body.classList.toggle("has-timer", minutes > 0);
   }
 
   // --- Pause / resume the exam timer --------------------------------------
@@ -1986,6 +1989,7 @@
     // Load timer preference + start the clock interval. The clock pill
     // updates every second whether a timer is active or not.
     STATE.timerMinutes = loadTimerMinutes();
+    document.body.classList.toggle("has-timer", STATE.timerMinutes > 0);
     updateClockAndTimer();
     setInterval(updateClockAndTimer, 1000);
 
