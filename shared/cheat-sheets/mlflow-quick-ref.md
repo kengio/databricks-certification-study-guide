@@ -202,4 +202,4 @@ results = mlflow.evaluate(
 
 - [MLflow Basics (Fundamentals)](../fundamentals/mlflow-basics.md)
 - [ML Associate Certification](../../certifications/ml-associate/README.md)
-- [Interview Prep — PySpark API](../interview-prep/08-pyspark-api.md)
+- [Interview Prep — PySpark API](../interview-prep/08-pyspark-sql-patterns.md)
