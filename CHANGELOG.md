@@ -4,6 +4,128 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.05.21-25] — Practice quiz: completion summary, attempt history, export, pause/resume, WCAG AAA
+
+This entry covers everything that landed alongside the mock-exam launch in the same `feat/mock-exams-in-practice` branch but is its own user-visible feature surface — separated here for clarity.
+
+### Added — completion summary screen
+
+When the user has answered every question in the (filtered) bank, the quiz redirects to a dedicated summary screen instead of looping back through the bank:
+
+- **Hero block**: large tone-coloured percentage + `correct / total` fraction + verdict badge.
+  - Mock exams use the Databricks-typical 70 % passing line: **PASS** or **BELOW PASSING**.
+  - Practice mode uses descriptive labels (`Perfect score` / `Excellent` / `Great work` / `Solid` / `Getting close` / `Keep practicing` / `More practice needed`).
+- **Per-module breakdown** with tone-coloured progress bars and `correct/total · pct%` labels per domain.
+- **Weak-area callout** ("Focus next on these modules"): domains scoring below 70 % surfaced explicitly so users know where to drill next.
+- **Time stats** (only when an exam timer was running): total time + average per question. Paused time is subtracted so the figure reflects effort, not wall-clock.
+- **Best streak** metric (always shown when > 0).
+- **Confetti burst** at ≥ 80 % using the per-cert gradient palette; respects `prefers-reduced-motion`.
+
+### Added — attempt history
+
+- Every completed session is appended to `localStorage` under `dbx-practice-sessions-<cert>` (per-bank ring buffer capped at 50 records).
+- The summary screen lists the last six prior attempts in a compact clickable list for at-a-glance comparison.
+- The Stats screen has a full **"Past attempts"** section showing every saved attempt for the current bank (date, time, score, fraction, duration, verdict).
+- Clicking any past row reopens that attempt's full summary in read-only mode (with a "← Back to history" action).
+- **"Clear history"** button on the Stats page with a confirm modal to wipe the attempt log without touching per-question history.
+
+### Added — export (HTML + CSV)
+
+The summary screen has an export bar (`Export this summary — HTML | CSV`) that downloads the current summary as a standalone file:
+
+- **HTML**: self-contained printable report with inline AAA-compliant styles, including the hero, weak-area callout, per-module breakdown, and stats table. Opens cleanly in any browser, prints well.
+- **CSV**: two-section sheet (metadata key/value pairs at the top, per-module table at the bottom). Opens cleanly in Excel / Numbers / Sheets.
+
+Filenames use `dbx-<cert>-<iso-timestamp>.{html,csv}`. Past summaries can also be exported via the same UI.
+
+### Added — pause / resume the exam timer
+
+- **Click the timer pill (or press `P`)** to pause. A full-screen backdrop-blur overlay covers the page so the questions aren't readable while the user steps away.
+- **Resume** by clicking the Resume pill, clicking anywhere outside the card, or pressing `P` / `Esc` / `Enter` / `Space`.
+- Paused time accumulates in `STATE.totalPausedMs` and is **subtracted** from the session's elapsed-time figure on the summary screen — so the "Total time" reflects actual effort.
+- Mobile-friendly: the pause glyph stays surfaced at low opacity on touch devices (no hover state), so users can discover the timer is interactive without tapping blind.
+
+### Added — custom confirm modal
+
+Replaces `window.confirm()` with a theme-aware dialog throughout the app:
+
+- Used by **Switch bank**, **Reset progress**, **Leave session**, **Clear attempt history**.
+- Focus is trapped between Cancel / Confirm; Esc + backdrop click cancel; Enter on Confirm closes.
+- `role="alertdialog"` with `aria-labelledby` + `aria-describedby` for screen readers.
+- Backdrop blur + scale-in animation; respects `prefers-reduced-motion`.
+
+### Added — Q.N watermark + editorial polish
+
+- Faded oversized `Q.N` numeral in the question card's top-right corner — adds editorial sequence cue without competing with content. Right-padding on the question text reserves the watermark zone so wrapping text never collides.
+- Soft warm radial gradient at the top of the page background (replaces flat single-tone bg).
+- Editorial eyebrow + lead paragraph on the cert picker.
+- Bigger sans-serif verdict heading in feedback ("Correct" / "Incorrect — answer was N") replacing the small mono-uppercase label.
+- Three-line colophon footer ("Set in Geist & Geist Mono · No tracking · Progress stays in your browser").
+- `text-wrap: balance` on headings + leads.
+
+### Added — keyboard layout polish
+
+The actionbar uses a CSS-grid 3-column layout (`1fr auto 1fr`) for predictable kbd-hint centering and primary-action placement:
+
+```
+Row 1: [Timer ←]   …   [kbd-hint centered]   [Next / Skip / Submit →]
+Row 2: [session · bank stats · Stats Settings Reset Switch bank]
+```
+
+- Primary actions on the right for thumb-reach on mobile + standard mobile convention.
+- Source order is `Next → Skip → Submit` so the rightmost visible button is always the primary action (Submit before submit; Next after).
+- `kbd-hint` strip shows `P pause` only when a timer is configured (gated by `body.has-timer`).
+
+### Changed — WCAG AAA contrast across the board
+
+Every text colour token now measures **≥ 7:1** on the body background (annotated with measured ratios in the CSS). The vivid brand `--accent` (`#FF4F2C` light / `#FF7A5C` dark) stays vivid for graphic uses (focus rings, gradient strips, big numerals) where 3:1 / AA-Large is sufficient. Small-text usages of accent now route through a darker `--accent-text` variant.
+
+Light theme:
+
+| Token | Before | After | Ratio |
+| :--- | :--- | :--- | :--- |
+| `--muted` | `#71717A` | `#52525B` | 4.45 → **7.1** |
+| `--positive` | `#15803D` | `#14532D` | 4.6 → **9.0** |
+| `--negative` | `#B91C1C` | `#991B1B` | 6.4 → **8.2** |
+| `--selected` | `#2563EB` | `#1D4ED8` | 5.7 → **8.6** |
+| `--accent-text` *(new)* | — | `#9A3412` | **7.1** |
+| `--warn` *(new)* | — | `#92400E` | **7.5** |
+
+Dark theme:
+
+| Token | Before | After | Ratio |
+| :--- | :--- | :--- | :--- |
+| `--muted` | `#8B8B95` | `#A1A1AA` | 5.8 → **7.4** |
+| `--positive` | `#4ADE80` | `#6EE7B7` | 8.5 → **11.2** |
+| `--negative` | `#F87171` | `#FCA5A5` | 7.5 → **9.7** |
+| `--selected` | `#60A5FA` | `#93C5FD` | 7.0 → **10.4** |
+| `--accent-text` *(new)* | — | `#FFA88B` | **7.2** |
+| `--warn` *(new)* | — | `#FBBF24` | **11.5** |
+
+Primary button hover redesigned: was a background swap to vivid accent (white-on-coral failed AA in dark mode at 2.7:1). Now keeps the AAA-strong idle colours and adds elevation + an accent-coloured glow as the only visual cue. Destructive modal button hardcoded `#991B1B` / `#7F1D1D` (white text 8.2 : 1+ in both themes).
+
+### Changed — accessibility plumbing
+
+- `aria-live="polite"` + `role="status"` on the quiz feedback panel.
+- Rich `aria-label` on past-attempt rows: screen readers announce the full row in one phrase ("View attempt from 21 May 2026 at 14:35, scored 85 percent, 38 of 45 correct, took 24:15, passed").
+- Settings selects properly bound via `aria-labelledby` + `aria-describedby` to their `h4` + helper paragraph.
+- Masthead buttons (brand-cluster, cert-link, theme pill) use in-bounds focus indicators (border-color + soft background tint) instead of `outline`, so the indicator can't be clipped by the sticky masthead's `backdrop-filter` containing block.
+- `prefers-reduced-motion` respected for confetti, slide-in, modal pop, pause overlay, attempt animations.
+- No emoji used as structural icons anywhere — every glyph is an inline SVG (timer, pause, play, brand mark).
+- All dynamic DOM is built via `createElement` + `textContent`; the HTML export uses an explicit `escapeHtml()`.
+
+### Changed — mobile responsive overhaul
+
+- New breakpoints: **540 px** + **380 px** + landscape phones. Existing 720 px / 640 px retained.
+- Choice text bumped to 16 px on phones (avoids iOS focus auto-zoom + improves arm's-length readability).
+- Touch targets ≥ 44 × 44 px for every interactive element (link buttons, brand cluster, cert-link, theme pill, attempt rows).
+- `@media (hover: none)` safeguards prevent the brief "sticky hover" state that lingers on touch devices after a tap.
+- Actionbar grid collapses to a 2-column layout on small screens; primary-action cluster pinned to the right edge for thumb reach.
+
+### Changed — UI cache versioning
+
+`APP_VERSION` bumped through `"31"` … `"37"` across the feature work. `<script src="app.js?v=37">` and `<link href="styles.css?v=37">` in `index.html`.
+
 ## [2026.05.21-24] — Mock exams in practice quiz + auto-rebuild on source edits (931 q / 18 banks)
 
 ### Added
