@@ -686,10 +686,10 @@ VPC Peering Setup:
 
 ## Related Topics
 
-- [Unity Catalog](01-unity-catalog.md) - Governance foundation
-- [Access Control](02-access-control.md) - Row/column security
-- [Secret Management](04-secret-management.md) - Audit of secret access
-- [Data Classification, Compliance & Permissions](06-classification-compliance-permissions.md) - GDPR, tagging, advanced permissions
+- [Unity Catalog](../08-data-governance/01-unity-catalog.md) - Governance foundation
+- [Access Control](./01-access-control.md) - Row/column security
+- [Secret Management](./02-secret-management.md) - Audit of secret access
+- [Data Classification, Compliance & Permissions](./04-classification-compliance-permissions.md) - GDPR, tagging, advanced permissions
 
 ---
 

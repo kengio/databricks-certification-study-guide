@@ -646,10 +646,10 @@ Use Row Tracking to:
 
 ## Related Topics
 
-- [Batch ETL Pipelines](01-batch-etl-pipelines-part1.md) - Window functions
-- [Structured Streaming](03-structured-streaming-part1.md) - Streaming and watermarks
-- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE patterns
-- [Change Data Capture](05-change-data-capture-part1.md) - Dedup before CDC apply
+- [Batch ETL Pipelines](../01-developing-code-for-data-processing/01-batch-etl-pipelines-part1.md) - Window functions
+- [Structured Streaming](../01-developing-code-for-data-processing/03-structured-streaming-part1.md) - Streaming and watermarks
+- [Delta Lake Operations](../01-developing-code-for-data-processing/04-delta-lake-operations-part1.md) - MERGE patterns
+- [Change Data Capture](./01-change-data-capture-part1.md) - Dedup before CDC apply
 
 ## Official Documentation
 

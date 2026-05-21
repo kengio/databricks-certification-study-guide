@@ -415,8 +415,8 @@ A typical promotion workflow:
 
 ## Related Topics
 
-- [Compliance & Audit Logging](04-compliance-audit-logging.md)
-- [Model Monitoring & Observability](01-model-monitoring-observability.md)
+- [Compliance & Audit Logging](./06-compliance-audit-logging.md)
+- [Model Monitoring & Observability](./03-model-monitoring-observability.md)
 - [Model Versioning and Registry](../02-ml-ops/01-model-versioning-registry.md)
 - [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md)
 - [Unity Catalog Quick Ref](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)

@@ -75,7 +75,7 @@ Databricks-provided classifiers integrate with Model Serving; you can also bring
 
 ## Layer 4 — Unity AI Gateway
 
-Per-endpoint policies that wrap any served LLM. Officially documented capabilities (https://docs.databricks.com/aws/en/ai-gateway/):
+Per-endpoint policies that wrap any served LLM. Officially documented capabilities ([Unity AI Gateway docs](https://docs.databricks.com/aws/en/ai-gateway/)):
 
 | Policy | What it does |
 | :--- | :--- |

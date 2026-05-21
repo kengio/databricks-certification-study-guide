@@ -8,7 +8,7 @@ status: published
 # MLflow for GenAI
 
 MLflow extends its tracking and deployment capabilities to GenAI with three main additions:
-**Tracing** for debugging LLM call chains, **`pyfunc.ChatModel *(deprecated in MLflow 3.0+; use `ResponsesAgent` / `ChatAgent`)*`** as a standard interface for
+**Tracing** for debugging LLM call chains, **`pyfunc.ChatModel`** as a standard interface for
 custom agents, and **`agents.deploy()`** for deploying to Model Serving with an integrated
 Review App.
 

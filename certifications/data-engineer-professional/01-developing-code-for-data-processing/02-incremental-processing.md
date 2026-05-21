@@ -611,9 +611,9 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 ## Related Topics
 
 - [Structured Streaming](03-structured-streaming-part1.md) - Streaming fundamentals
-- [Auto Loader](04-auto-loader.md) - File-based incremental
-- [Change Data Capture](05-change-data-capture-part1.md) - CDF for incremental
-- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE patterns
+- [Auto Loader](../07-data-ingestion-and-acquisition/01-auto-loader.md) - File-based incremental
+- [Change Data Capture](../03-data-transformation-cleansing-quality/01-change-data-capture-part1.md) - CDF for incremental
+- [Delta Lake Operations](./04-delta-lake-operations-part1.md) - MERGE patterns
 
 ## Official Documentation
 

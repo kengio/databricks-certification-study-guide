@@ -318,8 +318,8 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 ## Related Topics
 
-- [Delta Lake Operations](06-delta-lake-operations-part1.md) - MERGE for upserts
-- [Data Deduplication](07-data-deduplication.md) - Dedup strategies
+- [Delta Lake Operations](./04-delta-lake-operations-part1.md) - MERGE for upserts
+- [Data Deduplication](../03-data-transformation-cleansing-quality/02-data-deduplication.md) - Dedup strategies
 - [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md)
 
 ## Official Documentation

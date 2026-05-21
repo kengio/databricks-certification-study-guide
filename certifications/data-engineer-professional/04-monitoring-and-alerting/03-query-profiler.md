@@ -504,7 +504,7 @@ SELECT * FROM t1 JOIN t2 ON t1.id = t2.id WHERE t1.x > t2.y;
 
 ## Related Topics
 
-- [Spark UI Debugging](02-spark-ui-debugging.md) - Runtime analysis
+- [Spark UI Debugging](../06-debugging-and-deploying/07-spark-ui-debugging.md) - Runtime analysis
 - [Performance Optimization](../02-cost-and-performance-optimization/04-spark-tuning.md) - Tuning strategies
 - [Delta Lake Operations](../01-developing-code-for-data-processing/04-delta-lake-operations-part1.md) - Data skipping
 

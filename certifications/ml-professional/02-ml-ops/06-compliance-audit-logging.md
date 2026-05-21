@@ -431,9 +431,9 @@ Review the complete pre-exam checklist in the certification resources folder bef
 
 ## Related Topics
 
-- [Governance Frameworks](03-governance-frameworks.md)
-- [Model Monitoring & Observability](01-model-monitoring-observability.md)
-- [Drift Detection & Remediation](02-drift-detection-remediation.md)
+- [Governance Frameworks](./05-governance-frameworks.md)
+- [Model Monitoring & Observability](./03-model-monitoring-observability.md)
+- [Drift Detection & Remediation](./04-drift-detection-remediation.md)
 - [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md)
 - [MLflow Basics](../../../shared/fundamentals/mlflow-basics.md)
 

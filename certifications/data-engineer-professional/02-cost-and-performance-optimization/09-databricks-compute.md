@@ -755,7 +755,7 @@ aws_attributes = {
 
 ## Related Topics
 
-- [Workspace and Notebooks](01-workspace-and-notebooks.md) - Compute attachment
+- [Workspace and Notebooks](../01-developing-code-for-data-processing/08-workspace-and-notebooks.md) - Compute attachment
 - [Performance Optimization](../02-cost-and-performance-optimization/README.md) - Tuning compute
 - [Cost Optimization](../02-cost-and-performance-optimization/05-cost-optimization.md) - Reducing spend
 

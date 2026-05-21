@@ -666,8 +666,8 @@ TRACK HISTORY ON (salary, department, title)
 
 ## Related Topics
 
-- [Declarative Pipelines](01-declarative-pipelines.md) - Pipeline basics
-- [Expectations](02-expectations-data-quality.md) - Data quality
+- [Declarative Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) - Pipeline basics
+- [Expectations](./03-expectations-data-quality.md) - Data quality
 - [SCD Patterns](../09-data-modelling/04-scd-patterns.md) - SCD implementation
 - [Event Logs](../04-monitoring-and-alerting/02-lakeflow-event-logs.md) - Monitoring
 

@@ -462,8 +462,8 @@ print(f"Best XGBoost config: {best_config}")
 
 ## Related Topics
 
-- [Tuning Fundamentals](01-tuning-fundamentals.md)
-- [Distributed Tuning](03-distributed-tuning.md)
+- [Tuning Fundamentals](./05-tuning-fundamentals.md)
+- [Distributed Tuning](./07-distributed-tuning.md)
 
 ---
 

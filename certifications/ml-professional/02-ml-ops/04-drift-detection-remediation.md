@@ -470,8 +470,8 @@ Not all drift is the model's fault. Before retraining, rule out infrastructure c
 
 ## Related Topics
 
-- [Model Monitoring & Observability](01-model-monitoring-observability.md)
-- [Governance Frameworks](03-governance-frameworks.md)
+- [Model Monitoring & Observability](./03-model-monitoring-observability.md)
+- [Governance Frameworks](./05-governance-frameworks.md)
 - [Model Lifecycle Orchestration](../02-ml-ops/02-model-lifecycle-orchestration.md)
 
 ---

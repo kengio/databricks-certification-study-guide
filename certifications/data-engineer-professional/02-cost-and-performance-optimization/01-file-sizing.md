@@ -577,7 +577,7 @@ spark.sql("""
 ## Related Topics
 
 - [Z-ORDER Indexing](02-zorder-indexing.md) - Combine with OPTIMIZE
-- [Spark Tuning](03-spark-tuning.md) - Write performance
+- [Spark Tuning](./04-spark-tuning.md) - Write performance
 - [Delta Lake Operations](../01-developing-code-for-data-processing/04-delta-lake-operations-part1.md) - Table maintenance
 
 ## Official Documentation

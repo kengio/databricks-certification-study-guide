@@ -400,8 +400,8 @@ query = (df.writeStream
 ## Related Topics
 
 - [Incremental Processing](02-incremental-processing.md) - Checkpoint management
-- [Auto Loader](04-auto-loader.md) - File ingestion streaming
-- [Data Deduplication](07-data-deduplication.md) - Streaming dedup
+- [Auto Loader](../07-data-ingestion-and-acquisition/01-auto-loader.md) - File ingestion streaming
+- [Data Deduplication](../03-data-transformation-cleansing-quality/02-data-deduplication.md) - Streaming dedup
 
 ## Official Documentation
 

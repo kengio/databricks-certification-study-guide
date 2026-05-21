@@ -561,8 +561,8 @@ databricks secrets put --scope my-scope --key missing-key
 
 ## Related Topics
 
-- [Unity Catalog](01-unity-catalog.md) - Storage credentials
-- [Access Control](02-access-control.md) - Permission patterns
+- [Unity Catalog](../08-data-governance/01-unity-catalog.md) - Storage credentials
+- [Access Control](./01-access-control.md) - Permission patterns
 - [DBFS and Mounts](../08-data-governance/02-dbfs-and-uc-volumes.md) - Storage integration
 
 ## Official Documentation

@@ -1,0 +1,33 @@
+# lychee configuration for the Databricks Certification Study Guide.
+#
+# CI policy:
+# - Verify every relative .md / image / file link resolves to an existing path
+# - Skip external HTTP/HTTPS URLs (their health is verified manually during
+#   the 4-round PR review; flaky external endpoints would otherwise constantly
+#   fail CI)
+# - Skip mailto:, tel:, ftp:, data:, javascript:
+
+# Skip external URLs and other non-file schemes
+exclude = [
+  "^https?://",
+  "^mailto:",
+  "^tel:",
+  "^ftp://",
+  "^data:",
+  "^javascript:",
+]
+
+# Don't check links inside fenced code blocks (Python imports, SQL, etc.)
+include_verbatim = false
+
+# Cache to speed up repeated checks
+cache = true
+max_cache_age = "1d"
+
+# Exclude paths we don't author
+exclude_path = [
+  ".obsidian/",
+  "docs/superpowers/",
+  "node_modules/",
+  ".git/",
+]

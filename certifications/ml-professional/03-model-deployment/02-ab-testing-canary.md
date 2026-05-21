@@ -405,8 +405,8 @@ champion version and remove the old served model from the endpoint configuration
 
 ## Related Topics
 
-- [Model Serving & Deployment](02-model-serving-deployment.md)
-- [Model Lifecycle Orchestration](04-model-lifecycle-orchestration.md)
+- [Model Serving & Deployment](./01-model-serving-deployment.md)
+- [Model Lifecycle Orchestration](../02-ml-ops/02-model-lifecycle-orchestration.md)
 - [Model Monitoring & Observability](../02-ml-ops/03-model-monitoring-observability.md)
 
 ---
