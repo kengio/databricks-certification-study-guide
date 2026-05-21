@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css?v=19">
+  <link rel="stylesheet" href="styles.css?v=20">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -43,9 +43,7 @@
       </div>
 
       <div class="masthead-actions">
-        <span id="quiz-clock" class="meta-pill" title="Current time" aria-label="Current time"></span>
-        <span id="quiz-timer" class="meta-pill timer" hidden
-              title="Exam timer remaining" aria-label="Exam timer remaining"></span>
+        <span id="quiz-clock" title="Current time" aria-label="Current time"></span>
         <button type="button" id="btn-theme"
                 title="Cycle theme — auto, light, dark"
                 aria-label="Cycle theme">
@@ -127,6 +125,11 @@
   <div class="actionbar" id="actionbar" hidden>
     <div class="actionbar-inner">
       <div class="actionbar-left">
+        <span id="quiz-timer" class="actionbar-timer" hidden
+              title="Exam timer remaining" aria-label="Exam timer remaining">
+          <span class="timer-label">TIMER</span>
+          <span class="timer-value">00:00</span>
+        </span>
         <button type="button" id="btn-submit" class="primary" disabled>Submit</button>
         <button type="button" id="btn-skip" class="ghost">Skip</button>
         <button type="button" id="btn-next" class="primary" hidden>Next question</button>
@@ -168,6 +171,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=19"></script>
+  <script src="app.js?v=20"></script>
 </body>
 </html>

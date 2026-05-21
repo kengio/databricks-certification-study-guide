@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "19";
+  const APP_VERSION = "20";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -893,8 +893,10 @@
     // Timer
     const timerEl = $("#quiz-timer");
     if (!timerEl) return;
+    const valueEl = timerEl.querySelector(".timer-value");
+    const setValue = (text) => { if (valueEl) valueEl.textContent = text; };
     if (STATE.timerExpired) {
-      timerEl.textContent = "00:00";
+      setValue("00:00");
       timerEl.classList.add("expired");
       timerEl.classList.remove("warning");
       timerEl.hidden = false;
@@ -909,8 +911,7 @@
     const totalSec = Math.floor(remainMs / 1000);
     const m = Math.floor(totalSec / 60);
     const s = totalSec % 60;
-    timerEl.textContent =
-      String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    setValue(String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0"));
     timerEl.hidden = false;
     timerEl.classList.toggle("warning",
       remainMs > 0 && remainMs <= 5 * 60 * 1000);

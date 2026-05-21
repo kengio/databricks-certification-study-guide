@@ -230,43 +230,70 @@ a:hover { text-decoration-color: var(--accent); }
   align-items: center;
 }
 
-.meta-pill {
+/* Wall clock in masthead — minimal, ambient. No pill, no border;
+   just plain mono text in a muted tone so it stays clearly secondary
+   to the timer (which lives in the action bar). */
+#quiz-clock {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--muted);
-  padding: 0.4rem 0.7rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding-right: 0.25rem;
+}
+
+/* Exam timer in the actionbar — prominent, labelled, lives next to
+   the Submit/Skip buttons because it's part of the "active session"
+   state, not ambient awareness. */
+.actionbar-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem 0.45rem 0.65rem;
   border: 1px solid var(--hairline);
   border-radius: 99px;
   background: var(--surface);
+  font-family: var(--mono);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  display: inline-block;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.meta-pill.timer {
-  color: var(--fg);
+.actionbar-timer .timer-label {
+  font-size: 0.6rem;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
 }
-.meta-pill.timer.warning {
-  color: var(--accent);
+.actionbar-timer .timer-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+.actionbar-timer.warning {
   border-color: var(--accent);
   background: var(--accent-soft);
   animation: timer-pulse 1s ease-in-out infinite;
 }
-.meta-pill.timer.expired {
-  color: var(--negative);
+.actionbar-timer.warning .timer-label,
+.actionbar-timer.warning .timer-value { color: var(--accent); }
+.actionbar-timer.expired {
   border-color: var(--negative);
   background: var(--negative-soft);
   animation: none;
 }
+.actionbar-timer.expired .timer-label,
+.actionbar-timer.expired .timer-value { color: var(--negative); }
 @keyframes timer-pulse {
   0%, 100% { opacity: 1; }
-  50%      { opacity: 0.55; }
+  50%      { opacity: 0.6; }
 }
 
 @media (max-width: 720px) {
-  #quiz-clock { display: none; }  /* save room — timer is more important */
+  #quiz-clock { display: none; }  /* save room on mobile */
+  .actionbar-timer .timer-label { display: none; }  /* keep just MM:SS */
+  .actionbar-timer { padding: 0.4rem 0.7rem; }
 }
 
 #btn-theme {
@@ -1183,20 +1210,24 @@ fieldset#quiz-choices input[type=radio]:focus-visible { outline: none; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Question-to-question slide transition. Applied via a class toggle in
-   renderQuiz() so the animation re-fires for each new question even
-   though the .question-card element itself is reused. */
+/* Question-to-question slide transition. 0.55s is slow enough to be
+   clearly perceptible without being annoying — the user can see "okay,
+   new question" before reading. The card travels a bit further (28px)
+   so the motion registers even at this longer duration. */
 @media (prefers-reduced-motion: no-preference) {
   .question-card.slide-in {
-    animation: question-slide 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+    animation: question-slide 0.55s cubic-bezier(0.16, 0.84, 0.32, 1);
   }
 }
 @keyframes question-slide {
-  from {
+  0% {
     opacity: 0;
-    transform: translateX(18px);
+    transform: translateX(28px);
   }
-  to {
+  30% {
+    opacity: 0.4;
+  }
+  100% {
     opacity: 1;
     transform: translateX(0);
   }
