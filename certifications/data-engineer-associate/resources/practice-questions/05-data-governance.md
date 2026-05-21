@@ -137,7 +137,7 @@ D) The SQL endpoint's access control list
 **Question** *(Medium)*: What scenario would prompt a data engineer to use a single-node cluster?
 
 A) When running a distributed join across tables with billions of rows
-B) When deploying a production DLT pipeline with multiple streaming sources
+B) When deploying a production Lakeflow Declarative Pipelines pipeline with multiple streaming sources
 C) When working interactively with a small amount of data
 D) When maximizing parallelism for a large-scale ETL workload
 

@@ -132,12 +132,12 @@ D) `spark.sql("RUN NOTEBOOK utils")`
 A) Delta Lake change data feed
 B) MLflow run history
 C) Databricks Repos
-D) Databricks Workflows
+D) Lakeflow Jobs
 
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> Databricks Repos integrates with Git providers (GitHub, GitLab, Bitbucket, Azure DevOps) and allows you to version-control notebooks and code directly from the Databricks workspace. Delta Lake change data feed tracks table changes, MLflow run history tracks experiment results, and Workflows orchestrate jobs.
+> Databricks Repos integrates with Git providers (GitHub, GitLab, Bitbucket, Azure DevOps) and allows you to version-control notebooks and code directly from the Databricks workspace. Delta Lake change data feed tracks table changes, MLflow run history tracks experiment results, and Lakeflow Jobs orchestrate workloads.
 
 ---
 

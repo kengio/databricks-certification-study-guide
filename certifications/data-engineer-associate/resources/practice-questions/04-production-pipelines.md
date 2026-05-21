@@ -121,7 +121,7 @@ D) Configure a SQL endpoint event hook that triggers on query result thresholds
 A) Check the Databricks SQL query history for slow-running queries
 B) Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook
 C) Review the cluster event log for resource allocation errors
-D) Open the DLT pipeline UI to inspect per-table processing metrics
+D) Open the Lakeflow Declarative Pipelines pipeline UI to inspect per-table processing metrics
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -193,7 +193,7 @@ D) Create a downstream task that runs only on failure and sends the email
 A) Schedule the query to refresh every 1 day from the query's page in Databricks SQL
 B) Create a Databricks Job that runs the query notebook on a daily cron schedule
 C) Set up an Apache Airflow DAG to trigger the query execution daily
-D) Use a Delta Live Tables pipeline with a daily trigger to refresh the query
+D) Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh the query
 
 > [!success]- Answer
 > **Correct Answer: A**
@@ -226,7 +226,7 @@ D) When another task needs to successfully complete before the new task begins
 
 **Question** *(Medium)*: A data engineer tracks store-level records where sales equal zero. When this count exceeds zero, the entire team should be notified via a messaging webhook. What approach accomplishes this?
 
-A) Configure a DLT expectation that triggers a webhook when zero-sales records appear
+A) Configure a Lakeflow Declarative Pipelines expectation that triggers a webhook when zero-sales records appear
 B) Set up an Alert with a new webhook alert destination
 C) Build a custom Python script that polls the query results and posts to the webhook
 D) Add a dashboard filter that highlights zero-sales stores and emails the team

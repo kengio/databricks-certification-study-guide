@@ -28,6 +28,23 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-14] — Practice-questions terminology refresh
+
+### Changed
+
+- **Practice-question files across all 6 certs audited** for legacy product naming
+- ~60 occurrences of legacy terms replaced across 13 practice-question files:
+  - **"Delta Live Tables"** → **"Lakeflow Declarative Pipelines"**
+  - **"DLT pipeline / framework / event log / managed / alert / expectations / tables"** → **"Lakeflow Declarative Pipelines …"** (the `dlt` module name is retained for back-compat in code blocks)
+  - **"Databricks Workflows"** → **"Lakeflow Jobs"**; **"Workflows UI"** → **"Lakeflow Jobs UI"**; **"Workflows API"** → **"Jobs API"**
+- Question headings (e.g., `## Question 5.3: DLT Event Log` → `## Question 5.3: Lakeflow Declarative Pipelines Event Log`) updated alongside body text
+- Code blocks and `@dlt.*` decorator references kept as-is (the Python module is `dlt` by back-compat)
+- 1 specific ML Associate fix: "MLflow run history tracks experiment results, and Workflows orchestrate jobs" → "Lakeflow Jobs orchestrate workloads"
+
+### Verification
+
+Final audit: **0 prose DLT mentions** and **0 product-context "Workflows"** mentions remain across all 6 certs' practice-question files. Domain names like "ML Workflows" (which is the official 19% ML Associate domain name) and ML-Associate file paths (`02-ml-workflows.md`) are intentionally preserved.
+
 ## [2026.05.21-13] — Cheat-sheet terminology refresh
 
 ### Changed

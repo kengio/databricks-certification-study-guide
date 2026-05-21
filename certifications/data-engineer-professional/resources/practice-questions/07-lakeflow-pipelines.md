@@ -8,7 +8,7 @@ tags: [data-engineer-professional, practice-questions, lakeflow-pipelines]
 
 ## Question 7.1: Streaming Table vs Materialized View
 
-**Scenario**: A DLT pipeline needs a table that aggregates daily sales totals from a streaming source.
+**Scenario**: A Lakeflow Declarative Pipelines pipeline needs a table that aggregates daily sales totals from a streaming source.
 
 **Question** *(Medium)*: Which table type is most appropriate?
 
@@ -26,7 +26,7 @@ D) Temporary view
 
 ## Question 7.2: Expectations
 
-**Scenario**: A DLT pipeline requires that all records have a non-null customer_id. Invalid records should be removed but not fail the pipeline.
+**Scenario**: A Lakeflow Declarative Pipelines pipeline requires that all records have a non-null customer_id. Invalid records should be removed but not fail the pipeline.
 
 **Question** *(Easy)*: Which expectation syntax achieves this?
 
@@ -60,9 +60,9 @@ D) `STORED AS CURRENT`
 
 ---
 
-## Question 7.4: DLT Table Reference
+## Question 7.4: Lakeflow Declarative Pipelines Table Reference
 
-**Scenario**: A DLT SQL query needs to read from another table defined in the same pipeline.
+**Scenario**: A Lakeflow Declarative Pipelines SQL query needs to read from another table defined in the same pipeline.
 
 **Question** *(Easy)*: How should the source table be referenced?
 
@@ -74,13 +74,13 @@ D) `SELECT * FROM dlt.source_table`
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> In DLT SQL, tables within the pipeline are referenced using the `LIVE.` prefix. This tells DLT that the table is defined within the same pipeline and creates the proper dependency.
+> In Lakeflow Declarative Pipelines SQL, tables within the pipeline are referenced using the `LIVE.` prefix. This tells Lakeflow Declarative Pipelines that the table is defined within the same pipeline and creates the proper dependency.
 
 ---
 
 ## Question 7.5: Pipeline Modes
 
-**Scenario**: A DLT pipeline processes data continuously as it arrives with minimal latency.
+**Scenario**: A Lakeflow Declarative Pipelines pipeline processes data continuously as it arrives with minimal latency.
 
 **Question** *(Easy)*: Which pipeline configuration enables this?
 
@@ -98,7 +98,7 @@ D) `streaming: true`
 
 ## Question 7.6: Full Refresh
 
-**Scenario**: A schema change requires reprocessing all historical data in a DLT pipeline.
+**Scenario**: A schema change requires reprocessing all historical data in a Lakeflow Declarative Pipelines pipeline.
 
 **Question** *(Easy)*: How should the pipeline be refreshed?
 
