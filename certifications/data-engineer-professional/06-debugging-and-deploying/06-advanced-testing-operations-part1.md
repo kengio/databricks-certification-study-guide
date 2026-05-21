@@ -11,7 +11,7 @@ status: published
 
 # Advanced Testing & Operations — Part 1
 
-This guide covers advanced testing strategies for Databricks — property-based testing, DLT testing, streaming pipeline testing, integration testing, and test isolation patterns.
+This guide covers advanced testing strategies for Databricks — property-based testing, Lakeflow Declarative Pipelines testing, streaming pipeline testing, integration testing, and test isolation patterns.
 
 > For deployment validation, GitOps patterns, and rollback strategies, see [Part 2: Advanced Operations & Deployment](./06-advanced-testing-operations-part2.md).
 
@@ -184,9 +184,9 @@ def test_bronze_events_quality():
     assert results.success, f"Data quality check failed: {results}"
 ```
 
-### Testing DLT Pipelines
+### Testing Lakeflow Declarative Pipelines Pipelines
 
-DLT pipelines cannot be unit-tested directly because they rely on the DLT runtime. Instead, extract the transformation logic and test it separately.
+Lakeflow Declarative Pipelines pipelines cannot be unit-tested directly because they rely on the Lakeflow Declarative Pipelines runtime. Instead, extract the transformation logic and test it separately.
 
 ```python
 # src/pipelines/dlt_transforms.py

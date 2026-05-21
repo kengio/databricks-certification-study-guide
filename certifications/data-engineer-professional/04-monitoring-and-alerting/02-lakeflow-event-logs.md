@@ -9,15 +9,15 @@ tags:
 status: published
 ---
 
-# Lakeflow/DLT Event Logs
+# Lakeflow/Lakeflow Declarative Pipelines Event Logs
 
-Delta Live Tables (DLT) / Lakeflow pipelines generate detailed event logs that provide observability into pipeline execution, data quality, and maintenance operations. Understanding these logs is essential for monitoring and debugging production pipelines.
+Lakeflow Declarative Pipelines (formerly DLT) / Lakeflow pipelines generate detailed event logs that provide observability into pipeline execution, data quality, and maintenance operations. Understanding these logs is essential for monitoring and debugging production pipelines.
 
 ## Overview
 
 ```mermaid
 flowchart TB
-    Pipeline[DLT Pipeline] --> EventLog[Event Log]
+    Pipeline[Lakeflow Declarative Pipeline] --> EventLog[Event Log]
 
     EventLog --> Definition[flow_definition]
     EventLog --> Progress[flow_progress]
@@ -528,14 +528,14 @@ WHERE event_type = 'flow_progress';
 
 ## Related Topics
 
-- [Lakeflow Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) - DLT basics
+- [Lakeflow Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) - Lakeflow Declarative Pipelines basics
 - [Expectations](../03-data-transformation-cleansing-quality/03-expectations-data-quality.md) - Data quality
 - [System Tables](01-system-tables.md) - Account-level monitoring
 
 ## Official Documentation
 
-- [DLT Event Logs](https://docs.databricks.com/delta-live-tables/observability.html)
-- [Monitoring DLT Pipelines](https://docs.databricks.com/delta-live-tables/monitoring.html)
+- [Lakeflow Declarative Pipelines Event Logs](https://docs.databricks.com/delta-live-tables/observability.html)
+- [Monitoring Lakeflow Declarative Pipelines Pipelines](https://docs.databricks.com/delta-live-tables/monitoring.html)
 - [Event Log Schema](https://docs.databricks.com/delta-live-tables/observability.html#event-log-schema)
 
 ---

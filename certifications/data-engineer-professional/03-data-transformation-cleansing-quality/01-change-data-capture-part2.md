@@ -430,7 +430,7 @@ CREATE TABLE cdc_monitoring.metrics (
 2. **_change_type values**: `insert`, `update_preimage`, `update_postimage`, `delete`
 3. **table_changes()** function reads CDF in SQL
 4. **readChangeFeed** option reads CDF in DataFrame API
-5. **APPLY CHANGES** is the DLT/Lakeflow declarative CDC API
+5. **APPLY CHANGES** is the Lakeflow Declarative Pipelines/Lakeflow declarative CDC API
 6. **sequence_by** is required in APPLY CHANGES to order events
 7. **SCD Type 1** = overwrite, **SCD Type 2** = history with effective dates
 8. MERGE on CDF-enabled tables **automatically generates** change records
@@ -443,7 +443,7 @@ CREATE TABLE cdc_monitoring.metrics (
 - **CDF must be enabled before changes are written**; it is not retroactive — no history is captured for operations performed before enabling `delta.enableChangeDataFeed`
 - **`_change_type` values**: `insert`, `update_preimage` (before state), `update_postimage` (after state), `delete` — use `update_postimage` for downstream updates, not `preimage`
 - **`table_changes(table, startVersion)`** is the SQL function for reading CDF; the DataFrame API uses `.option("readChangeFeed", "true")` on a streaming or batch read
-- **`APPLY CHANGES`** is the Lakeflow/DLT declarative CDC API; `sequence_by` is required to order events correctly and determine which change wins on conflict
+- **`APPLY CHANGES`** is the Lakeflow/Lakeflow Declarative Pipelines declarative CDC API; `sequence_by` is required to order events correctly and determine which change wins on conflict
 - **Multi-hop CDC** requires CDF enabled at each layer (Bronze, Silver, Gold) so that changes can be propagated as streams between layers
 - **Idempotent CDC processing** requires deduplicating on `(id, _commit_version)` and using MERGE so that reprocessing the same batch produces the same result
 - **Row Tracking** (`delta.enableRowTracking`) adds `_metadata.row_id` and `_metadata.row_commit_version` for stable row-level lineage and audit verification

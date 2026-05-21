@@ -28,6 +28,33 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). 
   - `08-importing-data/01-importing-data-overview.md`
   - `09-data-modeling-with-databricks-sql/01-data-modeling-overview.md`
 
+## [2026.05.21-16] — Topic-file content audit (legacy terminology)
+
+### Changed
+
+- **174 topic files across all 6 certs audited** for legacy product naming inside the numbered topic folders
+- **30 files updated** (~83 lines changed) across DE Pro (24 files), DA (1 file), ML Pro (2 files), GenAI (3 files):
+  - "Delta Live Tables" → "Lakeflow Declarative Pipelines" — body text + bullet lists
+  - Prose "DLT pipeline / framework / event log / managed / decorators" → "Lakeflow Declarative Pipelines …"
+  - "Databricks Workflows" → "Lakeflow Jobs"; "Workflows UI" → "Lakeflow Jobs UI"; "Workflows API" → "Jobs API"
+  - Mermaid diagram labels referring to the DLT product (e.g., `Pipeline[DLT Pipeline]`) → `Lakeflow Declarative Pipeline`
+  - YAML/JSON `description` strings referring to "DLT pipeline" → "Lakeflow Declarative Pipeline"
+  - SQL comments referring to the product → "Lakeflow Declarative Pipelines"
+- **2 GenAI files** with multiple ChatModel mentions (12 + 4) received a top-of-file `> [!note]` deprecation callout explaining that `ChatModel` is deprecated in MLflow 3.0+ and pointing to the current `ResponsesAgent` / `ChatAgent` + `databricks.agents.deploy()` path. Inline mentions retained because they still appear in stems
+
+### Preserved (intentional)
+
+- `@dlt.*` decorators and the `dlt` Python module name (back-compat)
+- `(formerly DLT)` annotations that document the rename
+- Python code comments / docstrings that refer to the *module* (e.g., `# Import DLT module`)
+- File-path conventions like `dlt_notebook.py` (community naming)
+
+### Verification
+
+- Post-refresh audit: **0 Delta Live Tables**, **0 Databricks Workflows**, **0 Workflows UI**, **0 Workflows API** remain in topic-file prose
+- Remaining 9 DLT mentions are all inside Python code comments / docstrings that correctly reference the `dlt` Python module — preserved as-is
+- Repo-wide broken-link scan: 0
+
 ## [2026.05.21-15] — Per-question debrief tables (all 12 mocks)
 
 ### Changed

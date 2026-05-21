@@ -10,7 +10,7 @@ status: published
 
 # Lakeflow Jobs — Part 1
 
-Lakeflow Jobs (Databricks Workflows) provide orchestration capabilities for running notebooks, DLT pipelines, and other tasks as coordinated workflows. This part covers job components, configuration, task dependencies, task values, conditional execution, and for-each loops.
+Lakeflow Jobs (Lakeflow Jobs) provide orchestration capabilities for running notebooks, Lakeflow Declarative Pipelines pipelines, and other tasks as coordinated workflows. This part covers job components, configuration, task dependencies, task values, conditional execution, and for-each loops.
 
 ## Overview
 
@@ -70,12 +70,12 @@ flowchart LR
 
 ![Workflow Task Types](../../../images/databricks-ui/workflows/workflow_task_types.png)
 
-*Task type selector in the Databricks Workflows UI showing available task types (Notebook, Python, dbt, SQL, DLT).*
+*Task type selector in the Lakeflow Jobs UI showing available task types (Notebook, Python, dbt, SQL, Lakeflow Declarative Pipelines).*
 
 | Task Type | Use Case | Configuration |
 | :--- | :--- | :--- |
 | Notebook | Run notebook code | Notebook path, parameters |
-| DLT Pipeline | Run DLT pipeline | Pipeline ID |
+| Lakeflow Declarative Pipelines Pipeline | Run Lakeflow Declarative Pipelines pipeline | Pipeline ID |
 | Python Script | Run Python file | Script path, arguments |
 | SQL | Run SQL statements | SQL warehouse, queries |
 | JAR | Run Java/Scala JAR | JAR path, main class |

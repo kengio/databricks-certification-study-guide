@@ -41,7 +41,7 @@ flowchart TB
 | Unit | Functions, transformations | Fast | pytest, unittest | Test a cleaning function |
 | Integration | Notebook workflows | Medium | Nutter, Databricks jobs | Test bronze-to-silver flow |
 | End-to-End | Full pipelines | Slow | Databricks workflows | Test complete ETL |
-| Data Quality | Data validation | Varies | Great Expectations, DLT | Test data constraints |
+| Data Quality | Data validation | Varies | Great Expectations, Lakeflow Declarative Pipelines | Test data constraints |
 
 ## pytest Fundamentals
 

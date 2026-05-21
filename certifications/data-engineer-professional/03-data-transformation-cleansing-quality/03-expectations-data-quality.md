@@ -9,7 +9,7 @@ status: published
 
 # Expectations and Data Quality
 
-Expectations provide declarative data quality constraints in Lakeflow Pipelines (DLT). They enable data validation, quality monitoring, and enforcement directly within pipeline definitions.
+Expectations provide declarative data quality constraints in Lakeflow Pipelines (Lakeflow Declarative Pipelines). They enable data validation, quality monitoring, and enforcement directly within pipeline definitions.
 
 ## Overview
 
@@ -48,9 +48,9 @@ flowchart TB
     Metrics --> EventLog
 ```
 
-![DLT Data Quality Metrics](../../../images/databricks-ui/dlt/dlt_data_quality_metrics.png)
+![Lakeflow Declarative Pipelines Data Quality Metrics](../../../images/databricks-ui/dlt/dlt_data_quality_metrics.png)
 
-*DLT pipeline graph showing expectation pass, fail, and drop row counts per table.*
+*Lakeflow Declarative Pipelines pipeline graph showing expectation pass, fail, and drop row counts per table.*
 
 ## Expectation Types
 
@@ -594,7 +594,7 @@ CONSTRAINT valid_amount EXPECT (amount IS NOT NULL AND amount > 0)
 
 ## Comparison with Other Quality Tools
 
-| Feature | DLT Expectations | Great Expectations | dbt Tests |
+| Feature | Lakeflow Declarative Pipelines Expectations | Great Expectations | dbt Tests |
 | :--- | :--- | :--- | :--- |
 | Integration | Native | External | External |
 | Execution | Streaming/Batch | Batch | Batch |

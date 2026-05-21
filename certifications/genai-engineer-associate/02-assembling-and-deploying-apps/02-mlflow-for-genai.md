@@ -8,11 +8,14 @@ status: published
 # MLflow for GenAI
 
 MLflow extends its tracking and deployment capabilities to GenAI with three main additions:
-**Tracing** for debugging LLM call chains, **`pyfunc.ChatModel`** as a standard interface for
+**Tracing** for debugging LLM call chains, **`pyfunc.ChatModel *(deprecated in MLflow 3.0+; use `ResponsesAgent` / `ChatAgent`)*`** as a standard interface for
 custom agents, and **`agents.deploy()`** for deploying to Model Serving with an integrated
 Review App.
 
 ## Overview Diagram
+
+> [!note]
+> **MLflow `ChatModel` is deprecated in MLflow 3.0+.** The current Mosaic AI Agent Framework path is to subclass `mlflow.pyfunc.ResponsesAgent` (or `ChatAgent`) and deploy via `databricks.agents.deploy(...)`. References to `ChatModel` below are retained because they are still seen in the documentation and may appear in exam stems; treat them as legacy.
 
 ```mermaid
 flowchart TB

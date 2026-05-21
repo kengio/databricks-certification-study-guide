@@ -45,7 +45,7 @@ flowchart LR
 ## Related Resources
 
 - [Delta Lake cheat sheet (shared)](../../../shared/cheat-sheets/delta-lake-commands.md)
-- [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
+- [Lakeflow Declarative Pipelines / Lakeflow Declarative Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
 
 ---
 

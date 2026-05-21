@@ -10,7 +10,7 @@ status: published
 
 # Lakeflow Jobs — Part 2
 
-This part covers triggers and scheduling, compute configuration, notifications, job parameters, error handling, monitoring, common issues, and exam tips for Lakeflow Jobs (Databricks Workflows).
+This part covers triggers and scheduling, compute configuration, notifications, job parameters, error handling, monitoring, common issues, and exam tips for Lakeflow Jobs (Lakeflow Jobs).
 
 > For job components, configuration, task dependencies, task values, and for-each loops, see [Part 1](./07-lakeflow-jobs-part1.md).
 
@@ -395,13 +395,13 @@ tasks:
 
 ## Related Topics
 
-- [Declarative Pipelines](./06-declarative-pipelines.md) - DLT pipeline task type
+- [Declarative Pipelines](./06-declarative-pipelines.md) - Lakeflow Declarative Pipelines pipeline task type
 - [Asset Bundles](../06-debugging-and-deploying/01-asset-bundles-part1.md) - Job deployment via DABs
 - [CI/CD Integration](../06-debugging-and-deploying/02-cicd-integration-part1.md) - Automated deployment
 
 ## Official Documentation
 
-- [Databricks Workflows](https://docs.databricks.com/workflows/index.html)
+- [Lakeflow Jobs](https://docs.databricks.com/workflows/index.html)
 - [Jobs API](https://docs.databricks.com/api/workspace/jobs)
 - [Task Dependencies](https://docs.databricks.com/workflows/jobs/how-to/use-task-dependencies.html)
 - [Task Values](https://docs.databricks.com/workflows/jobs/how-to/share-task-values.html)

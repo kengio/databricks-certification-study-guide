@@ -214,7 +214,7 @@ my-template/
     },
     "include_dlt": {
       "type": "boolean",
-      "description": "Include DLT pipeline",
+      "description": "Include Lakeflow Declarative Pipeline",
       "default": false
     }
   }
@@ -284,7 +284,7 @@ spark.sql(f"USE CATALOG {catalog}")
 ## Use Cases
 
 - **Environment Promotion**: Defining `dev`, `staging`, and `prod` targets in `databricks.yml` to deploy the exact same pipeline configuration across different workspaces with environment-specific variables.
-- **Infrastructure as Code**: Managing job schedules, cluster definitions, and DLT pipeline configurations alongside the Python code in a single version-controlled repository.
+- **Infrastructure as Code**: Managing job schedules, cluster definitions, and Lakeflow Declarative Pipelines pipeline configurations alongside the Python code in a single version-controlled repository.
 
 ## Common Issues & Errors
 
