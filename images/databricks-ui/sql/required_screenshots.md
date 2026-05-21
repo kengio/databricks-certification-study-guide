@@ -1,12 +1,21 @@
-# Required Screenshots: Databricks SQL
+# Screenshots: Databricks SQL
 
-This folder is intended to hold screenshots related to Databricks SQL, Serverless SQL Warehouses, and Dashboarding.
+Screenshots for Databricks SQL — SQL Warehouses (serverless + classic), SQL Editor, Dashboards, and SQL Alerts.
 
-Please add the following screenshots and name them appropriately:
+## Inventory
 
-- `sql_warehouse_creation.png`: The UI for creating a new SQL Warehouse, highlighting the Serverless toggle.
-- `sql_editor_query_profile.png`: The SQL Editor view showing an executed query, with the Query Profile pane open on the side.
-- `sql_dashboard_parameters.png`: A Databricks dashboard showing interactive parameter widgets.
-- `sql_alerts_configuration.png`: The configuration screen for setting up a SQL Alert based on a query threshold.
+| File | Purpose | Referenced from |
+| :--- | :--- | :--- |
+| `sql_warehouse_creation.png` | SQL Warehouse creation UI highlighting the Serverless toggle | `certifications/data-engineer-professional/02-cost-and-performance-optimization/09-databricks-compute.md` |
+| `sql_editor_query_profile.png` | SQL Editor with the Query Profile pane open on an executed query | `certifications/data-engineer-professional/04-monitoring-and-alerting/03-query-profiler.md` |
+| `sql_dashboard_parameters.png` | Dashboard showing interactive parameter widgets | `certifications/data-engineer-professional/01-developing-code-for-data-processing/08-workspace-and-notebooks.md` |
+| `sql_alerts_configuration.png` | SQL Alert configuration — threshold + notification | `certifications/data-engineer-professional/04-monitoring-and-alerting/02-lakeflow-event-logs.md` |
 
-Once these images are added, they can be referenced in the corresponding `05-monitoring-logging` and `02-databricks-tooling` markdown files.
+## Contributing new screenshots
+
+When adding new screenshots:
+
+- Keep them ≤ 800 px wide (CLAUDE.md convention)
+- Use `snake_case.png` matching this folder's existing convention
+- Reference them from the appropriate topic file with `![Alt text](../../../images/databricks-ui/sql/<file>.png)` and an italic caption
+- Update the inventory table above
