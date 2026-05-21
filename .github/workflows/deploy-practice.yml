@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'practice/**'
+      - 'certifications/**/practice-questions/**'
+      - 'certifications/**/mock-exam/**'
+      - 'certifications/**/mock-exam-2/**'
       - '.github/workflows/deploy-practice.yml'
   workflow_dispatch:
 
@@ -28,6 +31,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Rebuild question banks from current cert markdown
+        # Source of truth is certifications/**/{practice-questions,mock-exam,mock-exam-2}/*.md.
+        # We regenerate practice/data/*.json on every deploy so the live site
+        # always reflects the latest committed cert content, even if the
+        # author forgot to re-run build.py locally before pushing.
+        # build.py uses Python 3 stdlib only — no setup-python step needed
+        # because ubuntu-latest ships with python3 pre-installed.
+        run: python3 practice/build.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

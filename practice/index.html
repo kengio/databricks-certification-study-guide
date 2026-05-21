@@ -5,113 +5,291 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Databricks Certification Practice</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=3">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css?v=35">
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <svg class="brand-icon" width="40" height="40" viewBox="0 0 32 32"
-           aria-hidden="true" style="width:40px;height:40px;flex-shrink:0">
-        <rect x="2" y="2" width="28" height="28" rx="6" fill="#FF3621"/>
-        <path d="M9 16.5 L14 21.5 L23 11.5" stroke="#ffffff" stroke-width="3.2" fill="none"
-              stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <div class="brand-text">
-        <h1>Databricks Certification Practice</h1>
-        <p class="subtitle">Adaptive practice questions with localStorage progress tracking. <a href="https://github.com/kengio/databricks-certification-study-guide">View on GitHub</a></p>
-      </div>
-    </div>
-    <div class="brand-actions">
-      <button type="button" id="btn-theme" title="Toggle theme (auto / light / dark)" aria-label="Toggle theme">
-        <span id="btn-theme-icon" aria-hidden="true">🖥️</span>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============== STICKY TOP BAR ============== -->
+  <header class="masthead" id="masthead">
+    <div class="masthead-inner">
+      <button type="button" class="brand-cluster" id="brand-link"
+              title="Back to all certifications"
+              aria-label="Back to all certifications">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40">
+            <rect x="1" y="1" width="38" height="38" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11 21 L17 27 L29 13" stroke="currentColor" stroke-width="2" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-title">DBX Practice</span>
       </button>
+
+      <!-- Quiz meta strip: only visible while a quiz is active.
+           The cert name doubles as a "back to certifications" link
+           with a confirm prompt. -->
+      <div class="quiz-meta-strip" id="quiz-meta-strip" hidden>
+        <button type="button" id="quiz-cert" class="cert-link"
+                title="Back to certifications"
+                aria-label="Back to certifications"></button>
+        <span class="rh-sep">/</span>
+        <span id="quiz-domain"></span>
+      </div>
+
+      <div class="masthead-actions">
+        <span id="quiz-clock" title="Current time" aria-label="Current time"></span>
+        <button type="button" id="btn-theme"
+                title="Cycle theme — auto, light, dark"
+                aria-label="Cycle theme">
+          <span id="btn-theme-label">Auto</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main id="app">
+  <!-- ============== MAIN SCROLL AREA ============== -->
+  <main id="main">
     <section id="setup">
-      <h2>Pick a question bank</h2>
-      <p>Loading…</p>
+      <p class="loading">Loading question banks…</p>
     </section>
 
     <section id="quiz" hidden>
-      <div class="quiz-header">
-        <div class="quiz-meta">
-          <span id="quiz-cert"></span>
-          <span class="separator">·</span>
-          <span id="quiz-counter"></span>
-          <span class="separator">·</span>
-          <span id="quiz-domain"></span>
-          <span class="separator">·</span>
-          <span id="quiz-difficulty" class="difficulty"></span>
-        </div>
-        <div class="quiz-controls">
-          <button type="button" id="btn-stats">Stats</button>
-          <button type="button" id="btn-settings">Settings</button>
-          <button type="button" id="btn-reset-top" class="danger" title="Reset all progress for this cert bank">Reset</button>
-          <button type="button" id="btn-exit">Switch bank</button>
-        </div>
+      <div class="question-header">
+        <span id="quiz-counter" class="q-counter"></span>
+        <span class="rh-sep">·</span>
+        <span id="quiz-difficulty" class="difficulty"></span>
       </div>
-
-      <div class="question-card">
+      <article class="question-card">
+        <span id="quiz-watermark" class="q-watermark" aria-hidden="true"></span>
         <p id="quiz-question"></p>
-        <fieldset id="quiz-choices"></fieldset>
-        <div class="quiz-actions">
-          <button type="button" id="btn-submit" disabled>Submit answer</button>
-          <button type="button" id="btn-next" hidden>Next question →</button>
-        </div>
-        <div id="quiz-feedback" hidden></div>
-      </div>
-
-      <div class="session-bar">
-        <span id="session-stats">Session: 0 / 0</span>
-        <span id="bank-stats"></span>
-      </div>
+        <fieldset id="quiz-choices" aria-label="Answer choices"></fieldset>
+        <div id="quiz-feedback" hidden role="status" aria-live="polite"></div>
+      </article>
     </section>
 
     <section id="stats" hidden>
+      <button type="button" id="btn-stats-back" class="back-button">← Back to quiz</button>
       <h2>Stats</h2>
       <div id="stats-content"></div>
       <div class="stats-actions">
-        <button type="button" id="btn-stats-back">← Back to quiz</button>
-        <button type="button" id="btn-export">Export progress (JSON)</button>
-        <button type="button" id="btn-reset" class="danger">Reset history (this bank)</button>
+        <button type="button" id="btn-export" class="ghost">Export progress</button>
+        <button type="button" id="btn-reset" class="ghost danger">Reset history</button>
       </div>
     </section>
 
+    <section id="summary" hidden>
+      <!-- Populated by renderSummary() in app.js. Shown when the user has
+           answered every question in the current bank (or timer expired). -->
+    </section>
+
     <section id="settings" hidden>
+      <button type="button" id="btn-settings-cancel" class="back-button">← Back to quiz</button>
       <h2>Settings</h2>
-      <label>Mode
-        <select id="setting-mode">
-          <option value="adaptive">Adaptive (default) — weight toward never-seen + recently-wrong</option>
-          <option value="random">Random — uniform sampling, no history weighting</option>
-          <option value="sequential">Sequential — go through every question in order</option>
-        </select>
-      </label>
-      <label>Domain filter
-        <select id="setting-domain">
-          <option value="">All domains</option>
-        </select>
-      </label>
-      <label>Difficulty filter
-        <select id="setting-difficulty">
-          <option value="">All difficulties</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-      </label>
+      <p class="section-intro">Customize how you practice — selection order, filters, and exam timing.</p>
+
+      <div class="settings-panel">
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4 id="lbl-setting-mode">Selection mode</h4>
+            <p id="lbl-setting-mode-desc">Adaptive surfaces questions you've missed; sequential walks the bank in order.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-mode"
+                    aria-labelledby="lbl-setting-mode"
+                    aria-describedby="lbl-setting-mode-desc">
+              <option value="adaptive">Adaptive — weight toward gaps</option>
+              <option value="random">Random — uniform sampling</option>
+              <option value="sequential">Sequential — in source order</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4 id="lbl-setting-domain">Filter by domain</h4>
+            <p id="lbl-setting-domain-desc">Drill a specific exam domain instead of the whole bank.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-domain"
+                    aria-labelledby="lbl-setting-domain"
+                    aria-describedby="lbl-setting-domain-desc">
+              <option value="">All domains</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4 id="lbl-setting-difficulty">Filter by difficulty</h4>
+            <p id="lbl-setting-difficulty-desc">Restrict to easy, medium, or hard questions only.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-difficulty"
+                    aria-labelledby="lbl-setting-difficulty"
+                    aria-describedby="lbl-setting-difficulty-desc">
+              <option value="">All difficulties</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-meta">
+            <h4 id="lbl-setting-timer">Exam timer</h4>
+            <p id="lbl-setting-timer-desc">Simulate the real exam by setting a countdown timer. Timer resets when you switch banks.</p>
+          </div>
+          <div class="settings-field">
+            <select id="setting-timer"
+                    aria-labelledby="lbl-setting-timer"
+                    aria-describedby="lbl-setting-timer-desc">
+              <option value="0">None — practice mode</option>
+              <option value="30">30 minutes</option>
+              <option value="60">60 minutes</option>
+              <option value="90">90 minutes — Associate exam length</option>
+              <option value="120">120 minutes — Professional exam length</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="settings-actions">
-        <button type="button" id="btn-settings-apply">Apply</button>
-        <button type="button" id="btn-settings-cancel">Cancel</button>
+        <button type="button" id="btn-settings-cancel-2" class="ghost">Cancel</button>
+        <button type="button" id="btn-settings-apply" class="primary">Apply settings</button>
       </div>
     </section>
   </main>
 
-  <footer>
-    <p>This is study material, not the official Databricks exam. Question banks are generated from the markdown practice-question files in this repo. <a href="./README.md">Read the docs</a> · <a href="./format.md">Format spec</a></p>
+  <!-- ============== PAUSE OVERLAY ==============
+       Shown when the user pauses the exam timer. Blurs the background
+       so the page isn't readable while the user steps away, and offers
+       a Resume button + Esc/Enter/Space keyboard return path. -->
+  <div class="pause-overlay" id="pause-overlay" hidden
+       role="alertdialog" aria-modal="true" aria-labelledby="pause-title">
+    <div class="pause-card">
+      <p class="pause-eyebrow">Exam on hold</p>
+      <h2 id="pause-title" class="pause-title">Paused</h2>
+      <p class="pause-message">
+        Your timer is frozen and the questions are blurred. Take your time —
+        nothing counts against your effort while you're away.
+      </p>
+      <button type="button" id="btn-resume" class="primary">Resume exam</button>
+      <p class="pause-hint">
+        <kbd>Esc</kbd> / <kbd>Enter</kbd> / <kbd>Space</kbd> · or tap anywhere
+      </p>
+    </div>
+  </div>
+
+  <!-- ============== CONFIRM MODAL (theme-aware, focus-trapped) ============== -->
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <div class="modal" role="alertdialog" aria-modal="true"
+         aria-labelledby="modal-title" aria-describedby="modal-message"
+         tabindex="-1">
+      <h3 id="modal-title" class="modal-title">Confirm</h3>
+      <p id="modal-message" class="modal-message"></p>
+      <div class="modal-actions">
+        <button type="button" id="modal-cancel" class="ghost">Cancel</button>
+        <button type="button" id="modal-confirm" class="primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== STICKY BOTTOM ACTION BAR (quiz mode only) ==============
+       Row 1 is a 3-column grid:
+         [Timer (left)]   [kbd-hint (center)]   [Next/Skip/Submit (right)]
+       Row 2 spans all columns:
+         [session · bank stats · Stats Settings Reset Switch bank]
+
+       The kbd-hint sits in the centre column (independent of timer/buttons)
+       so it stays optically centred regardless of timer state. On mobile
+       the centre column is hidden entirely. -->
+  <div class="actionbar" id="actionbar" hidden>
+    <div class="actionbar-inner">
+      <button type="button" id="quiz-timer" class="actionbar-timer" hidden
+              title="Click to pause / resume the exam timer (P)"
+              aria-label="Exam timer — click to pause or resume">
+        <span class="timer-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="9" r="5.25"/>
+            <path d="M8 6.5V9l1.6 1.2"/>
+            <path d="M6.25 2h3.5M8 2v1.5"/>
+          </svg>
+        </span>
+        <span class="timer-value">00:00</span>
+        <span class="timer-pause-glyph" aria-hidden="true">
+          <svg viewBox="0 0 12 12" width="10" height="10" fill="currentColor">
+            <rect x="2.5" y="2" width="2.5" height="8" rx="0.5"/>
+            <rect x="7" y="2" width="2.5" height="8" rx="0.5"/>
+          </svg>
+        </span>
+        <span class="timer-resume-glyph" aria-hidden="true">
+          <svg viewBox="0 0 12 12" width="10" height="10" fill="currentColor">
+            <path d="M3 2 L10 6 L3 10 Z"/>
+          </svg>
+        </span>
+      </button>
+      <span class="kbd-hint" aria-hidden="true" id="kbd-hint-pre">
+        <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> or <kbd>↑</kbd><kbd>↓</kbd> select &nbsp;
+        <kbd>↵</kbd> / <kbd>Space</kbd> submit &nbsp;
+        <kbd>S</kbd> skip
+      </span>
+      <span class="kbd-hint" aria-hidden="true" id="kbd-hint-post" hidden>
+        <kbd>↵</kbd> / <kbd>Space</kbd> / <kbd>N</kbd> / <kbd>→</kbd> next question
+      </span>
+      <div class="actionbar-left">
+        <!-- Source order is "Next, Skip, Submit" so the rightmost visible
+             button is always the primary action: Submit before submit,
+             Next after. -->
+        <button type="button" id="btn-next" class="primary" hidden>Next question</button>
+        <button type="button" id="btn-skip" class="ghost">Skip</button>
+        <button type="button" id="btn-submit" class="primary" disabled>Submit</button>
+      </div>
+      <div class="actionbar-right">
+        <span id="session-stats">0/0</span>
+        <span class="rh-sep">·</span>
+        <span id="bank-stats"></span>
+        <span class="actionbar-divider"></span>
+        <button type="button" id="btn-stats" class="link">Stats</button>
+        <button type="button" id="btn-settings" class="link">Settings</button>
+        <button type="button" id="btn-reset-top" class="link danger" title="Reset progress for this bank">Reset</button>
+        <button type="button" id="btn-exit" class="link">Switch bank</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p class="footer-tag">A study aid, not the official exam.</p>
+    <p class="footer-meta">
+      <a href="https://github.com/kengio/databricks-certification-study-guide">Source on GitHub</a>
+      <span class="rh-sep">·</span>
+      <span class="colophon">MIT</span>
+      <span class="rh-sep">·</span>
+      © 2026 <a href="https://github.com/kengio">@kengio</a>
+    </p>
+    <p class="footer-colophon">
+      Set in <span class="colophon-mark">Geist</span> &amp;
+      <span class="colophon-mark">Geist Mono</span>
+      &nbsp;·&nbsp; No tracking
+      &nbsp;·&nbsp; Progress stays in your browser
+    </p>
   </footer>
 
-  <script src="app.js?v=3"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
+          data-manual crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js" crossorigin="anonymous"></script>
+  <script src="app.js?v=35"></script>
 </body>
 </html>

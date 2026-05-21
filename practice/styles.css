@@ -1,432 +1,2520 @@
-/* Theme variables.
- * Default = light. `[data-theme="dark"]` forces dark.
- * `[data-theme="auto"]` (default if no manual override) uses prefers-color-scheme. */
+/* ============================================================
+   Databricks Certification Practice — design system
+   Typography:  Geist (everything) · Geist Mono (code + labels)
+   Palette:     warm neutral · vivid coral accent · per-cert gradients
+   ============================================================ */
 
 :root {
-  --color-bg: #fafafa;
-  --color-fg: #1a1a1a;
-  --color-muted: #666;
-  --color-border: #d0d0d0;
-  --color-accent: #FF3621;
-  --color-correct: #1f8b4c;
-  --color-incorrect: #c52b2b;
-  --color-correct-bg: #e8f6ed;
-  --color-incorrect-bg: #fbeaea;
-  --color-card-bg: #ffffff;
-  --color-link: #0066cc;
-  --color-medium-bg: #fff2cc;
-  --color-medium-fg: #8a6a00;
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
-  --radius: 6px;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Light theme — WCAG AAA contrast tokens (≥7:1 normal text, ≥4.5:1 large).
+     --muted bumped from #71717A (4.45:1, AA Large only) to #52525B (7.1:1
+     AAA pass). --positive / --negative likewise darkened for small-text
+     contexts. --accent stays vivid for graphic/large-display use only —
+     small-text usages of accent route through --accent-text. */
+  --bg:            #FAFAF7;
+  --surface:       #FFFFFF;
+  --surface-soft:  #F4F3EF;
+  --fg:            #18181B;            /* 17:1 on bg  — AAA */
+  --fg-soft:       #3F3F46;            /* 10:1 on bg  — AAA */
+  --muted:         #52525B;            /* 7.1:1 on bg — AAA */
+  --hairline:      #E5E5E2;
+  --hairline-soft: #EFEFED;
+  --accent:        #FF4F2C;            /* graphic only — 3.8:1 on bg */
+  --accent-text:   #9A3412;            /* 7.1:1 on bg — for accent-coloured small text */
+  --accent-soft:   rgba(255,79,44,0.08);
+  --selected:      #1D4ED8;            /* 8.6:1 on bg — was #2563EB at 5.7:1 */
+  --selected-soft: rgba(29,78,216,0.08);
+  --positive:      #14532D;            /* 9.0:1 on bg — was #15803D at 4.6:1 */
+  --positive-soft: #DCFCE7;
+  --negative:      #991B1B;            /* 8.2:1 on bg — was #B91C1C at 6.4:1 */
+  --negative-soft: #FBEAEA;
+  --warn:          #92400E;            /* 7.5:1 on bg — new token for AAA warn text */
+  --warn-soft:     rgba(217,119,6,0.10);
+  --code-bg:       #F1F1ED;
+
+  --shadow-1: 0 1px 0 var(--hairline);
+  --shadow-2: 0 1px 0 var(--hairline), 0 8px 24px -12px rgba(24,24,27,0.08);
+  --shadow-3: 0 1px 0 var(--hairline), 0 16px 40px -16px rgba(24,24,27,0.16);
+
+  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius:    8px;
+  --radius-lg: 12px;
+  --content-w: 760px;
+
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* System dark mode: only applied when theme = auto (no manual override) */
 @media (prefers-color-scheme: dark) {
   :root[data-theme="auto"], :root:not([data-theme]) {
-    --color-bg: #161616;
-    --color-fg: #f0f0f0;
-    --color-muted: #aaa;
-    --color-border: #333;
-    --color-card-bg: #1f1f1f;
-    --color-correct-bg: #16341e;
-    --color-incorrect-bg: #3a1717;
-    --color-link: #5cb3ff;
-    --color-medium-bg: #3a3105;
-    --color-medium-fg: #e7c83e;
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.5);
+    --bg:            #0A0A0C;
+    --surface:       #131316;
+    --surface-soft:  #1B1B1F;
+    --fg:            #FAFAFA;            /* 18:1 on bg — AAA */
+    --fg-soft:       #D4D4D8;            /* 13:1 on bg — AAA */
+    --muted:         #A1A1AA;            /* 7.4:1 on bg — AAA (was #8B8B95 at 5.8:1) */
+    --hairline:      #26262C;
+    --hairline-soft: #1D1D22;
+    --accent:        #FF7A5C;            /* graphic — was #FF6240 */
+    --accent-text:   #FFA88B;            /* 7.2:1 on bg — for accent text */
+    --accent-soft:   rgba(255,122,92,0.14);
+    --selected:      #93C5FD;            /* 10.4:1 on bg — AAA */
+    --selected-soft: rgba(147,197,253,0.14);
+    --positive:      #6EE7B7;            /* 11.2:1 on bg — AAA */
+    --positive-soft: rgba(110,231,183,0.12);
+    --negative:      #FCA5A5;            /* 9.7:1 on bg — AAA */
+    --negative-soft: rgba(252,165,165,0.12);
+    --warn:          #FBBF24;            /* 11.5:1 on bg — AAA */
+    --warn-soft:     rgba(251,191,36,0.14);
+    --code-bg:       #1A1A1F;
+
+    --shadow-2: 0 1px 0 var(--hairline), 0 12px 36px -16px rgba(0,0,0,0.6);
+    --shadow-3: 0 1px 0 var(--hairline), 0 20px 48px -18px rgba(0,0,0,0.8);
   }
 }
 
-/* Manual dark override: works regardless of system preference */
 :root[data-theme="dark"] {
-  --color-bg: #161616;
-  --color-fg: #f0f0f0;
-  --color-muted: #aaa;
-  --color-border: #333;
-  --color-card-bg: #1f1f1f;
-  --color-correct-bg: #16341e;
-  --color-incorrect-bg: #3a1717;
-  --color-link: #5cb3ff;
-  --color-medium-bg: #3a3105;
-  --color-medium-fg: #e7c83e;
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.5);
+  --bg:            #0A0A0C;
+  --surface:       #131316;
+  --surface-soft:  #1B1B1F;
+  --fg:            #FAFAFA;
+  --fg-soft:       #D4D4D8;
+  --muted:         #A1A1AA;            /* 7.4:1 on bg — AAA */
+  --hairline:      #26262C;
+  --hairline-soft: #1D1D22;
+  --accent:        #FF7A5C;
+  --accent-text:   #FFA88B;            /* 7.2:1 on bg — AAA */
+  --accent-soft:   rgba(255,122,92,0.14);
+  --selected:      #93C5FD;            /* 10.4:1 on bg — AAA */
+  --selected-soft: rgba(147,197,253,0.14);
+  --positive:      #6EE7B7;            /* 11.2:1 on bg — AAA */
+  --positive-soft: rgba(110,231,183,0.12);
+  --negative:      #FCA5A5;            /* 9.7:1 on bg — AAA */
+  --negative-soft: rgba(252,165,165,0.12);
+  --warn:          #FBBF24;            /* 11.5:1 on bg — AAA */
+  --warn-soft:     rgba(251,191,36,0.14);
+  --code-bg:       #1A1A1F;
+
+  --shadow-2: 0 1px 0 var(--hairline), 0 12px 36px -16px rgba(0,0,0,0.6);
+  --shadow-3: 0 1px 0 var(--hairline), 0 20px 48px -18px rgba(0,0,0,0.8);
 }
 
-/* Manual light override: defaults already light, but explicit for completeness
-   so the toggle reaches a stable third state regardless of system preference */
 :root[data-theme="light"] {
-  --color-bg: #fafafa;
-  --color-fg: #1a1a1a;
-  --color-muted: #666;
-  --color-border: #d0d0d0;
-  --color-card-bg: #ffffff;
-  --color-correct-bg: #e8f6ed;
-  --color-incorrect-bg: #fbeaea;
-  --color-link: #0066cc;
-  --color-medium-bg: #fff2cc;
-  --color-medium-fg: #8a6a00;
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
+  --bg:            #FAFAF7;
+  --surface:       #FFFFFF;
+  --surface-soft:  #F4F3EF;
+  --fg:            #18181B;
+  --fg-soft:       #3F3F46;
+  --muted:         #52525B;            /* 7.1:1 on bg — AAA */
+  --hairline:      #E5E5E2;
+  --hairline-soft: #EFEFED;
+  --accent:        #FF4F2C;
+  --accent-text:   #9A3412;            /* 7.1:1 on bg — AAA */
+  --accent-soft:   rgba(255,79,44,0.08);
+  --selected:      #1D4ED8;            /* 8.6:1 on bg — AAA */
+  --selected-soft: rgba(29,78,216,0.08);
+  --positive:      #14532D;            /* 9.0:1 on bg — AAA */
+  --positive-soft: #DCFCE7;
+  --negative:      #991B1B;            /* 8.2:1 on bg — AAA */
+  --negative-soft: #FBEAEA;
+  --warn:          #92400E;            /* 7.5:1 on bg — AAA */
+  --warn-soft:     rgba(217,119,6,0.10);
+  --code-bg:       #F1F1ED;
 }
+
+/* ---------- Base ---------- */
 
 * { box-sizing: border-box; }
 
+/* The HTML `hidden` attribute must always win, even against button.primary
+   { display: inline-flex } which has higher specificity than the built-in
+   `[hidden] { display: none }` user-agent rule. Without this, btn-next
+   stays visually clickable before the user submits. */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
-  font-family: var(--font-sans);
-  background: var(--color-bg);
-  color: var(--color-fg);
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 16px;
   line-height: 1.55;
+  letter-spacing: -0.005em;
+  /* Soft warm glow at the top of the page — keeps the bg from reading
+     as a flat single tone. Layered above the solid --bg so per-theme
+     swapping still works. background-attachment: fixed keeps the glow
+     anchored to the viewport while content scrolls beneath. */
+  background:
+    radial-gradient(ellipse 90% 50% at 50% -10%,
+      color-mix(in srgb, var(--accent) 6%, transparent),
+      transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--fg);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--color-border);
+/* Improve line balance on big display text — keeps headings from
+   leaving a one-word orphan on the last line. Supported in Chrome,
+   Safari, Firefox; gracefully ignored elsewhere. */
+h2, .cert-card strong, .bank-card strong, .modal-title,
+#quiz-feedback h4, .lead {
+  text-wrap: balance;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  padding: 0.5rem 1rem;
+  background: var(--fg);
+  color: var(--bg);
+  font: 500 0.875rem var(--sans);
+  border-radius: 0 0 var(--radius) 0;
+}
+.skip-link:focus { left: 0; z-index: 100; }
+
+a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--hairline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s var(--ease);
+}
+a:hover { text-decoration-color: var(--accent); }
+
+/* Drop the paper-grain — it doesn't match the modern aesthetic */
+.paper-grain { display: none; }
+
+/* ---------- Sticky top masthead ---------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.masthead-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0.65rem 1.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
+  min-height: 52px;
 }
 
-footer {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--color-border);
-  font-size: 0.85em;
-  color: var(--color-muted);
-  margin-top: 2rem;
-}
-
-.brand {
-  display: flex;
+/* Brand cluster doubles as "back to all certifications" link. Hover
+   tints the title and rotates the mark; confirm dialog handled in JS. */
+button.brand-cluster {
+  display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
-  min-width: 0;
-}
-
-.brand-icon {
+  gap: 0.6rem;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+button.brand-cluster:hover {
+  background: var(--surface-soft);
+  border-color: var(--hairline);
+}
+button.brand-cluster:hover .brand-mark { transform: rotate(-8deg) scale(1.08); }
+button.brand-cluster:hover .brand-title { color: var(--accent-text); }
+/* Custom focus indicator: an OUTLINE here would extend below the
+   masthead boundary and get clipped by the next section's background
+   (sticky masthead has its own stacking context + border-bottom). Using
+   the existing transparent border slot keeps the indicator inside the
+   button's painted area, so nothing ever gets cut off. */
+button.brand-cluster:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface-soft);
+}
+button.brand-cluster:focus-visible .brand-title { color: var(--accent); }
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: var(--accent);
+  transition: transform 0.2s var(--ease);
+}
+.brand-mark svg { width: 22px; height: 22px; display: block; }
+.brand-title { transition: color 0.15s; }
+
+.brand-title {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  white-space: nowrap;
 }
 
-.brand-text { min-width: 0; }
-
-.brand h1 {
-  margin: 0 0 0.15rem 0;
-  font-size: 1.35rem;
-  line-height: 1.2;
+.quiz-meta-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  padding-left: 1rem;
+  border-left: 1px solid var(--hairline);
+  margin-left: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-
-.brand .subtitle {
-  margin: 0;
-  font-size: 0.85em;
-  color: var(--color-muted);
+.quiz-meta-strip[hidden] { display: none; }
+.quiz-meta-strip #quiz-cert,
+.quiz-meta-strip .cert-link {
+  color: var(--fg);
+  font-weight: 600;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  transition: color 0.15s;
 }
+.quiz-meta-strip .cert-link:hover {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+/* Same reasoning as button.brand-cluster:focus-visible above —
+   keep the focus indicator inside the element so it can't be clipped
+   by the sticky masthead's boundary. */
+.quiz-meta-strip .cert-link:focus-visible {
+  outline: none;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.quiz-meta-strip #quiz-domain { color: var(--fg-soft); }
+.quiz-meta-strip .rh-sep { color: var(--hairline); padding: 0 0.15rem; }
 
-.brand-actions {
-  display: flex;
+.masthead-actions {
+  display: inline-flex;
   gap: 0.5rem;
   flex-shrink: 0;
+  margin-left: auto;
+  align-items: center;
+}
+
+/* Wall clock in masthead — minimal, ambient. No pill, no border;
+   just plain mono text in a muted tone so it stays clearly secondary
+   to the timer (which lives in the action bar). */
+#quiz-clock {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding-right: 0.25rem;
+}
+
+/* Exam timer in the masthead quiz-meta-strip — lives RIGHT AFTER the
+   question counter so "Q6 this session · 22:27 remaining" reads as a
+   single line of session state. Subtle pill with monospace value;
+   warning state pulses accent-coloured, expired locks negative-red. */
+/* Exam timer — large pill in the action bar, far right. Designed to
+   be clearly visible during a timed practice. */
+.actionbar-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem 0.5rem 0.75rem;
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.actionbar-timer .timer-icon {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.actionbar-timer .timer-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: 0;
+}
+.actionbar-timer.warning {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+.actionbar-timer.warning .timer-icon,
+.actionbar-timer.warning .timer-value { color: var(--accent-text); }
+.actionbar-timer.expired {
+  border-color: var(--negative);
+  background: var(--negative-soft);
+  animation: none;
+}
+.actionbar-timer.expired .timer-icon,
+.actionbar-timer.expired .timer-value { color: var(--negative); }
+
+/* Timer pill is a button that toggles pause. Show the appropriate
+   pause/play glyph; hide both when the timer is in passive states. */
+button.actionbar-timer { cursor: pointer; }
+button.actionbar-timer:disabled { cursor: default; }
+.actionbar-timer .timer-pause-glyph,
+.actionbar-timer .timer-resume-glyph {
+  display: none;
+  color: var(--muted);
+  margin-left: 0.1rem;
+}
+@media (hover: hover) {
+  /* On hover, surface the pause glyph as an affordance */
+  button.actionbar-timer:not(.expired):not(.paused):hover .timer-pause-glyph { display: inline-flex; }
+  button.actionbar-timer:not(.expired):not(.paused):hover { border-color: var(--fg-soft); }
+}
+@media (hover: none) {
+  /* Touch devices have no hover state — surface the pause glyph faded so
+     mobile users can discover the timer is interactive without tapping
+     blind. Full opacity on press feedback. */
+  button.actionbar-timer:not(.expired):not(.paused) .timer-pause-glyph {
+    display: inline-flex;
+    opacity: 0.45;
+  }
+  button.actionbar-timer:not(.expired):not(.paused):active .timer-pause-glyph { opacity: 1; }
+}
+button.actionbar-timer.paused {
+  border-color: var(--fg-soft);
+  background: var(--surface-soft);
+}
+button.actionbar-timer.paused .timer-icon,
+button.actionbar-timer.paused .timer-value { color: var(--fg-soft); }
+button.actionbar-timer.paused .timer-resume-glyph { display: inline-flex; color: var(--fg-soft); }
+button.actionbar-timer.paused .timer-pause-glyph { display: none; }
+button.actionbar-timer:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+@keyframes timer-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+@media (max-width: 720px) {
+  #quiz-clock { display: none; }  /* save room on mobile */
 }
 
 #btn-theme {
-  font-size: 1.15rem;
-  padding: 0.3rem 0.55rem;
-  line-height: 1;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem 0.4rem 0.7rem;
+  background: var(--surface);
+  color: var(--fg-soft);
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+}
+#btn-theme::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+#btn-theme:hover {
+  color: var(--fg);
+  border-color: var(--fg-soft);
+}
+#btn-theme:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--fg);
 }
 
-@media (max-width: 600px) {
-  header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-  .brand h1 { font-size: 1.15rem; }
-  .brand .subtitle { font-size: 0.8em; }
+@media (max-width: 720px) {
+  .masthead-inner { padding: 0.55rem 1rem; gap: 0.75rem; }
+  .brand-title { display: none; }  /* keep just the logo on small screens */
+  .quiz-meta-strip {
+    font-size: 0.65rem;
+    padding-left: 0.6rem;
+    margin-left: 0;
+  }
 }
 
-a { color: var(--color-link); }
+/* ---------- Main column ---------- */
 
 main {
-  max-width: 800px;
-  margin: 1.5rem auto;
-  padding: 0 1.5rem;
+  max-width: var(--content-w);
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  main { padding: 2rem 1.25rem 3rem; }
 }
 
 h2 {
-  margin-top: 0;
-  font-size: 1.25rem;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0 0 2rem 0;
+  color: var(--fg);
 }
+
+/* Editorial eyebrow — a small accent-coloured kicker that sits above
+   the main heading on picker pages. Uses --accent-text (the AAA-safe
+   darker variant) for the type itself; the decorative dash keeps the
+   vivid --accent since it's a graphic. */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin: 0 0 0.85rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 1.5px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+/* Lead paragraph — the friendly orientation line under the page title.
+   Generous size, muted colour, balanced wrapping so two-line leads
+   don't leave orphans. */
+.lead {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--fg-soft);
+  margin: -1.25rem 0 2.25rem 0;
+  max-width: 56ch;
+  font-weight: 400;
+}
+@media (max-width: 540px) {
+  .lead { font-size: 0.98rem; margin-top: -1rem; margin-bottom: 1.75rem; }
+  .eyebrow { font-size: 0.65rem; }
+}
+
+/* ---------- Buttons ---------- */
 
 button {
   font: inherit;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-card-bg);
-  color: var(--color-fg);
-  border-radius: var(--radius);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  border: none;
+  background: none;
+  color: inherit;
 }
 
-button:hover:not(:disabled) {
-  border-color: var(--color-accent);
+button.primary {
+  background: var(--fg);
+  color: var(--bg);              /* AAA — black-on-white / inverted in dark */
+  padding: 0.85rem 1.5rem;
+  border-radius: 99px;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-
-button:disabled {
-  opacity: 0.5;
+/* Hover keeps the idle (AAA-strong) background and just adds elevation
+   + an accent-coloured glow. Swapping the bg to vivid accent broke AAA
+   because white-on-coral is ~2.7:1 in dark mode and ~3.8:1 in light. */
+button.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px -10px var(--accent);
+}
+button.primary:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+button.primary:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-button.danger {
-  color: var(--color-incorrect);
-  border-color: var(--color-incorrect);
+button.ghost {
+  background: transparent;
+  color: var(--fg);
+  padding: 0.7rem 1.3rem;
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+}
+button.ghost:hover {
+  border-color: var(--fg-soft);
+  background: var(--surface-soft);
+}
+button.ghost.danger { color: var(--negative); border-color: var(--negative-soft); }
+button.ghost.danger:hover {
+  border-color: var(--negative);
+  background: var(--negative-soft);
 }
 
-button.danger:hover { background: var(--color-incorrect-bg); }
+button.link {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.25rem 0;
+  transition: color 0.15s var(--ease);
+}
+button.link:hover { color: var(--fg); }
+button.link.danger { color: var(--negative); }
+button.link.danger:hover { color: var(--negative); }
 
-/* Setup */
+.back-button {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 0;
+  margin-bottom: 1.5rem;
+  transition: color 0.15s var(--ease);
+}
+.back-button:hover { color: var(--fg); }
+
+/* ---------- Loading ---------- */
+
+.loading {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  padding: 4rem 0;
+}
+
+/* ---------- Step 1: Certification picker ---------- */
+
+#setup .cert-list {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 720px) {
+  #setup .cert-list { grid-template-columns: 1fr 1fr; }
+}
+
+.cert-card {
+  --gradient: linear-gradient(135deg, var(--accent), #FFAB1F);
+
+  display: block;
+  text-align: left;
+  padding: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.15s var(--ease);
+  font-family: var(--sans);
+  isolation: isolate;
+}
+
+/* Distinctive per-cert accent gradients */
+.cert-card[data-cert="data-engineer-associate"]     { --gradient: linear-gradient(135deg, #FF4F2C, #FFAB1F); }
+.cert-card[data-cert="data-engineer-professional"]  { --gradient: linear-gradient(135deg, #6366F1, #4F46E5); }
+.cert-card[data-cert="data-analyst-associate"]      { --gradient: linear-gradient(135deg, #10B981, #14B8A6); }
+.cert-card[data-cert="ml-associate"]                { --gradient: linear-gradient(135deg, #A855F7, #EC4899); }
+.cert-card[data-cert="ml-professional"]             { --gradient: linear-gradient(135deg, #F59E0B, #DC2626); }
+.cert-card[data-cert="genai-engineer-associate"]    { --gradient: linear-gradient(135deg, #06B6D4, #3B82F6); }
+
+.cert-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--gradient);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.cert-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: var(--gradient);
+  opacity: 0;
+  z-index: -1;
+  filter: blur(40px);
+  transition: opacity 0.3s var(--ease);
+}
+
+.cert-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-3);
+  border-color: transparent;
+}
+.cert-card:hover::after { opacity: 0.15; }
+
+.cert-card .cert-card-arrow {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: var(--muted);
+  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
+}
+.cert-card:hover .cert-card-arrow {
+  transform: translate(2px, -2px);
+  color: var(--fg);
+}
+
+.cert-card strong {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.45rem;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0.5rem 0 1.5rem 0;
+  color: var(--fg);
+  padding-right: 2rem;
+}
+
+.cert-card .cert-card-stats {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+.cert-card .cert-card-stats .stat-num {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 2.5rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.cert-card .cert-card-stats .stat-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.cert-card .cert-card-meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--fg-soft);
+  margin-bottom: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.cert-card .cert-card-blueprint {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--hairline-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Step 2: Bank picker ---------- */
+
+#setup .cert-subtitle {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: -1rem 0 2rem 0;
+}
+
 #setup .bank-list {
   display: grid;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-#setup .bank-card {
-  text-align: left;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-card-bg);
-}
-
-#setup .bank-card strong { display: block; font-size: 1.05rem; margin-bottom: 0.25rem; }
-#setup .bank-card .bank-meta { font-size: 0.85em; color: var(--color-muted); }
-
-/* Quiz */
-.quiz-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
-  font-size: 0.85em;
-  color: var(--color-muted);
-  margin-bottom: 0.75rem;
+  grid-template-columns: 1fr;
 }
 
-.quiz-controls {
+@media (min-width: 700px) {
+  #setup .bank-list { grid-template-columns: repeat(3, 1fr); }
+}
+
+.bank-card {
+  display: block;
+  text-align: left;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  font-family: var(--sans);
+  position: relative;
+}
+.bank-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-2px);
+}
+
+.bank-card strong {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+  color: var(--fg);
+}
+
+.bank-card .bank-meta {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  color: var(--fg-soft);
+  margin-bottom: 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.bank-card .bank-purpose {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* ---------- Question header (above the question card) ---------- */
+
+.question-header {
   display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
-
-.quiz-controls button {
-  padding: 0.3rem 0.6rem;
-  font-size: 0.85em;
+.question-header .q-counter {
+  color: var(--fg);
+  font-weight: 600;
 }
+.question-header .rh-sep { color: var(--hairline); }
 
-.quiz-meta .separator { margin: 0 0.4rem; opacity: 0.4; }
+/* ---------- Difficulty pill ---------- */
 
 .difficulty {
-  padding: 0.1rem 0.5rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 99px;
-  font-size: 0.8em;
+  font-family: var(--mono);
+  font-size: 0.62rem;
   font-weight: 600;
-  text-transform: capitalize;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-block;
 }
-.difficulty.easy { background: var(--color-correct-bg); color: var(--color-correct); }
-.difficulty.medium { background: var(--color-medium-bg); color: var(--color-medium-fg); }
-.difficulty.hard { background: var(--color-incorrect-bg); color: var(--color-incorrect); }
+.difficulty.easy    { background: var(--positive-soft); color: var(--positive); }
+.difficulty.medium  { background: var(--accent-soft);   color: var(--accent-text); }
+.difficulty.hard    { background: var(--negative-soft); color: var(--negative); }
+
+/* ---------- Question card ---------- */
 
 .question-card {
-  background: var(--color-card-bg);
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-2);
+  /* Prevent unbreakable inline content from making the card wider than its
+     container. min-width:0 lets the box shrink past its intrinsic width. */
+  min-width: 0;
+  overflow-wrap: break-word;
+  position: relative;        /* so .q-watermark can absolute-position inside */
 }
 
-.question-card h3 {
-  margin-top: 0;
-  font-size: 1.05rem;
-  color: var(--color-muted);
+/* "Q.N" watermark — a faded oversized numeral in the card's top-right
+   that signals "this is item N in a sequence". Editorial pull-quote
+   feel. Pure decoration, aria-hidden in the markup. */
+.q-watermark {
+  position: absolute;
+  top: 0.85rem;
+  right: 1.25rem;
+  font-family: var(--mono);
+  font-weight: 500;
+  /* Cap the font-size lower so 3-digit Q-numbers (Q.100, Q.150 …) still
+     fit inside the reserved padding zone on #quiz-question without
+     overlapping the wrapped text. */
+  font-size: clamp(1.55rem, 3.2vw, 2.1rem);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  /* Light theme: dark ink on a near-white surface — needs more opacity
+     than the dark theme to read at all. 0.035 was visually invisible. */
+  color: var(--fg);
+  opacity: 0.08;
+  pointer-events: none;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  z-index: 0;
+  /* Anchor right edge so widths stay bounded as N grows */
+  max-width: 6rem;
+  text-align: right;
+  white-space: nowrap;
+}
+/* Dark theme: bright ink on a near-black surface — same opacity would
+   pop too much, so we dial it back. */
+:root[data-theme="dark"] .q-watermark { opacity: 0.06; }
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] .q-watermark,
+  :root:not([data-theme]) .q-watermark { opacity: 0.06; }
+}
+.question-card > *:not(.q-watermark) { position: relative; z-index: 1; }
+@media (max-width: 540px) {
+  .q-watermark { top: 0.5rem; right: 0.85rem; font-size: 1.3rem; opacity: 0.07; max-width: 4rem; }
+  :root[data-theme="dark"] .q-watermark { opacity: 0.055; }
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme="auto"] .q-watermark { opacity: 0.055; }
+  }
 }
 
-.question-card #quiz-question {
-  font-size: 1.05rem;
+#quiz-feedback {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+  .question-card { padding: 1.5rem 1.25rem; }
+}
+
+#quiz-question {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  letter-spacing: -0.012em;
+  color: var(--fg);
+  margin: 0 0 1.75rem 0;
+  /* Reserve right-side space for the Q.N watermark in the card corner.
+     Sized to clear up to "Q.150" comfortably (5 chars at the capped
+     watermark font-size + right offset). */
+  padding-right: 6rem;
+}
+@media (max-width: 540px) {
+  #quiz-question { padding-right: 4rem; }
+}
+#quiz-question p { margin: 0.5rem 0; }
+#quiz-question p:first-child { margin-top: 0; }
+#quiz-question p:last-child { margin-bottom: 0; }
+#quiz-question code {
+  font-size: 0.92em;
   font-weight: 500;
 }
 
-.question-card #quiz-question p {
-  margin: 0.5rem 0;
-}
-
-.question-card #quiz-question p:first-child {
-  margin-top: 0;
-}
+/* ---------- Choices ---------- */
 
 fieldset#quiz-choices {
   border: none;
   padding: 0;
-  margin: 1rem 0;
+  margin: 0 0 1.75rem 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.625rem;
 }
 
 fieldset#quiz-choices label {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--color-border);
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--hairline);
   border-radius: var(--radius);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  background: var(--surface);
+  transition: all 0.15s var(--ease);
+  position: relative;
+}
+/* Hover gives no visual cue — only an actual selection (click, arrow
+   keys, or 1-4) changes a row's appearance. This prevents leftover
+   mouse position from looking like a selection. The mouse cursor turns
+   into a pointer on hover, which is enough affordance that the row is
+   clickable. */
+
+/* Selected — uses a distinct blue (not the red accent) so the
+   "I picked this" state can never be confused with the red "incorrect"
+   state after submit. Green = correct, red = incorrect, blue = picked. */
+fieldset#quiz-choices label:has(input[type=radio]:checked):not(.correct):not(.incorrect) {
+  border-color: var(--selected);
+  background: var(--selected-soft);
+}
+fieldset#quiz-choices label.disabled {
+  cursor: default;
+  pointer-events: none;
 }
 
-fieldset#quiz-choices label:hover {
-  border-color: var(--color-accent);
+fieldset#quiz-choices input[type=radio] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--hairline);
+  border-radius: 50%;
+  margin: 0.15rem 0 0 0;
+  flex-shrink: 0;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  position: relative;
 }
-
-fieldset#quiz-choices label.disabled { cursor: default; }
-
-fieldset#quiz-choices input[type=radio] { margin-top: 0.3rem; }
-
-fieldset#quiz-choices label.correct {
-  background: var(--color-correct-bg);
-  border-color: var(--color-correct);
+fieldset#quiz-choices input[type=radio]:hover { border-color: var(--fg-soft); }
+fieldset#quiz-choices input[type=radio]:checked {
+  border-color: var(--fg);
+  background: var(--fg);
+  box-shadow: inset 0 0 0 4px var(--surface);
 }
-
-fieldset#quiz-choices label.incorrect {
-  background: var(--color-incorrect-bg);
-  border-color: var(--color-incorrect);
-}
+fieldset#quiz-choices input[type=radio]:disabled { opacity: 0.5; cursor: default; }
 
 fieldset#quiz-choices .choice-letter {
+  font-family: var(--mono);
   font-weight: 600;
-  margin-right: 0.25rem;
-  min-width: 1.2em;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.15rem 0 0 0;
+  flex-shrink: 0;
+  min-width: 1.25em;
+  text-transform: uppercase;
+  transition: color 0.15s var(--ease);
 }
 
-.quiz-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+fieldset#quiz-choices label:hover .choice-letter { color: var(--fg); }
+fieldset#quiz-choices label input[type=radio]:checked ~ .choice-letter { color: var(--fg); }
+
+fieldset#quiz-choices label .choice-text {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--fg);
 }
+
+fieldset#quiz-choices label.correct {
+  background: var(--positive-soft);
+  border-color: var(--positive);
+}
+fieldset#quiz-choices label.correct .choice-letter,
+fieldset#quiz-choices label.correct .choice-text { color: var(--positive); }
+fieldset#quiz-choices label.correct input[type=radio] { border-color: var(--positive); }
+
+fieldset#quiz-choices label.incorrect {
+  background: var(--negative-soft);
+  border-color: var(--negative);
+}
+fieldset#quiz-choices label.incorrect .choice-letter,
+fieldset#quiz-choices label.incorrect .choice-text { color: var(--negative); }
+
+/* ---------- Sticky bottom action bar (quiz mode only) ---------- */
+
+.actionbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-top: 1px solid var(--hairline);
+}
+.actionbar[hidden] { display: none; }
+
+/* 3-column grid for row 1 keeps the kbd-hint optically centred no matter
+   how wide the timer or button cluster grows. Row 2 (actionbar-right)
+   spans all columns via grid-column: 1 / -1. */
+.actionbar-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem 1rem;
+  min-height: 64px;
+}
+
+#quiz-timer.actionbar-timer {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.actionbar-inner > .kbd-hint {
+  grid-column: 2;
+  justify-self: center;
+  text-align: center;
+  margin-left: 0;          /* override the inline-flow margin-left */
+  white-space: nowrap;
+}
+
+.actionbar-left {
+  grid-column: 3;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.actionbar-right {
+  grid-column: 1 / -1;     /* row 2 spans the full width */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.actionbar-right #session-stats,
+.actionbar-right #bank-stats { color: var(--fg-soft); }
+.actionbar-right .rh-sep { color: var(--hairline); }
+.actionbar-right .actionbar-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--hairline);
+  margin: 0 0.15rem;
+}
+
+/* When quiz is active, leave room at the bottom of main so the fixed
+   actionbar doesn't cover the last few choices / feedback rows.
+   --actionbar-h is updated by a ResizeObserver in app.js whenever the
+   actionbar's height changes (wrap onto a second row, viewport resize,
+   feedback visibility, etc). +1.5rem of breathing room. */
+body.quiz-active main {
+  padding-bottom: calc(var(--actionbar-h, 7rem) + 1.5rem);
+}
+body.quiz-active .page-footer { display: none; }
+
+.kbd-hint {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  margin-left: 0.5rem;
+}
+.kbd-hint[hidden] { display: none; }
+.kbd-hint kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--hairline);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .actionbar-inner { padding: 0.65rem 1rem; gap: 0.6rem; }
+  .actionbar-right { font-size: 0.65rem; gap: 0.5rem; }
+  .actionbar-right .actionbar-divider { display: none; }
+  .actionbar-right #bank-stats { display: none; }  /* save room */
+  .kbd-hint { display: none; }  /* hide kbd hints on small screens */
+}
+
+/* ---------- Feedback ---------- */
 
 #quiz-feedback {
-  margin-top: 1rem;
-  padding: 1rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--surface-soft);
   border-radius: var(--radius);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--positive);
 }
+#quiz-feedback.incorrect { border-left-color: var(--negative); }
 
+/* Verdict heading — large + confident sans, not the small mono-uppercase
+   it used to be. Pairs a coloured circular badge with the verdict label
+   so the post-submit moment lands with weight, like a stamp. */
 #quiz-feedback h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.95rem;
+  margin: 0 0 0.9rem 0;
+  font-family: var(--sans);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--positive);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-transform: none;
+}
+#quiz-feedback.incorrect h4 { color: var(--negative); }
+@media (max-width: 540px) {
+  #quiz-feedback h4 { font-size: 1.15rem; }
 }
 
-#quiz-feedback.correct h4 { color: var(--color-correct); }
-#quiz-feedback.incorrect h4 { color: var(--color-incorrect); }
+#quiz-feedback p { margin: 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
 
-#quiz-feedback p { margin: 0.4rem 0; }
-#quiz-feedback p:first-of-type { font-weight: 500; }
+#quiz-feedback p.fb-short {
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.005em;
+}
+
 #quiz-feedback p.fb-topic {
-  font-weight: normal;
-  font-size: 0.9em;
-  color: var(--color-muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
   margin-top: 0;
+  margin-bottom: 0.85rem;
 }
 
-.session-bar {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85em;
-  color: var(--color-muted);
-  margin-top: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
+#quiz-feedback pre { margin: 0.85rem 0; }
 
-/* Stats */
+/* (quiz-footer removed — replaced by sticky bottom actionbar) */
+
+/* ---------- Stats view ---------- */
+
 #stats table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1rem 0;
-  font-size: 0.95em;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
 }
-
 #stats th, #stats td {
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 0.85rem;
   text-align: left;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--hairline);
 }
-
 #stats th {
+  font-family: var(--mono);
   font-weight: 600;
-  color: var(--color-muted);
-  font-size: 0.85em;
+  font-size: 0.7rem;
+  color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  border-bottom-color: var(--fg-soft);
 }
-
-#stats td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
+#stats td.numeric {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+#stats tr:last-child td {
+  font-weight: 600;
+  border-bottom: none;
+  border-top: 1px solid var(--fg-soft);
+}
+#stats h3 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: -0.015em;
+  margin: 2rem 0 0.75rem;
+}
+#stats ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#stats ul li {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--hairline-soft);
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 
 .stats-actions, .settings-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
-/* Settings */
-#settings label {
+/* Past-attempts header row on the stats page — heading + clear button */
+.stats-history-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.stats-history-head h3 { flex: 1; }
+
+/* ---------- Settings ---------- */
+
+#settings .section-intro {
+  margin: -1rem 0 1.75rem 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.settings-panel {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 360px);
+  gap: 2rem;
+  padding: 1.5rem 1.75rem;
+  align-items: center;
+  border-bottom: 1px solid var(--hairline);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row-meta { min-width: 0; }
+.settings-row-meta h4 {
+  margin: 0 0 0.3rem 0;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+.settings-row-meta p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+/* Custom-styled select — native chevron replaced with a CSS arrow so
+   it picks up the theme color and stays consistent across browsers. */
+.settings-field {
+  position: relative;
+}
+.settings-field::after {
+  content: "";
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--fg-soft);
+  border-bottom: 1.5px solid var(--fg-soft);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+  transition: border-color 0.15s;
+}
+.settings-field:hover::after { border-color: var(--fg); }
+
+.settings-field select {
   display: block;
-  margin: 1rem 0;
+  width: 100%;
+  padding: 0.7rem 2.5rem 0.7rem 0.95rem;
+  font: inherit;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.settings-field select:hover {
+  border-color: var(--fg-soft);
+  background: var(--surface);
+}
+.settings-field select:focus {
+  outline: none;
+  border-color: var(--selected);
+  box-shadow: 0 0 0 3px var(--selected-soft);
+}
+
+@media (max-width: 700px) {
+  .settings-row {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    padding: 1.25rem 1.25rem;
+  }
+}
+
+/* ============================================================
+   Session-summary screen
+   ============================================================
+   Shown when the user has visited every question in the current
+   bank and answered at least one. Hero score, per-module breakdown,
+   weak-area callout, time + streak stats, past-attempt history,
+   and HTML/CSV export.
+   ============================================================ */
+
+#summary { padding-bottom: 2rem; }
+
+.summary-timestamp {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: -1rem 0 2rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Hero --- */
+.summary-hero {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 2rem 2rem;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.summary-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--accent);
+}
+.summary-hero[data-tone="great"]::before { background: linear-gradient(90deg, var(--positive), #14B8A6); }
+.summary-hero[data-tone="good"]::before  { background: var(--positive); }
+.summary-hero[data-tone="warn"]::before  { background: var(--warn); }
+.summary-hero[data-tone="weak"]::before  { background: var(--negative); }
+
+.summary-num-wrap {
+  display: flex;
+  align-items: baseline;
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.summary-num {
+  font-size: clamp(3.5rem, 11vw, 5.5rem);
+  color: var(--fg);
+}
+.summary-hero[data-tone="great"] .summary-num { color: var(--positive); }
+.summary-hero[data-tone="good"]  .summary-num { color: var(--positive); }
+.summary-hero[data-tone="warn"]  .summary-num { color: var(--warn); }
+.summary-hero[data-tone="weak"]  .summary-num { color: var(--negative); }
+.summary-num-pct {
+  font-size: 1.75rem;
+  color: var(--muted);
+  margin-left: 0.05em;
   font-weight: 500;
 }
 
-#settings select {
-  display: block;
-  width: 100%;
-  margin-top: 0.4rem;
-  padding: 0.5rem;
-  font: inherit;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-card-bg);
-  color: var(--color-fg);
+.summary-hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
 }
+.summary-fraction {
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+.summary-verdict {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+  margin-top: 0.4rem;
+}
+.summary-verdict[data-tone="great"] { color: var(--positive); }
+.summary-verdict[data-tone="good"]  { color: var(--positive); }
+.summary-verdict[data-tone="warn"]  { color: var(--warn); }
+.summary-verdict[data-tone="weak"]  { color: var(--negative); }
+.summary-verdict-sub {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-top: 0.1rem;
+}
+
+@media (max-width: 540px) {
+  .summary-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1.5rem 1.25rem;
+  }
+  .summary-num { font-size: 3.5rem; }
+  .summary-num-pct { font-size: 1.35rem; }
+  .summary-fraction { font-size: 1.05rem; }
+}
+
+/* --- Weak-area callout --- */
+.summary-callout {
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.75rem;
+  border-left: 3px solid var(--negative);
+  background: var(--negative-soft);
+}
+.summary-callout-title {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--negative);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.005em;
+}
+.summary-callout-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.summary-callout-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.3rem 0;
+  gap: 1rem;
+}
+.summary-callout-list .wk-name {
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  color: var(--fg);
+  flex: 1;
+  min-width: 0;
+}
+.summary-callout-list .wk-pct {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--negative);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* --- Section titles (between summary blocks) --- */
+.summary-section-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2rem 0 0.85rem;
+}
+
+/* --- Per-module domain breakdown --- */
+.summary-domains {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.summary-domain-row {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+.summary-domain-row:last-child { border-bottom: none; }
+.summary-domain-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.55rem;
+  gap: 1rem;
+}
+.summary-domain-name {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--fg);
+  flex: 1;
+  min-width: 0;
+}
+.summary-domain-stat {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--fg-soft);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.summary-meter {
+  height: 6px;
+  background: var(--hairline-soft);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.summary-meter-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--fg-soft);
+  transition: width 0.5s var(--ease);
+}
+.summary-meter-fill[data-tone="great"] { background: linear-gradient(90deg, var(--positive), #14B8A6); }
+.summary-meter-fill[data-tone="good"]  { background: var(--positive); }
+.summary-meter-fill[data-tone="warn"]  { background: var(--warn); }
+.summary-meter-fill[data-tone="weak"]  { background: var(--negative); }
+
+/* --- Stats grid (time / streak metric cards) --- */
+.summary-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+.summary-metric {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+}
+.summary-metric-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+.summary-metric-value {
+  font-family: var(--sans);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.summary-metric-sub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+/* --- Actions row --- */
+.summary-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+.summary-actions button.primary,
+.summary-actions button.ghost {
+  flex: 0 1 auto;
+}
+
+/* --- Export bar (HTML / CSV) --- */
+.summary-export {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.15rem 0 0;
+  border-top: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.summary-export-label {
+  color: var(--muted);
+  margin-right: 0.35rem;
+}
+.summary-export button.link {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--fg-soft);
+  padding: 0.4rem 0.75rem;
+  border-radius: 99px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.summary-export button.link:hover {
+  border-color: var(--accent);
+  color: var(--accent-text);
+  background: var(--accent-soft);
+}
+
+/* --- Past-attempts list --- */
+.attempt-list {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.attempt-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) auto auto auto auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.15rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--hairline-soft);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s var(--ease);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--fg-soft);
+  width: 100%;
+}
+.attempt-row:last-child { border-bottom: none; }
+@media (hover: hover) {
+  .attempt-row:hover { background: var(--surface-soft); }
+  .attempt-row:hover .attempt-arrow { color: var(--accent); transform: translateX(2px); }
+}
+.attempt-when { font-variant-numeric: tabular-nums; display: inline-flex; gap: 0.5rem; align-items: baseline; }
+.attempt-date { color: var(--fg); font-weight: 500; }
+.attempt-time { color: var(--muted); }
+.attempt-pct {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-soft);
+  justify-self: end;
+}
+.attempt-pct[data-tone="great"] { color: var(--positive); }
+.attempt-pct[data-tone="good"]  { color: var(--positive); }
+.attempt-pct[data-tone="warn"]  { color: var(--warn); }
+.attempt-pct[data-tone="weak"]  { color: var(--negative); }
+.attempt-fraction, .attempt-duration { font-variant-numeric: tabular-nums; color: var(--muted); }
+.attempt-duration.muted { color: var(--hairline); }
+.attempt-verdict {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.18rem 0.55rem;
+  border-radius: 99px;
+  text-transform: uppercase;
+}
+.attempt-verdict[data-tone="good"] { background: var(--positive-soft); color: var(--positive); }
+.attempt-verdict[data-tone="weak"] { background: var(--negative-soft); color: var(--negative); }
+.attempt-verdict.muted { background: transparent; color: var(--muted); border: 1px solid var(--hairline-soft); font-weight: 500; }
+.attempt-arrow {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 1rem;
+  transition: transform 0.15s var(--ease), color 0.15s;
+}
+
+@media (max-width: 720px) {
+  .attempt-row {
+    grid-template-columns: 1fr auto auto;
+    grid-template-rows: auto auto;
+    gap: 0.4rem 0.85rem;
+    padding: 0.75rem 1rem;
+  }
+  .attempt-when { grid-column: 1 / -1; font-size: 0.72rem; }
+  .attempt-pct { grid-column: 1; grid-row: 2; justify-self: start; }
+  .attempt-fraction { grid-column: 2; grid-row: 2; }
+  .attempt-duration { grid-column: 3; grid-row: 2; }
+  .attempt-verdict { display: none; }
+  .attempt-arrow { display: none; }
+}
+
+/* ---------- Pause overlay ----------
+   Full-screen blur + "Paused" card. Blocks interaction with the quiz
+   underneath so the user can step away without accidentally answering.
+   When body.timer-paused is set, the main column gets a strong blur. */
+
+body.timer-paused main {
+  filter: blur(8px) saturate(85%) brightness(0.95);
+  transition: filter 0.25s var(--ease);
+  pointer-events: none;
+  user-select: none;
+}
+
+.pause-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  animation: modal-backdrop-in 0.2s var(--ease);
+}
+.pause-overlay[hidden] { display: none !important; }
+
+.pause-card {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 1px 0 var(--hairline),
+    0 24px 64px -16px rgba(0, 0, 0, 0.35);
+  padding: 2.25rem 2rem 1.75rem;
+  animation: modal-pop 0.25s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.pause-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.65rem;
+}
+.pause-title {
+  font-family: var(--sans);
+  font-size: 2.1rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 0 0 0.85rem;
+  line-height: 1.1;
+}
+.pause-message {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--fg-soft);
+  margin: 0 auto 1.5rem;
+  max-width: 36ch;
+}
+.pause-card #btn-resume {
+  min-width: 200px;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.95rem;
+}
+.pause-hint {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin: 1.25rem 0 0;
+  letter-spacing: 0.02em;
+}
+.pause-hint kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--hairline);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-align: center;
+  margin: 0 0.15rem;
+}
+
+@media (max-width: 540px) {
+  .pause-card { padding: 1.75rem 1.5rem 1.5rem; }
+  .pause-title { font-size: 1.7rem; }
+  .pause-message { font-size: 0.9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pause-overlay, .pause-card { animation: none; }
+  body.timer-paused main { transition: none; }
+}
+
+/* ---------- Custom confirm modal (theme-aware, focus-trapped) ----------
+   Replaces native window.confirm() with a styled dialog that matches the
+   rest of the design. Backdrop blur + scale-in animation; respects
+   prefers-reduced-motion. Focus is trapped between Cancel/Confirm and
+   restored to the trigger element on close (see customConfirm in app.js). */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;            /* above masthead (50) + actionbar (50) + toasts (1000) */
+  background: color-mix(in srgb, var(--fg) 38%, transparent);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: modal-backdrop-in 0.16s var(--ease);
+}
+.modal-backdrop[hidden] { display: none !important; }
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 1px 0 var(--hairline),
+    0 20px 60px -20px rgba(0,0,0,0.4),
+    0 8px 16px -8px rgba(0,0,0,0.2);
+  padding: 1.5rem 1.5rem 1.25rem;
+  transform-origin: center;
+  animation: modal-pop 0.2s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.modal:focus { outline: none; }
+
+.modal-title {
+  margin: 0 0 0.5rem 0;
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  line-height: 1.3;
+}
+
+.modal-message {
+  margin: 0 0 1.5rem 0;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--fg-soft);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+.modal-actions button {
+  min-height: 44px;            /* touch target */
+}
+/* Danger-flavored primary button (used for destructive confirms like
+   "Reset progress?" and "Leave timed exam?"). Hardcoded dark red so
+   white text stays ≥8:1 contrast in BOTH themes — the semantic
+   `--negative` token is too light in dark mode (it's calibrated for
+   text on dark bg, not button bg). */
+.modal-actions .primary.danger {
+  background: #991B1B;
+  color: #FFFFFF;
+}
+@media (hover: hover) {
+  .modal-actions .primary.danger:hover:not(:disabled) {
+    background: #7F1D1D;
+    box-shadow: 0 8px 24px -10px rgba(153, 27, 27, 0.5);
+  }
+}
+
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modal-pop {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal { animation: none; }
+}
+
+/* ---------- Code blocks (Prism syntax highlighting) ---------- */
 
 code {
-  font-family: var(--font-mono);
-  font-size: 0.92em;
-  background: rgba(125,125,125,0.15);
-  padding: 0.1rem 0.3rem;
-  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.86em;
+  font-weight: 500;
+  background: var(--code-bg);
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  color: var(--fg);
+  /* Long unbroken strings like spark.sql.streaming.stateStore.providerClass
+     are a single "word" with no word-break points. Allow the renderer to
+     break anywhere when there's no better option, otherwise the inline
+     code overflows the right edge of the question/feedback container. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-pre {
-  background: rgba(125,125,125,0.15);
-  padding: 0.75rem 1rem;
+/* Code blocks (pre > code) handle long lines with horizontal scroll
+   instead — preserving whitespace + indentation is more important there
+   than fitting in the container. */
+pre code, pre[class*="language-"] code {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+pre, pre[class*="language-"] {
+  background: var(--code-bg);
+  padding: 1rem 1.15rem;
   border-radius: var(--radius);
   overflow-x: auto;
-  font-size: 0.88em;
-  margin: 0.75rem 0;
-  font-family: var(--font-mono);
-  line-height: 1.45;
+  font-size: 0.82rem;
+  margin: 1rem 0;
+  font-family: var(--mono);
+  line-height: 1.55;
   white-space: pre;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--hairline);
+  color: var(--fg);
+  text-shadow: none;
 }
-
-pre code {
+pre code, pre[class*="language-"] code {
   background: none;
   padding: 0;
   font-size: inherit;
+  font-weight: 400;
   border-radius: 0;
+  color: inherit;
+  text-shadow: none;
 }
 
-#quiz-question pre,
-#quiz-feedback pre {
-  white-space: pre;
+/* Light-mode Prism overrides */
+:root[data-theme="light"] .token.comment,
+:root[data-theme="light"] .token.prolog,
+:root[data-theme="light"] .token.doctype,
+:root[data-theme="light"] .token.cdata { color: #8a8a85; font-style: italic; }
+:root[data-theme="light"] .token.punctuation { color: #52525B; }
+:root[data-theme="light"] .token.keyword,
+:root[data-theme="light"] .token.boolean,
+:root[data-theme="light"] .token.null { color: #DC2626; }
+:root[data-theme="light"] .token.string,
+:root[data-theme="light"] .token.char,
+:root[data-theme="light"] .token.attr-value { color: #15803D; }
+:root[data-theme="light"] .token.number { color: #B45309; }
+:root[data-theme="light"] .token.function,
+:root[data-theme="light"] .token.class-name { color: #1D4ED8; }
+:root[data-theme="light"] .token.operator { color: #52525B; }
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme="auto"] .token.comment,
+  :root:not([data-theme]) .token.comment { color: #8a8a85; font-style: italic; }
+  :root[data-theme="auto"] .token.keyword,
+  :root:not([data-theme]) .token.keyword { color: #DC2626; }
+  :root[data-theme="auto"] .token.string,
+  :root:not([data-theme]) .token.string { color: #15803D; }
+  :root[data-theme="auto"] .token.number,
+  :root:not([data-theme]) .token.number { color: #B45309; }
+  :root[data-theme="auto"] .token.function,
+  :root:not([data-theme]) .token.function { color: #1D4ED8; }
+}
+
+/* ---------- Page footer — refined as a colophon ----------
+   Three rhythmic lines of decreasing weight:
+     1. plain-language tagline (what the site is)
+     2. source / license / copyright (the meta line)
+     3. set notes (typeface, privacy)
+   Treated as a printer's mark below the content stream. */
+
+.page-footer {
+  max-width: var(--content-w);
+  margin: 5rem auto 0;
+  padding: 2rem 2rem 3rem;
+  border-top: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  line-height: 1.65;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.page-footer p { margin: 0; }
+.page-footer .footer-tag {
+  color: var(--fg-soft);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  font-family: var(--sans);
+}
+.page-footer .footer-meta { color: var(--muted); }
+.page-footer .footer-meta a {
+  color: var(--fg-soft);
+  text-decoration-color: var(--hairline);
+}
+.page-footer .footer-meta a:hover { text-decoration-color: var(--accent); color: var(--accent-text); }
+.page-footer .footer-colophon {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-style: italic;
+  letter-spacing: 0.015em;
+}
+.page-footer .footer-colophon .colophon-mark {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--fg-soft);
+  letter-spacing: 0;
+}
+.page-footer .colophon { font-style: italic; }
+.page-footer .rh-sep { color: var(--hairline); padding: 0 0.25rem; }
+@media (max-width: 540px) {
+  .page-footer { padding: 1.5rem 1rem 2.25rem; margin-top: 3.5rem; }
+  .page-footer .footer-tag { font-size: 0.74rem; }
+  .page-footer .footer-colophon { font-size: 0.64rem; }
+}
+
+/* ---------- Focus ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+button:focus-visible { outline-offset: 3px; }
+
+/* The choice label uses a subtle background tint (matching hover) for both
+   mouse-click and keyboard-arrow selection — see :has(input:checked) above.
+   Drop the loud orange focus outline so the choice row never looks "stuck"
+   after keyboard navigation. The `!important` is intentional: it overrides
+   the global `:focus-visible` rule plus any browser-default focus indicator
+   the UA might draw on appearance:none radios. */
+fieldset#quiz-choices label:focus-within,
+fieldset#quiz-choices label:focus-within * {
+  outline: none !important;
+}
+fieldset#quiz-choices input[type=radio]:focus,
+fieldset#quiz-choices input[type=radio]:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none;
+}
+/* Preserve the filled-center indicator on the currently-checked radio
+   even while it has keyboard focus (the rule above stripped its
+   box-shadow). */
+fieldset#quiz-choices input[type=radio]:checked,
+fieldset#quiz-choices input[type=radio]:checked:focus,
+fieldset#quiz-choices input[type=radio]:checked:focus-visible {
+  box-shadow: inset 0 0 0 4px var(--surface);
+}
+
+/* ---------- Motion & micro-interactions ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Entrance fade-up for cards */
+  .cert-card, .bank-card, .question-card {
+    animation: fadeUp 0.4s var(--ease) backwards;
+  }
+  .cert-card:nth-child(1) { animation-delay: 0s; }
+  .cert-card:nth-child(2) { animation-delay: 0.05s; }
+  .cert-card:nth-child(3) { animation-delay: 0.1s; }
+  .cert-card:nth-child(4) { animation-delay: 0.15s; }
+  .cert-card:nth-child(5) { animation-delay: 0.2s; }
+  .cert-card:nth-child(6) { animation-delay: 0.25s; }
+
+  /* Answer reveal: green pulse + glow on the correct choice */
+  fieldset#quiz-choices label.correct {
+    animation: pulse-correct 0.7s var(--ease);
+  }
+  /* Red shake on whichever choice the user picked wrong */
+  fieldset#quiz-choices label.incorrect {
+    animation: shake-incorrect 0.4s var(--ease);
+  }
+
+  /* Feedback panel slides in from above */
+  #quiz-feedback:not([hidden]) {
+    animation: slideDown 0.35s var(--ease);
+  }
+
+  /* Question card transitions in cleanly between questions */
+  .question-card { transition: none; }
+
+  /* Brief tint flash on the whole question card */
+  .question-card.flash-correct  { animation: flash-correct 0.6s var(--ease); }
+  .question-card.flash-incorrect { animation: flash-incorrect 0.5s var(--ease); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Question-to-question slide transition. 0.85s — slow enough that you
+   clearly see "new question arriving from the right". Both the
+   question-header (Q# · difficulty) and the question-card animate
+   together so the whole row reads as a single unit moving in. */
+@media (prefers-reduced-motion: no-preference) {
+  .question-card.slide-in,
+  .question-header.slide-in {
+    animation: question-slide 0.85s cubic-bezier(0.16, 0.84, 0.32, 1);
+  }
+  .question-header.slide-in { animation-duration: 0.7s; }  /* arrives slightly earlier */
+}
+@keyframes question-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  20% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-correct {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0   rgba(21,128,61,0); }
+  35%  { transform: scale(1.015); box-shadow: 0 0 0 6px rgba(21,128,61,0.18); }
+  70%  { transform: scale(1.005); box-shadow: 0 0 0 3px rgba(21,128,61,0.08); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0   rgba(21,128,61,0); }
+}
+
+@keyframes shake-incorrect {
+  0%, 100% { transform: translateX(0); }
+  15%      { transform: translateX(-6px); }
+  30%      { transform: translateX(6px); }
+  45%      { transform: translateX(-4px); }
+  60%      { transform: translateX(4px); }
+  75%      { transform: translateX(-2px); }
+  90%      { transform: translateX(2px); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); max-height: 0; }
+  to   { opacity: 1; transform: translateY(0);    max-height: 1000px; }
+}
+
+@keyframes flash-correct {
+  0%, 100% { background: var(--surface); }
+  20%      { background: var(--positive-soft); }
+}
+
+@keyframes flash-incorrect {
+  0%, 100% { background: var(--surface); }
+  20%      { background: var(--negative-soft); }
+}
+
+/* ---------- Streak indicator (appears briefly on a correct streak) ---------- */
+
+.streak-toast {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  background: var(--fg);
+  color: var(--bg);
+  padding: 0.75rem 1.5rem;
+  border-radius: 99px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 12px 32px -8px rgba(0,0,0,0.25);
+}
+.streak-toast.show {
+  animation: streakIn 1.6s var(--ease);
+}
+.streak-toast .streak-num {
+  background: var(--accent);
+  color: #FFFFFF;
+  padding: 0.1rem 0.55rem;
+  border-radius: 99px;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes streakIn {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+  20%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+/* ---------- "+1" floating indicator on correct answer ---------- */
+
+.float-plus {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--positive);
+  pointer-events: none;
+  opacity: 0;
+  animation: floatPlus 1.1s var(--ease);
+}
+@keyframes floatPlus {
+  0%   { opacity: 0; transform: translateY(-50%); }
+  20%  { opacity: 1; transform: translate(0, calc(-50% - 8px)); }
+  100% { opacity: 0; transform: translate(0, calc(-50% - 36px)); }
+}
+
+/* ---------- Confetti burst on correct answer ---------- */
+
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.confetti-particle {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  border-radius: 1.5px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: confetti-arc 1.4s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes confetti-arc {
+  0% {
+    transform: translate(-50%, -50%) rotate(0);
+    opacity: 1;
+  }
+  10% { opacity: 1; }
+  50% {
+    transform: translate(
+      calc(-50% + var(--mid-dx)),
+      calc(-50% + var(--mid-dy))
+    ) rotate(calc(var(--rot) / 2));
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--end-dx)),
+      calc(-50% + var(--end-dy))
+    ) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-container { display: none; }
+}
+
+/* ============================================================
+   Touch device safeguards — prevent "sticky hover" lingering on
+   mobile after a tap. Coarse-pointer devices don't have real hover,
+   but :hover styles get applied briefly on tap and stay until
+   another tap elsewhere, which looks like a glitchy selection.
+   ============================================================ */
+@media (hover: none) {
+  .cert-card:hover { transform: none; box-shadow: var(--shadow-2); border-color: var(--hairline); }
+  .cert-card:hover::after { opacity: 0; }
+  .cert-card:hover .cert-card-arrow { transform: none; color: var(--muted); }
+  .bank-card:hover { transform: none; background: var(--surface); border-color: var(--hairline); }
+  button.primary:hover:not(:disabled) { transform: none; background: var(--fg); color: var(--bg); box-shadow: none; }
+  button.ghost:hover { background: transparent; border-color: var(--hairline); }
+  button.brand-cluster:hover { background: none; border-color: transparent; }
+  button.brand-cluster:hover .brand-mark { transform: none; }
+  button.brand-cluster:hover .brand-title { color: var(--fg); }
+  .quiz-meta-strip .cert-link:hover { color: var(--fg); text-decoration: none; }
+  #btn-theme:hover { color: var(--fg-soft); border-color: var(--hairline); }
+  button.link:hover { color: var(--muted); }
+  .back-button:hover { color: var(--muted); }
+}
+
+/* ============================================================
+   Mobile portrait + small phones — touch targets, font sizes,
+   spacing reductions. Stacks the actionbar so primary controls
+   stay reachable with the thumb.
+   ============================================================ */
+
+@media (max-width: 720px) {
+  /* All "link"-style buttons in the actionbar need ≥44px tap area */
+  button.link {
+    padding: 0.7rem 0.5rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Theme pill stays compact but reaches 36px minimum */
+  #btn-theme { padding: 0.55rem 0.85rem; min-height: 36px; }
+  /* Brand cluster gets a real tap area even though the title hides */
+  button.brand-cluster {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.5rem;
+    justify-content: center;
+  }
+  /* Cert-link button (back to bank picker) — bigger tap area */
+  .quiz-meta-strip .cert-link {
+    padding: 0.45rem 0;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Difficulty pill slightly larger so the colour band reads clearly */
+  .difficulty { padding: 0.2rem 0.55rem; font-size: 0.65rem; }
+}
+
+@media (max-width: 540px) {
+  main { padding: 1.75rem 1rem 2.5rem; }
+  h2 { font-size: 1.65rem; margin-bottom: 1.5rem; letter-spacing: -0.025em; }
+
+  /* Cert picker cards — full-width, slightly less padding, but still
+     visually distinct with the gradient bar at the top */
+  .cert-card { padding: 1.4rem 1.25rem; }
+  .cert-card strong { font-size: 1.2rem; margin-bottom: 1rem; padding-right: 1rem; }
+  .cert-card .cert-card-meta { font-size: 0.68rem; }
+  .cert-card .cert-card-blueprint { font-size: 0.66rem; padding-top: 0.85rem; margin-top: 0.85rem; }
+
+  /* Bank cards — denser */
+  .bank-card { padding: 1.15rem 1rem; }
+  .bank-card strong { font-size: 1rem; margin-bottom: 0.65rem; }
+  .bank-card .bank-meta { font-size: 0.72rem; }
+  .bank-card .bank-purpose { font-size: 0.78rem; }
+
+  /* Question card — tighter padding, 16px choice text to prevent iOS
+     auto-zoom on focus and improve readability at arm's length */
+  .question-card { padding: 1.25rem 1rem; border-radius: 10px; }
+  #quiz-question { font-size: 1.05rem; margin-bottom: 1.5rem; }
+  fieldset#quiz-choices label { padding: 0.95rem 0.95rem; gap: 0.75rem; }
+  fieldset#quiz-choices label .choice-text { font-size: 1rem; }    /* 16px — readable + no iOS zoom */
+  fieldset#quiz-choices .choice-letter { font-size: 0.9rem; min-width: 1.5em; }
+
+  /* Feedback panel — match card padding */
+  #quiz-feedback { padding: 1.15rem 1rem; }
+  #quiz-feedback p.fb-short { font-size: 0.98rem; }
+
+  /* Stats table — horizontal scroll instead of squishing */
+  #stats { overflow-x: auto; }
+  #stats table { font-size: 0.85rem; }
+  #stats th, #stats td { padding: 0.6rem 0.55rem; }
+
+  /* On mobile the kbd-hint hides (centre column not needed), so the grid
+     collapses to a 2-column layout: timer left + buttons right. When the
+     timer is also off (practice mode), col1 collapses to 0 and buttons
+     get the full width — no awkward empty half. */
+  .actionbar-inner {
+    padding: 0.55rem 0.9rem;
+    gap: 0.5rem;
+    min-height: 56px;
+    grid-template-columns: auto 1fr;
+  }
+  #quiz-timer.actionbar-timer { grid-column: 1; }
+  .actionbar-left {
+    grid-column: 2;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+  .actionbar-right { grid-column: 1 / -1; }
+  .actionbar-left button.primary { padding: 0.75rem 1.1rem; font-size: 0.9rem; }
+  .actionbar-left button.ghost { padding: 0.65rem 1rem; font-size: 0.85rem; }
+  .actionbar-timer { padding: 0.4rem 0.75rem 0.4rem 0.6rem; }
+  .actionbar-timer .timer-value { font-size: 0.95rem; }
+  .actionbar-right { gap: 0.4rem; font-size: 0.6rem; }
+  .actionbar-right .actionbar-divider,
+  .actionbar-right #bank-stats,
+  .actionbar-right .rh-sep { display: none; }   /* only session-stats + nav controls fit */
+
+  /* Question header — tighter */
+  .question-header { font-size: 0.65rem; gap: 0.4rem; margin-bottom: 0.7rem; }
+}
+
+@media (max-width: 380px) {
+  main { padding: 1.25rem 0.85rem 2rem; }
+  .masthead-inner { padding: 0.5rem 0.85rem; gap: 0.5rem; }
+  .quiz-meta-strip { font-size: 0.6rem; }
+  .quiz-meta-strip .rh-sep { display: none; }     /* gain a few precious pixels */
+  .quiz-meta-strip #quiz-domain { display: none; } /* keep just the cert name */
+  .actionbar-inner { padding: 0.5rem 0.7rem; }
+  .actionbar-right #session-stats { font-size: 0.7rem; }
+}
+
+/* Landscape phones — keep the actionbar slim so most of the viewport
+   is for the question card. */
+@media (max-width: 920px) and (orientation: landscape) and (max-height: 500px) {
+  .masthead-inner { min-height: 44px; padding: 0.4rem 1rem; }
+  .actionbar-inner { padding: 0.5rem 1rem; min-height: 52px; }
+  main { padding: 1.25rem 1.25rem 2rem; }
+  .streak-toast { top: 3rem; }
 }
