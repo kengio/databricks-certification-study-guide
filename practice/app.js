@@ -24,6 +24,10 @@
 (() => {
   "use strict";
 
+  // Bump on every deploy that changes app.js / data/*.json. Appended to
+  // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
+  const APP_VERSION = "3";
+
   const KNOWN_BANKS = [
     { cert: "data-engineer-associate", file: "data/data-engineer-associate.json" },
     { cert: "data-engineer-professional", file: "data/data-engineer-professional.json" },
@@ -182,11 +186,15 @@
 
   // --- Bank loading --------------------------------------------------------
 
+  function bustedUrl(file) {
+    return file + (file.includes("?") ? "&" : "?") + "v=" + APP_VERSION;
+  }
+
   async function probeBanks() {
     const available = [];
     for (const b of KNOWN_BANKS) {
       try {
-        const res = await fetch(b.file, { method: "HEAD" });
+        const res = await fetch(bustedUrl(b.file), { method: "HEAD", cache: "no-cache" });
         if (res.ok) available.push(b);
       } catch (_) { /* file missing — skip */ }
     }
@@ -194,7 +202,7 @@
   }
 
   async function loadBank(certInfo) {
-    const res = await fetch(certInfo.file);
+    const res = await fetch(bustedUrl(certInfo.file), { cache: "no-cache" });
     if (!res.ok) throw new Error(`Failed to load ${certInfo.file}`);
     const data = await res.json();
     STATE.bank = data;
@@ -219,7 +227,7 @@
     for (const b of available) {
       const button = el("button", { type: "button", className: "bank-card",
                                     onclick: () => loadBank(b) }, b.cert);
-      fetch(b.file).then(r => r.json()).then(d => {
+      fetch(bustedUrl(b.file), { cache: "no-cache" }).then(r => r.json()).then(d => {
         clear(button);
         button.appendChild(el("strong", {}, d.certTitle || d.cert));
         button.appendChild(el("div", { className: "bank-meta" },
