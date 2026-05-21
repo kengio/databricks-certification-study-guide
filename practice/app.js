@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "12";
+  const APP_VERSION = "13";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -773,8 +773,13 @@
   function handleKeydown(ev) {
     // Only react when the quiz section is visible
     if ($("#quiz").hidden) return;
-    // Ignore when the user is typing inside an input/select
-    if (ev.target.matches && ev.target.matches("input, textarea, select")) return;
+    // Ignore when the user is typing in a real input. Radios + checkboxes
+    // are explicitly NOT excluded — we still want Space/Enter/arrows to work
+    // when focus is on a choice's radio (which is normal after ↑/↓ or click).
+    if (ev.target.matches
+        && ev.target.matches("input:not([type=radio]):not([type=checkbox]), textarea, select")) {
+      return;
+    }
     // Ignore when a modifier key is held (let browser shortcuts pass through)
     if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
 
