@@ -809,7 +809,7 @@ D) Use a Databricks notebook task scheduled to run the chain
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> The Mosaic AI Agent Framework `ResponsesAgent` + `databricks.agents.deploy()` is the documented one-step path that gives you streaming, MLflow tracing, and Inference Tables auto-enabled. `databricks.agents.deploy()` provisions the Model Serving endpoint, registers the version, and wires all three features in one call. B is the "build it yourself" path that loses the framework benefits. C works but is two-step (no streaming or auto-tracing unless wrapped). D is for batch processing, not serving.
+> The Mosaic AI Agent Framework `ResponsesAgent` + `databricks.agents.deploy()` is the documented one-step path that gives you streaming, MLflow tracing, and Inference Tables auto-enabled — the third pillar (Inference Tables) directly enables the EVAL-1 / online-monitoring story. `databricks.agents.deploy()` provisions the Model Serving endpoint, registers the version, and wires all three features in one call. B is the "build it yourself" path that loses the framework benefits. C works but is two-step (no streaming or auto-tracing unless wrapped). D is for batch processing, not serving.
 
 ---
 
