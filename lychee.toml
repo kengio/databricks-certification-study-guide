@@ -5,8 +5,7 @@
 # - Skip external HTTP/HTTPS URLs (their health is verified manually during
 #   the 4-round PR review; flaky external endpoints would otherwise constantly
 #   fail CI)
-# - Skip in-document anchors (#section) — markdownlint catches malformed headings
-# - Skip mailto:, tel:, ftp:
+# - Skip mailto:, tel:, ftp:, data:, javascript:
 
 # Skip external URLs and other non-file schemes
 exclude = [
@@ -20,12 +19,6 @@ exclude = [
 
 # Don't check links inside fenced code blocks (Python imports, SQL, etc.)
 include_verbatim = false
-
-# Don't follow redirects (we only care about file existence)
-no_progress = true
-
-# Exit non-zero on any failure
-exit_code = 1
 
 # Cache to speed up repeated checks
 cache = true
