@@ -117,20 +117,60 @@
     }
   }
 
+  const FENCE_OPEN_RE = /^\s*```(\w*)\s*$/;
+  const FENCE_CLOSE_RE = /^\s*```\s*$/;
+
   function renderMarkdown(s) {
     const frag = document.createDocumentFragment();
-    const paragraphs = s.split(/\n\s*\n/);
-    for (const para of paragraphs) {
-      const trimmed = para.trim();
-      if (!trimmed) continue;
-      const p = el("p");
-      const lines = trimmed.split("\n");
-      for (let i = 0; i < lines.length; i++) {
-        renderInline(lines[i], p);
-        if (i < lines.length - 1) p.appendChild(el("br"));
+    const lines = s.split("\n");
+    let buffer = [];
+
+    const flushParagraphs = () => {
+      // `buffer` is a slab of lines; split it into paragraphs by blank lines
+      // and render each as a <p> with inline formatting + <br> for newlines.
+      let para = [];
+      const emit = () => {
+        if (para.length === 0) return;
+        const p = el("p");
+        for (let j = 0; j < para.length; j++) {
+          renderInline(para[j], p);
+          if (j < para.length - 1) p.appendChild(el("br"));
+        }
+        frag.appendChild(p);
+        para = [];
+      };
+      for (const ln of buffer) {
+        if (ln.trim() === "") emit();
+        else para.push(ln);
       }
-      frag.appendChild(p);
+      emit();
+      buffer = [];
+    };
+
+    let i = 0;
+    while (i < lines.length) {
+      const fence = lines[i].match(FENCE_OPEN_RE);
+      if (fence) {
+        flushParagraphs();
+        const codeLines = [];
+        i++;
+        while (i < lines.length && !FENCE_CLOSE_RE.test(lines[i])) {
+          codeLines.push(lines[i]);
+          i++;
+        }
+        // Skip the closing fence (if present)
+        if (i < lines.length) i++;
+        const code = el("code");
+        code.textContent = codeLines.join("\n");
+        const pre = el("pre");
+        pre.appendChild(code);
+        frag.appendChild(pre);
+        continue;
+      }
+      buffer.push(lines[i]);
+      i++;
     }
+    flushParagraphs();
     return frag;
   }
 
