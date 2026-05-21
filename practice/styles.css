@@ -1225,3 +1225,50 @@ fieldset#quiz-choices label:focus-within {
   20%  { opacity: 1; transform: translate(0, calc(-50% - 8px)); }
   100% { opacity: 0; transform: translate(0, calc(-50% - 36px)); }
 }
+
+/* ---------- Confetti burst on correct answer ---------- */
+
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.confetti-particle {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  border-radius: 1.5px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: confetti-arc 1.4s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes confetti-arc {
+  0% {
+    transform: translate(-50%, -50%) rotate(0);
+    opacity: 1;
+  }
+  10% { opacity: 1; }
+  50% {
+    transform: translate(
+      calc(-50% + var(--mid-dx)),
+      calc(-50% + var(--mid-dy))
+    ) rotate(calc(var(--rot) / 2));
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--end-dx)),
+      calc(-50% + var(--end-dy))
+    ) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-container { display: none; }
+}

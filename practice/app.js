@@ -26,7 +26,7 @@
 
   // Bump on every deploy that changes app.js / data/*.json. Appended to
   // bank-JSON fetch URLs so browsers don't serve stale banks after a deploy.
-  const APP_VERSION = "14";
+  const APP_VERSION = "15";
 
   // Title patterns that are placeholder fallbacks (mock-exam questions whose
   // source heading is `## Question N *(Difficulty)*` with no real title text).
@@ -555,6 +555,67 @@
     setTimeout(() => plus.remove(), 1200);
   }
 
+  // Zero-dependency confetti burst — 40 particles in random colors, each
+  // following a parabolic arc with rotation. Origin is the centre of the
+  // chosen correct-answer label so the burst feels like it comes from that
+  // row. Auto-skipped when prefers-reduced-motion: reduce is set.
+  function fireConfetti(originEl) {
+    if (window.matchMedia
+        && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    const rect = originEl.getBoundingClientRect();
+    const ox = rect.left + rect.width / 2;
+    const oy = rect.top + rect.height / 2;
+
+    const colors = [
+      "#FF4F2C", "#FFAB1F", "#10B981", "#14B8A6",
+      "#3B82F6", "#6366F1", "#A855F7", "#EC4899",
+      "#F59E0B", "#FFFFFF",
+    ];
+    const N = 40;
+    const container = document.createElement("div");
+    container.className = "confetti-container";
+
+    for (let i = 0; i < N; i++) {
+      const p = document.createElement("span");
+      p.className = "confetti-particle";
+
+      // Mostly-upward initial direction with wide horizontal spread
+      const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.3;
+      const speed = 160 + Math.random() * 200;
+      const dx = Math.cos(angle) * speed;
+      const dy = Math.sin(angle) * speed;
+      // Midpoint of parabola (apex)
+      const midDx = dx * 0.65;
+      const midDy = dy * 0.85;
+      // Final position: initial horizontal + gravity fall
+      const endDx = dx;
+      const endDy = dy + 380 + Math.random() * 220;
+      const rot = (Math.random() - 0.5) * 720;
+
+      p.style.left = ox + "px";
+      p.style.top = oy + "px";
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      // Vary particle shape so it doesn't all look identical
+      if (Math.random() < 0.3) {
+        p.style.borderRadius = "50%";
+        p.style.width = "8px"; p.style.height = "8px";
+      }
+      p.style.setProperty("--mid-dx", midDx + "px");
+      p.style.setProperty("--mid-dy", midDy + "px");
+      p.style.setProperty("--end-dx", endDx + "px");
+      p.style.setProperty("--end-dy", endDy + "px");
+      p.style.setProperty("--rot", rot + "deg");
+      p.style.animationDelay = (Math.random() * 80) + "ms";
+
+      container.appendChild(p);
+    }
+
+    document.body.appendChild(container);
+    setTimeout(() => container.remove(), 2000);
+  }
+
   function submitAnswer() {
     if (!STATE.currentChoice) return;
     const q = STATE.currentQ;
@@ -592,6 +653,7 @@
     }
     if (correct && correctLabel) {
       showFloatPlus(correctLabel);
+      fireConfetti(correctLabel);
       // Toast at 3, 5, 7, 10, every 5 thereafter
       if (STATE.streak === 3 || STATE.streak === 5 || STATE.streak === 7
           || STATE.streak === 10 || (STATE.streak > 10 && STATE.streak % 5 === 0)) {
