@@ -14,6 +14,19 @@ tags:
 
 Tables are the fundamental storage units in Databricks SQL for organizing and accessing data. Schemas provide logical organization of tables, while Delta provides ACID compliance and performance optimization.
 
+> [!abstract]
+>
+> - Managed vs external tables; temporary views
+> - Schemas, table properties, comments, and Delta features
+> - Liquid clustering for data layout
+
+> [!tip] What the Exam Tests
+>
+> - `DROP TABLE` behaviour for managed vs external tables
+> - DDL for schemas and tables, including `CREATE OR REPLACE`
+
+---
+
 ## Table Types Architecture
 
 ```mermaid

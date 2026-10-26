@@ -373,7 +373,7 @@ SELECT * FROM system.principals
 WHERE user_name = current_user();
 ```
 
-## Best Practices
+## Access Control Best Practices
 
 ### Principle of Least Privilege
 
