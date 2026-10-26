@@ -709,16 +709,16 @@
       "domain": "governance-and-security",
       "title": "Question 42",
       "difficulty": "medium",
-      "question": "A company wants to share a Delta table with an external partner organization that uses a different cloud provider, without copying the underlying data. Which Databricks feature enables this?",
+      "question": "A team registered the external Delta table `main.bronze.vendor_feed` over an existing cloud storage path. Nothing writes to that path directly any more, and the team now wants Unity Catalog to own the table's storage, without changing its name, permissions, or history. Ten days after the change, they may still need to undo it. Which approach fits?",
       "choices": {
-        "A": "External Location with cross-account IAM role",
-        "B": "DBFS mount with public access enabled",
-        "C": "Unity Catalog data lineage export",
-        "D": "Delta Sharing — an open protocol for sharing live data across organizations"
+        "A": "Drop the external table and re-create it as a managed table with `CREATE TABLE ... AS SELECT`",
+        "B": "Run `RESTORE TABLE main.bronze.vendor_feed TO VERSION AS OF 0`, which restores the table as managed",
+        "C": "Run `DEEP CLONE` into a new managed table and swap the names",
+        "D": "Run `ALTER TABLE main.bronze.vendor_feed SET MANAGED`, and roll back with `ALTER TABLE ... UNSET MANAGED` within 14 days if needed"
       },
       "correctAnswer": "D",
-      "shortAnswer": "Delta Sharing is an open, REST-based protocol that enables sharing live Delta Lake data with external organizations without copying data or requiring the recipient to use Databricks. Recipients access shared data using open-source Delta Sharing clients in Python, Spark, or pandas. External Locations manage access to cloud storage within the same organization, not across organizations.",
-      "explanation": ""
+      "shortAnswer": "`ALTER TABLE ... SET MANAGED` converts an external Delta table to a managed table in place. It keeps the name, settings, permissions, views, and table history, and needs Databricks Runtime 17.3 LTS+ or serverless and ownership of the table. `UNSET MANAGED` points the table back to its original external location, and it is available for 14 days after the conversion.",
+      "explanation": "Dropping and re-creating, or cloning and swapping names, produces a new table that loses its grants and history. `RESTORE` restores data versions, not the table type. Existing read and write streams fail after the conversion and need a restart."
     },
     {
       "id": "data-engineer-associate-mock-1-q043",
