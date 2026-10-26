@@ -78,7 +78,8 @@ with sql.connect(server_hostname=..., http_path=...) as conn:
             SELECT request:messages AS messages, response:choices AS response
             FROM main.serving_logs.customer_support_rag_payload
             WHERE request_time >= current_timestamp() - INTERVAL 1 DAY
-            TABLESAMPLE (500 ROWS)
+            ORDER BY rand()
+            LIMIT 500
         """)
         df = cursor.fetchall_arrow().to_pandas()
 
