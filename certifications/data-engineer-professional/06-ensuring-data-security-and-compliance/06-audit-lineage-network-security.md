@@ -693,4 +693,4 @@ VPC Peering Setup:
 
 ---
 
-**[← Previous: Secret Management](./05-secret-management.md) | [↑ Back to Security & Governance](./README.md) | [Next: Data Classification, Compliance & Permissions](./04-classification-compliance-permissions.md) →**
+**[← Previous: Secret Management](./05-secret-management.md) | [↑ Back to Section](./README.md) | [Next: Unity Catalog →](../07-data-governance/01-unity-catalog.md)**

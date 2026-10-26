@@ -1,16 +1,16 @@
 ---
-title: Databricks Compute
-type: topic
+title: Databricks Compute — Part 1
+type: study-material
 tags:
-  - data-engineering
+  - data-engineer-professional
   - compute
   - clusters
 status: published
 ---
 
-# Databricks Compute
+# Databricks Compute — Part 1
 
-Understanding Databricks compute options is essential for building cost-effective, performant data pipelines. Choose the right compute type based on workload characteristics.
+Understanding Databricks compute options is essential for building cost-effective, performant data pipelines. This part covers classic compute: all-purpose and job clusters, instance pools, cluster policies, autoscaling, spot instances, and cluster permissions. [Part 2](./09-databricks-compute-part2.md) covers serverless compute (environments, dependencies, performance mode, high memory, auto-optimization), SQL warehouses, and Photon.
 
 ## Overview
 
@@ -25,18 +25,31 @@ flowchart TB
 
     Automated --> JobCluster[Job Clusters]
     Automated --> Pools[Instance Pools]
+    Automated --> ServerlessJobs[Serverless Jobs and Pipelines]
 
     SQL --> SQLWarehouse[SQL Warehouses]
     SQL --> ServerlessSQL[Serverless SQL]
 ```
+
+> [!abstract]
+>
+> - Classic compute runs in your cloud account: all-purpose clusters for interactive work, job clusters created per run, and instance pools to cut startup time.
+> - Cluster policies (`fixed`, `allowlist`, `blocklist`, `range`, `unlimited`) enforce configuration and cost standards.
+> - Autoscaling, spot instances with `first_on_demand`, and cluster permissions round out classic configuration.
+
+> [!tip] What the Exam Tests
+>
+> - "Choose appropriate compute and configuration for environments and dependencies" — know when classic compute is still required and how it is configured.
+> - Picking job clusters vs all-purpose clusters, pools, policies, and spot settings for a given cost and reliability constraint.
+> - Serverless-specific settings (environments, performance mode, high memory, auto-optimization) are in [Part 2](./09-databricks-compute-part2.md).
 
 ## Compute Types Comparison
 
 | Type | Use Case | Cost | Startup Time | Best For |
 | :--- | :--- | :--- | :--- | :--- |
 | All-Purpose Clusters | Interactive development | Higher | 5-10 minutes | Notebooks, exploration |
-| Job Clusters | Production jobs | Lower | 5-10 minutes | Scheduled workloads |
-| Serverless Compute | Quick development | Pay-per-use | Seconds | Ad-hoc queries |
+| Job Clusters | Production jobs on classic compute | Lower | 5-10 minutes | Scheduled workloads that need classic-only features |
+| Serverless Compute | Notebooks, jobs, Lakeflow Pipelines | Pay per use | Seconds (performance-optimized); 4-6 minutes in standard mode | Default for supported job task types |
 | Instance Pools | Reduce startup time | Moderate | Seconds | Frequent cluster creation |
 | SQL Warehouse | SQL analytics | Per-query | Minutes | BI, dashboards |
 | Serverless SQL | SQL analytics | Per-query | Seconds | BI, ad-hoc SQL |
@@ -61,7 +74,7 @@ flowchart LR
 | Users | Multiple users can attach notebooks |
 | Languages | Supports Python, SQL, Scala, R |
 | Cost model | Pay while running (even if idle) |
-| Auto-termination | Configurable (default 120 minutes) |
+| Auto-termination | Configurable: 10–10,000 minutes of inactivity, or 0 to disable |
 
 ### Creating All-Purpose Clusters
 
@@ -118,7 +131,7 @@ w.clusters.edit(
 | :--- | :--- |
 | `autotermination_minutes=0` | Never auto-terminate |
 | `autotermination_minutes=60` | Terminate after 60 mins idle |
-| Default | 120 minutes |
+| Not set (Clusters API) | Cluster is not automatically terminated |
 
 ## Job Clusters
 
@@ -282,172 +295,6 @@ job = w.jobs.create(
 | `max_capacity` | Based on peak usage | Prevent over-provisioning |
 | `idle_instance_autotermination_minutes` | 15-30 | Reduce idle costs |
 | `preloaded_spark_versions` | Your common versions | Faster startup |
-
-## Serverless Compute
-
-Serverless compute provides instant compute without cluster management.
-
-### Serverless for Notebooks
-
-```mermaid
-flowchart LR
-    User[User] --> Notebook[Notebook]
-    Notebook --> Serverless[Serverless Compute]
-    Serverless --> |Instant| Execution[Code Execution]
-```
-
-| Feature | Behavior |
-| :--- | :--- |
-| Startup time | Seconds (not minutes) |
-| Languages | Python, SQL |
-| Scaling | Automatic |
-| Cost | Pay per compute usage |
-| Management | No cluster configuration needed |
-
-### Enabling Serverless
-
-```python
-
-# Serverless is enabled at workspace level
-# Attach notebook to "Serverless" compute option in UI
-
-```
-
-### Serverless Limitations
-
-| Supported | Not Supported |
-| :--- | :--- |
-| Python | Scala |
-| SQL | R |
-| Spark DataFrames | Low-level RDD operations |
-| Most Spark APIs | Custom JARs |
-| Delta Lake | Some advanced Spark configs |
-
-## SQL Warehouses
-
-SQL warehouses are optimized for SQL analytics and BI workloads.
-
-### Warehouse Types
-
-```mermaid
-flowchart TB
-    SQLWarehouse[SQL Warehouse] --> Classic[Classic]
-    SQLWarehouse --> Pro[Pro]
-    SQLWarehouse --> Serverless[Serverless]
-
-    Classic --> C1["Standard SQL"]
-    Pro --> P1["Enhanced security"]
-    Pro --> P2["Query federation"]
-    Serverless --> S1["Instant startup"]
-    Serverless --> S2["Auto-scaling"]
-```
-
-| Type | Features | Best For |
-| :--- | :--- | :--- |
-| Classic | Standard SQL, Photon | Cost-sensitive workloads |
-| Pro | + Query federation, enhanced security | Enterprise features |
-| Serverless | Instant start, auto-scale, no management | Ad-hoc queries, variable load |
-
-### Creating SQL Warehouse
-
-![SQL Warehouse Creation](../../../images/databricks-ui/sql/sql_warehouse_creation.png)
-
-*SQL Warehouse creation form showing cluster size, auto-stop, and scaling settings.*
-
-```python
-from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.sql import EndpointInfo
-
-w = WorkspaceClient()
-
-warehouse = w.warehouses.create(
-    name="analytics-warehouse",
-    cluster_size="Small",  # 2X-Small, X-Small, Small, Medium, Large, X-Large, 2X-Large, 3X-Large, 4X-Large
-    min_num_clusters=1,
-    max_num_clusters=4,
-    auto_stop_mins=30,
-    enable_photon=True,
-    warehouse_type="PRO",  # CLASSIC, PRO
-    spot_instance_policy="COST_OPTIMIZED"  # COST_OPTIMIZED, RELIABILITY_OPTIMIZED
-).result()
-
-print(f"Warehouse ID: {warehouse.id}")
-```
-
-### Warehouse Sizing
-
-| Size | Cluster DBU/hour | Use Case |
-| :--- | :--- | :--- |
-| 2X-Small | 2 | Light queries |
-| X-Small | 4 | Development |
-| Small | 8 | Small team |
-| Medium | 16 | Medium workloads |
-| Large | 32 | Heavy analytics |
-| X-Large+ | 64+ | Enterprise scale |
-
-### Auto-Scaling
-
-```python
-# Configure scaling
-
-warehouse = w.warehouses.edit(
-    id="warehouse-id",
-    min_num_clusters=1,   # Minimum clusters running
-    max_num_clusters=10,  # Maximum concurrent clusters
-    auto_stop_mins=15     # Stop after 15 mins idle
-)
-```
-
-```mermaid
-flowchart LR
-    Load[Query Load] --> Scale{Scaling Decision}
-    Scale --> |High load| ScaleUp[Add clusters]
-    Scale --> |Low load| ScaleDown[Remove clusters]
-    Scale --> |No queries| Stop[Auto-stop]
-```
-
-## Photon Engine
-
-Photon is Databricks' native vectorized query engine for accelerated SQL and DataFrame operations.
-
-### Photon Benefits
-
-| Workload | Speedup | Notes |
-| :--- | :--- | :--- |
-| Aggregations | 2-8x | SIMD vectorization |
-| Joins | 2-5x | Optimized hash joins |
-| Scans | 2-4x | Columnar processing |
-| Filters | 2-5x | Predicate pushdown |
-
-### Enabling Photon
-
-```python
-# On clusters
-
-cluster = w.clusters.create(
-    cluster_name="photon-cluster",
-    spark_version="14.3.x-photon-scala2.12",  # Use Photon runtime
-    runtime_engine="PHOTON",  # Explicitly enable
-    # ...
-)
-
-# On SQL warehouses (enabled by default)
-
-warehouse = w.warehouses.create(
-    name="photon-warehouse",
-    enable_photon=True,  # Enable Photon
-    # ...
-)
-```
-
-### Photon Limitations
-
-| Accelerated | Not Accelerated |
-| :--- | :--- |
-| SQL queries | Python UDFs |
-| DataFrame operations | Scala UDFs |
-| Delta Lake operations | Complex nested types |
-| Parquet/ORC reads | Some window functions |
 
 ## Cluster Policies
 
@@ -655,118 +502,8 @@ w.permissions.set(
 )
 ```
 
-## Use Cases
-
-### Development Workflow
-
-| Stage | Compute Type | Rationale |
-| :--- | :--- | :--- |
-| Exploration | Serverless or small all-purpose | Quick iteration |
-| Development | All-purpose cluster | Persistent environment |
-| Testing | Job cluster | Isolated, reproducible |
-| Production | Job cluster with pool | Fast startup, cost-effective |
-
-### Cost Optimization Decision Tree
-
-```mermaid
-flowchart TD
-    Start[Choose Compute] --> Interactive{Interactive?}
-    Interactive --> |Yes| Predictable{Predictable usage?}
-    Interactive --> |No| Automated[Job Cluster]
-
-    Predictable --> |Yes| AllPurpose[All-Purpose Cluster]
-    Predictable --> |No| Serverless[Serverless Compute]
-
-    Automated --> Frequent{Frequent runs?}
-    Frequent --> |Yes| Pool[Job Cluster + Pool]
-    Frequent --> |No| JobCluster[Job Cluster]
-```
-
-## Common Issues & Errors
-
-### Cluster Startup Timeout
-
-**Scenario:** Cluster takes too long to start.
-
-**Fix:** Use instance pools or check cloud quotas.
-
-### Out of Memory
-
-**Scenario:** Executor or driver OOM errors.
-
-**Fix:** Increase instance size or add workers:
-
-```python
-# Increase driver memory
-
-spark_conf = {
-    "spark.driver.memory": "8g"
-}
-```
-
-### Spot Instance Interruption
-
-**Scenario:** Spot instances preempted during job.
-
-**Fix:** Use `SPOT_WITH_FALLBACK` or set first_on_demand:
-
-```python
-aws_attributes = {
-    "first_on_demand": 2,  # Keep driver + 1 worker on-demand
-    "availability": "SPOT_WITH_FALLBACK"
-}
-```
-
-### Policy Violation
-
-**Scenario:** Cluster creation blocked by policy.
-
-**Fix:** Adjust cluster config to comply with policy or request policy change.
-
-### Quota Exceeded
-
-**Scenario:** Cannot create cluster due to cloud quota.
-
-**Fix:** Request quota increase from cloud provider or terminate unused resources.
-
-## Exam Tips
-
-1. **Job vs All-Purpose** - Job clusters are isolated and cost-effective for production
-2. **Pools** - Reduce startup time from minutes to seconds
-3. **Serverless** - Instant startup, Python/SQL only, no Scala/R
-4. **Photon** - Accelerates SQL/DataFrame ops, not UDFs
-5. **Auto-termination** - Default 120 mins, set 0 to disable
-6. **Autoscaling** - Based on pending tasks and resource usage
-7. **Spot instances** - Use first_on_demand for driver reliability
-8. **Cluster permissions** - Can Attach To < Can Restart < Can Manage
-9. **Policies** - fixed, allowlist, range, unlimited types
-10. **SQL Warehouse sizes** - Know Small = 8 DBU/hour baseline
-
-## Key Takeaways
-
-- **Job clusters vs all-purpose clusters**: job clusters are created per run, isolated, and auto-terminated — lower cost and recommended for production; all-purpose clusters persist and are shared across users — better for interactive development
-- **Instance pools** keep a set of pre-provisioned idle instances that reduce cluster startup from minutes to seconds; clusters reference a pool via `instance_pool_id`
-- **Serverless compute** starts in seconds and supports Python and SQL only; Scala and R are not supported, and low-level RDD operations and custom JARs are unavailable
-- **Photon** accelerates SQL queries and DataFrame operations (joins, aggregations, scans, filters) via vectorized C++ execution but does not accelerate Python or Scala UDFs
-- **Auto-termination default is 120 minutes**; setting `autotermination_minutes=0` disables it (not recommended for cost management)
-- **Cluster policy types**: `fixed` (enforced value), `allowlist` (must be in list), `blocklist` (must not be in list), `range` (min/max), `unlimited` (unrestricted)
-- **SQL Warehouse types**: Classic (standard), Pro (query federation, enhanced security), Serverless (instant startup, auto-scale, no management overhead)
-- **Spot instance availability**: `SPOT` (all spot, higher interruption risk), `SPOT_WITH_FALLBACK` (spot preferred with on-demand fallback), `ON_DEMAND` (no interruption, highest cost)
-
-## Related Topics
-
-- [Workspace and Notebooks](10-workspace-and-notebooks.md) - Compute attachment
-- [Performance Optimization](../05-cost-and-performance-optimization/README.md) - Tuning compute
-- [Cost Optimization](../05-cost-and-performance-optimization/10-cost-optimization.md) - Reducing spend
-
-## Official Documentation
-
-- [Compute Overview](https://docs.databricks.com/compute/index.html)
-- [Cluster Configuration](https://docs.databricks.com/clusters/configure.html)
-- [Instance Pools](https://docs.databricks.com/clusters/instance-pools/index.html)
-- [SQL Warehouses](https://docs.databricks.com/sql/admin/sql-endpoints.html)
-- [Photon](https://docs.databricks.com/runtime/photon.html)
+> **Continue reading:** [Part 2 — Serverless Compute, Environments, SQL Warehouses, Photon & Exam Tips](./09-databricks-compute-part2.md)
 
 ---
 
-**[← Previous: Databricks REST API — Part 2 (Permissions, SQL, Error Handling & Use Cases)](../04-monitoring-and-alerting/05-rest-api-part2.md) | [↑ Back to Databricks Tooling](../05-cost-and-performance-optimization/README.md) | [Next: DBFS and Mounts](../07-data-governance/03-dbfs-and-uc-volumes.md) →**
+**[Next: Databricks Compute — Part 2 →](./09-databricks-compute-part2.md)**

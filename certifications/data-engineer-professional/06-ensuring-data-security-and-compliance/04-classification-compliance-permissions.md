@@ -57,8 +57,8 @@ ALTER TABLE prod.gold.customers UNSET TAGS ('retention_days');
 ```sql
 -- Find all tables tagged as containing PII
 SELECT
-    table_catalog,
-    table_schema,
+    catalog_name,
+    schema_name,
     table_name,
     tag_name,
     tag_value
@@ -68,8 +68,8 @@ WHERE tag_name = 'contains_pii'
 
 -- Find all columns tagged as sensitive
 SELECT
-    table_catalog,
-    table_schema,
+    catalog_name,
+    schema_name,
     table_name,
     column_name,
     tag_name,
@@ -199,6 +199,9 @@ SET spark.databricks.delta.retentionDurationCheck.enabled = true;
 -- WARNING: RETAIN 0 HOURS breaks time travel for all data in the table
 -- Best practice: schedule GDPR deletions and VACUUM with 7-day retention
 ```
+
+> [!note] Platform update (Oct 2026)
+> On tables with deletion vectors, run `REORG TABLE ... APPLY (PURGE)` before `VACUUM` so deleted rows are rewritten out of the data files, and on Databricks Runtime 18.0+ `VACUUM` uses the `delta.deletedFileRetentionDuration` table property rather than the `RETAIN` argument (except `RETAIN 0 HOURS`). The full erasure workflow is in [Anonymization, PII Controls, and Data Purging](./03-anonymization-pii-and-data-purging.md). Sources: [GDPR compliance with Delta Lake](https://docs.databricks.com/aws/en/ldp/gdpr), [VACUUM](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum)
 
 ### GDPR Deletion Tracking
 
@@ -351,8 +354,8 @@ Key inheritance rules:
 | :--- | :--- |
 | Ownership cascades | Object owner has full control over all children |
 | USE privilege required | Must have USE CATALOG and USE SCHEMA to access tables |
-| GRANT does not cascade | Granting SELECT on a schema does NOT auto-grant on future tables in Unity Catalog (behavior differs from some RDBMS) |
-| Explicit grants needed | Each level requires explicit privilege grants |
+| Grants inherit downward | A privilege granted on a catalog or schema applies to all current **and future** objects inside it |
+| Usage still required | Inherited `SELECT` is usable only with `USE CATALOG` and `USE SCHEMA` on the parents |
 
 ### Ownership vs Privileges
 
@@ -590,11 +593,11 @@ GRANT USE SCHEMA ON SCHEMA prod.gold TO `compliance-team`;
 ```sql
 -- Table tags
 SELECT * FROM system.information_schema.table_tags
-WHERE table_catalog = 'prod';
+WHERE catalog_name = 'prod';
 
 -- Column tags
 SELECT * FROM system.information_schema.column_tags
-WHERE table_catalog = 'prod';
+WHERE catalog_name = 'prod';
 ```
 
 ### VACUUM With RETAIN 0 HOURS Fails
@@ -698,7 +701,7 @@ D) GRANT OPTION
 4. **VACUUM for GDPR** -- DELETE alone is insufficient; VACUUM is required to permanently remove data from Delta Lake storage
 5. **Tags for classification** -- Use `ALTER TABLE/COLUMN SET TAGS` for data classification; query tags via `system.information_schema.table_tags` and `column_tags`
 6. **Private Link vs SCC** -- Private Link secures control-plane-to-data-plane traffic; SCC removes public IPs from cluster nodes; both are recommended for regulated workloads
-7. **MANAGE permission** -- Allows granting/revoking on an object without ownership; more powerful than ALL PRIVILEGES for governance delegation
+7. **MANAGE permission** -- Allows granting/revoking on an object without ownership; note that `ALL PRIVILEGES` does not include `MANAGE`
 8. **Group-based access** -- Always use groups rather than individual user grants for scalable permission management
 9. **Service principals** -- Use separate service principals per pipeline/application with least-privilege access
 10. **Ownership vs privileges** -- Owners have full control (including DROP and ALTER); privilege holders are limited to specific operations
@@ -710,9 +713,9 @@ D) GRANT OPTION
 - **Tag syntax**: table tags use `ALTER TABLE ... SET TAGS ('key' = 'value')`; column tags use `ALTER TABLE ... ALTER COLUMN <col> SET TAGS ('key' = 'value')`; tags are queried via `system.information_schema.table_tags` and `system.information_schema.column_tags`
 - **GDPR right-to-be-forgotten**: `DELETE` alone is not sufficient — Delta Lake keeps old data files for time travel; `VACUUM` must also be run to permanently remove deleted files from storage; `RETAIN 0 HOURS` requires disabling the retention safety check
 - **CCPA data subject requests**: export all records for a data subject using `UNION ALL` across tables filtered by `customer_id`, then deliver to the consumer; deletion follows the same DELETE + VACUUM pattern as GDPR
-- **MANAGE permission**: allows a principal to grant/revoke privileges on an object without being the owner; it is more powerful than data-access privileges for governance delegation
+- **MANAGE permission**: allows a principal to grant/revoke privileges on an object without being the owner; `ALL PRIVILEGES` does not include it
 - **Ownership vs privileges**: owners have full implicit control (SELECT, MODIFY, DROP, ALTER, GRANT, transfer ownership); privilege holders are limited to the specific operations granted to them; only owners can drop objects
-- **GRANT does not auto-cascade to future tables**: granting `SELECT ON SCHEMA prod.gold TO analysts` covers current tables but NOT tables created in the future — future grants must be applied explicitly or at creation time
+- **Grants inherit to future objects**: granting `SELECT ON SCHEMA prod.gold TO analysts` covers the tables in that schema now and any created later (analysts still need `USE CATALOG` and `USE SCHEMA`) — see [Unity Catalog permission inheritance](../07-data-governance/01-unity-catalog.md)
 - **Group-based access best practice**: always grant to groups rather than individual users; use layered group strategies (role groups + team groups + access-level groups) synced from an identity provider via SCIM
 - **Lineage only works for UC-managed tables**: hive_metastore tables do not generate automatic lineage; migration to Unity Catalog is required to enable lineage tracking
 
@@ -739,4 +742,4 @@ D) GRANT OPTION
 
 ---
 
-**[← Previous: Audit Logging, Data Lineage & Network Security](./06-audit-lineage-network-security.md) | [↑ Back to Security & Governance](./README.md)**
+**[← Previous: Anonymization, PII Controls, and Data Purging](./03-anonymization-pii-and-data-purging.md) | [↑ Back to Section](./README.md) | [Next: Secret Management →](./05-secret-management.md)**

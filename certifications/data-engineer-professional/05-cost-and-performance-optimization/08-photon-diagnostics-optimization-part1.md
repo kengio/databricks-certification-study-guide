@@ -446,4 +446,4 @@ Solutions:
 
 ---
 
-**[← Previous: EXPLAIN Plans & Adaptive Query Execution](./07-explain-plans-aqe.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Photon, Diagnostics & Query Optimization — Part 2](./08-photon-diagnostics-optimization-part2.md) →**
+**[Next: Photon, Diagnostics & Query Optimization — Part 2 →](./08-photon-diagnostics-optimization-part2.md)**

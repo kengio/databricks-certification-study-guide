@@ -131,4 +131,4 @@ Databricks tracks the files-already-loaded set in the target table's commit log.
 
 ---
 
-**[← Previous: Auto Loader](./01-auto-loader.md) | [↑ Back to Data Ingestion & Acquisition](./README.md) | [Next: Streaming Ingestion from Message Buses →](./03-streaming-ingestion-from-message-buses.md)**
+**[← Previous: Auto Loader](./01-auto-loader.md) | [↑ Back to Section](./README.md) | [Next: Streaming Ingestion from Message Buses →](./03-streaming-ingestion-from-message-buses.md)**

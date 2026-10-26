@@ -461,4 +461,4 @@ databricks configure --token
 
 ---
 
-**[← Previous: Databricks CLI — Part 1](./04-databricks-cli-part1.md) | [↑ Back to Databricks Tooling](../08-debugging-and-deploying/README.md) | [Next: REST API — Part 1 (Jobs, Clusters, DBFS & Workspace APIs)](./05-rest-api-part1.md) →**
+**[← Previous: Databricks CLI — Part 1](./04-databricks-cli-part1.md) | [↑ Back to Section](./README.md) | [Next: Databricks REST API — Part 1: Jobs, Clusters, DBFS & Workspace APIs →](./05-rest-api-part1.md)**

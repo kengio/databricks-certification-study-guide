@@ -213,7 +213,7 @@ ALTER TABLE bronze.events ADD COLUMN user_agent STRING;
 
 ### GitHub Actions OIDC with Databricks
 
-OIDC (OpenID Connect) federation eliminates the need for long-lived tokens in CI/CD pipelines. The CI runner obtains a short-lived token from the identity provider.
+Databricks calls this **workload identity federation** (a form of OAuth token federation): the CI runner's OIDC token is exchanged for a short-lived Databricks OAuth token for a service principal, so no PAT or client secret is stored in CI. Source: [Enable workload identity federation for GitHub Actions](https://docs.databricks.com/aws/en/dev-tools/auth/provider-github)
 
 ```mermaid
 sequenceDiagram
@@ -253,26 +253,24 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      # No token needed - OIDC handles authentication
+      # No token or client secret needed - workload identity federation
       - name: Deploy to production
         run: databricks bundle deploy -t prod
         env:
+          DATABRICKS_AUTH_TYPE: github-oidc
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_SP_CLIENT_ID }}
-          # Token exchange happens via OIDC - no client secret needed
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_SP_CLIENT_ID }}  # SP application ID
 ```
 
 ```bash
 
-# Configure Databricks service principal for OIDC
-# In Databricks Account Console:
-# Create service principal
-# Add federation policy:
-#    - Issuer: https://token.actions.githubusercontent.com
-#    - Subject: repo:org/repo-name:ref:refs/heads/main
-#    - Audiences: https://accounts.cloud.databricks.com
+# Create a service principal federation policy (account level), e.g. with
+#   databricks account service-principal-federation-policy create <SP_NUMERIC_ID> --json '{"oidc_policy": {...}}'
+#    - Issuer:    https://token.actions.githubusercontent.com
+#    - Subject:   repo:my-org/my-repo:environment:prod  (environment entity type recommended)
+#    - Audiences: your Databricks account ID (the default if omitted)
 
-# Azure AD federation for GitHub Actions
+# Alternative on Azure: Microsoft Entra federated credential for GitHub Actions
 
 az ad app federated-credential create \
     --id <app-object-id> \
@@ -288,9 +286,9 @@ az ad app federated-credential create \
 
 | Practice | Description | Priority |
 | :--- | :--- | :--- |
-| Use OIDC federation | No long-lived secrets in CI | High |
+| Use workload identity federation (OIDC) | No long-lived secrets in CI | High |
 | Scope service principals | Minimum required permissions | High |
-| Rotate PAT tokens | Set expiration, rotate regularly | High |
+| Avoid PATs (legacy); if used, rotate | Set expiration, rotate regularly | High |
 | Environment protection | Require approval for prod deploy | High |
 | Audit CI/CD access | Review service principal activity | Medium |
 | IP allowlisting | Restrict CI runner IP ranges | Medium |
@@ -323,7 +321,7 @@ az ad app federated-credential create \
 5. **Delta Time Travel for rollback** - `RESTORE TABLE ... TO VERSION AS OF N`
 6. **Feature flags** - Store in Unity Catalog Delta table, read at pipeline runtime
 7. **Schema migrations** - Track applied versions in a Delta table to ensure idempotency
-8. **OIDC federation** - Eliminates long-lived secrets; requires `id-token: write` permission in GitHub Actions
+8. **Workload identity federation (OIDC)** - Eliminates long-lived secrets; requires `id-token: write` in GitHub Actions and `DATABRICKS_AUTH_TYPE: github-oidc`
 9. **Environment protection rules** - Enforce manual approval and reviewer gates for production
 10. **Separate service principals** - Use different SPs per environment for least-privilege access
 
@@ -349,9 +347,10 @@ az ad app federated-credential create \
 
 - [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
 - [Bundle Configuration Reference](https://docs.databricks.com/dev-tools/bundles/settings.html)
-- [OIDC Federation](https://docs.databricks.com/dev-tools/authentication-oidc.html)
+- [OAuth token federation](https://docs.databricks.com/aws/en/dev-tools/auth/oauth-federation)
+- [Enable workload identity federation for GitHub Actions](https://docs.databricks.com/aws/en/dev-tools/auth/provider-github)
 - [Delta Time Travel](https://docs.databricks.com/delta/history.html)
 
 ---
 
-**[← Previous: Bundle Deployment Strategies — Part 1 (Bundle Patterns & CI/CD Pipelines)](./04-bundle-deployment-strategies-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Advanced Testing & Operations — Part 1](../01-developing-code-for-data-processing/12-advanced-testing-operations-part1.md) →**
+**[← Previous: Bundle Deployment Strategies — Part 1: Bundle Patterns & CI/CD Pipelines](./04-bundle-deployment-strategies-part1.md) | [↑ Back to Section](./README.md) | [Next: CI/CD Integration — Part 1: Platforms & Configuration →](./05-cicd-integration-part1.md)**

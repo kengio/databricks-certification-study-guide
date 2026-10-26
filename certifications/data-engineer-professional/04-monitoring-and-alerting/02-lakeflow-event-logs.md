@@ -540,4 +540,4 @@ WHERE event_type = 'flow_progress';
 
 ---
 
-**[← Previous: Spark UI Debugging](../08-debugging-and-deploying/01-spark-ui-debugging.md) | [↑ Back to Monitoring & Logging](./README.md) | [Next: Query Profiler](../05-cost-and-performance-optimization/05-query-profiler.md) →**
+**[← Previous: System Tables](./01-system-tables.md) | [↑ Back to Section](./README.md) | [Next: Lakehouse Alerts →](./03-lakehouse-alerts.md)**

@@ -1,8 +1,8 @@
 {
   "cert": "data-engineer-professional-mock-1",
   "certTitle": "Data Engineer Professional — Mock Exam 1",
-  "blueprintVersion": "Nov 30, 2025",
-  "generated": "2026-05-22",
+  "blueprintVersion": "Oct 9, 2026",
+  "generated": "2026-10-26",
   "domains": [
     {
       "id": "section-1-data-processing",
@@ -712,12 +712,12 @@
       "question": "Which feature enables secure data sharing with external organizations?",
       "choices": {
         "A": "Create a service principal for the partner to access via API",
-        "B": "Use Delta Sharing to share data via open protocol",
+        "B": "Use OpenSharing to share data via open protocol",
         "C": "Export data daily to a shared cloud storage location",
         "D": "Create a Databricks workspace for the partner with access to the dataset"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Delta Sharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.",
+      "shortAnswer": "OpenSharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.",
       "explanation": ""
     },
     {
@@ -813,7 +813,7 @@
         "D": "Query the pipeline's event log table for expectation metrics"
       },
       "correctAnswer": "D",
-      "shortAnswer": "Lakeflow Declarative Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.",
+      "shortAnswer": "Lakeflow Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.",
       "explanation": ""
     },
     {
@@ -973,7 +973,7 @@
         "D": "The materialized view requires a manual REFRESH command"
       },
       "correctAnswer": "A",
-      "shortAnswer": "In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Declarative Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.",
+      "shortAnswer": "In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.",
       "explanation": ""
     },
     {
@@ -1005,7 +1005,7 @@
         "D": "Query the pipeline event log for expectation metrics"
       },
       "correctAnswer": "D",
-      "shortAnswer": "Lakeflow Declarative Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Declarative Pipelines tracks this automatically.",
+      "shortAnswer": "Lakeflow Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Pipelines tracks this automatically.",
       "explanation": ""
     },
     {

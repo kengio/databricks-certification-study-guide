@@ -268,9 +268,8 @@ export DATABRICKS_HOST="https://..."
 export DATABRICKS_TOKEN="dapi..."
 databricks workspace list /
 
-# Check token expiration
-# PAT tokens have configurable lifetime
-# Service principal tokens may need refresh
+# Check token expiration (PATs are legacy and have a configurable lifetime);
+# prefer a service principal with OAuth M2M or workload identity federation
 
 ```
 
@@ -302,17 +301,15 @@ databricks workspace list /
   run: databricks bundle deploy -t prod
   timeout-minutes: 30
 
-# Or deploy incrementally
-
-- name: Deploy jobs only
-  run: databricks bundle deploy -t prod --resource jobs
+# There is no per-resource-type deploy flag; `--select` exists for plan/deploy
+# but the docs say it is not intended for production. Split large bundles instead.
 ```
 
-### State File Conflicts
+### Deployment Lock Conflicts
 
-**Scenario:** Multiple CI runs cause state conflicts.
+**Scenario:** Multiple CI runs deploy the same target at once and fail on the deployment lock.
 
-**Fix:** Use locking or sequential deployments:
+**Fix:** Serialize deployments per target (use `--force-lock` only to clear a stale lock from a crashed run):
 
 ```yaml
 # GitHub Actions - use concurrency
@@ -356,13 +353,13 @@ def mock_spark():
 ## Key Takeaways
 
 - **Service principal over PAT**: Production CI/CD pipelines should authenticate using service principals rather than personal access tokens (PATs) to avoid dependency on individual user credentials.
-- **Concurrency gating**: Use GitHub Actions `concurrency:` groups to prevent parallel deployments from causing Terraform state file conflicts when multiple PRs merge simultaneously.
+- **Concurrency gating**: Use GitHub Actions `concurrency:` groups to serialize deployments to a target, so parallel merges do not collide on the bundle's deployment lock and state.
 - **Testing pyramid in CI**: Unit tests (local, fast, no Spark) run first; integration tests (real Spark/Databricks) run after; data quality tests (schema and null checks) validate production correctness.
 - **Blue-green with bundles**: Implement blue-green deployments by defining two separate `targets` (e.g., `prod-blue`, `prod-green`) in `databricks.yml` with slot-specific resource names.
 - **Canary pattern**: Deploy to a small subset first, monitor for a fixed period, then either promote to full rollout or trigger rollback — never deploy directly to 100% of traffic.
 - **Secret management**: Never hardcode credentials in workflow YAML; use GitHub Secrets, Azure DevOps variable groups, or HashiCorp Vault for all credential references.
 - **Environment gates**: Require manual approvers and wait timers on GitHub Actions production environments to enforce a human-in-the-loop before critical deployments.
-- **Deployment timeout handling**: Set explicit `timeout-minutes` on deploy steps and use `--resource jobs` to deploy incrementally when full deployments time out.
+- **Deployment timeout handling**: Set explicit `timeout-minutes` on deploy steps; split very large bundles rather than relying on partial deploys.
 
 ## Related Topics
 
@@ -380,4 +377,4 @@ def mock_spark():
 
 ---
 
-**[← Previous: CI/CD Integration — Part 1 (Platforms & Configuration)](./05-cicd-integration-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Git Folders](./06-git-folders.md) →**
+**[← Previous: CI/CD Integration — Part 1: Platforms & Configuration](./05-cicd-integration-part1.md) | [↑ Back to Section](./README.md) | [Next: Git Folders →](./06-git-folders.md)**

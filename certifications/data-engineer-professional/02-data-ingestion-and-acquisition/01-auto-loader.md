@@ -745,4 +745,4 @@ print(query.status)
 
 ---
 
-**[← Previous: Structured Streaming — Part 2](../01-developing-code-for-data-processing/04-structured-streaming-part2.md) | [↑ Back to Data Processing](./README.md) | [Next: Change Data Capture (CDC) — Part 1](04-change-data-capture-part1.md) →**
+**[← Previous: Advanced Testing & Operations — Part 2](../01-developing-code-for-data-processing/12-advanced-testing-operations-part2.md) | [↑ Back to Section](./README.md) | [Next: COPY INTO →](./02-copy-into.md)**

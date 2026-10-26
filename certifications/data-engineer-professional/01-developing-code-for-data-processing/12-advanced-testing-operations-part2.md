@@ -683,4 +683,4 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 
 ---
 
-**[← Previous: Advanced Testing & Operations — Part 1](./12-advanced-testing-operations-part1.md) | [↑ Back to Testing & Deployment](../08-debugging-and-deploying/README.md)**
+**[← Previous: Advanced Testing & Operations — Part 1](./12-advanced-testing-operations-part1.md) | [↑ Back to Section](./README.md) | [Next: Auto Loader →](../02-data-ingestion-and-acquisition/01-auto-loader.md)**

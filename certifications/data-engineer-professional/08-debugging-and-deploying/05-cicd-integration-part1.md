@@ -58,11 +58,14 @@ export DATABRICKS_HOST="https://adb-1234567890.1.azuredatabricks.net"
 export DATABRICKS_CLIENT_ID="00000000-0000-0000-0000-000000000000"
 export DATABRICKS_CLIENT_SECRET="your-client-secret"
 
-# Or using OAuth token
+# Or, in GitHub Actions, workload identity federation (no secret stored)
 
+export DATABRICKS_AUTH_TYPE="github-oidc"
 export DATABRICKS_HOST="https://adb-1234567890.1.azuredatabricks.net"
-export DATABRICKS_TOKEN="your-oauth-token"
+export DATABRICKS_CLIENT_ID="00000000-0000-0000-0000-000000000000"
 ```
+
+`DATABRICKS_CLIENT_ID` + `DATABRICKS_CLIENT_SECRET` select OAuth M2M (`oauth-m2m`); `DATABRICKS_TOKEN` is a personal access token, which the docs mark as legacy. Source: [Environment variables for unified authentication](https://docs.databricks.com/aws/en/dev-tools/auth/env-vars)
 
 ### Azure Service Principal Setup
 
@@ -82,16 +85,15 @@ az ad sp create-for-rbac --name "databricks-cicd-sp" --role Contributor \
 ### AWS Authentication
 
 ```bash
-# Using instance profile (recommended for EC2/EKS)
+# The Databricks CLI does not authenticate with AWS instance profiles or AWS keys.
+# Use a Databricks service principal (OAuth M2M or workload identity federation):
 
 export DATABRICKS_HOST="https://my-workspace.cloud.databricks.com"
+export DATABRICKS_CLIENT_ID="00000000-0000-0000-0000-000000000000"
+export DATABRICKS_CLIENT_SECRET="your-client-secret"
 
-# Instance profile attached to runner handles auth
-
-# Using access keys (less recommended)
-
-export DATABRICKS_HOST="https://my-workspace.cloud.databricks.com"
-export DATABRICKS_TOKEN="dapi..."
+# Legacy: personal access token
+# export DATABRICKS_TOKEN="dapi..."
 ```
 
 ## GitHub Actions
@@ -613,4 +615,4 @@ pipeline {
 
 ---
 
-**[← Previous: Declarative Automation Bundles — Part 2](./03-declarative-automation-bundles-part2.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: CI/CD Integration — Part 2 (Testing, Secrets & Monitoring)](./05-cicd-integration-part2.md) →**
+**[Next: CI/CD Integration — Part 2: Testing, Secrets & Monitoring →](./05-cicd-integration-part2.md)**

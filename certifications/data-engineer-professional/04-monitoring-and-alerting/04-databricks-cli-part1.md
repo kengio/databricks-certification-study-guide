@@ -457,4 +457,4 @@ databricks jobs delete --job-id 123456
 
 ---
 
-**[← Previous: Workspace and Notebooks](../01-developing-code-for-data-processing/10-workspace-and-notebooks.md) | [↑ Back to Databricks Tooling](../08-debugging-and-deploying/README.md) | [Next: Databricks CLI — Part 2](./04-databricks-cli-part2.md) →**
+**[Next: Databricks CLI — Part 2 →](./04-databricks-cli-part2.md)**

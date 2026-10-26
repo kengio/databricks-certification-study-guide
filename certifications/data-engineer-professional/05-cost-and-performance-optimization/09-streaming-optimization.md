@@ -431,4 +431,4 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 
 ---
 
-**[← Previous: Photon, Diagnostics & Query Optimization — Part 2](./08-photon-diagnostics-optimization-part2.md) | [↑ Back to Performance Optimization](./README.md)**
+**[← Previous: Photon, Diagnostics & Query Optimization — Part 2](./08-photon-diagnostics-optimization-part2.md) | [↑ Back to Section](./README.md) | [Next: Cost Optimization →](./10-cost-optimization.md)**

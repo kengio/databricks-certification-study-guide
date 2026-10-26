@@ -400,13 +400,16 @@ ALTER TABLE main.default.orders SET TBLPROPERTIES (
 ### Triggering Clustering
 
 ```sql
--- Manual trigger (similar to OPTIMIZE)
+-- Incremental clustering of data that still needs it
 OPTIMIZE main.default.orders;
 
--- Clustering happens automatically with:
--- 1. Writes when auto-optimize is enabled
--- 2. OPTIMIZE commands
--- 3. Background maintenance (Databricks-managed)
+-- Recluster all existing data, e.g. after changing keys (DBR 16.4 LTS+)
+OPTIMIZE main.default.orders FULL;
+
+-- Clustering also happens:
+-- 1. On write (INSERT INTO, CTAS/RTAS, COPY INTO from Parquet, append) once the
+--    transaction exceeds a size threshold (64 MB for 1 key on UC managed tables)
+-- 2. Through predictive optimization, which runs OPTIMIZE on UC managed tables
 ```
 
 ### When to Use Liquid Clustering
@@ -415,7 +418,7 @@ OPTIMIZE main.default.orders;
 |----------|----------------|
 | New tables | Use liquid clustering |
 | Uncertain query patterns | Use liquid clustering (easy to change) |
-| Very large tables (PB+) | Still consider traditional partitioning |
+| Tables of 100 TB or more | Liquid clustering first. Partition only if it measurably helps |
 | Need exact partition control | Use traditional partitioning |
 | Streaming workloads | Liquid clustering works well |
 
@@ -429,7 +432,7 @@ OPTIMIZE main.default.orders;
 | Filter efficiency | Partition pruning | Data skipping | Data skipping |
 | Cardinality support | Low-medium | High | High |
 | Column changes | Table rebuild | Re-OPTIMIZE | ALTER TABLE |
-| Maintenance | Manual | Manual OPTIMIZE | Automatic |
+| Maintenance | Manual | Manual OPTIMIZE | OPTIMIZE (run by predictive optimization on UC managed tables) |
 | Streaming support | Good | Manual maintenance | Good |
 
 ### Decision Guide
@@ -478,26 +481,23 @@ OPTIMIZE main.default.orders;
 
 ```python
 # Control file size with repartition
+# (Docs: don't repartition/coalesce just before a write when optimized writes is on)
 
 (df.repartition(10)
     .write
     .format("delta")
     .mode("append")
     .saveAsTable("main.default.orders"))
+```
 
-# Target file size
-
-spark.conf.set("spark.databricks.delta.optimizeWrite.fileSize", "128mb")
+```sql
+-- Pin a fixed target file size (otherwise Databricks autotunes by table size)
+ALTER TABLE main.default.orders SET TBLPROPERTIES ('delta.targetFileSize' = '256mb');
 ```
 
 ### Target File Sizes
 
-| Scenario | Target File Size |
-|----------|-----------------|
-| General workloads | 128 MB - 1 GB |
-| Frequent small queries | 64 MB - 128 MB |
-| Large scan workloads | 256 MB - 1 GB |
-| Streaming | 64 MB - 128 MB |
+Databricks autotunes target file size from table size. See [File size targets](#file-size-targets) below. On Unity Catalog managed tables, only `OPTIMIZE` respects a manual `delta.targetFileSize`.
 
 ## Partition Evolution
 
@@ -539,9 +539,64 @@ spark.sql("ALTER TABLE main.default.orders_new RENAME TO main.default.orders")
 ALTER TABLE main.default.orders
 CLUSTER BY (region, order_month);
 
--- Previous clustering columns are changed
--- Existing data will be re-clustered on next OPTIMIZE
+-- New keys apply to subsequent writes and OPTIMIZE runs.
+-- Existing data is NOT rewritten until you run:
+OPTIMIZE main.default.orders FULL;
 ```
+
+> [!note]
+> In Databricks Runtime 18.1+, `ALTER TABLE ... REPLACE PARTITIONED BY WITH CLUSTER BY` converts a partitioned Delta table to liquid clustering in place, without the CTAS rebuild shown above.
+
+## Designing Layouts for Large Delta and Iceberg Tables
+
+> [!tip] What the Exam Tests
+> "Design scalable Delta/Iceberg table layouts for large data assets by mapping partitioning to data grain, aligning clustering to relationship access patterns, and maintaining balanced file sizes through compaction."
+
+| Exam phrase | Documented guidance |
+| :--- | :--- |
+| Map partitioning to data grain | Partition only large tables, only on low or known cardinality columns (for example a date), and only when every partition holds at least 1 GB. Unpartitioned Delta tables get ingestion time clustering automatically |
+| Align clustering to relationship access patterns | Pick clustering keys from the columns most used in filters **and joins** (up to 4 keys). If two columns are highly correlated, keep one. Dynamic file pruning skips more fact files when the join key is a clustering key. Use hierarchical clustering (DBR 17.1+) to prioritize a low-cardinality column such as a date. `CLUSTER BY AUTO` lets predictive optimization choose keys from query history (UC managed tables) |
+| Balanced file sizes through compaction | `OPTIMIZE` compacts and incrementally clusters. Run `OPTIMIZE ... FULL` after changing keys. Predictive optimization runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` on UC managed tables. Target file size is autotuned by table size. Auto compaction and optimized writes are always on for `MERGE` / `UPDATE` / `DELETE` |
+
+### Size thresholds for partitioning
+
+| Table size | Guidance |
+| :--- | :--- |
+| Less than 1 TB | Don't partition |
+| 1 TB to 100 TB | Use liquid clustering instead. Partitioning likely hurts more often than it helps |
+| 100 TB or more | Partitioning might help, but use liquid clustering first and verify the gain |
+| Any partitioned table | Each partition should contain at least 1 GB. Fewer, larger partitions outperform many small ones |
+
+```sql
+-- Large fact table: no partitions; cluster on the time grain and the main join key
+CREATE TABLE main.gold.fact_events (
+  event_date  DATE,
+  customer_id BIGINT,
+  event_type  STRING,
+  amount      DECIMAL(18,2)
+)
+CLUSTER BY (event_date, customer_id)
+TBLPROPERTIES ('delta.liquid.hierarchicalClusteringColumns' = 'event_date');
+
+-- Convert an over-partitioned table in place (DBR 18.1+); partition columns
+-- become hierarchical clustering keys. Then cluster the data.
+ALTER TABLE main.gold.fact_events_legacy
+  REPLACE PARTITIONED BY WITH CLUSTER BY (event_date, customer_id);
+OPTIMIZE main.gold.fact_events_legacy;
+```
+
+When migrating keys, use partition columns and `ZORDER BY` columns as clustering keys. For a generated low-cardinality column (such as a date derived from a timestamp), cluster on the original column instead. Streaming tables and materialized views in Lakeflow pipelines can't use the conversion command. Change their definitions to `CLUSTER BY`.
+
+### Managed Iceberg tables
+
+- Unity Catalog managed Iceberg tables support **only liquid clustering**. `PARTITIONED BY` columns are interpreted as clustering keys, so the conversion command isn't needed (running it raises an error).
+- Liquid clustering on Iceberg is Public Preview (DBR 16.4 LTS+). Automatic liquid clustering needs Iceberg v3 and DBR 18.0+.
+- Partition evolution (`ADD` / `DROP` / `REPLACE PARTITION FIELD`) works only from external Iceberg engines through the Iceberg REST Catalog, not from Databricks SQL. Expression transforms such as `years()` or `bucket()` aren't supported. With `bucket(c1, n)`, Unity Catalog drops the transform and clusters on `c1`.
+- Managed Iceberg tables require predictive optimization.
+
+### File size targets
+
+Unity Catalog managed tables tune file size automatically. The autotuned target is 256 MB for tables under 2.56 TB, grows linearly to 1 GB between 2.56 TB and 10 TB, and stays at 1 GB above 10 TB. Larger targets don't rewrite existing smaller files. To force a size, set `delta.targetFileSize` (Delta) or `iceberg.targetFileSize` (Iceberg). For tables over 1 TB without predictive optimization, run `OPTIMIZE` on a schedule. Auto compaction and optimized writes reduce small files but don't replace `OPTIMIZE`.
 
 ## Use Cases
 
@@ -668,8 +723,10 @@ OPTIMIZE orders ZORDER BY (customer_id);  -- If filtering by customer
 6. **Generated columns** - Use for derived partition columns
 7. **Cardinality** - Low-medium for partitioning, high for Z-ORDER/clustering
 8. **replaceWhere** - Explicit partition overwrite option
-9. **File size target** - 128 MB - 1 GB for most workloads
-10. **Partition evolution** - Traditional requires rebuild, liquid uses ALTER
+9. **File size target** - Autotuned: 256 MB below 2.56 TB, growing to 1 GB above 10 TB. Pin with `delta.targetFileSize`
+10. **Partition evolution** - Traditional requires a rebuild (or `REPLACE PARTITIONED BY WITH CLUSTER BY` on DBR 18.1+). Liquid uses `ALTER TABLE ... CLUSTER BY` and then `OPTIMIZE FULL`
+11. **When to partition** - Under 1 TB never. 1–100 TB use liquid clustering. At least 1 GB per partition
+12. **Clustering for joins** - Cluster fact tables on frequently joined or filtered keys so dynamic file pruning skips files. Managed Iceberg tables support only liquid clustering
 
 ## Key Takeaways
 
@@ -680,21 +737,27 @@ OPTIMIZE orders ZORDER BY (customer_id);  -- If filtering by customer
 - **Dynamic partition overwrite**: `spark.sql.sources.partitionOverwriteMode = dynamic` causes `mode("overwrite")` to replace only the partitions present in the DataFrame, leaving other partitions untouched
 - **replaceWhere**: `.option("replaceWhere", "<condition>")` on a write restricts the overwrite to matching partitions; a more explicit alternative to dynamic partition overwrite
 - **Small file problem**: streaming and frequent small writes create many small files; solutions are `optimizeWrite=true` (coalesce on write), `autoCompact=true` (compact after write), periodic `OPTIMIZE`, or switching to Liquid Clustering
-- **Target file size**: 128 MB–1 GB for most workloads; streaming targets 64–128 MB; files outside this range degrade either metadata overhead (too small) or read parallelism (too large)
+- **Target file size**: Databricks autotunes by table size, from 256 MB (under 2.56 TB) to 1 GB (over 10 TB). Unity Catalog managed tables tune automatically, and predictive optimization runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` for them
+- **Layout for large assets**: partition only tables of 100 TB or more on a low-cardinality grain column with at least 1 GB per partition. Otherwise use liquid clustering keyed on filter and join columns (up to 4), and compact with `OPTIMIZE`
 
 ## Related Topics
 
 - [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - OPTIMIZE and VACUUM
 - [Performance Optimization](../05-cost-and-performance-optimization/README.md) - Query tuning
 - [Z-Order Indexing](../05-cost-and-performance-optimization/03-zorder-indexing.md) - Deep dive
+- [File Sizing](../05-cost-and-performance-optimization/02-file-sizing.md) - compaction and file size tuning
+- [Dimensional Modeling and Metric Views](06-dimensional-modeling-and-metric-views.md) - star-schema keys and joins
 
 ## Official Documentation
 
-- [Delta Lake Partitioning](https://docs.databricks.com/delta/best-practices.html#choose-the-right-partition-column)
-- [Z-Ordering](https://docs.databricks.com/delta/optimizations/file-mgmt.html#z-ordering-multi-dimensional-clustering)
-- [Liquid Clustering](https://docs.databricks.com/delta/clustering.html)
-- [Auto Optimize](https://docs.databricks.com/delta/optimizations/auto-optimize.html)
+- [When to partition tables on Databricks](https://docs.databricks.com/aws/en/tables/partitions)
+- [Use liquid clustering for tables](https://docs.databricks.com/aws/en/tables/clustering)
+- [Control data file size](https://docs.databricks.com/aws/en/tables/tune-file-size)
+- [Predictive optimization for Unity Catalog managed tables](https://docs.databricks.com/aws/en/optimizations/predictive-optimization)
+- [Dynamic file pruning](https://docs.databricks.com/aws/en/optimizations/dynamic-file-pruning)
+- [What is Apache Iceberg in Databricks? (partition evolution)](https://docs.databricks.com/aws/en/iceberg/)
+- [Data skipping (Z-order)](https://docs.databricks.com/aws/en/tables/data-skipping)
 
 ---
 
-**[← Previous: SCD Patterns](05-scd-patterns.md) | [↑ Back to Data Modeling](../05-cost-and-performance-optimization/README.md)**
+**[← Previous: Delta Lake Fundamentals](./02-delta-lake-fundamentals.md) | [↑ Back to Section](./README.md) | [Next: Schema Management →](./04-schema-management.md)**

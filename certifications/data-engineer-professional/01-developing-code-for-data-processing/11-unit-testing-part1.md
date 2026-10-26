@@ -11,7 +11,7 @@ status: published
 
 # Unit Testing — Part 1
 
-Robust testing practices are essential for reliable data pipelines. This part covers unit testing strategies, pytest fundamentals, writing unit tests, chispa comparisons, mocking, and the Nutter framework.
+Robust testing practices are essential for reliable data pipelines. This part covers unit testing strategies, pytest fundamentals, writing unit tests, PySpark's built-in `assertDataFrameEqual` and `assertSchemaEqual` utilities, structuring code with `DataFrame.transform`, chispa comparisons, mocking, and the Nutter framework. [Part 2](./11-unit-testing-part2.md) covers testing patterns, integration tests, unit testing Lakeflow Pipelines (Beta), CI/CD integration, and exam tips.
 
 ## Overview
 
@@ -33,6 +33,19 @@ flowchart TB
     Integration --> Nutter
     E2E --> Great
 ```
+
+> [!abstract]
+>
+> - Unit tests check self-contained functions early and often; integration tests check how components work together against real compute and tables.
+> - PySpark ships `assertDataFrameEqual` and `assertSchemaEqual` in `pyspark.testing` (Spark 3.5+) for DataFrame and schema comparisons in any test framework.
+> - Writing each transformation as a `DataFrame -> DataFrame` function and chaining them with `DataFrame.transform` keeps logic testable without reading or writing tables.
+> - `pytest` fixtures (for example a session-scoped `spark` fixture in `conftest.py`) provide shared setup and teardown.
+
+> [!tip] What the Exam Tests
+>
+> - "Develop unit and integration tests using assertDataFrameEqual, assertSchemaEqual, DataFrame.transform, and testing frameworks to ensure code correctness."
+> - Choosing the right assertion and options (row order, float tolerance, schema-only checks) for a test.
+> - Structuring pipeline code so it can be unit-tested, and knowing where integration tests run.
 
 ## Testing Pyramid for Data Engineering
 
@@ -88,7 +101,7 @@ markers =
 pytest>=7.0.0
 pytest-cov>=4.0.0
 pytest-mock>=3.10.0
-pyspark>=3.4.0
+pyspark>=3.5.0   # pyspark.testing.assertDataFrameEqual / assertSchemaEqual
 chispa>=0.9.0
 ```
 
@@ -167,7 +180,143 @@ def deduplicate(df: DataFrame, key_columns: list) -> DataFrame:
     return df.dropDuplicates(key_columns)
 ```
 
-## Testing with chispa
+## PySpark Built-in Test Utilities
+
+> [!important] What the exam names
+> The exam guide names `assertDataFrameEqual`, `assertSchemaEqual`, `DataFrame.transform`, and "testing frameworks". The two assertions ship with PySpark in `pyspark.testing` (new in Spark 3.5.0), work with Spark Connect and Databricks Connect, and plug into any framework such as `pytest` or `unittest`. chispa and Nutter, covered later on this page, are third-party alternatives you may meet in older codebases.
+
+### Write transformations as composable functions
+
+Code is testable when each step is a function that takes a DataFrame (plus parameters) and returns a DataFrame. `DataFrame.transform(func, *args, **kwargs)` chains those functions without nesting calls; passing extra positional and keyword arguments needs Spark 3.3+.
+
+```python
+# src/my_project/transforms.py
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
+
+
+def clean_names(df: DataFrame, column: str = "name") -> DataFrame:
+    """Collapse repeated whitespace and trim."""
+    return df.withColumn(column, F.trim(F.regexp_replace(F.col(column), r"\s+", " ")))
+
+
+def keep_valid(df: DataFrame) -> DataFrame:
+    return df.filter(F.col("amount") > 0)
+
+
+def add_net_amount(df: DataFrame, tax_rate: float) -> DataFrame:
+    return df.withColumn("net_amount", F.round(F.col("amount") * (1 - tax_rate), 2))
+
+
+def build_silver(df: DataFrame, tax_rate: float) -> DataFrame:
+    """Compose the steps; each one is also unit-tested on its own."""
+    return (df
+        .transform(clean_names)
+        .transform(keep_valid)
+        .transform(add_net_amount, tax_rate=tax_rate))
+```
+
+Because none of these functions reads a table or writes output, a test can build a tiny input DataFrame, call one function, and compare the result. Reading and writing stay in a thin entry point (`main.py`, a notebook, or a pipeline file) that is covered by integration tests instead.
+
+### Share one SparkSession with a pytest fixture
+
+```python
+# tests/conftest.py
+import pytest
+from pyspark.sql import SparkSession
+
+
+@pytest.fixture(scope="session")
+def spark():
+    spark = (SparkSession.builder
+        .master("local[*]")
+        .appName("unit-tests")
+        .config("spark.sql.shuffle.partitions", "1")
+        .getOrCreate())
+    yield spark
+    spark.stop()
+```
+
+`scope="session"` creates the session once for the whole test run; `yield` hands it to every test that declares a `spark` argument, and the code after `yield` tears it down.
+
+### `assertDataFrameEqual`
+
+```python
+# tests/test_transforms.py
+from pyspark.sql import Row
+from pyspark.testing import assertDataFrameEqual
+
+from my_project.transforms import add_net_amount, build_silver, clean_names
+
+
+def test_clean_names_collapses_spaces(spark):
+    df = spark.createDataFrame([("John    D.",), ("  Alice G. ",)], ["name"])
+    expected = spark.createDataFrame([("John D.",), ("Alice G.",)], ["name"])
+    assertDataFrameEqual(clean_names(df), expected)
+
+
+def test_add_net_amount_within_tolerance(spark):
+    df = spark.createDataFrame([(1, 100.0)], ["id", "amount"])
+    expected = [Row(id=1, amount=100.0, net_amount=80.0)]   # list of Rows also works
+    assertDataFrameEqual(add_net_amount(df, tax_rate=0.2), expected, rtol=1e-5)
+
+
+def test_build_silver_drops_invalid_rows(spark):
+    df = spark.createDataFrame([(" Bob ", 10.0), ("Eve", -5.0)], ["name", "amount"])
+    expected = spark.createDataFrame([("Bob", 10.0, 9.0)], ["name", "amount", "net_amount"])
+    assertDataFrameEqual(build_silver(df, tax_rate=0.1), expected)
+```
+
+| Parameter | Default | Meaning |
+| :--- | :--- | :--- |
+| `actual`, `expected` | — | Spark, Spark Connect, pandas, or pandas-on-Spark DataFrames, or a list of `Row` objects |
+| `checkRowOrder` | `False` | Row order is ignored unless `True`; DataFrame order is non-deterministic unless explicitly sorted |
+| `rtol`, `atol` | `1e-5`, `1e-8` | Float/decimal values pass when `abs(a - b) <= atol + rtol * abs(b)` |
+| `ignoreNullable` | `True` | Nullable flags are ignored in the schema check (Spark 4.0+) |
+| `ignoreColumnOrder` | `False` | Compare columns by name instead of position (Spark 4.0+) |
+| `ignoreColumnName` / `ignoreColumnType` | `False` | Skip name or type checks in the schema comparison (Spark 4.0+) |
+| `maxErrors`, `showOnlyDiff`, `includeDiffRows` | `None`, `False`, `False` | Limit and shape the failure report (Spark 4.0+) |
+
+- The schema is checked only when `expected` is a DataFrame, not a list of Rows.
+- On failure it raises `PySparkAssertionError` with `[DIFFERENT_ROWS]` (and the percentage of mismatched rows plus a diff) or `[DIFFERENT_SCHEMA]`.
+- `ignoreColumnOrder` and `ignoreColumnName` can't both be `True`.
+
+### `assertSchemaEqual`
+
+`assertSchemaEqual` compares two `StructType` schemas, so pass `df.schema`, not the DataFrame. Use it to pin an output contract without comparing data.
+
+```python
+from pyspark.sql.types import DoubleType, StringType, StructField, StructType
+from pyspark.testing import assertSchemaEqual
+
+
+def test_build_silver_schema(spark):
+    df = spark.createDataFrame([("Bob", 10.0)], ["name", "amount"])
+    expected = StructType([
+        StructField("name", StringType(), True),
+        StructField("amount", DoubleType(), True),
+        StructField("net_amount", DoubleType(), True),
+    ])
+    assertSchemaEqual(build_silver(df, tax_rate=0.1).schema, expected)
+```
+
+In Spark 4.0+, `assertSchemaEqual` also accepts `ignoreNullable` (default `True`), `ignoreColumnOrder`, and `ignoreColumnName`. A failure raises `PySparkAssertionError: [DIFFERENT_SCHEMA]` with a diff of both schemas.
+
+### Choosing an assertion
+
+| Need | Use |
+| :--- | :--- |
+| Compare data and schema of two DataFrames | `assertDataFrameEqual(actual, expected)` |
+| Compare only the output schema (contract test) | `assertSchemaEqual(actual.schema, expected_schema)` |
+| Floating-point results | `assertDataFrameEqual(..., rtol=..., atol=...)` |
+| Result was explicitly sorted and order matters | `assertDataFrameEqual(..., checkRowOrder=True)` |
+| Quick expected values without building a DataFrame | `expected=[Row(...), Row(...)]` (no schema check) |
+| Count or a single value | Plain `assert df.count() == n` |
+
+## Testing with chispa (Third-Party)
+
+> [!note]
+> chispa is an open-source library, not part of PySpark; `assertDataFrameEqual` and `assertSchemaEqual` cover the same checks with built-in utilities.
 
 ### DataFrame Comparison
 
@@ -357,6 +506,9 @@ class TestAPIClient:
 
 ### Nutter Overview
 
+> [!note]
+> Nutter is an open-source project ([microsoft/nutter](https://github.com/microsoft/nutter)), not a Databricks product, and isn't named in the exam guide. For the exam, focus on `pytest` tests that use PySpark's built-in assertions.
+
 ```text
 Nutter is a Databricks-native testing framework:
 - Runs tests inside Databricks notebooks
@@ -484,4 +636,4 @@ nutter run /Workspace/Users/user@company.com/project/tests/ \
 
 ---
 
-**[← Previous: Git Folders](../08-debugging-and-deploying/06-git-folders.md) | [↑ Back to Testing & Deployment](../08-debugging-and-deploying/README.md) | [Next: Unit Testing — Part 2](./11-unit-testing-part2.md) →**
+**[Next: Unit Testing — Part 2 →](./11-unit-testing-part2.md)**

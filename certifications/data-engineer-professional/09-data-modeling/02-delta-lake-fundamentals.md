@@ -784,4 +784,4 @@ INSERT INTO orders VALUES ('ORD001', 1, -50);
 
 ---
 
-**[← Previous: Medallion Architecture](./01-medallion-architecture.md) | [↑ Back to Data Modeling](./README.md) | [Next: Schema Management](./04-schema-management.md) →**
+**[← Previous: Medallion Architecture](./01-medallion-architecture.md) | [↑ Back to Section](./README.md) | [Next: Partitioning Strategies →](./03-partitioning-strategies.md)**

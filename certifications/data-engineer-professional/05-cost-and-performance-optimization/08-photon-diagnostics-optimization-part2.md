@@ -438,4 +438,4 @@ D) `EXPLAIN COST`
 
 ---
 
-**[← Previous: Photon, Diagnostics & Query Optimization — Part 1](./08-photon-diagnostics-optimization-part1.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Streaming Performance Optimization](./09-streaming-optimization.md) →**
+**[← Previous: Photon, Diagnostics & Query Optimization — Part 1](./08-photon-diagnostics-optimization-part1.md) | [↑ Back to Section](./README.md) | [Next: Streaming Performance Optimization →](./09-streaming-optimization.md)**

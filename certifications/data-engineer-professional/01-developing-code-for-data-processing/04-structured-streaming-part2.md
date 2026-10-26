@@ -411,4 +411,4 @@ query = (df.writeStream
 
 ---
 
-**[← Previous: Structured Streaming — Part 1](./04-structured-streaming-part1.md) | [↑ Back to Data Processing](./README.md) | [Next: Auto Loader](../02-data-ingestion-and-acquisition/01-auto-loader.md) →**
+**[← Previous: Structured Streaming — Part 1](./04-structured-streaming-part1.md) | [↑ Back to Section](./README.md) | [Next: Streaming Joins & Stateful Operations →](./05-streaming-joins-stateful.md)**

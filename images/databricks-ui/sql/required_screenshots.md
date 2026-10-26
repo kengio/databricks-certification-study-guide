@@ -6,7 +6,7 @@ Screenshots for Databricks SQL — SQL Warehouses (serverless + classic), SQL Ed
 
 | File | Purpose | Referenced from |
 | :--- | :--- | :--- |
-| `sql_warehouse_creation.png` | SQL Warehouse creation UI highlighting the Serverless toggle | `certifications/data-engineer-professional/01-developing-code-for-data-processing/09-databricks-compute.md` |
+| `sql_warehouse_creation.png` | SQL Warehouse creation UI highlighting the Serverless toggle | `certifications/data-engineer-professional/01-developing-code-for-data-processing/09-databricks-compute-part2.md` |
 | `sql_editor_query_profile.png` | SQL Editor with the Query Profile pane open on an executed query | `certifications/data-engineer-professional/05-cost-and-performance-optimization/05-query-profiler.md` |
 | `sql_dashboard_parameters.png` | Dashboard showing interactive parameter widgets | `certifications/data-engineer-professional/01-developing-code-for-data-processing/10-workspace-and-notebooks.md` |
 | `sql_alerts_configuration.png` | SQL Alert configuration — threshold + notification | `certifications/data-engineer-professional/04-monitoring-and-alerting/02-lakeflow-event-logs.md` |

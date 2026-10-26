@@ -1,19 +1,36 @@
 ---
 title: Git Folders
-type: topic
+type: study-material
 tags:
-  - data-engineering
-  - git
+  - data-engineer-professional
+  - git-folders
+  - cicd
   - version-control
-  - collaboration
 status: published
 ---
 
 # Git Folders
 
-Git Folders (formerly Repos) provide native Git integration within Databricks workspaces, enabling version control for notebooks and project files directly from the Databricks UI.
-
 ## Overview
+
+Databricks Git folders (formerly Repos) are a visual Git client and API inside the workspace: you clone a remote repository, branch, commit, push, pull, merge, and rebase notebooks and files. For CI/CD, automation can update a production Git folder to a branch or tag through the Repos API or `databricks repos update`, while Declarative Automation Bundles deploy jobs and pipelines as code.
+
+> [!abstract]
+>
+> - Git folders = Repos renamed: same functionality, can live anywhere in the workspace, and support more asset types
+> - UI operations: clone, branch, commit & push, pull, merge, rebase, reset, resolve conflicts
+> - CI/CD: a **production Git folder** updated only by automation (`PATCH /api/2.0/repos/{id}` or `databricks repos update <id> --branch|--tag`)
+> - Databricks recommends bundles to deploy jobs and pipelines; Git folders hold the code
+
+> [!tip] What the Exam Tests
+>
+> - "Configure Git-based CI/CD workflows using Databricks Git folders (formerly Repos) to deploy notebooks and code."
+> - Updating a production Git folder from CI to a branch or tag, with a service principal's Git credential
+> - Choosing Git folders vs. bundles vs. a job's remote Git source (`git_source`)
+
+---
+
+## Architecture
 
 ```mermaid
 flowchart TB
@@ -37,13 +54,16 @@ flowchart TB
 
 ## Git Folders vs Legacy Repos
 
-| Feature | Git Folders | Legacy Repos |
+| Feature | Git folders | Repos (before the rename) |
 | :--- | :--- | :--- |
-| Location | /Workspace/Users or /Workspace/Shared | /Repos/ path |
-| File support | All file types | Limited file types |
-| Arbitrary folders | Yes | No |
-| Integration | Native workspace | Separate repos area |
-| Recommended | Yes | Deprecated |
+| Location | Any workspace folder, at any depth under your user folder, several per user | Only under `/Repos` |
+| Asset types | Files, notebooks, folders, plus DBSQL queries, AI/BI dashboard drafts, and alerts (Public Preview) | Fewer asset types |
+| Remote URL | **Required** | Not required |
+| Existing `/Repos` paths | Still work: `/Repos` and `/Workspace/Repos` are the same folder, so job, `dbutils.notebook.run`, and `%run` paths need no change | n/a |
+| Recommendation | Create new Git folders | Keep working; no deprecation announced |
+
+> [!note] Platform update (Oct 2026)
+> Repos are now called **Git folders**: "The core functionality hasn't changed, only the terminology." The API and CLI still use the `repos` name. Source: [What happened to Databricks Repos?](https://docs.databricks.com/aws/en/repos/what-happened-repos)
 
 ## Setting Up Git Folders
 
@@ -51,35 +71,39 @@ flowchart TB
 
 ```text
 UI Steps:
-1. Navigate to Workspace
-2. Right-click on folder → Create → Git Folder
+1. Navigate to Workspace (you need CAN MANAGE on the parent folder)
+2. New → Git folder
 3. Enter repository URL
 4. Select Git provider
-5. Choose branch
+5. Optionally enable sparse checkout mode
 6. Click Create
 ```
 
 ### Git Provider Configuration
 
 ```text
-Supported Providers:
-- GitHub (github.com, GitHub Enterprise)
-- GitLab (gitlab.com, GitLab Self-Managed)
-- Azure DevOps (dev.azure.com)
-- Bitbucket (bitbucket.org, Bitbucket Server)
+Cloud providers:
+- GitHub, GitHub Advanced Enterprise, GitHub Enterprise Cloud
+- Atlassian Bitbucket Cloud
+- GitLab and GitLab Enterprise Edition
+- Microsoft Azure DevOps (Azure Repos)
 - AWS CodeCommit
+
+Self-hosted (must be internet-accessible, or use the Git server proxy):
+- GitHub Enterprise Server, Bitbucket Server / Data Center,
+  GitLab Self-Managed, Azure DevOps Server
 ```
 
-### Personal Access Token Setup
+### Git Credential Setup
 
 ```text
+In Databricks: user icon → Settings → Linked accounts → Add Git credential
+
 For GitHub:
-1. Go to GitHub Settings → Developer Settings → Personal Access Tokens
-2. Generate new token with scopes:
-   - repo (full control)
-   - read:org (if using organization repos)
-3. In Databricks: User Settings → Git Integration
-4. Select GitHub, enter username and token
+- Recommended: the Databricks GitHub app (OAuth 2.0, tokens renewed
+  automatically, can be limited to specific repositories)
+- Or a fine-grained PAT (Contents: Read and write), or a classic PAT
+  with the repo scope (plus workflow to edit GitHub Actions files)
 
 For Azure DevOps:
 1. Go to Azure DevOps → User Settings → Personal Access Tokens
@@ -87,6 +111,8 @@ For Azure DevOps:
    - Code (Read & Write)
 3. In Databricks: User Settings → Git Integration
 4. Select Azure DevOps Services, enter token
+
+For jobs and CI/CD: configure a Git credential for a service principal
 ```
 
 ## Working with Git Folders
@@ -95,9 +121,9 @@ For Azure DevOps:
 
 ```text
 Pull:
-- Right-click folder → Git → Pull
-- Updates local folder with remote changes
-- Requires no local uncommitted changes
+- Git dialog → Pull
+- Updates the folder with remote changes
+- Conflicts with local changes are resolved as merge conflicts
 
 Commit & Push:
 - Right-click folder → Git → Commit & Push
@@ -111,9 +137,15 @@ Create Branch:
 - Optionally checkout new branch
 
 Switch Branch:
-- Right-click folder → Git → Switch Branch
 - Select from available branches
+- Discard changes you do not want to carry over first
+
+Merge / Rebase / Reset:
+- Merge another branch, rebase onto one, or reset
+- Reset = hard reset plus force push of the branch
 ```
+
+With the **Git CLI in Git folders** preview, standard `git` commands also run from the web terminal (serverless environment version 5+ or Databricks Runtime 17.0+).
 
 ### Resolving Conflicts
 
@@ -130,22 +162,25 @@ flowchart TD
 ```
 
 ```text
-Conflict Resolution:
-1. Pull detects conflicts
-2. Choose resolution strategy:
-   - Keep local changes
-   - Take remote changes
-   - Manual merge (edit conflicting files)
-3. Commit resolution
-4. Push changes
+Conflict Resolution (merge, rebase, or pull):
+1. The Git folders UI lists the conflicting files
+2. Choose per file:
+   - Keep all current changes
+   - Take all incoming changes
+   - Edit the file manually
+3. Or abort the operation to discard the conflicting changes
+4. Commit and push the resolution
 ```
 
 ## File Organization
 
 ### Supported File Types
 
+New notebooks default to **IPYNB** format. Git folders recognize a notebook by the `.ipynb` extension or by a marker such as `# Databricks notebook source` at the top of a source file. Outputs of `.ipynb` notebooks are committed only if a workspace admin allows it (controlled per repo by `.databricks/commit_outputs`). MLflow experiments, legacy alerts, and Genie Agents cannot be committed.
+
 | File Type | Extension | Notes |
 | :--- | :--- | :--- |
+| Jupyter Notebook (default) | .ipynb | Keeps dashboards and visualizations |
 | Python Notebook | .py | With # Databricks notebook source header |
 | SQL Notebook | .sql | With -- Databricks notebook source header |
 | Scala Notebook | .scala | With // Databricks notebook source header |
@@ -323,11 +358,13 @@ sequenceDiagram
 
 ### Importing Python Modules
 
+On Databricks Runtime 11.3 LTS and above, the notebook's working directory and the **Git folder root** are added to `sys.path` automatically, so modules at the repo root import directly. Use `sys.path.append` only for other directories (on serverless the working directory is not guaranteed, so use absolute paths).
+
 ```python
 
 # Databricks notebook source
 
-# Add project root to path
+# Only needed because src/python is not the Git folder root
 
 import sys
 sys.path.append("/Workspace/Users/user@company.com/my-project/src/python")
@@ -350,82 +387,83 @@ data_validation.check_nulls(df_cleaned)
 
 ## Automating Git Operations
 
-### Webhook Integration
+### Production Git Folder (CI/CD for Code)
+
+Databricks recommends **Declarative Automation Bundles** for CI/CD. If you deploy only code, use a **production Git folder**:
+
+1. Choose the repository and deployment branch.
+2. Give a service principal a Git credential for that repository.
+3. Create the Git folder for that repo and branch in a subfolder under `/Workspace` (not under a user folder).
+4. Share it: **Can Run** for project users and automation service principals; optionally **Can View** for everyone. Only admins and service principals get edit rights.
+5. Keep it in sync with automation only: external CI/CD after a PR merges into the deployment branch, or a scheduled job that calls the API. Never edit it by hand.
 
 ```mermaid
 flowchart LR
-    Push[Git Push] --> Webhook[Webhook]
-    Webhook --> API[Databricks API]
-    API --> Update[Update Git Folder]
-    Update --> Job[Trigger Job]
+    PR[PR merged to main] --> CI[CI runner as service principal]
+    CI --> Update["databricks repos update /Workspace/Production/my-project --branch main"]
+    Update --> Folder[Production Git folder]
+    Folder --> Job[Jobs run notebooks from the folder]
 ```
 
-### REST API for Git Folders
+### Repos API for Git Folders
+
+| Operation | Endpoint |
+| :--- | :--- |
+| Create (clone) | `POST /api/2.0/repos` with `url`, `provider`, `path` |
+| Get | `GET /api/2.0/repos/{id}` |
+| Update: checkout a branch or tag, or pull the latest commit | `PATCH /api/2.0/repos/{id}` with `branch` **or** `tag` (optional `sparse_checkout`) |
+| Delete | `DELETE /api/2.0/repos/{id}` |
+| List | `GET /api/2.0/repos` (deprecated: omits repos with the Git CLI enabled) |
+
+Updating to a **tag** leaves the Git folder in a **detached HEAD** state, which suits release deployments.
 
 ```python
-import requests
+from databricks.sdk import WorkspaceClient
 
-# Get Git folder status
+w = WorkspaceClient()  # authenticates as the CI service principal
 
-response = requests.get(
-    f"{workspace_url}/api/2.0/workspace/get-status",
-    headers={"Authorization": f"Bearer {token}"},
-    json={"path": "/Workspace/Users/user@company.com/my-project"}
-)
+# Pull the latest commit of main into the production Git folder
+w.repos.update(repo_id=12345, branch="main")
 
-# Pull latest changes
-
-response = requests.post(
-    f"{workspace_url}/api/2.0/repos/{repo_id}/pull",
-    headers={"Authorization": f"Bearer {token}"}
-)
-
-# Create branch
-
-response = requests.post(
-    f"{workspace_url}/api/2.0/repos/{repo_id}/branches",
-    headers={"Authorization": f"Bearer {token}"},
-    json={"name": "feature/new-feature"}
-)
+# Or pin a release tag (detached HEAD)
+w.repos.update(repo_id=12345, tag="v1.4.0")
 ```
 
 ### CLI Operations
 
 ```bash
-# List Git folders
+# Get a Git folder by ID or workspace path
+databricks repos get 12345
 
-databricks repos list
+# Checkout + pull the latest commit of a branch (ID or path)
+databricks repos update 12345 --branch main
+databricks repos update /Workspace/Production/my-project --branch main
 
-# Get Git folder info
+# Checkout a release tag
+databricks repos update 12345 --tag v1.4.0
 
-databricks repos get --repo-id 12345
-
-# Update Git folder (pull)
-
-databricks repos update --repo-id 12345 --branch main
-
-# Create Git folder
-
-databricks repos create \
-    --url https://github.com/company/project.git \
-    --provider github \
-    --path /Workspace/Users/user@company.com/my-project
+# Create (clone) a Git folder
+databricks repos create https://github.com/company/project.git gitHub \
+    --path /Workspace/Production/my-project
 ```
+
+### Remote Git Source in Jobs (Alternative)
+
+A job can skip the workspace copy entirely: set `git_source` (`git_url`, `git_provider`, and one of `git_branch`, `git_tag`, `git_commit`). Notebook, Python script, dbt, and SQL file tasks then read files from the remote repository at run time.
 
 ## Security and Permissions
 
 ### Git Folder Permissions
 
 ```text
-Permission Levels:
-- CAN_READ: View files, clone
-- CAN_RUN: Execute notebooks
-- CAN_EDIT: Modify files, commit
-- CAN_MANAGE: Full control, delete
+Permission Levels (Git folder ACLs):
+- CAN READ: View contents
+- CAN RUN: Run notebooks
+- CAN EDIT: Edit and rename assets
+- CAN MANAGE: Create/switch branches, pull and push, create/import/
+  delete/move assets, change permissions
 
-Inheritance:
-- Follows workspace folder permissions
-- Can be overridden at folder level
+Most Git operations require CAN MANAGE.
 ```
 
 ### Credential Management
@@ -436,10 +474,10 @@ Git Credentials Storage:
    - Stored per user
    - Used for that user's operations
 
-2. Workspace-level (Admin):
-   - Admin Console → Git Integration
-   - Shared service account credentials
-   - Used when personal credentials not set
+2. Service principal:
+   - Configure a Git credential for the service principal
+   - Recommended for jobs and CI/CD automation
+   - No shared "workspace" Git credential: each identity has its own
 ```
 
 ### Branch Protection
@@ -461,8 +499,9 @@ Databricks follows Git provider rules
 | Purpose | Version control UI | Deployment automation |
 | Workflow | Interactive development | CI/CD deployment |
 | Configuration | Git provider settings | databricks.yml |
-| Deployment | Manual or webhook | CLI commands |
-| Best for | Development | Production deployment |
+| Deployment | Production Git folder updated by `repos update` / Repos API | `databricks bundle deploy -t <target>` |
+| What is deployed | Code only (notebooks, files) | Code **plus** jobs, pipelines, and other resources |
+| Best for | Development; code-only deployments | Production deployment (Databricks recommendation) |
 
 ### When to Use Each
 
@@ -585,10 +624,11 @@ flowchart TB
 **Fix:**
 
 ```text
-1. Use sparse checkout for large repos
-2. Split into smaller repositories
-3. Use shallow clone (limited history)
-4. Archive old notebooks to separate repo
+1. Use sparse checkout mode (cone patterns) for large repos
+2. Keep total workspace assets and files under 20,000; avoid monorepos
+3. Remember the limits: working branches up to 1 GB, each Git operation
+   up to 2 GB memory and 4 GB disk writes, files over 10 MB not viewable in the UI
+4. Split into smaller repositories
 ```
 
 ## Best Practices
@@ -627,41 +667,49 @@ flowchart TB
 
 ## Exam Tips
 
-1. **Git Folders vs Repos** - Git Folders is the newer, recommended approach
-2. **Supported providers** - GitHub, GitLab, Azure DevOps, Bitbucket, AWS CodeCommit
-3. **Notebook format** - Must have `# Databricks notebook source` header
-4. **Git operations** - Pull, commit, push, branch, merge via UI
-5. **Permissions** - CAN_READ, CAN_RUN, CAN_EDIT, CAN_MANAGE
-6. **Credential setup** - Personal access tokens per user
-7. **%run** - Works with relative and absolute paths in Git folders
-8. **Python imports** - Add to sys.path for module imports
-9. **Conflict resolution** - Keep local, take remote, or manual merge
-10. **Combined with DAB** - Git Folders for dev, bundles for deployment
+> [!tip]
+>
+> - **Git folders = Repos renamed**. Exam text says "Databricks Git folders (formerly Repos)"; API and CLI still say `repos`.
+> - **CI/CD with Git folders**: a production Git folder, updated only by automation with `databricks repos update <id-or-path> --branch <b>` or `--tag <t>` (`PATCH /api/2.0/repos/{id}`), authenticated as a service principal with a Git credential.
+> - **Tag = detached HEAD**: pinning a release tag is the safe way to deploy a fixed version.
+> - **Bundles vs Git folders**: bundles deploy code plus jobs and pipelines and are Databricks' recommended CI/CD path; Git folders alone deploy code only.
+> - **Permissions**: pulling, pushing, and switching branches need **CAN MANAGE**; production folders give most users **Can Run**.
+> - **Imports**: the Git folder root is on `sys.path` automatically (DBR 11.3+).
+> - **Credentials** are per identity (user or service principal); the Databricks GitHub app is recommended for GitHub.
 
 ## Key Takeaways
 
-- **Git Folders supersede Repos**: Git Folders (under `/Workspace/`) is the current recommended approach; the legacy Repos path (`/Repos/`) is deprecated and supports fewer file types.
-- **Supported providers**: GitHub, GitLab, Azure DevOps, Bitbucket, and AWS CodeCommit are all natively supported; authentication uses personal access tokens configured per user.
-- **Notebook source header**: A Python notebook stored in Git must begin with `# Databricks notebook source` — without this header Databricks will not render it as a notebook.
-- **Permission levels**: Git Folder permissions are `CAN_READ`, `CAN_RUN`, `CAN_EDIT`, and `CAN_MANAGE`, following the workspace folder permission hierarchy.
-- **%run and imports**: `%run ./relative/path` executes another notebook; `sys.path.append(workspace_path)` enables importing Python modules from the same Git Folder.
-- **Conflict resolution options**: When a pull detects conflicts, the user can keep local changes, take remote changes, or manually merge — Databricks does not auto-merge conflicting notebooks.
-- **Combined workflow**: Git Folders are best for interactive development; Declarative Automation Bundles are best for automated CI/CD deployment — use both together in production workflows.
-- **CLI operations**: Use `databricks repos update --repo-id <id> --branch <branch>` to programmatically pull the latest branch, enabling webhook-triggered auto-updates.
+- **Git folders supersede the Repos name**: same functionality, can live anywhere in the workspace, require a remote URL; existing `/Repos` paths keep working.
+- **Supported providers**: GitHub, Bitbucket Cloud, GitLab, Azure DevOps, and AWS CodeCommit in the cloud, plus self-hosted servers that are internet-accessible or reached through the Git server proxy.
+- **Notebook formats**: new notebooks default to IPYNB; source-format notebooks are recognized by the `# Databricks notebook source` header.
+- **Permission levels**: CAN READ, CAN RUN, CAN EDIT, CAN MANAGE; most Git operations need CAN MANAGE.
+- **Conflict resolution**: keep current changes, take incoming changes, edit manually, or abort.
+- **Production Git folder**: admin-created, run-only for users, updated only by automation after merges.
+- **CLI/API**: `databricks repos update <id-or-path> --branch main` checks out and pulls the latest commit; `--tag v1.0.0` pins a release.
+- **Combined workflow**: develop in personal Git folders, review through PRs, deploy with bundles (or a production Git folder for code-only deployments).
 
 ## Related Topics
 
-- [Declarative Automation Bundles](03-declarative-automation-bundles-part1.md) - Deployment automation
-- [CI/CD Integration](05-cicd-integration-part1.md) - Pipeline workflows
+- [Declarative Automation Bundles — Part 1](./03-declarative-automation-bundles-part1.md) - Deployment automation
+- [CI/CD Integration — Part 1](./05-cicd-integration-part1.md) - Pipeline workflows
 - [Workspace and Notebooks](../01-developing-code-for-data-processing/10-workspace-and-notebooks.md) - Notebook features
 
 ## Official Documentation
 
-- [Git Folders](https://docs.databricks.com/repos/index.html)
-- [Git Integration](https://docs.databricks.com/repos/git-operations.html)
-- [Configure Git Credentials](https://docs.databricks.com/repos/repos-setup.html)
-- [Notebooks in Git](https://docs.databricks.com/repos/work-with-notebooks-other-files.html)
+- [Databricks Git folders](https://docs.databricks.com/aws/en/repos/)
+- [What happened to Databricks Repos?](https://docs.databricks.com/aws/en/repos/what-happened-repos)
+- [Git folders concepts](https://docs.databricks.com/aws/en/repos/git-folders-concepts)
+- [Create and manage Git folders](https://docs.databricks.com/aws/en/repos/git-operations-with-repos)
+- [CI/CD with Databricks Git folders](https://docs.databricks.com/aws/en/repos/ci-cd-techniques-with-repos)
+- [Connect your Git provider to Databricks](https://docs.databricks.com/aws/en/repos/get-access-tokens-from-git-provider)
+- [Git folder limits and reference](https://docs.databricks.com/aws/en/repos/limits)
+- [Supported asset types in Git folders](https://docs.databricks.com/aws/en/repos/supported-artifact-types)
+- [Notebook formats](https://docs.databricks.com/aws/en/notebooks/notebook-format)
+- [Work with Python modules](https://docs.databricks.com/aws/en/files/workspace-modules)
+- [Access control lists (Git folder ACLs)](https://docs.databricks.com/aws/en/security/auth/access-control/)
+- [Repos API](https://docs.databricks.com/api/workspace/repos/update)
+- [`repos` command group (CLI)](https://docs.databricks.com/aws/en/dev-tools/cli/reference/repos-commands)
 
 ---
 
-**[← Previous: CI/CD Integration — Part 2 (Testing, Secrets & Monitoring)](./05-cicd-integration-part2.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: Unit Testing — Part 1](../01-developing-code-for-data-processing/11-unit-testing-part1.md) →**
+**[← Previous: CI/CD Integration — Part 2: Testing, Secrets & Monitoring](./05-cicd-integration-part2.md) | [↑ Back to Section](./README.md) | [Next: Medallion Architecture →](../09-data-modeling/01-medallion-architecture.md)**

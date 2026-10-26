@@ -606,50 +606,10 @@ SELECT id, name FROM source_table WHERE date = '2024-01-01';
 
 ## User-Defined Functions (UDFs)
 
-### Python UDFs
-
-```python
-from pyspark.sql.functions import udf
-from pyspark.sql.types import StringType
-
-# Define UDF
-
-@udf(returnType=StringType())
-def format_phone(phone):
-    if phone and len(phone) == 10:
-        return f"({phone[:3]}) {phone[3:6]}-{phone[6:]}"
-    return phone
-
-# Use UDF
-
-df.withColumn("formatted_phone", format_phone(col("phone")))
-```
-
-### Pandas UDFs (Vectorized)
-
-```python
-from pyspark.sql.functions import pandas_udf
-import pandas as pd
-
-# Scalar Pandas UDF (much faster than regular UDFs)
-
-@pandas_udf("double")
-def calculate_discount(amount: pd.Series, rate: pd.Series) -> pd.Series:
-    return amount * (1 - rate)
-
-df.withColumn("discounted", calculate_discount(col("amount"), col("rate")))
-```
-
-| UDF Type | Performance | Use Case |
-|----------|-------------|----------|
-| Python UDF | Slow (row-by-row) | Complex logic, external libraries |
-| Pandas UDF | Fast (vectorized) | Numerical computations |
-| Built-in functions | Fastest | Use whenever possible |
-
-**Best Practice**: Always prefer built-in Spark functions over UDFs when possible.
+Prefer built-in Spark functions; reach for a UDF only when the logic can't be expressed with them. Python, pandas (vectorized), SQL, and Unity Catalog functions, and when to choose each, are covered in [UDFs and Unity Catalog Functions](../01-developing-code-for-data-processing/02-udfs-and-unity-catalog-functions.md).
 
 > **Continue reading:** [Part 2 — Performance Optimization, Error Handling, Use Cases & Exam Tips](./01-batch-etl-pipelines-part2.md)
 
 ---
 
-**[↑ Back to Data Processing](../01-developing-code-for-data-processing/README.md) | [Next: Batch ETL Pipelines — Part 2](./01-batch-etl-pipelines-part2.md) →**
+**[Next: Batch ETL Pipelines — Part 2 →](./01-batch-etl-pipelines-part2.md)**

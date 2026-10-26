@@ -653,4 +653,4 @@ spark.conf.set("spark.memory.offHeap.size", "4g")
 
 ---
 
-**[← Previous: Z-ORDER Indexing and Data Skipping](./03-zorder-indexing.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Cost Optimization](./10-cost-optimization.md) →**
+**[← Previous: Query Profile](./05-query-profiler.md) | [↑ Back to Section](./README.md) | [Next: EXPLAIN Plans & Adaptive Query Execution →](./07-explain-plans-aqe.md)**

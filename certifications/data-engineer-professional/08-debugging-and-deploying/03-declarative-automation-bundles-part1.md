@@ -1,42 +1,68 @@
 ---
 title: Declarative Automation Bundles — Part 1
-type: topic
+type: study-material
 tags:
-  - data-engineering
-  - dab
+  - data-engineer-professional
+  - declarative-automation-bundles
   - deployment
-  - bundles
+  - cicd
 status: published
 ---
 
-# Declarative Automation Bundles (DABs) — Part 1
-
-Declarative Automation Bundles provide a standardized way to package, validate, and deploy Databricks resources as code. This part covers bundle structure, resource definitions, variables, commands, target configuration, and artifact packaging.
+# Declarative Automation Bundles — Part 1
 
 ## Overview
 
+Declarative Automation Bundles (formerly Databricks Asset Bundles) describe Databricks resources such as jobs, pipelines, and clusters as code in a `databricks.yml` project, then validate and deploy them with the Databricks CLI. One bundle can target dev, staging, and prod with per-target overrides. This part covers bundle structure, resource definitions, variables, commands, targets, deployment modes, presets, permissions, `run_as`, and artifacts.
+
+> [!abstract]
+>
+> - A bundle = `databricks.yml` (plus `include`d YAML files) + source code, deployed with `databricks bundle deploy -t <target>`
+> - `targets` hold per-environment overrides; `mode: development` and `mode: production` apply opinionated defaults, and `presets` customize them
+> - `variables` (`${var.name}`) and substitutions (`${bundle.target}`, `${workspace.current_user.short_name}`) are resolved at **deployment** time
+> - `run_as` and `permissions` separate the identity that runs a job from the one that deployed it
+
+> [!tip] What the Exam Tests
+>
+> - "Deploy Databricks resources using Declarative Automation Bundles (formerly Databricks Asset Bundles)."
+> - Deploying the same job and pipeline definitions identically to dev, staging, and prod from source control with per-target overrides
+> - Knowing the core commands (`init`, `validate`, `deploy`, `run`, `destroy`, `summary`) and what development vs. production mode change
+> - Choosing `run_as` (service principal) and `permissions` for production targets
+
+> [!note] Platform update (Oct 2026)
+> Databricks Asset Bundles was renamed **Declarative Automation Bundles** on March 16, 2026. The CLI command group is unchanged: `databricks bundle ...`. Source: [Declarative Automation Bundles feature release notes](https://docs.databricks.com/aws/en/release-notes/dev-tools/bundles)
+
+---
+
+## Bundle Lifecycle
+
 ```mermaid
 flowchart TB
-    subgraph Development["Development"]
-        Code[Source Code]
+    subgraph Development["Source control"]
+        Code[Source code]
         Config[databricks.yml]
-        Resources[Resource Definitions]
+        Resources[resources/*.yml]
     end
 
-    subgraph Bundle["Bundle Operations"]
-        Validate[databricks bundle validate]
-        Deploy[databricks bundle deploy]
-        Destroy[databricks bundle destroy]
+    subgraph Bundle["databricks bundle ..."]
+        Validate[validate]
+        Plan[plan]
+        Deploy[deploy -t target]
+        Run[run]
+        Destroy[destroy]
     end
 
-    subgraph Targets["Deployment Targets"]
-        Dev[Development]
-        Staging[Staging]
-        Prod[Production]
+    subgraph Targets["Targets"]
+        Dev[dev: mode development]
+        Staging[staging]
+        Prod[prod: mode production]
     end
 
-    Development --> Bundle
-    Bundle --> Targets
+    Development --> Validate
+    Validate --> Plan
+    Plan --> Deploy
+    Deploy --> Targets
+    Deploy --> Run
 ```
 
 ## Bundle Structure
@@ -45,25 +71,42 @@ flowchart TB
 
 ```text
 my-databricks-project/
-├── databricks.yml              # Main bundle configuration
+├── databricks.yml              # Main bundle configuration (bundle root)
 ├── resources/
 │   ├── jobs.yml               # Job definitions
-│   ├── pipelines.yml          # Lakeflow Declarative Pipeline definitions
-│   └── clusters.yml           # Cluster configurations
+│   ├── pipelines.yml          # Lakeflow pipeline definitions
+│   └── clusters.yml           # Cluster definitions
 ├── src/
 │   ├── notebooks/             # Notebook source files
 │   │   ├── bronze/
 │   │   ├── silver/
 │   │   └── gold/
-│   └── python/                # Python wheel/modules
-│       ├── etl/
-│       └── utils/
+│   ├── pipelines/             # Pipeline source files
+│   └── python/                # Python package built as a wheel
 ├── tests/
-│   ├── unit/                  # Unit tests
-│   └── integration/           # Integration tests
-├── fixtures/                  # Test data
-└── .databricks/               # Generated state files (gitignore)
+│   ├── unit/
+│   └── integration/
+└── .databricks/               # Local CLI working files: keep out of Git
 ```
+
+### Top-Level Mappings
+
+| Mapping | Purpose |
+| :--- | :--- |
+| `bundle` | Bundle `name` (required), optional `git`, `databricks_cli_version`, deployment settings |
+| `include` | Globs of extra YAML files, relative to the file that lists them |
+| `variables` | Custom variables, referenced as `${var.<name>}` |
+| `workspace` | `host`, `profile`, `root_path`, `artifact_path`, `file_path`, `state_path` |
+| `artifacts` | Local builds to run and upload on deploy (`whl`, `jar`, `tgz`) |
+| `resources` | Jobs, pipelines, clusters, schemas, volumes, dashboards, apps, and more |
+| `permissions` | Permissions applied to every resource in the bundle |
+| `run_as` | Identity that jobs and pipelines run as |
+| `sync` | `include` / `exclude` / `paths` for files uploaded to the workspace |
+| `scripts` | Commands you can run with `bundle run` |
+| `python` | Load resources defined in Python (`databricks-bundles` package) |
+| `targets` | Per-environment overrides; exactly one may set `default: true` |
+
+Default workspace paths: `root_path` is `/Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}`. Under it, `artifact_path` defaults to `${workspace.root}/artifacts`, `file_path` to `${workspace.root}/files`, and `state_path` to `${workspace.root}/state`.
 
 ### Core Configuration File
 
@@ -73,12 +116,8 @@ my-databricks-project/
 bundle:
   name: my-etl-project
 
-# Include additional configuration files
-
 include:
   - resources/*.yml
-
-# Variables for parameterization
 
 variables:
   environment:
@@ -88,20 +127,21 @@ variables:
     description: "Unity Catalog name"
     default: dev_catalog
 
-# Workspace configuration
-
 workspace:
   host: https://adb-1234567890.1.azuredatabricks.net
 
-# Artifact locations
-
 artifacts:
-  default:
+  etl_package:
     type: whl
     path: ./src/python
     build: poetry build
 
-# Deployment targets
+# Applied to every resource in the bundle
+permissions:
+  - level: CAN_VIEW
+    group_name: data-analysts
+  - level: CAN_MANAGE
+    group_name: data-engineers
 
 targets:
   dev:
@@ -110,8 +150,6 @@ targets:
     variables:
       environment: dev
       catalog: dev_catalog
-    workspace:
-      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
 
   staging:
     variables:
@@ -119,6 +157,9 @@ targets:
       catalog: staging_catalog
     workspace:
       root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
+    presets:
+      name_prefix: "staging_"
+      trigger_pause_status: PAUSED
 
   prod:
     mode: production
@@ -128,7 +169,8 @@ targets:
     workspace:
       root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
     run_as:
-      service_principal_name: etl-service-principal
+      # Service principal application ID
+      service_principal_name: "00000000-0000-0000-0000-000000000000"
 ```
 
 ## Resource Definitions
@@ -154,13 +196,19 @@ resources:
         environment: ${var.environment}
         team: data-engineering
 
+      # Job parameters: pushed down to every notebook task, and
+      # overridable on Run now and Repair run without redeploying
+      parameters:
+        - name: catalog
+          default: ${var.catalog}            # deploy-time default
+        - name: run_date
+          default: "{{job.start_time.iso_date}}"
+
       tasks:
         - task_key: bronze_ingestion
           notebook_task:
+            # Relative to THIS file (resources/jobs.yml)
             notebook_path: ../src/notebooks/bronze/ingest.py
-            base_parameters:
-              catalog: ${var.catalog}
-              environment: ${var.environment}
           job_cluster_key: etl_cluster
 
         - task_key: silver_transform
@@ -168,8 +216,6 @@ resources:
             - task_key: bronze_ingestion
           notebook_task:
             notebook_path: ../src/notebooks/silver/transform.py
-            base_parameters:
-              catalog: ${var.catalog}
           job_cluster_key: etl_cluster
 
         - task_key: gold_aggregate
@@ -177,21 +223,20 @@ resources:
             - task_key: silver_transform
           notebook_task:
             notebook_path: ../src/notebooks/gold/aggregate.py
-            base_parameters:
-              catalog: ${var.catalog}
           job_cluster_key: etl_cluster
 
       job_clusters:
         - job_cluster_key: etl_cluster
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "15.4.x-scala2.12"
             node_type_id: "Standard_DS3_v2"
             num_workers: 2
-            spark_conf:
-              spark.databricks.delta.preview.enabled: "true"
 ```
 
-### Lakeflow Pipelines Pipeline Configuration
+> [!important] Relative paths and parameters
+> Paths in a resource file resolve relative to the configuration file **that declares them**, not the bundle root. The old fallback lookup was removed in CLI 0.266.0, so a wrong relative path is now an error. Bundle validation does not allow job-level `parameters` and task `base_parameters` in the same job: once a job has job parameters, move task values up to the job level.
+
+### Lakeflow Pipeline Configuration
 
 ```yaml
 # resources/pipelines.yml
@@ -200,21 +245,16 @@ resources:
   pipelines:
     streaming_pipeline:
       name: "Streaming ETL - ${var.environment}"
-      target: "${var.catalog}.${var.environment}_streaming"
-      development: ${var.environment == "dev"}
+      catalog: ${var.catalog}
+      schema: ${var.environment}_streaming   # `target` is the deprecated legacy field
+      serverless: true                        # recommended for new pipelines; omit `clusters`
 
       configuration:
         environment: ${var.environment}
-        catalog: ${var.catalog}
-
-      clusters:
-        - label: default
-          num_workers: 2
-          node_type_id: "Standard_DS3_v2"
 
       libraries:
-        - notebook:
-            path: ../src/notebooks/streaming/pipeline.py
+        - glob:
+            include: ../src/pipelines/streaming/**
 
       continuous: false
 
@@ -226,6 +266,8 @@ resources:
             - on-flow-failure
 ```
 
+You do not set `development:` per environment yourself. `mode: development` marks pipelines as development pipelines, and `mode: production` checks that they are not.
+
 ### Cluster Configuration
 
 ```yaml
@@ -235,20 +277,21 @@ resources:
   clusters:
     shared_analytics:
       cluster_name: "Analytics Cluster - ${var.environment}"
-      spark_version: "14.3.x-scala2.12"
+      spark_version: "15.4.x-scala2.12"
       node_type_id: "Standard_DS4_v2"
       autoscale:
         min_workers: 1
         max_workers: 8
-      spark_conf:
-        spark.databricks.cluster.profile: serverless
+      autotermination_minutes: 30
       custom_tags:
         environment: ${var.environment}
 ```
 
+Other resource types include `schemas`, `volumes`, `dashboards`, `apps`, `model_serving_endpoints`, `registered_models`, `quality_monitors`, `sql_warehouses`, and more (see the resources reference). A resource-level `lifecycle.prevent_destroy: true` protects it from `bundle destroy`.
+
 ## Variables and Substitutions
 
-### Variable Types
+### Custom Variables
 
 ```yaml
 # databricks.yml
@@ -258,44 +301,64 @@ variables:
   environment:
     default: dev
 
-  # Variable without default (required)
-  db_password:
-    description: "Database password"
+  # No default: must be supplied at deploy time
+  notification_email:
+    description: "Alert recipient"
 
-  # Complex variable with lookup
-  instance_pool_id:
+  # Lookup: resolve an object's ID from its name
+  etl_pool_id:
     lookup:
       instance_pool: etl-pool
+
+  # Complex variable (maps or lists)
+  default_cluster:
+    type: complex
+    default:
+      spark_version: "15.4.x-scala2.12"
+      node_type_id: "Standard_DS3_v2"
+      num_workers: 2
 ```
 
-### Built-in Variables
+Lookup types include `alert`, `cluster_policy`, `cluster`, `dashboard`, `instance_pool`, `job`, `metastore`, `notification_destination`, `pipeline`, `query`, `service_principal`, and `warehouse`. A lookup fails if the name matches no object or more than one.
 
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| `${bundle.name}` | Bundle name | my-etl-project |
-| `${bundle.target}` | Current target | dev, prod |
-| `${workspace.current_user.userName}` | Current user | `user@company.com` |
-| `${workspace.root_path}` | Workspace root | /Workspace/Shared/... |
-| `${resources.jobs.<name>.id}` | Job ID after deploy | 123456789 |
+### Where a Variable's Value Comes From (first match wins)
 
-### Variable Substitution Examples
+1. `--var="<name>=<value>"` on the `bundle` command
+2. An environment variable `BUNDLE_VAR_<name>`
+3. `.databricks/bundle/<target>/variable-overrides.json`
+4. The `variables` mapping inside the selected target
+5. The variable's top-level `default`
+
+> [!note]
+> Bundle variables are **deployment-time** values. For values that change per run, use **job parameters**, which can be overridden on **Run now** and **Repair run**.
+
+### Built-in Substitutions
+
+| Substitution | Value |
+| :--- | :--- |
+| `${bundle.name}` | Bundle name |
+| `${bundle.target}` | Selected target (`dev`, `prod`, ...) |
+| `${workspace.current_user.userName}` | Deploying user's user name (email) |
+| `${workspace.current_user.short_name}` | Short form of the user name (used in the dev-mode prefix) |
+| `${workspace.root_path}` | Bundle root folder in the workspace |
+| `${workspace.file_path}` | Where synced source files are deployed |
+| `${resources.jobs.<job-name>.id}` | ID of a job defined in the bundle |
+| `${resources.pipelines.<name>.<field>}` | Any field of a bundle resource, e.g. `.schema` |
+
+### Variable Substitution Example
 
 ```yaml
-# Using variables in configurations
-
 resources:
   jobs:
     my_job:
       name: "Job - ${var.environment}"
-
       tasks:
         - task_key: main
           notebook_task:
-            notebook_path: /Workspace/${workspace.root_path}/notebooks/main
+            notebook_path: ../src/notebooks/main.py
             base_parameters:
-              # Reference another variable
               catalog: ${var.catalog}
-              # Use bundle metadata
+              config_path: ${workspace.file_path}/config/${bundle.target}.yml
               bundle_name: ${bundle.name}
 ```
 
@@ -304,136 +367,129 @@ resources:
 ### Core Commands
 
 ```bash
-# Initialize new bundle from template
+# Initialize a new bundle from a template (prompts if no template given)
+databricks bundle init default-python
 
-databricks bundle init
+# Check the configuration is syntactically valid (-o json for JSON output)
+databricks bundle validate -t prod -o json
 
-# Validate bundle configuration
+# Preview what deploy would create, update, or delete
+databricks bundle plan -t prod
 
-databricks bundle validate
-
-# Deploy bundle to target
-
+# Deploy to the default target, or to a named one
 databricks bundle deploy
-
-# Deploy to specific target
-
 databricks bundle deploy -t prod
 
-# Run a job defined in bundle
+# Run a job (or pipeline, app, or script) defined in the bundle
+databricks bundle run -t prod etl_daily_job
 
-databricks bundle run etl_daily_job
+# Run with job parameters: comma-separated key=value pairs
+databricks bundle run -t prod etl_daily_job --params run_date=2026-10-25
 
-# Run with parameters
+# Show deployed resources and their workspace URLs
+databricks bundle summary -t prod
 
-databricks bundle run etl_daily_job --params '{"date": "2024-01-15"}'
-
-# Destroy deployed resources
-
-databricks bundle destroy
-
-# Show bundle summary
-
-databricks bundle summary
+# Delete everything this bundle deployed (cannot be undone)
+databricks bundle destroy -t dev
 ```
 
-### Development Mode
-
-```bash
-# Deploy in development mode (personal copy)
-
-databricks bundle deploy -t dev
-
-# Development mode characteristics:
-# - Prefixes resource names with user email
-# - Pauses job schedules
-# - Sets pipelines to development mode
-# - Uses personal workspace path
-
-```
+| Command | Notes |
+| :--- | :--- |
+| `init [TEMPLATE]` | Default templates: `default-python`, `default-minimal`, `default-sql`, `default-scala`, `dbt-sql`, `mlops-stacks`, `pydabs`; or a Git URL / local path |
+| `validate` | Syntax check; warns on properties not in the resource schema |
+| `plan` | Shows planned changes; `deploy --plan` replays a saved plan (direct engine) |
+| `deploy` | Builds artifacts, uploads files, creates or updates resources. Flags: `--force`, `--force-lock`, `--auto-approve`, `--fail-on-active-runs`, `-c/--cluster-id` |
+| `run [KEY]` | Jobs: `--params`, `--only`, `--restart`, `--no-wait`. Pipelines: `--full-refresh`, `--refresh`, `--validate-only` |
+| `destroy` | `--auto-approve`, `--force-lock`; skips resources with `lifecycle.prevent_destroy` |
+| `summary` | Lists deployed resources for the target |
+| `deployment bind KEY RESOURCE_ID` | Attach an existing workspace resource (for example a job) to a bundle resource key |
+| `generate job --existing-job-id <id>` | Write bundle YAML for an existing job (`pipeline`, `dashboard`, `app` also supported) |
 
 ### Validation and Debugging
 
 ```bash
-# Validate configuration
+# Supply a variable without a default
+databricks bundle validate -t prod --var="notification_email=ops@company.com"
 
-databricks bundle validate
-
-# Validate specific target
-
-databricks bundle validate -t prod
-
-# Show resolved configuration
-
-databricks bundle validate --output json
-
-# Debug deployment issues
-
-databricks bundle deploy --debug
+# Verbose logs for a failing deploy (global flag)
+databricks bundle deploy -t prod --debug
 ```
 
 ## Target Configuration
 
-### Development vs Production Modes
+### Development vs. Production Modes
 
-```yaml
-targets:
-  dev:
-    mode: development
-    # Development mode:
-    # - Prefixes names with username
-    # - Pauses schedules
-    # - Enables pipeline development mode
+| Behavior | `mode: development` | `mode: production` |
+| :--- | :--- | :--- |
+| Resource names | Prefixed with `[dev ${workspace.current_user.short_name}]` | Unchanged |
+| Tags | Adds a `dev` tag to jobs and pipelines | None added |
+| Schedules and triggers | **Paused** (set `pause_status: UNPAUSED` to override) | As configured |
+| Pipelines | Marked `development: true` | Deploy checks they are `development: false` |
+| Concurrent job runs | Enabled | As configured |
+| Cluster override (`--cluster-id`) | Allowed | **Not allowed** |
+| Deployment lock | Disabled (enable with `bundle.deployment.lock.enabled: true`) | Enabled |
+| Git branch check | None | Current branch must match the target's `git.branch` if set (`--force` overrides) |
+| Identity | Deploying user | Service principal via `run_as` recommended; without one, user-specific paths are rejected and `run_as` plus `permissions` are required |
 
-  prod:
-    mode: production
-    # Production mode:
-    # - Uses exact resource names
-    # - Enables schedules
-    # - Requires run_as for identity
-```
+### Presets
+
+`presets` in a target customize behavior with or without a `mode`. Presets override mode defaults, and settings on an individual resource override presets.
+
+| Preset | Effect |
+| :--- | :--- |
+| `name_prefix` | Prefix for resource names |
+| `pipelines_development` | Lock pipeline deployments in development mode |
+| `trigger_pause_status` | Pause status for all triggers and schedules (always `PAUSED` in development mode) |
+| `jobs_max_concurrent_runs` | Max concurrent runs for all jobs |
+| `tags` | Tags applied to all resources that support tags |
+| `source_linked_deployment` | Resources point at workspace source files instead of deployed copies |
+| `artifacts_dynamic_version` | Patch `whl` versions dynamically on each deploy |
 
 ### Environment-Specific Overrides
 
 ```yaml
 targets:
   dev:
-    variables:
-      cluster_size: small
     resources:
       jobs:
-        etl_job:
+        etl_daily_job:
           job_clusters:
-            - job_cluster_key: main
+            - job_cluster_key: etl_cluster
               new_cluster:
                 num_workers: 1
 
   prod:
-    variables:
-      cluster_size: large
     resources:
       jobs:
-        etl_job:
+        etl_daily_job:
           job_clusters:
-            - job_cluster_key: main
+            - job_cluster_key: etl_cluster
               new_cluster:
                 num_workers: 8
                 driver_node_type_id: "Standard_DS5_v2"
 ```
 
-### Service Principal Authentication
+Target-level `resources` merge into the top-level definitions by join key (`job_cluster_key` for job clusters, `label` for pipeline clusters, `task_key` for tasks). Conflicting settings take the target's value; everything else is kept, so you restate only what changes.
+
+### `run_as` and `permissions`
 
 ```yaml
 targets:
   prod:
     mode: production
     run_as:
-      service_principal_name: production-etl-sp
-
-    # Or use service principal ID
-    # run_as:
-    #   service_principal_id: "00000000-0000-0000-0000-000000000000"
+      service_principal_name: "00000000-0000-0000-0000-000000000000"  # application ID
+    permissions:
+      - level: CAN_MANAGE
+        group_name: data-engineers
+      - level: CAN_RUN
+        service_principal_name: "00000000-0000-0000-0000-000000000000"
 ```
+
+- `run_as` takes `user_name` or `service_principal_name`. Non-admins can set only their own user name.
+- If the deployer differs from the `run_as` identity, only **jobs and pipelines** are supported in the bundle. `run_as` is not supported with model serving endpoints.
+- To deploy with a service principal as `run_as`, deploy as that service principal or hold **CAN_USE** on it.
+- Top-level and target `permissions` allow `CAN_VIEW`, `CAN_MANAGE`, and `CAN_RUN`, each with `user_name`, `group_name`, or `service_principal_name`.
 
 ## Artifacts and Libraries
 
@@ -441,27 +497,29 @@ targets:
 
 ```yaml
 # databricks.yml
-
 artifacts:
   etl_package:
     type: whl
-    path: ./src/python
-    build: poetry build
-    # Or: build: python setup.py bdist_wheel
+    path: ./src/python       # relative to databricks.yml
+    build: poetry build      # default when omitted: python setup.py bdist_wheel
+```
 
-# Reference in job
-
+```yaml
+# resources/jobs.yml
 resources:
   jobs:
-    my_job:
+    wheel_job:
       tasks:
         - task_key: main
+          job_cluster_key: etl_cluster
           python_wheel_task:
             package_name: etl_package
             entry_point: main
           libraries:
-            - whl: ../artifacts/etl_package/*.whl
+            - whl: ../src/python/dist/*.whl   # relative to this file
 ```
+
+On serverless compute, Python wheel tasks need an `environment_key` that points at a job `environments` entry instead of `libraries`.
 
 ### JAR Artifacts
 
@@ -471,18 +529,23 @@ artifacts:
     type: jar
     path: ./libs
     build: mvn package -DskipTests
+    files:
+      - source: ./libs/target/spark-extensions-1.0.jar
 
 resources:
   jobs:
-    my_job:
+    jar_job:
       tasks:
         - task_key: main
+          job_cluster_key: etl_cluster
+          spark_jar_task:
+            main_class_name: com.company.Main
           libraries:
-            - jar: ../artifacts/spark_extensions/*.jar
+            - jar: ../libs/target/spark-extensions-1.0.jar
 ```
 
-> **Continue reading:** [Part 2 — Sync, CI/CD Integration, Bundle Templates, Common Patterns & Exam Tips](./03-declarative-automation-bundles-part2.md)
+> **Continue reading:** [Part 2 — Sync, State, CI/CD, Templates, Common Patterns & Exam Tips](./03-declarative-automation-bundles-part2.md)
 
 ---
 
-**[↑ Back to Testing & Deployment](./README.md) | [Next: Declarative Automation Bundles — Part 2](./03-declarative-automation-bundles-part2.md) →**
+**[Next: Declarative Automation Bundles — Part 2 →](./03-declarative-automation-bundles-part2.md)**

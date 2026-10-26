@@ -659,4 +659,4 @@ Use Row Tracking to:
 
 ---
 
-**[← Previous: Delta Lake Operations — Part 2](02-delta-lake-operations-part2.md) | [↑ Back to Data Processing](./README.md) | [Next: Streaming Joins & Stateful Operations](../01-developing-code-for-data-processing/05-streaming-joins-stateful.md) →**
+**[← Previous: Delta Lake Operations — Part 2](./02-delta-lake-operations-part2.md) | [↑ Back to Section](./README.md) | [Next: VARIANT and Semi-Structured Data →](./04-variant-semi-structured-data.md)**

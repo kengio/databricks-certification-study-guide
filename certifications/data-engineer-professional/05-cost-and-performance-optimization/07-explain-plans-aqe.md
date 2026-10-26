@@ -467,4 +467,4 @@ Continue with [Photon, Diagnostics & Query Optimization](./08-photon-diagnostics
 
 ---
 
-**[← Previous: Cost Optimization](./10-cost-optimization.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Photon, Diagnostics & Query Optimization — Part 1](./08-photon-diagnostics-optimization-part1.md) →**
+**[← Previous: Spark Tuning](./06-spark-tuning.md) | [↑ Back to Section](./README.md) | [Next: Photon, Diagnostics & Query Optimization — Part 1 →](./08-photon-diagnostics-optimization-part1.md)**

@@ -3,46 +3,55 @@ title: Data Governance
 type: category
 tags:
   - data-engineer-professional
-  - governance
+  - data-governance
   - unity-catalog
 status: published
 ---
 
-# Data Governance (7 % of Exam)
+# Section 7: Data Governance (5 % of Exam)
 
-Unity Catalog as the single governance plane: catalogs, schemas, tables, views, volumes, models, and the metadata that connects them. Covers UC architecture, object hierarchy, and the migration path from DBFS to UC volumes.
+Organising and describing data in Unity Catalog: the object hierarchy and permission inheritance model, tags and comments for discoverability, and Volumes vs legacy DBFS.
 
 ## Topics Overview
 
 ```mermaid
-flowchart TD
-    Gov[Data Governance] --> UC[Unity Catalog]
-    Gov --> Vol[UC Volumes / DBFS migration]
+flowchart LR
+    D[Data Governance]
+    D --> T1["Unity Catalog"]
+    D --> T2["Tags, Comments, and Discoverability"]
+    D --> T3["DBFS and Cloud Storage"]
 ```
 
 ## Section Contents
 
 | File | Topic | Priority |
 | :--- | :--- | :--- |
-| [01-unity-catalog.md](./01-unity-catalog.md) | UC architecture, three-level namespace, metastore, securables | High |
-| [02-dbfs-and-uc-volumes.md](./03-dbfs-and-uc-volumes.md) | DBFS root, mounts (legacy), UC volumes (managed + external) | High |
+| [01-unity-catalog.md](./01-unity-catalog.md) | UC hierarchy, securables, permission inheritance, ownership | High |
+| [02-tags-comments-and-discoverability.md](./02-tags-comments-and-discoverability.md) | Tags and comments on securables; search and discovery | High |
+| [03-dbfs-and-uc-volumes.md](./03-dbfs-and-uc-volumes.md) | UC Volumes vs DBFS and mounts | Medium |
+
+## Exam Skill Coverage
+
+Every skill bullet in Section 7 of the Oct 9, 2026 exam guide, with the files that cover it.
+
+| Exam guide skill | Where it is covered |
+| :--- | :--- |
+| Demonstrate understanding of Unity Catalog tags and comments as mechanisms for adding metadata to securable objects to improve data discoverability. | [02-tags-comments-and-discoverability.md](./02-tags-comments-and-discoverability.md) |
+| Demonstrate understanding of the Unity Catalog permission inheritance model as a mechanism for managing access control across catalogs, schemas, and objects. | [01-unity-catalog.md](./01-unity-catalog.md) |
 
 ## Key Concepts to Master
 
 | Concept | Why it matters |
 | :--- | :--- |
-| **Three-level namespace** | `catalog.schema.object` — every UC object addressed this way |
-| **Metastore vs catalog** | One metastore per region per account; a metastore contains many catalogs |
-| **Managed vs external tables** | Managed = UC owns storage; external = UC owns metadata, you own storage |
-| **UC Volumes** | UC-governed object-store paths — replace DBFS mounts for non-tabular files (PDFs, models, images) |
-| **DBFS root is deprecated for new workloads** | Use UC volumes for any new file-storage need |
+| **Permission inheritance** | A privilege granted on a catalog or schema applies to every current and future object below it |
+| **`USE CATALOG` / `USE SCHEMA`** | Required on each parent before a child privilege such as `SELECT` can be used |
+| **Tags and comments** | Metadata on securables that drives search, discovery and (with governed tags) policy |
 
 ## Related Resources
 
+- [Unity Catalog cheat sheet](../resources/cheat-sheets/unity-catalog-quick-ref.md)
 - [Unity Catalog Basics (shared)](../../../shared/fundamentals/unity-catalog-basics.md)
-- [Unity Catalog cheat sheet (shared)](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
-- [Unity Catalog documentation](https://docs.databricks.com/en/data-governance/unity-catalog/index.html)
 
 ---
 
-**[← Previous: Data Ingestion & Acquisition](../02-data-ingestion-and-acquisition/README.md) | [↑ Back to DE Professional](../README.md) | [Next: Data Modeling →](../09-data-modeling/README.md)**
+**[← Previous: Ensuring Data Security and Compliance](../06-ensuring-data-security-and-compliance/README.md) | [↑ Back to DE Professional](../README.md) | [Next: Debugging and Deploying →](../08-debugging-and-deploying/README.md)**

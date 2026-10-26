@@ -1,533 +1,365 @@
 ---
-title: Z-ORDER Indexing and Data Skipping
+title: "Data Skipping: Liquid Clustering vs Partitioning and Z-ORDER"
 type: study-material
 tags:
   - data-engineer-professional
   - performance-optimization
+  - liquid-clustering
+  - data-skipping
 status: published
 ---
 
-# Z-ORDER Indexing and Data Skipping
-
-Z-ORDER indexing enables efficient data skipping by co-locating related data in the same files. Understanding Z-ORDER and its newer replacement, Liquid Clustering, is essential for optimizing query performance.
+# Data Skipping: Liquid Clustering vs Partitioning and Z-ORDER
 
 ## Overview
 
-```mermaid
-flowchart TB
-    subgraph Without["Without Z-ORDER"]
-        direction LR
-        F1[File 1: A-Z]
-        F2[File 2: A-Z]
-        F3[File 3: A-Z]
-        F4[File 4: A-Z]
-    end
-
-    subgraph With["With Z-ORDER"]
-        direction LR
-        Z1[File 1: A-F]
-        Z2[File 2: G-L]
-        Z3[File 3: M-R]
-        Z4[File 4: S-Z]
-    end
-
-    Query[Query: WHERE name = 'John'] --> Without
-    Query --> With
-    Without --> Scan[Scan All Files]
-    With --> Skip[Skip 3 Files]
-```
-
-## Data Skipping Concepts
-
-### How Data Skipping Works
-
-```text
-Delta Lake tracks file-level statistics:
-- MIN/MAX values per column
-- NULL counts
-- Row counts
-
-Query execution:
-1. Parse filter predicates
-2. Check file statistics
-3. Skip files that can't match
-4. Read only relevant files
-```
-
-### Statistics Collection
-
-```sql
--- Check statistics columns
-DESCRIBE DETAIL catalog.schema.orders;
-
--- Statistics are collected for first 32 columns by default
--- Configuration to change:
-ALTER TABLE catalog.schema.orders
-SET TBLPROPERTIES (
-    'delta.dataSkippingNumIndexedCols' = '50'
-);
-```
-
-### Statistics Limitations
-
-| Column Type | Statistics Collected |
-| :--- | :--- |
-| Numeric | MIN, MAX, NULL count |
-| String | MIN, MAX, NULL count |
-| Date/Timestamp | MIN, MAX, NULL count |
-| Boolean | NULL count |
-| Complex (Array, Map, Struct) | No statistics |
-
-## Z-ORDER Clustering
-
-### Basic Z-ORDER
-
-```sql
--- Apply Z-ORDER to a table
-OPTIMIZE catalog.schema.orders
-ZORDER BY (customer_id);
-
--- Multiple columns
-OPTIMIZE catalog.schema.orders
-ZORDER BY (customer_id, order_date);
-
--- With partition filter
-OPTIMIZE catalog.schema.orders
-WHERE order_date >= '2024-01-01'
-ZORDER BY (customer_id);
-```
-
-### How Z-ORDER Works
-
-```mermaid
-flowchart TD
-    subgraph Data["Original Data Distribution"]
-        D1[customer_id values scattered]
-        D2[Across many files]
-    end
-
-    subgraph ZOrder["Z-ORDER Process"]
-        Sort[Multi-dimensional sort]
-        Interleave[Interleave bits]
-        Cluster[Group similar values]
-    end
-
-    subgraph Result["Optimized Distribution"]
-        R1[Similar customer_ids together]
-        R2[In same or nearby files]
-    end
-
-    Data --> ZOrder
-    ZOrder --> Result
-```
-
-### Z-ORDER Column Selection
-
-```text
-Best columns for Z-ORDER:
-1. Frequently filtered in WHERE clauses
-2. High cardinality (many distinct values)
-3. Used in JOIN conditions
-4. Not already partition columns
-
-Bad columns for Z-ORDER:
-1. Low cardinality (few distinct values)
-2. Already partition columns
-3. Rarely used in filters
-4. Columns with complex types
-```
-
-### Column Order Matters
-
-```sql
--- Order by importance/frequency of filtering
-OPTIMIZE orders
-ZORDER BY (
-    customer_id,    -- Most common filter
-    order_date      -- Second most common
-);
-
--- First column gets best clustering
--- Diminishing returns after ~4 columns
-```
-
-## Z-ORDER vs Partitioning
-
-### Comparison
-
-| Aspect | Partitioning | Z-ORDER |
-| :--- | :--- | :--- |
-| File organization | Separate directories | Within files |
-| Cardinality | Low (< 1000) | High (millions) |
-| Filter types | Equality, range | Equality, range |
-| Maintenance | Automatic | Manual OPTIMIZE |
-| Multiple columns | Limited | 3-4 columns |
-
-### When to Use Each
-
-```mermaid
-flowchart TD
-    Start[Column Selection] --> Card{Cardinality?}
-    Card -->|Low < 1000| Partition[Use Partitioning]
-    Card -->|High > 1000| ZOrder[Use Z-ORDER]
-
-    Partition --> Both{Need more columns?}
-    ZOrder --> Both
-    Both -->|Yes| Combine[Partition + Z-ORDER]
-    Both -->|No| Done[Done]
-```
-
-### Combined Strategy
-
-```sql
--- Partition by low-cardinality date
-CREATE TABLE orders (
-    order_id BIGINT,
-    customer_id BIGINT,
-    product_id BIGINT,
-    order_date DATE,
-    amount DECIMAL(10,2)
-)
-PARTITIONED BY (order_date);
-
--- Z-ORDER by high-cardinality columns within partitions
-OPTIMIZE orders
-WHERE order_date >= '2024-01-01'
-ZORDER BY (customer_id, product_id);
-```
-
-## Liquid Clustering
-
-### Overview
-
-```text
-Liquid Clustering is the evolution of Z-ORDER:
-- Automatic maintenance (no manual OPTIMIZE ZORDER)
-- Incremental clustering (only new data)
-- Better handling of streaming
-- More flexible column changes
-```
-
-### Enabling Liquid Clustering
-
-```sql
--- Create table with liquid clustering
-CREATE TABLE catalog.schema.orders (
-    order_id BIGINT,
-    customer_id BIGINT,
-    order_date DATE,
-    amount DECIMAL(10,2)
-)
-CLUSTER BY (customer_id, order_date);
-
--- Convert existing table to liquid clustering
-ALTER TABLE catalog.schema.orders
-CLUSTER BY (customer_id, order_date);
-```
-
-### Liquid vs Z-ORDER
-
-| Feature | Z-ORDER | Liquid Clustering |
-| :--- | :--- | :--- |
-| Maintenance | Manual OPTIMIZE | Automatic |
-| Clustering | Full rewrite | Incremental |
-| Column changes | Requires full rewrite | ALTER supported |
-| Streaming | Manual OPTIMIZE needed | Auto-handled |
-| Partitioning | Can combine | Replaces partitioning |
-| Availability | All versions | Databricks 13.3+ |
-
-### Liquid Clustering Operations
-
-```sql
--- Change clustering columns
-ALTER TABLE catalog.schema.orders
-CLUSTER BY (customer_id);
-
--- Remove clustering
-ALTER TABLE catalog.schema.orders
-CLUSTER BY NONE;
-
--- Trigger clustering manually (optional)
-OPTIMIZE catalog.schema.orders;
-```
-
-### Liquid Clustering Best Practices
-
-```text
-Column Selection:
-- 2-4 columns maximum
-- High cardinality columns
-- Frequently filtered columns
-- Avoid columns that change frequently
-
-Migration from Partitioning:
-1. Analyze query patterns
-2. Choose clustering columns
-3. Create new table with CLUSTER BY
-4. Migrate data
-5. Verify query performance
-```
-
-## Bloom Filters
-
-### What Are Bloom Filters
-
-```text
-Bloom filters provide:
-- Probabilistic data skipping
-- Effective for equality predicates
-- Works with high-cardinality columns
-- False positives possible, no false negatives
-```
-
-### Enabling Bloom Filters
-
-```sql
--- Enable bloom filter on specific columns
-ALTER TABLE catalog.schema.orders
-SET TBLPROPERTIES (
-    'delta.bloomFilter.columns' = 'order_id,customer_id'
-);
-
--- Configure bloom filter parameters
-ALTER TABLE catalog.schema.orders
-SET TBLPROPERTIES (
-    'delta.bloomFilter.columns' = 'order_id',
-    'delta.bloomFilter.fpp' = '0.01',  -- False positive probability
-    'delta.bloomFilter.numBits' = '1048576'  -- Bits per filter
-);
-```
-
-### Bloom Filter Use Cases
-
-```sql
--- Best for equality predicates on high-cardinality columns
-SELECT * FROM orders WHERE order_id = 'abc-123-def';
-
--- Bloom filter helps skip files that definitely don't contain the value
-```
-
-### Bloom Filter vs Z-ORDER
-
-| Aspect | Bloom Filter | Z-ORDER |
-| :--- | :--- | :--- |
-| Filter type | Equality only | Equality and range |
-| Space overhead | Some | None |
-| Maintenance | Automatic | Manual |
-| Best for | Point lookups | Range scans |
-
-## Query Performance Analysis
-
-### Checking Data Skipping
-
-```sql
--- Enable query metrics
-SET spark.databricks.io.skipping.reportSkipStats = true;
-
--- Run query
-SELECT * FROM orders WHERE customer_id = 12345;
-
--- Check Spark UI for:
--- "files read" vs "files total"
--- "rows read" vs "rows total"
-```
-
-### Analyzing Query Plans
-
-```sql
--- Check if data skipping is used
-EXPLAIN
-SELECT * FROM orders WHERE customer_id = 12345;
-
--- Look for:
--- "DataFilters" in FileScan
--- Partition pruning
--- File skipping metrics
-```
-
-### Performance Metrics
-
-```python
-# Programmatic access to metrics
-
-df = spark.sql("SELECT * FROM orders WHERE customer_id = 12345")
-df.collect()
-
-# Get execution metrics
-
-metrics = spark.sparkContext.statusTracker.getExecutorInfos()
-```
-
-## OPTIMIZE Strategies
-
-### Scheduled Optimization
-
-```python
-# Daily optimization job
-
-from datetime import datetime, timedelta
-
-def optimize_tables():
-    tables = [
-        ("orders", "customer_id", "order_date"),
-        ("events", "user_id", "event_date"),
-    ]
-
-    for table, *zorder_cols in tables:
-        # Optimize recent data only
-        spark.sql(f"""
-            OPTIMIZE catalog.schema.{table}
-            WHERE _commit_timestamp >= current_timestamp() - INTERVAL 1 DAY
-            ZORDER BY ({', '.join(zorder_cols)})
-        """)
-```
-
-### Incremental Z-ORDER
-
-```sql
--- Only Z-ORDER recent partitions
-OPTIMIZE catalog.schema.orders
-WHERE order_date >= date_sub(current_date(), 7)
-ZORDER BY (customer_id);
-```
-
-### Full Table Z-ORDER
-
-```sql
--- Periodic full optimization (weekly/monthly)
-OPTIMIZE catalog.schema.orders
-ZORDER BY (customer_id, product_id);
-
--- Warning: Can be expensive for large tables
--- Consider running during low-usage periods
-```
-
-## Migration Patterns
-
-### From Partitioning to Liquid Clustering
-
-```sql
--- Step 1: Create new table with liquid clustering
-CREATE TABLE catalog.schema.orders_v2
-CLUSTER BY (customer_id, order_date)
-AS SELECT * FROM catalog.schema.orders;
-
--- Step 2: Verify query performance
--- Step 3: Update references
--- Step 4: Drop old table after validation
-```
-
-### From Z-ORDER to Liquid Clustering
-
-```sql
--- Enable liquid clustering on existing table
-ALTER TABLE catalog.schema.orders
-CLUSTER BY (customer_id, order_date);
-
--- Future writes will be clustered
--- Run OPTIMIZE to cluster historical data
-OPTIMIZE catalog.schema.orders;
-```
-
-## Common Issues & Errors
-
-### Z-ORDER Not Improving Performance
-
-**Scenario:** Queries still scan many files.
-
-**Fix:** Verify column selection and query patterns:
-
-```sql
--- Check if filter columns match Z-ORDER columns
-OPTIMIZE orders ZORDER BY (customer_id);  -- Clustered by customer_id
-
--- This query benefits:
-SELECT * FROM orders WHERE customer_id = 123;
-
--- This query doesn't benefit (different column):
-SELECT * FROM orders WHERE product_id = 456;
-```
-
-### Too Many Z-ORDER Columns
-
-**Scenario:** Diminishing returns with many columns.
-
-**Fix:** Limit to 3-4 columns:
-
-```sql
--- Bad: Too many columns
-OPTIMIZE orders ZORDER BY (a, b, c, d, e, f);
-
--- Better: Focus on most important
-OPTIMIZE orders ZORDER BY (a, b, c);
-```
-
-### Z-ORDER on Low-Cardinality Column
-
-**Scenario:** Poor clustering effectiveness.
-
-**Fix:** Use partitioning for low-cardinality:
-
-```sql
--- Bad: Z-ORDER on low-cardinality
-OPTIMIZE orders ZORDER BY (status);  -- Only 5 values
-
--- Better: Partition by low-cardinality, Z-ORDER by high
-CREATE TABLE orders PARTITIONED BY (status);
-OPTIMIZE orders ZORDER BY (customer_id);
-```
-
-### Liquid Clustering Not Working
-
-**Scenario:** Data not being clustered.
-
-**Fix:** Verify configuration and trigger optimization:
-
-```sql
--- Check table properties
-DESCRIBE DETAIL catalog.schema.orders;
-
--- Manually trigger clustering
-OPTIMIZE catalog.schema.orders;
-```
-
-## Exam Tips
-
-1. **Z-ORDER** - Multi-dimensional clustering for data skipping
-2. **Column selection** - High cardinality, frequently filtered
-3. **Column limit** - 3-4 columns practical maximum
-4. **Liquid clustering** - Automatic, incremental, replaces ZORDER
-5. **CLUSTER BY** - SQL syntax for liquid clustering
-6. **Partitioning vs Z-ORDER** - Low cardinality partition, high cardinality Z-ORDER
-7. **Bloom filters** - Equality predicates on high-cardinality
-8. **Maintenance** - Z-ORDER requires manual OPTIMIZE, liquid is automatic
-9. **Data skipping** - File-level statistics MIN/MAX
-10. **Statistics** - First 32 columns by default
-
-## Key Takeaways
-
-- **Z-ORDER mechanism**: Z-ORDER co-locates rows with similar values for the specified columns into the same files, enabling Delta Lake's file-level MIN/MAX statistics to skip files during filtered queries.
-- **Best column candidates**: Choose high-cardinality columns (many distinct values) that are frequently used in `WHERE` clauses or `JOIN` conditions — never use Z-ORDER on partition columns.
-- **Column limit**: Diminishing returns set in after 3–4 Z-ORDER columns; first column gets the best clustering, and effectiveness decreases significantly beyond the fourth.
-- **Partitioning vs Z-ORDER**: Use partitioning for low-cardinality columns (< 1,000 distinct values, e.g., `date`, `region`); use Z-ORDER for high-cardinality columns (e.g., `customer_id`, `user_id`).
-- **Liquid Clustering replaces Z-ORDER**: `CLUSTER BY` (Databricks 13.3+) is the successor — it clusters incrementally and automatically, requires no manual `OPTIMIZE ZORDER BY`, and supports `ALTER TABLE ... CLUSTER BY` to change columns.
-- **Bloom filters for point lookups**: Bloom filters enable probabilistic data skipping for equality predicates on high-cardinality columns (e.g., UUID lookups) where Z-ORDER range skipping is less effective.
-- **Data skipping statistics**: Delta tracks `MIN`, `MAX`, and `NULL` counts per column in each file for the first 32 columns (configurable via `delta.dataSkippingNumIndexedCols`).
-- **Z-ORDER maintenance**: Unlike Liquid Clustering, Z-ORDER requires periodic manual `OPTIMIZE ... ZORDER BY` runs because new writes append unsorted files that bypass the existing clustering.
-
-## Related Topics
-
-- [File Sizing](02-file-sizing.md) - OPTIMIZE for compaction
-- [Spark Tuning](./06-spark-tuning.md) - Query optimization
-- [Partitioning Strategies](../09-data-modeling/03-partitioning-strategies.md) - Partition design
-
-## Official Documentation
-
-- [Z-ORDER Clustering](https://docs.databricks.com/delta/data-skipping.html)
-- [Liquid Clustering](https://docs.databricks.com/delta/clustering.html)
-- [Bloom Filters](https://docs.databricks.com/delta/optimizations/bloom-filters.html)
-- [Data Skipping](https://docs.databricks.com/delta/optimizations/file-mgmt.html)
+Every layout technique on Databricks exists to let queries skip files. Hive-style partitioning skips whole directories, Z-ORDER co-locates values inside files so per-file statistics can skip them, and liquid clustering does the same job incrementally with keys you can change. The exam asks you to pick the right one for a given table size and query pattern; the docs' current answer for new tables is liquid clustering.
+
+> [!abstract]
+>
+> - **Data skipping** uses per-file min/max/null-count/record-count statistics collected on write
+> - **Partitioning** = one directory per value; only for low/known-cardinality columns and very large tables (Databricks: don't partition tables under 1 TB)
+> - **Z-ORDER** = multi-column co-location applied by `OPTIMIZE ... ZORDER BY`; manual, not maintained by predictive optimization, not combinable with liquid clustering
+> - **Liquid clustering** (`CLUSTER BY` / `CLUSTER BY AUTO`) replaces both, works for low and high cardinality, clusters incrementally, and lets keys change without a rewrite
+
+> [!tip] What the Exam Tests
+>
+> - Compare Liquid Clustering vs partitioning/ZORDER for a given table size and query pattern
+> - Know Databricks' size guidance (< 1 TB, 1–100 TB, ≥ 100 TB) and that liquid clustering is recommended for all new tables
+> - Know how to migrate a partitioned or Z-ordered table to liquid clustering and how to verify skipping
 
 ---
 
-**[← Previous: File Sizing and Compaction](./02-file-sizing.md) | [↑ Back to Performance Optimization](./README.md) | [Next: Spark Tuning](./06-spark-tuning.md) →**
+## Data Skipping Fundamentals
+
+```mermaid
+flowchart TB
+    subgraph Without["Unclustered layout"]
+        direction LR
+        F1[File 1: ids 1-9000]
+        F2[File 2: ids 3-9800]
+        F3[File 3: ids 5-9900]
+    end
+
+    subgraph With["Clustered layout (Z-ORDER or liquid)"]
+        direction LR
+        Z1[File 1: ids 1-3000]
+        Z2[File 2: ids 3001-6000]
+        Z3[File 3: ids 6001-9900]
+    end
+
+    Query["Query: WHERE id = 4200"] --> Without
+    Query --> With
+    Without --> Scan[Min/max overlap: read all files]
+    With --> Skip[Only File 2 can match: skip 2 files]
+```
+
+Data skipping statistics are collected **automatically when you write** to a Delta Lake or managed Iceberg table. At query time Databricks uses per-file **minimum and maximum values, null counts, and total records** to skip files that can't match the filter. Layout techniques make those min/max ranges narrow; without them, every file's range overlaps the filter value.
+
+### Which Columns Have Statistics
+
+| Table type | Default statistics columns |
+| :--- | :--- |
+| UC external tables | First 32 columns of the schema |
+| UC managed tables with predictive optimization | First 32 columns, plus additional columns that predictive optimization selects because they are frequently used in filters |
+
+If you aren't using predictive optimization, change the defaults with table properties:
+
+```sql
+-- Number of leading columns to collect stats on (depends on column order)
+ALTER TABLE main.sales.orders SET TBLPROPERTIES ('delta.dataSkippingNumIndexedCols' = '40');
+
+-- Explicit list (DBR 13.3 LTS+); supersedes dataSkippingNumIndexedCols
+ALTER TABLE main.sales.orders SET TBLPROPERTIES ('delta.dataSkippingStatsColumns' = 'customer_id, order_date, region');
+
+-- Changing the properties only affects future writes; recompute for existing data (DBR 14.3 LTS+)
+ANALYZE TABLE main.sales.orders COMPUTE DELTA STATISTICS;
+```
+
+- Statistics aren't used for columns outside the current statistics column list.
+- Long strings are truncated during statistics collection; consider excluding long string columns that are rarely filtered.
+- Z-ORDER and liquid clustering keys **must** be columns with statistics; Z-ordering a column without stats is ineffective and wastes compute.
+
+---
+
+## Hive-Style Partitioning
+
+Partitioning splits a table into one directory per partition-column value, so filters on that column prune whole directories.
+
+```sql
+CREATE TABLE main.sales.orders_by_date (
+  order_id BIGINT, customer_id BIGINT, amount DECIMAL(10, 2), order_date DATE
+) PARTITIONED BY (order_date);
+```
+
+What the docs say about it today:
+
+- Most tables **under 100 TB don't need partitioning**. Unpartitioned Delta tables automatically use **ingestion time clustering**, which gives partitioning-like performance for datetime filters with no tuning.
+- Partitioning works well only for **low or known cardinality** fields (dates, physical locations), not high-cardinality fields such as timestamps.
+- Each partition should hold **at least 1 GB**; fewer, larger partitions tend to outperform many small ones.
+- A bad partitioning choice can need a **full rewrite** to fix, which is slow and expensive for large tables.
+- Partition columns must be top-level columns; you can't partition by struct fields or complex types (liquid clustering can cluster on struct fields).
+
+### Size Guidance from the Docs
+
+| Table size | Guidance |
+| :--- | :--- |
+| Less than 1 TB | Don't partition |
+| More than 1 TB to 100 TB | Use liquid clustering instead of partitioning; partitioning more often hurts than helps |
+| 100 TB or more | Partitioning might improve performance, but use liquid clustering first and verify any gain |
+
+---
+
+## Z-ORDER
+
+Z-ordering co-locates related values in the same set of files so data-skipping statistics become selective. It is applied by `OPTIMIZE`:
+
+```sql
+OPTIMIZE main.sales.events ZORDER BY (event_type);
+
+-- Multiple columns (effectiveness drops with each extra column)
+OPTIMIZE main.sales.events ZORDER BY (user_id, event_type);
+
+-- Limit the rewrite with a partition predicate (WHERE accepts partition columns only)
+OPTIMIZE main.sales.events
+WHERE event_date >= current_timestamp() - INTERVAL 1 day
+ZORDER BY (event_type);
+```
+
+Rules to know:
+
+- Use `ZORDER BY` on columns that are commonly used in predicates and have **high cardinality**.
+- You **cannot Z-order on partition columns**, and Z-order can only co-locate data **within a partition** (files are never combined across partition boundaries).
+- Z-ordering is **not idempotent** but aims to be incremental; re-running is not guaranteed to get faster. If no new data was added to a partition that was just Z-ordered, Z-ordering it again has no effect.
+- It balances files by number of rows, not bytes, so `OPTIMIZE` task times and file sizes can be skewed when recent rows are much wider.
+- Data written after the last `OPTIMIZE ... ZORDER BY` is not Z-ordered until the next run, so Z-order needs a scheduled job.
+- **Predictive optimization never runs `ZORDER`** and ignores Z-ordered files.
+- You **can't use `ZORDER` on a liquid-clustered table**.
+
+---
+
+## Liquid Clustering in Brief
+
+Liquid clustering replaces partitioning and Z-ORDER. It is recommended for all new tables, including streaming tables and materialized views. Full details (syntax, thresholds, `CLUSTER BY AUTO`, deletion vectors) are in [Managed Tables, Predictive Optimization, and Automatic Clustering](./01-managed-tables-predictive-optimization.md).
+
+```sql
+CREATE TABLE main.sales.orders (
+  order_id BIGINT, customer_id BIGINT, order_date DATE, amount DECIMAL(10, 2)
+) CLUSTER BY (customer_id, order_date);
+
+ALTER TABLE main.sales.orders CLUSTER BY AUTO;   -- UC managed + predictive optimization
+OPTIMIZE main.sales.orders;                       -- incremental clustering
+OPTIMIZE main.sales.orders FULL;                  -- recluster everything after a key change
+```
+
+- Up to **four** keys; for tables under about 10 TB, more keys can slow single-column filters (four keys is worse than two).
+- Keys can change any time with `ALTER TABLE ... CLUSTER BY`; existing data is not rewritten until `OPTIMIZE ... FULL`.
+- Works for both low- and high-cardinality columns and avoids fixed partition boundaries and the small-file issues of static partitioning.
+- Liquid clustering tables allow **row-level concurrency** (with deletion vectors and row tracking), so concurrent writes conflict less.
+
+---
+
+## Comparison: Liquid Clustering vs Partitioning vs Z-ORDER
+
+| Aspect | Hive-style partitioning | Z-ORDER | Liquid clustering |
+| :--- | :--- | :--- | :--- |
+| Mechanism | Separate directory per value; prunes directories | Co-locates values inside files during `OPTIMIZE` | Organizes files by clustering keys on write (above size thresholds) and during `OPTIMIZE` |
+| Column cardinality | Low or known only (date, region) | High (ids, timestamps) | Low **and** high |
+| Columns | One or a few low-cardinality columns | Several, but effectiveness drops with each extra column | Up to 4 keys |
+| Changing the columns | Full table rewrite | Re-run `OPTIMIZE ... ZORDER BY` with new columns (rewrite) | `ALTER TABLE ... CLUSTER BY`; no immediate rewrite |
+| New data | Lands in the right partition | Unordered until the next `ZORDER` run | Clustered incrementally (on write or next `OPTIMIZE`) |
+| Maintained by predictive optimization | Compaction within partitions only | **No** (`ZORDER` never run) | **Yes** (incremental clustering; `AUTO` also picks keys) |
+| Automatic key selection | No | No | `CLUSTER BY AUTO` (UC managed tables) |
+| Skewed data | Partition key can give too many or too few partitions | Balances rows (not bytes) per file; `OPTIMIZE` tasks can skew | Recommended for heavy skew |
+| Combine with the others | Can combine with Z-ORDER | Can combine with partitioning | **Not compatible** with partitioning or `ZORDER` |
+| Docs recommendation | Only for 100 TB+ tables, after testing liquid clustering | Use liquid clustering instead for new tables | **Recommended for all new tables** |
+
+---
+
+## Decision by Table Size and Query Pattern
+
+| Table size | Query pattern | Choose |
+| :--- | :--- | :--- |
+| Under 1 TB | Any | **No partitioning.** Liquid clustering (or `CLUSTER BY AUTO`) on the filter columns, or rely on ingestion time clustering for time-ordered appends |
+| Under ~10 TB | Mostly single-column filters | Liquid clustering with **few keys** (one or two) |
+| 1–100 TB | Filters on high-cardinality columns (`customer_id`, `device_id`) | **Liquid clustering** on those columns |
+| 1–100 TB | Filters on a date plus an id | Liquid clustering on both (not partition-by-date + Z-ORDER) |
+| Any (UC managed) | Mixed, changing, or unknown filter patterns | **`CLUSTER BY AUTO`** with predictive optimization |
+| Any | Heavy skew, or a partition key would create too many or too few partitions | Liquid clustering |
+| Any | Many concurrent writers | Liquid clustering (row-level concurrency) |
+| 100 TB+ | Every query filters on a low-cardinality column with ≥ 1 GB per value | Start with liquid clustering; add partitioning only if testing proves it faster |
+| Existing partitioned / Z-ordered table | Poor skipping, over-partitioning, or rising `OPTIMIZE` cost | Convert with `REPLACE PARTITIONED BY WITH CLUSTER BY` |
+| Table read by clients that can't handle writer v7 / reader v3 | Any | Partitioning / Z-ORDER may have to stay until the clients are upgraded |
+
+```mermaid
+flowchart TD
+    Start[Choose a layout] --> New{New table?}
+    New -->|Yes| Managed{UC managed with<br/>predictive optimization?}
+    Managed -->|Yes, filters vary| AUTO[CLUSTER BY AUTO]
+    Managed -->|Known filter columns| LC[CLUSTER BY up to 4 keys]
+    Managed -->|No| LC
+    New -->|No, existing| Old{Partitioned or<br/>Z-ordered today?}
+    Old -->|Yes| Conv[REPLACE PARTITIONED BY<br/>WITH CLUSTER BY ... then OPTIMIZE]
+    Old -->|Unpartitioned| Alter[ALTER TABLE CLUSTER BY<br/>then OPTIMIZE FULL]
+    Start --> Huge{100 TB+ and every query<br/>filters one low-cardinality column?}
+    Huge -->|Yes| Test[Test liquid clustering first;<br/>partition only if proven faster]
+```
+
+---
+
+## Migrating to Liquid Clustering
+
+### Convert a Partitioned Table In Place (Recommended)
+
+Databricks recommends the `REPLACE PARTITIONED BY WITH CLUSTER BY` conversion (Databricks Runtime 18.1 and above; external and managed Delta tables). It minimizes reader and writer downtime; afterwards the table supports reads from DBR 13.3 LTS and above.
+
+```sql
+-- Keep the partition columns as clustering keys
+ALTER TABLE main.sales.orders_by_date REPLACE PARTITIONED BY WITH CLUSTER BY;
+
+-- Cluster on different/additional columns, then run OPTIMIZE to benefit
+ALTER TABLE main.sales.orders_by_date REPLACE PARTITIONED BY WITH CLUSTER BY (order_date, customer_id);
+OPTIMIZE main.sales.orders_by_date;
+
+-- Start from the partition columns and let predictive optimization adapt (UC managed only)
+ALTER TABLE main.sales.orders_by_date REPLACE PARTITIONED BY WITH CLUSTER BY AUTO;
+```
+
+- On conversion, the old partition columns become **hierarchical clustering keys** (prioritized ahead of the other keys).
+- Verify with `DESCRIBE EXTENDED` (new clustering columns) and `DESCRIBE HISTORY` (REORG, UPGRADE PROTOCOL, and REPLACE PARTITIONED BY WITH CLUSTER BY operations).
+- **Not supported** for streaming tables and materialized views created in Lakeflow Pipelines: change the pipeline definition from `PARTITIONED BY` to `CLUSTER BY` instead.
+- Converting a table partitioned by a **timestamp** column needs `spark.databricks.delta.liquidConversion.statsGeneration.enabled = false` and then `ANALYZE TABLE ... COMPUTE DELTA STATISTICS`.
+
+### Picking Keys When You Migrate
+
+| Current technique | Clustering keys to use |
+| :--- | :--- |
+| Hive-style partitioning | The partition columns |
+| Z-order indexing | The `ZORDER BY` columns |
+| Partitioning + Z-order | Both the partition columns and the `ZORDER BY` columns |
+| Generated column to reduce cardinality (e.g. `date` from a timestamp) | The original column; don't create the generated column |
+
+### Unpartitioned, Z-Ordered Table
+
+```sql
+ALTER TABLE main.sales.events CLUSTER BY (user_id, event_type);  -- former ZORDER BY columns
+OPTIMIZE main.sales.events FULL;                                 -- recluster existing data once
+```
+
+A CTAS into a new `CLUSTER BY` table also works, but it rewrites the whole table and doesn't keep all table metadata.
+
+---
+
+## Bloom Filter Indexes (Deprecated)
+
+> [!note] Platform update (Oct 2026)
+> Bloom filter indexes are **deprecated**: Databricks says not to use them and to remove existing ones. Predictive I/O (Photon) performs file skipping on all columns automatically and fully supersedes them; liquid clustering improves skipping for frequently filtered columns. Source: [Bloom filter indexes (deprecated)](https://docs.databricks.com/aws/en/optimizations/bloom-filters)
+
+```sql
+-- Remove an existing Bloom filter index, then VACUUM to clean up the _delta_index files
+DROP BLOOMFILTER INDEX ON TABLE main.sales.orders;
+```
+
+---
+
+## Verifying That Skipping Works
+
+- **Query profile / query history**: the query details panel shows the percentage of data pruned during scanning; see [Query Profile](./05-query-profiler.md).
+- **`system.query.history`**: compare `pruned_files` vs `read_files` and `pruned_files_bytes` vs `read_files_bytes`.
+- **Performance insights** flag layout problems: `COVERAGE_FILTER_KEYS_CLUSTERING` / `COVERAGE_FILTER_KEYS_PARTITIONING` (table clustered/partitioned on keys the query doesn't filter on), `COVERAGE_STATS_DELTA` (missing statistics for the filter columns), `DATA_FILE_SIZE` (many small files), and `MANUAL_DATA_LAYOUT` (manually optimized table that could use automatic liquid clustering).
+- **`EXPLAIN`**: `PartitionFilters` shows partition pruning; see [EXPLAIN Plans & AQE](./07-explain-plans-aqe.md).
+
+```sql
+SELECT statement_id, read_files, pruned_files,
+       ROUND(pruned_files / NULLIF(read_files + pruned_files, 0) * 100, 1) AS pct_files_pruned
+FROM system.query.history
+WHERE statement_text ILIKE '%main.sales.orders%'
+  AND start_time >= current_timestamp() - INTERVAL 1 DAY
+ORDER BY start_time DESC;
+```
+
+---
+
+## Use Cases
+
+- **200 GB dimension table partitioned by `country`**: under 1 TB, so remove partitioning; liquid clustering on `country` (or `CLUSTER BY AUTO`) gives the same skipping without small files.
+- **20 TB event table filtered by `user_id` and `event_date`**: liquid clustering on both columns instead of partition-by-date plus nightly `ZORDER BY (user_id)`; predictive optimization keeps it clustered.
+- **Shared gold table whose filters change every quarter**: `CLUSTER BY AUTO` on the managed table instead of re-planning partitions.
+- **Legacy 50 TB table partitioned by `(year, month, day)` and Z-ordered by `customer_id`**: `REPLACE PARTITIONED BY WITH CLUSTER BY (day, customer_id)` (or with the partition and Z-order columns), then `OPTIMIZE`.
+
+## Common Issues & Errors
+
+### Z-ORDER Stops Paying Off
+
+**Cause:** new files arrive unordered between runs, the filter columns don't match the Z-order columns, or too many columns are listed.
+
+**Fix:** move to liquid clustering using the `ZORDER BY` columns as keys; predictive optimization will then cluster new data incrementally.
+
+### `ZORDER` Fails on a Clustered Table
+
+**Cause:** liquid clustering is not compatible with `ZORDER` (or partitioning).
+
+**Fix:** use `OPTIMIZE` without `ZORDER BY`, or change keys with `ALTER TABLE ... CLUSTER BY`.
+
+### Thousands of Tiny Partitions
+
+**Cause:** partitioned on a high-cardinality column, or a table far below 1 TB.
+
+**Fix:** convert with `REPLACE PARTITIONED BY WITH CLUSTER BY`; partitions should hold at least 1 GB each.
+
+### Filters on a Column Still Scan Everything
+
+**Cause:** the column has no statistics (beyond the first 32 columns), or the filter wraps the column in a type conversion.
+
+**Fix:** add it with `delta.dataSkippingStatsColumns` and `ANALYZE TABLE ... COMPUTE DELTA STATISTICS`, or enable predictive optimization on a managed table; check the `COVERAGE_STATS_DELTA` insight.
+
+### Old Data Not Clustered After Changing Keys
+
+**Cause:** key changes don't rewrite existing data; `OPTIMIZE` is incremental.
+
+**Fix:** run `OPTIMIZE <table> FULL`.
+
+## Exam Tips
+
+> [!tip]
+>
+> - **New table → liquid clustering** (Databricks recommends it for all new tables, including streaming tables and materialized views). Unknown or changing filters on a UC managed table → `CLUSTER BY AUTO`.
+> - **Size rules:** < 1 TB don't partition; 1–100 TB use liquid clustering instead; ≥ 100 TB partitioning *might* help but test liquid clustering first; ≥ 1 GB per partition.
+> - **Partitioning = low/known cardinality; Z-ORDER = high cardinality; liquid = both.**
+> - **Liquid clustering can't be combined with partitioning or `ZORDER`**; predictive optimization never runs `ZORDER`.
+> - **Changing layout columns:** partitioning needs a rewrite; Z-order needs a new `OPTIMIZE ... ZORDER BY`; liquid clustering just needs `ALTER TABLE ... CLUSTER BY` (+ `OPTIMIZE FULL` for old data).
+> - **Migration:** `ALTER TABLE ... REPLACE PARTITIONED BY WITH CLUSTER BY`; use partition + Z-order columns as keys.
+> - Bloom filter indexes are deprecated; don't pick them as the modern answer.
+
+## Key Takeaways
+
+- **Data skipping** relies on per-file min/max/null/record statistics, collected on write for the first 32 columns by default (managed tables with predictive optimization add frequently filtered columns).
+- **Partitioning** suits only very large tables filtered on a low-cardinality column with ≥ 1 GB per partition; tables under 1 TB shouldn't be partitioned, and unpartitioned tables get ingestion time clustering for free.
+- **Z-ORDER** co-locates high-cardinality values within files but is manual, not maintained by predictive optimization, works only within partitions, and loses effectiveness with each added column.
+- **Liquid clustering** handles low and high cardinality, up to four keys, clusters incrementally, supports row-level concurrency, and lets you change keys without an immediate rewrite.
+- **`CLUSTER BY AUTO`** is the low-maintenance choice for UC managed tables with mixed or changing query patterns.
+- **Migrate** partitioned or Z-ordered tables with `REPLACE PARTITIONED BY WITH CLUSTER BY`, then verify pruning in the query profile or `system.query.history`.
+
+## Related Topics
+
+- [Managed Tables, Predictive Optimization, and Automatic Clustering](./01-managed-tables-predictive-optimization.md) - liquid clustering, `CLUSTER BY AUTO`, deletion vectors in depth
+- [File Sizing and Compaction](./02-file-sizing.md) - `OPTIMIZE` and small files
+- [Query Profile](./05-query-profiler.md) - confirm files and bytes pruned
+- [EXPLAIN Plans & AQE](./07-explain-plans-aqe.md) - `PartitionFilters`, pushed filters
+- [Partitioning Strategies](../09-data-modeling/03-partitioning-strategies.md) - partition design in data modeling
+- [Delta Lake Fundamentals](../09-data-modeling/02-delta-lake-fundamentals.md) - transaction log and file statistics
+
+## Official Documentation
+
+- [Use liquid clustering for tables](https://docs.databricks.com/aws/en/delta/clustering)
+- [When to partition tables on Databricks](https://docs.databricks.com/aws/en/tables/partitions)
+- [Data skipping (statistics and Z-ordering)](https://docs.databricks.com/aws/en/delta/data-skipping)
+- [Optimize data file layout (OPTIMIZE)](https://docs.databricks.com/aws/en/delta/optimize)
+- [Predictive optimization for Unity Catalog managed tables](https://docs.databricks.com/aws/en/optimizations/predictive-optimization)
+- [Bloom filter indexes (deprecated)](https://docs.databricks.com/aws/en/optimizations/bloom-filters)
+- [Query performance insights](https://docs.databricks.com/aws/en/sql/user/queries/performance-insights)
+- [Query history system table reference](https://docs.databricks.com/aws/en/admin/system-tables/query-history)
+
+---
+
+**[← Previous: File Sizing and Compaction](./02-file-sizing.md) | [↑ Back to Section](./README.md) | [Next: Disk Caching →](./04-disk-caching.md)**

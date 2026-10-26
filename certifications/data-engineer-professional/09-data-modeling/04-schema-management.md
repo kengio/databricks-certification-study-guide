@@ -714,4 +714,4 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 
 ---
 
-**[← Previous: Delta Lake Fundamentals](./02-delta-lake-fundamentals.md) | [↑ Back to Data Modeling](./README.md) | [Next: SCD Patterns](./05-scd-patterns.md) →**
+**[← Previous: Partitioning Strategies](./03-partitioning-strategies.md) | [↑ Back to Section](./README.md) | [Next: Slowly Changing Dimension (SCD) Patterns →](./05-scd-patterns.md)**

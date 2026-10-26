@@ -494,4 +494,4 @@ spark.conf.set(
 
 ---
 
-**[← Previous: Streaming Joins & Stateful Operations](../01-developing-code-for-data-processing/05-streaming-joins-stateful.md) | [↑ Back to Data Processing](./README.md)**
+**[← Previous: Databricks REST API — Part 2: Monitoring with SDK, REST & CLI; Permissions, SQL & Error Handling](./05-rest-api-part2.md) | [↑ Back to Section](./README.md) | [Next: Managed Tables, Predictive Optimization, and Automatic Clustering →](../05-cost-and-performance-optimization/01-managed-tables-predictive-optimization.md)**

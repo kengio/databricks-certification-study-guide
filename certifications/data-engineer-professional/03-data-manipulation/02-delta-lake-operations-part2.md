@@ -373,4 +373,4 @@ DESCRIBE DETAIL table_name;
 
 ---
 
-**[← Previous: Delta Lake Operations — Part 1](./02-delta-lake-operations-part1.md) | [↑ Back to Data Processing](../01-developing-code-for-data-processing/README.md) | [Next: Data Deduplication](03-data-deduplication.md) →**
+**[← Previous: Delta Lake Operations — Part 1](./02-delta-lake-operations-part1.md) | [↑ Back to Section](./README.md) | [Next: Data Deduplication →](./03-data-deduplication.md)**

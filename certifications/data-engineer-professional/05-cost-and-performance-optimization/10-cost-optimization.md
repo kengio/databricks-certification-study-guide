@@ -592,7 +592,7 @@ dev_cluster:
 
 ## Related Topics
 
-- [Databricks Compute](../01-developing-code-for-data-processing/09-databricks-compute.md) - Cluster types
+- [Databricks Compute](../01-developing-code-for-data-processing/09-databricks-compute-part1.md) - Cluster types
 - [System Tables](../04-monitoring-and-alerting/01-system-tables.md) - Usage monitoring
 - [Declarative Automation Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Job configuration
 
@@ -606,4 +606,4 @@ dev_cluster:
 
 ---
 
-**[← Previous: Spark Tuning](./06-spark-tuning.md) | [↑ Back to Performance Optimization](./README.md) | [Next: EXPLAIN Plans & Adaptive Query Execution](./07-explain-plans-aqe.md) →**
+**[← Previous: Streaming Performance Optimization](./09-streaming-optimization.md) | [↑ Back to Section](./README.md) | [Next: Access Control →](../06-ensuring-data-security-and-compliance/01-access-control.md)**

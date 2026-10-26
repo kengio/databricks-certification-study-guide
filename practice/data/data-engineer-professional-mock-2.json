@@ -1,8 +1,8 @@
 {
   "cert": "data-engineer-professional-mock-2",
   "certTitle": "Data Engineer Professional — Mock Exam 2",
-  "blueprintVersion": "Nov 30, 2025",
-  "generated": "2026-05-22",
+  "blueprintVersion": "Oct 9, 2026",
+  "generated": "2026-10-26",
   "domains": [
     {
       "id": "section-1-data-processing",
@@ -357,15 +357,15 @@
       "domain": "section-2-databricks-tooling",
       "title": "Question 20",
       "difficulty": "medium",
-      "question": "Which statement correctly describes a key difference between Databricks Asset Bundles and the legacy CLI approach?",
+      "question": "Which statement correctly describes a key difference between Declarative Automation Bundles and the legacy CLI approach?",
       "choices": {
-        "A": "Asset Bundles require all resources to be defined in Python rather than YAML or JSON",
-        "B": "Asset Bundles only support job deployments and cannot manage clusters or permissions",
-        "C": "Asset Bundles use declarative YAML configuration files (`databricks.yml`) that define resources, environments, and deployment targets in a single project structure",
-        "D": "Asset Bundles replace the REST API entirely and cannot be used alongside direct API calls"
+        "A": "Declarative Automation Bundles require all resources to be defined in Python rather than YAML or JSON",
+        "B": "Declarative Automation Bundles only support job deployments and cannot manage clusters or permissions",
+        "C": "Declarative Automation Bundles use declarative YAML configuration files (`databricks.yml`) that define resources, environments, and deployment targets in a single project structure",
+        "D": "Declarative Automation Bundles replace the REST API entirely and cannot be used alongside direct API calls"
       },
       "correctAnswer": "C",
-      "shortAnswer": "Databricks Asset Bundles introduce a declarative, project-based approach using `databricks.yml` files where resources (jobs, pipelines, etc.), environment-specific overrides, and deployment targets are defined together. This replaces the imperative scripting approach of the legacy CLI. Option A is wrong because DABs use YAML, Option B understates their capabilities, and Option D is incorrect since the API and bundles can coexist.",
+      "shortAnswer": "Declarative Automation Bundles introduce a declarative, project-based approach using `databricks.yml` files where resources (jobs, pipelines, etc.), environment-specific overrides, and deployment targets are defined together. This replaces the imperative scripting approach of the legacy CLI. Option A is wrong because DABs use YAML, Option B understates their capabilities, and Option D is incorrect since the API and bundles can coexist.",
       "explanation": ""
     },
     {
@@ -709,15 +709,15 @@
       "domain": "section-4-security-governance",
       "title": "Question 42",
       "difficulty": "hard",
-      "question": "How does the third institution (the non-Databricks recipient) authenticate and access data shared via Delta Sharing?",
+      "question": "How does the third institution (the non-Databricks recipient) authenticate and access data shared via OpenSharing?",
       "choices": {
         "A": "They receive a Databricks personal access token that grants read-only access to the shared tables",
         "B": "They connect via OAuth using the pharmaceutical company's identity provider",
         "C": "They install a Databricks Connect client that tunnels into the provider's workspace",
-        "D": "They download an activation link that provisions a bearer token, which the open-source Delta Sharing client uses to authenticate with the sharing server"
+        "D": "They download an activation link that provisions a bearer token, which the open-source OpenSharing client uses to authenticate with the sharing server"
       },
       "correctAnswer": "D",
-      "shortAnswer": "Delta Sharing uses an open protocol where recipients receive an activation link to generate a bearer token stored in a credential file. The open-source Delta Sharing connector (available for Spark, pandas, and other platforms) uses this token to authenticate directly with the sharing server without requiring a Databricks account. Options A and C incorrectly assume the recipient needs Databricks credentials or workspace connectivity, and Option B is not how Delta Sharing authenticates external recipients.",
+      "shortAnswer": "OpenSharing uses an open protocol where recipients receive an activation link to generate a bearer token stored in a credential file. The open-source OpenSharing connector (available for Spark, pandas, and other platforms) uses this token to authenticate directly with the sharing server without requiring a Databricks account. Options A and C incorrectly assume the recipient needs Databricks credentials or workspace connectivity, and Option B is not how OpenSharing authenticates external recipients.",
       "explanation": ""
     },
     {
@@ -789,15 +789,15 @@
       "domain": "section-5-monitoring-logging",
       "title": "Question 47",
       "difficulty": "hard",
-      "question": "What is the most effective method to identify backlog metrics across individual flows in the Lakeflow Declarative Pipelines pipeline?",
+      "question": "What is the most effective method to identify backlog metrics across individual flows in the Lakeflow pipeline?",
       "choices": {
-        "A": "Check the Lakeflow Declarative Pipelines pipeline UI graph view and look for red-highlighted tables indicating failures",
+        "A": "Check the Lakeflow pipeline UI graph view and look for red-highlighted tables indicating failures",
         "B": "Query `system.billing.usage` filtered by the pipeline ID to find the slowest compute phase",
         "C": "Query the pipeline's event log for `flow_progress` events and examine the `metrics.backlog_bytes` field for each flow",
         "D": "Examine the Spark UI Streaming tab for each cluster to view micro-batch processing rates"
       },
       "correctAnswer": "C",
-      "shortAnswer": "The Lakeflow Declarative Pipelines event log stores `flow_progress` event types that include detailed metrics such as `backlog_bytes` and `num_output_rows` for each individual flow in the pipeline. Querying these events lets you pinpoint exactly which flow has the largest backlog and is causing downstream lag. Option A shows status but not quantitative backlog metrics, Option B provides cost data not pipeline throughput, and Option D is not directly accessible for DLT-managed clusters.",
+      "shortAnswer": "The Lakeflow Pipelines event log stores `flow_progress` event types that include detailed metrics such as `backlog_bytes` and `num_output_rows` for each individual flow in the pipeline. Querying these events lets you pinpoint exactly which flow has the largest backlog and is causing downstream lag. Option A shows status but not quantitative backlog metrics, Option B provides cost data not pipeline throughput, and Option D is not directly accessible for DLT-managed clusters.",
       "explanation": ""
     },
     {
@@ -919,13 +919,13 @@
       "difficulty": "hard",
       "question": "How should the team validate the expectation results in their CI/CD pipeline?",
       "choices": {
-        "A": "Parse the Lakeflow Declarative Pipelines pipeline logs from the cluster driver output to count dropped rows",
-        "B": "Query the Lakeflow Declarative Pipelines event log for expectation metrics using `expectations.dropped_records` and compare the drop rate against the 0.1% threshold",
+        "A": "Parse the Lakeflow pipeline logs from the cluster driver output to count dropped rows",
+        "B": "Query the Lakeflow Pipelines event log for expectation metrics using `expectations.dropped_records` and compare the drop rate against the 0.1% threshold",
         "C": "Add a downstream notebook that reads the target table's row count and compares it to the source table's row count",
-        "D": "Configure a Lakeflow Declarative Pipelines alert that sends an email notification if the drop rate exceeds 0.1%"
+        "D": "Configure a Lakeflow Pipelines alert that sends an email notification if the drop rate exceeds 0.1%"
       },
       "correctAnswer": "B",
-      "shortAnswer": "The Lakeflow Declarative Pipelines event log captures detailed metrics for each expectation, including the number of records that passed, failed, and were dropped. By querying the event log for `expectations` events, the CI/CD pipeline can programmatically extract the drop counts, calculate the drop rate, and fail the pipeline promotion if the rate exceeds the defined threshold. This approach is precise, automatable, and uses the purpose-built observability layer rather than indirect row-count comparisons or non-programmatic alerts.",
+      "shortAnswer": "The Lakeflow Pipelines event log captures detailed metrics for each expectation, including the number of records that passed, failed, and were dropped. By querying the event log for `expectations` events, the CI/CD pipeline can programmatically extract the drop counts, calculate the drop rate, and fail the pipeline promotion if the rate exceeds the defined threshold. This approach is precise, automatable, and uses the purpose-built observability layer rather than indirect row-count comparisons or non-programmatic alerts.",
       "explanation": ""
     },
     {
@@ -949,7 +949,7 @@
       "domain": "section-6-testing-deployment",
       "title": "Question 57",
       "difficulty": "medium",
-      "question": "What is the fastest way to roll back the deployment using Databricks Asset Bundles?",
+      "question": "What is the fastest way to roll back the deployment using Declarative Automation Bundles?",
       "choices": {
         "A": "Check out the previous Git commit in the repository and run `databricks bundle deploy --target production` to redeploy the last known good version",
         "B": "Run `databricks bundle destroy --target production` to remove the broken deployment, then manually recreate the resources from the Databricks UI",
@@ -965,7 +965,7 @@
       "domain": "section-7-lakeflow-pipelines-performance",
       "title": "Question 58",
       "difficulty": "medium",
-      "question": "How should the team define the session metrics dataset in the Lakeflow Declarative Pipelines pipeline to best serve both downstream consumers?",
+      "question": "How should the team define the session metrics dataset in the Lakeflow pipeline to best serve both downstream consumers?",
       "choices": {
         "A": "Define it as a materialized view so that both the dashboard and batch process always read a consistent, pre-computed result",
         "B": "Define it as a streaming table with Change Data Feed enabled so the batch process can read incremental changes",

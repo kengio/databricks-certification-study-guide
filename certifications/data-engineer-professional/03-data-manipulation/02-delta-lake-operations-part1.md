@@ -476,4 +476,4 @@ ANALYZE TABLE table_name COMPUTE STATISTICS FOR ALL COLUMNS;
 
 ---
 
-**[← Previous: Change Data Capture (CDC) — Part 2](../02-data-ingestion-and-acquisition/04-change-data-capture-part2.md) | [↑ Back to Data Processing](../01-developing-code-for-data-processing/README.md) | [Next: Delta Lake Operations — Part 2](./02-delta-lake-operations-part2.md) →**
+**[Next: Delta Lake Operations — Part 2 →](./02-delta-lake-operations-part2.md)**

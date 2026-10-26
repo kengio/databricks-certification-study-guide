@@ -574,4 +574,4 @@ databricks secrets put --scope my-scope --key missing-key
 
 ---
 
-**[← Previous: Data Sharing](../02-data-ingestion-and-acquisition/06-opensharing.md) | [↑ Back to Security & Governance](./README.md) | [Next: Audit Logging, Data Lineage & Network Security](./06-audit-lineage-network-security.md) →**
+**[← Previous: Data Classification, Compliance & Permissions](./04-classification-compliance-permissions.md) | [↑ Back to Section](./README.md) | [Next: Audit Logging, Data Lineage & Network Security →](./06-audit-lineage-network-security.md)**

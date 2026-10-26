@@ -534,4 +534,4 @@ sequenceDiagram
 
 ---
 
-**[← Previous: Incremental Processing](./03-incremental-processing.md) | [↑ Back to Data Processing](./README.md) | [Next: Structured Streaming — Part 2](./04-structured-streaming-part2.md) →**
+**[Next: Structured Streaming — Part 2 →](./04-structured-streaming-part2.md)**

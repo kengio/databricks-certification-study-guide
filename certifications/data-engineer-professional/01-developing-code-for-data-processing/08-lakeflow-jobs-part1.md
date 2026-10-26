@@ -484,4 +484,4 @@ print(f"Processed table: {table_name}")
 
 ---
 
-**[← Previous: APPLY CHANGES API](07-auto-cdc-api.md) | [↑ Back to Lakeflow Pipelines](./README.md) | [Next: Lakeflow Jobs — Part 2](./08-lakeflow-jobs-part2.md) →**
+**[Next: Lakeflow Jobs — Part 2 →](./08-lakeflow-jobs-part2.md)**

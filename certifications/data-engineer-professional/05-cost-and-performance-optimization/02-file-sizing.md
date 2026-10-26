@@ -589,4 +589,4 @@ spark.sql("""
 
 ---
 
-**[↑ Back to Performance Optimization](./README.md) | [Next: Z-ORDER Indexing and Data Skipping](./03-zorder-indexing.md) →**
+**[← Previous: Managed Tables, Predictive Optimization, and Automatic Clustering](./01-managed-tables-predictive-optimization.md) | [↑ Back to Section](./README.md) | [Next: Data Skipping: Liquid Clustering vs Partitioning and Z-ORDER →](./03-zorder-indexing.md)**

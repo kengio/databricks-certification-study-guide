@@ -25,7 +25,15 @@ flowchart TB
     RowLevel --> DynamicViews[Dynamic Views]
     ColumnLevel --> ColumnMask[Column Masking]
     Masking --> Functions[Masking Functions]
+    AccessControl --> ABAC[ABAC Policies on Governed Tags]
+    AccessControl --> WS[Workspace Object ACLs]
 ```
+
+> [!tip] What the Exam Tests
+>
+> - Apply least-privilege access control lists (ACLs) to secure Unity Catalog securable objects and workspace resources.
+> - Combine Unity Catalog grants (data) with workspace ACLs on jobs, compute, notebooks, SQL warehouses, and pipelines (resources).
+> - Choose between dynamic views, table-level row filters / column masks, and ABAC policies.
 
 ## Table-Level Access Control
 
@@ -45,10 +53,7 @@ flowchart TB
 -- Grant SELECT on specific table
 GRANT SELECT ON TABLE prod.gold.customers TO `analysts`;
 
--- Grant SELECT on all tables in schema
-GRANT SELECT ON SCHEMA prod.gold TO `analysts`;
-
--- Grant with inheritance (all current and future tables)
+-- Grant SELECT on all current AND future tables in the schema (inheritance)
 GRANT SELECT ON SCHEMA prod.gold TO `analysts`;
 
 -- Grant multiple privileges
@@ -86,11 +91,8 @@ SHOW GRANTS ON TABLE prod.gold.customers;
 -- Show grants on schema
 SHOW GRANTS ON SCHEMA prod.gold;
 
--- Show grants for principal
-SHOW GRANTS TO `analysts`;
-
--- Show grants for current user
-SHOW GRANTS TO `current_user`;
+-- Show grants for one principal (an ON clause is always required)
+SHOW GRANTS `analysts` ON SCHEMA prod.gold;
 ```
 
 ### Grant Hierarchy
@@ -324,7 +326,58 @@ ALTER TABLE prod.gold.customers ALTER COLUMN ssn DROP MASK;
 | Applied at | Query time | Table level |
 | Bypassing | Users query underlying table | Cannot bypass |
 | Maintenance | Multiple views needed | Single definition |
-| Performance | Depends on view complexity | Optimized |
+| Performance | Full optimization and pushdown | Engine favors security over some optimizations |
+
+## Workspace Object ACLs
+
+Unity Catalog grants protect **data**; workspace access control lists (ACLs) protect **workspace resources** such as jobs, compute, notebooks, folders, SQL warehouses, and pipelines. Workspace admins have CAN MANAGE on all workspace objects, and users automatically get CAN MANAGE on objects they create. Objects in a folder inherit the folder's permissions.
+
+| Resource | Permission levels (lowest → highest) | Key distinctions |
+| :--- | :--- | :--- |
+| Jobs | CAN VIEW, CAN MANAGE RUN, IS OWNER, CAN MANAGE | CAN MANAGE RUN can run, run with different parameters, cancel, and see logs; only IS OWNER / CAN MANAGE edit, delete, or change permissions. One owner per job; a group cannot be owner |
+| Compute (clusters) | CAN VIEW (Beta), CAN ATTACH TO, CAN RESTART, CAN MANAGE | CAN ATTACH TO = attach notebooks; CAN RESTART = start/restart/terminate; CAN MANAGE = edit, resize, libraries, permissions, driver logs |
+| Notebooks | CAN VIEW, CAN RUN, CAN EDIT, CAN MANAGE | CAN RUN = attach and run commands; CAN EDIT = edit cells; CAN MANAGE = change permissions |
+| Folders | CAN VIEW, CAN EDIT, CAN RUN, CAN MANAGE | Contents inherit folder permissions; only CAN MANAGE creates, imports, deletes, moves |
+| SQL warehouses | CAN VIEW, CAN MONITOR, CAN USE, IS OWNER, CAN MANAGE | CAN USE = start and run queries; CAN MONITOR adds viewing all warehouse queries; only IS OWNER / CAN MANAGE stop, edit, delete |
+| Lakeflow pipelines | CAN VIEW, CAN RUN, CAN MANAGE, IS OWNER | CAN RUN = start/stop updates; CAN MANAGE / IS OWNER edit settings, delete, change permissions |
+| Secret scopes | READ, WRITE, MANAGE | READ = read and list secrets |
+
+> [!note]
+> The UI says CAN VIEW where the Permissions API uses `CAN_READ` for notebooks and folders. API and bundle level names use underscores, for example `CAN_MANAGE_RUN`.
+
+### Job identity: owner vs Run as
+
+A job runs with the privileges of its **Run as** identity (by default the creator, who is also IS OWNER). Whoever clicks **Run now**, the job still uses the Run as identity, so CAN MANAGE RUN can let users trigger a job over data they cannot read themselves. Databricks recommends setting **Run as** to a service principal.
+
+### Least-privilege example: production pipeline
+
+```yaml
+# databricks.yml (Declarative Automation Bundles)
+run_as:
+  service_principal_name: "6f0c...-sp-etl"     # job identity, not a person
+
+resources:
+  jobs:
+    nightly_etl:
+      name: nightly_etl
+      permissions:
+        - group_name: data-engineers
+          level: CAN_MANAGE_RUN                # can run and repair, cannot edit
+        - group_name: analysts
+          level: CAN_VIEW                      # can see results only
+```
+
+```sql
+-- The service principal gets exactly the data access the job needs
+GRANT USE CATALOG ON CATALOG prod TO `sp-etl`;
+GRANT USE SCHEMA, SELECT ON SCHEMA prod.bronze TO `sp-etl`;
+GRANT USE SCHEMA, SELECT, MODIFY, CREATE TABLE ON SCHEMA prod.silver TO `sp-etl`;
+-- Analysts read gold only; data is masked further by ABAC policies
+GRANT USE CATALOG ON CATALOG prod TO `analysts`;
+GRANT USE SCHEMA, SELECT ON SCHEMA prod.gold TO `analysts`;
+```
+
+Least-privilege checklist: grant to groups, not users; grant `CREATE TABLE` and `EXECUTE` at the narrowest level (schema / individual function); give jobs a service-principal Run as identity; give operators CAN MANAGE RUN instead of CAN MANAGE; give warehouse consumers CAN USE; reserve `MANAGE` and ownership for a governance group. For tag-driven row filters and column masks across many tables, see [ABAC Policies and Governed Tags](./02-abac-governed-tags.md).
 
 ## Access Control Patterns
 
@@ -397,7 +450,8 @@ SELECT
     action_name,
     request_params.full_name_arg AS object_name
 FROM system.access.audit
-WHERE action_name IN ('getTable', 'selectFromTable')
+WHERE service_name = 'unityCatalog'
+    AND action_name = 'getTable'
     AND event_date >= current_date() - 7
 ORDER BY event_time DESC;
 ```
@@ -411,7 +465,7 @@ SELECT DISTINCT
     COUNT(*) as access_count
 FROM system.access.audit
 WHERE request_params.full_name_arg = 'prod.gold.customers'
-    AND action_name = 'selectFromTable'
+    AND action_name = 'getTable'
     AND event_date >= current_date() - 30
 GROUP BY user_identity.email;
 
@@ -423,7 +477,7 @@ SELECT DISTINCT
     COUNT(*) AS access_count
 FROM system.access.audit
 WHERE user_identity.email = 'analyst@company.com'
-    AND action_name = 'selectFromTable'
+    AND action_name = 'getTable'
     AND event_date >= current_date() - 30
 GROUP BY request_params.full_name_arg;
 
@@ -434,7 +488,8 @@ SELECT
     action_name,
     request_params
 FROM system.access.audit
-WHERE action_name IN ('grant', 'revoke', 'updatePermissions')
+WHERE service_name = 'unityCatalog'
+    AND action_name = 'updatePermissions'
 ORDER BY event_time DESC;
 ```
 
@@ -495,9 +550,9 @@ GRANT SELECT ON VIEW prod.secure.customers TO `analysts`;
 
 ### Function Not Executing
 
-**Scenario:** Masking function not working.
+**Scenario:** Cannot attach a masking/filter function, or a view's function fails.
 
-**Fix:** Grant EXECUTE on function:
+**Fix:** The principal assigning a row filter or column mask needs `EXECUTE` on the function (plus `USE CATALOG` / `USE SCHEMA`):
 
 ```sql
 GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
@@ -507,20 +562,21 @@ GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
 
 **Scenario:** Row filter causes slow queries.
 
-**Fix:** Optimize filter function, ensure mapping tables are small and indexed.
+**Fix:** Use simple, deterministic SQL UDFs with few arguments, prefer `CASE` logic, and keep lookup tables small so they are broadcast.
 
 ## Exam Tips
 
 1. **Privilege hierarchy** - Need USE CATALOG → USE SCHEMA → table privilege
 2. **current_user()** - Returns current user's email for row filtering
 3. **is_account_group_member()** - Check group membership in views/functions
-4. **Dynamic views** - Primary method for row/column security
+4. **Dynamic views** - Best for curated/joined data; for many tables prefer ABAC policies
 5. **Declarative filters** - ALTER TABLE with ROW FILTER/MASK
 6. **Audit logs** - system.access.audit for access tracking
-7. **Grant inheritance** - Schema grants apply to all tables within
+7. **Grant inheritance** - Schema/catalog grants apply to all current and future objects within
 8. **View security** - Grant view access, revoke table access
 9. **Service principals** - Use for automated pipelines
 10. **Masking functions** - Reusable column masking logic
+11. **Workspace ACLs** - Jobs: CAN VIEW / CAN MANAGE RUN / IS OWNER / CAN MANAGE; warehouses: CAN USE for query users; least privilege = smallest level that works
 
 ## Key Takeaways
 
@@ -531,21 +587,28 @@ GRANT EXECUTE ON FUNCTION prod.functions.mask_email TO `analysts`;
 - **Column masking patterns**: use `REGEXP_REPLACE`, `CONCAT`, `LEFT`, `RIGHT`, and `NULL` to reveal only last-4-digits, initials, or nothing depending on group membership
 - **MANAGE privilege**: grants the ability to grant/revoke permissions on an object without being the owner; more powerful than data privileges for governance delegation
 - **Audit log table**: `system.access.audit` records all UC access events; filter by `service_name = 'unityCatalog'`, `action_name`, and `event_date` for compliance queries
-- **Schema-level grants**: `GRANT SELECT ON SCHEMA prod.gold TO analysts` applies to all current tables in the schema, not automatically to future tables created after the grant
+- **Schema-level grants**: `GRANT SELECT ON SCHEMA prod.gold TO analysts` applies to all current tables **and to tables created later** (privilege inheritance)
+- **Workspace ACLs**: jobs, compute, notebooks, folders, SQL warehouses, and pipelines have their own permission levels; give operators CAN MANAGE RUN, warehouse users CAN USE, and run jobs as a service principal
 
 ## Related Topics
 
 - [Unity Catalog](../07-data-governance/01-unity-catalog.md) - Governance foundation
 - [Data Sharing](../02-data-ingestion-and-acquisition/06-opensharing.md) - Sharing with external parties
 - [Secret Management](./05-secret-management.md) - Credential security
+- [ABAC Policies and Governed Tags](./02-abac-governed-tags.md) - Row filters and column masks at scale
+- [Anonymization, PII Controls, and Data Purging](./03-anonymization-pii-and-data-purging.md) - Masking techniques
 
 ## Official Documentation
 
-- [Privileges in Unity Catalog](https://docs.databricks.com/data-governance/unity-catalog/manage-privileges/privileges.html)
-- [Row and Column Filters](https://docs.databricks.com/data-governance/unity-catalog/row-and-column-filters.html)
-- [Dynamic Views](https://docs.databricks.com/data-governance/unity-catalog/create-views.html)
-- [Audit Logs](https://docs.databricks.com/administration-guide/account-settings/audit-logs.html)
+- [Unity Catalog permissions model concepts](https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/permissions-concepts)
+- [Row filters and column masks](https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/)
+- [Manually apply row filters and column masks](https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/manually-apply)
+- [Access control lists](https://docs.databricks.com/aws/en/security/auth/access-control/)
+- [Manage identities, permissions, and privileges for Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/privileges)
+- [Set permissions for resources in Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/permissions)
+- [SHOW GRANTS](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant)
+- [Audit log reference](https://docs.databricks.com/aws/en/admin/account-settings/audit-logs)
 
 ---
 
-**[← Previous: Unity Catalog](../07-data-governance/01-unity-catalog.md) | [↑ Back to Security & Governance](./README.md) | [Next: Data Sharing](../02-data-ingestion-and-acquisition/06-opensharing.md) →**
+**[← Previous: Cost Optimization](../05-cost-and-performance-optimization/10-cost-optimization.md) | [↑ Back to Section](./README.md) | [Next: ABAC Policies and Governed Tags →](./02-abac-governed-tags.md)**

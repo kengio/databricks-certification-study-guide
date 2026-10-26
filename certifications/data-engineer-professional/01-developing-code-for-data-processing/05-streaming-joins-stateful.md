@@ -771,4 +771,4 @@ Continue with [Streaming Monitoring & Optimization](../04-monitoring-and-alertin
 
 ---
 
-**[← Previous: Data Deduplication](../03-data-manipulation/03-data-deduplication.md) | [↑ Back to Data Processing](./README.md) | [Next: Streaming Monitoring & Optimization](../04-monitoring-and-alerting/06-streaming-monitoring-optimization.md) →**
+**[← Previous: Structured Streaming — Part 2](./04-structured-streaming-part2.md) | [↑ Back to Section](./README.md) | [Next: Declarative Pipelines →](./06-declarative-pipelines.md)**

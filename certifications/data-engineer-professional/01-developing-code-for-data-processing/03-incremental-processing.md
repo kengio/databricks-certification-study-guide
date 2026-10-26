@@ -623,4 +623,4 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 ---
 
-**[← Previous: Batch ETL Pipelines — Part 2](../03-data-manipulation/01-batch-etl-pipelines-part2.md) | [↑ Back to Data Processing](./README.md) | [Next: Structured Streaming — Part 1](./04-structured-streaming-part1.md) →**
+**[← Previous: UDFs and Unity Catalog Functions](./02-udfs-and-unity-catalog-functions.md) | [↑ Back to Section](./README.md) | [Next: Structured Streaming — Part 1 →](./04-structured-streaming-part1.md)**

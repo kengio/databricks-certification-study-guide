@@ -652,4 +652,4 @@ curl -X POST \
 
 ---
 
-**[← Previous: Databricks CLI — Part 2](./04-databricks-cli-part2.md) | [↑ Back to Databricks Tooling](../08-debugging-and-deploying/README.md) | [Next: Databricks REST API — Part 2 (Permissions, SQL, Error Handling & Use Cases)](./05-rest-api-part2.md) →**
+**[Next: Databricks REST API — Part 2: Monitoring with SDK, REST & CLI; Permissions, SQL & Error Handling →](./05-rest-api-part2.md)**

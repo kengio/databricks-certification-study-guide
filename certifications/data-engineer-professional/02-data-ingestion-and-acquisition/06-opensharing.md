@@ -1,622 +1,426 @@
 ---
-title: Data Sharing
-type: topic
+title: OpenSharing
+type: study-material
 tags:
-  - data-engineering
-  - delta-sharing
-  - collaboration
+  - data-engineer-professional
+  - opensharing
+  - data-sharing
+  - unity-catalog
 status: published
 ---
 
-# Data Sharing
-
-OpenSharing is an open protocol for secure data sharing across organizations and platforms. It enables sharing data without copying, while maintaining governance and audit capabilities.
+# OpenSharing
 
 ## Overview
 
-```mermaid
-flowchart LR
-    subgraph Provider["Data Provider"]
-        Data[(Delta Tables)]
-        Share[Share]
-        Recipient[Recipient Config]
-    end
-
-    subgraph Consumer["Data Consumer"]
-        Client[OpenSharing Client]
-        Query[Query Data]
-    end
-
-    Data --> Share
-    Share --> Recipient
-    Recipient --> |Credentials| Client
-    Client --> Query
-```
-
-## OpenSharing Architecture
-
-### Components
-
-| Component | Description |
-| :--- | :--- |
-| Share | Named collection of tables/schemas to share |
-| Recipient | Entity authorized to access shares |
-| Provider | Organization sharing data |
-| Consumer | Organization receiving shared data |
-
-### Protocol Features
-
-```mermaid
-flowchart TB
-    DeltaSharing[OpenSharing] --> Open[Open Protocol]
-    DeltaSharing --> Secure[Secure Access]
-    DeltaSharing --> CrossPlatform[Cross-Platform]
-    DeltaSharing --> Governed[Governed]
-
-    Open --> |REST API| Any[Any Client]
-    Secure --> |Bearer Token| Auth[Authentication]
-    CrossPlatform --> Databricks[Databricks]
-    CrossPlatform --> Spark[Apache Spark]
-    CrossPlatform --> Pandas[pandas]
-    CrossPlatform --> PowerBI[Power BI]
-    Governed --> Audit[Audit Logs]
-    Governed --> Revoke[Revoke Access]
-```
-
-## Creating Shares
-
-### Basic Share Creation
-
-```sql
--- Create a share
-CREATE SHARE customer_data_share;
-
--- Create share with comment
-CREATE SHARE sales_insights
-COMMENT 'Monthly sales data for partners';
-
--- List shares
-SHOW SHARES;
-
--- Describe share
-DESCRIBE SHARE customer_data_share;
-```
-
-### Adding Tables to Shares
-
-```sql
--- Add table to share
-ALTER SHARE customer_data_share
-ADD TABLE prod.gold.customers;
-
--- Add table with alias (recipients see different name)
-ALTER SHARE customer_data_share
-ADD TABLE prod.gold.customers AS customers_v2;
-
--- Add multiple tables
-ALTER SHARE customer_data_share
-ADD TABLE prod.gold.orders;
-
-ALTER SHARE customer_data_share
-ADD TABLE prod.gold.products;
-
--- Add entire schema
-ALTER SHARE customer_data_share
-ADD SCHEMA prod.gold;
-
--- Add table with partition filter (share subset)
-ALTER SHARE regional_data
-ADD TABLE prod.gold.sales
-WITH PARTITION (region = 'US');
-
--- Remove table from share
-ALTER SHARE customer_data_share
-REMOVE TABLE prod.gold.orders;
-```
-
-### Share with History (Change Data Feed)
-
-```sql
--- Enable history sharing for CDC
-ALTER SHARE customer_data_share
-ADD TABLE prod.gold.customers
-WITH HISTORY;
-
--- Recipients can query changes
--- SELECT * FROM customers_shared VERSION AS OF 5;
--- SELECT * FROM table_changes('customers_shared', 1, 5);
-```
-
-## Managing Recipients
-
-### Creating Recipients
-
-```sql
--- Create recipient (Databricks-to-Databricks)
-CREATE RECIPIENT partner_analytics
-USING ID 'aws:us-west-2:12345678-1234-1234-1234-123456789012';
-
--- Create recipient with comment
-CREATE RECIPIENT acme_corp
-COMMENT 'Acme Corporation data science team'
-USING ID 'azure:eastus:abc12345-1234-1234-1234-123456789012';
-
--- Create recipient for non-Databricks (open sharing)
-CREATE RECIPIENT external_partner;
--- This generates a credential file for download
-```
-
-### Sharing Credentials
-
-```sql
--- Get activation link for open sharing recipient
-DESCRIBE RECIPIENT external_partner;
--- Returns activation_link for credential download
-
--- Rotate recipient token
-ALTER RECIPIENT external_partner ROTATE TOKEN;
-```
-
-### Granting Share Access
-
-```sql
--- Grant share to recipient
-GRANT SELECT ON SHARE customer_data_share TO RECIPIENT partner_analytics;
-
--- Grant multiple shares
-GRANT SELECT ON SHARE customer_data_share TO RECIPIENT acme_corp;
-GRANT SELECT ON SHARE sales_insights TO RECIPIENT acme_corp;
-
--- List recipient grants
-SHOW GRANTS TO RECIPIENT partner_analytics;
-
--- Revoke access
-REVOKE SELECT ON SHARE customer_data_share FROM RECIPIENT partner_analytics;
-```
-
-### Viewing Recipients
-
-```sql
--- List all recipients
-SHOW RECIPIENTS;
-
--- Describe recipient
-DESCRIBE RECIPIENT partner_analytics;
-
--- Show shares granted to recipient
-SHOW GRANTS TO RECIPIENT partner_analytics;
-```
-
-## Consuming Shared Data
-
-### Databricks-to-Databricks
-
-```sql
--- Create catalog from share (provider shares with your workspace)
-CREATE CATALOG shared_customer_data
-USING SHARE provider_name.customer_data_share;
-
--- Query shared data like normal tables
-SELECT * FROM shared_customer_data.default.customers;
-
--- List shared catalogs
-SHOW CATALOGS;
-```
-
-### Using Credentials File (Open Sharing)
-
-```python
-
-# Install delta-sharing library
-# pip install delta-sharing
-
-import delta_sharing
-
-# Load the credential file
-
-profile_path = "/path/to/config.share"
-
-# List available shares
-
-shares = delta_sharing.list_shares(profile_path)
-
-# List tables in share
-
-tables = delta_sharing.list_all_tables(profile_path)
-
-# Load table as pandas DataFrame
-
-df = delta_sharing.load_as_pandas(f"{profile_path}#share_name.schema_name.table_name")
-
-# Load as Spark DataFrame
-
-df = delta_sharing.load_as_spark(f"{profile_path}#share_name.schema_name.table_name")
-```
-
-### Credential File Format
-
-```json
-{
-  "shareCredentialsVersion": 1,
-  "endpoint": "https://sharing.databricks.com/delta-sharing/",
-  "bearerToken": "xxxxxxxxxxxxxxxx"
-}
-```
-
-### Power BI Integration
-
-```text
-1. Download credential file from provider
-2. In Power BI:
-   - Get Data → OpenSharing
-   - Provide credential file path
-   - Select tables to import
-```
-
-## Sharing Patterns
-
-### Partner Data Exchange
-
-```mermaid
-sequenceDiagram
-    participant Provider as Your Company
-    participant Share as OpenSharing share
-    participant Recipient as Partner
-
-    Provider->>Share: Create share
-    Provider->>Share: Add tables
-    Provider->>Recipient: Create recipient
-    Provider->>Recipient: Grant share access
-    Provider->>Recipient: Send activation link
-    Recipient->>Recipient: Download credentials
-    Recipient->>Share: Query shared data
-    Provider->>Provider: Monitor via audit logs
-```
-
-```sql
--- Provider setup
-CREATE SHARE partner_exchange;
-
-ALTER SHARE partner_exchange
-ADD TABLE prod.gold.public_metrics;
-
-ALTER SHARE partner_exchange
-ADD TABLE prod.gold.benchmarks;
-
-CREATE RECIPIENT partner_company;
-
-GRANT SELECT ON SHARE partner_exchange TO RECIPIENT partner_company;
-
--- Get activation link
-DESCRIBE RECIPIENT partner_company;
-```
-
-### Internal Team Sharing
-
-```sql
--- Share across workspaces in same account
-CREATE SHARE team_shared_data;
-
-ALTER SHARE team_shared_data
-ADD SCHEMA prod.gold;
-
--- Create recipient for other workspace
-CREATE RECIPIENT data_science_ws
-USING ID 'databricks:workspace:12345';
-
-GRANT SELECT ON SHARE team_shared_data TO RECIPIENT data_science_ws;
-```
-
-### Filtered Sharing (Multi-Tenant)
-
-```sql
--- Share different partitions to different recipients
-CREATE SHARE us_customer_data;
-ALTER SHARE us_customer_data
-ADD TABLE prod.gold.customers
-WITH PARTITION (country = 'US');
-
-CREATE SHARE eu_customer_data;
-ALTER SHARE eu_customer_data
-ADD TABLE prod.gold.customers
-WITH PARTITION (country IN ('DE', 'FR', 'GB'));
-
--- Different recipients for each region
-GRANT SELECT ON SHARE us_customer_data TO RECIPIENT us_partner;
-GRANT SELECT ON SHARE eu_customer_data TO RECIPIENT eu_partner;
-```
-
-## Share Governance
-
-### Auditing Share Access
-
-```sql
--- Query audit logs for sharing activity
-SELECT
-    event_time,
-    user_identity.email,
-    action_name,
-    request_params.share_name,
-    request_params.recipient_name,
-    response.status_code
-FROM system.access.audit
-WHERE service_name = 'unityCatalog'
-    AND action_name LIKE '%Share%'
-ORDER BY event_time DESC;
-
--- Track recipient queries
-SELECT
-    event_time,
-    request_params.recipient_name,
-    request_params.share_name,
-    request_params.table_name
-FROM system.access.audit
-WHERE action_name = 'deltaSharingQueryTable'
-ORDER BY event_time DESC;
-```
-
-### Managing Share Lifecycle
-
-```sql
--- Disable recipient access temporarily
-ALTER RECIPIENT partner_analytics SET OWNER TO `admin-group`;
--- Then revoke specific share access
-
--- Re-enable access
-GRANT SELECT ON SHARE customer_data_share TO RECIPIENT partner_analytics;
-
--- Permanently remove recipient
-DROP RECIPIENT partner_analytics;
-
--- Drop share (removes all recipient access)
-DROP SHARE customer_data_share;
-```
-
-### Share Versioning
-
-```sql
--- Share with history enables version queries
-ALTER SHARE customer_data_share
-ADD TABLE prod.gold.customers
-WITH HISTORY;
-
--- Recipient can query historical versions
--- (In recipient's environment)
-SELECT * FROM shared_catalog.schema.customers VERSION AS OF 10;
-
--- Query changes between versions
-SELECT * FROM table_changes('shared_catalog.schema.customers', 5, 10);
-```
-
-## Marketplace (Databricks Marketplace)
-
-### Publishing to Marketplace
-
-```sql
--- Create listing (via UI primarily)
--- 1. Create share with tables
--- 2. Create listing in Marketplace
--- 3. Set listing visibility (public/private)
--- 4. Add documentation and terms
-```
-
-### Consuming from Marketplace
-
-```sql
--- Browse and request access via UI
--- Once approved, create catalog from listing
-
--- Query marketplace data
-SELECT * FROM marketplace_catalog.schema.table_name;
-```
-
-## Cross-Cloud Sharing
-
-### Sharing Across Clouds
-
-```mermaid
-flowchart LR
-    subgraph AWS["AWS Workspace"]
-        AWSData[(Data)]
-        AWSShare[Share]
-    end
-
-    subgraph Azure["Azure Workspace"]
-        AzureRecipient[Recipient]
-        AzureCatalog[Shared Catalog]
-    end
-
-    AWSData --> AWSShare
-    AWSShare --> |OpenSharing Protocol| AzureRecipient
-    AzureRecipient --> AzureCatalog
-```
-
-```sql
--- AWS provider creates share
-CREATE SHARE cross_cloud_data;
-ALTER SHARE cross_cloud_data ADD TABLE prod.analytics.metrics;
-
--- Create recipient with Azure identifier
-CREATE RECIPIENT azure_team
-USING ID 'azure:eastus:workspace-id';
-
-GRANT SELECT ON SHARE cross_cloud_data TO RECIPIENT azure_team;
-
--- Azure consumer creates catalog
-CREATE CATALOG aws_shared_data
-USING SHARE aws_account.cross_cloud_data;
-```
-
-## Security Considerations
-
-### Share Access Security
-
-| Aspect | Implementation |
-| :--- | :--- |
-| Authentication | Bearer token (auto-rotated) |
-| Authorization | GRANT/REVOKE at share level |
-| Network | HTTPS only |
-| Audit | Full audit logging |
-| Data | Never copied, read from source |
-
-### Best Practices
-
-```sql
--- Use partition filters to limit data exposure
-ALTER SHARE partner_share
-ADD TABLE prod.gold.transactions
-WITH PARTITION (year = 2024);
-
--- Create views for additional filtering
-CREATE VIEW prod.gold.sharable_customers AS
-SELECT customer_id, name, city, state
-FROM prod.gold.customers
-WHERE consent_to_share = true;
-
-ALTER SHARE partner_share
-ADD TABLE prod.gold.sharable_customers;
-
--- Regular access review
-SHOW GRANTS TO RECIPIENT partner_analytics;
-```
-
-## Use Cases
-
-### Data Monetization
-
-```sql
--- Create tiered data products
-CREATE SHARE basic_tier;
-ALTER SHARE basic_tier ADD TABLE prod.gold.public_aggregates;
-
-CREATE SHARE premium_tier;
-ALTER SHARE premium_tier ADD TABLE prod.gold.public_aggregates;
-ALTER SHARE premium_tier ADD TABLE prod.gold.detailed_metrics WITH HISTORY;
-
--- Different pricing per tier
-GRANT SELECT ON SHARE basic_tier TO RECIPIENT customer_basic;
-GRANT SELECT ON SHARE premium_tier TO RECIPIENT customer_premium;
-```
-
-### Regulatory Reporting
-
-```sql
--- Share compliance data with regulators
-CREATE SHARE regulatory_reports;
-
-ALTER SHARE regulatory_reports
-ADD TABLE prod.compliance.annual_report;
-
-ALTER SHARE regulatory_reports
-ADD TABLE prod.compliance.quarterly_metrics
-WITH PARTITION (quarter = '2024-Q1');
-
-CREATE RECIPIENT federal_regulator;
-GRANT SELECT ON SHARE regulatory_reports TO RECIPIENT federal_regulator;
-```
-
-## Common Issues & Errors
-
-### Recipient Cannot Access Share
-
-**Scenario:** Recipient gets authentication error.
-
-**Fix:** Verify recipient configuration and grant:
-
-```sql
--- Check recipient status
-DESCRIBE RECIPIENT partner_analytics;
-
--- Verify grant exists
-SHOW GRANTS TO RECIPIENT partner_analytics;
-
--- Re-grant if needed
-GRANT SELECT ON SHARE customer_data_share TO RECIPIENT partner_analytics;
-```
-
-### Table Not Visible in Share
-
-**Scenario:** Table added to share but recipient can't see it.
-
-**Fix:** Verify table is properly added:
-
-```sql
--- Check share contents
-DESCRIBE SHARE customer_data_share;
-
--- Verify table was added
-SHOW ALL IN SHARE customer_data_share;
-
--- Re-add table if needed
-ALTER SHARE customer_data_share ADD TABLE prod.gold.customers;
-```
-
-### Credential File Expired
-
-**Scenario:** Open sharing recipient's token expired.
-
-**Fix:** Rotate token:
-
-```sql
-ALTER RECIPIENT external_partner ROTATE TOKEN;
--- Send new activation link to recipient
-DESCRIBE RECIPIENT external_partner;
-```
-
-### Partition Filter Not Working
-
-**Scenario:** Recipient sees all data despite partition filter.
-
-**Fix:** Verify partition column and values:
-
-```sql
--- Check partition specification
-DESCRIBE SHARE regional_data;
-
--- Re-add with correct partition
-ALTER SHARE regional_data REMOVE TABLE prod.gold.sales;
-ALTER SHARE regional_data
-ADD TABLE prod.gold.sales
-WITH PARTITION (region = 'US');
-```
-
-## Exam Tips
-
-1. **OpenSharing protocol** - Open protocol, REST API, cross-platform
-2. **Share components** - Share contains tables, recipient accesses shares
-3. **Recipient types** - Databricks (cloud ID) or open sharing (credential file)
-4. **GRANT syntax** - GRANT SELECT ON SHARE ... TO RECIPIENT ...
-5. **Partition filtering** - Share subsets with WITH PARTITION clause
-6. **History sharing** - WITH HISTORY enables time travel for recipients
-7. **Audit logs** - All sharing activity logged in system.access.audit
-8. **No data copy** - Data stays at source, accessed via protocol
-9. **Token rotation** - ALTER RECIPIENT ... ROTATE TOKEN
-10. **Cross-cloud** - Works across AWS, Azure, GCP
-
-## Key Takeaways
-
-- **OpenSharing is an open protocol**: data never moves — the consumer reads directly from the provider's storage via a REST API using a bearer token; no data duplication occurs
-- **Share components**: a Share is a named collection of tables/schemas; a Recipient is an entity authorized to access a share; access is granted with `GRANT SELECT ON SHARE <share> TO RECIPIENT <recipient>`
-- **Recipient types**: Databricks-to-Databricks sharing uses a cloud identifier (`USING ID`); open sharing for non-Databricks clients generates a credential `.share` JSON file with a bearer token
-- **Partition filtering in shares**: `ALTER SHARE ... ADD TABLE ... WITH PARTITION (col = 'value')` restricts the recipient to only seeing the matching partition — used for multi-tenant or regional data isolation
-- **History sharing**: `ALTER SHARE ... ADD TABLE ... WITH HISTORY` lets recipients query historical versions and change data feed (`VERSION AS OF`, `table_changes()`)
-- **Consumer workflow (Databricks-to-Databricks)**: consumer creates a catalog from the share with `CREATE CATALOG ... USING SHARE provider.share_name` and then queries it like any other catalog
-- **Token rotation**: `ALTER RECIPIENT ... ROTATE TOKEN` regenerates the bearer token for open sharing recipients; useful for security rotation without removing and recreating the recipient
-- **Audit trail**: sharing activity is logged in `system.access.audit` with `action_name LIKE '%Share%'` and `action_name = 'deltaSharingQueryTable'` for recipient query tracking
-
-## Related Topics
-
-- [Unity Catalog](../07-data-governance/01-unity-catalog.md) - Governance foundation
-- [Access Control](../06-ensuring-data-security-and-compliance/01-access-control.md) - Internal access patterns
-- [Secret Management](../06-ensuring-data-security-and-compliance/05-secret-management.md) - Credential security
-
-## Official Documentation
-
-- [OpenSharing](https://docs.databricks.com/data-sharing/index.html)
-- [Create and Manage Shares](https://docs.databricks.com/data-sharing/create-share.html)
-- [Create and Manage Recipients](https://docs.databricks.com/data-sharing/create-recipient.html)
-- [OpenSharing Protocol](https://github.com/delta-io/delta-sharing)
+**OpenSharing** (formerly Delta Sharing) is the secure data sharing platform in Databricks for sharing data and AI assets with users outside your organization, whether or not they use Databricks. Data is shared live without replication; the provider governs access with Unity Catalog securables (**shares** and **recipients**), and the recipient reads through either the **Databricks-to-Databricks (D2D)** protocol or the **Databricks-to-Open (D2O)** protocol. OpenSharing is also the foundation of Databricks Marketplace and Clean Rooms.
+
+> [!note] Platform update (Oct 2026)
+> "Delta Sharing is now OpenSharing" (June 10, 2026). The docs moved to `/opensharing/`, but SQL keywords (`CREATE SHARE`, `CREATE RECIPIENT`), the `deltaSharing` Spark format, the `delta-sharing` Python package, and `deltaSharing*` audit events keep their old names. Source: [Databricks release notes, June 2026](https://docs.databricks.com/aws/en/release-notes/product/2026/june)
+
+> [!abstract]
+>
+> - **Share** = read-only collection of assets from one metastore; **recipient** = the organization allowed to read it; **provider** = the sharing organization
+> - **D2D**: recipient has a Unity Catalog-enabled workspace; identified by a **sharing identifier**; no tokens to manage; supports notebooks, volumes, models, metric views
+> - **D2O** ("open sharing"): any platform; authenticates with a **bearer-token credential file** or **OIDC federation**; tabular data only
+> - `WITH HISTORY` enables time travel, streaming reads, and (with CDF enabled) `table_changes()` for recipients
+
+> [!tip] What the Exam Tests
+>
+> - "Implement OpenSharing (D2D and Databricks-to-Open) ... for privacy-preserving collaboration" — choose the protocol from the recipient's platform and the assets you need to share
+> - The provider DDL: `CREATE SHARE`, `ALTER SHARE ... ADD TABLE | VIEW | VOLUME | MODEL`, `CREATE RECIPIENT [USING ID ...]`, `GRANT SELECT ON SHARE ... TO RECIPIENT ...`
+> - Restricting what a recipient sees: partition specs, recipient properties with `CURRENT_RECIPIENT()`, dynamic views, aliases
+> - The recipient side: `CREATE CATALOG ... USING SHARE provider.share`, credential files, `deltaSharing` streaming reads, and audit via `system.access.audit`
 
 ---
 
-**[← Previous: Access Control](../06-ensuring-data-security-and-compliance/01-access-control.md) | [↑ Back to Security & Governance](./README.md) | [Next: Secret Management](../06-ensuring-data-security-and-compliance/05-secret-management.md) →**
+## How OpenSharing Works
+
+```mermaid
+flowchart LR
+    subgraph P["Provider (UC-enabled workspace)"]
+        T[(Tables, views, volumes,<br/>models, notebooks)]
+        S[Share]
+        R1[Recipient: DATABRICKS<br/>sharing identifier]
+        R2[Recipient: TOKEN / OIDC]
+    end
+    subgraph D2D["D2D recipient"]
+        C1[Catalog created<br/>USING SHARE]
+    end
+    subgraph D2O["D2O recipient"]
+        C2[Spark / pandas / Power BI /<br/>Iceberg clients]
+    end
+    T --> S
+    S -- GRANT SELECT --> R1
+    S -- GRANT SELECT --> R2
+    R1 -- managed by Databricks --> C1
+    R2 -- credential file or IdP JWT --> C2
+```
+
+Ways to share with OpenSharing:
+
+1. **Databricks-to-Databricks protocol** — share data and AI assets with users who have a Unity Catalog-enabled workspace (another account, another cloud, or another metastore in your own account).
+2. **Databricks-to-Open protocol** — share tabular data managed in Unity Catalog with users on any computing platform.
+3. **Customer-managed open-source OpenSharing server** — share from any platform to any platform (not covered by Databricks docs).
+4. **SAP BDC Connector** — zero-copy sharing with SAP Business Data Cloud.
+
+> [!important]
+> There is no need for OpenSharing between workspaces attached to the **same** Unity Catalog metastore — use normal Unity Catalog grants. D2D sharing between metastores in the same account is enabled by default; sharing outside the account requires an account admin to enable OpenSharing on the metastore.
+
+### D2D vs D2O at a glance
+
+| Aspect | Databricks-to-Databricks (D2D) | Databricks-to-Open (D2O) |
+| :--- | :--- | :--- |
+| Recipient platform | Unity Catalog-enabled Databricks workspace | Any (Databricks, Apache Spark, pandas, Power BI, Tableau, Iceberg clients such as Snowflake, Trino, Flink) |
+| Recipient identity | **Sharing identifier** `<cloud>:<region>:<uuid>` of the recipient metastore | Recipient object with authentication type `TOKEN`, or an OIDC federation policy |
+| Credentials | None for the recipient to manage — Databricks handles authentication | **Bearer token** in a credential file (download once, max lifetime 1 year) or short-lived OAuth tokens via **OIDC federation** with the recipient's IdP |
+| Shareable assets | Tables, streaming tables, managed/foreign Iceberg tables, views and dynamic views, materialized views, **metric views, volumes, models, notebook files** | Tabular data (tables, views, MVs; streaming tables as current snapshot only) |
+| Recipient governance | Recipient grants access to the mounted catalog with Unity Catalog | Managed in the recipient's own tool |
+| Audit/usage tracking | Both provider and recipient | Provider side |
+| SQL creation | `CREATE RECIPIENT ... USING ID '<sharing-identifier>'` | `CREATE RECIPIENT name` (no `USING ID`) → returns activation link |
+
+---
+
+## Provider Setup and Privileges
+
+| Privilege | Scope | Used for |
+| :--- | :--- | :--- |
+| `CREATE SHARE` | Metastore | Create shares |
+| `CREATE RECIPIENT` | Metastore | Create recipients |
+| `USE SHARE` + `SET SHARE PERMISSION` (or share owner) | Share | Delegated grant management |
+| `USE RECIPIENT` (or recipient owner) | Recipient | View recipients/grants; needed with the above to grant |
+| `SELECT` / `READ VOLUME` / `EXECUTE` | Each shared table/view, volume, model | The share owner must keep these for as long as the asset is shared |
+| `CREATE PROVIDER`, `USE PROVIDER` | Recipient metastore | Recipient side: see providers and mount shares |
+
+Account admins enable OpenSharing on the metastore (for sharing outside the account), set the **default recipient token lifetime** (Databricks recommends tokens expire), and set an **organization name** that recipients see. Databricks recommends a **group** as share owner.
+
+---
+
+## Creating Shares
+
+```sql
+CREATE SHARE IF NOT EXISTS customer_data_share
+COMMENT 'Curated customer data for partners';
+
+-- Table, with an alias the recipient must use, and full history
+ALTER SHARE customer_data_share
+ADD TABLE prod.gold.customers
+COMMENT 'Customer master'
+AS shared.customers
+WITH HISTORY;
+
+-- Whole schema: current and future tables/views/volumes/models (no alias or partition allowed)
+ALTER SHARE customer_data_share ADD SCHEMA prod.gold;
+
+-- Views, materialized views, volumes, models
+ALTER SHARE customer_data_share ADD VIEW prod.gold.customer_summary_v;
+ALTER SHARE customer_data_share ADD MATERIALIZED VIEW prod.gold.daily_sales_mv;
+ALTER SHARE customer_data_share ADD VOLUME prod.raw.contracts AS shared.contracts;  -- D2D only
+ALTER SHARE customer_data_share ADD MODEL prod.ml.churn_model;                      -- D2D only
+
+-- Inspect and maintain
+SHOW SHARES;
+DESCRIBE SHARE customer_data_share;
+SHOW ALL IN SHARE customer_data_share;
+ALTER SHARE customer_data_share REMOVE TABLE shared.customers;
+```
+
+- **`WITH HISTORY` / `WITHOUT HISTORY`** (DBR 12.2 LTS+): `WITH HISTORY` lets recipients run time travel (`VERSION AS OF`, `TIMESTAMP AS OF`), streaming reads, and transactions; for D2D it also shares the Delta log for better read performance. It is the **default on Databricks SQL and DBR 16.2+** (and always for schema sharing); `WITHOUT HISTORY` is the default on DBR 16.1 and below. `WITH CHANGE DATA FEED` is deprecated.
+- To let recipients query **CDF** with `table_changes()`, **enable CDF on the table before** sharing it `WITH HISTORY`.
+- **Notebook files** are added through Catalog Explorer (*Manage assets → Add notebook file*), D2D only.
+- Streaming tables are added with `ADD TABLE`; D2O recipients can read only their **current snapshot** (no time travel, streaming, or CDF).
+
+### What you cannot share
+
+- Tables with **row filters or column masks** (share a dynamic view instead), tables with **collations**, `SHALLOW CLONE` tables, tables using **liquid clustering with partition filtering**, R2 tables with V2 checkpoint
+- Metric views, volumes, models, and notebooks over D2O
+- Assets from more than one metastore in a single share
+
+### Limiting what a recipient sees
+
+```sql
+-- Static partition spec: syntax is PARTITION (...), not WITH PARTITION
+ALTER SHARE regional_share
+ADD TABLE prod.gold.sales
+PARTITION (region = 'US');
+
+-- Several partitions in one spec
+ALTER SHARE eu_share
+ADD TABLE prod.gold.customers
+PARTITION (country = 'DE'), (country = 'FR'), (country = 'GB');
+
+-- One share, many recipients: partition by a recipient property (DBR 12.2 LTS+)
+CREATE RECIPIENT acme USING ID 'aws:us-west-2:19a84bee-54bc-43a2-87de-023d0ec16016'
+PROPERTIES ('country' = 'US');
+
+ALTER SHARE global_share
+ADD TABLE prod.gold.sales
+PARTITION (country = CURRENT_RECIPIENT().country);
+```
+
+```sql
+-- Dynamic view with row-level filtering per recipient (DBR 14.2+)
+CREATE VIEW prod.gold.sales_by_recipient AS
+SELECT * FROM prod.gold.sales
+WHERE country = CURRENT_RECIPIENT('country');
+
+-- Column-level redaction
+CREATE VIEW prod.gold.customers_masked AS
+SELECT
+  customer_id,
+  CASE WHEN CURRENT_RECIPIENT('country') = 'US' THEN email ELSE 'REDACTED' END AS email
+FROM prod.gold.customers;
+
+ALTER SHARE global_share ADD VIEW prod.gold.sales_by_recipient;
+```
+
+A provider can't query a `CURRENT_RECIPIENT()` view directly; to test it, share it with yourself and query as a recipient. Shareable views must be defined on Delta tables, foreign tables, other shareable views, or local materialized views and streaming tables.
+
+---
+
+## Managing Recipients
+
+### Databricks-to-Databricks recipient
+
+The recipient finds their sharing identifier (the output of `current_metastore()` on their side, format `<cloud>:<region>:<uuid>`) and sends it to the provider.
+
+```sql
+CREATE RECIPIENT IF NOT EXISTS partner_analytics
+USING ID 'aws:eu-west-1:g0c979c8-3e68-4cdf-94af-d05c120ed1ef'
+COMMENT 'Partner analytics metastore';
+-- authentication_type = DATABRICKS
+```
+
+### Databricks-to-Open recipient (bearer token)
+
+```sql
+CREATE RECIPIENT IF NOT EXISTS external_partner
+COMMENT 'Non-Databricks partner';
+-- authentication_type = TOKEN
+
+DESCRIBE RECIPIENT external_partner;
+-- returns activation_link until the credential file is downloaded
+```
+
+- Send the **activation link** over a secure channel; the recipient downloads the credential file **only once**.
+- Token lifetime defaults to the metastore setting; tokens are valid for a **maximum of one year**.
+- **Rotate** with Catalog Explorer or the CLI — there is no SQL `ROTATE` clause:
+
+  ```bash
+  databricks recipients rotate-token <recipient-name> <existing-token-expire-in-seconds>
+  ```
+
+  A recipient has at most two tokens (active + rotated); `0` expires the old token immediately (use it if the token is compromised).
+- Optionally restrict D2O recipients with **IP access lists**.
+
+### Databricks-to-Open recipient (OIDC federation)
+
+Instead of a long-lived token, the provider creates a recipient with an **OIDC token federation policy** (issuer URL of the recipient's IdP such as Microsoft Entra ID or Okta, plus allowed users, groups, service principals, or apps). Recipients authenticate with their own IdP — **U2M** (for example Power BI, Tableau) or **M2M** (OpenSharing Python/Spark clients) — and Databricks exchanges the IdP's JWT for short-lived OAuth tokens. MFA and token lifetime are enforced by the IdP; email invitations don't support OIDC.
+
+### Grants and recipient maintenance
+
+```sql
+GRANT SELECT ON SHARE customer_data_share TO RECIPIENT partner_analytics;  -- SELECT is the only share privilege
+SHOW GRANT ON SHARE customer_data_share;
+SHOW GRANTS TO RECIPIENT partner_analytics;
+REVOKE SELECT ON SHARE customer_data_share FROM RECIPIENT partner_analytics;
+
+ALTER RECIPIENT partner_analytics SET PROPERTIES ('country' = 'DE');
+ALTER RECIPIENT partner_analytics OWNER TO `data-sharing-admins`;
+DROP RECIPIENT partner_analytics;  -- loses access to every share
+DROP SHARE customer_data_share;    -- every recipient loses access
+```
+
+**OpenSharing by email** (Beta): invite a recipient by email address and choose Databricks, open sharing, or either; granting the share sends the activation link. Not supported for OIDC, groups, or service principals, or via the `CREATE RECIPIENT` SQL command.
+
+---
+
+## Consuming Shared Data
+
+### D2D recipient
+
+```sql
+-- Requires metastore admin, or CREATE CATALOG + USE PROVIDER (or provider ownership)
+SHOW PROVIDERS;
+CREATE CATALOG IF NOT EXISTS partner_shared
+USING SHARE acme_provider.customer_data_share;
+
+GRANT USE CATALOG ON CATALOG partner_shared TO `analysts`;
+SELECT * FROM partner_shared.shared.customers;
+
+-- Shared WITH HISTORY (+ CDF enabled by provider)
+SELECT * FROM partner_shared.shared.customers VERSION AS OF 3;
+SELECT * FROM table_changes('partner_shared.shared.customers', 0, 3);
+```
+
+Objects in a shared catalog are **read-only**; recipients can be granted only read access. Shared notebooks live at the catalog level and can be cloned by anyone with `USE CATALOG`. New shares and share updates are cached for about a minute before they appear.
+
+### D2O recipient (credential file)
+
+```python
+# pip install delta-sharing
+import delta_sharing
+
+profile = "/Volumes/main/sharing/creds/config.share"
+client = delta_sharing.SharingClient(profile)
+print(client.list_all_tables())
+
+pdf = delta_sharing.load_as_pandas(f"{profile}#customer_data_share.shared.customers")
+sdf = delta_sharing.load_as_spark(f"{profile}#customer_data_share.shared.customers")
+```
+
+The credential (profile) file is JSON with `shareCredentialsVersion`, `endpoint`, `bearerToken`, and optional `expirationTime`; Databricks-issued files also carry an `icebergEndpoint` for Iceberg REST Catalog clients. Power BI Desktop uses the **OpenSharing** connector with the endpoint URL and bearer token from the file.
+
+### Streaming and CDF reads
+
+A table shared **with history** (or a streaming table, for D2D) can be a Structured Streaming source with the `deltaSharing` format:
+
+```python
+d2d_stream = (spark.readStream
+    .format("deltaSharing")
+    .option("startingVersion", 0)
+    .option("ignoreDeletes", "true")
+    .option("maxFilesPerTrigger", 10)
+    .table("partner_shared.shared.customers"))
+
+d2o_cdf = (spark.readStream
+    .format("deltaSharing")
+    .option("readChangeFeed", "true")
+    .load("/Volumes/main/sharing/creds/config.share#customer_data_share.shared.customers"))
+```
+
+Supported source options include `startingVersion`, `startingTimestamp`, `ignoreDeletes`, `ignoreChanges`, `maxFilesPerTrigger`, `maxBytesPerTrigger`, and `readChangeFeed`. Tables with deletion vectors or column mapping need `responseFormat=delta` for streaming and CDF reads, and you can't change `responseFormat` on a running stream.
+
+> [!note] Platform update (Oct 2026)
+> `Trigger.AvailableNow` on OpenSharing streaming sources became GA on July 14, 2026: it captures the shared table's version at start, processes the backlog in multiple micro-batches (honoring `maxFilesPerTrigger` and `maxVersionsPerRpc`), then stops. It needs DBR 18.0+; on earlier runtimes it is converted to `Trigger.Once`. Source: [Databricks release notes, July 2026](https://docs.databricks.com/aws/en/release-notes/product/2026/july)
+
+### Iceberg clients
+
+Providers can share Delta tables, managed Iceberg tables, foreign Iceberg tables, views, materialized views, and streaming tables with external engines that speak the **Iceberg REST Catalog API** (Snowflake, Trino, Flink, Spark, PyIceberg). Delta tables need `IcebergCompatV3`; assets in default storage can't be shared to Iceberg clients; sharing views/MVs/streaming tables triggers provider-side materialization. Recipients use the `icebergEndpoint` + bearer token from the credential file, or **OIDC federation** (supported for Iceberg clients since June 15, 2026).
+
+---
+
+## Governance, Cost, and Security
+
+### Auditing
+
+Provider-side OpenSharing events are logged in `system.access.audit` under `service_name = 'unityCatalog'`; actions performed by recipients start with the `deltaSharing` prefix.
+
+```sql
+SELECT
+  event_time,
+  request_params.recipient_name,
+  request_params.share,
+  request_params.schema,
+  request_params.name AS table_name,
+  source_ip_address
+FROM system.access.audit
+WHERE service_name = 'unityCatalog'
+  AND action_name IN ('deltaSharingQueryTable', 'deltaSharingQueryTableChanges')
+ORDER BY event_time DESC;
+```
+
+### Who pays, and where data is filtered
+
+| Recipient compute | Account relationship | Who pays (views) | Access method |
+| :--- | :--- | :--- | :--- |
+| Databricks serverless | Any | Recipient | Direct access to underlying data |
+| Databricks classic | Same account | Recipient | Direct access |
+| Databricks classic | Different account | Recipient (provider's serverless SKU) | Provider performs filtering |
+| D2O connectors | Any | Provider | Provider performs filtering |
+
+- Sharing **within a region** has no egress cost; cross-region/cross-cloud sharing can incur cloud egress fees (Cloudflare R2 avoids them). With **SecureConnect** (Public Preview), providers share storage behind a firewall without allowlisting each recipient, and data transfer is billed by Databricks.
+- Files are delivered via short-lived **pre-signed URLs** or scoped **cloud tokens**; for eligible tables shared `WITH HISTORY` and without partition filters, cloud tokens give near-direct-read performance — but they are scoped to the table root, so the recipient can also read the Delta log and not-yet-vacuumed deleted data.
+- Revoke at any granularity: revoke a share, restrict IPs, filter rows/columns, rotate tokens, or drop the recipient.
+
+### Cross-cloud and regulatory domains
+
+D2D works across AWS, Azure, and GCP. Sharing across regulatory domains (commercial ↔ AWS GovCloud, GovCloud DoD, Azure China) is in **Public Preview** since June 15, 2026; Azure Government environments are not supported.
+
+---
+
+## Databricks Marketplace
+
+Marketplace is an open exchange built on OpenSharing for datasets, notebooks, AI models, apps, and MCP servers.
+
+- **Consumers** browse the Open Marketplace or the workspace **Marketplace** page, but must request access from a Databricks workspace. Listings are in the **public marketplace** or a provider's **private exchange**; some are instant, others need provider approval. Datasets are typically delivered as catalogs of tabular data (volumes are also supported); a Unity Catalog-enabled workspace gives the deepest integration, while other consumers can use Power BI, pandas, or Spark.
+- **Providers** need a premium, Unity Catalog-enabled workspace and must apply through the Databricks Data Partner Program (or use self-service signup for private exchanges only) and follow the provider policies.
+
+---
+
+## Use Cases
+
+| Scenario | Approach |
+| :--- | :--- |
+| Partner on Databricks (any cloud) needs curated gold tables plus notebooks | D2D share; partner mounts with `CREATE CATALOG ... USING SHARE` |
+| Regulator or customer without Databricks needs a quarterly extract in Power BI | D2O share with bearer token (short lifetime) or OIDC |
+| One share serving many regional partners, each seeing only their rows | Recipient properties + `PARTITION (col = CURRENT_RECIPIENT().prop)` or a dynamic view |
+| Downstream partner needs incremental change feed | Enable CDF, share `WITH HISTORY`, recipient streams with `deltaSharing` + `readChangeFeed` |
+| Snowflake team wants to query your tables in place | D2O to an Iceberg REST Catalog client |
+| Monetize a dataset publicly | Marketplace listing |
+| Two companies need joint results without seeing each other's rows | Not a share — use [Clean Rooms](./07-clean-rooms.md) |
+
+## Common Issues & Errors
+
+| Symptom | Cause | Fix |
+| :--- | :--- | :--- |
+| `ALTER SHARE ... WITH PARTITION` syntax error | Wrong keyword | Use `PARTITION (col = 'value')` |
+| Recipient can't time travel or run `table_changes()` | Shared `WITHOUT HISTORY` (old runtime default) or CDF not enabled before sharing | Enable CDF, then `ALTER SHARE ... ALTER TABLE ... WITH HISTORY` |
+| Activation link missing from `DESCRIBE RECIPIENT` | Credential file already downloaded (one-time) | Rotate the token to issue a new link |
+| D2O integrations break on Dec 8, 2026 | D2O tokens issued before Dec 8, 2025 with later or no expiration automatically expire on Dec 8, 2026 | Review and renew long-lived tokens |
+| Can't add a table with row filters/column masks | Not shareable | Share a dynamic view |
+| Provider can't preview a `CURRENT_RECIPIENT()` view | Sharing context only | Share it to yourself and query as a recipient |
+| New table not visible to recipient yet | Share metadata cached ~1 minute; `information_schema` refreshes only on direct query/`DESCRIBE` | Wait, then query the table directly |
+| Workspace admin can't add a table | Inherited `USE CATALOG`/`USE SCHEMA` from the admin group isn't enough | Grant yourself the privileges directly |
+| Asset vanished from share after dropping a schema | Cascade deletes bypass share protection | Remove assets from shares before deleting parents |
+
+## Exam Tips
+
+> [!tip]
+>
+> - **Recipient on Databricks with UC → D2D** (sharing identifier, no token, notebooks/volumes/models allowed). **Anyone else → D2O** (credential file or OIDC, tables only).
+> - `CREATE RECIPIENT x USING ID '<cloud>:<region>:<uuid>'` = D2D; `CREATE RECIPIENT x` without `USING ID` = token-based D2O.
+> - `GRANT SELECT ON SHARE s TO RECIPIENT r` — `SELECT` is the only share privilege.
+> - `PARTITION (...)` (no `WITH`) shares a slice; `CURRENT_RECIPIENT()` lets one share serve many recipients.
+> - `WITH HISTORY` (default on DBR 16.2+) enables time travel and streaming; CDF must be enabled on the source **before** sharing.
+> - Rotate tokens with the CLI/Catalog Explorer, not SQL; max token lifetime one year.
+> - Same metastore? Don't use OpenSharing — just grant.
+
+## Key Takeaways
+
+- OpenSharing (formerly Delta Sharing) shares live data without replication through Unity Catalog shares and recipients.
+- D2D uses the recipient metastore's sharing identifier and supports non-tabular assets; D2O uses bearer-token credential files or OIDC federation for any client, including Iceberg REST Catalog engines.
+- Providers limit exposure with partitions, recipient properties, dynamic views, and aliases; tables with row filters or column masks can't be shared directly.
+- History sharing unlocks time travel, streaming (`deltaSharing` source, `Trigger.AvailableNow` GA on DBR 18.0+), and CDF for recipients.
+- Every access is auditable in `system.access.audit` (`deltaSharing*` actions under `unityCatalog`), and Marketplace and Clean Rooms build on the same protocol.
+
+## Related Topics
+
+- [Clean Rooms](./07-clean-rooms.md) — privacy-preserving collaboration on top of OpenSharing
+- [Lakehouse Federation](./08-lakehouse-federation.md) — query external systems without copying
+- [Unity Catalog](../07-data-governance/01-unity-catalog.md) — governance foundation for shares and recipients
+- [Access Control](../06-ensuring-data-security-and-compliance/01-access-control.md) — UC privileges and dynamic views
+- [Change Data Capture (CDC) — Part 1](./04-change-data-capture-part1.md) — CDF fundamentals used by history sharing
+
+## Official Documentation
+
+- [What is OpenSharing?](https://docs.databricks.com/aws/en/opensharing/) (the old `/delta-sharing/` path redirects here)
+- [What is the Databricks-to-Databricks protocol?](https://docs.databricks.com/aws/en/opensharing/share-data-databricks)
+- [What is the Databricks-to-Open sharing protocol?](https://docs.databricks.com/aws/en/opensharing/share-data-open)
+- [Set up OpenSharing for your account](https://docs.databricks.com/aws/en/opensharing/set-up)
+- [Create shares](https://docs.databricks.com/aws/en/opensharing/create-share)
+- [Create recipients (D2D)](https://docs.databricks.com/aws/en/opensharing/create-recipient)
+- [Create recipients with bearer tokens (D2O)](https://docs.databricks.com/aws/en/opensharing/create-recipient-token)
+- [Enable OIDC federation for recipients](https://docs.databricks.com/aws/en/opensharing/create-recipient-oidc-fed)
+- [Manage access to shares](https://docs.databricks.com/aws/en/opensharing/grant-access)
+- [Read data shared using D2D](https://docs.databricks.com/aws/en/opensharing/read-data-databricks)
+- [Read data shared with bearer tokens](https://docs.databricks.com/aws/en/opensharing/read-data-open)
+- [Read shares from an Iceberg client using OIDC](https://docs.databricks.com/aws/en/opensharing/sharing-over-oidc-iceberg)
+- [Audit and monitor data sharing](https://docs.databricks.com/aws/en/opensharing/audit-logs)
+- [ALTER SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share), [CREATE RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient), [GRANT ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-grant-share)
+- [What is Databricks Marketplace?](https://docs.databricks.com/aws/en/marketplace/)
+- [OpenSharing protocol (open source)](https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md)
+
+---
+
+**[← Previous: Lakeflow Connect Database CDC](./05-lakeflow-connect-database-cdc.md) | [↑ Back to Section](./README.md) | [Next: Clean Rooms →](./07-clean-rooms.md)**

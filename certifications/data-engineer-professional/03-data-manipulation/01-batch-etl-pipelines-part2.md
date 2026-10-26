@@ -330,4 +330,4 @@ Understanding when to apply specific techniques is crucial for the exam and real
 
 ---
 
-**[← Previous: Batch ETL Pipelines — Part 1](./01-batch-etl-pipelines-part1.md) | [↑ Back to Data Processing](../01-developing-code-for-data-processing/README.md) | [Next: Incremental Processing](../01-developing-code-for-data-processing/03-incremental-processing.md) →**
+**[← Previous: Batch ETL Pipelines — Part 1](./01-batch-etl-pipelines-part1.md) | [↑ Back to Section](./README.md) | [Next: Delta Lake Operations — Part 1 →](./02-delta-lake-operations-part1.md)**

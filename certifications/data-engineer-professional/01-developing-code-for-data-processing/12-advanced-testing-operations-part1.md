@@ -711,4 +711,4 @@ targets:
 
 ---
 
-**[← Previous: Bundle Deployment Strategies — Part 2 (Rollback, Feature Flags & OIDC)](../08-debugging-and-deploying/04-bundle-deployment-strategies-part2.md) | [↑ Back to Testing & Deployment](../08-debugging-and-deploying/README.md) | [Next: Advanced Testing & Operations — Part 2](./12-advanced-testing-operations-part2.md) →**
+**[Next: Advanced Testing & Operations — Part 2 →](./12-advanced-testing-operations-part2.md)**

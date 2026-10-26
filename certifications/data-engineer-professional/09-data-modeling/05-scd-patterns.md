@@ -512,52 +512,67 @@ WHERE s.city != d.current_city
   );
 ```
 
-## Lakeflow Pipelines APPLY CHANGES for SCD Type 2
+## Lakeflow Pipelines AUTO CDC for SCD Type 2
 
-Lakeflow Pipelines provides built-in SCD Type 2 support.
+Lakeflow Pipelines provide built-in SCD Type 1 and Type 2 through the AUTO CDC APIs (formerly APPLY CHANGES). The target must be a streaming table; `stored_as_scd_type` selects the SCD type (default 1).
+
+> [!note] Platform update (Oct 2026)
+> AUTO CDC replaces APPLY CHANGES with the same syntax: `dlt.apply_changes()` is now `dp.create_auto_cdc_flow()` (same signature) and the Python module is `from pyspark import pipelines as dp` (`import dlt` still works). Source: [The AUTO CDC APIs](https://docs.databricks.com/aws/en/ldp/cdc)
 
 ```python
-import dlt
+from pyspark import pipelines as dp
+from pyspark.sql.functions import col
 
 # Source data
-
-@dlt.view
+@dp.temporary_view
 def customers_cdc():
     return (spark.readStream.format("cloudFiles")
         .option("cloudFiles.format", "json")
-        .load("/landing/customers_cdc/"))
+        .load("/Volumes/main/landing/customers_cdc/"))
 
-# SCD Type 2 with APPLY CHANGES
+# SCD Type 2 with AUTO CDC
+dp.create_streaming_table("dim_customer_scd2")
 
-dlt.create_streaming_table("dim_customer_scd2")
-
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="dim_customer_scd2",
     source="customers_cdc",
     keys=["customer_id"],
     sequence_by=col("updated_at"),
     stored_as_scd_type=2,
-    columns=["name", "email", "city", "tier"]
+    column_list=["customer_id", "name", "email", "city", "tier", "updated_at"],
+    track_history_column_list=["city", "tier"],
 )
 
 # Resulting table has:
-# - __START_AT: Effective date
-# - __END_AT: End date
-# - All source columns
+# - __START_AT / __END_AT: the sequence values (same type as updated_at) that opened and closed each version
+# - __END_AT IS NULL marks the current version
+# - Changes to columns outside track_history_column_list update the current version in place
+```
 
+```sql
+-- Same flow in SQL
+CREATE OR REFRESH STREAMING TABLE dim_customer_scd2;
+
+CREATE FLOW dim_customer_scd2_cdc AS AUTO CDC INTO dim_customer_scd2
+FROM STREAM(customers_cdc)
+KEYS (customer_id)
+SEQUENCE BY updated_at
+COLUMNS (customer_id, name, email, city, tier, updated_at)
+STORED AS SCD TYPE 2
+TRACK HISTORY ON * EXCEPT (name, email, updated_at);
 ```
 
 ### Lakeflow Pipelines SCD Type 1
 
 ```python
-dlt.create_streaming_table("dim_customer_scd1")
+dp.create_streaming_table("dim_customer_scd1")
 
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="dim_customer_scd1",
     source="customers_cdc",
     keys=["customer_id"],
     sequence_by=col("updated_at"),
-    stored_as_scd_type=1  # Type 1: Overwrite
+    stored_as_scd_type=1,  # Type 1: overwrite (the default)
 )
 ```
 
@@ -581,15 +596,17 @@ WHEN MATCHED THEN UPDATE SET
 ### Lakeflow Pipelines with Deletes
 
 ```python
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="dim_customer_scd2",
     source="customers_cdc",
     keys=["customer_id"],
     sequence_by=col("updated_at"),
     stored_as_scd_type=2,
-    apply_as_deletes=expr("operation = 'DELETE'"),
-    apply_as_truncates=expr("operation = 'TRUNCATE'")
+    apply_as_deletes="operation = 'DELETE'",
+    except_column_list=["operation"],
 )
+# For SCD Type 2, a delete closes the current version (sets __END_AT).
+# apply_as_truncates is supported only for SCD Type 1.
 ```
 
 ## Performance Considerations
@@ -714,7 +731,7 @@ result = fact_df.join(broadcast(current_df), "customer_id")
 4. **Type 4** - Separate mini-dimension for rapidly changing attributes
 5. **Type 6** - Hybrid of 1, 2, 3 for maximum flexibility
 6. **MERGE** - Primary mechanism for SCD implementation in Delta Lake
-7. **Lakeflow Pipelines APPLY CHANGES** - Built-in SCD support with `stored_as_scd_type`
+7. **Lakeflow Pipelines AUTO CDC (formerly APPLY CHANGES)** - Built-in SCD support with `stored_as_scd_type`
 8. **End date convention** - Often `9999-12-31` for current records
 9. **Point-in-time query** - `effective_date <= date AND end_date >= date`
 10. **Surrogate vs Natural key** - Type 2 requires surrogate key for uniqueness
@@ -727,21 +744,22 @@ result = fact_df.join(broadcast(current_df), "customer_id")
 - **SCD Type 3**: adds `previous_<attr>` columns to track only the immediately prior value; limited to one change of history per tracked attribute
 - **SCD Type 4**: extracts rapidly changing attributes into a separate mini-dimension table; the fact table holds a foreign key to the mini-dimension at transaction time
 - **SCD Type 6**: hybrid of Types 1 + 2 + 3; stores full Type 2 history rows AND carries a `current_<attr>` column (Type 1 update) and a `previous_<attr>` column (Type 3) on every row
-- **Lakeflow Pipelines APPLY CHANGES**: `dlt.apply_changes(..., stored_as_scd_type=2)` generates Type 2 history automatically; the resulting table adds `__START_AT` and `__END_AT` metadata columns; `stored_as_scd_type=1` does a simple upsert
+- **Lakeflow Pipelines AUTO CDC (formerly APPLY CHANGES)**: `dp.create_auto_cdc_flow(..., stored_as_scd_type=2)` (formerly `dlt.apply_changes`) generates Type 2 history automatically; the resulting table adds `__START_AT` and `__END_AT` columns holding sequence values; `stored_as_scd_type=1` (the default) does a simple upsert
 - **MERGE as primary SCD mechanism**: MERGE is the standard DML for all SCD types in Delta Lake; two-step MERGE (expire then insert) is common for Type 2 to avoid ambiguous row matching
 
 ## Related Topics
 
 - [Delta Lake Fundamentals](02-delta-lake-fundamentals.md) - MERGE operations
 - [Medallion Architecture](01-medallion-architecture.md) - Where dimensions fit
-- [Apply Changes API](../01-developing-code-for-data-processing/07-auto-cdc-api.md) - Lakeflow Pipelines SCD support
+- [AUTO CDC API](../01-developing-code-for-data-processing/07-auto-cdc-api.md) - Lakeflow Pipelines SCD support
 
 ## Official Documentation
 
 - [Delta Lake MERGE](https://docs.databricks.com/delta/merge.html)
-- [Lakeflow Pipelines APPLY CHANGES](https://docs.databricks.com/delta-live-tables/cdc.html)
-- [Slowly Changing Dimensions](https://docs.databricks.com/delta-live-tables/slowly-changing-dimensions.html)
+- [The AUTO CDC APIs](https://docs.databricks.com/aws/en/ldp/cdc)
+- [create_auto_cdc_flow](https://docs.databricks.com/aws/en/ldp/developer/ldp-python-ref-apply-changes)
+- [Change data capture and snapshots (SCD Type 1 and 2)](https://docs.databricks.com/aws/en/data-engineering/what-is-cdc)
 
 ---
 
-**[← Previous: Schema Management](./04-schema-management.md) | [↑ Back to Data Modeling](./README.md) | [Next: Partitioning Strategies](03-partitioning-strategies.md) →**
+**[← Previous: Schema Management](./04-schema-management.md) | [↑ Back to Section](./README.md) | [Next: Dimensional Modeling and Metric Views →](./06-dimensional-modeling-and-metric-views.md)**

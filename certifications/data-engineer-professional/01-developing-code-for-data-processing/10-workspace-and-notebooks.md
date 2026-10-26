@@ -794,4 +794,4 @@ value = dbutils.jobs.taskValues.get(
 
 ---
 
-**[↑ Back to Databricks Tooling](./README.md) | [Next: Databricks CLI — Part 1](../04-monitoring-and-alerting/04-databricks-cli-part1.md) →**
+**[← Previous: Databricks Compute — Part 2](./09-databricks-compute-part2.md) | [↑ Back to Section](./README.md) | [Next: Unit Testing — Part 1 →](./11-unit-testing-part1.md)**

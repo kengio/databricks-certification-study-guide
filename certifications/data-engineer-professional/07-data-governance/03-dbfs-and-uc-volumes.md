@@ -669,4 +669,4 @@ DESCRIBE VOLUME main.default.my_volume;
 
 ---
 
-**[← Previous: Databricks Compute](../01-developing-code-for-data-processing/09-databricks-compute.md) | [↑ Back to Databricks Tooling](./README.md)**
+**[← Previous: Tags, Comments, and Discoverability](./02-tags-comments-and-discoverability.md) | [↑ Back to Section](./README.md) | [Next: Spark UI Debugging →](../08-debugging-and-deploying/01-spark-ui-debugging.md)**

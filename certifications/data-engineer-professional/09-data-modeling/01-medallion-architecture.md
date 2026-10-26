@@ -711,4 +711,4 @@ deduped = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
 
 ---
 
-**[↑ Back to Data Modeling](./README.md) | [Next: Delta Lake Fundamentals](./02-delta-lake-fundamentals.md) →**
+**[← Previous: Git Folders](../08-debugging-and-deploying/06-git-folders.md) | [↑ Back to Section](./README.md) | [Next: Delta Lake Fundamentals →](./02-delta-lake-fundamentals.md)**
