@@ -13,6 +13,20 @@ tags:
 
 Unity Catalog (UC) is Databricks' centralized metadata and access control solution that provides a single place to govern data across the entire Databricks platform. It addresses data governance challenges like scattered metadata, inconsistent access control, and lack of audit trails.
 
+> [!abstract]
+>
+> - A metastore is the top-level container (one per region). Below it sits the three-level namespace `catalog.schema.object`
+> - Securable objects include tables, views, volumes, functions, models, external locations, and storage credentials
+> - Storage credentials plus external locations govern access to cloud storage paths
+
+> [!tip] What the Exam Tests
+>
+> - Supports the Domain 7 skills: the object hierarchy that privileges are granted on
+> - Configuring external storage in order: storage credential → external location → external table or volume
+> - Unity Catalog vs the legacy workspace-level Hive metastore
+
+---
+
 ## Unity Catalog Architecture
 
 ```mermaid
@@ -453,4 +467,4 @@ CREATE METASTORE ASSIGNMENT catalog_name
 
 ---
 
-**[↑ Back to Data Governance](./README.md) | [Next: Access Control and Permissions](./03-access-control-permissions.md) →**
+**[↑ Back to Governance and Security](./README.md) | [Next: Managed and External Tables →](./02-managed-and-external-tables.md)**

@@ -13,6 +13,20 @@ tags:
 
 The Databricks workspace is your collaborative environment for developing, testing, and deploying data engineering solutions. It provides unified tools for SQL, Python, R, and Scala development.
 
+> [!abstract]
+>
+> - The workspace brings notebooks, files, Git folders, jobs, and data objects together in one browser UI
+> - Magic commands (`%sql`, `%python`, `%md`, `%run`, `%pip`) change the language or behaviour of a single cell
+> - `dbutils.widgets` parameterize notebooks so Lakeflow Jobs can pass values in
+
+> [!tip] What the Exam Tests
+>
+> - Supports the Domain 1 core-components skill: workspace, notebooks, and collaboration
+> - Mixing languages in one notebook, and `%run` vs `dbutils.notebook.run()`
+> - Git integration (Git folders) is tested in Domain 5. See [Git Folders](../05-implementing-cicd/01-git-folders.md)
+
+---
+
 ## Workspace Architecture
 
 ```mermaid
@@ -28,7 +42,7 @@ flowchart TB
             NB4["Dashboard"]
         end
 
-        subgraph Repos["Repos"]
+        subgraph GitFolders["Git folders"]
             GIT["Git Integration"]
             VCS["Version Control"]
         end
@@ -48,8 +62,7 @@ flowchart TB
 |------|---------|--------|
 | `/Users/{email}/` | Personal home directory | Only you |
 | `/Shared/` | Team-accessible folder | All workspace users |
-| `/Repos/{name}/` | Git-connected repositories | Team with access |
-| `/Workplace/` | Legacy shared (deprecated) | All users |
+| Git folder (formerly a Repo) | A workspace folder backed by a remote Git repository | Users with access to the folder |
 
 ### Best Practices
 
@@ -60,8 +73,8 @@ Workspace Root/
 │   ├── /dashboards/             # BI dashboards
 │   ├── /team-notebooks/         # Collaborative notebooks
 │   └── /production-jobs/        # Job definitions
-├── /Repos/
-│   └── /data-platform/          # Git repo for IaC
+├── /Shared/git/
+│   └── /data-platform/          # Git folder (formerly a Repo) for pipeline code
 └── /Users/
     └── {your-email}/
         ├── /dev/                # Personal development
@@ -78,7 +91,7 @@ Notebooks are the primary development tool in Databricks.
 - **Multiple Languages**: SQL, Python, R, Scala in same notebook
 - **Magic Commands**: Control notebook behavior
 - **Collaborative**: Real-time multi-user editing
-- **Version History**: Automatic snapshots of changes (30-day retention)
+- **Version History**: Automatic revision snapshots of the notebook
 - **Publishing**: Share as HTML or embed dashboards
 
 ### Language Magic Commands
@@ -110,46 +123,14 @@ env = dbutils.widgets.get("env")
 
 # File system operations
 
-dbutils.fs.ls("/mnt/data/")  # List files
+dbutils.fs.ls("/Volumes/main/raw/landing/")  # List files in a UC volume
 dbutils.fs.mv("/path/src", "/path/dst")  # Move files
 dbutils.fs.cp("/path/src", "/path/dst", True)  # Copy recursively
 ```
 
-## Repos (Git Integration)
+## Git Folders (formerly Repos)
 
-Repositories enable version control and CI/CD for data engineering code.
-
-### Git Workflow
-
-```mermaid
-flowchart LR
-    Local["Local Changes"]
-    Stage["Stage Changes"]
-    Commit["Commit"]
-    Push["Push to Remote"]
-    GitHub["GitHub/GitLab"]
-
-    Local --> Stage
-    Stage --> Commit
-    Commit --> Push
-    Push --> GitHub
-```
-
-### Common Operations
-
-```python
-
-# Git clone into Databricks
-# UI: Workspace > Repos > Create Repo > GitHub URL
-
-# Common git operations in workspace terminal
-
-git status
-git add <file>
-git commit -m "message"
-git push origin main
-git pull origin main
-```
+**Databricks Git folders** (formerly Databricks Repos) are workspace folders backed by a remote Git repository. They are a visual Git client for creating branches, committing and pushing, pulling, merging, and resolving conflicts in the workspace UI. The exam tests this workflow in **Domain 5 — Implementing CI/CD**. See [Git Folders](../05-implementing-cicd/01-git-folders.md) for the full branch → commit & push → pull request flow.
 
 ### Branching Strategy for Data Engineering
 
@@ -176,7 +157,7 @@ Clusters provide the compute for running notebooks and jobs.
 
 ### Personal Compute (Single-User Cluster)
 
-```python
+```text
 # Faster startup for personal
 
 Cluster config:
@@ -187,7 +168,7 @@ Cluster config:
 
 ### Shared Multi-Workspace Cluster
 
-```python
+```text
 # For team collaboration
 
 Cluster config:
@@ -226,7 +207,7 @@ Resolve comments when addressed
 
 ### Access Control
 
-```python
+```text
 Admins can control:
 - User & group management
 - Workspace features (notebooks, clusters, jobs)
@@ -244,7 +225,7 @@ Admin console → Security
 
 ### Audit Logs
 
-```python
+```text
 Workspace Admin Console → Audit log
 Captures:
 - Who accessed what, when
@@ -265,33 +246,32 @@ Captures:
 ## Use Cases
 
 - **Collaborative Notebook Development**: Multiple data engineers work simultaneously in shared notebooks during sprint development, using real-time co-editing and inline comments for code reviews.
-- **Git-Integrated CI/CD Pipelines**: Using Repos to connect notebooks to GitHub/GitLab, enabling pull request workflows, branch-based development, and automated testing before promoting code to production.
+- **Git-Integrated CI/CD Pipelines**: Using Git folders (formerly Repos) to connect notebooks to GitHub/GitLab, enabling pull request workflows, branch-based development, and automated testing before promoting code to production.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Widget Default Used Instead of the Job's Value
 
-**Scenario:** The default settings for Databricks Workspace do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Databricks Workspace to handle production-scale workloads.
+**Scenario:** A notebook run by a Lakeflow Job keeps processing the widget's default date instead of the date passed by the job.
+**Fix:** The job's task parameter name must match the widget name exactly (`dbutils.widgets.get("run_date")` reads a `run_date` parameter). Check the task's parameters in the run details.
 
 ### Notebook Session Timeout
 
 **Scenario:** A notebook session times out after inactivity, and unsaved work in cells is lost.
-**Fix:** Enable autosave in notebook settings and use Repos for version control so that code changes are always committed to Git.
+**Fix:** Keep code in a Git folder (formerly Repos) and commit regularly, so changes are always saved to Git ([Git Folders](../05-implementing-cicd/01-git-folders.md)).
 
 ## Exam Tips
 
-- Know the difference between the Home directory (`/Users/{email}/`), Shared folder, and Repos
+- Know the difference between the Home directory (`/Users/{email}/`), the Shared folder, and Git folders (formerly Repos)
 - Understand magic commands (`%python`, `%sql`, `%md`, etc.) for switching languages within a notebook
-- Remember that notebook version history has 30-day retention and is automatic
 - Global temporary views use the `global_temp` database and persist across sessions; regular temp views are session-scoped
 
 ## Key Takeaways
 
 - **Workspace isolation**: Each workspace is independent
-- **Three-level permissions**: Admin, User, Viewer roles
-- **Notebook versions**: Automatically saved, 30-day recovery
-- **Repos**: Git integration for production code
+- **Workspace object permissions** (notebooks, folders) are separate from Unity Catalog data privileges
+- **Notebook versions**: Revision history is saved automatically
+- **Git folders** (formerly Repos): Git integration for production code. Tested in Domain 5
 - **Multi-language support**: SQL + Python in same notebook
 
 ## Related Topics
@@ -302,9 +282,10 @@ Captures:
 
 ## Official Documentation
 
-- [Databricks Workspace Overview](https://docs.databricks.com/en/workspace/index.html)
-- [Databricks Notebooks](https://docs.databricks.com/en/notebooks/index.html)
+- [Navigate the workspace](https://docs.databricks.com/aws/en/workspace/)
+- [Databricks notebooks](https://docs.databricks.com/aws/en/notebooks/)
+- [Databricks Git folders](https://docs.databricks.com/aws/en/repos/)
 
 ---
 
-**[← Previous: Lakehouse Architecture](./01-lakehouse-architecture.md) | [↑ Back to Databricks Lakehouse Platform](./README.md) | [Next: Compute and Clusters](./03-compute-clusters.md) →**
+**[← Previous: Lakehouse Architecture](./01-lakehouse-architecture.md) | [↑ Back to Databricks Intelligence Platform](./README.md) | [Next: Compute and Clusters →](./03-compute-clusters.md)**

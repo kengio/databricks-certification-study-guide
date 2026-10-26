@@ -11,7 +11,22 @@ tags:
 
 ## Overview
 
-Scheduling and triggering mechanisms automate job execution based on time (cron) or external events. Databricks supports cron-based scheduling, event-based triggers, and programmatic run submission.
+A Lakeflow Job starts runs from a **trigger**. The exam guide names three trigger types: **scheduled** (time-based), **file arrival**, and **table update** (both data-driven). It also expects you to choose between time-based and data-driven triggers based on data availability and pipeline dependencies. Continuous and manual runs complete the picture.
+
+> [!abstract]
+>
+> - **Scheduled**: simple interval, or advanced Quartz cron with a time zone (minimum 10 seconds between runs)
+> - **File arrival**: monitors a UC external location or volume and starts a run when new files land
+> - **Table update**: starts a run when monitored UC tables (or views, MVs, and streaming tables) change, waiting for *any* or *all* of them
+> - **Continuous**: starts a new run whenever the previous one ends. It can't be combined with other triggers
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: implement job schedules with an understanding of trigger types (scheduled, file arrival, and table update)
+> - Exam guide skill: choose between time-based and data-driven triggers based on data availability and pipeline dependencies
+> - Reading Quartz cron (`second minute hour day-of-month month day-of-week`) and using `?` correctly
+
+---
 
 ## Cron Scheduling
 
@@ -485,4 +500,4 @@ When DST changes occur:
 
 ---
 
-**[← Previous: Databricks Jobs](./01-lakeflow-jobs-and-tasks.md) | [↑ Back to Workflows and Orchestration](./README.md) | [Next: Job Monitoring](../06-troubleshooting-monitoring-and-optimization/01-job-monitoring.md) →**
+**[← Previous: Lakeflow Jobs and Tasks](./01-lakeflow-jobs-and-tasks.md) | [↑ Back to Working with Lakeflow Jobs](./README.md) | [Next: Control Flow →](./03-control-flow.md)**

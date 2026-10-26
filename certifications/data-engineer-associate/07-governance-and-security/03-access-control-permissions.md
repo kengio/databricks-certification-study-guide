@@ -13,6 +13,20 @@ tags:
 
 Access Control and Permissions in Unity Catalog provide fine-grained control over who can access what data. The privilege model is role-based and hierarchical, allowing delegation of access management throughout the organization.
 
+> [!abstract]
+>
+> - Principals: users, groups, and service principals. Grant to **groups** wherever possible
+> - To reach an object you need `USE CATALOG` + `USE SCHEMA`, plus the object privilege (`SELECT`, `MODIFY`, ...). Grants on a parent are inherited by current and future children
+> - `GRANT` adds and `REVOKE` removes. The classic `DENY` statement is **legacy Hive metastore only**. Unity Catalog's deny mechanism is the ABAC DENY policy (Beta)
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: configure access controls using the UI and SQL by applying GRANT, REVOKE, and DENY to principals at the right level of the hierarchy
+> - The minimum privileges for a scenario (for example, read one table without the rest of the schema)
+> - Who can grant: the owner, a user with `MANAGE`, the parent's owner, or a metastore admin
+
+---
+
 ## Principals: Users, Groups, and Service Principals
 
 ```mermaid
@@ -510,4 +524,4 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 
 ---
 
-**[← Previous: Unity Catalog Basics](./01-unity-catalog-basics.md) | [↑ Back to Data Governance](./README.md) | [Next: Data Sharing](./05-data-sharing.md) →**
+**[← Previous: Managed and External Tables](./02-managed-and-external-tables.md) | [↑ Back to Governance and Security](./README.md) | [Next: Row Filters, Column Masks, and ABAC →](./04-row-filters-column-masks-abac.md)**

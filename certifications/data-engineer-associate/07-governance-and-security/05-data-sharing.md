@@ -13,6 +13,19 @@ tags:
 
 Delta Sharing is a secure, open protocol for sharing data across organizations without copying data or managing credentials. It enables data providers to share live, curated data with consumers inside and outside their organization.
 
+> [!abstract]
+>
+> - Delta Sharing (now called **OpenSharing**) shares live tables with other organizations or workspaces without copying data
+> - Providers create **shares** and **recipients**. Databricks-to-Databricks sharing uses a sharing identifier, and open sharing uses tokens
+> - Recipients get read-only access. Share views or filtered tables to limit what is exposed
+
+> [!tip] What the Exam Tests
+>
+> - Not part of the August 2026 exam outline. Keep it as background for governance scenarios and the DE Professional exam
+> - Telling sharing (no copy, cross-org) apart from Lakehouse Federation (querying external databases)
+
+---
+
 ## Delta Sharing Architecture
 
 ```mermaid
@@ -536,4 +549,4 @@ ORDER BY query_count DESC;
 
 ---
 
-**[← Previous: Access Control and Permissions](./03-access-control-permissions.md) | [↑ Back to Data Governance](./README.md)**
+**[← Previous: Row Filters, Column Masks, and ABAC](./04-row-filters-column-masks-abac.md) | [↑ Back to Governance and Security](./README.md)**

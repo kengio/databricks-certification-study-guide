@@ -13,6 +13,20 @@ tags:
 
 Delta Lake maintains a complete history of all changes via its transaction log. This enables time travel (querying historical data), versioning, rollback, and clone operations—capabilities unique among major data formats.
 
+> [!abstract]
+>
+> - Every commit creates a new table version. `DESCRIBE HISTORY` lists them
+> - `VERSION AS OF` / `TIMESTAMP AS OF` query an old version, and `RESTORE TABLE` rolls the table back
+> - `VACUUM` deletes unreferenced files and limits how far back time travel can go
+
+> [!tip] What the Exam Tests
+>
+> - Supports the Domain 1 core-components skill: reliable rollback after a bad ingest, and an audit trail of changes
+> - `VERSION AS OF 7` (version number) vs `TIMESTAMP AS OF` (point in time)
+> - Shallow vs deep clone, and why `VACUUM` breaks time travel
+
+---
+
 ## Transaction Log and Versioning
 
 ```mermaid
@@ -432,4 +446,4 @@ log_path = "/mnt/data/employees/_delta_log"
 
 ---
 
-**[← Previous: Delta Lake Fundamentals](./04-delta-lake-fundamentals.md) | [↑ Back to Delta Lake](../06-troubleshooting-monitoring-and-optimization/README.md) | [Next: Delta Lake Optimization](../06-troubleshooting-monitoring-and-optimization/03-delta-optimization.md) →**
+**[← Previous: Delta Lake Fundamentals](./04-delta-lake-fundamentals.md) | [↑ Back to Databricks Intelligence Platform](./README.md)**

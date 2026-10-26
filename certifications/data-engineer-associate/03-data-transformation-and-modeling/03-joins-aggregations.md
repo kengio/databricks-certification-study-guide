@@ -13,6 +13,20 @@ tags:
 
 Joins and aggregations are fundamental operations for combining data from multiple sources and computing summary statistics. Mastering join optimization and aggregation functions is critical for building efficient data pipelines.
 
+> [!abstract]
+>
+> - Join types: inner, left/right/full outer, cross, semi, anti. Joins can be on multiple keys
+> - `union` / `unionAll` keep duplicates and match by position. `unionByName` matches by name. SQL `UNION` deduplicates and `UNION ALL` doesn't
+> - Broadcast joins avoid a shuffle by copying the small side to every executor
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: combine DataFrames with inner, left, broadcast, multi-key, and cross joins, and with union and union all
+> - Exam guide skill: aggregate operations such as count, approximate count distinct, and mean
+> - Reading join output row counts, and spotting duplicate columns after a join
+
+---
+
 ## Join Types
 
 ```mermaid
@@ -455,4 +469,4 @@ df_window = employees.withColumn(
 
 ---
 
-**[← Previous: DataFrame Operations](./02-dataframe-operations.md) | [↑ Back to ETL with Spark SQL and Python](./README.md) | [Next: Advanced Transformations](./04-advanced-transformations.md) →**
+**[← Previous: DataFrame Operations](./02-dataframe-operations.md) | [↑ Back to Data Transformation and Modeling](./README.md) | [Next: Advanced Transformations →](./04-advanced-transformations.md)**

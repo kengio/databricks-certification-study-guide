@@ -11,7 +11,21 @@ tags:
 
 ## Overview
 
-The Databricks Lakehouse combines the best of data warehouses and data lakes, enabling analytics, AI, and real-time applications on all your data.
+The Databricks Lakehouse combines the best of data warehouses and data lakes, enabling analytics, AI, and real-time applications on all your data. On the exam this is Domain 1 (Databricks Intelligence Platform): the core components, meaning the architecture, Delta Lake, and Unity Catalog.
+
+> [!abstract]
+>
+> - A lakehouse keeps one copy of data in open formats on cloud object storage and adds warehouse-grade reliability with Delta Lake
+> - Medallion layers: Bronze (raw, as ingested), Silver (cleaned and conformed), Gold (business-level aggregates for BI and analytics)
+> - Unity Catalog adds centralized access control, lineage, and auditing across workspaces
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: understand the core components of the platform (architecture, Delta Lake, Unity Catalog)
+> - Why one governed copy of the data gives AI and BI a single source of truth, with rollback (time travel) and audit trails
+> - Which medallion layer a given transformation or table belongs in
+
+---
 
 ## Lakehouse Architecture
 
@@ -80,17 +94,15 @@ flowchart LR
 # Schema enforcement prevents bad data
 
 (df.write
-    .format("delta")
     .mode("append")
-    .save("/mnt/data/table"))
+    .saveAsTable("main.silver.orders"))   # fails if df's schema doesn't match
 
 # Schema evolution allows controlled changes
 
 (df.write
-    .format("delta")
     .mode("append")
     .option("mergeSchema", "true")
-    .save("/mnt/data/table"))
+    .saveAsTable("main.silver.orders"))   # adds new columns from df
 ```
 
 ### **Data Versioning & Time Travel**
@@ -103,16 +115,14 @@ flowchart LR
 # Time travel query
 
 (spark.read
-    .format("delta")
     .option("versionAsOf", 0)
-    .load("/mnt/data/table"))
+    .table("main.silver.orders"))
 
 # Or by timestamp
 
 (spark.read
-    .format("delta")
     .option("timestampAsOf", "2025-01-15")
-    .load("/mnt/data/table"))
+    .table("main.silver.orders"))
 ```
 
 ### **Data Lineage & Audit Logs**
@@ -134,7 +144,7 @@ Delta Lake is the open-source storage engine powering the Lakehouse:
 ```python
 # Create a Delta table
 
-df.write.format("delta").mode("overwrite").save("/mnt/delta/my_table")
+df.write.mode("overwrite").saveAsTable("main.bronze.my_table")   # Delta is the default format
 
 # Or convert existing Parquet
 
@@ -204,11 +214,13 @@ flowchart TB
 
 ## Where Each Layer Lives in Databricks
 
-| Layer | Storage | Format | Access |
+| Layer | Typical Unity Catalog location | Format | Access |
 |-------|---------|--------|--------|
-| **Bronze** | `/mnt/data/bronze/` | Delta | Data Engineers |
-| **Silver** | `/mnt/data/silver/` | Delta | Analysts, Engineers |
-| **Gold** | `/mnt/data/gold/` or SQL tables | Delta | All users, BI tools |
+| **Bronze** | `main.bronze.*` tables (raw files in a UC volume such as `/Volumes/main/raw/landing/`) | Delta | Data engineers |
+| **Silver** | `main.silver.*` | Delta | Data engineers, analysts |
+| **Gold** | `main.gold.*` tables, views, and materialized views | Delta | Analysts, BI tools, ML |
+
+Many teams use a catalog per environment (`dev`, `prod`) and a schema per layer. Some use a catalog per layer instead. Either way, the layers are UC securables, not DBFS mount paths. DBFS mounts are deprecated in favour of Unity Catalog volumes and external locations ([What is DBFS?](https://docs.databricks.com/aws/en/dbfs/)).
 
 ## Unity Catalog for Governance
 
@@ -217,7 +229,7 @@ Unity Catalog provides a unified governance solution:
 - **Catalogs**: Database-like containers for organizing tables
 - **Schemas**: Namespaces within catalogs
 - **Tables/Volumes**: Data objects with fine-grained access control
-- **Column-level security**: Mask sensitive columns by user/role
+- **Fine-grained security**: row filters, column masks, and ABAC policies (see [Domain 7](../07-governance-and-security/04-row-filters-column-masks-abac.md))
 
 ```python
 # Three-level namespace
@@ -276,9 +288,10 @@ spark.sql("SELECT * FROM main.default.my_table")
 
 ## Official Documentation
 
-- [What is a Lakehouse?](https://docs.databricks.com/en/lakehouse/index.html)
-- [Delta Lake Documentation](https://docs.databricks.com/en/delta/index.html)
+- [What is a data lakehouse?](https://docs.databricks.com/aws/en/lakehouse/)
+- [What is Delta Lake?](https://docs.databricks.com/aws/en/delta/)
+- [What is Unity Catalog?](https://docs.databricks.com/aws/en/data-governance/unity-catalog/)
 
 ---
 
-**[↑ Back to Databricks Lakehouse Platform](./README.md) | [Next: Databricks Workspace](./02-databricks-workspace.md) →**
+**[↑ Back to Databricks Intelligence Platform](./README.md) | [Next: Databricks Workspace →](./02-databricks-workspace.md)**

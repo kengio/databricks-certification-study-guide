@@ -13,6 +13,20 @@ tags:
 
 Delta Lake is an open-source storage layer that brings ACID transactions, data lineage, and unified streaming/batch processing to data lakes. It sits on top of cloud storage (S3, ADLS, GCS) and complements Apache Spark.
 
+> [!abstract]
+>
+> - A Delta table is Parquet data files plus a `_delta_log` transaction log, which gives ACID transactions on object storage
+> - Schema enforcement rejects mismatched writes. Schema evolution (`mergeSchema`) adds columns on purpose
+> - Full DML: `INSERT`, `UPDATE`, `DELETE`, and `MERGE INTO` for upserts
+
+> [!tip] What the Exam Tests
+>
+> - Supports the Domain 1 skill on core components (Delta Lake)
+> - Reading `MERGE` syntax and choosing `MERGE` over `INSERT` to avoid duplicates
+> - Managed vs external tables are tested in Domain 7. See [Managed and External Tables](../07-governance-and-security/02-managed-and-external-tables.md)
+
+---
+
 ## What is Delta Lake?
 
 ```mermaid
@@ -451,4 +465,4 @@ Each JSON file represents one committed transaction, enabling:
 
 ---
 
-**[↑ Back to Delta Lake](../06-troubleshooting-monitoring-and-optimization/README.md) | [Next: Time Travel and Versioning](./05-time-travel-versioning.md) →**
+**[← Previous: Compute and Clusters](./03-compute-clusters.md) | [↑ Back to Databricks Intelligence Platform](./README.md) | [Next: Time Travel and Versioning →](./05-time-travel-versioning.md)**

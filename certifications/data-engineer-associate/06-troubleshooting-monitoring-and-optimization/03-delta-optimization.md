@@ -13,6 +13,20 @@ tags:
 
 Delta Lake optimization ensures tables remain performant as they grow. Key operations include compacting small files, removing old data, indexing for faster queries, and collecting statistics for query optimization.
 
+> [!abstract]
+>
+> - `OPTIMIZE` compacts small files. `ZORDER BY` co-locates values for data skipping on partitioned or unclustered tables
+> - `VACUUM` removes data files no longer referenced by the log after the retention period (7 days by default), and limits time travel
+> - For new tables, Databricks recommends **Liquid Clustering** over partitioning plus Z-order. See [Liquid Clustering and Predictive Optimization](./04-liquid-clustering-and-predictive-optimization.md)
+
+> [!tip] What the Exam Tests
+>
+> - Supports the Domain 6 optimization skills (Liquid Clustering and predictive optimization build on these commands)
+> - `OPTIMIZE` vs `VACUUM`: compaction vs file deletion
+> - Why `VACUUM` with a short retention breaks time travel and concurrent readers
+
+---
+
 ## OPTIMIZE Command (Compaction)
 
 ```mermaid
@@ -487,4 +501,4 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
 ---
 
-**[← Previous: Time Travel and Versioning](../01-databricks-intelligence-platform/05-time-travel-versioning.md) | [↑ Back to Delta Lake](./README.md)**
+**[← Previous: Spark UI and System Tables](./02-spark-ui-and-system-tables.md) | [↑ Back to Troubleshooting, Monitoring, and Optimization](./README.md) | [Next: Liquid Clustering and Predictive Optimization →](./04-liquid-clustering-and-predictive-optimization.md)**

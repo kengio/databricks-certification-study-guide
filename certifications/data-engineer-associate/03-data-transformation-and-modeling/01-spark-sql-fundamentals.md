@@ -13,6 +13,20 @@ tags:
 
 Spark SQL provides a SQL interface to process structured data with Spark's distributed computing power. It handles SQL queries, CSV, Parquet, Delta, and connects to external data sources.
 
+> [!abstract]
+>
+> - Spark SQL and the DataFrame API share one optimizer and engine. Pick whichever language fits the task
+> - Permanent views live in Unity Catalog. Temporary views exist only for the session
+> - Catalog commands (`SHOW`, `DESCRIBE`, `USE CATALOG`, `USE SCHEMA`) navigate the three-level namespace
+
+> [!tip] What the Exam Tests
+>
+> - Supports the Domain 3 skills on building tables and views in Unity Catalog with SQL
+> - Scope of temporary views vs permanent views
+> - Running SQL from Python with `spark.sql()` and `%sql` cells
+
+---
+
 ## Spark SQL Architecture
 
 ```mermaid
@@ -318,4 +332,4 @@ SELECT id, amount FROM new_sales
 
 ---
 
-**[↑ Back to ETL with Spark SQL and Python](./README.md) | [Next: DataFrame Operations](./02-dataframe-operations.md) →**
+**[↑ Back to Data Transformation and Modeling](./README.md) | [Next: DataFrame Operations →](./02-dataframe-operations.md)**

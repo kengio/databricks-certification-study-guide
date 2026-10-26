@@ -11,7 +11,21 @@ tags:
 
 ## Overview
 
-Databricks Jobs are the primary mechanism for deploying and running production data engineering workloads. Jobs provide reliability, monitoring, alerting, and integration with external orchestrators.
+**Lakeflow Jobs** (formerly Databricks Jobs, and part of what was called Workflows) is the orchestration service for production data engineering workloads. A job groups one or more **tasks** into a DAG and adds triggers, parameters, compute, retries, and notifications.
+
+> [!abstract]
+>
+> - A **job** has a trigger and settings. **Tasks** are its DAG nodes, wired with **Depends on**. Tasks with no dependency on each other run in parallel
+> - Common task types: Notebook, SQL, SQL Alert, Dashboards, Pipeline, Python script, Python wheel, dbt, JAR, Run Job, If/else, For each
+> - Parameters: job parameters plus dynamic value references such as `{{job.run_id}}` and `{{job.start_time.iso_date}}`
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: configure common tasks (notebook, SQL query, dashboard, and pipeline tasks) and their dependencies using Lakeflow Jobs and its DAG-based task graph
+> - Inserting an upstream task by changing **Depends on**
+> - Choosing compute for tasks: serverless, jobs compute, or an existing all-purpose cluster
+
+---
 
 ## What is a Job?
 
@@ -538,4 +552,4 @@ flowchart LR
 
 ---
 
-**[↑ Back to Workflows and Orchestration](./README.md) | [Next: Scheduling and Triggers](./02-scheduling-triggers.md) →**
+**[↑ Back to Working with Lakeflow Jobs](./README.md) | [Next: Scheduling and Triggers →](./02-scheduling-triggers.md)**

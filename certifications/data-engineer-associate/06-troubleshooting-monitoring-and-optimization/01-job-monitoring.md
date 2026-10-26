@@ -11,7 +11,21 @@ tags:
 
 ## Overview
 
-Effective monitoring and troubleshooting is critical for reliable data pipelines. Databricks provides comprehensive logging, run history, alerting, and performance metrics to diagnose and resolve issues.
+Monitoring Lakeflow Jobs means knowing where to look: the **Jobs & Pipelines** list, a job's **Runs** tab (matrix view of run history), and a run's **Graph / Timeline / List** views. You also need to read run and task statuses correctly and get alerted when something breaks.
+
+> [!abstract]
+>
+> - The **matrix view** shows a job's history: one bar per run, height = duration, colour = status. It is how you spot runs slower than the baseline
+> - Run statuses: Queued, Pending, Running, Skipped, Succeeded, **Succeeded with failures**, Failed, Timed Out, Canceling, Canceled. The outcome is decided by **leaf tasks**
+> - Task-level states include **Upstream failed** (a dependency failed) and **Excluded** (a branch or Run if condition wasn't met)
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: identify trends in job performance using the Lakeflow Jobs run history view to compare current execution times against historical baselines
+> - Exam guide skill: use the Lakeflow Jobs UI to monitor pipeline health: interpret job statuses, use the DAG task graph to spot upstream blockers, and track run times and failure rates
+> - Fixing a **Timed Out** task by raising its timeout, and alerting with notifications
+
+---
 
 ## Job Run History
 
@@ -555,4 +569,4 @@ for run in runs:
 
 ---
 
-**[← Previous: Scheduling and Triggers](../04-working-with-lakeflow-jobs/02-scheduling-triggers.md) | [↑ Back to Workflows and Orchestration](../04-working-with-lakeflow-jobs/README.md)**
+**[↑ Back to Troubleshooting, Monitoring, and Optimization](./README.md) | [Next: Spark UI and System Tables →](./02-spark-ui-and-system-tables.md)**

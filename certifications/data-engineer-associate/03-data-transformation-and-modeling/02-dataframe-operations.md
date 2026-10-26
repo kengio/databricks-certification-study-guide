@@ -13,6 +13,20 @@ tags:
 
 DataFrames are the primary abstraction in Spark for structured data. They provide a distributed collection of rows organized into named columns with a defined schema. DataFrames combine the familiarity of SQL with the power of distributed computing.
 
+> [!abstract]
+>
+> - DataFrames are lazy: transformations build a plan, and actions (`count`, `show`, `write`) execute it
+> - Column operations: `select`, `withColumn`, `withColumnRenamed`, `drop`, `filter` / `where`
+> - Deduplicate with `distinct()` (all columns) or `dropDuplicates([...])` (chosen keys)
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: manipulate columns, rows, and table structures (add, drop, split, rename, filter, explode)
+> - Exam guide skill: deduplication and aggregate operations (count, approximate count distinct, mean, summary)
+> - Spotting which calls are actions and which are transformations
+
+---
+
 ## What is a DataFrame?
 
 ```mermaid
@@ -404,4 +418,4 @@ sample_df = df.sampleBy("category", fractions={
 
 ---
 
-**[← Previous: Spark SQL Fundamentals](./01-spark-sql-fundamentals.md) | [↑ Back to ETL with Spark SQL and Python](./README.md) | [Next: Joins and Aggregations](./03-joins-aggregations.md) →**
+**[← Previous: Spark SQL Fundamentals](./01-spark-sql-fundamentals.md) | [↑ Back to Data Transformation and Modeling](./README.md) | [Next: Joins and Aggregations →](./03-joins-aggregations.md)**

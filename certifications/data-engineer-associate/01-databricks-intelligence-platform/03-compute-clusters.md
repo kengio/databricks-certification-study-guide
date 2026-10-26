@@ -13,6 +13,20 @@ tags:
 
 Compute clusters provide scalable processing power for your notebooks and jobs. Understanding cluster types, configuration, and costs is critical for data engineers.
 
+> [!abstract]
+>
+> - **All-purpose compute** is interactive and shareable. **Jobs compute** is created per run and terminated afterwards
+> - **Serverless compute** (notebooks, jobs, pipelines) is managed by Databricks, starts fast, and always runs the latest runtime
+> - **SQL warehouses**: serverless (about 2–6 s startup, recommended), pro, and classic. They autoscale by adding clusters for concurrency
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: understand the compute services, their characteristics, limitations, and cost models, and pick the best option for a workload
+> - Classic scenario: many concurrent ad hoc SQL users on curated tables → **serverless SQL warehouse** with autoscaling
+> - Cost levers: job vs all-purpose compute, auto termination, pools, spot instances, serverless pay-per-use
+
+---
+
 ## Cluster Architecture
 
 ```mermaid
@@ -349,4 +363,4 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 
 ---
 
-**[← Previous: Databricks Workspace](./02-databricks-workspace.md) | [↑ Back to Databricks Lakehouse Platform](./README.md)**
+**[← Previous: Databricks Workspace](./02-databricks-workspace.md) | [↑ Back to Databricks Intelligence Platform](./README.md) | [Next: Delta Lake Fundamentals →](./04-delta-lake-fundamentals.md)**

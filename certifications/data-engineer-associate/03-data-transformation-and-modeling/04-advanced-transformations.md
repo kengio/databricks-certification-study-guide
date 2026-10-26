@@ -13,6 +13,20 @@ tags:
 
 Advanced transformation techniques enable complex data processing beyond standard SQL operations. User-defined functions (UDFs), window functions, and collection operations provide flexibility for sophisticated data pipelines.
 
+> [!abstract]
+>
+> - Collection functions: `explode`, `split`, `array_contains`, `transform`, `filter`, `flatten`
+> - Window functions (`ROW_NUMBER`, `RANK`, `LAG`) for ranking, deduplication, and running totals
+> - Prefer built-in functions to Python UDFs. UDFs are opaque to the optimizer and add serialization cost
+
+> [!tip] What the Exam Tests
+>
+> - Exam guide skill: manipulate columns and rows: split strings, explode arrays, rename, filter
+> - Exam guide skill: Bronze → Silver cleaning, including null handling and type standardization
+> - Choosing a higher-order function (`filter`, `transform`) over `explode` + `groupBy`
+
+---
+
 ## User-Defined Functions (UDFs)
 
 ### Python UDFs
@@ -494,4 +508,4 @@ df_cleaned.unpersist()
 
 ---
 
-**[← Previous: Joins and Aggregations](./03-joins-aggregations.md) | [↑ Back to ETL with Spark SQL and Python](./README.md)**
+**[← Previous: Joins and Aggregations](./03-joins-aggregations.md) | [↑ Back to Data Transformation and Modeling](./README.md) | [Next: Data Cleaning and Data Quality →](./05-data-cleaning-and-quality.md)**
