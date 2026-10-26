@@ -5,7 +5,7 @@ tags: [genai-engineer-associate, practice-questions, foundation-model-apis, mlfl
 status: published
 ---
 
-# Practice Questions — Databricks GenAI Tools (Domain 4)
+# Practice Questions — Databricks GenAI Tools
 
 7 questions covering Foundation Model APIs, MLflow AI Gateway, and deploying GenAI applications on Databricks.
 

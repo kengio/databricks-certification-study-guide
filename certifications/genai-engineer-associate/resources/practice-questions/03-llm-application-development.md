@@ -5,7 +5,7 @@ tags: [genai-engineer-associate, practice-questions, llm-application-development
 status: published
 ---
 
-# Practice Questions — LLM Application Development (Domain 3)
+# Practice Questions — LLM Application Development
 
 14 questions covering prompt engineering, LangChain chains and agents, conversation memory, and MLflow LLM tracking.
 

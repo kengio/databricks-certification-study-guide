@@ -5,7 +5,7 @@ tags: [genai-engineer-associate, practice-questions, vector-search, embeddings]
 status: published
 ---
 
-# Practice Questions — Vector Search & Embeddings (Domain 2)
+# Practice Questions — Vector Search & Embeddings
 
 12 questions covering embedding models, Databricks Vector Search index types, similarity metrics, and querying APIs.
 

@@ -6,25 +6,25 @@
   "domains": [
     {
       "id": "rag-architecture",
-      "name": "Practice Questions — RAG Architecture (Domain 1)",
+      "name": "Practice Questions — RAG Architecture",
       "sourceFile": "certifications/genai-engineer-associate/resources/practice-questions/01-rag-architecture.md",
       "questionCount": 15
     },
     {
       "id": "vector-search-embeddings",
-      "name": "Practice Questions — Vector Search & Embeddings (Domain 2)",
+      "name": "Practice Questions — Vector Search & Embeddings",
       "sourceFile": "certifications/genai-engineer-associate/resources/practice-questions/02-vector-search-embeddings.md",
       "questionCount": 12
     },
     {
       "id": "llm-application-development",
-      "name": "Practice Questions — LLM Application Development (Domain 3)",
+      "name": "Practice Questions — LLM Application Development",
       "sourceFile": "certifications/genai-engineer-associate/resources/practice-questions/03-llm-application-development.md",
       "questionCount": 14
     },
     {
       "id": "databricks-genai-tools",
-      "name": "Practice Questions — Databricks GenAI Tools (Domain 4)",
+      "name": "Practice Questions — Databricks GenAI Tools",
       "sourceFile": "certifications/genai-engineer-associate/resources/practice-questions/04-databricks-genai-tools.md",
       "questionCount": 7
     },

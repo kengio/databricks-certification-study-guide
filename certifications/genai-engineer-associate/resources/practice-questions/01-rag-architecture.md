@@ -5,7 +5,7 @@ tags: [genai-engineer-associate, practice-questions, rag-architecture]
 status: published
 ---
 
-# Practice Questions — RAG Architecture (Domain 1)
+# Practice Questions — RAG Architecture
 
 15 questions covering RAG design patterns, chunking strategies, retrieval methods, and RAG evaluation.
 
