@@ -431,5 +431,5 @@ D) Customer-Managed Keys
 - [Secure Cluster Connectivity](https://docs.databricks.com/security/network/classic/secure-cluster-connectivity.html)
 - [Private Link](https://docs.databricks.com/security/network/classic/privatelink.html)
 - [AWS Deployment](https://docs.databricks.com/administration-guide/cloud-configurations/aws/index.html)
-- [Azure Deployment](https://docs.databricks.com/administration-guide/cloud-configurations/azure/index.html)
-- [GCP Deployment](https://docs.databricks.com/administration-guide/cloud-configurations/gcp/index.html)
+- [Azure Deployment](https://learn.microsoft.com/en-us/azure/databricks/)
+- [GCP Deployment](https://docs.databricks.com/gcp/en/)

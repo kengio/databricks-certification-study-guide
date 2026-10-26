@@ -653,7 +653,7 @@ Use Row Tracking to:
 
 ## Official Documentation
 
-- [Streaming Deduplication](https://docs.databricks.com/structured-streaming/dedup.html)
+- [Streaming Deduplication](https://docs.databricks.com/aws/en/structured-streaming/watermarks)
 - [Delta Lake MERGE](https://docs.databricks.com/delta/merge.html)
 - [Watermarks](https://docs.databricks.com/structured-streaming/watermarks.html)
 

@@ -49,7 +49,7 @@ Databricks does not publish a numeric passing score for the Oct 9, 2026 exam gui
 
 - [Databricks Academy](https://www.databricks.com/learn/training/home) — official training
 - [Oct 9, 2026 exam guide (PDF)](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf) — 10 official sample questions
-- [Udemy practice exams](https://www.udemy.com/topic/databricks-certified-data-engineer-professional/) and [SkillCertPro](https://skillcertpro.com/product/databricks-data-engineer-professional-practice-tests/) — third-party; check they target the Oct 9, 2026 guide
+- [Udemy practice exams](https://www.udemy.com/topic/databricks-certified-data-engineer-professional/) — third-party; check it targets the Oct 9, 2026 guide
 - [Mock Exam 1](../mock-exam/README.md) and [Mock Exam 2](../mock-exam-2/README.md)
 
 ---

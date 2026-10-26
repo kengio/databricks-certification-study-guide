@@ -484,12 +484,12 @@ spark.conf.set(
 
 ## Official Documentation
 
-- [Stream-Stream Joins](https://docs.databricks.com/structured-streaming/stream-stream-joins.html)
+- [Stream-Stream Joins](https://docs.databricks.com/aws/en/structured-streaming/stateful-streaming)
 - [Stateful Streaming](https://docs.databricks.com/structured-streaming/stateful-streaming.html)
 - [Watermarks](https://docs.databricks.com/structured-streaming/watermarks.html)
 - [RocksDB State Store](https://docs.databricks.com/structured-streaming/rocksdb-state-store.html)
-- [Streaming Deduplication](https://docs.databricks.com/structured-streaming/dedup.html)
-- [StreamingQueryListener](https://docs.databricks.com/structured-streaming/streaming-query-listener.html)
+- [Streaming Deduplication](https://docs.databricks.com/aws/en/structured-streaming/watermarks)
+- [StreamingQueryListener](https://docs.databricks.com/aws/en/structured-streaming/stream-monitoring)
 - [Structured Streaming Guide](https://docs.databricks.com/structured-streaming/index.html)
 
 ---

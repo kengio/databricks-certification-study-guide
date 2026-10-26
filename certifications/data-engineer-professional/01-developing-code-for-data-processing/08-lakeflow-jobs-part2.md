@@ -446,8 +446,8 @@ tasks:
 
 - [Lakeflow Jobs](https://docs.databricks.com/workflows/index.html)
 - [Jobs API](https://docs.databricks.com/api/workspace/jobs)
-- [Task Dependencies](https://docs.databricks.com/workflows/jobs/how-to/use-task-dependencies.html)
-- [Task Values](https://docs.databricks.com/workflows/jobs/how-to/share-task-values.html)
+- [Task Dependencies](https://docs.databricks.com/aws/en/jobs/run-if)
+- [Task Values](https://docs.databricks.com/aws/en/jobs/task-values)
 - [Monitor Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/monitor)
 - [Diagnose Lakeflow Jobs performance](https://docs.databricks.com/aws/en/jobs/diagnose-job-performance)
 - [Add notifications on a job](https://docs.databricks.com/aws/en/jobs/notifications)

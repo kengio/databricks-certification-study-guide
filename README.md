@@ -510,7 +510,7 @@ databricks-certification-study-guide/
 - [Databricks Blog](https://www.databricks.com/blog) — product launches and best practices
 - [Databricks YouTube channel](https://www.youtube.com/databricks)
 - [Databricks Data + AI Summit recordings](https://www.databricks.com/dataaisummit)
-- [Awesome Databricks (community list)](https://github.com/devmotion/awesome-databricks)
+- [Awesome Databricks (community list)](https://github.com/jrlasak/awesome-databricks)
 
 </details>
 

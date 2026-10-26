@@ -535,7 +535,7 @@ WHERE event_type = 'flow_progress';
 ## Official Documentation
 
 - [Lakeflow Pipelines Event Logs](https://docs.databricks.com/delta-live-tables/observability.html)
-- [Monitoring Lakeflow Pipelines](https://docs.databricks.com/delta-live-tables/monitoring.html)
+- [Monitoring Lakeflow Pipelines](https://docs.databricks.com/aws/en/ldp/monitor-event-logs)
 - [Event Log Schema](https://docs.databricks.com/delta-live-tables/observability.html#event-log-schema)
 
 ---

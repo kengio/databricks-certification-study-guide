@@ -433,7 +433,7 @@ D) `EXPLAIN COST`
 - [Adaptive Query Execution](https://docs.databricks.com/optimizations/aqe.html)
 - [Photon Runtime](https://docs.databricks.com/compute/photon.html)
 - [Query Performance Tuning](https://docs.databricks.com/optimizations/index.html)
-- [Spark UI Guide](https://docs.databricks.com/clusters/spark-ui.html)
+- [Spark UI Guide](https://docs.databricks.com/aws/en/compute/troubleshooting/debugging-spark-ui)
 - [Cost-Based Optimizer](https://docs.databricks.com/optimizations/cbo.html)
 
 ---

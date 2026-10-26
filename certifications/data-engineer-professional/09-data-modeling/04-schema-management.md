@@ -707,7 +707,7 @@ ALTER TABLE main.default.customers SET TBLPROPERTIES (
 
 ## Official Documentation
 
-- [Delta Lake Schema Enforcement](https://docs.databricks.com/delta/schema-enforcement.html)
+- [Delta Lake Schema Enforcement](https://docs.databricks.com/aws/en/tables/schema-enforcement)
 - [Delta Lake Schema Evolution](https://docs.databricks.com/delta/update-schema.html)
 - [Column Mapping](https://docs.databricks.com/delta/column-mapping.html)
 - [ALTER TABLE](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-alter-table.html)
