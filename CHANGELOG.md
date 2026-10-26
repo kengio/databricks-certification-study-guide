@@ -19,15 +19,128 @@ A series of seven PRs (#32–#37 plus this one) re-checked all six certification
 | ML Professional | Sep 30, 2025 (PDF re-issued Aug 2026) | unchanged domains; Optuna, Ray, bundles, rollout coverage |
 | GenAI Engineer Associate | Mar 18, 2026 (PDF re-issued Aug 2026) | Agent Bricks, MCP, Genie multi-agent, MLflow 3 judges coverage |
 
-### Changed — per-cert PRs
+### Data Engineer Associate — #37 (exam guide Aug 6, 2026)
 
-- **#32 GenAI Engineer:** 9 new topic files, AI Gateway moved to Evaluation & Monitoring, practice bank 46 → 85
-- **#33 ML Professional:** 6 new topic files, code fixes (Optuna, Ray, serving, Lakehouse Monitoring), practice bank 57 → 97
-- **#34 ML Associate:** folders realigned to the PDF sections, current UC APIs, practice bank 46 → 107, mocks rebuilt to 48 questions
-- **#35 DE Professional:** restructured to 9 domains, 14 new topic files, practice bank 73 → 155
-- **#36 Data Analyst:** Genie Agents rewrite (4 files, 15 questions), practice bank 57 → 159 across 9 domains, `{{ }}` → `:param`, topic files realigned
-- **#37 DE Associate:** restructured to 7 domains, 15 new topic files, practice bank 85 → 145
-- **Every practice bank:** answer keys rebalanced to roughly 25 % per letter (several banks had more than half their answers on B)
+- **Restructured** to the guide's 7 officially weighted domains:
+  - `01-databricks-intelligence-platform` (6 %)
+  - `02-data-ingestion-and-loading` (21 %)
+  - `03-data-transformation-and-modeling` (22 %)
+  - `04-working-with-lakeflow-jobs` (16 %)
+  - `05-implementing-cicd` (10 %)
+  - `06-troubleshooting-monitoring-and-optimization` (10 %)
+  - `07-governance-and-security` (15 %)
+- **Added 15 topic files:**
+  - ingestion patterns and Lakeflow Connect
+  - `COPY INTO` / Auto Loader
+  - JDBC / REST and semi-structured data
+  - data cleaning and quality
+  - Gold-layer objects
+  - Spark tuning
+  - Lakeflow Jobs control flow
+  - Git folders
+  - Liquid Clustering and predictive optimization
+  - compute troubleshooting
+  - managed vs external tables
+  - row filters, column masks, and ABAC
+- **Rewritten:**
+  - triggers (Quartz cron examples were wrong)
+  - job monitoring
+  - access control (legacy `USAGE` privileges removed)
+  - compute (invented DBU prices removed)
+  - Declarative Automation Bundles (formerly Databricks Asset Bundles)
+  - Spark UI
+- **Practice bank:** 85 → 145 questions (60 new), remapped to the 7 domains. Wrong answers fixed (GROUP BY ordinal, `LIVE TABLE` syntax, Repos merge).
+- **Mock exams:** regrouped by domain. Corrected DBFS root, 120-minute auto-stop, Auto Loader mode, `dbutils.taskValues`, SKIPPED status, and `ignoreChanges`.
+
+### Data Engineer Professional — #35 (new exam, Oct 9, 2026)
+
+- **New exam version:** 10 → 9 domains, 59 → 60 scored questions, English only per the PDF.
+- **Folders renamed and merged:**
+  - "Data Sharing and Federation" folds into `02-data-ingestion-and-acquisition`
+  - "Data Transformation, Cleansing, and Quality" becomes `03-data-manipulation`
+  - `09-data-modelling` becomes `09-data-modeling`
+- **Added 14 topic files:**
+  - Python project structure and dependencies
+  - UDFs and UC functions
+  - Lakeflow Connect database CDC
+  - Clean Rooms
+  - VARIANT
+  - AI functions (`ai_query`)
+  - Lakehouse alerts
+  - predictive optimization and `CLUSTER BY AUTO`
+  - disk caching
+  - ABAC and governed tags
+  - PII anonymization and purging
+  - tags, comments, and discoverability
+  - job repair and parameter overrides
+  - dimensional modeling and UC metric views
+- **Rewritten:** AUTO CDC (formerly `APPLY CHANGES`); OpenSharing (formerly Delta Sharing); pipelines code now uses `pyspark.pipelines`.
+- **Fixed:**
+  - UC grant inheritance and `DENY`
+  - invalid system-table columns
+  - Jobs API 2.1 → 2.2
+  - invented Repos endpoints
+  - a nonexistent `CREATE STORAGE CREDENTIAL` statement
+- **Practice bank:** 73 → 155 questions (82 new) across 9 section files. Every one of the 45 exam-guide skills is mapped to content.
+
+### Data Analyst Associate — #36 (exam guide Oct 30, 2025, unchanged)
+
+- **Genie domain** (12 %; Genie Spaces renamed Genie Agents on Jul 8, 2026), rewritten as 4 files: overview, tuning, benchmarks/monitoring/sharing, and API/integrations.
+  - Fixed: example-SQL parameters use `:name`, not `?`.
+  - Fixed: trusted assets are a formal concept (parameterized example SQL + UC SQL functions), not community shorthand.
+  - Added: knowledge store, entity matching, SQL expressions (Filter / Measure / Field), UC functions, benchmark scoring rules, Monitor tab and feedback, permission levels, iframe embed, OpenSharing (Beta), Conversation API, Databricks Apps, MCP.
+- **Practice bank:** 57 → 159 questions, remapped from the old 5-section taxonomy to the 9 official domains. Includes 15 Genie questions; there were none before.
+- **Topic files realigned to the PDF sections:**
+  - joins, aggregations, and window functions → Executing Queries
+  - parameters → Dashboards
+  - new Analyzing Queries files: Photon, query profile, Delta history, Liquid Clustering, fixing queries
+  - 6 more new files: tables and time travel, MVs and streaming tables, federation, platform components, tagging and cleaning, ownership and PII
+- **Fixed:**
+  - `{{ }}` parameters → `:param`
+  - warehouse auto-stop defaults (10 min serverless, 45 min pro/classic)
+  - UC has no `DENY`
+  - `system.query.history`
+  - no published 70 % pass mark
+  - 14 outdated mock questions; mock 2's Genie questions were duplicates of mock 1's and are replaced
+
+### ML Associate — #34 (exam Mar 1, 2025; guide re-issued Aug 2026)
+
+- **Folders realigned** to the PDF's section names: `02-data-processing` (19 %) and `03-model-development` (31 %); feature store, MLflow tracking, and registry move into `01-databricks-machine-learning`.
+- **Added:** EDA, hyperparameter tuning, model evaluation, MLOps strategy, streaming inference.
+- **Rewritten to current APIs:**
+  - `FeatureEngineeringClient`
+  - UC model registry (aliases, tags, `copy_model_version`)
+  - AutoML facts
+  - Model Serving with `served_entities` / `traffic_config`
+- **Practice bank:** 46 → 107 questions. Both mocks rebuilt to the real 48-question format (multiple-choice and multiple-selection).
+- **Platform notes:** Hyperopt removed after 16.4 LTS ML; AutoML not built in from DBR 18.0 ML; online tables → Online Feature Store; Workspace Model Registry legacy.
+
+### ML Professional — #33 (exam Sep 30, 2025; guide re-issued Aug 2026)
+
+- **Added 6 topic files:** Spark ML pipelines; scaling ML (pandas Function API, Ray); advanced MLflow tracking; Feature Engineering client and online serving; validation and testing; environments and bundles.
+- **Fixed:**
+  - Optuna (`MlflowSparkStudy`) and Ray Tune code
+  - Lakehouse Monitoring output schema
+  - serving workload sizes (concurrency tiers, not vCPU)
+  - `served_entities`
+  - `publish_table()`
+  - question count and pass-mark claims in exam tips
+- **Practice bank:** 57 → 97 questions, including a new Spark ML and scaling bank.
+
+### GenAI Engineer Associate — #32 (exam Mar 18, 2026; guide re-issued Aug 2026)
+
+- **Added 9 topic files:** agentic systems with MLflow and Genie; model selection; MCP servers (managed / external / custom); access control and batch inference (`ai_query`); memory, CI/CD, and Prompt Registry; solution design; Agent Bricks (Knowledge Assistant, Supervisor Agent, Information Extraction); document extraction and retrieval evaluation; MLflow 3 scorers, judges, and SME feedback.
+- **Moved:** AI Gateway content to Evaluation & Monitoring, where the guide places it.
+- **Platform notes:**
+  - Knowledge Assistant / Supervisor Agent legacy (Oct 12, 2026)
+  - agents on Model Serving legacy → Agent Bricks CLI (Oct 5, 2026)
+  - Vector Search → AI Search (Jun 1, 2026)
+  - `ChatModel` / `ChatAgent` legacy → `ResponsesAgent`
+- **Practice bank:** 46 → 85 questions. 5 questions that the quiz builder used to skip now load.
+
+### All practice banks
+
+- **Answer keys rebalanced** to roughly 25 % per letter. Several banks had more than half their answers on B, and ML Professional had no D answers at all.
 
 ### Changed — shared content and top-level
 

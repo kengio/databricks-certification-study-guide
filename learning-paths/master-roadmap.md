@@ -137,13 +137,13 @@ Choose one (or both) based on your path.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Data Transformation and Modeling (22 %) | [02-etl-spark-sql](../certifications/data-engineer-associate/02-etl-spark-sql/README.md) |
-| 2 | Data Ingestion and Loading (21 %) | [03-delta-lake](../certifications/data-engineer-associate/03-delta-lake/README.md) |
-| 3 | Working with Lakeflow Jobs (16 %) | [04-workflows-orchestration](../certifications/data-engineer-associate/04-workflows-orchestration/README.md) |
-| 4 | Governance and Security (15 %) | [05-data-governance](../certifications/data-engineer-associate/05-data-governance/README.md) |
-| 5 | Implementing CI/CD (10 %) | See the Full Study Guide |
-| 6 | Troubleshooting, Monitoring, and Optimization (10 %) | See the Full Study Guide |
-| 7 | Databricks Intelligence Platform (6 %) | [01-lakehouse-platform](../certifications/data-engineer-associate/01-lakehouse-platform/README.md) |
+| 1 | Data Transformation and Modeling (22 %) | [03-data-transformation-and-modeling](../certifications/data-engineer-associate/03-data-transformation-and-modeling/README.md) |
+| 2 | Data Ingestion and Loading (21 %) | [02-data-ingestion-and-loading](../certifications/data-engineer-associate/02-data-ingestion-and-loading/README.md) |
+| 3 | Working with Lakeflow Jobs (16 %) | [04-working-with-lakeflow-jobs](../certifications/data-engineer-associate/04-working-with-lakeflow-jobs/README.md) |
+| 4 | Governance and Security (15 %) | [07-governance-and-security](../certifications/data-engineer-associate/07-governance-and-security/README.md) |
+| 5 | Implementing CI/CD (10 %) | [05-implementing-cicd](../certifications/data-engineer-associate/05-implementing-cicd/README.md) |
+| 6 | Troubleshooting, Monitoring, and Optimization (10 %) | [06-troubleshooting-monitoring-and-optimization](../certifications/data-engineer-associate/06-troubleshooting-monitoring-and-optimization/README.md) |
+| 7 | Databricks Intelligence Platform (6 %) | [01-databricks-intelligence-platform](../certifications/data-engineer-associate/01-databricks-intelligence-platform/README.md) |
 
 **Practice & Review:**
 
@@ -158,15 +158,15 @@ Choose one (or both) based on your path.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Executing Queries Using Databricks SQL and Warehouses (20 %) | [01-executing-queries](../certifications/data-analyst-associate/01-executing-queries-databricks-sql-warehouses/README.md) |
-| 2 | Creating Dashboards and Visualizations (16 %) | [02-dashboards-visualizations](../certifications/data-analyst-associate/02-creating-dashboards-and-visualizations/README.md) |
+| 1 | Executing Queries Using Databricks SQL and Warehouses (20 %) | [01-executing-queries-databricks-sql-warehouses](../certifications/data-analyst-associate/01-executing-queries-databricks-sql-warehouses/README.md) |
+| 2 | Creating Dashboards and Visualizations (16 %) | [02-creating-dashboards-and-visualizations](../certifications/data-analyst-associate/02-creating-dashboards-and-visualizations/README.md) |
 | 3 | Analyzing Queries (15 %) | [03-analyzing-queries](../certifications/data-analyst-associate/03-analyzing-queries/README.md) |
-| 4 | Developing, Sharing, and Maintaining AI/BI Genie spaces — now Genie Agents (12 %) | See the Full Study Guide |
-| 5 | Understanding the Databricks Data + AI Platform (11 %) | See the Full Study Guide |
+| 4 | Developing, Sharing, and Maintaining AI/BI Genie spaces — now Genie Agents (12 %) | [04-developing-sharing-maintaining-genie-spaces](../certifications/data-analyst-associate/04-developing-sharing-maintaining-genie-spaces/README.md) |
+| 5 | Understanding the Databricks Data + AI Platform (11 %) | [05-understanding-databricks-platform](../certifications/data-analyst-associate/05-understanding-databricks-platform/README.md) |
 | 6 | Managing Data (8 %) | [06-managing-data](../certifications/data-analyst-associate/06-managing-data/README.md) |
-| 7 | Securing Data (8 %) | See the Full Study Guide |
-| 8 | Importing Data (5 %) | See the Full Study Guide |
-| 9 | Data Modeling with Databricks SQL (5 %) | See the Full Study Guide |
+| 7 | Securing Data (8 %) | [07-securing-data](../certifications/data-analyst-associate/07-securing-data/README.md) |
+| 8 | Importing Data (5 %) | [08-importing-data](../certifications/data-analyst-associate/08-importing-data/README.md) |
+| 9 | Data Modeling with Databricks SQL (5 %) | [09-data-modeling-with-databricks-sql](../certifications/data-analyst-associate/09-data-modeling-with-databricks-sql/README.md) |
 
 **Practice & Review:**
 
@@ -187,15 +187,15 @@ After completing an entry certification, choose your specialization.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Developing Code for Data Processing using Python and SQL (23 %) | [01-developing-code](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
-| 2 | Cost & Performance Optimization (15 %) | [02-cost-performance](../certifications/data-engineer-professional/02-cost-and-performance-optimization/README.md) |
-| 3 | Data Ingestion & Acquisition (12 %) | See the Full Study Guide |
-| 4 | Data Manipulation (12 %) | See the Full Study Guide |
-| 5 | Monitoring and Alerting (10 %) | [04-monitoring-alerting](../certifications/data-engineer-professional/04-monitoring-and-alerting/README.md) |
-| 6 | Debugging and Deploying (10 %) | [06-debugging-deploying](../certifications/data-engineer-professional/06-debugging-and-deploying/README.md) |
-| 7 | Ensuring Data Security and Compliance (8 %) | [05-security-compliance](../certifications/data-engineer-professional/05-ensuring-data-security-and-compliance/README.md) |
-| 8 | Data Governance (5 %) | See the Full Study Guide |
-| 9 | Data Modeling (5 %) | [09-data-modelling](../certifications/data-engineer-professional/09-data-modelling/README.md) |
+| 1 | Developing Code for Data Processing using Python and SQL (23 %) | [01-developing-code-for-data-processing](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
+| 2 | Cost & Performance Optimization (15 %) | [05-cost-and-performance-optimization](../certifications/data-engineer-professional/05-cost-and-performance-optimization/README.md) |
+| 3 | Data Ingestion & Acquisition (12 %) | [02-data-ingestion-and-acquisition](../certifications/data-engineer-professional/02-data-ingestion-and-acquisition/README.md) |
+| 4 | Data Manipulation (12 %) | [03-data-manipulation](../certifications/data-engineer-professional/03-data-manipulation/README.md) |
+| 5 | Monitoring and Alerting (10 %) | [04-monitoring-and-alerting](../certifications/data-engineer-professional/04-monitoring-and-alerting/README.md) |
+| 6 | Debugging and Deploying (10 %) | [08-debugging-and-deploying](../certifications/data-engineer-professional/08-debugging-and-deploying/README.md) |
+| 7 | Ensuring Data Security and Compliance (8 %) | [06-ensuring-data-security-and-compliance](../certifications/data-engineer-professional/06-ensuring-data-security-and-compliance/README.md) |
+| 8 | Data Governance (5 %) | [07-data-governance](../certifications/data-engineer-professional/07-data-governance/README.md) |
+| 9 | Data Modeling (5 %) | [09-data-modeling](../certifications/data-engineer-professional/09-data-modeling/README.md) |
 
 **Practice & Review:**
 
@@ -212,8 +212,8 @@ After completing an entry certification, choose your specialization.
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
 | 1 | Databricks Machine Learning (38 %) | [01-databricks-machine-learning](../certifications/ml-associate/01-databricks-machine-learning/README.md) |
-| 2 | Model Development (31 %) | [02-model-development](../certifications/ml-associate/02-model-development/README.md) |
-| 3 | Data Processing — "ML Workflows" on the cert page (19 %) | [03-ml-workflows](../certifications/ml-associate/03-ml-workflows/README.md) |
+| 2 | Model Development (31 %) | [03-model-development](../certifications/ml-associate/03-model-development/README.md) |
+| 3 | Data Processing — "ML Workflows" on the cert page (19 %) | [02-data-processing](../certifications/ml-associate/02-data-processing/README.md) |
 | 4 | Model Deployment (12 %) | [04-model-deployment](../certifications/ml-associate/04-model-deployment/README.md) |
 
 **Practice & Review:**
@@ -253,11 +253,11 @@ Choose based on your career direction after Stage 3.
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
 | 1 | Application Development (30 %) | [01-application-development](../certifications/genai-engineer-associate/01-application-development/README.md) |
-| 2 | Assembling and Deploying Apps (22%) | [02-assembling-and-deploying-apps](../certifications/genai-engineer-associate/02-assembling-and-deploying-apps/README.md) |
-| 3 | Design Applications (14%) | [03-design-applications](../certifications/genai-engineer-associate/03-design-applications/README.md) |
-| 4 | Data Preparation (14%) | [04-data-preparation](../certifications/genai-engineer-associate/04-data-preparation/README.md) |
-| 5 | Evaluation and Monitoring (12%) | [05-evaluation-and-monitoring](../certifications/genai-engineer-associate/05-evaluation-and-monitoring/README.md) |
-| 6 | Governance (8%) | [06-governance](../certifications/genai-engineer-associate/06-governance/README.md) |
+| 2 | Assembling and Deploying Applications (22 %) | [02-assembling-and-deploying-apps](../certifications/genai-engineer-associate/02-assembling-and-deploying-apps/README.md) |
+| 3 | Design Applications (14 %) | [03-design-applications](../certifications/genai-engineer-associate/03-design-applications/README.md) |
+| 4 | Data Preparation (14 %) | [04-data-preparation](../certifications/genai-engineer-associate/04-data-preparation/README.md) |
+| 5 | Evaluation and Monitoring (12 %) | [05-evaluation-and-monitoring](../certifications/genai-engineer-associate/05-evaluation-and-monitoring/README.md) |
+| 6 | Governance (8 %) | [06-governance](../certifications/genai-engineer-associate/06-governance/README.md) |
 
 **Practice & Review:**
 
