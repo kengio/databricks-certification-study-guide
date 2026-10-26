@@ -135,11 +135,13 @@ Choose one (or both) based on your path.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | ELT with Spark SQL & Python (29%) | [02-etl-spark-sql](../certifications/data-engineer-associate/02-etl-spark-sql/README.md) |
-| 2 | Lakehouse Platform (24%) | [01-lakehouse-platform](../certifications/data-engineer-associate/01-lakehouse-platform/README.md) |
-| 3 | Incremental Data Processing (22%) | [03-delta-lake](../certifications/data-engineer-associate/03-delta-lake/README.md) |
-| 4 | Production Pipelines (16%) | [04-workflows-orchestration](../certifications/data-engineer-associate/04-workflows-orchestration/README.md) |
-| 5 | Data Governance (9%) | [05-data-governance](../certifications/data-engineer-associate/05-data-governance/README.md) |
+| 1 | Data Transformation and Modeling (22%) | [03-data-transformation-and-modeling](../certifications/data-engineer-associate/03-data-transformation-and-modeling/README.md) |
+| 2 | Data Ingestion and Loading (21%) | [02-data-ingestion-and-loading](../certifications/data-engineer-associate/02-data-ingestion-and-loading/README.md) |
+| 3 | Working with Lakeflow Jobs (16%) | [04-working-with-lakeflow-jobs](../certifications/data-engineer-associate/04-working-with-lakeflow-jobs/README.md) |
+| 4 | Governance and Security (15%) | [07-governance-and-security](../certifications/data-engineer-associate/07-governance-and-security/README.md) |
+| 5 | Implementing CI/CD (10%) | [05-implementing-cicd](../certifications/data-engineer-associate/05-implementing-cicd/README.md) |
+| 6 | Troubleshooting, Monitoring, and Optimization (10%) | [06-troubleshooting-monitoring-and-optimization](../certifications/data-engineer-associate/06-troubleshooting-monitoring-and-optimization/README.md) |
+| 7 | Databricks Intelligence Platform (6%) | [01-databricks-intelligence-platform](../certifications/data-engineer-associate/01-databricks-intelligence-platform/README.md) |
 
 **Practice & Review:**
 

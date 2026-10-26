@@ -14,9 +14,12 @@ tags:
 
 ---
 
-## Databricks Lakehouse Platform (Questions 1–11)
+> [!note] Platform update (Oct 2026)
+> Questions are grouped by the 7 domains of the August 2026 exam guide. Some stems still use legacy names: **DLT / Delta Live Tables** = Lakeflow Declarative Pipelines (now **Lakeflow Spark Declarative Pipelines**, renamed Nov 12, 2025), and `@dlt.*` decorators still work, although the `pyspark.pipelines` (`dp`) module is now recommended. **Delta Sharing** is now **OpenSharing** (Jun 10, 2026).
 
 ---
+
+## Databricks Intelligence Platform (Questions 1–11)
 
 ## Question 1 *(Medium)*
 
@@ -84,22 +87,6 @@ D) The Data Plane manages the web UI; the Control Plane runs Spark jobs
 
 ## Question 5 *(Medium)*
 
-An analyst needs to access data stored in an external S3 bucket from a Databricks cluster without hardcoding credentials in notebooks. Which approach is most appropriate?
-
-A) Store credentials in a notebook cell marked as hidden
-B) Use Databricks Secrets with `dbutils.secrets.get()` to retrieve credentials at runtime
-C) Export credentials as environment variables in the cluster init script
-D) Pass credentials as job parameters in the Workflows UI
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Databricks Secrets provides a secure vault for storing sensitive values. `dbutils.secrets.get()` retrieves them at runtime and the values are never shown in logs or notebook output. Hardcoding in notebooks or init scripts exposes credentials in version control and logs. Job parameters are visible in the UI and logs.
-
----
-
-## Question 6 *(Medium)*
-
 A data engineer is comparing Databricks Photon engine to standard Spark. In which scenario does Photon provide the greatest performance benefit?
 
 A) Python UDFs running complex custom logic
@@ -114,23 +101,7 @@ D) Machine learning model training with MLlib
 
 ---
 
-## Question 7 *(Medium)*
-
-A Databricks cluster is configured with a driver node (16 cores) and 4 worker nodes (8 cores each). A user runs a SQL query. What is the total parallelism available for task execution?
-
-A) 16 cores (driver only coordinates)
-B) 32 cores (workers only)
-C) 48 cores (driver + workers)
-D) Depends on the number of partitions in the data
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> In Spark, the driver node coordinates tasks but does not execute them. Task execution happens exclusively on worker nodes. With 4 workers × 8 cores = 32 cores available for parallel task execution. The number of partitions determines how many tasks run simultaneously, but available parallelism is capped by worker cores.
-
----
-
-## Question 8 *(Easy)*
+## Question 6 *(Easy)*
 
 A team wants to use Databricks Runtime for Machine Learning (ML Runtime) instead of the standard Databricks Runtime. What is the primary reason to choose the ML Runtime?
 
@@ -146,7 +117,7 @@ D) ML Runtime provides faster SQL query execution via Photon
 
 ---
 
-## Question 9 *(Medium)*
+## Question 7 *(Medium)*
 
 A data engineer wants to understand the Lakehouse architecture. Which statement best describes what differentiates a Lakehouse from a traditional two-tier Lambda architecture (data lake + data warehouse)?
 
@@ -162,7 +133,7 @@ D) A Lakehouse eliminates the need for data transformation; Lambda requires full
 
 ---
 
-## Question 10 *(Medium)*
+## Question 8 *(Medium)*
 
 An organization runs a multi-tenant Databricks workspace. A cluster policy is configured with `spark.executor.memory` set as a fixed value. What is the effect of this policy on users?
 
@@ -178,27 +149,123 @@ D) Cluster policies only restrict admin users; regular users are unaffected
 
 ---
 
-## Question 11 *(Medium)*
+## Question 9 *(Medium)*
 
 A data engineer needs to run a notebook that performs interactive EDA (exploratory data analysis) with visualizations, then automatically hand off to a scheduled production pipeline. Which Databricks features best match these two phases respectively?
 
 A) All-purpose cluster for EDA; DLT pipeline for production
 B) Job cluster for EDA; all-purpose cluster for production
 C) SQL warehouse for EDA; serverless compute for production
-D) All-purpose cluster for EDA; job cluster with Workflows for production
+D) All-purpose cluster for EDA; job cluster with Lakeflow Jobs for production
 
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> All-purpose clusters support interactive notebook sessions ideal for EDA with visualizations and iterative development. Databricks Workflows with job clusters provide automated, scheduled, cost-efficient execution for production pipelines. Job clusters terminate after the job completes, reducing cost. SQL warehouses are optimized for SQL queries, not general notebook EDA.
+> All-purpose clusters support interactive notebook sessions ideal for EDA with visualizations and iterative development. Lakeflow Jobs with job clusters provide automated, scheduled, cost-efficient execution for production pipelines. Job clusters terminate after the job completes, reducing cost. SQL warehouses are optimized for SQL queries, not general notebook EDA.
 
 ---
 
-## ELT with Spark SQL and Python (Questions 12–24)
+## Question 10 *(Medium)*
+
+A data engineer needs to query data as it existed 7 days ago from a Delta table named `transactions`. Which command correctly retrieves this historical snapshot?
+
+A) `SELECT * FROM transactions WHERE _commit_timestamp >= date_sub(current_date(), 7)`
+B) `SELECT * FROM transactions VERSION AS OF 7`
+C) `SELECT * FROM transactions TIMESTAMP AS OF date_sub(current_date(), 7)`
+D) `RESTORE TABLE transactions TO TIMESTAMP AS OF date_sub(current_date(), 7)`
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> Delta Lake time travel using `TIMESTAMP AS OF` queries the table state at a specific point in time. `VERSION AS OF 7` queries version number 7 (the 8th commit), not 7 days ago. `RESTORE TABLE` permanently restores the table to a previous state rather than just reading it. `_commit_timestamp` is not a valid time travel filter syntax.
 
 ---
 
-## Question 12 *(Easy)*
+## Question 11 *(Medium)*
+
+A data engineer wants job clusters to start quickly for scheduled jobs without paying for always-running compute. Which Databricks feature achieves fast startup while keeping costs low?
+
+A) All-purpose cluster shared via cluster ID
+B) Job cluster without any optimization — they always start from scratch
+C) Interactive cluster attached to the job
+D) Instance pool that job clusters acquire for fast startup, then release after the job completes
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> Instance pools maintain pre-warmed instances that job clusters can acquire instantly, reducing startup time to seconds. The pool persists between runs while the job cluster itself is created and destroyed per run, maintaining cost isolation. All-purpose clusters are not managed by Workflows and incur continuous cost.
+
+---
+
+## Data Ingestion and Loading (Questions 12–14)
+
+## Question 12 *(Medium)*
+
+A data engineer configures Auto Loader to ingest CSV files from an S3 bucket. The pipeline runs every hour. What happens if 5 new files arrive between runs?
+
+A) Only the first file is processed; subsequent files are queued for the next run
+B) Auto Loader automatically detects and processes all 5 new files in the next trigger
+C) Auto Loader processes files only when triggered manually
+D) Auto Loader fails if more than 1 file arrives between runs
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Auto Loader uses cloud storage notifications or directory listing combined with a checkpoint to track which files have been processed. On the next trigger, it automatically detects all new, unprocessed files and ingests them. This checkpointing mechanism ensures exactly-once processing without manual intervention or file tracking.
+
+---
+
+## Question 13 *(Medium)*
+
+A streaming job reads from a Kafka topic and writes to a Delta table. The engineer wants the job to process all currently available data and then stop automatically. Which trigger type should they configure?
+
+A) `trigger(processingTime="0 seconds")` for continuous mode
+B) `trigger(availableNow=True)` to process all available data then stop
+C) `trigger(continuous="10 seconds")` for low-latency micro-batch processing
+D) No trigger configuration — streaming jobs stop automatically when the source is empty
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `trigger(availableNow=True)` (Spark 3.3+) or `trigger(once=True)` processes all currently available data in the stream source and then terminates the query. This is ideal for scheduled batch-style streaming jobs. `processingTime="0 seconds"` runs as fast as possible but never stops. Streaming jobs do not stop automatically without explicit trigger configuration.
+
+---
+
+## Question 14 *(Hard)*
+
+A data engineer notices that a Delta streaming job fails with `StreamingQueryException: Detected a data update in the source table`. What caused this error?
+
+A) The source Delta table had `OPTIMIZE` run on it while the stream was reading
+B) The source Delta table had rows `UPDATE`d or `DELETE`d, which is not supported by default streaming reads
+C) The streaming job ran out of memory due to large state size
+D) The checkpoint directory was deleted, causing the stream to restart
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> By default, Delta streaming reads assume an append-only source. If the source table has `UPDATE`, `DELETE`, or `MERGE` operations on existing rows, the stream throws this exception. To handle such sources, use `.option("skipChangeCommits", "true")` (recommended on DBR 12.2 LTS+; it replaces the legacy `ignoreChanges`), or switch to Change Data Feed for CDC-aware streaming.
+
+---
+
+## Data Transformation and Modeling (Questions 15–33)
+
+## Question 15 *(Medium)*
+
+A Databricks cluster is configured with a driver node (16 cores) and 4 worker nodes (8 cores each). A user runs a SQL query. What is the total parallelism available for task execution?
+
+A) 16 cores (driver only coordinates)
+B) 32 cores (workers only)
+C) 48 cores (driver + workers)
+D) Depends on the number of partitions in the data
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> In Spark, the driver node coordinates tasks but does not execute them. Task execution happens exclusively on worker nodes. With 4 workers × 8 cores = 32 cores available for parallel task execution. The number of partitions determines how many tasks run simultaneously, but available parallelism is capped by worker cores.
+
+---
+
+## Question 16 *(Easy)*
 
 A data engineer runs the following SQL command. What is the result?
 
@@ -221,7 +288,7 @@ D) Creates a temporary view of the aggregated results
 
 ---
 
-## Question 13 *(Easy)*
+## Question 17 *(Easy)*
 
 A Databricks SQL query must return all rows from the `orders` table and only the matching rows from the `customers` table. Which JOIN type accomplishes this?
 
@@ -237,7 +304,7 @@ D) CROSS JOIN
 
 ---
 
-## Question 14 *(Medium)*
+## Question 18 *(Medium)*
 
 A data engineer needs to find the top 3 highest-selling products within each product category. Which SQL feature is most appropriate?
 
@@ -253,7 +320,7 @@ D) PIVOT table with category as columns
 
 ---
 
-## Question 15 *(Medium)*
+## Question 19 *(Medium)*
 
 A data engineer writes the following PySpark code. What does it accomplish?
 
@@ -276,7 +343,7 @@ D) Creates a new Delta table with department salary averages
 
 ---
 
-## Question 16 *(Medium)*
+## Question 20 *(Medium)*
 
 A data engineer needs to apply a custom Python function to a column in a large Spark DataFrame. The function uses a third-party library not available as a built-in Spark function. What is the recommended approach?
 
@@ -292,7 +359,7 @@ D) Use `df.withColumn()` with a Python lambda directly without registration
 
 ---
 
-## Question 17 *(Easy)*
+## Question 21 *(Easy)*
 
 A data engineer uses `explode()` on a column containing arrays. What does this function do?
 
@@ -308,7 +375,7 @@ D) Converts an array column into a string by joining elements
 
 ---
 
-## Question 18 *(Easy)*
+## Question 22 *(Easy)*
 
 A data engineer needs to add a column to an existing Delta table without rewriting the data. Which SQL command accomplishes this?
 
@@ -324,7 +391,7 @@ D) `CREATE OR REPLACE TABLE table_name AS SELECT *, NULL AS new_col FROM table_n
 
 ---
 
-## Question 19 *(Hard)*
+## Question 23 *(Hard)*
 
 A data engineer writes SQL to calculate a running total of sales by date using the following window specification. What does it return?
 
@@ -344,7 +411,7 @@ D) The sum of only the current row and the immediately following row
 
 ---
 
-## Question 20 *(Easy)*
+## Question 24 *(Easy)*
 
 A data engineer needs to combine two DataFrames that have the same schema, keeping all rows from both including duplicates. Which operation should they use?
 
@@ -360,7 +427,7 @@ D) `df1.merge(df2)`
 
 ---
 
-## Question 21 *(Easy)*
+## Question 25 *(Easy)*
 
 A data engineer needs to pivot sales data so that each product category becomes a separate column showing total sales. Which SQL keyword accomplishes this?
 
@@ -376,7 +443,7 @@ D) TRANSPOSE
 
 ---
 
-## Question 22 *(Medium)*
+## Question 26 *(Medium)*
 
 A data engineer wants to select only distinct combinations of `customer_id` and `product_id` from a table with millions of rows. Which approach is most efficient?
 
@@ -392,23 +459,7 @@ D) Use `dropDuplicates()` in PySpark only — `DISTINCT` is not supported in Dat
 
 ---
 
-## Question 23 *(Hard)*
-
-A data engineer writes a SQL query joining three large tables. The query is slow and the Spark UI shows excessive shuffle volume. Which optimization should they apply first?
-
-A) Increase the number of shuffle partitions with `spark.sql.shuffle.partitions`
-B) Use broadcast join hints for small dimension tables: `/*+ BROADCAST(dim) */`
-C) Convert all joins to CROSS JOINs for performance
-D) Add more worker nodes to the cluster
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> If one or more tables are small enough to fit in memory (~200MB or less), a broadcast join eliminates the shuffle entirely by sending the small table to every executor. This is the most impactful optimization for join-heavy queries. Increasing shuffle partitions only changes partition count, not the total shuffle volume. Adding nodes doesn't eliminate the shuffle.
-
----
-
-## Question 24 *(Medium)*
+## Question 27 *(Medium)*
 
 A data engineer uses higher-order functions to work with an array column. Which function filters array elements based on a lambda condition?
 
@@ -424,27 +475,7 @@ D) `aggregate(arr, 0, (acc, x) -> acc + x)`
 
 ---
 
-## Incremental Data Processing / Delta Lake (Questions 25–34)
-
----
-
-## Question 25 *(Medium)*
-
-A data engineer needs to query data as it existed 7 days ago from a Delta table named `transactions`. Which command correctly retrieves this historical snapshot?
-
-A) `SELECT * FROM transactions WHERE _commit_timestamp >= date_sub(current_date(), 7)`
-B) `SELECT * FROM transactions VERSION AS OF 7`
-C) `SELECT * FROM transactions TIMESTAMP AS OF date_sub(current_date(), 7)`
-D) `RESTORE TABLE transactions TO TIMESTAMP AS OF date_sub(current_date(), 7)`
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> Delta Lake time travel using `TIMESTAMP AS OF` queries the table state at a specific point in time. `VERSION AS OF 7` queries version number 7 (the 8th commit), not 7 days ago. `RESTORE TABLE` permanently restores the table to a previous state rather than just reading it. `_commit_timestamp` is not a valid time travel filter syntax.
-
----
-
-## Question 26 *(Medium)*
+## Question 28 *(Medium)*
 
 A data engineer needs to upsert records into a Delta table: update existing customer records when `customer_id` matches, and insert new records when there is no match. Which clause correctly completes the MERGE statement?
 
@@ -470,23 +501,7 @@ D) `INSERT * FROM source`
 
 ---
 
-## Question 27 *(Medium)*
-
-A data engineer configures Auto Loader to ingest CSV files from an S3 bucket. The pipeline runs every hour. What happens if 5 new files arrive between runs?
-
-A) Only the first file is processed; subsequent files are queued for the next run
-B) Auto Loader automatically detects and processes all 5 new files in the next trigger
-C) Auto Loader processes files only when triggered manually
-D) Auto Loader fails if more than 1 file arrives between runs
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Auto Loader uses cloud storage notifications or directory listing combined with a checkpoint to track which files have been processed. On the next trigger, it automatically detects all new, unprocessed files and ingests them. This checkpointing mechanism ensures exactly-once processing without manual intervention or file tracking.
-
----
-
-## Question 28 *(Medium)*
+## Question 29 *(Medium)*
 
 A data engineer enables Change Data Feed (CDF) on a Delta table. What additional metadata columns does CDF expose when reading changes?
 
@@ -502,55 +517,7 @@ D) A JSON file in the `_delta_log` directory with changed row details
 
 ---
 
-## Question 29 *(Easy)*
-
-A Delta table has accumulated many small Parquet files over several months of streaming ingestion. A data engineer runs `OPTIMIZE` on the table. What is the primary effect?
-
-A) Deletes files marked for deletion by previous VACUUM operations
-B) Rewrites small Parquet files into larger, more efficient files to improve read performance
-C) Recalculates column statistics and updates the transaction log
-D) Converts the table from Parquet format to a different columnar format
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `OPTIMIZE` compacts small files into larger files (typically targeting 1GB) to reduce the overhead of reading many small files and improve scan efficiency. It does not delete files — `VACUUM` handles that. Statistics updates are a secondary benefit. Delta Lake always uses Parquet as its underlying storage format.
-
----
-
-## Question 30 *(Medium)*
-
-A data engineer runs `VACUUM transactions RETAIN 168 HOURS`. What is the effect on time travel capabilities?
-
-A) No effect — VACUUM only removes duplicated data, not historical versions
-B) Historical data files older than 168 hours (7 days) are permanently deleted and time travel to those versions is no longer possible
-C) Delta Lake automatically creates a backup before running VACUUM
-D) VACUUM retains exactly 168 versions of the table, not based on time
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `VACUUM` removes data files no longer referenced by the transaction log that are older than the retention period. Once vacuumed, time travel queries to those older versions fail because the underlying Parquet files are deleted. The default retention is 7 days (168 hours). Delta Lake does not automatically create backups before VACUUM.
-
----
-
-## Question 31 *(Medium)*
-
-A streaming job reads from a Kafka topic and writes to a Delta table. The engineer wants the job to process all currently available data and then stop automatically. Which trigger type should they configure?
-
-A) `trigger(processingTime="0 seconds")` for continuous mode
-B) `trigger(availableNow=True)` to process all available data then stop
-C) `trigger(continuous="10 seconds")` for low-latency micro-batch processing
-D) No trigger configuration — streaming jobs stop automatically when the source is empty
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `trigger(availableNow=True)` (Spark 3.3+) or `trigger(once=True)` processes all currently available data in the stream source and then terminates the query. This is ideal for scheduled batch-style streaming jobs. `processingTime="0 seconds"` runs as fast as possible but never stops. Streaming jobs do not stop automatically without explicit trigger configuration.
-
----
-
-## Question 32 *(Easy)*
+## Question 30 *(Easy)*
 
 A data engineer uses the medallion architecture. Which layer is responsible for enforcing data quality rules, deduplication, and applying business logic transformations?
 
@@ -566,75 +533,7 @@ D) The medallion architecture has no dedicated quality enforcement layer
 
 ---
 
-## Question 33 *(Medium)*
-
-A data engineer wants to Z-ORDER a Delta table by the `customer_id` column to improve query performance. When does Z-ORDER provide the most benefit?
-
-A) When queries always perform full table scans without any filters
-B) When queries frequently filter on `customer_id`, enabling Delta's data skipping to skip entire files
-C) When the table has fewer than 10 files and is already compact
-D) Z-ORDER provides no benefit on Delta tables; use partitioning for all performance needs
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Z-ORDER co-locates related values within the same set of files, enabling Delta Lake's data skipping to skip entire files that don't contain queried `customer_id` values. This is most beneficial for high-cardinality columns frequently used in `WHERE` clauses. If queries always scan the full table, or the table is very small, Z-ORDER provides no benefit.
-
----
-
-## Question 34 *(Hard)*
-
-A data engineer notices that a Delta streaming job fails with `StreamingQueryException: Detected a data update in the source table`. What caused this error?
-
-A) The source Delta table had `OPTIMIZE` run on it while the stream was reading
-B) The source Delta table had rows `UPDATE`d or `DELETE`d, which is not supported by default streaming reads
-C) The streaming job ran out of memory due to large state size
-D) The checkpoint directory was deleted, causing the stream to restart
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> By default, Delta streaming reads assume an append-only source. If the source table has `UPDATE`, `DELETE`, or `MERGE` operations on existing rows, the stream throws this exception. To handle such sources, use `.option("ignoreChanges", "true")` or `.option("ignoreDeletes", "true")`, or switch to Change Data Feed for CDC-aware streaming.
-
----
-
-## Production Pipelines (Questions 35–41)
-
----
-
-## Question 35 *(Medium)*
-
-A data engineer is designing a Databricks Workflow with three tasks: `ingest → transform → report`. The `report` task must only run if `transform` succeeds. How should task dependencies be configured?
-
-A) Use a single-task job with all logic in one notebook to avoid dependency issues
-B) Configure `transform` as a dependency of `report` using the `depends_on` task setting
-C) Use separate jobs for each task and chain them with external orchestration
-D) Set `transform` and `report` to run in parallel to reduce total execution time
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Databricks Workflows supports multi-task jobs with explicit task dependencies via `depends_on`. When `transform` fails, downstream tasks (`report`) are automatically skipped or marked as failed. Running tasks in parallel would not enforce the required sequential dependency. Separate jobs with external orchestration adds unnecessary complexity.
-
----
-
-## Question 36 *(Medium)*
-
-A production job fails intermittently due to transient cloud API errors. What built-in Databricks Workflows feature can automatically retry failed tasks without manual intervention?
-
-A) Task timeout configuration — the task retries when it exceeds the timeout
-B) Per-task retry policy with configurable maximum retries and retry interval
-C) Workflow-level SLA notifications that page the on-call engineer
-D) Databricks auto-recovers all failed tasks by default with no configuration needed
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Databricks Workflows allows configuring a retry policy per task, specifying the maximum number of retry attempts and the interval between retries. This handles transient failures automatically. Timeout configuration controls how long a task runs before being killed, not whether it retries. Auto-recovery is not enabled by default.
-
----
-
-## Question 37 *(Easy)*
+## Question 31 *(Easy)*
 
 A data engineer uses Delta Live Tables (DLT) to build a pipeline. Which Python decorator defines a table that is computed and materialized from a query?
 
@@ -650,7 +549,7 @@ D) `@dlt.expect`
 
 ---
 
-## Question 38 *(Medium)*
+## Question 32 *(Medium)*
 
 A DLT pipeline has an `EXPECT` constraint: `EXPECT (amount > 0) ON VIOLATION DROP ROW`. A batch of 1,000 records arrives and 50 have `amount <= 0`. What happens?
 
@@ -666,39 +565,7 @@ D) The pipeline pauses and waits for manual intervention to resolve the violatio
 
 ---
 
-## Question 39 *(Medium)*
-
-A data engineer configures a Databricks Workflow job with a schedule of `0 0 8 * * ?` (Quartz cron format). When does this job run?
-
-A) Every 8 minutes
-B) Every hour at minute 8
-C) At 8:00 AM every day
-D) At 8:00 AM on the 8th of every month
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> In Quartz cron format, fields are: second minute hour day-of-month month day-of-week. So `0 0 8 * * ?` means second=0, minute=0, hour=8, every day, every month. This fires at exactly 8:00:00 AM daily. `0 8 * * * ?` would run every hour at minute 8. `0 0 0 8 * ?` would run at midnight on the 8th of each month.
-
----
-
-## Question 40 *(Medium)*
-
-A data engineer wants job clusters to start quickly for scheduled jobs without paying for always-running compute. Which Databricks feature achieves fast startup while keeping costs low?
-
-A) All-purpose cluster shared via cluster ID
-B) Job cluster without any optimization — they always start from scratch
-C) Interactive cluster attached to the job
-D) Instance pool that job clusters acquire for fast startup, then release after the job completes
-
-> [!success]- Answer
-> **Correct Answer: D**
->
-> Instance pools maintain pre-warmed instances that job clusters can acquire instantly, reducing startup time to seconds. The pool persists between runs while the job cluster itself is created and destroyed per run, maintaining cost isolation. All-purpose clusters are not managed by Workflows and incur continuous cost.
-
----
-
-## Question 41 *(Medium)*
+## Question 33 *(Medium)*
 
 A DLT pipeline is configured in `CONTINUOUS` mode. How does this differ from `TRIGGERED` mode?
 
@@ -714,7 +581,137 @@ D) There is no functional difference; the setting only affects UI display
 
 ---
 
-## Data Governance (Questions 42–45)
+## Working with Lakeflow Jobs (Questions 34–36)
+
+## Question 34 *(Medium)*
+
+A data engineer is designing a Lakeflow Job with three tasks: `ingest → transform → report`. The `report` task must only run if `transform` succeeds. How should task dependencies be configured?
+
+A) Use a single-task job with all logic in one notebook to avoid dependency issues
+B) Configure `transform` as a dependency of `report` using the `depends_on` task setting
+C) Use separate jobs for each task and chain them with external orchestration
+D) Set `transform` and `report` to run in parallel to reduce total execution time
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Lakeflow Jobs supports multi-task jobs with explicit task dependencies via `depends_on`. When `transform` fails, downstream tasks (`report`) don't run and are marked `Upstream failed` (default Run if: *All succeeded*). Running tasks in parallel would not enforce the required sequential dependency. Separate jobs with external orchestration adds unnecessary complexity.
+
+---
+
+## Question 35 *(Medium)*
+
+A production job fails intermittently due to transient cloud API errors. What built-in Lakeflow Jobs feature can automatically retry failed tasks without manual intervention?
+
+A) Task timeout configuration — the task retries when it exceeds the timeout
+B) Per-task retry policy with configurable maximum retries and retry interval
+C) Workflow-level SLA notifications that page the on-call engineer
+D) Databricks auto-recovers all failed tasks by default with no configuration needed
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Lakeflow Jobs allows configuring a retry policy per task, specifying the maximum number of retry attempts and the interval between retries. This handles transient failures automatically. Timeout configuration controls how long a task runs before being killed, not whether it retries. Auto-recovery is not enabled by default.
+
+---
+
+## Question 36 *(Medium)*
+
+A data engineer configures a Lakeflow Job with a schedule of `0 0 8 * * ?` (Quartz cron format). When does this job run?
+
+A) Every 8 minutes
+B) Every hour at minute 8
+C) At 8:00 AM every day
+D) At 8:00 AM on the 8th of every month
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> In Quartz cron format, fields are: second minute hour day-of-month month day-of-week. So `0 0 8 * * ?` means second=0, minute=0, hour=8, every day, every month. This fires at exactly 8:00:00 AM daily. `0 8 * * * ?` would run every hour at minute 8. `0 0 0 8 * ?` would run at midnight on the 8th of each month.
+
+---
+
+## Troubleshooting, Monitoring, and Optimization (Questions 37–40)
+
+## Question 37 *(Hard)*
+
+A data engineer writes a SQL query joining three large tables. The query is slow and the Spark UI shows excessive shuffle volume. Which optimization should they apply first?
+
+A) Increase the number of shuffle partitions with `spark.sql.shuffle.partitions`
+B) Use broadcast join hints for small dimension tables: `/*+ BROADCAST(dim) */`
+C) Convert all joins to CROSS JOINs for performance
+D) Add more worker nodes to the cluster
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> If one or more tables are small enough to fit in memory (~200MB or less), a broadcast join eliminates the shuffle entirely by sending the small table to every executor. This is the most impactful optimization for join-heavy queries. Increasing shuffle partitions only changes partition count, not the total shuffle volume. Adding nodes doesn't eliminate the shuffle.
+
+---
+
+## Question 38 *(Easy)*
+
+A Delta table has accumulated many small Parquet files over several months of streaming ingestion. A data engineer runs `OPTIMIZE` on the table. What is the primary effect?
+
+A) Deletes files marked for deletion by previous VACUUM operations
+B) Rewrites small Parquet files into larger, more efficient files to improve read performance
+C) Recalculates column statistics and updates the transaction log
+D) Converts the table from Parquet format to a different columnar format
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `OPTIMIZE` compacts small files into larger files (typically targeting 1GB) to reduce the overhead of reading many small files and improve scan efficiency. It does not delete files — `VACUUM` handles that. Statistics updates are a secondary benefit. Delta Lake always uses Parquet as its underlying storage format.
+
+---
+
+## Question 39 *(Medium)*
+
+A data engineer runs `VACUUM transactions RETAIN 168 HOURS`. What is the effect on time travel capabilities?
+
+A) No effect — VACUUM only removes duplicated data, not historical versions
+B) Historical data files older than 168 hours (7 days) are permanently deleted and time travel to those versions is no longer possible
+C) Delta Lake automatically creates a backup before running VACUUM
+D) VACUUM retains exactly 168 versions of the table, not based on time
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `VACUUM` removes data files no longer referenced by the transaction log that are older than the retention period. Once vacuumed, time travel queries to those older versions fail because the underlying Parquet files are deleted. The default retention is 7 days (168 hours). Delta Lake does not automatically create backups before VACUUM.
+
+---
+
+## Question 40 *(Medium)*
+
+A data engineer wants to Z-ORDER a Delta table by the `customer_id` column to improve query performance. When does Z-ORDER provide the most benefit?
+
+A) When queries always perform full table scans without any filters
+B) When queries frequently filter on `customer_id`, enabling Delta's data skipping to skip entire files
+C) When the table has fewer than 10 files and is already compact
+D) Z-ORDER provides no benefit on Delta tables; use partitioning for all performance needs
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Z-ORDER co-locates related values within the same set of files, enabling Delta Lake's data skipping to skip entire files that don't contain queried `customer_id` values. This is most beneficial for high-cardinality columns frequently used in `WHERE` clauses. If queries always scan the full table, or the table is very small, Z-ORDER provides no benefit.
+
+---
+
+## Governance and Security (Questions 41–45)
+
+## Question 41 *(Medium)*
+
+An analyst needs to access data stored in an external S3 bucket from a Databricks cluster without hardcoding credentials in notebooks. Which approach is most appropriate?
+
+A) Store credentials in a notebook cell marked as hidden
+B) Use Databricks Secrets with `dbutils.secrets.get()` to retrieve credentials at runtime
+C) Export credentials as environment variables in the cluster init script
+D) Pass credentials as job parameters in the Lakeflow Jobs UI
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Databricks Secrets provides a secure vault for storing sensitive values. `dbutils.secrets.get()` retrieves them at runtime and the values are never shown in logs or notebook output. Hardcoding in notebooks or init scripts exposes credentials in version control and logs. Job parameters are visible in the UI and logs.
 
 ---
 
@@ -786,20 +783,20 @@ D) Spark UI history server — stores query history with user attribution
 
 | # | Answer | # | Answer | # | Answer |
 |---|--------|---|--------|---|--------|
-| 1 | B | 16 | B | 31 | B |
-| 2 | C | 17 | B | 32 | B |
-| 3 | B | 18 | B | 33 | B |
+| 1 | B | 16 | B | 31 | A |
+| 2 | C | 17 | C | 32 | C |
+| 3 | B | 18 | C | 33 | B |
 | 4 | B | 19 | B | 34 | B |
 | 5 | B | 20 | B | 35 | B |
-| 6 | B | 21 | C | 36 | B |
-| 7 | B | 22 | C | 37 | A |
-| 8 | B | 23 | B | 38 | C |
-| 9 | B | 24 | B | 39 | C |
-| 10 | B | 25 | C | 40 | D |
+| 6 | B | 21 | B | 36 | C |
+| 7 | B | 22 | B | 37 | B |
+| 8 | B | 23 | B | 38 | B |
+| 9 | D | 24 | B | 39 | B |
+| 10 | C | 25 | C | 40 | B |
 | 11 | D | 26 | C | 41 | B |
 | 12 | B | 27 | B | 42 | C |
-| 13 | C | 28 | B | 43 | B |
-| 14 | C | 29 | B | 44 | D |
+| 13 | B | 28 | C | 43 | B |
+| 14 | B | 29 | B | 44 | D |
 | 15 | B | 30 | B | 45 | B |
 
 ---
@@ -816,13 +813,15 @@ D) Spark UI history server — stores query history with user attribution
 
 ## Section Performance Tracker
 
-| Domain | Questions | Your Score | Percentage |
+| Domain (Aug 2026 weight) | Questions | Your Score | Percentage |
 | ------ | --------- | ---------- | ---------- |
-| Lakehouse Platform | 1–11 (11 questions) | ___/11 | ___% |
-| ELT with Spark SQL and Python | 12–24 (13 questions) | ___/13 | ___% |
-| Incremental Data Processing | 25–34 (10 questions) | ___/10 | ___% |
-| Production Pipelines | 35–41 (7 questions) | ___/7 | ___% |
-| Data Governance | 42–45 (4 questions) | ___/4 | ___% |
+| Databricks Intelligence Platform (6 %) | 1–11 (11 questions) | ___/11 | ___% |
+| Data Ingestion and Loading (21 %) | 12–14 (3 questions) | ___/3 | ___% |
+| Data Transformation and Modeling (22 %) | 15–33 (19 questions) | ___/19 | ___% |
+| Working with Lakeflow Jobs (16 %) | 34–36 (3 questions) | ___/3 | ___% |
+| Implementing CI/CD (10 %) | none in this mock (see practice questions) | — | — |
+| Troubleshooting, Monitoring, and Optimization (10 %) | 37–40 (4 questions) | ___/4 | ___% |
+| Governance and Security (15 %) | 41–45 (5 questions) | ___/5 | ___% |
 | **Total** | **45 questions** | **___/45** | **___%** |
 
 ---
