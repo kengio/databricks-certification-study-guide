@@ -319,6 +319,8 @@ MlflowException: No such model version found
 
 **Cause**: Using workspace registry URI when model is registered in Unity Catalog (or vice versa).
 
+In MLflow 3 the default registry URI on Databricks is `databricks-uc`; on MLflow 2.x the workspace registry was the usual default, so older notebooks that never call `set_registry_uri` can change behavior after an upgrade ([MLflow 3 on Databricks](https://docs.databricks.com/aws/en/mlflow/mlflow-3-install)).
+
 **Solution**:
 
 ```python
@@ -415,11 +417,14 @@ payload = {
 - Implement client-side retry with exponential backoff
 
 ```python
-from databricks.sdk.service.serving import ServedModelInput
+from databricks.sdk.service.serving import ServedEntityInput
 
-ServedModelInput(
+# served_entities / ServedEntityInput; served_models / ServedModelInput is deprecated
+# (https://databricks-sdk-py.readthedocs.io/en/latest/dbdataclasses/serving.html)
+ServedEntityInput(
+    entity_name="catalog.schema.model",
+    entity_version="1",
     scale_to_zero_enabled=False,  # Keep warm for SLA compliance
-    ...
 )
 ```
 

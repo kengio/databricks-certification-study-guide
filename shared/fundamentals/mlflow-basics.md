@@ -23,7 +23,7 @@ MLflow provides four core components:
 | **Tracking** | Log and query experiments (parameters, metrics, artifacts) |
 | **Projects** | Reproducible ML code packaging format |
 | **Models** | Standard format for packaging and loading models |
-| **Model Registry** | Central model store with versioning and lifecycle stages |
+| **Model Registry** | Central model store with versioning and aliases (Unity Catalog on Databricks) |
 
 Databricks integrates MLflow natively — every cluster has it pre-installed, and the Tracking Server is managed automatically.
 
@@ -45,7 +45,7 @@ flowchart TB
 
     subgraph Registry["Model Registry"]
         Versions[Model Versions]
-        Stages[Stages<br>Staging → Production]
+        Stages[Legacy stages<br>workspace registry only]
         Aliases[Aliases<br>champion, challenger]
     end
 
@@ -87,11 +87,11 @@ with mlflow.start_run(run_name="rf-baseline"):
     mlflow.log_metric("accuracy", accuracy_score(y_test, y_pred))
     mlflow.log_metric("f1_score", f1_score(y_test, y_pred))
 
-    # Log the model
+    # Log the model (MLflow 3: name= replaces artifact_path=)
     mlflow.sklearn.log_model(
         model,
-        artifact_path="model",
-        registered_model_name="fraud-detector"
+        name="model",
+        registered_model_name="prod_catalog.ml_models.fraud_detector"  # UC three-level name
     )
 ```
 
@@ -128,29 +128,30 @@ with mlflow.start_run():
 
 ## Model Registry
 
-The Model Registry provides versioning, lifecycle stages, and collaboration around model promotion.
+The Model Registry provides versioning, aliases, and collaboration around model promotion. In MLflow 3 the default registry on Databricks is Unity Catalog (`databricks-uc`), so registered model names are three-level: `catalog.schema.model`.
 
 ### Registering a Model
 
 ```python
 # Register during logging
-mlflow.sklearn.log_model(
+model_info = mlflow.sklearn.log_model(
     model,
-    artifact_path="model",
-    registered_model_name="fraud-detector"
+    name="model",
+    registered_model_name="prod_catalog.ml_models.fraud_detector"
 )
 
-# Register an existing run
+# Register an already-logged model by its URI (MLflow 3: models:/<model_id>;
+# the MLflow 2.x form was runs:/<run_id>/model)
 result = mlflow.register_model(
-    model_uri="runs:/abc123/model",
-    name="fraud-detector"
+    model_uri=model_info.model_uri,
+    name="prod_catalog.ml_models.fraud_detector"
 )
 print(f"Model version: {result.version}")
 ```
 
-### Model Aliases (MLflow 2.x — recommended)
+### Model Aliases (recommended)
 
-Aliases are flexible pointers to specific model versions, replacing lifecycle stages:
+Aliases are flexible pointers to specific model versions, replacing lifecycle stages (stages are not supported for models in Unity Catalog):
 
 ```python
 from mlflow import MlflowClient
@@ -159,16 +160,18 @@ client = MlflowClient()
 
 # Set alias "champion" to version 3
 client.set_registered_model_alias(
-    name="fraud-detector",
+    name="prod_catalog.ml_models.fraud_detector",
     alias="champion",
     version=3
 )
 
 # Load by alias
-model = mlflow.pyfunc.load_model("models:/fraud-detector@champion")
+model = mlflow.pyfunc.load_model("models:/prod_catalog.ml_models.fraud_detector@champion")
 ```
 
-### Legacy Lifecycle Stages (older APIs)
+### Legacy Lifecycle Stages (workspace registry only)
+
+Stages only exist in the legacy workspace model registry (`mlflow.set_registry_uri("databricks")`); Unity Catalog models use aliases instead.
 
 | Stage | Description |
 | :--- | :--- |
@@ -180,7 +183,7 @@ model = mlflow.pyfunc.load_model("models:/fraud-detector@champion")
 ```python
 # Transition to production (legacy)
 client.transition_model_version_stage(
-    name="fraud-detector",
+    name="fraud_detector",  # two-level workspace-registry name
     version=3,
     stage="Production"
 )
@@ -190,14 +193,14 @@ client.transition_model_version_stage(
 
 ```python
 # Load as generic Python function (framework-agnostic)
-model = mlflow.pyfunc.load_model("models:/fraud-detector@champion")
+model = mlflow.pyfunc.load_model("models:/prod_catalog.ml_models.fraud_detector@champion")
 predictions = model.predict(new_data)
 
 # Load as sklearn model
-model = mlflow.sklearn.load_model("models:/fraud-detector/3")
+model = mlflow.sklearn.load_model("models:/prod_catalog.ml_models.fraud_detector/3")
 
 # Batch inference with Spark
-predict_udf = mlflow.pyfunc.spark_udf(spark, "models:/fraud-detector@champion")
+predict_udf = mlflow.pyfunc.spark_udf(spark, "models:/prod_catalog.ml_models.fraud_detector@champion")
 predictions = df.withColumn("prediction", predict_udf(*feature_cols))
 ```
 
@@ -233,13 +236,13 @@ print(f"Best F1: {best_run['metrics.f1_score']}")
 In Databricks with Unity Catalog, models are registered using three-level namespace: `catalog.schema.model_name`:
 
 ```python
-# Register to Unity Catalog
+# Register to Unity Catalog (default registry URI in MLflow 3; required on MLflow 2.x)
 mlflow.set_registry_uri("databricks-uc")
 
 mlflow.sklearn.log_model(
     model,
-    artifact_path="model",
-    registered_model_name="prod_catalog.ml_models.fraud-detector"
+    name="model",
+    registered_model_name="prod_catalog.ml_models.fraud_detector"
 )
 ```
 
@@ -258,8 +261,9 @@ mlflow.sklearn.log_model(
 1. **`mlflow.start_run()` context manager** — Always use `with mlflow.start_run():` to ensure the run is properly ended, even if an exception occurs
 2. **Autolog limitations** — Autolog captures what the framework exposes; custom metrics still need explicit `log_metric()` calls
 3. **Model URI formats** — `runs:/<run_id>/artifact_path` vs `models:/<name>/<version>` vs `models:/<name>@<alias>`
-4. **Aliases vs stages** — In MLflow 2.x/Databricks, aliases are preferred over lifecycle stages (None/Staging/Production/Archived)
-5. **Unity Catalog registry** — UC models use `catalog.schema.model` naming; set `mlflow.set_registry_uri("databricks-uc")` first
+4. **Aliases vs stages** — On Databricks with Unity Catalog, use aliases; lifecycle stages (None/Staging/Production/Archived) are not supported for UC models
+5. **Unity Catalog registry** — UC models use `catalog.schema.model` naming; `databricks-uc` is the default registry URI in MLflow 3 (set it explicitly on MLflow 2.x)
+6. **MLflow 3 `log_model`** — pass `name="model"` (`artifact_path=` is deprecated) and use the returned `model_info.model_uri` (`models:/<model_id>`)
 
 ## Practice Questions
 
@@ -285,7 +289,7 @@ D) A run is a deployment unit; an experiment tracks serving metrics
 
 ### Question 2: Aliases vs. Lifecycle Stages
 
-**Question**: You are using Databricks with Unity Catalog. You want to designate version 5 of `prod_catalog.ml_models.fraud-detector` as the current production model. What is the recommended approach?
+**Question**: You are using Databricks with Unity Catalog. You want to designate version 5 of `prod_catalog.ml_models.fraud_detector` as the current production model. What is the recommended approach?
 
 A) Call `transition_model_version_stage(version=5, stage="Production")`
 B) Set an alias `champion` pointing to version 5 using `set_registered_model_alias`
@@ -295,12 +299,12 @@ D) Use `mlflow.register_model()` with `stage="Production"` as a parameter
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> In MLflow 2.x and Databricks Unity Catalog, **aliases** (`champion`, `challenger`,
+> In Databricks Unity Catalog (MLflow 2.x and 3), **aliases** (`champion`, `challenger`,
 > etc.) replace legacy lifecycle stages (Staging/Production/Archived). Aliases are
 > flexible named pointers that can be updated independently of version numbering.
-> Load the model with `mlflow.pyfunc.load_model("models:/fraud-detector@champion")`.
-> The legacy `transition_model_version_stage` API still works but is deprecated for
-> UC-registered models.
+> Load the model with `mlflow.pyfunc.load_model("models:/prod_catalog.ml_models.fraud_detector@champion")`.
+> The legacy `transition_model_version_stage` API only applies to the workspace model
+> registry; stages are not supported for models in Unity Catalog.
 
 ---
 
@@ -343,3 +347,6 @@ D) Business KPIs computed after the model is deployed to production
 - [MLflow Autologging](https://mlflow.org/docs/latest/tracking/autolog.html)
 - [Unity Catalog Model Registry](https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/index.html)
 - [MLflow Model Serving — Databricks](https://docs.databricks.com/en/machine-learning/model-serving/index.html)
+- [Get started with MLflow 3 — Databricks](https://docs.databricks.com/aws/en/mlflow/mlflow-3-install)
+- [MLflow 3 migration (`name=`, `models:/<model_id>`) — mlflow.org](https://www.mlflow.org/docs/latest/ml/mlflow-3/)
+- [Manage model lifecycle in Unity Catalog (aliases; stages unsupported)](https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/)
