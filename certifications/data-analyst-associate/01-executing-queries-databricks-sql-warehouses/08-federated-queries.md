@@ -111,7 +111,7 @@ Query federation sources include MySQL, PostgreSQL, Teradata, Oracle, Amazon Red
 
 - [Joins & Set Operations](./03-joins-and-set-operations.md)
 - [Importing Data](../08-importing-data/01-importing-data-overview.md) - When to ingest instead of federate
-- [Lakehouse Federation (DE Pro)](../../data-engineer-professional/10-data-sharing-and-federation/02-lakehouse-federation.md) - Deeper engineering view
+- [Lakehouse Federation (DE Pro)](../../data-engineer-professional/02-data-ingestion-and-acquisition/08-lakehouse-federation.md) - Deeper engineering view
 
 ## Official Documentation
 
