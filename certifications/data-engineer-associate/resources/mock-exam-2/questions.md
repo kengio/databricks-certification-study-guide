@@ -55,17 +55,19 @@ D) Rerun the original data ingestion pipeline to recreate the data
 
 ## Question 3 *(Medium)*
 
-A data engineer needs a copy of a Delta table to test schema changes without affecting production. They need the copy to be fast and space-efficient, sharing underlying files with the source. Which clone type should they use?
+A team runs a nightly ETL notebook on a shared all-purpose cluster that stays up all day. Nobody watches the run, and the notebook needs no R, GPU, or custom init script. The team wants to cut cost and follow Databricks guidance for unattended production work. Which compute should the scheduled job use?
 
-A) Deep clone — copies all data files to a new location  
-B) Databricks snapshot — an automatic backup created by the platform  
-C) CTAS (CREATE TABLE AS SELECT) — creates an independent copy with full data duplication  
-D) Shallow clone — creates a copy that references the source table's data files without copying them  
+A) The same all-purpose cluster, with auto termination turned off so it is always ready  
+B) A Pro SQL warehouse sized to the notebook's data volume  
+C) A single-node all-purpose cluster dedicated to the job  
+D) Serverless compute for jobs, or a jobs compute cluster that is created for each run and terminated afterwards  
 
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Shallow clone creates a Delta table that references the source's data files without copying them, making it fast and storage-efficient. Schema and metadata are independent, so changes to the clone don't affect the source. Deep clone physically copies all data files to a new location — useful for true independence. CTAS also copies all data.
+> For a nightly ETL notebook with no one watching, Databricks points to **serverless jobs** or **jobs compute**. Jobs compute is created for the run and terminated at the end, so you pay only while it runs, at the separate jobs price. Serverless bills DBUs for the work done with idle time minimized.
+>
+> All-purpose compute is meant for interactive use and keeps billing while idle until auto termination, so turning auto termination off makes the cost worse. A SQL warehouse runs SQL for BI and ad hoc queries, not a general notebook job. Single-node compute suits small data and single-machine libraries, and it is still all-purpose compute.
 
 ---
 
@@ -643,17 +645,19 @@ D) In the job's "Notifications" settings, where email addresses can be added for
 
 ## Question 38 *(Hard)*
 
-A data engineer needs to query the Delta Live Tables event log to find pipeline runs where expectations failed. Which system table or approach provides this information?
+A report notebook runs `pdf = spark.table("main.silver.events").toPandas()` on a 200-million-row table. The run fails with `java.lang.OutOfMemoryError` on the driver, and the notebook detaches. The engineer doubles the number of workers, and the error comes back. What is the right fix?
 
-A) `DESCRIBE HISTORY pipeline_name` — shows all pipeline execution history  
-B) Query the DLT event log table stored at the pipeline's storage location, filtering for `eventType = 'flow_progress'` records  
-C) `SELECT * FROM system.pipelines.events` in Unity Catalog  
-D) The DLT UI shows expectation violations but there is no queryable log  
+A) Double the number of workers again, until the cluster has enough total memory  
+B) Keep the data distributed: aggregate or filter in Spark and collect only the small result (or write the output to a table), raising `spark.driver.memory` only if still needed  
+C) Raise `spark.sql.shuffle.partitions` so each partition is smaller  
+D) Enable autoscaling so Databricks adds workers when memory runs low  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Every pipeline has an event log. For Unity Catalog pipelines, query it with `SELECT * FROM event_log(<pipeline_id>)`, or publish it to a named table. Legacy Hive metastore pipelines stored it under the pipeline's storage location. Engineers can query it to analyze pipeline runs, including `flow_progress` events which contain `data_quality` metrics showing expectation pass/fail counts. The UI visualizes this data, but the underlying table is also directly queryable for custom analysis.
+> A driver OOM usually comes from pulling data to the driver with `collect()` or `toPandas()`. Workers don't add driver memory, so more workers or autoscaling can't fix it. Aggregate in Spark first, for example `groupBy("event_type").count().toPandas()`, or write results to a table and use `display()` or `limit()`.
+>
+> More shuffle partitions help executor OOM and spill from oversized partitions, not a driver that is holding the whole table. Raising `spark.driver.memory` at the compute level is a last resort when the result really must live on the driver.
 
 ---
 

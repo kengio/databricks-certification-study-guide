@@ -653,20 +653,19 @@ D) `SELECT * FROM information_schema.tables LIMIT 10`
 
 ## Question 35 *(Medium)*
 
-What is the difference between a `SHALLOW CLONE` and a `DEEP CLONE` of a Delta table?
+An analyst who doesn't own the table `main.crm.customers` tries to add the tag `domain = crm` to it in Catalog Explorer, and the action is refused. The analyst already has `SELECT` on the table. What else is needed?
 
-A) Shallow clone copies all data files; deep clone copies only metadata  
-B) Shallow clone supports time travel; deep clone does not  
-C) They are identical — both copy all data and metadata  
-D) Shallow clone copies only metadata and references the source data files; deep clone copies both metadata and all data files  
+A) `MODIFY` on the table, because tags change the table's data  
+B) Workspace admin rights, because only admins can tag objects  
+C) Nothing; tags can be added only with SQL, not in Catalog Explorer  
+D) `APPLY TAG` on the table, plus `USE SCHEMA` and `USE CATALOG` on its parents (or ownership of the table)  
 
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> `SHALLOW CLONE` creates a new table with its own transaction log but references the original
-> data files — no data is physically copied. It is fast and storage-efficient but depends on the
-> source files remaining available. `DEEP CLONE` copies all data files and the transaction log,
-> creating a fully independent copy suitable for backup or migration.
+> Tagging an object needs ownership of it, or `APPLY TAG` on it together with `USE SCHEMA` and `USE CATALOG` on the parents. Tags are key-value labels on catalogs, schemas, tables, columns, volumes, and more, with up to 50 tags per object.
+>
+> Tags are metadata, so no data privilege such as `MODIFY` is involved, and tagging isn't limited to admins. In Catalog Explorer, open the object's **Overview** page and click **Add tags** under **Tags**. SQL works too, for example `SET TAG ON TABLE main.crm.customers domain = crm`.
 
 ---
 

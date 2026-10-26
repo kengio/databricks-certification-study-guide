@@ -552,19 +552,19 @@ D) ODBC or JDBC driver provided by Databricks
 
 ## Question 30 *(Easy)*
 
-Partner Connect in Databricks is used to:
+A team requests a third-party reference dataset from Databricks Marketplace. How does the data typically reach their workspace?
 
-A) Establish pre-built integrations with partner tools like dbt, Fivetran, and Tableau with automated credential setup  
-B) Connect multiple Databricks workspaces to each other  
-C) Share data with external organizations via Delta Sharing  
-D) Connect to on-premises databases over a VPN  
+A) Through Delta Sharing (now OpenSharing), usually as a catalog of tables, so there is no copy pipeline to build  
+B) As CSV files that each user downloads to their laptop and uploads again  
+C) Through an Auto Loader pipeline the team must build against the provider's storage bucket  
+D) It can't: Marketplace lists only AI models and apps, not datasets  
 
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> Partner Connect provides one-click integration setup for certified Databricks partner tools. It
-> automatically creates service principals, generates access tokens, and configures the partner
-> tool's connection — eliminating manual credential management.
+> Marketplace is an open exchange where providers publish datasets, AI models, notebooks, apps, and MCP servers. Datasets are delivered through Delta Sharing (renamed OpenSharing on June 10, 2026) and usually arrive as catalogs of tabular data, so consumers query them without building ingestion.
+>
+> Anyone can browse the Open Marketplace, but requesting a product needs a Databricks workspace. Some listings are instant, and others need the provider's approval.
 
 ---
 
