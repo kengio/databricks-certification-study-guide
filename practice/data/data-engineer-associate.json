@@ -1367,14 +1367,14 @@
       "difficulty": "medium",
       "question": "A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?",
       "choices": {
-        "A": "Databricks Asset Bundles YAML configuration",
+        "A": "Declarative Automation Bundles (formerly Databricks Asset Bundles) YAML configuration",
         "B": "Cron syntax",
         "C": "Apache Airflow DAG definitions",
         "D": "JSON job templates via the Databricks CLI"
       },
       "correctAnswer": "B",
       "shortAnswer": "Cron syntax.",
-      "explanation": "Databricks Jobs support quartz cron expressions for scheduling. Cron strings are compact, human-readable, and can be programmatically constructed and submitted via the Jobs API or embedded in Databricks Asset Bundles YAML configuration files."
+      "explanation": "Databricks Jobs support quartz cron expressions for scheduling. Cron strings are compact, human-readable, and can be programmatically constructed and submitted via the Jobs API or embedded in Declarative Automation Bundles (formerly Databricks Asset Bundles) YAML configuration files."
     },
     {
       "id": "04-working-with-lakeflow-jobs-q004",

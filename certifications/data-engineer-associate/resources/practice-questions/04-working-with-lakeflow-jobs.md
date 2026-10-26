@@ -48,7 +48,7 @@ D) Set the query's refresh schedule to end on a specific date in the query sched
 
 **Question** *(Medium)*: A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?
 
-A) Databricks Asset Bundles YAML configuration
+A) Declarative Automation Bundles (formerly Databricks Asset Bundles) YAML configuration
 B) Cron syntax
 C) Apache Airflow DAG definitions
 D) JSON job templates via the Databricks CLI
@@ -58,7 +58,7 @@ D) JSON job templates via the Databricks CLI
 >
 > Cron syntax.
 >
-> Databricks Jobs support quartz cron expressions for scheduling. Cron strings are compact, human-readable, and can be programmatically constructed and submitted via the Jobs API or embedded in Databricks Asset Bundles YAML configuration files.
+> Databricks Jobs support quartz cron expressions for scheduling. Cron strings are compact, human-readable, and can be programmatically constructed and submitted via the Jobs API or embedded in Declarative Automation Bundles (formerly Databricks Asset Bundles) YAML configuration files.
 
 ---
 

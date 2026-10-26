@@ -169,7 +169,7 @@ Global flags: `-t, --target` selects the target, and `--var="key=value"` sets va
 ## A CI/CD Pipeline With Bundles
 
 ```yaml
-# .github/workflows/deploy.yml (sketch)
+# .github/workflows/deploy.yml (sketch, based on the GitHub Actions page in the Databricks docs)
 on:
   push:
     branches: [main]
@@ -258,6 +258,7 @@ jobs:
 - [Deployment modes](https://docs.databricks.com/aws/en/dev-tools/bundles/deployment-modes)
 - [bundle command group](https://docs.databricks.com/aws/en/dev-tools/cli/bundle-commands)
 - [Bundles release notes](https://docs.databricks.com/aws/en/release-notes/dev-tools/bundles)
+- [GitHub Actions for Databricks (Public Preview)](https://docs.databricks.com/aws/en/dev-tools/ci-cd/github)
 
 ---
 
