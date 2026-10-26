@@ -24,12 +24,12 @@ with mlflow.start_run():
 ```
 
 A) The run stays open until `mlflow.end_run()` is called manually  
-B) The run is automatically ended and its status is set to FINISHED  
+B) The run parameters and metrics are discarded  
 C) The run is automatically ended and its status is set to FAILED  
-D) The run parameters and metrics are discarded
+D) The run is automatically ended and its status is set to FINISHED
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > When used as a context manager, `mlflow.start_run()` automatically calls `mlflow.end_run()` when the `with` block exits. If the block exits normally (no exception), the run status is set to FINISHED. If an exception is raised, the run status is set to FAILED.
 
@@ -40,12 +40,12 @@ D) The run parameters and metrics are discarded
 **Question** *(Easy)*: A data scientist wants to log three metrics at once — `accuracy`, `precision`, and `recall` — without writing three separate log calls. Which function signature is correct?
 
 A) `mlflow.log_metric({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`  
-B) `mlflow.log_metrics({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`  
+B) `mlflow.log_metric("accuracy", "precision", "recall", [0.9, 0.85, 0.88])`  
 C) `mlflow.log_metrics(accuracy=0.9, precision=0.85, recall=0.88)`  
-D) `mlflow.log_metric("accuracy", "precision", "recall", [0.9, 0.85, 0.88])`
+D) `mlflow.log_metrics({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `mlflow.log_metrics()` (plural) accepts a dictionary of metric name to numeric value. `mlflow.log_metric()` (singular) accepts a single name-value pair. Neither function accepts keyword arguments or positional lists for multiple metrics.
 
@@ -104,12 +104,12 @@ D) `mlflow.search_runs(metrics={"test_accuracy": ">0.90"})`
 **Question** *(Easy)*: A data scientist wants to save a confusion matrix image file (`confusion_matrix.png`) as part of their MLflow run. Which code is correct?
 
 A) `mlflow.log_metric("confusion_matrix", "confusion_matrix.png")`  
-B) `mlflow.log_artifact("confusion_matrix.png")`  
+B) `mlflow.save_artifact("confusion_matrix.png")`  
 C) `mlflow.log_param("confusion_matrix", "confusion_matrix.png")`  
-D) `mlflow.save_artifact("confusion_matrix.png")`
+D) `mlflow.log_artifact("confusion_matrix.png")`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `mlflow.log_artifact(local_path)` uploads a local file to the run's artifact store. Metrics are numeric values, parameters are string key-value pairs, and `save_artifact` is not a valid MLflow function.
 
@@ -120,12 +120,12 @@ D) `mlflow.save_artifact("confusion_matrix.png")`
 **Question** *(Easy)*: What is the relationship between an MLflow experiment and an MLflow run?
 
 A) An experiment is a single training attempt; a run is a collection of experiments  
-B) An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts  
+B) A run contains multiple experiments, each representing a different dataset  
 C) An experiment and a run are the same concept with different names  
-D) A run contains multiple experiments, each representing a different dataset
+D) An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > In MLflow, an **experiment** is a named container that groups related runs. A **run** represents a single execution of training code, capturing parameters, metrics, artifacts, and metadata. One experiment can contain many runs, making it easy to compare different model configurations.
 
@@ -136,12 +136,12 @@ D) A run contains multiple experiments, each representing a different dataset
 **Question** *(Medium)*: A data scientist is running a hyperparameter sweep and wants to create a parent run that tracks the sweep, with each individual trial as a child run. Which code correctly creates a child run inside an existing parent run?
 
 A) `mlflow.start_run(parent=True)`  
-B) `mlflow.start_run(nested=True)`  
+B) `mlflow.start_run(run_type="child")`  
 C) `mlflow.start_child_run()`  
-D) `mlflow.start_run(run_type="child")`
+D) `mlflow.start_run(nested=True)`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `mlflow.start_run(nested=True)` creates a child run within the currently active parent run. There is no `parent=True`, `start_child_run()`, or `run_type` parameter in the MLflow API.
 
@@ -152,12 +152,12 @@ D) `mlflow.start_run(run_type="child")`
 **Question** *(Easy)*: A data scientist generates multiple output files in a local directory called `./outputs/` and wants to log all of them as artifacts. Which function should they use?
 
 A) `mlflow.log_artifact("./outputs/")`  
-B) `mlflow.log_artifacts("./outputs/")`  
+B) `mlflow.log_model("./outputs/")`  
 C) `mlflow.log_artifact("./outputs/*")`  
-D) `mlflow.log_model("./outputs/")`
+D) `mlflow.log_artifacts("./outputs/")`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `mlflow.log_artifacts(local_dir)` (plural) uploads all files in a local directory to the artifact store. `mlflow.log_artifact(local_path)` (singular) uploads a single file. Glob patterns are not supported, and `log_model` is for ML model objects, not arbitrary files.
 
@@ -167,13 +167,13 @@ D) `mlflow.log_model("./outputs/")`
 
 **Question** *(Medium)*: A data scientist runs `mlflow.start_run()` in a Databricks notebook without ever calling `mlflow.set_experiment()`. Where is the run logged?
 
-A) To a workspace experiment that an admin must create first  
-B) To the notebook's own experiment, which Databricks associates with the notebook  
+A) To the notebook's own experiment, which Databricks associates with the notebook  
+B) To a workspace experiment that an admin must create first  
 C) To a registry experiment attached to the Unity Catalog schema  
 D) Nowhere — the call fails until an experiment is set
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > On Databricks, a notebook has a default **notebook experiment**; runs started without `set_experiment()` are logged there. **Workspace experiments** are created explicitly (UI or `mlflow.set_experiment("/path")`) and can collect runs from many notebooks or jobs.
 >
@@ -186,12 +186,12 @@ D) Nowhere — the call fails until an experiment is set
 **Question** *(Easy)*: A data scientist has run 10 experiments with different hyperparameters and wants to visually compare their metrics. Which MLflow UI feature enables this?
 
 A) The artifact browser in each individual run  
-B) The "Compare" feature on the Experiments page, which creates parallel coordinate plots and scatter plots  
+B) The run tags section, which can be filtered by metric value  
 C) The model registry page, which shows metric comparisons across versions  
-D) The run tags section, which can be filtered by metric value
+D) The "Compare" feature on the Experiments page, which creates parallel coordinate plots and scatter plots
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The MLflow Experiments page allows you to select multiple runs and click "Compare" to view parallel coordinate plots, scatter plots, and metric comparison tables. This makes it straightforward to identify which hyperparameter combinations produced the best results. The artifact browser, model registry page, and run tags do not provide side-by-side metric comparison views.
 

@@ -18,12 +18,12 @@ status: published
 **Question**: Which of the following libraries is pre-installed in the Databricks Runtime for Machine Learning but NOT in the standard Databricks Runtime?
 
 A) Apache Spark  
-B) MLflow  
+B) Delta Lake  
 C) pandas  
-D) Delta Lake
+D) MLflow
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The Databricks Runtime for ML adds a pre-installed, version-tested ML stack — MLflow, PyTorch, TensorFlow, scikit-learn, XGBoost, and more — on top of the standard Databricks Runtime. Apache Spark, pandas, and Delta Lake are already part of the standard runtime.
 
@@ -34,12 +34,12 @@ D) Delta Lake
 **Question**: A data scientist is training a scikit-learn model on a 500 MB dataset that fits entirely in memory. Which cluster type is most appropriate?
 
 A) Multi-node cluster with 4 workers  
-B) Single-node cluster  
+B) Multi-node cluster with autoscaling enabled  
 C) High-concurrency cluster  
-D) Multi-node cluster with autoscaling enabled
+D) Single-node cluster
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Single-node clusters are ideal for workloads that use libraries without native Spark support, such as scikit-learn, and for datasets that fit in memory. Using a multi-node cluster adds distributed computing overhead with no benefit for non-distributed workloads.
 
@@ -82,12 +82,12 @@ D) A JSON configuration file in DBFS
 **Question**: A platform engineer wants to prevent data science teams from launching GPU clusters without explicit approval. What is the best approach?
 
 A) Document a policy in a wiki and ask teams to follow it  
-B) Create a cluster policy that restricts node type to CPU instance types only  
+B) Restrict Unity Catalog permissions for the data science teams  
 C) Set up a budget alert that notifies the engineer when GPU spend exceeds a threshold  
-D) Restrict Unity Catalog permissions for the data science teams
+D) Create a cluster policy that restricts node type to CPU instance types only
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Cluster policies allow administrators to enforce cluster configuration constraints, including restricting the allowed instance types to non-GPU options. Policies are enforced at the platform level and cannot be bypassed by regular users.
 
@@ -114,12 +114,12 @@ D) Databricks Runtime Photon
 **Question** *(Easy)*: A team stores common data preprocessing utility functions in a notebook called `utils` in the same folder. What is the correct way to execute that notebook's code in another notebook so its functions become available?
 
 A) `import utils`  
-B) `%run ./utils`  
+B) `spark.sql("RUN NOTEBOOK utils")`  
 C) `dbutils.notebook.run("utils", 60)`  
-D) `spark.sql("RUN NOTEBOOK utils")`
+D) `%run ./utils`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The `%run` magic command executes another notebook in the context of the current notebook, making all defined functions and variables available in the current scope. `dbutils.notebook.run()` also executes a notebook but runs it in a separate context and only returns a string result, not the defined variables.
 
@@ -148,12 +148,12 @@ D) Lakeflow Jobs
 **Question** *(Easy)*: When configuring a Databricks AutoML forecasting experiment, which column is required in addition to the target variable?
 
 A) A feature importance column  
-B) A time column  
+B) A row ID column  
 C) A grouping column  
-D) A row ID column
+D) A time column
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > AutoML forecasting requires a time column that identifies the time step for each observation. The time column is mandatory because forecasting is inherently a time-series problem. A grouping column is optional (for multi-series forecasting). Feature importance and row ID columns are not required inputs.
 
@@ -182,12 +182,12 @@ D) The cluster has auto-termination set to 30 minutes
 **Question** *(Medium)*: Which of the following workloads benefits MOST from using a multi-node Spark cluster instead of a single-node cluster?
 
 A) Training a logistic regression model with scikit-learn on a 1 GB CSV file  
-B) Training a distributed gradient-boosted tree using Spark ML on a 500 GB Delta table  
+B) Visualizing model performance with matplotlib  
 C) Running a hyperparameter sweep with Optuna on a single machine  
-D) Visualizing model performance with matplotlib
+D) Training a distributed gradient-boosted tree using Spark ML on a 500 GB Delta table
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Multi-node clusters are beneficial when the workload can be parallelized across workers. Training a Spark ML model on a large Delta table leverages distributed computation. scikit-learn, Optuna, and matplotlib do not distribute work across Spark workers, so they receive no benefit from additional nodes.
 
@@ -198,12 +198,12 @@ D) Visualizing model performance with matplotlib
 **Question** *(Easy)*: After completing an AutoML experiment, a data scientist wants to retrain and customize the best model. What does AutoML provide to enable this?
 
 A) A compiled binary model file that can be fine-tuned  
-B) A generated Python notebook containing the training code for the best model  
+B) A Delta table containing the best model's feature importances  
 C) A REST API endpoint that exposes the best model's hyperparameters  
-D) A Delta table containing the best model's feature importances
+D) A generated Python notebook containing the training code for the best model
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Databricks AutoML generates an editable Python notebook for the best model. This notebook contains all the code to reproduce and customize the model, including feature engineering, training, and MLflow logging. The data scientist can clone and modify this notebook as a starting point.
 
@@ -214,12 +214,12 @@ D) A Delta table containing the best model's feature importances
 **Question** *(Easy)*: A platform administrator wants to ensure that ML training clusters are automatically terminated after 30 minutes of inactivity to reduce costs. Where is this configured?
 
 A) In the cluster policy definition  
-B) In the cluster's auto-termination setting  
+B) In the MLflow experiment configuration  
 C) In the Databricks workflow job settings  
-D) In the MLflow experiment configuration
+D) In the cluster's auto-termination setting
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Each cluster has an auto-termination setting that specifies the number of minutes of inactivity before the cluster is shut down. This is configured directly on the cluster (or enforced via a cluster policy). It is independent of workflow job settings and MLflow configuration.
 

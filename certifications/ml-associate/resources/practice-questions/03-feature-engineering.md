@@ -17,13 +17,13 @@ status: published
 
 **Question** *(Easy)*: A data scientist wants to use `VectorAssembler` to combine columns `age`, `income`, and `credit_score` into a single feature vector column called `features`. Which code is correct?
 
-A) `VectorAssembler(inputCol=["age", "income", "credit_score"], outputCol="features")`  
-B) `VectorAssembler(inputCols=["age", "income", "credit_score"], outputCol="features")`  
+A) `VectorAssembler(inputCols=["age", "income", "credit_score"], outputCol="features")`  
+B) `VectorAssembler(inputCol=["age", "income", "credit_score"], outputCol="features")`  
 C) `VectorAssembler(columns=["age", "income", "credit_score"], output="features")`  
 D) `VectorAssembler(features=["age", "income", "credit_score"], label="features")`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `VectorAssembler` requires `inputCols` (plural, a list of column names) and `outputCol` (singular, the output column name). Using `inputCol` (singular) is the common mistake — `VectorAssembler` always takes a list, so the parameter is always plural. The other options use non-existent parameter names.
 
@@ -34,12 +34,12 @@ D) `VectorAssembler(features=["age", "income", "credit_score"], label="features"
 **Question** *(Medium)*: A data scientist wants to one-hot encode a categorical column `color`. Which stage ordering in the Pipeline is correct?
 
 A) `OneHotEncoder` → `StringIndexer`  
-B) `StringIndexer` → `OneHotEncoder`  
+B) `OneHotEncoder` can be applied directly to a string column without `StringIndexer`  
 C) `VectorAssembler` → `StringIndexer` → `OneHotEncoder`  
-D) `OneHotEncoder` can be applied directly to a string column without `StringIndexer`
+D) `StringIndexer` → `OneHotEncoder`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `StringIndexer` must come before `OneHotEncoder`. `StringIndexer` converts string categories to numeric indices (e.g., "red" → 0, "blue" → 1). `OneHotEncoder` then converts those integer indices into sparse binary vectors. `OneHotEncoder` does not accept raw string columns — it requires numeric index input.
 
@@ -49,13 +49,13 @@ D) `OneHotEncoder` can be applied directly to a string column without `StringInd
 
 **Question** *(Medium)*: A data scientist creates a `Pipeline` with a `StringIndexer` and a `LogisticRegression` estimator. They call `pipeline.fit(train_df)`. What is returned?
 
-A) A trained `LogisticRegressionModel` object  
-B) A `PipelineModel` object containing fitted stages  
+A) A `PipelineModel` object containing fitted stages  
+B) A trained `LogisticRegressionModel` object  
 C) The original `Pipeline` object with updated parameters  
 D) A pandas DataFrame with predictions
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `Pipeline.fit(df)` returns a `PipelineModel`, not a single model object. The `PipelineModel` contains all the fitted stages — in this case, a fitted `StringIndexerModel` and a fitted `LogisticRegressionModel`. You then call `pipeline_model.transform(test_df)` to generate predictions.
 
@@ -116,12 +116,12 @@ D) `{"regParam": [0.01, 0.1], "maxIter": [10, 100]}` passed directly as `estimat
 **Question** *(Medium)*: A data scientist has a small dataset of 5,000 rows. They want to select hyperparameters using the most statistically reliable method. Which Spark ML class should they use?
 
 A) `TrainValidationSplit` — it is faster and more reliable on small datasets  
-B) `CrossValidator` — it performs k-fold cross-validation, providing more reliable estimates on small datasets  
+B) `Pipeline` — it automatically performs cross-validation when `numFolds` is set  
 C) `ParamGridBuilder` — it directly selects the best hyperparameter combination  
-D) `Pipeline` — it automatically performs cross-validation when `numFolds` is set
+D) `CrossValidator` — it performs k-fold cross-validation, providing more reliable estimates on small datasets
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `CrossValidator` performs k-fold cross-validation, which provides more reliable hyperparameter estimates because every data point is used for both training and validation across different folds. This is especially valuable on small datasets. `TrainValidationSplit` uses a single random split, which is faster but less reliable on small datasets. `ParamGridBuilder` and `Pipeline` do not perform cross-validation themselves.
 
@@ -131,13 +131,13 @@ D) `Pipeline` — it automatically performs cross-validation when `numFolds` is 
 
 **Question** *(Easy)*: A data scientist calls `FeatureEngineeringClient().create_table(name="ml.features.customers", df=features_df)` without specifying `primary_keys`. What happens?
 
-A) The feature table is created with an auto-generated UUID as the primary key  
-B) The call fails because `primary_keys` is a required argument  
+A) The call fails because `primary_keys` is a required argument  
+B) The feature table is created with an auto-generated UUID as the primary key  
 C) The feature table is created with no primary key, allowing duplicate rows  
 D) The feature table is created using the first column as the default primary key
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `primary_keys` is a required argument of `FeatureEngineeringClient.create_table` (it has no default). In Unity Catalog a feature table *is* a Delta table with a primary key; the key is what lookups, training-set joins, `score_batch`, and online publishing use to find rows.
 >
@@ -168,12 +168,12 @@ D) `fe.write_table(name=..., df=new_df, mode="update")`
 **Question** *(Medium)*: A model was trained on Unity Catalog feature tables and logged with `fe.log_model(...)`. A data scientist has a DataFrame containing only `customer_id` values to score. Which call retrieves the features and scores the batch?
 
 A) `fe.predict(model_uri, entities_df)`  
-B) `fe.score_batch(model_uri=model_uri, df=entities_df)`  
-C) `mlflow.pyfunc.load_model(model_uri).transform(entities_df)`  
+B) `mlflow.pyfunc.load_model(model_uri).transform(entities_df)`  
+C) `fe.score_batch(model_uri=model_uri, df=entities_df)`  
 D) `fe.read_table(name=feature_table_name).join(entities_df)`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > `FeatureEngineeringClient.score_batch(model_uri, df)` reads the feature-lookup metadata packaged by `fe.log_model`, joins the required features to the input keys, and applies the model — the same feature definitions as training, so no training-serving skew.
 >
@@ -186,12 +186,12 @@ D) `fe.read_table(name=feature_table_name).join(entities_df)`
 **Question** *(Medium)*: Why do feature tables in Unity Catalog support point-in-time lookups?
 
 A) To ensure features are computed faster using parallel processing  
-B) To prevent data leakage by retrieving feature values as they existed at the time of each training label's event  
+B) To automatically version all feature tables when new data is ingested  
 C) To allow real-time feature updates without retraining the model  
-D) To automatically version all feature tables when new data is ingested
+D) To prevent data leakage by retrieving feature values as they existed at the time of each training label's event
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Point-in-time lookups (a `timestamp_lookup_key` on the `FeatureLookup`) retrieve the feature values that were available at the exact moment each training label was generated. This prevents data leakage, which occurs when future information is used to predict a past event. For example, when predicting a customer's purchase at time T, only features available before or at time T should be used.
 

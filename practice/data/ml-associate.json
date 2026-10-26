@@ -62,11 +62,11 @@
       "question": "Which of the following libraries is pre-installed in the Databricks Runtime for Machine Learning but NOT in the standard Databricks Runtime?",
       "choices": {
         "A": "Apache Spark",
-        "B": "MLflow",
+        "B": "Delta Lake",
         "C": "pandas",
-        "D": "Delta Lake"
+        "D": "MLflow"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "The Databricks Runtime for ML adds a pre-installed, version-tested ML stack — MLflow, PyTorch, TensorFlow, scikit-learn, XGBoost, and more — on top of the standard Databricks Runtime. Apache Spark, pandas, and Delta Lake are already part of the standard runtime.",
       "explanation": ""
     },
@@ -78,11 +78,11 @@
       "question": "A data scientist is training a scikit-learn model on a 500 MB dataset that fits entirely in memory. Which cluster type is most appropriate?",
       "choices": {
         "A": "Multi-node cluster with 4 workers",
-        "B": "Single-node cluster",
+        "B": "Multi-node cluster with autoscaling enabled",
         "C": "High-concurrency cluster",
-        "D": "Multi-node cluster with autoscaling enabled"
+        "D": "Single-node cluster"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Single-node clusters are ideal for workloads that use libraries without native Spark support, such as scikit-learn, and for datasets that fit in memory. Using a multi-node cluster adds distributed computing overhead with no benefit for non-distributed workloads.",
       "explanation": ""
     },
@@ -126,11 +126,11 @@
       "question": "A platform engineer wants to prevent data science teams from launching GPU clusters without explicit approval. What is the best approach?",
       "choices": {
         "A": "Document a policy in a wiki and ask teams to follow it",
-        "B": "Create a cluster policy that restricts node type to CPU instance types only",
+        "B": "Restrict Unity Catalog permissions for the data science teams",
         "C": "Set up a budget alert that notifies the engineer when GPU spend exceeds a threshold",
-        "D": "Restrict Unity Catalog permissions for the data science teams"
+        "D": "Create a cluster policy that restricts node type to CPU instance types only"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Cluster policies allow administrators to enforce cluster configuration constraints, including restricting the allowed instance types to non-GPU options. Policies are enforced at the platform level and cannot be bypassed by regular users.",
       "explanation": ""
     },
@@ -158,11 +158,11 @@
       "question": "A team stores common data preprocessing utility functions in a notebook called `utils` in the same folder. What is the correct way to execute that notebook's code in another notebook so its functions become available?",
       "choices": {
         "A": "`import utils`",
-        "B": "`%run ./utils`",
+        "B": "`spark.sql(\"RUN NOTEBOOK utils\")`",
         "C": "`dbutils.notebook.run(\"utils\", 60)`",
-        "D": "`spark.sql(\"RUN NOTEBOOK utils\")`"
+        "D": "`%run ./utils`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "The `%run` magic command executes another notebook in the context of the current notebook, making all defined functions and variables available in the current scope. `dbutils.notebook.run()` also executes a notebook but runs it in a separate context and only returns a string result, not the defined variables.",
       "explanation": ""
     },
@@ -190,11 +190,11 @@
       "question": "When configuring a Databricks AutoML forecasting experiment, which column is required in addition to the target variable?",
       "choices": {
         "A": "A feature importance column",
-        "B": "A time column",
+        "B": "A row ID column",
         "C": "A grouping column",
-        "D": "A row ID column"
+        "D": "A time column"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "AutoML forecasting requires a time column that identifies the time step for each observation. The time column is mandatory because forecasting is inherently a time-series problem. A grouping column is optional (for multi-series forecasting). Feature importance and row ID columns are not required inputs.",
       "explanation": ""
     },
@@ -222,11 +222,11 @@
       "question": "Which of the following workloads benefits MOST from using a multi-node Spark cluster instead of a single-node cluster?",
       "choices": {
         "A": "Training a logistic regression model with scikit-learn on a 1 GB CSV file",
-        "B": "Training a distributed gradient-boosted tree using Spark ML on a 500 GB Delta table",
+        "B": "Visualizing model performance with matplotlib",
         "C": "Running a hyperparameter sweep with Optuna on a single machine",
-        "D": "Visualizing model performance with matplotlib"
+        "D": "Training a distributed gradient-boosted tree using Spark ML on a 500 GB Delta table"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Multi-node clusters are beneficial when the workload can be parallelized across workers. Training a Spark ML model on a large Delta table leverages distributed computation. scikit-learn, Optuna, and matplotlib do not distribute work across Spark workers, so they receive no benefit from additional nodes.",
       "explanation": ""
     },
@@ -238,11 +238,11 @@
       "question": "After completing an AutoML experiment, a data scientist wants to retrain and customize the best model. What does AutoML provide to enable this?",
       "choices": {
         "A": "A compiled binary model file that can be fine-tuned",
-        "B": "A generated Python notebook containing the training code for the best model",
+        "B": "A Delta table containing the best model's feature importances",
         "C": "A REST API endpoint that exposes the best model's hyperparameters",
-        "D": "A Delta table containing the best model's feature importances"
+        "D": "A generated Python notebook containing the training code for the best model"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Databricks AutoML generates an editable Python notebook for the best model. This notebook contains all the code to reproduce and customize the model, including feature engineering, training, and MLflow logging. The data scientist can clone and modify this notebook as a starting point.",
       "explanation": ""
     },
@@ -254,11 +254,11 @@
       "question": "A platform administrator wants to ensure that ML training clusters are automatically terminated after 30 minutes of inactivity to reduce costs. Where is this configured?",
       "choices": {
         "A": "In the cluster policy definition",
-        "B": "In the cluster's auto-termination setting",
+        "B": "In the MLflow experiment configuration",
         "C": "In the Databricks workflow job settings",
-        "D": "In the MLflow experiment configuration"
+        "D": "In the cluster's auto-termination setting"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Each cluster has an auto-termination setting that specifies the number of minutes of inactivity before the cluster is shut down. This is configured directly on the cluster (or enforced via a cluster policy). It is independent of workflow job settings and MLflow configuration.",
       "explanation": ""
     },
@@ -270,11 +270,11 @@
       "question": "A data scientist writes the following code. What happens when the `with` block exits normally?\n\n```python\nwith mlflow.start_run():\n    mlflow.log_param(\"alpha\", 0.5)\n    mlflow.log_metric(\"rmse\", 1.23)\n```",
       "choices": {
         "A": "The run stays open until `mlflow.end_run()` is called manually",
-        "B": "The run is automatically ended and its status is set to FINISHED",
+        "B": "The run parameters and metrics are discarded",
         "C": "The run is automatically ended and its status is set to FAILED",
-        "D": "The run parameters and metrics are discarded"
+        "D": "The run is automatically ended and its status is set to FINISHED"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "When used as a context manager, `mlflow.start_run()` automatically calls `mlflow.end_run()` when the `with` block exits. If the block exits normally (no exception), the run status is set to FINISHED. If an exception is raised, the run status is set to FAILED.",
       "explanation": ""
     },
@@ -286,11 +286,11 @@
       "question": "A data scientist wants to log three metrics at once — `accuracy`, `precision`, and `recall` — without writing three separate log calls. Which function signature is correct?",
       "choices": {
         "A": "`mlflow.log_metric({\"accuracy\": 0.9, \"precision\": 0.85, \"recall\": 0.88})`",
-        "B": "`mlflow.log_metrics({\"accuracy\": 0.9, \"precision\": 0.85, \"recall\": 0.88})`",
+        "B": "`mlflow.log_metric(\"accuracy\", \"precision\", \"recall\", [0.9, 0.85, 0.88])`",
         "C": "`mlflow.log_metrics(accuracy=0.9, precision=0.85, recall=0.88)`",
-        "D": "`mlflow.log_metric(\"accuracy\", \"precision\", \"recall\", [0.9, 0.85, 0.88])`"
+        "D": "`mlflow.log_metrics({\"accuracy\": 0.9, \"precision\": 0.85, \"recall\": 0.88})`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.log_metrics()` (plural) accepts a dictionary of metric name to numeric value. `mlflow.log_metric()` (singular) accepts a single name-value pair. Neither function accepts keyword arguments or positional lists for multiple metrics.",
       "explanation": ""
     },
@@ -350,11 +350,11 @@
       "question": "A data scientist wants to save a confusion matrix image file (`confusion_matrix.png`) as part of their MLflow run. Which code is correct?",
       "choices": {
         "A": "`mlflow.log_metric(\"confusion_matrix\", \"confusion_matrix.png\")`",
-        "B": "`mlflow.log_artifact(\"confusion_matrix.png\")`",
+        "B": "`mlflow.save_artifact(\"confusion_matrix.png\")`",
         "C": "`mlflow.log_param(\"confusion_matrix\", \"confusion_matrix.png\")`",
-        "D": "`mlflow.save_artifact(\"confusion_matrix.png\")`"
+        "D": "`mlflow.log_artifact(\"confusion_matrix.png\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.log_artifact(local_path)` uploads a local file to the run's artifact store. Metrics are numeric values, parameters are string key-value pairs, and `save_artifact` is not a valid MLflow function.",
       "explanation": ""
     },
@@ -366,11 +366,11 @@
       "question": "What is the relationship between an MLflow experiment and an MLflow run?",
       "choices": {
         "A": "An experiment is a single training attempt; a run is a collection of experiments",
-        "B": "An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts",
+        "B": "A run contains multiple experiments, each representing a different dataset",
         "C": "An experiment and a run are the same concept with different names",
-        "D": "A run contains multiple experiments, each representing a different dataset"
+        "D": "An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "In MLflow, an **experiment** is a named container that groups related runs. A **run** represents a single execution of training code, capturing parameters, metrics, artifacts, and metadata. One experiment can contain many runs, making it easy to compare different model configurations.",
       "explanation": ""
     },
@@ -382,11 +382,11 @@
       "question": "A data scientist is running a hyperparameter sweep and wants to create a parent run that tracks the sweep, with each individual trial as a child run. Which code correctly creates a child run inside an existing parent run?",
       "choices": {
         "A": "`mlflow.start_run(parent=True)`",
-        "B": "`mlflow.start_run(nested=True)`",
+        "B": "`mlflow.start_run(run_type=\"child\")`",
         "C": "`mlflow.start_child_run()`",
-        "D": "`mlflow.start_run(run_type=\"child\")`"
+        "D": "`mlflow.start_run(nested=True)`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.start_run(nested=True)` creates a child run within the currently active parent run. There is no `parent=True`, `start_child_run()`, or `run_type` parameter in the MLflow API.",
       "explanation": ""
     },
@@ -398,11 +398,11 @@
       "question": "A data scientist generates multiple output files in a local directory called `./outputs/` and wants to log all of them as artifacts. Which function should they use?",
       "choices": {
         "A": "`mlflow.log_artifact(\"./outputs/\")`",
-        "B": "`mlflow.log_artifacts(\"./outputs/\")`",
+        "B": "`mlflow.log_model(\"./outputs/\")`",
         "C": "`mlflow.log_artifact(\"./outputs/*\")`",
-        "D": "`mlflow.log_model(\"./outputs/\")`"
+        "D": "`mlflow.log_artifacts(\"./outputs/\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.log_artifacts(local_dir)` (plural) uploads all files in a local directory to the artifact store. `mlflow.log_artifact(local_path)` (singular) uploads a single file. Glob patterns are not supported, and `log_model` is for ML model objects, not arbitrary files.",
       "explanation": ""
     },
@@ -413,12 +413,12 @@
       "difficulty": "medium",
       "question": "A data scientist runs `mlflow.start_run()` in a Databricks notebook without ever calling `mlflow.set_experiment()`. Where is the run logged?",
       "choices": {
-        "A": "To a workspace experiment that an admin must create first",
-        "B": "To the notebook's own experiment, which Databricks associates with the notebook",
+        "A": "To the notebook's own experiment, which Databricks associates with the notebook",
+        "B": "To a workspace experiment that an admin must create first",
         "C": "To a registry experiment attached to the Unity Catalog schema",
         "D": "Nowhere — the call fails until an experiment is set"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "On Databricks, a notebook has a default **notebook experiment**; runs started without `set_experiment()` are logged there. **Workspace experiments** are created explicitly (UI or `mlflow.set_experiment(\"/path\")`) and can collect runs from many notebooks or jobs.",
       "explanation": "There is no \"registry experiment\" type, and the call does not fail."
     },
@@ -430,11 +430,11 @@
       "question": "A data scientist has run 10 experiments with different hyperparameters and wants to visually compare their metrics. Which MLflow UI feature enables this?",
       "choices": {
         "A": "The artifact browser in each individual run",
-        "B": "The \"Compare\" feature on the Experiments page, which creates parallel coordinate plots and scatter plots",
+        "B": "The run tags section, which can be filtered by metric value",
         "C": "The model registry page, which shows metric comparisons across versions",
-        "D": "The run tags section, which can be filtered by metric value"
+        "D": "The \"Compare\" feature on the Experiments page, which creates parallel coordinate plots and scatter plots"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "The MLflow Experiments page allows you to select multiple runs and click \"Compare\" to view parallel coordinate plots, scatter plots, and metric comparison tables. This makes it straightforward to identify which hyperparameter combinations produced the best results. The artifact browser, model registry page, and run tags do not provide side-by-side metric comparison views.",
       "explanation": ""
     },
@@ -477,12 +477,12 @@
       "difficulty": "easy",
       "question": "A data scientist wants to use `VectorAssembler` to combine columns `age`, `income`, and `credit_score` into a single feature vector column called `features`. Which code is correct?",
       "choices": {
-        "A": "`VectorAssembler(inputCol=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
-        "B": "`VectorAssembler(inputCols=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
+        "A": "`VectorAssembler(inputCols=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
+        "B": "`VectorAssembler(inputCol=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
         "C": "`VectorAssembler(columns=[\"age\", \"income\", \"credit_score\"], output=\"features\")`",
         "D": "`VectorAssembler(features=[\"age\", \"income\", \"credit_score\"], label=\"features\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`VectorAssembler` requires `inputCols` (plural, a list of column names) and `outputCol` (singular, the output column name). Using `inputCol` (singular) is the common mistake — `VectorAssembler` always takes a list, so the parameter is always plural. The other options use non-existent parameter names.",
       "explanation": ""
     },
@@ -494,11 +494,11 @@
       "question": "A data scientist wants to one-hot encode a categorical column `color`. Which stage ordering in the Pipeline is correct?",
       "choices": {
         "A": "`OneHotEncoder` → `StringIndexer`",
-        "B": "`StringIndexer` → `OneHotEncoder`",
+        "B": "`OneHotEncoder` can be applied directly to a string column without `StringIndexer`",
         "C": "`VectorAssembler` → `StringIndexer` → `OneHotEncoder`",
-        "D": "`OneHotEncoder` can be applied directly to a string column without `StringIndexer`"
+        "D": "`StringIndexer` → `OneHotEncoder`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`StringIndexer` must come before `OneHotEncoder`. `StringIndexer` converts string categories to numeric indices (e.g., \"red\" → 0, \"blue\" → 1). `OneHotEncoder` then converts those integer indices into sparse binary vectors. `OneHotEncoder` does not accept raw string columns — it requires numeric index input.",
       "explanation": ""
     },
@@ -509,12 +509,12 @@
       "difficulty": "medium",
       "question": "A data scientist creates a `Pipeline` with a `StringIndexer` and a `LogisticRegression` estimator. They call `pipeline.fit(train_df)`. What is returned?",
       "choices": {
-        "A": "A trained `LogisticRegressionModel` object",
-        "B": "A `PipelineModel` object containing fitted stages",
+        "A": "A `PipelineModel` object containing fitted stages",
+        "B": "A trained `LogisticRegressionModel` object",
         "C": "The original `Pipeline` object with updated parameters",
         "D": "A pandas DataFrame with predictions"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`Pipeline.fit(df)` returns a `PipelineModel`, not a single model object. The `PipelineModel` contains all the fitted stages — in this case, a fitted `StringIndexerModel` and a fitted `LogisticRegressionModel`. You then call `pipeline_model.transform(test_df)` to generate predictions.",
       "explanation": ""
     },
@@ -574,11 +574,11 @@
       "question": "A data scientist has a small dataset of 5,000 rows. They want to select hyperparameters using the most statistically reliable method. Which Spark ML class should they use?",
       "choices": {
         "A": "`TrainValidationSplit` — it is faster and more reliable on small datasets",
-        "B": "`CrossValidator` — it performs k-fold cross-validation, providing more reliable estimates on small datasets",
+        "B": "`Pipeline` — it automatically performs cross-validation when `numFolds` is set",
         "C": "`ParamGridBuilder` — it directly selects the best hyperparameter combination",
-        "D": "`Pipeline` — it automatically performs cross-validation when `numFolds` is set"
+        "D": "`CrossValidator` — it performs k-fold cross-validation, providing more reliable estimates on small datasets"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`CrossValidator` performs k-fold cross-validation, which provides more reliable hyperparameter estimates because every data point is used for both training and validation across different folds. This is especially valuable on small datasets. `TrainValidationSplit` uses a single random split, which is faster but less reliable on small datasets. `ParamGridBuilder` and `Pipeline` do not perform cross-validation themselves.",
       "explanation": ""
     },
@@ -589,12 +589,12 @@
       "difficulty": "easy",
       "question": "A data scientist calls `FeatureEngineeringClient().create_table(name=\"ml.features.customers\", df=features_df)` without specifying `primary_keys`. What happens?",
       "choices": {
-        "A": "The feature table is created with an auto-generated UUID as the primary key",
-        "B": "The call fails because `primary_keys` is a required argument",
+        "A": "The call fails because `primary_keys` is a required argument",
+        "B": "The feature table is created with an auto-generated UUID as the primary key",
         "C": "The feature table is created with no primary key, allowing duplicate rows",
         "D": "The feature table is created using the first column as the default primary key"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`primary_keys` is a required argument of `FeatureEngineeringClient.create_table` (it has no default). In Unity Catalog a feature table *is* a Delta table with a primary key; the key is what lookups, training-set joins, `score_batch`, and online publishing use to find rows.",
       "explanation": "No key is ever invented for you. The legacy workspace `FeatureStoreClient.create_table` also required primary keys."
     },
@@ -622,11 +622,11 @@
       "question": "A model was trained on Unity Catalog feature tables and logged with `fe.log_model(...)`. A data scientist has a DataFrame containing only `customer_id` values to score. Which call retrieves the features and scores the batch?",
       "choices": {
         "A": "`fe.predict(model_uri, entities_df)`",
-        "B": "`fe.score_batch(model_uri=model_uri, df=entities_df)`",
-        "C": "`mlflow.pyfunc.load_model(model_uri).transform(entities_df)`",
+        "B": "`mlflow.pyfunc.load_model(model_uri).transform(entities_df)`",
+        "C": "`fe.score_batch(model_uri=model_uri, df=entities_df)`",
         "D": "`fe.read_table(name=feature_table_name).join(entities_df)`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "`FeatureEngineeringClient.score_batch(model_uri, df)` reads the feature-lookup metadata packaged by `fe.log_model`, joins the required features to the input keys, and applies the model — the same feature definitions as training, so no training-serving skew.",
       "explanation": "There is no `fe.predict`, a pyfunc model has `predict` rather than `transform`, and `read_table(...).join(...)` only fetches features without scoring."
     },
@@ -638,11 +638,11 @@
       "question": "Why do feature tables in Unity Catalog support point-in-time lookups?",
       "choices": {
         "A": "To ensure features are computed faster using parallel processing",
-        "B": "To prevent data leakage by retrieving feature values as they existed at the time of each training label's event",
+        "B": "To automatically version all feature tables when new data is ingested",
         "C": "To allow real-time feature updates without retraining the model",
-        "D": "To automatically version all feature tables when new data is ingested"
+        "D": "To prevent data leakage by retrieving feature values as they existed at the time of each training label's event"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Point-in-time lookups (a `timestamp_lookup_key` on the `FeatureLookup`) retrieve the feature values that were available at the exact moment each training label was generated. This prevents data leakage, which occurs when future information is used to predict a past event. For example, when predicting a customer's purchase at time T, only features available before or at time T should be used.",
       "explanation": ""
     },
