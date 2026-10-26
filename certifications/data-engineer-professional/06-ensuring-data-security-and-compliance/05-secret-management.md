@@ -259,7 +259,103 @@ print(list(password))  # Converted to list - NOT redacted
 print(password.encode())  # Encoded - NOT redacted
 ```
 
-## Common Use Cases
+## Secrets in Job Parameters
+
+### Referencing Secrets in Jobs
+
+```python
+
+# In job configuration, reference secrets
+# Notebook parameter: {{secrets/my-scope/db-password}}
+
+# In notebook, access via widget or directly
+
+password = dbutils.widgets.get("password")
+# or
+
+password = dbutils.secrets.get("my-scope", "db-password")
+```
+
+### Job Configuration Example
+
+```json
+{
+  "name": "ETL Job",
+  "tasks": [{
+    "task_key": "extract",
+    "notebook_task": {
+      "notebook_path": "/Jobs/extract",
+      "base_parameters": {
+        "db_host": "{{secrets/db-scope/host}}",
+        "db_password": "{{secrets/db-scope/password}}"
+      }
+    }
+  }]
+}
+```
+
+## Integration with Unity Catalog
+
+### Secrets vs Unity Catalog Credentials
+
+| Aspect | Secrets | UC Storage Credentials |
+| :--- | :--- | :--- |
+| Scope | Workspace-level | Account-level (Unity Catalog) |
+| Use case | Application credentials | Cloud storage access |
+| Management | dbutils.secrets | Unity Catalog SQL |
+| Governance | Scope ACLs | UC permissions |
+
+### When to Use Each
+
+```python
+
+# Use secrets for:
+# - Database passwords
+# - API keys
+# - Custom application credentials
+
+password = dbutils.secrets.get("app-scope", "password")
+
+# Use Unity Catalog for:
+# - Cloud storage access (external locations)
+# - Governed data access
+
+# Storage access via UC (no secrets needed)
+
+df = spark.read.format("delta").load("/Volumes/catalog/schema/volume/data/")
+```
+
+## Monitoring and Auditing
+
+### Audit Secret Access
+
+```sql
+-- Query audit logs for secret access
+SELECT
+    event_time,
+    user_identity.email,
+    action_name,
+    request_params.scope AS scope,
+    request_params.key AS secret_key,
+    response.status_code
+FROM system.access.audit
+WHERE service_name = 'secrets'
+ORDER BY event_time DESC
+LIMIT 100;
+
+-- Track who accessed specific scope
+SELECT
+    user_identity.email,
+    COUNT(*) AS access_count,
+    MAX(event_time) AS last_access
+FROM system.access.audit
+WHERE service_name = 'secrets'
+    AND request_params.scope = 'prod-database'
+    AND action_name = 'getSecret'
+GROUP BY user_identity.email;
+```
+
+## Use Cases
 
 ### Database Connections
 
@@ -340,148 +436,6 @@ spark.conf.set("fs.azure.account.oauth2.client.endpoint",
     f"https://login.microsoftonline.com/{tenant_id}/oauth2/token")
 ```
 
-## Secrets in Job Parameters
-
-### Referencing Secrets in Jobs
-
-```python
-
-# In job configuration, reference secrets
-# Notebook parameter: {{secrets/my-scope/db-password}}
-
-# In notebook, access via widget or directly
-
-password = dbutils.widgets.get("password")
-# or
-
-password = dbutils.secrets.get("my-scope", "db-password")
-```
-
-### Job Configuration Example
-
-```json
-{
-  "name": "ETL Job",
-  "tasks": [{
-    "task_key": "extract",
-    "notebook_task": {
-      "notebook_path": "/Jobs/extract",
-      "base_parameters": {
-        "db_host": "{{secrets/db-scope/host}}",
-        "db_password": "{{secrets/db-scope/password}}"
-      }
-    }
-  }]
-}
-```
-
-## Best Practices
-
-### Scope Organization
-
-```text
-Recommended scope structure:
-├── prod-database           # Production database credentials
-├── dev-database            # Development database credentials
-├── azure-storage           # Azure storage keys
-├── api-keys               # External API keys
-├── service-principals     # SP credentials
-└── team-secrets           # Team-specific secrets
-```
-
-### Access Control Pattern
-
-```bash
-# Production: Limited access
-
-databricks secrets put-acl --scope prod-database --principal etl-service-principal --permission READ
-databricks secrets put-acl --scope prod-database --principal platform-admins --permission MANAGE
-
-# Development: Broader access
-
-databricks secrets put-acl --scope dev-database --principal developers --permission READ
-databricks secrets put-acl --scope dev-database --principal developers --permission WRITE
-```
-
-### Secret Rotation
-
-```python
-def rotate_database_password(scope, key, new_password):
-    """Rotate database password and update secret."""
-    # 1. Update password in target system
-    # (database, API, etc.)
-
-    # 2. Update secret in Databricks
-    # Via CLI: databricks secrets put --scope {scope} --key {key}
-
-    # 3. Verify new password works
-    # Test connection
-
-    # 4. Log rotation event
-    print(f"Rotated secret {scope}/{key}")
-```
-
-## Integration with Unity Catalog
-
-### Secrets vs Unity Catalog Credentials
-
-| Aspect | Secrets | UC Storage Credentials |
-| :--- | :--- | :--- |
-| Scope | Workspace-level | Account-level (Unity Catalog) |
-| Use case | Application credentials | Cloud storage access |
-| Management | dbutils.secrets | Unity Catalog SQL |
-| Governance | Scope ACLs | UC permissions |
-
-### When to Use Each
-
-```python
-
-# Use secrets for:
-# - Database passwords
-# - API keys
-# - Custom application credentials
-
-password = dbutils.secrets.get("app-scope", "password")
-
-# Use Unity Catalog for:
-# - Cloud storage access (external locations)
-# - Governed data access
-
-# Storage access via UC (no secrets needed)
-
-df = spark.read.format("delta").load("/Volumes/catalog/schema/volume/data/")
-```
-
-## Monitoring and Auditing
-
-### Audit Secret Access
-
-```sql
--- Query audit logs for secret access
-SELECT
-    event_time,
-    user_identity.email,
-    action_name,
-    request_params.scope AS scope,
-    request_params.key AS secret_key,
-    response.status_code
-FROM system.access.audit
-WHERE service_name = 'secrets'
-ORDER BY event_time DESC
-LIMIT 100;
-
--- Track who accessed specific scope
-SELECT
-    user_identity.email,
-    COUNT(*) AS access_count,
-    MAX(event_time) AS last_access
-FROM system.access.audit
-WHERE service_name = 'secrets'
-    AND request_params.scope = 'prod-database'
-    AND action_name = 'getSecret'
-GROUP BY user_identity.email;
-```
-
 ## Common Issues & Errors
 
 ### Secret Scope Not Found
@@ -547,6 +501,52 @@ databricks secrets put --scope my-scope --key missing-key
 1. Immediately rotate the secret
 2. Review code for transformation of secret values
 3. Ensure no `print(secret[0:n])` patterns
+
+## Best Practices
+
+### Scope Organization
+
+```text
+Recommended scope structure:
+├── prod-database           # Production database credentials
+├── dev-database            # Development database credentials
+├── azure-storage           # Azure storage keys
+├── api-keys               # External API keys
+├── service-principals     # SP credentials
+└── team-secrets           # Team-specific secrets
+```
+
+### Access Control Pattern
+
+```bash
+# Production: Limited access
+
+databricks secrets put-acl --scope prod-database --principal etl-service-principal --permission READ
+databricks secrets put-acl --scope prod-database --principal platform-admins --permission MANAGE
+
+# Development: Broader access
+
+databricks secrets put-acl --scope dev-database --principal developers --permission READ
+databricks secrets put-acl --scope dev-database --principal developers --permission WRITE
+```
+
+### Secret Rotation
+
+```python
+def rotate_database_password(scope, key, new_password):
+    """Rotate database password and update secret."""
+    # 1. Update password in target system
+    # (database, API, etc.)
+
+    # 2. Update secret in Databricks
+    # Via CLI: databricks secrets put --scope {scope} --key {key}
+
+    # 3. Verify new password works
+    # Test connection
+
+    # 4. Log rotation event
+    print(f"Rotated secret {scope}/{key}")
+```
 
 ## Exam Tips
 

@@ -710,6 +710,16 @@ print(query.status)
 
 **Fix:** If schema logic changed fundamentally, delete the schema location directory to reset inference (caution: resets evolution history).
 
+## Best Practices
+
+- Start with directory listing, switch to file notification at scale
+- Always set schemaLocation for schema tracking
+- Use `addNewColumns` for flexible sources, `rescue` for data quality monitoring
+- Add `_source_file` and `_ingestion_timestamp` metadata columns
+- Use `availableNow` for scheduled batch-style processing
+- Set appropriate rate limits to prevent OOM
+- Store schema and checkpoint in cloud storage for durability
+
 ## Exam Tips
 
 1. **Directory listing vs file notification** - Know when to use each
@@ -722,16 +732,6 @@ print(query.status)
 8. **Unity Catalog** - Use Volumes for schema location and data paths
 9. **UC permissions** - `READ FILES` / `WRITE FILES` required for external locations
 10. **mergeSchema** option required when Auto Loader adds columns to UC tables
-
-## Best Practices
-
-- Start with directory listing, switch to file notification at scale
-- Always set schemaLocation for schema tracking
-- Use `addNewColumns` for flexible sources, `rescue` for data quality monitoring
-- Add `_source_file` and `_ingestion_timestamp` metadata columns
-- Use `availableNow` for scheduled batch-style processing
-- Set appropriate rate limits to prevent OOM
-- Store schema and checkpoint in cloud storage for durability
 
 ## Key Takeaways
 

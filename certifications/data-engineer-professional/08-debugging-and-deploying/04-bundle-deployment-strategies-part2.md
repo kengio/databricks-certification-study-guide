@@ -326,6 +326,35 @@ az ad app federated-credential create \
 
 ```
 
+## Use Cases
+
+- **Failed production release**: redeploy the previous known-good commit with `databricks bundle deploy -t prod`, then `RESTORE TABLE` any data the bad release wrote
+- **Gradual feature rollout**: read a feature flag from a Unity Catalog Delta table at pipeline runtime to turn new logic on per environment without redeploying
+- **Repeatable schema changes**: track applied migration versions in a Delta table so each numbered migration script runs once in every environment
+- **Secretless deployments**: authenticate GitHub Actions to Databricks with workload identity federation (OIDC) instead of a stored PAT or client secret
+
+## Common Issues & Errors
+
+### Bundle Rollback Leaves Bad Data Behind
+
+**Scenario:** Redeploying the previous commit restored the job definitions, but tables still hold rows written by the failed release.
+**Fix:** A bundle rollback only covers resources. Roll back data separately with Delta time travel: check `DESCRIBE HISTORY`, then `RESTORE TABLE ... TO VERSION AS OF N` (or `TO TIMESTAMP AS OF`).
+
+### Schema Migration Applied Twice
+
+**Scenario:** A migration script runs again in an environment where it was already applied.
+**Fix:** Record each applied migration version in a dedicated Delta table and skip versions already recorded, so every script runs exactly once.
+
+### CI Depends on a Long-Lived Secret
+
+**Scenario:** The deployment workflow stores a PAT or client secret that can leak or expire.
+**Fix:** Use workload identity federation: grant `id-token: write` in the GitHub Actions workflow, set `DATABRICKS_AUTH_TYPE: github-oidc`, and create a federation policy for the service principal.
+
+### One Service Principal Can Deploy to Every Environment
+
+**Scenario:** A single service principal has access to dev, staging, and prod, so a mistake in a lower environment can change production.
+**Fix:** Use a separate service principal per environment with minimum permissions, and add environment protection rules (required reviewers) for production.
+
 ## Exam Tips
 
 1. **Multi-project bundles** - Use `include:` to share cluster and permission config across projects

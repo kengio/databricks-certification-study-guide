@@ -16,7 +16,7 @@ status: published
 
 This guide covers production streaming operations: back-pressure and rate limiting, monitoring and troubleshooting, state store internals, and performance tuning.
 
-> For streaming join patterns and stateful processing, see [Streaming Joins & Stateful Operations](../01-developing-code-for-data-processing/05-streaming-joins-stateful.md).
+> For streaming join patterns and stateful processing, see [Streaming Joins & Stateful Operations](../01-developing-code-for-data-processing/05-streaming-joins-stateful-part1.md).
 
 > [!abstract]
 >
@@ -406,7 +406,14 @@ spark.conf.set(
 | Key count | < 1M keys | Millions of keys |
 | Recommended for | Simple aggregations | Stream-stream joins, large dedup |
 
-## Common Issues and Errors
+## Use Cases
+
+- **Large Kafka or file backlog**: cap intake per micro-batch with `maxOffsetsPerTrigger` (Kafka) or `maxFilesPerTrigger` (files) so the stream catches up without overloading executors
+- **Production stream alerting**: register a `StreamingQueryListener` before starting the query to push progress and termination events to monitoring
+- **Large stateful aggregation**: switch to the RocksDB state store, with changelog checkpointing, when state exceeds about 100 MB or has millions of keys
+- **Incompatible query change**: start a new, versioned checkpoint location (for example `/checkpoints/query_v2/`) when changing groupBy keys, watermark delay, or output mode
+
+## Common Issues & Errors
 
 ### Stream-Stream Join State Explosion
 
@@ -452,19 +459,6 @@ spark.conf.set(
 
 **Fix:** Ensure the listener is registered before the query starts. Verify the listener class extends `StreamingQueryListener` and implements all three methods (`onQueryStarted`, `onQueryProgress`, `onQueryTerminated`).
 
-## Exam Tips
-
-1. **Stream-stream joins require watermarks on both sides** for inner joins, and on the opposite side for outer joins (left outer needs right watermark, right outer needs left watermark)
-2. **Time range conditions are essential** in stream-stream join predicates for bounding state; watermarks alone are not sufficient for state cleanup
-3. **Stream-static joins re-read the static side** each micro-batch; no watermark is needed on the static side
-4. **`mapGroupsWithState`** emits exactly one output per group; **`flatMapGroupsWithState`** emits zero or more
-5. **ProcessingTimeTimeout** is based on wall clock time; **EventTimeTimeout** is based on the watermark advancing past a set timestamp
-6. **Global watermark policy "min"** (default) is conservative and retains more state; **"max"** is aggressive and drops more late data
-7. **Events at exactly the watermark boundary are included** (not dropped); the condition is `event_time >= watermark`
-8. **`dropDuplicatesWithinWatermark`** is more memory-efficient than `dropDuplicates` because it only tracks keys within the watermark window
-9. **Checkpoint compatibility**: changing groupBy keys, watermark delay, join conditions, state schema, or output mode requires a **new checkpoint location**
-10. **Back-pressure** is indicated when `inputRowsPerSecond` exceeds `processedRowsPerSecond` or batch duration exceeds the trigger interval; use `maxOffsetsPerTrigger` (Kafka) or `maxFilesPerTrigger` (files) to control intake
-
 ## Best Practices
 
 - Always define watermarks on both sides of stream-stream joins with tight time range conditions
@@ -477,6 +471,19 @@ spark.conf.set(
 - Use `flatMapGroupsWithState` only when you need zero-or-many output semantics; prefer built-in aggregations when possible
 - Test stateful logic with small datasets and the `rate` source before connecting production sources
 - Keep checkpoint locations versioned (e.g., `/checkpoints/query_v2/`) when making incompatible query changes
+
+## Exam Tips
+
+1. **Stream-stream joins require watermarks on both sides** for inner joins, and on the opposite side for outer joins (left outer needs right watermark, right outer needs left watermark)
+2. **Time range conditions are essential** in stream-stream join predicates for bounding state; watermarks alone are not sufficient for state cleanup
+3. **Stream-static joins re-read the static side** each micro-batch; no watermark is needed on the static side
+4. **`mapGroupsWithState`** emits exactly one output per group; **`flatMapGroupsWithState`** emits zero or more
+5. **ProcessingTimeTimeout** is based on wall clock time; **EventTimeTimeout** is based on the watermark advancing past a set timestamp
+6. **Global watermark policy "min"** (default) is conservative and retains more state; **"max"** is aggressive and drops more late data
+7. **Events at exactly the watermark boundary are included** (not dropped); the condition is `event_time >= watermark`
+8. **`dropDuplicatesWithinWatermark`** is more memory-efficient than `dropDuplicates` because it only tracks keys within the watermark window
+9. **Checkpoint compatibility**: changing groupBy keys, watermark delay, join conditions, state schema, or output mode requires a **new checkpoint location**
+10. **Back-pressure** is indicated when `inputRowsPerSecond` exceeds `processedRowsPerSecond` or batch duration exceeds the trigger interval; use `maxOffsetsPerTrigger` (Kafka) or `maxFilesPerTrigger` (files) to control intake
 
 ## Key Takeaways
 

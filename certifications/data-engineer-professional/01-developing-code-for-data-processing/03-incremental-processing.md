@@ -588,6 +588,16 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 **Fix:** Scale up cluster (add cores), optimize code, or check backpressure configurations.
 
+## Best Practices
+
+- Use `availableNow` for scheduled batch-style streaming jobs
+- Store watermarks in a control table with audit columns
+- Always use checkpoints for streaming queries
+- Deduplicate before MERGE to handle source duplicates
+- Monitor lag between watermark and current time
+- Use `ignoreChanges` when updates don't need downstream propagation
+- Test incremental logic with edge cases (empty batches, duplicates)
+
 ## Exam Tips
 
 1. **High-water mark** requires a reliable timestamp/sequence column in source
@@ -599,16 +609,6 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 7. **Rate limiting** (maxFilesPerTrigger) prevents OOM on large backlogs
 8. **Predictive Optimization** can auto-schedule OPTIMIZE/VACUUM, reducing manual maintenance
 9. **Deletion Vectors** improve incremental read performance by marking deletes without rewriting files
-
-## Best Practices
-
-- Use `availableNow` for scheduled batch-style streaming jobs
-- Store watermarks in a control table with audit columns
-- Always use checkpoints for streaming queries
-- Deduplicate before MERGE to handle source duplicates
-- Monitor lag between watermark and current time
-- Use `ignoreChanges` when updates don't need downstream propagation
-- Test incremental logic with edge cases (empty batches, duplicates)
 
 ## Key Takeaways
 

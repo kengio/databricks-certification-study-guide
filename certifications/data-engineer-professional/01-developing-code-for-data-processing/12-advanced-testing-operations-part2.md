@@ -514,7 +514,14 @@ D) Skip unit tests and use Great Expectations for all validation
 >
 > Property-based testing (using Hypothesis) excels at discovering unexpected edge cases by generating random inputs and checking invariants (e.g., "deduplication never increases row count"). It complements example-based testing with chispa, which verifies exact expected outputs for specific known inputs. Together they provide thorough coverage: chispa for correctness of known cases, Hypothesis for robustness against unexpected inputs.
 
-## Common Issues / Errors
+## Use Cases
+
+- **Post-deployment validation**: run a smoke test job right after each deployment and roll back automatically (check out the previous commit and redeploy) if it fails
+- **Mono-repo with several bundles**: use `paths:` filters in GitHub Actions so only the bundle whose files changed is deployed
+- **Reviewing data pipeline changes**: use a pull request template that records the type of change, impact assessment, testing, deployment notes, and rollback plan
+- **Parallel CI runs**: give each integration test run its own `test_catalog.ci_<uuid>` schema and drop it with `CASCADE` in teardown
+
+## Common Issues & Errors
 
 ### OIDC Token Exchange Fails
 

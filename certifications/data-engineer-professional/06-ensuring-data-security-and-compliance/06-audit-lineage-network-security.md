@@ -686,6 +686,15 @@ VPC Peering Setup:
 **Scenario:** Data lineage is not showing up in the Catalog Explorer for a specific set of tables.
 **Fix:** Tables stored in the legacy `hive_metastore` do not support automatic lineage capture. Migrate the tables to Unity Catalog to enable lineage.
 
+## Exam Tips
+
+1. **Lineage scope** - captured automatically for Unity Catalog tables; `hive_metastore` tables generate no lineage
+2. **Column-level lineage** - visible in Catalog Explorer and through the lineage REST API
+3. **Impact analysis** - use downstream lineage to see which tables, views, notebooks, and dashboards a change affects
+4. **Audit retention** - `system.access.audit` keeps 365 days by default; copy records to your own Delta table for longer retention
+5. **Information schema** - results only include objects the caller can access
+6. **SCC vs Private Link** - Secure Cluster Connectivity removes public IPs from cluster nodes; Private Link keeps traffic on the cloud provider's private network
+
 ## Key Takeaways
 
 - **Automatic lineage capture**: Unity Catalog records table-to-table, column-level, and notebook/job lineage for all queries run against UC-managed tables; tables in `hive_metastore` do NOT generate lineage
@@ -703,6 +712,15 @@ VPC Peering Setup:
 - [Access Control](./01-access-control.md) - Row/column security
 - [Secret Management](./05-secret-management.md) - Audit of secret access
 - [Data Classification, Compliance & Permissions](./04-classification-compliance-permissions.md) - GDPR, tagging, advanced permissions
+
+## Official Documentation
+
+- [View data lineage using Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage)
+- [Audit log system table reference](https://docs.databricks.com/aws/en/admin/system-tables/audit-logs)
+- [Information schema](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-information-schema)
+- [Secure Cluster Connectivity](https://docs.databricks.com/security/network/classic/secure-cluster-connectivity.html)
+- [Private Link](https://docs.databricks.com/security/network/classic/privatelink.html)
+- [IP Access Lists](https://docs.databricks.com/security/network/ip-access-list.html)
 
 ---
 

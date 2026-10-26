@@ -339,6 +339,15 @@ DESCRIBE DETAIL table_name;
 
 **Fix:** **Irreversible**. Recover from deep clone or backup if available. Never do this in production.
 
+## Best Practices
+
+- Run OPTIMIZE on partitions with many small files
+- Use ZORDER on 1-4 high-cardinality filter columns
+- Schedule VACUUM to run regularly but keep 7+ days retention
+- Use shallow clones for testing, deep clones for backups
+- Enable auto optimize for streaming or frequent small writes
+- Compute statistics after large data loads for better query plans
+
 ## Exam Tips
 
 1. **VACUUM default is 168 hours (7 days)** - This is frequently tested
@@ -352,15 +361,6 @@ DESCRIBE DETAIL table_name;
 9. **Liquid Clustering** replaces ZORDER for evolving query patterns
 10. **UniForm** enables reading Delta as Iceberg/Hudi for cross-platform sharing
 11. **Predictive Optimization** auto-schedules OPTIMIZE and VACUUM
-
-## Best Practices
-
-- Run OPTIMIZE on partitions with many small files
-- Use ZORDER on 1-4 high-cardinality filter columns
-- Schedule VACUUM to run regularly but keep 7+ days retention
-- Use shallow clones for testing, deep clones for backups
-- Enable auto optimize for streaming or frequent small writes
-- Compute statistics after large data loads for better query plans
 
 ## Key Takeaways
 

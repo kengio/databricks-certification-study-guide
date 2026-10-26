@@ -186,12 +186,102 @@ Tip: Use EXISTS instead of IN for large subqueries:
   WHERE EXISTS (SELECT 1 FROM customers c WHERE c.id = o.customer_id AND c.region = 'US')
 ```
 
+## Practice Questions
+
+### Question 1
+
+An engineer runs `EXPLAIN FORMATTED` on a query joining two Delta tables and sees the following in the physical plan:
+
+```text
++- SortMergeJoin [customer_id], [id], Inner
+   :- Exchange hashpartitioning(customer_id, 200)
+   :  +- FileScan parquet [customer_id, amount]
+   +- Exchange hashpartitioning(id, 200)
+      +- FileScan parquet [id, name, region]
+```
+
+The `customers` table has only 5 MB of data. What should the engineer do to improve performance?
+
+A) Increase `spark.sql.shuffle.partitions` to 500
+B) Use a broadcast hint or increase `spark.sql.autoBroadcastJoinThreshold` to broadcast the customers table
+C) Add a `SORT BY` clause before the join
+D) Disable Adaptive Query Execution
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The customers table is only 5 MB, which is below the default broadcast threshold of 10 MB but is using SortMergeJoin with two shuffles. This suggests statistics may not be available. Using `broadcast(customers)` hint or verifying that `autoBroadcastJoinThreshold >= 5MB` would eliminate both shuffles by broadcasting the small table. AQE may also detect this at runtime, but the explicit hint guarantees it.
+
+### Question 2
+
+An engineer notices that a query plan shows `PushedFilters: []` (empty) even though the query has a `WHERE` clause filtering on a column. Which of the following is the most likely cause?
+
+A) The table does not have statistics collected
+B) The filter uses a Python UDF on the column
+C) The table is stored in Delta format
+D) The cluster does not have Photon enabled
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Python UDFs are opaque to the Catalyst optimizer and cannot be pushed down to the data source. The optimizer cannot evaluate a UDF at scan time because UDF logic runs in the Python process. Statistics (A) affect cost-based optimization but not predicate pushdown. Delta tables (C) support pushdown well. Photon (D) does not affect pushdown behavior.
+
+### Question 3
+
+In the Spark UI Stages tab, an engineer observes the following task summary for a shuffle stage:
+
+```text
+Duration:     Min=2s   Median=4s   Max=180s
+Input Size:   Min=50MB Median=65MB Max=8GB
+Spill (Disk): Min=0    Median=0    Max=6GB
+```
+
+What does this indicate and what is the best solution?
+
+A) Network latency - increase `spark.sql.broadcastTimeout`
+B) Insufficient executor memory - increase `spark.executor.memory`
+C) Data skew - enable AQE skew join optimization
+D) Too few partitions - decrease `spark.sql.shuffle.partitions`
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> The extreme variance between median and max values (duration: 4s vs 180s, input: 65MB vs 8GB) is a classic indicator of data skew. One partition has vastly more data than others, causing a straggler task that also spills 6GB to disk. Enabling AQE skew join optimization (`spark.sql.adaptive.skewJoin.enabled = true`) will automatically split the large partition into smaller sub-partitions. Option D would make the problem worse by creating fewer, larger partitions.
+
+### Question 4
+
+An engineer is running a query on a Photon-enabled cluster but the `EXPLAIN FORMATTED` output shows `HashAggregate` and `FileScan` operators without the "Photon" prefix. What is the most likely reason?
+
+A) The query result set is too large for Photon
+B) The query uses a Python UDF in one of the transformations
+C) The Delta table has not been optimized recently
+D) The cluster is using too many executors
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Python UDFs force Photon to fall back to standard Spark JVM execution. When any operator in the pipeline requires Spark JVM execution (like a Python UDF), operators adjacent to it may also fall back. The solution is to replace Python UDFs with built-in Spark SQL functions that are Photon-compatible. Table optimization (C) and cluster sizing (D) do not affect whether Photon is used.
+
+### Question 5
+
+Which EXPLAIN mode should an engineer use to see how the Catalyst optimizer has transformed the logical plan, including predicate pushdown and column pruning optimizations?
+
+A) `EXPLAIN`
+B) `EXPLAIN EXTENDED`
+C) `EXPLAIN FORMATTED`
+D) `EXPLAIN COST`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `EXPLAIN EXTENDED` shows all four plan stages: Parsed Logical Plan, Analyzed Logical Plan, Optimized Logical Plan, and Physical Plan. By comparing the Analyzed and Optimized logical plans, an engineer can see exactly which optimizer rules were applied, including predicate pushdown and column pruning. `EXPLAIN` (A) shows only the physical plan. `EXPLAIN FORMATTED` (C) shows a formatted physical plan. `EXPLAIN COST` (D) shows cost estimates but not the full optimization stages.
+
 ## Use Cases
 
 - **Cost-Based Optimizer Enhancement**: Running `ANALYZE TABLE COMPUTE STATISTICS FOR COLUMNS` on a multi-terabyte fact table so the Catalyst optimizer can exploit column histograms to accurately estimate filter selectivity and choose a broadcast join over a costly sort-merge.
 - **Predicate Pushdown Verification**: Using `EXPLAIN FORMATTED` to definitively prove that a newly added filter on a massive Delta table is successfully populating the `PushedFilters` array, drastically reducing the volume of data pulled from object storage into Spark memory.
 
-## Common Issues and Errors
+## Common Issues & Errors
 
 ### Query Plan Shows CartesianProduct
 
@@ -332,96 +422,6 @@ spark.conf.set("spark.sql.execution.useObjectHashAggregateExec", "false")
 8. **ANALYZE TABLE enables CBO** - Column statistics allow the Cost-Based Optimizer to make better decisions about join order and strategy
 9. **Photon does not accelerate UDFs** - Python/Scala UDFs always fall back to Spark JVM execution; replace with built-in functions to benefit from Photon
 10. **CustomShuffleReaderExec confirms AQE** - Seeing this operator (or AQEShuffleRead) in the plan confirms that AQE has actively modified the execution strategy
-
-## Practice Questions
-
-### Question 1
-
-An engineer runs `EXPLAIN FORMATTED` on a query joining two Delta tables and sees the following in the physical plan:
-
-```text
-+- SortMergeJoin [customer_id], [id], Inner
-   :- Exchange hashpartitioning(customer_id, 200)
-   :  +- FileScan parquet [customer_id, amount]
-   +- Exchange hashpartitioning(id, 200)
-      +- FileScan parquet [id, name, region]
-```
-
-The `customers` table has only 5 MB of data. What should the engineer do to improve performance?
-
-A) Increase `spark.sql.shuffle.partitions` to 500
-B) Use a broadcast hint or increase `spark.sql.autoBroadcastJoinThreshold` to broadcast the customers table
-C) Add a `SORT BY` clause before the join
-D) Disable Adaptive Query Execution
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> The customers table is only 5 MB, which is below the default broadcast threshold of 10 MB but is using SortMergeJoin with two shuffles. This suggests statistics may not be available. Using `broadcast(customers)` hint or verifying that `autoBroadcastJoinThreshold >= 5MB` would eliminate both shuffles by broadcasting the small table. AQE may also detect this at runtime, but the explicit hint guarantees it.
-
-### Question 2
-
-An engineer notices that a query plan shows `PushedFilters: []` (empty) even though the query has a `WHERE` clause filtering on a column. Which of the following is the most likely cause?
-
-A) The table does not have statistics collected
-B) The filter uses a Python UDF on the column
-C) The table is stored in Delta format
-D) The cluster does not have Photon enabled
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Python UDFs are opaque to the Catalyst optimizer and cannot be pushed down to the data source. The optimizer cannot evaluate a UDF at scan time because UDF logic runs in the Python process. Statistics (A) affect cost-based optimization but not predicate pushdown. Delta tables (C) support pushdown well. Photon (D) does not affect pushdown behavior.
-
-### Question 3
-
-In the Spark UI Stages tab, an engineer observes the following task summary for a shuffle stage:
-
-```text
-Duration:     Min=2s   Median=4s   Max=180s
-Input Size:   Min=50MB Median=65MB Max=8GB
-Spill (Disk): Min=0    Median=0    Max=6GB
-```
-
-What does this indicate and what is the best solution?
-
-A) Network latency - increase `spark.sql.broadcastTimeout`
-B) Insufficient executor memory - increase `spark.executor.memory`
-C) Data skew - enable AQE skew join optimization
-D) Too few partitions - decrease `spark.sql.shuffle.partitions`
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> The extreme variance between median and max values (duration: 4s vs 180s, input: 65MB vs 8GB) is a classic indicator of data skew. One partition has vastly more data than others, causing a straggler task that also spills 6GB to disk. Enabling AQE skew join optimization (`spark.sql.adaptive.skewJoin.enabled = true`) will automatically split the large partition into smaller sub-partitions. Option D would make the problem worse by creating fewer, larger partitions.
-
-### Question 4
-
-An engineer is running a query on a Photon-enabled cluster but the `EXPLAIN FORMATTED` output shows `HashAggregate` and `FileScan` operators without the "Photon" prefix. What is the most likely reason?
-
-A) The query result set is too large for Photon
-B) The query uses a Python UDF in one of the transformations
-C) The Delta table has not been optimized recently
-D) The cluster is using too many executors
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Python UDFs force Photon to fall back to standard Spark JVM execution. When any operator in the pipeline requires Spark JVM execution (like a Python UDF), operators adjacent to it may also fall back. The solution is to replace Python UDFs with built-in Spark SQL functions that are Photon-compatible. Table optimization (C) and cluster sizing (D) do not affect whether Photon is used.
-
-### Question 5
-
-Which EXPLAIN mode should an engineer use to see how the Catalyst optimizer has transformed the logical plan, including predicate pushdown and column pruning optimizations?
-
-A) `EXPLAIN`
-B) `EXPLAIN EXTENDED`
-C) `EXPLAIN FORMATTED`
-D) `EXPLAIN COST`
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `EXPLAIN EXTENDED` shows all four plan stages: Parsed Logical Plan, Analyzed Logical Plan, Optimized Logical Plan, and Physical Plan. By comparing the Analyzed and Optimized logical plans, an engineer can see exactly which optimizer rules were applied, including predicate pushdown and column pruning. `EXPLAIN` (A) shows only the physical plan. `EXPLAIN FORMATTED` (C) shows a formatted physical plan. `EXPLAIN COST` (D) shows cost estimates but not the full optimization stages.
 
 ## Key Takeaways
 
