@@ -649,4 +649,4 @@ D) An error
 
 - [Databricks SQL Reference](https://docs.databricks.com/sql/language-manual/index.html)
 - [SQL Functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions.html)
-- [Databricks SQL Best Practices](https://docs.databricks.com/sql/admin/best-practices.html)
+- [SQL warehouse sizing, scaling, and queuing](https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-behavior)

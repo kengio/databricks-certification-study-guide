@@ -707,7 +707,7 @@ deduped = df.withColumn("rn", row_number().over(window)).filter("rn = 1")
 
 - [Medallion Architecture](https://docs.databricks.com/lakehouse/medallion.html)
 - [Lakeflow Pipelines](https://docs.databricks.com/delta-live-tables/index.html)
-- [Data Engineering Best Practices](https://docs.databricks.com/lakehouse/data-engineering.html)
+- [Data Engineering Best Practices](https://docs.databricks.com/aws/en/data-engineering/)
 
 ---
 

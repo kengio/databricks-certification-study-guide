@@ -678,7 +678,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 - [Databricks Connect](https://docs.databricks.com/dev-tools/databricks-connect/index.html)
 - [CI/CD Best Practices](https://docs.databricks.com/dev-tools/ci-cd/index.html)
 - [Delta Lake Time Travel](https://docs.databricks.com/delta/history.html)
-- [Great Expectations with Databricks](https://docs.databricks.com/integrations/great-expectations.html)
+- [Great Expectations documentation (third-party)](https://docs.greatexpectations.io/docs/home/)
 - [Lakeflow Pipelines Pipeline Testing](https://docs.databricks.com/delta-live-tables/testing.html)
 
 ---

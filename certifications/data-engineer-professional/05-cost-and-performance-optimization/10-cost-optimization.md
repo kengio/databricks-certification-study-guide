@@ -599,10 +599,10 @@ dev_cluster:
 ## Official Documentation
 
 - [Cluster Pricing](https://databricks.com/pricing)
-- [Instance Pools](https://docs.databricks.com/compute/pool.html)
-- [Spot Instances](https://docs.databricks.com/compute/spot-instances.html)
+- [Instance Pools](https://docs.databricks.com/aws/en/compute/pools)
+- [Spot Instances](https://docs.databricks.com/aws/en/compute/configure)
 - [Serverless Compute](https://docs.databricks.com/serverless-compute/index.html)
-- [Cost Management](https://docs.databricks.com/administration-guide/account-settings/cost-management.html)
+- [Cost Management](https://docs.databricks.com/aws/en/admin/usage/)
 
 ---
 

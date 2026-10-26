@@ -371,8 +371,8 @@ def mock_spark():
 ## Official Documentation
 
 - [CI/CD with Databricks](https://docs.databricks.com/dev-tools/ci-cd/index.html)
-- [GitHub Actions Integration](https://docs.databricks.com/dev-tools/ci-cd/ci-cd-github.html)
-- [Azure DevOps Integration](https://docs.databricks.com/dev-tools/ci-cd/ci-cd-azure-devops.html)
+- [GitHub Actions Integration](https://docs.databricks.com/aws/en/dev-tools/ci-cd/github)
+- [Azure DevOps Integration](https://docs.databricks.com/aws/en/dev-tools/ci-cd/azure-devops)
 - [Service Principal Authentication](https://docs.databricks.com/dev-tools/authentication-oauth.html)
 
 ---
