@@ -1,38 +1,38 @@
 {
   "cert": "ml-associate-mock-2",
   "certTitle": "ML Associate — Mock Exam 2",
-  "blueprintVersion": "Mar 1, 2025",
-  "generated": "2026-05-22",
+  "blueprintVersion": "Mar 1, 2025 (Aug 2026 guide)",
+  "generated": "2026-10-26",
   "domains": [
     {
-      "id": "databricks-ml",
-      "name": "Databricks ML",
+      "id": "databricks-machine-learning",
+      "name": "Databricks Machine Learning",
       "sourceFile": "certifications/ml-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 13
+      "questionCount": 18
     },
     {
-      "id": "ml-workflows",
-      "name": "ML Workflows",
+      "id": "data-processing",
+      "name": "Data Processing",
       "sourceFile": "certifications/ml-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 12
+      "questionCount": 9
     },
     {
-      "id": "feature-engineering",
-      "name": "Feature Engineering",
+      "id": "model-development",
+      "name": "Model Development",
       "sourceFile": "certifications/ml-associate/resources/mock-exam-2/questions.md",
       "questionCount": 15
     },
     {
-      "id": "mlflow-deployment",
-      "name": "MLflow Deployment",
+      "id": "model-deployment",
+      "name": "Model Deployment",
       "sourceFile": "certifications/ml-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 4
+      "questionCount": 6
     }
   ],
   "questions": [
     {
       "id": "ml-associate-mock-2-q001",
-      "domain": "databricks-ml",
+      "domain": "databricks-machine-learning",
       "title": "Question 1",
       "difficulty": "medium",
       "question": "A data scientist is debugging a scikit-learn pipeline on a small sample of data locally in a Databricks notebook. The full training dataset is 2 TB in Delta Lake. Which cluster type should they use for the debugging phase?",
@@ -48,40 +48,8 @@
     },
     {
       "id": "ml-associate-mock-2-q002",
-      "domain": "databricks-ml",
+      "domain": "databricks-machine-learning",
       "title": "Question 2",
-      "difficulty": "medium",
-      "question": "A data scientist accidentally launches a Databricks Runtime ML cluster instead of Databricks Runtime ML GPU for a PyTorch training job that requires GPU. What symptom will they observe?",
-      "choices": {
-        "A": "The cluster fails to start because GPU drivers cannot be installed on a non-GPU runtime",
-        "B": "PyTorch runs in CPU-only mode, and GPU acceleration is unavailable",
-        "C": "The job runs normally because Databricks automatically detects and enables GPU support",
-        "D": "MLflow autolog is disabled because GPU metrics cannot be tracked"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Databricks Runtime ML GPU is needed for CUDA/GPU support. If a GPU instance type is selected with the standard ML Runtime, PyTorch will run in CPU-only mode because the CUDA libraries are not installed. The runtime selection must explicitly be ML GPU to enable GPU acceleration.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q003",
-      "domain": "databricks-ml",
-      "title": "Question 3",
-      "difficulty": "medium",
-      "question": "An ML platform team wants to allow data scientists to configure cluster memory and core counts but prevent them from changing the auto-termination setting. How should the policy be configured?",
-      "choices": {
-        "A": "Set auto-termination to a fixed value in the cluster policy",
-        "B": "Make auto-termination a hidden field in the cluster creation UI",
-        "C": "Create a separate termination policy in the billing console",
-        "D": "Set a minimum auto-termination threshold without fixing it"
-      },
-      "correctAnswer": "A",
-      "shortAnswer": "Cluster policies support `fixed` constraints that lock a parameter to a specific value, preventing users from changing it. Setting auto-termination to a fixed value in the policy ensures all clusters terminate after the specified idle time, regardless of user preferences.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q004",
-      "domain": "databricks-ml",
-      "title": "Question 4",
       "difficulty": "medium",
       "question": "A data scientist runs AutoML for classification. The resulting experiment shows 20 trial runs. They want to use the best model's code as a starting point for further tuning. Where is this code located?",
       "choices": {
@@ -95,57 +63,9 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q005",
-      "domain": "databricks-ml",
-      "title": "Question 5",
-      "difficulty": "medium",
-      "question": "A company wants to standardize all ML cluster configurations so that data scientists cannot accidentally change the Databricks Runtime version. Which cluster policy constraint type should be used?",
-      "choices": {
-        "A": "`allowlist` — provide a list of allowed runtime versions",
-        "B": "`fixed` — lock the runtime to a specific version",
-        "C": "`range` — specify minimum and maximum runtime versions",
-        "D": "`default` — set a default but allow overrides"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "The `fixed` constraint in a cluster policy locks a parameter to a specific value that cannot be changed by users. `allowlist` allows users to choose from a set of approved values. `range` sets min/max bounds. `default` sets an initial value but allows the user to override it.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q006",
-      "domain": "databricks-ml",
-      "title": "Question 6",
-      "difficulty": "easy",
-      "question": "A data scientist wants to track their ML experiment notebooks in version control and collaborate with teammates using pull requests. Which Databricks feature should they use?",
-      "choices": {
-        "A": "MLflow experiment tags",
-        "B": "Databricks Repos with Git integration",
-        "C": "Delta Lake change data feed",
-        "D": "Databricks Workflows version history"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Databricks Repos integrates with Git providers, enabling full Git workflows including branching, committing, pushing, and pull requests. This is the correct feature for source-controlling notebooks and collaborating through code reviews.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q007",
-      "domain": "databricks-ml",
-      "title": "Question 7",
-      "difficulty": "medium",
-      "question": "A data scientist is running a hyperparameter optimization loop in a notebook. After 50 iterations, they want to identify which hyperparameter combination produced the best validation AUC. What is the most efficient approach?",
-      "choices": {
-        "A": "Manually inspect each cell's output in the notebook",
-        "B": "Export all results to a CSV and sort by AUC",
-        "C": "Use `mlflow.search_runs()` to query runs by `metrics.val_auc` in descending order",
-        "D": "Review the printed output from each training loop iteration"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "`mlflow.search_runs(filter_string=\"\", order_by=[\"metrics.val_auc DESC\"])` programmatically retrieves all runs sorted by the specified metric. This is more efficient and reproducible than manual inspection or CSV exports.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q008",
-      "domain": "databricks-ml",
-      "title": "Question 8",
+      "id": "ml-associate-mock-2-q003",
+      "domain": "databricks-machine-learning",
+      "title": "Question 3",
       "difficulty": "hard",
       "question": "An organization uses AutoML for initial model prototyping. A data scientist notices that the AutoML experiment uses different feature transformations than their production preprocessing pipeline. What is the risk?",
       "choices": {
@@ -159,89 +79,9 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q009",
-      "domain": "databricks-ml",
-      "title": "Question 9",
-      "difficulty": "easy",
-      "question": "A data scientist wants to run their model training notebook as a scheduled job. Which Databricks feature orchestrates this?",
-      "choices": {
-        "A": "Databricks Repos (scheduled sync)",
-        "B": "MLflow experiment scheduler",
-        "C": "Databricks Workflows (Jobs)",
-        "D": "Delta Live Tables pipeline"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "Databricks Workflows (Jobs) allows scheduling and orchestrating notebook, Python script, and pipeline executions on a recurring schedule or trigger. MLflow does not have a scheduler, Repos is for version control, and Delta Live Tables is for data pipeline orchestration.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q010",
-      "domain": "databricks-ml",
-      "title": "Question 10",
-      "difficulty": "easy",
-      "question": "A data scientist runs `dbutils.notebook.run(\"train_model\", 600)`. What does the integer `600` represent?",
-      "choices": {
-        "A": "The maximum number of rows to process",
-        "B": "The timeout in seconds before the notebook execution is aborted",
-        "C": "The maximum number of MLflow runs to create",
-        "D": "The cluster auto-termination time in minutes"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "The second parameter to `dbutils.notebook.run()` is the timeout in seconds. If the called notebook does not complete within 600 seconds (10 minutes), the call raises a `TimeoutError`. Unlike `%run`, `dbutils.notebook.run()` returns only a string result, not shared variables.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q011",
-      "domain": "databricks-ml",
-      "title": "Question 11",
-      "difficulty": "hard",
-      "question": "Which Databricks Runtime feature reduces data shuffle costs in Spark ML training by keeping data co-located?",
-      "choices": {
-        "A": "Photon engine",
-        "B": "Delta Lake Z-ordering",
-        "C": "Adaptive Query Execution (AQE)",
-        "D": "Spark ML `cacheData` option in `CrossValidator`"
-      },
-      "correctAnswer": "D",
-      "shortAnswer": "`CrossValidator` has a `parallelism` parameter and a `seed` for reproducibility, but more importantly, `CrossValidator` (and `TrainValidationSplit`) have a `collectSubModels` option and support data caching via `cacheData=True` to avoid recomputing the dataset for each fold. AQE and Photon optimize general Spark queries but are not ML-specific caching features.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q012",
-      "domain": "databricks-ml",
-      "title": "Question 12",
-      "difficulty": "medium",
-      "question": "A team wants to share an AutoML-generated notebook with a colleague who works in a different Databricks workspace. What is the best approach?",
-      "choices": {
-        "A": "Export the notebook as a .dbc file and import it into the colleague's workspace",
-        "B": "Share the MLflow experiment URL — it is accessible across workspaces",
-        "C": "Push the notebook to a shared Git repository using Databricks Repos",
-        "D": "Copy the notebook text and paste it into an email"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "Databricks Repos with Git integration is the best approach for sharing notebooks across workspaces. Pushing to a shared Git repository allows the colleague to clone or pull the notebook in their own workspace. The `.dbc` export/import approach works but is less maintainable for ongoing collaboration.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q013",
-      "domain": "databricks-ml",
-      "title": "Question 13",
-      "difficulty": "easy",
-      "question": "A data scientist wants to create a reproducible experiment where the same random split is used every time the notebook runs. Which parameter in `train_test_split` (sklearn) or `randomSplit` (Spark) controls this?",
-      "choices": {
-        "A": "`reproducible=True`",
-        "B": "`random_state` (sklearn) or `seed` (Spark)",
-        "C": "`deterministic=True`",
-        "D": "`fixed_split=True`"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "In scikit-learn, `train_test_split(df, random_state=42)` sets the random seed. In Spark, `df.randomSplit([0.8, 0.2], seed=42)` sets the split seed. The parameter is `random_state` in sklearn and `seed` in Spark. `reproducible`, `deterministic`, and `fixed_split` are not valid parameters.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q014",
-      "domain": "ml-workflows",
-      "title": "Question 14",
+      "id": "ml-associate-mock-2-q004",
+      "domain": "databricks-machine-learning",
+      "title": "Question 4",
       "difficulty": "medium",
       "question": "A data scientist enables `mlflow.autolog()` and then manually logs `mlflow.log_metric(\"custom_f1\", 0.88)` within the same run. What is the result?",
       "choices": {
@@ -255,25 +95,9 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q015",
-      "domain": "ml-workflows",
-      "title": "Question 15",
-      "difficulty": "medium",
-      "question": "A data scientist wants to log the full training dataset as an artifact for reproducibility. The dataset is a Spark DataFrame. What is the recommended approach?",
-      "choices": {
-        "A": "`mlflow.log_artifact(train_df)` — pass the DataFrame directly",
-        "B": "Save the DataFrame to a Delta table path and log the path string as a parameter",
-        "C": "`mlflow.log_param(\"dataset_path\", delta_table_path)` or save a sample CSV and log with `log_artifact()`",
-        "D": "Log the DataFrame as a pickle file using `mlflow.log_artifact()`"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "Spark DataFrames cannot be passed directly to `log_artifact()`. The best practice is to log the data location (Delta table path or version) as a parameter with `log_param()`, ensuring reproducibility without duplicating large datasets. For small datasets, saving a sample and logging with `log_artifact()` is also acceptable.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q016",
-      "domain": "ml-workflows",
-      "title": "Question 16",
+      "id": "ml-associate-mock-2-q005",
+      "domain": "databricks-machine-learning",
+      "title": "Question 5",
       "difficulty": "hard",
       "question": "A parent run is active. A data scientist calls `mlflow.start_run(nested=True)` inside a loop to create child runs. When does the parent run end?",
       "choices": {
@@ -287,41 +111,41 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q017",
-      "domain": "ml-workflows",
-      "title": "Question 17",
+      "id": "ml-associate-mock-2-q006",
+      "domain": "databricks-machine-learning",
+      "title": "Question 6",
       "difficulty": "medium",
-      "question": "A data scientist uses the same experiment name in two different notebooks running simultaneously. Both call `mlflow.set_experiment(\"shared-experiment\")` and `mlflow.start_run()`. What happens?",
+      "question": "A data scientist wants the top 3 runs of experiment `123` ordered by `val_accuracy`, highest first. Which call is correct?",
       "choices": {
-        "A": "The second notebook's runs overwrite the first notebook's runs",
-        "B": "Both notebooks log runs to the same experiment — runs are identified by unique run IDs",
-        "C": "An error is raised because experiments cannot be used by multiple notebooks concurrently",
-        "D": "One notebook's runs are automatically moved to a new experiment"
+        "A": "`mlflow.search_runs(experiment_ids=[\"123\"], order_by=[\"metrics.val_accuracy DESC\"], max_results=3)`",
+        "B": "`mlflow.search_runs(experiment_ids=[\"123\"], sort_by=\"val_accuracy\", limit=3)`",
+        "C": "`mlflow.get_experiment(\"123\").runs[:3]`",
+        "D": "`mlflow.search_runs(experiment_ids=[\"123\"], order_by=[\"metrics.val_accuracy ASC\"], max_results=3)`"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "MLflow experiments support concurrent access. Each `mlflow.start_run()` creates a unique run with its own `run_id`. Multiple runs from different notebooks can coexist in the same experiment simultaneously. There is no locking or overwriting.",
-      "explanation": ""
+      "correctAnswer": "A",
+      "shortAnswer": "`search_runs` takes `order_by` strings such as `\"metrics.val_accuracy DESC\"` and `max_results` to limit the result.",
+      "explanation": "`sort_by` and `limit` are not parameters, an `Experiment` object has no `.runs`, and `ASC` would return the lowest accuracies."
     },
     {
-      "id": "ml-associate-mock-2-q019",
-      "domain": "ml-workflows",
-      "title": "Question 19",
+      "id": "ml-associate-mock-2-q007",
+      "domain": "databricks-machine-learning",
+      "title": "Question 7",
       "difficulty": "medium",
-      "question": "A data scientist logs a model inside a run but forgets to register it to the Model Registry. Later, they want to register it without re-running training. What should they do?",
+      "question": "A data scientist logged a model in run `r9` (artifact path `model`) but forgot to register it. How can they register it as `ml.churn.clf` in Unity Catalog without retraining?",
       "choices": {
-        "A": "Retrain the model and call `mlflow.register_model()` this time",
-        "B": "Use `mlflow.register_model(\"runs:/<run_id>/<artifact_path>\", \"model_name\")` to register the logged model",
-        "C": "Delete the run and start over with proper registration",
-        "D": "Copy the artifact file to the model registry manually using DBFS commands"
+        "A": "Retrain the model and pass `registered_model_name` this time",
+        "B": "`mlflow.register_model(\"runs:/r9/model\", \"ml.churn.clf\")`",
+        "C": "Delete the run and start over",
+        "D": "Copy the artifact files into the catalog with `dbutils.fs.cp`"
       },
       "correctAnswer": "B",
-      "shortAnswer": "`mlflow.register_model()` can be called at any time after a model has been logged to a run. As long as you know the `run_id` and `artifact_path`, you can register the model to the registry without re-running training. The run must not have been deleted.",
-      "explanation": ""
+      "shortAnswer": "`mlflow.register_model()` can be called any time after logging, using the `runs:/<run_id>/<artifact_path>` URI and a three-level Unity Catalog name.",
+      "explanation": "The run must still exist, and the model version must have a signature for Unity Catalog."
     },
     {
-      "id": "ml-associate-mock-2-q020",
-      "domain": "ml-workflows",
-      "title": "Question 20",
+      "id": "ml-associate-mock-2-q008",
+      "domain": "databricks-machine-learning",
+      "title": "Question 8",
       "difficulty": "medium",
       "question": "Which MLflow tag is automatically set to identify the notebook path where a run was started in Databricks?",
       "choices": {
@@ -335,9 +159,9 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q021",
-      "domain": "ml-workflows",
-      "title": "Question 21",
+      "id": "ml-associate-mock-2-q009",
+      "domain": "databricks-machine-learning",
+      "title": "Question 9",
       "difficulty": "medium",
       "question": "A data scientist calls `mlflow.log_metric(\"accuracy\", 0.92)` multiple times in a run without specifying a `step`. What happens?",
       "choices": {
@@ -351,41 +175,9 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q022",
-      "domain": "ml-workflows",
-      "title": "Question 22",
-      "difficulty": "medium",
-      "question": "A data scientist wants to log a Python dictionary as a JSON artifact. Which approach is correct?",
-      "choices": {
-        "A": "`mlflow.log_artifact(my_dict)` — dicts are automatically serialized",
-        "B": "Save the dict to a JSON file locally, then call `mlflow.log_artifact(\"config.json\")`",
-        "C": "`mlflow.log_param(\"config\", str(my_dict))`",
-        "D": "`mlflow.log_metric(\"config\", my_dict)`"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "`mlflow.log_artifact()` requires a local file path, not a Python object. The correct approach is to serialize the dictionary to a local file (e.g., using `json.dump()`) and then call `log_artifact()` with the file path. `log_param()` works for short strings but not for large dictionaries. `log_metric()` only accepts numeric values.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q023",
-      "domain": "ml-workflows",
-      "title": "Question 23",
-      "difficulty": "hard",
-      "question": "A data scientist wants to programmatically delete all MLflow runs in an experiment that have `val_loss > 1.0`. Which approach is correct?",
-      "choices": {
-        "A": "Use `mlflow.delete_runs()` with a filter string",
-        "B": "Use `mlflow.search_runs()` to find matching run IDs, then call `MlflowClient().delete_run(run_id)` for each",
-        "C": "Delete the entire experiment with `mlflow.delete_experiment(experiment_id)`",
-        "D": "Use `MlflowClient().archive_runs(filter_string=\"metrics.val_loss > 1.0\")`"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "There is no `mlflow.delete_runs()` bulk function or `archive_runs()` method. The correct approach is to use `mlflow.search_runs()` to retrieve matching run IDs, then iterate and call `MlflowClient().delete_run(run_id)` for each. Deleting the entire experiment would also delete all passing runs.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q024",
-      "domain": "ml-workflows",
-      "title": "Question 24",
+      "id": "ml-associate-mock-2-q010",
+      "domain": "databricks-machine-learning",
+      "title": "Question 10",
       "difficulty": "medium",
       "question": "A data scientist sets `mlflow.autolog(log_models=False)`. What is the effect?",
       "choices": {
@@ -399,153 +191,137 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q025",
-      "domain": "ml-workflows",
-      "title": "Question 25",
+      "id": "ml-associate-mock-2-q011",
+      "domain": "databricks-machine-learning",
+      "title": "Question 11",
+      "difficulty": "medium",
+      "question": "Features are computed daily into a time-series feature table. Training must use, for each label, the feature values as of the label's event time. Which capability provides this?",
+      "choices": {
+        "A": "`fe.write_table(..., mode=\"merge\")` every day",
+        "B": "A point-in-time lookup: `FeatureLookup(..., timestamp_lookup_key=\"event_ts\")`",
+        "C": "Delta time travel to the latest table version",
+        "D": "Calling `fe.score_batch()` on historical entities"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Point-in-time lookups use the label's timestamp to fetch the feature values as they existed at that moment, preventing future data leaking into training rows.",
+      "explanation": "Merging and time travel to the latest version do not align features with each label's time, and `score_batch` scores rather than building training sets."
+    },
+    {
+      "id": "ml-associate-mock-2-q012",
+      "domain": "databricks-machine-learning",
+      "title": "Question 12",
+      "difficulty": "medium",
+      "question": "A model logged with `fe.log_model` was trained on three features of `ml.features.customers`. Later two new columns are added to that feature table. How are the model's scoring calls affected?",
+      "choices": {
+        "A": "The model automatically starts using the new columns",
+        "B": "They are unaffected — the model looks up only the features recorded in its training set",
+        "C": "Scoring fails because the table schema changed",
+        "D": "The new columns are passed in but given zero weight"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`fe.log_model` stores the feature lookups used at training; `score_batch` and online lookups fetch exactly those features. New columns are used only if the model is retrained with them.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-associate-mock-2-q013",
+      "domain": "databricks-machine-learning",
+      "title": "Question 13",
+      "difficulty": "medium",
+      "question": "Why log a feature-table-trained model with `fe.log_model(...)` instead of `mlflow.sklearn.log_model(...)`?",
+      "choices": {
+        "A": "It deploys the model to a serving endpoint automatically",
+        "B": "It packages the feature lookup metadata, so `fe.score_batch` (and online lookups) can fetch the features automatically at inference",
+        "C": "It stores the model in a Delta table instead of MLflow",
+        "D": "It skips signature inference"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`FeatureEngineeringClient.log_model(model, artifact_path, flavor, training_set, ...)` records which feature tables and keys the model needs; inference then needs only the keys.",
+      "explanation": "It does not deploy anything or replace MLflow storage, and Unity Catalog still requires a signature."
+    },
+    {
+      "id": "ml-associate-mock-2-q014",
+      "domain": "databricks-machine-learning",
+      "title": "Question 14",
+      "difficulty": "medium",
+      "question": "A data scientist needs a DataFrame of feature values for a list of `customer_id`s to inspect before scoring, without running a model. Which call fits?",
+      "choices": {
+        "A": "`fe.score_batch(model_uri, ids_df)`",
+        "B": "`fe.create_training_set(df=ids_df, feature_lookups=lookups, label=None).load_df()`",
+        "C": "`fe.publish_table(...)`",
+        "D": "`fe.create_table(name, primary_keys=[\"customer_id\"])`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`create_training_set` joins the requested features onto the key DataFrame; `label=None` builds a feature set without a target column, and `load_df()` returns it.",
+      "explanation": "`score_batch` runs inference, `publish_table` copies to an online store, and `create_table` creates a new table."
+    },
+    {
+      "id": "ml-associate-mock-2-q015",
+      "domain": "databricks-machine-learning",
+      "title": "Question 15",
       "difficulty": "hard",
-      "question": "A data scientist uses `mlflow.autolog(disable=True)` at the top of their notebook. Then they call `mlflow.sklearn.autolog()` for a specific sklearn model. What happens?",
+      "question": "Version 5 of `ml.ads.ctr_model` should replace version 4 in production. Consumers load `@champion`, and the team also wants to keep a pointer to the previous model for quick rollback. Which sequence is correct?",
       "choices": {
-        "A": "All autolog functionality remains disabled because the global disable takes precedence",
-        "B": "Global autolog is disabled, but explicitly calling `mlflow.sklearn.autolog()` re-enables sklearn-specific autolog",
-        "C": "An error is raised because autolog cannot be partially enabled",
-        "D": "The global `disable=True` is overridden by the sklearn-specific call for all frameworks"
+        "A": "`transition_model_version_stage(version=5, stage=\"Production\", archive_existing_versions=True)`",
+        "B": "`set_registered_model_alias(name, \"previous\", 4)` then `set_registered_model_alias(name, \"champion\", 5)`",
+        "C": "`delete_model_version(name, 4)` then `set_registered_model_alias(name, \"champion\", 5)`",
+        "D": "`set_model_version_tag(name, \"5\", \"stage\", \"Production\")`"
       },
       "correctAnswer": "B",
-      "shortAnswer": "`mlflow.autolog(disable=True)` disables the global autolog. However, calling a framework-specific autolog function like `mlflow.sklearn.autolog()` explicitly re-enables autolog for that specific framework only. This allows fine-grained control over which integrations are active.",
-      "explanation": ""
+      "shortAnswer": "Aliases are named pointers you control: keep `previous` on version 4 for rollback, then move `champion` to version 5. Rolling back is just moving `champion` back.",
+      "explanation": "Stages (and `archive_existing_versions`) are not supported in Unity Catalog, deleting version 4 removes the rollback target, and a tag does not change what consumers load."
     },
     {
-      "id": "ml-associate-mock-2-q026",
-      "domain": "ml-workflows",
-      "title": "Question 26",
+      "id": "ml-associate-mock-2-q016",
+      "domain": "databricks-machine-learning",
+      "title": "Question 16",
       "difficulty": "medium",
-      "question": "A data scientist has trained a model and wants to log it under a specific artifact subdirectory called `models/classifier` within the run. Which call is correct?",
+      "question": "A data scientist registers the same logged model `runs:/abc123/model` under two Unity Catalog names: `ml.team_a.model` and `ml.team_b.model`. What happens?",
       "choices": {
-        "A": "`mlflow.sklearn.log_model(model, artifact_path=\"models/classifier\")`",
-        "B": "`mlflow.sklearn.log_model(model, artifact_dir=\"models/classifier\")`",
-        "C": "`mlflow.log_artifact(model, \"models/classifier\")`",
-        "D": "`mlflow.sklearn.log_model(model, path=\"models/classifier\")`"
-      },
-      "correctAnswer": "A",
-      "shortAnswer": "The `artifact_path` parameter in `log_model()` specifies the subdirectory within the run's artifact store where the model is saved. The full URI to reference this model would be `runs:/<run_id>/models/classifier`. `artifact_dir` and `path` are not valid parameter names for `log_model()`.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q027",
-      "domain": "feature-engineering",
-      "title": "Question 27",
-      "difficulty": "hard",
-      "question": "A data scientist creates a `Pipeline` with a `VectorAssembler` and `LogisticRegression`. The `VectorAssembler` uses `inputCols=[\"age\", \"income\"]` and `outputCol=\"features\"`. `LogisticRegression` uses `featuresCol=\"features\"`. What happens if the test DataFrame is missing the `income` column?",
-      "choices": {
-        "A": "The pipeline silently ignores the missing column and uses only `age`",
-        "B": "An exception is raised when `transform()` is called on the missing column",
-        "C": "The `VectorAssembler` fills missing values with 0 by default",
-        "D": "The pipeline adds a null `income` column automatically"
+        "A": "An error — a run's model can only be registered once",
+        "B": "Both succeed, each creating version 1 of its own registered model",
+        "C": "Only the first succeeds",
+        "D": "The second call adds version 2 to `ml.team_a.model`"
       },
       "correctAnswer": "B",
-      "shortAnswer": "`VectorAssembler` raises an exception if any column specified in `inputCols` is missing from the input DataFrame at transform time. There is no automatic null-filling or column creation behavior unless `handleInvalid=\"keep\"` is set, which handles null values in existing columns but not entirely absent columns.",
+      "shortAnswer": "Registration creates a version under the target name; the same source can back versions in different registered models, each starting at version 1.",
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q028",
-      "domain": "feature-engineering",
-      "title": "Question 28",
+      "id": "ml-associate-mock-2-q017",
+      "domain": "databricks-machine-learning",
+      "title": "Question 17",
+      "difficulty": "easy",
+      "question": "Version 6 of `ml.churn.clf` should carry `validation_status=approved`. Which call adds that tag to the version?",
+      "choices": {
+        "A": "`client.set_registered_model_alias(\"ml.churn.clf\", \"approved\", 6)`",
+        "B": "`client.set_model_version_tag(\"ml.churn.clf\", \"6\", \"validation_status\", \"approved\")`",
+        "C": "`client.set_registered_model_tag(\"ml.churn.clf\", \"validation_status\", \"approved\")`",
+        "D": "`client.update_model_version(\"ml.churn.clf\", 6, tag=\"approved\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`set_model_version_tag(name, version, key, value)` tags one version; `delete_model_version_tag(name, version, key)` removes it.",
+      "explanation": "A model-level tag applies to the registered model, an alias is a pointer rather than a tag, and `update_model_version` changes the description."
+    },
+    {
+      "id": "ml-associate-mock-2-q018",
+      "domain": "databricks-machine-learning",
+      "title": "Question 18",
       "difficulty": "medium",
-      "question": "A data scientist wants to one-hot encode two categorical columns `city` and `category`. They use two `StringIndexer` stages and two `OneHotEncoder` stages. Which pipeline ordering is correct?",
+      "question": "Why might an organisation keep feature tables in Unity Catalog rather than in a legacy workspace feature store?",
       "choices": {
-        "A": "`OHE(city)` → `OHE(category)` → `SI(city)` → `SI(category)`",
-        "B": "`SI(city)` → `SI(category)` → `OHE(city)` → `OHE(category)`",
-        "C": "`SI(city)` → `OHE(city)` → `SI(category)` → `OHE(category)`",
-        "D": "All four stages can be in any order since they operate on different columns"
+        "A": "Unity Catalog feature tables don't need primary keys",
+        "B": "Feature tables registered in Unity Catalog can be discovered and reused from any workspace on the metastore, with centralised governance and lineage",
+        "C": "Unity Catalog feature tables are refreshed automatically",
+        "D": "Workspace feature stores support online serving but Unity Catalog does not"
       },
       "correctAnswer": "B",
-      "shortAnswer": "While options B and C both work functionally (each `StringIndexer` must precede its corresponding `OneHotEncoder`), the typical convention is to group all `StringIndexer` stages first, then all `OneHotEncoder` stages. However, B and C are both logically correct. The key constraint is that `SI(city)` must precede `OHE(city)` and `SI(category)` must precede `OHE(category)`.",
-      "explanation": ""
+      "shortAnswer": "Unity Catalog is account-level, giving cross-workspace sharing and discovery, UC access control, and lineage to models.",
+      "explanation": "Primary keys are required, refresh is your pipeline's job, and UC feature tables publish to online stores."
     },
     {
-      "id": "ml-associate-mock-2-q029",
-      "domain": "feature-engineering",
-      "title": "Question 29",
-      "difficulty": "hard",
-      "question": "A `CrossValidator` with `numFolds=5` is used to tune a model with a `ParamGrid` containing 6 hyperparameter combinations. How many total model training runs occur?",
-      "choices": {
-        "A": "6 (one per hyperparameter combination)",
-        "B": "5 (one per fold)",
-        "C": "30 (6 combinations × 5 folds)",
-        "D": "11 (6 combinations + 5 folds)"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "`CrossValidator` trains a model for every combination of hyperparameters and every fold. With 6 parameter combinations and 5 folds, the total is 6 × 5 = 30 training runs. After selecting the best combination, a final model is optionally retrained on the full dataset.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q030",
-      "domain": "feature-engineering",
-      "title": "Question 30",
-      "difficulty": "medium",
-      "question": "A data scientist fits a `Pipeline` on training data and saves it with `pipeline_model.save(\"/dbfs/models/pipeline\")`. Later, they load it with `PipelineModel.load(\"/dbfs/models/pipeline\")`. Which statement is true?",
-      "choices": {
-        "A": "The loaded model needs to be re-fitted on new data before it can transform",
-        "B": "The loaded model contains all fitted stage parameters and can transform new data immediately",
-        "C": "Only the final estimator stage is saved; preprocessing stages must be re-fitted",
-        "D": "The `save()` method does not persist the fitted parameters, only the stage configuration"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "`PipelineModel.save()` persists all fitted stage parameters (e.g., `StringIndexerModel`'s index mapping, `StandardScalerModel`'s mean and variance, `LogisticRegressionModel`'s coefficients). When loaded, the model is fully ready to call `transform()` without any re-fitting.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q031",
-      "domain": "feature-engineering",
-      "title": "Question 31",
-      "difficulty": "medium",
-      "question": "A data scientist wants to add `parallelism=4` to a `CrossValidator`. What does this parameter do?",
-      "choices": {
-        "A": "It splits the training data into 4 parallel streams",
-        "B": "It trains up to 4 hyperparameter-fold combinations simultaneously",
-        "C": "It uses 4 threads to read data from Delta Lake",
-        "D": "It limits the CrossValidator to evaluating only 4 hyperparameter combinations"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "The `parallelism` parameter in `CrossValidator` (and `TrainValidationSplit`) specifies the degree of parallelism for fitting and evaluating models. Setting `parallelism=4` allows up to 4 (hyperparameter combination, fold) pairs to be trained simultaneously, which can significantly reduce wall-clock time for large parameter grids.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q032",
-      "domain": "feature-engineering",
-      "title": "Question 32",
-      "difficulty": "hard",
-      "question": "A data scientist creates a Feature Store table called `customer_features` with `primary_keys=[\"customer_id\"]`. They then try to write a DataFrame that has duplicate `customer_id` values using `mode=\"merge\"`. What happens?",
-      "choices": {
-        "A": "The duplicate rows are silently deduplicated, keeping the last row",
-        "B": "An error is raised because duplicate primary keys violate the Feature Store constraint",
-        "C": "All duplicate rows are written, resulting in duplicate primary key entries",
-        "D": "Only the first occurrence of each duplicate `customer_id` is written"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "The Databricks Feature Store enforces primary key uniqueness. Writing a DataFrame with duplicate primary key values in `mode=\"merge\"` raises an error. You must deduplicate the DataFrame before writing to ensure each primary key appears exactly once.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q033",
-      "domain": "feature-engineering",
-      "title": "Question 33",
-      "difficulty": "medium",
-      "question": "A data scientist is building a Feature Store pipeline where features are computed daily. They want to ensure that model training uses feature values from the day before each label's event. Which Feature Store capability should they use?",
-      "choices": {
-        "A": "`write_table(mode=\"overwrite\")` to replace features daily",
-        "B": "Point-in-time lookups with a `timestamp_lookup_key` in `FeatureLookup`",
-        "C": "Delta Lake time travel to query feature tables at a specific version",
-        "D": "Scheduled `score_batch()` runs that re-score all historical entities"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Point-in-time lookups use a `timestamp_lookup_key` in `FeatureLookup` to retrieve feature values as they existed at a specific timestamp for each training example. This prevents data leakage by ensuring that only feature values available before each label's event time are used in training.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q034",
-      "domain": "feature-engineering",
-      "title": "Question 34",
+      "id": "ml-associate-mock-2-q019",
+      "domain": "data-processing",
+      "title": "Question 19",
       "difficulty": "medium",
       "question": "A data scientist accidentally passes a string column directly to `OneHotEncoder` (skipping `StringIndexer`). What happens?",
       "choices": {
@@ -559,57 +335,9 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q035",
-      "domain": "feature-engineering",
-      "title": "Question 35",
-      "difficulty": "medium",
-      "question": "A data scientist uses the Feature Store to train a model. Later, a new version of the feature table is available with additional columns. How does this affect the deployed model?",
-      "choices": {
-        "A": "The deployed model automatically uses the new feature columns because it queries the live feature table",
-        "B": "The deployed model is unaffected — it only uses the features specified in its `FeatureLookup` configuration at training time",
-        "C": "The deployed model fails with an error because the schema has changed",
-        "D": "The deployed model uses the new columns but ignores their values"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Models deployed with Feature Store integration use the `FeatureLookup` configuration captured at training time. New columns added to the feature table are ignored by existing models unless the model is retrained with an updated `FeatureLookup` that includes the new features. Schema additions do not break existing models.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q036",
-      "domain": "feature-engineering",
-      "title": "Question 36",
-      "difficulty": "easy",
-      "question": "Which Spark ML evaluator class should be used with `CrossValidator` for a binary classification problem?",
-      "choices": {
-        "A": "`RegressionEvaluator`",
-        "B": "`MulticlassClassificationEvaluator`",
-        "C": "`BinaryClassificationEvaluator`",
-        "D": "`ClusteringEvaluator`"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "`BinaryClassificationEvaluator` is used for binary classification problems. It supports metrics such as `areaUnderROC` (AUC) and `areaUnderPR`. `MulticlassClassificationEvaluator` supports more than two classes with metrics like accuracy and F1. `RegressionEvaluator` is for regression tasks.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q037",
-      "domain": "feature-engineering",
-      "title": "Question 37",
-      "difficulty": "medium",
-      "question": "A data scientist trains a model with Feature Store features. They call `FeatureStoreClient.log_model()` instead of `mlflow.sklearn.log_model()`. What is the key advantage?",
-      "choices": {
-        "A": "The model is automatically deployed to a serving endpoint",
-        "B": "The model artifact includes feature lookup metadata, enabling `score_batch()` to automatically retrieve features during inference",
-        "C": "The model is stored in Delta Lake instead of the MLflow artifact store",
-        "D": "The model skips cross-validation and uses the full dataset for training"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "When you log a model with `FeatureStoreClient.log_model()`, the feature lookup metadata (table names, primary keys, feature names) is stored alongside the model artifact. This metadata is later used by `FeatureStoreClient.score_batch()` to automatically retrieve the correct features from the Feature Store during batch inference, preventing train-serve skew.",
-      "explanation": ""
-    },
-    {
-      "id": "ml-associate-mock-2-q038",
-      "domain": "feature-engineering",
-      "title": "Question 38",
+      "id": "ml-associate-mock-2-q020",
+      "domain": "data-processing",
+      "title": "Question 20",
       "difficulty": "medium",
       "question": "A data scientist applies `Normalizer(p=2.0)` to a feature vector. What transformation is applied?",
       "choices": {
@@ -623,9 +351,217 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q039",
-      "domain": "feature-engineering",
-      "title": "Question 39",
+      "id": "ml-associate-mock-2-q021",
+      "domain": "data-processing",
+      "title": "Question 21",
+      "difficulty": "easy",
+      "question": "Which Databricks utility renders summary statistics for a Spark or pandas DataFrame in a notebook?",
+      "choices": {
+        "A": "`dbutils.data.summarize(df)`",
+        "B": "`dbutils.notebook.summarize(df)`",
+        "C": "`dbutils.fs.describe(df)`",
+        "D": "`dbutils.widgets.summary(df)`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`dbutils.data.summarize(df)` calculates and displays summary statistics; `precise=True` trades speed for precision.",
+      "explanation": "The other utilities handle notebooks, files, and widgets."
+    },
+    {
+      "id": "ml-associate-mock-2-q022",
+      "domain": "data-processing",
+      "title": "Question 22",
+      "difficulty": "medium",
+      "question": "Which approach removes rows whose `amount` lies more than 3 standard deviations from the mean?",
+      "choices": {
+        "A": "Compute `mu` and `sigma` with `F.mean`/`F.stddev`, then `df.filter(F.abs(F.col(\"amount\") - mu) <= 3 * sigma)`",
+        "B": "`df.filter(F.col(\"amount\") <= 3)`",
+        "C": "`df.dropna(subset=[\"amount\"])`",
+        "D": "`df.orderBy(\"amount\").limit(int(df.count() * 0.97))`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The z-score rule keeps |x − μ| ≤ 3σ.",
+      "explanation": "Filtering a raw value of 3, dropping nulls, or trimming the top 3 % are different operations."
+    },
+    {
+      "id": "ml-associate-mock-2-q023",
+      "domain": "data-processing",
+      "title": "Question 23",
+      "difficulty": "medium",
+      "question": "What is the most appropriate way to examine the relationship between two continuous features, `age` and `annual_spend`?",
+      "choices": {
+        "A": "A contingency table with a chi-square test",
+        "B": "A scatter plot with a correlation coefficient",
+        "C": "A bar chart of distinct ages",
+        "D": "One-hot encoding both columns"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Scatter plots and Pearson/Spearman correlation describe two continuous features; Spearman is preferable for monotonic or skewed relationships.",
+      "explanation": "Contingency tables and chi-square tests are for categorical pairs."
+    },
+    {
+      "id": "ml-associate-mock-2-q024",
+      "domain": "data-processing",
+      "title": "Question 24",
+      "difficulty": "medium",
+      "question": "A data scientist must impute missing `delivery_days` (a numeric feature that is roughly symmetric, with no strong outliers). Which strategy is reasonable?",
+      "choices": {
+        "A": "Mean",
+        "B": "Mode of a string column",
+        "C": "Always zero",
+        "D": "Drop the column"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "For symmetric continuous data without strong outliers, the mean is a reasonable estimate (median for skewed data, mode for categorical).",
+      "explanation": "Zero-filling invents values, and dropping a mostly complete column throws away signal."
+    },
+    {
+      "id": "ml-associate-mock-2-q025",
+      "domain": "data-processing",
+      "title": "Question 25",
+      "difficulty": "medium",
+      "question": "Which Spark code imputes missing numeric `age` with its median, learned from the training data?",
+      "choices": {
+        "A": "`Imputer(inputCols=[\"age\"], outputCols=[\"age_imp\"], strategy=\"median\").fit(train_df)`",
+        "B": "`train_df.fillna(\"median\")`",
+        "C": "`Imputer(strategy=\"median\").transform(train_df)` with no fit",
+        "D": "`train_df.na.drop(subset=[\"age\"])`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`Imputer` is an Estimator: `fit` learns the median on training data, and the resulting `ImputerModel` transforms train, validation, and test data.",
+      "explanation": "`fillna(\"median\")` fills the literal string, an unfitted `Imputer` cannot transform, and dropping rows is not imputation."
+    },
+    {
+      "id": "ml-associate-mock-2-q026",
+      "domain": "data-processing",
+      "title": "Question 26",
+      "difficulty": "medium",
+      "question": "Which feature is a poor candidate for one-hot encoding?",
+      "choices": {
+        "A": "`payment_type` with 4 nominal levels for a logistic regression",
+        "B": "`customer_id` with 3 million distinct values",
+        "C": "`day_of_week` for a linear model",
+        "D": "`region` with 6 levels for k-nearest neighbours"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Millions of levels would create millions of sparse columns; identifiers like this are usually dropped or replaced by aggregate or encoded features.",
+      "explanation": "Low-cardinality nominal features for linear or distance-based models are classic one-hot candidates."
+    },
+    {
+      "id": "ml-associate-mock-2-q027",
+      "domain": "data-processing",
+      "title": "Question 27",
+      "difficulty": "medium",
+      "question": "When is a log transformation of a feature most appropriate?",
+      "choices": {
+        "A": "The feature is already normally distributed around zero",
+        "B": "The feature is positive, right-skewed, and spans several orders of magnitude",
+        "C": "The feature contains many negative values",
+        "D": "The feature is a high-cardinality categorical column"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "A log compresses large values and makes right-skewed positive data more symmetric.",
+      "explanation": "It adds nothing for normal data, is undefined for zero or negative values (use `log1p` for zeros), and is not a cardinality-reduction technique."
+    },
+    {
+      "id": "ml-associate-mock-2-q028",
+      "domain": "model-development",
+      "title": "Question 28",
+      "difficulty": "easy",
+      "question": "A data scientist wants to create a reproducible experiment where the same random split is used every time the notebook runs. Which parameter in `train_test_split` (sklearn) or `randomSplit` (Spark) controls this?",
+      "choices": {
+        "A": "`reproducible=True`",
+        "B": "`random_state` (sklearn) or `seed` (Spark)",
+        "C": "`deterministic=True`",
+        "D": "`fixed_split=True`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "In scikit-learn, `train_test_split(df, random_state=42)` sets the random seed. In Spark, `df.randomSplit([0.8, 0.2], seed=42)` sets the split seed. The parameter is `random_state` in sklearn and `seed` in Spark. `reproducible`, `deterministic`, and `fixed_split` are not valid parameters.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-associate-mock-2-q029",
+      "domain": "model-development",
+      "title": "Question 29",
+      "difficulty": "hard",
+      "question": "A data scientist creates a `Pipeline` with a `VectorAssembler` and `LogisticRegression`. The `VectorAssembler` uses `inputCols=[\"age\", \"income\"]` and `outputCol=\"features\"`. `LogisticRegression` uses `featuresCol=\"features\"`. What happens if the test DataFrame is missing the `income` column?",
+      "choices": {
+        "A": "The pipeline silently ignores the missing column and uses only `age`",
+        "B": "An exception is raised when `transform()` is called on the missing column",
+        "C": "The `VectorAssembler` fills missing values with 0 by default",
+        "D": "The pipeline adds a null `income` column automatically"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`VectorAssembler` raises an exception if any column specified in `inputCols` is missing from the input DataFrame at transform time. There is no automatic null-filling or column creation behavior unless `handleInvalid=\"keep\"` is set, which handles null values in existing columns but not entirely absent columns.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-associate-mock-2-q030",
+      "domain": "model-development",
+      "title": "Question 30",
+      "difficulty": "medium",
+      "question": "A pipeline must one-hot encode `city` and `category`. Which stage ordering is **invalid**?",
+      "choices": {
+        "A": "`SI(city)` → `SI(category)` → `OHE(city_idx, category_idx)` → `VectorAssembler`",
+        "B": "`SI(city)` → `OHE(city_idx)` → `SI(category)` → `OHE(category_idx)` → `VectorAssembler`",
+        "C": "`OHE(city)` → `SI(city)` → `OHE(category)` → `SI(category)` → `VectorAssembler`",
+        "D": "`SI(city, category)` (multi-column) → `OHE(city_idx, category_idx)` → `VectorAssembler`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Each `OneHotEncoder` needs the numeric index produced by its `StringIndexer`, so every indexer must come before the encoder that uses its output.",
+      "explanation": "Grouping all indexers first, interleaving index/encode pairs, or using multi-column stages are all valid."
+    },
+    {
+      "id": "ml-associate-mock-2-q031",
+      "domain": "model-development",
+      "title": "Question 31",
+      "difficulty": "hard",
+      "question": "A `CrossValidator` with `numFolds=5` is used to tune a model with a `ParamGrid` containing 6 hyperparameter combinations. How many total model training runs occur?",
+      "choices": {
+        "A": "6 (one per hyperparameter combination)",
+        "B": "5 (one per fold)",
+        "C": "30 (6 combinations × 5 folds)",
+        "D": "11 (6 combinations + 5 folds)"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`CrossValidator` trains a model for every combination of hyperparameters and every fold. With 6 parameter combinations and 5 folds, the total is 6 × 5 = 30 training runs. After selecting the best combination, a final model is optionally retrained on the full dataset.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-associate-mock-2-q032",
+      "domain": "model-development",
+      "title": "Question 32",
+      "difficulty": "medium",
+      "question": "A data scientist fits a `Pipeline` on training data and saves it with `pipeline_model.save(\"/Volumes/ml/churn/models/pipeline\")`. Later, they load it with `PipelineModel.load(\"/Volumes/ml/churn/models/pipeline\")`. Which statement is true?",
+      "choices": {
+        "A": "The loaded model needs to be re-fitted on new data before it can transform",
+        "B": "The loaded model contains all fitted stage parameters and can transform new data immediately",
+        "C": "Only the final estimator stage is saved; preprocessing stages must be re-fitted",
+        "D": "The `save()` method does not persist the fitted parameters, only the stage configuration"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`PipelineModel.save()` persists all fitted stage parameters (e.g., `StringIndexerModel`'s index mapping, `StandardScalerModel`'s mean and variance, `LogisticRegressionModel`'s coefficients). When loaded, the model is fully ready to call `transform()` without any re-fitting.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-associate-mock-2-q033",
+      "domain": "model-development",
+      "title": "Question 33",
+      "difficulty": "easy",
+      "question": "Which Spark ML evaluator class should be used with `CrossValidator` for a binary classification problem?",
+      "choices": {
+        "A": "`RegressionEvaluator`",
+        "B": "`MulticlassClassificationEvaluator`",
+        "C": "`BinaryClassificationEvaluator`",
+        "D": "`ClusteringEvaluator`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`BinaryClassificationEvaluator` is used for binary classification problems. It supports metrics such as `areaUnderROC` (AUC) and `areaUnderPR`. `MulticlassClassificationEvaluator` supports more than two classes with metrics like accuracy and F1. `RegressionEvaluator` is for regression tasks.",
+      "explanation": ""
+    },
+    {
+      "id": "ml-associate-mock-2-q034",
+      "domain": "model-development",
+      "title": "Question 34",
       "difficulty": "medium",
       "question": "A data scientist's `CrossValidator` is running slowly because the parameter grid has 100 combinations and 5 folds (500 total training runs). Which `CrossValidator` parameter reduces wall-clock time by training multiple combinations simultaneously?",
       "choices": {
@@ -639,9 +575,9 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q040",
-      "domain": "feature-engineering",
-      "title": "Question 40",
+      "id": "ml-associate-mock-2-q035",
+      "domain": "model-development",
+      "title": "Question 35",
       "difficulty": "hard",
       "question": "A data scientist uses `Pipeline` with stages `[indexer, encoder, assembler, classifier]`. During `pipeline.fit(train_df)`, which stages call `.fit()` vs `.transform()`?",
       "choices": {
@@ -655,25 +591,121 @@
       "explanation": ""
     },
     {
+      "id": "ml-associate-mock-2-q036",
+      "domain": "model-development",
+      "title": "Question 36",
+      "difficulty": "easy",
+      "question": "Which Hyperopt setting performs random search instead of Bayesian search?",
+      "choices": {
+        "A": "`algo=tpe.suggest`",
+        "B": "`algo=rand.suggest`",
+        "C": "`trials=SparkTrials()`",
+        "D": "`max_evals=1`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`rand.suggest` samples hyperparameters at random; `tpe.suggest` is the Bayesian (TPE) algorithm.",
+      "explanation": "`SparkTrials` controls parallel execution, not the search strategy."
+    },
+    {
+      "id": "ml-associate-mock-2-q037",
+      "domain": "model-development",
+      "title": "Question 37",
+      "difficulty": "hard",
+      "question": "A data scientist tunes a Spark ML `RandomForestClassifier` on a large table with Hyperopt. Which `trials` setting is recommended?",
+      "choices": {
+        "A": "`SparkTrials(parallelism=16)`",
+        "B": "The default `Trials()`, because each MLlib fit is already distributed across the cluster",
+        "C": "`SparkTrials(parallelism=1)`",
+        "D": "No trials object; Hyperopt cannot tune MLlib"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`SparkTrials` is for single-machine models; distributed MLlib training should use `Trials`.",
+      "explanation": "Note: Hyperopt is not included in Databricks Runtime ML after 16.4 LTS ML; the docs now recommend Optuna or Ray Tune."
+    },
+    {
+      "id": "ml-associate-mock-2-q038",
+      "domain": "model-development",
+      "title": "Question 38",
+      "difficulty": "medium",
+      "question": "A marketing team needs to explain to stakeholders how each attribute influences a customer's predicted spend (a continuous value). Which model is the best starting point?",
+      "choices": {
+        "A": "Linear regression (with regularisation if needed)",
+        "B": "Logistic regression",
+        "C": "k-means",
+        "D": "A 500-tree gradient-boosted ensemble"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Linear regression predicts a continuous target and its coefficients explain each feature's effect.",
+      "explanation": "Logistic regression is for classification, k-means is unsupervised, and large ensembles are harder to explain."
+    },
+    {
+      "id": "ml-associate-mock-2-q039",
+      "domain": "model-development",
+      "title": "Question 39",
+      "difficulty": "medium",
+      "question": "Which is a valid way to mitigate class imbalance in training data?",
+      "choices": {
+        "A": "Oversample the minority class in the training split only",
+        "B": "Oversample the minority class in the test split",
+        "C": "Remove the minority class",
+        "D": "Evaluate only with accuracy"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Resampling the training split (or class weights) helps the model learn the minority class; evaluation data must keep the real distribution.",
+      "explanation": "Evaluating only with accuracy hides poor minority-class performance."
+    },
+    {
+      "id": "ml-associate-mock-2-q040",
+      "domain": "model-development",
+      "title": "Question 40",
+      "difficulty": "medium",
+      "question": "Revenue forecasts must heavily penalise occasional very large misses. Which metric fits?",
+      "choices": {
+        "A": "MAE",
+        "B": "RMSE",
+        "C": "Accuracy",
+        "D": "F1"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "RMSE squares errors before averaging, so large misses dominate — useful when big errors are especially costly.",
+      "explanation": "MAE treats all errors linearly; accuracy and F1 are classification metrics."
+    },
+    {
       "id": "ml-associate-mock-2-q041",
-      "domain": "feature-engineering",
+      "domain": "model-development",
       "title": "Question 41",
       "difficulty": "medium",
-      "question": "A data scientist wants to retrieve feature values from a Feature Store table for a list of customer IDs to prepare a batch scoring dataset. Which function retrieves features without performing model inference?",
+      "question": "A regression model trained on `log(price)` reports RMSE = 0.18 on the validation set. A stakeholder asks for the typical error in dollars. What is the correct next step?",
       "choices": {
-        "A": "`FeatureStoreClient.score_batch(model_uri, entity_df)`",
-        "B": "`FeatureStoreClient.read_table(table_name)`",
-        "C": "`FeatureStoreClient.create_training_set(df, feature_lookups, label=None)`",
-        "D": "`FeatureStoreClient.get_table(table_name)`"
+        "A": "Report $0.18",
+        "B": "Exponentiate the predictions and compute RMSE against the original prices",
+        "C": "Report e^0.18 dollars",
+        "D": "Retrain without the log transform"
       },
-      "correctAnswer": "C",
-      "shortAnswer": "`FeatureStoreClient.create_training_set()` retrieves features from Feature Store tables by joining on primary keys, supporting point-in-time lookups if a timestamp key is provided. Setting `label=None` creates a feature dataset for scoring without a target column. `read_table()` reads the full table. `score_batch()` performs inference. `get_table()` returns table metadata only.",
-      "explanation": ""
+      "correctAnswer": "B",
+      "shortAnswer": "Convert predictions back to dollars (exp) and evaluate them against the dollar labels; a log-space RMSE cannot be converted to dollars by a simple formula.",
+      "explanation": "There is no need to abandon the log target — just invert it before evaluation."
     },
     {
       "id": "ml-associate-mock-2-q042",
-      "domain": "mlflow-deployment",
+      "domain": "model-development",
       "title": "Question 42",
+      "difficulty": "medium",
+      "question": "Increasing a tree's `maxDepth` from 3 to 6 lowers both training and validation error. What does this suggest about the depth-3 model?",
+      "choices": {
+        "A": "It was overfitting (high variance)",
+        "B": "It was underfitting (high bias), so extra complexity helped",
+        "C": "It had data leakage",
+        "D": "Nothing — validation error is irrelevant"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When added complexity lowers validation error too, the simpler model was too biased. Keep increasing complexity only while validation error keeps improving.",
+      "explanation": "Overfitting would show validation error rising as training error falls."
+    },
+    {
+      "id": "ml-associate-mock-2-q043",
+      "domain": "model-deployment",
+      "title": "Question 43",
       "difficulty": "medium",
       "question": "A data scientist wants to create a custom MLflow model that wraps a proprietary scoring library. Which MLflow class should they subclass?",
       "choices": {
@@ -687,52 +719,84 @@
       "explanation": ""
     },
     {
-      "id": "ml-associate-mock-2-q043",
-      "domain": "mlflow-deployment",
-      "title": "Question 43",
-      "difficulty": "hard",
-      "question": "A model is in Production in the Model Registry. A new, better version has been trained and registered as version 5. A data scientist wants to promote version 5 to Production and archive version 4. What is the correct sequence of API calls?",
-      "choices": {
-        "A": "Call `transition_model_version_stage(version=5, stage=\"Production\")` only — version 4 is automatically archived",
-        "B": "Call `transition_model_version_stage(version=5, stage=\"Production\")` with `archive_existing_versions=True`",
-        "C": "Call `delete_model_version(version=4)` first, then `transition_model_version_stage(version=5, stage=\"Production\")`",
-        "D": "Call `transition_model_version_stage(version=5, stage=\"Staging\")` first, then promote to Production in a separate call"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "`MlflowClient().transition_model_version_stage(name, version, stage, archive_existing_versions=True)` promotes the specified version to Production and automatically archives all existing Production versions in a single call. This is the recommended approach for clean Production transitions.",
-      "explanation": ""
-    },
-    {
       "id": "ml-associate-mock-2-q044",
-      "domain": "mlflow-deployment",
+      "domain": "model-deployment",
       "title": "Question 44",
       "difficulty": "medium",
-      "question": "A data scientist loads a model using `mlflow.pyfunc.load_model(\"models:/my-model/Production\")` and calls `model.predict(df)`. The model was trained with scikit-learn. What type does `df` need to be?",
+      "question": "A data scientist loads `mlflow.pyfunc.load_model(\"models:/ml.retail.mymodel@champion\")` for a scikit-learn model and calls `model.predict(data)`. What should `data` be?",
       "choices": {
         "A": "A Spark DataFrame",
-        "B": "A pandas DataFrame or numpy array (inputs compatible with the sklearn model's `predict()`)",
-        "C": "A Python list of dictionaries",
-        "D": "A Delta Lake table path string"
+        "B": "A pandas DataFrame (or array) compatible with the model's signature",
+        "C": "A Delta table path string",
+        "D": "A list of SQL statements"
       },
       "correctAnswer": "B",
-      "shortAnswer": "`mlflow.pyfunc.load_model()` returns a `PyFuncModel` whose `predict()` method accepts pandas DataFrames or numpy arrays — the same inputs that the underlying sklearn model accepts. For Spark-based distributed scoring, use `mlflow.pyfunc.spark_udf()` instead.",
-      "explanation": ""
+      "shortAnswer": "A `PyFuncModel.predict` takes pandas DataFrames (or NumPy arrays) matching the model signature — batch inference with pandas.",
+      "explanation": "For Spark DataFrames, use `mlflow.pyfunc.spark_udf` instead."
     },
     {
       "id": "ml-associate-mock-2-q045",
-      "domain": "mlflow-deployment",
+      "domain": "model-deployment",
       "title": "Question 45",
-      "difficulty": "medium",
-      "question": "A data scientist registers the same model artifact to two different registered model names: `model-v1` and `model-v2`. Both point to `runs:/abc123/model`. Which statement is true?",
+      "difficulty": "easy",
+      "question": "A retailer scores 5 million customers each night for the next day's email campaign. No one needs a prediction in real time. Which approach is most cost-effective?",
       "choices": {
-        "A": "This raises an error — a run artifact can only be registered to one model name",
-        "B": "Both registrations succeed, each creating version 1 of their respective model names",
-        "C": "Only the first registration succeeds; the second is rejected as a duplicate",
-        "D": "The second registration automatically increments the version on `model-v1`"
+        "A": "An always-on real-time endpoint",
+        "B": "A scheduled batch inference job",
+        "C": "A continuously running streaming pipeline",
+        "D": "A GPU endpoint with provisioned concurrency"
       },
       "correctAnswer": "B",
-      "shortAnswer": "MLflow allows registering the same run artifact to multiple model names. Each registration is independent and creates version 1 of the respective registered model. This is useful for A/B testing or maintaining separate staging and production model lineages from the same training run.",
+      "shortAnswer": "Scheduled scoring of a full population with no latency requirement is batch inference — the simplest and cheapest option.",
       "explanation": ""
+    },
+    {
+      "id": "ml-associate-mock-2-q046",
+      "domain": "model-deployment",
+      "title": "Question 46",
+      "difficulty": "medium",
+      "question": "Which Databricks SDK call shape creates a Model Serving endpoint for version 2 of `ml.fraud.clf`?",
+      "choices": {
+        "A": "`w.serving_endpoints.create(name=\"fraud\", config=EndpointCoreConfigInput(served_entities=[ServedEntityInput(entity_name=\"ml.fraud.clf\", entity_version=\"2\", workload_size=\"Small\", scale_to_zero_enabled=True)]))`",
+        "B": "`w.clusters.create(model=\"ml.fraud.clf\", version=2)`",
+        "C": "`mlflow.register_model(\"ml.fraud.clf/2\", \"fraud\")`",
+        "D": "`w.jobs.create(name=\"fraud\", endpoint=True)`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Endpoints are created with `served_entities` naming the Unity Catalog model, version, workload size, and scale-to-zero setting (or the same payload through the MLflow Deployments client or the UI).",
+      "explanation": "Clusters, registration, and jobs do not create serving endpoints."
+    },
+    {
+      "id": "ml-associate-mock-2-q047",
+      "domain": "model-deployment",
+      "title": "Question 47",
+      "difficulty": "medium",
+      "question": "An endpoint serves `champion-v7` and `challenger-v8`. Which `traffic_config` sends a quarter of requests to the challenger?",
+      "choices": {
+        "A": "`{\"routes\": [{\"served_model_name\": \"champion-v7\", \"traffic_percentage\": 75}, {\"served_model_name\": \"challenger-v8\", \"traffic_percentage\": 25}]}`",
+        "B": "`{\"routes\": [{\"served_model_name\": \"challenger-v8\", \"traffic_percentage\": 25}]}`",
+        "C": "`{\"alias\": \"challenger\", \"share\": 0.25}`",
+        "D": "`{\"routes\": [{\"served_model_name\": \"champion-v7\", \"traffic_percentage\": 100}, {\"served_model_name\": \"challenger-v8\", \"traffic_percentage\": 25}]}`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Each served entity gets a route, and the percentages must add up to 100.",
+      "explanation": "A single 25 % route or routes summing to 125 % are invalid, and aliases do not route traffic."
+    },
+    {
+      "id": "ml-associate-mock-2-q048",
+      "domain": "model-deployment",
+      "title": "Question 48",
+      "difficulty": "medium",
+      "question": "Listening events must be scored for low engagement as they arrive, at tens of thousands of events per second, with compute that grows and shrinks with traffic. Which design fits best?",
+      "choices": {
+        "A": "A Delta Live Tables pipeline that applies the model as a Spark UDF to the streaming events",
+        "B": "A notebook that a person reruns every hour",
+        "C": "A serving endpoint called once per event from a Python loop on the driver",
+        "D": "A weekly batch job"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "A pipeline keeps the model in-process (Spark UDF) for throughput and manages streaming state, checkpoints, and enhanced autoscaling.",
+      "explanation": "Per-event endpoint calls from the driver add overhead and do not scale; manual or weekly runs miss the latency requirement."
     }
   ],
   "kind": "mock",

@@ -15,8 +15,8 @@ Preparation materials for the Databricks Certified Machine Learning Associate ex
 | Resource | Description |
 | -------- | ----------- |
 | [Practice Questions](./practice-questions/README.md) | Topic-specific practice questions |
-| [Mock Exam](./mock-exam/README.md) | Full-length practice exam (45 questions) |
-| [Mock Exam 2](./mock-exam-2/README.md) | Alternative practice exam (45 questions) |
+| [Mock Exam](./mock-exam/README.md) | Full-length practice exam (48 questions, by exam section) |
+| [Mock Exam 2](./mock-exam-2/README.md) | Alternative practice exam (48 questions, by exam section) |
 | [Exam Tips](./exam-tips.md) | Strategies, time management, common pitfalls |
 | [Final Review](./final-review.md) | 20-minute exam-morning cram scan |
 | [Official Links](./official-links.md) | Databricks documentation and registration |
