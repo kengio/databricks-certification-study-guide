@@ -16,18 +16,23 @@ Simulate the real exam under timed conditions before your test date.
 | ------ | ----- |
 | Total Questions | 45 |
 | Time Limit | 90 minutes |
-| Passing Score | 70% (32 or more correct) |
+| Target Score | 70 %+ (32 or more correct). Databricks doesn't publish a passing score |
 | Format | Multiple choice, single correct answer |
 
 ## Domain Distribution
 
-| Domain | Weight | Questions |
-| ------ | ------ | --------- |
-| Lakehouse Platform | 24% | 11 |
-| ELT with Spark & SQL | 29% | 13 |
-| Delta Lake & Incremental | 21% | 10 |
-| Workflows & Orchestration | 16% | 7 |
-| Data Governance | 10% | 4 |
+Questions are grouped by the 7 domains of the August 2026 exam guide. The last column shows the share of 45 questions each domain would get at its official weight. This mock was written before the 2026 blueprint, so it over-samples platform and transformation topics. Cover the gap with the matching [practice questions](../practice-questions/README.md).
+
+| Domain | Official weight | Questions in this mock | ≈ Official share of 45 |
+| ------ | :---: | :---: | :---: |
+| Databricks Intelligence Platform | 6 % | 11 | ~3 |
+| Data Ingestion and Loading | 21 % | 3 | ~9 |
+| Data Transformation and Modeling | 22 % | 19 | ~10 |
+| Working with Lakeflow Jobs | 16 % | 3 | ~7 |
+| Implementing CI/CD | 10 % | 0 | ~5 |
+| Troubleshooting, Monitoring, and Optimization | 10 % | 4 | ~4 |
+| Governance and Security | 15 % | 5 | ~7 |
+| **Total** | **100 %** | **45** | **45** |
 
 ## How to Take This Exam
 
