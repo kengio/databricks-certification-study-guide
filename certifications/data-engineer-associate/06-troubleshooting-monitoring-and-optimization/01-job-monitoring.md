@@ -27,68 +27,60 @@ Monitoring Lakeflow Jobs means knowing where to look: the **Jobs & Pipelines** l
 
 ---
 
-## Job Run History
+## Where to Look in the Jobs UI
 
-### Understanding Run Status
+| View | What it shows | Use it to |
+| :--- | :--- | :--- |
+| **Jobs & Pipelines** list | Every job and pipeline you can access, with creator, trigger, and the **last five runs** | Spot failing jobs at a glance |
+| **Runs** tab (workspace-wide) | Runs across jobs and pipelines for the last 60 days, a *Finished runs count* graph (48 h), and *Top 5 error types* | Track failure rates and common errors |
+| **Job → Runs → matrix view** | One column per run, with a **Run total duration** row and a row per task. Bar **height = duration**, colour = status | **Compare current durations with the historical baseline**, and see which task got slower |
+| **Run details → Graph** | The DAG, with each task's status | Find the **upstream blocker** that failed or was skipped |
+| **Run details → Timeline** | Task durations, dependencies, and overlap | Find the long pole (critical path) of a run |
+| **Run details → List** | Searchable, sortable task list | Filter by status or duration |
+
+Matrix-view colours: **green** = success, **red** = unsuccessful, **pink** = skipped, **yellow** = waiting for retry, **grey** = pending, canceled, or timed out. A warning appears when a run exceeds its expected completion time (the **run duration warning** threshold). Source: [Monitor Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/monitor).
 
 ```mermaid
-flowchart TB
-    Scheduled["SCHEDULED"]
-    Pending["PENDING"]
-    Running["RUNNING"]
-    Success["SUCCESS"]
-    Failed["FAILED"]
-    Timeout["TIMEOUT"]
-    Skipped["SKIPPED"]
-
-    Scheduled --> Pending
-    Pending --> Running
-    Running --> Success
-    Running --> Failed
-    Running --> Timeout
-    Scheduled -.->|If prev running| Skipped
+flowchart LR
+    A[Duration alert or<br/>stakeholder complaint] --> B[Job → Runs → matrix view<br/>compare bar heights to baseline]
+    B --> C[Which task row grew?]
+    C --> D[Run details → Timeline / Graph]
+    D --> E[Task → Spark UI<br/>stage metrics]
 ```
 
-### Run Status Meanings
+Run history is kept for **60 days**. For longer trends, query the `system.lakeflow` job tables (see [Spark UI and System Tables](./02-spark-ui-and-system-tables.md)) or join them with `system.billing.usage` for cost.
 
-| Status | Meaning | Action |
-|--------|---------|--------|
-| `PENDING` | Waiting for cluster/resources | Wait or check cluster |
-| `RUNNING` | Currently executing | Monitor logs |
-| `SUCCESS` | Completed successfully | None |
-| `FAILED` | Task execution failed | Check logs for errors |
-| `TIMEOUT` | Exceeded timeout_seconds | Increase timeout or optimize |
-| `SKIPPED` | Skipped due to max_runs limit | Previous run still executing |
-| `INTERNAL_ERROR` | Databricks system error | Retry or contact support |
+## Run and Task Statuses
 
-### Viewing Run History
+**Run statuses** (from the docs): `Queued`, `Pending`, `Running`, `Skipped`, `Succeeded`, `Succeeded with failures`, `Failed`, `Timed Out`, `Canceling`, `Canceled`.
 
-```python
-# Via Databricks CLI
+| Status | Meaning | Typical action |
+| :--- | :--- | :--- |
+| **Queued** | Waiting because a concurrency limit was reached and queueing is on | Check max concurrent runs |
+| **Pending** | Preparing to run, for example while compute starts | Check compute startup if it lasts long |
+| **Skipped** | Not started, for example because max concurrent runs was already reached | Previous run still active. Tune the schedule or concurrency |
+| **Succeeded with failures** | Some tasks failed, but **all leaf tasks** succeeded | Inspect the failed non-leaf tasks |
+| **Failed** | A leaf task failed | Open the failed task's output and logs |
+| **Timed Out** | A task exceeded its configured **timeout** | Raise the timeout (each retry gets the full timeout) or speed up the task |
+| **Canceled** | Stopped by a user, API, or cancellation propagation | — |
 
-databricks jobs list --job-id 123
+**Task-level conditions** to recognise in the Graph view:
 
-# View specific run
+| Task state | Cause |
+| :--- | :--- |
+| **Upstream failed** | A dependency failed, and the task's Run if (default *All succeeded*) wasn't met. The real problem is **upstream** |
+| **Excluded** | A Run if condition such as *At least one failed* wasn't met, or an If/else branch wasn't taken |
+| **Waiting for retry** | The task failed and a retry is scheduled |
+| **Disabled** | The task was disabled in the job definition and skipped |
 
-databricks jobs get-run --run-id 456789
+A run's overall outcome depends on its **leaf tasks** (tasks with no downstream dependencies). Source: [Monitor Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/monitor), [Configure task dependencies](https://docs.databricks.com/aws/en/jobs/conditional-tasks).
 
-# List all runs for a job
+### Finding the Upstream Blocker
 
-databricks jobs list-runs --job-id 123 --limit 20
-
-# Via Python API
-
-import requests
-
-response = requests.get(
-    "https://databricks-instance.cloud.databricks.com/api/2.1/jobs/get-run",
-    headers={"Authorization": f"Bearer {pat_token}"},
-    params={"run_id": 456789}
-)
-
-run_details = response.json()
-print(run_details["state"])  # SUCCESS/FAILED/etc
-```
+1. Open the failed run → **Graph** view
+2. Tasks marked **Upstream failed** aren't the cause. Follow the edges upstream to the first **Failed** or **Timed Out** task
+3. Open that task's output and logs, and if needed its **Spark UI**
+4. Fix it, then use **Repair run** to re-run only the failed task and its dependents
 
 ## Logs and Debugging
 
@@ -521,10 +513,10 @@ for run in runs:
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Task Keeps Timing Out as Data Grows
 
-**Scenario:** The default settings for Job Monitoring do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Job Monitoring to handle production-scale workloads.
+**Scenario:** A task fails as **Timed Out** after 45 minutes. Data volume has grown, and the task now needs about 60 minutes.
+**Fix:** Raise the task's **timeout** (for example to 90 minutes). Retries, max concurrent runs, and auto termination don't stop the timeout from killing the task.
 
 ### Spark UI Not Loading for Completed Runs
 
@@ -538,34 +530,32 @@ for run in runs:
 
 ## Exam Tips
 
-- Know the job run statuses: PENDING, RUNNING, SUCCESS, FAILED, TIMEOUT, SKIPPED -- and what causes each
-- SKIPPED status means a previous run was still executing and `max_concurrent_runs` prevented a new one
-- Email notifications support `on_success` and `on_failure` -- configure both for production pipelines
-- OOM errors are resolved by increasing cluster size, adding workers, or repartitioning data
+- **Trends over time** → the job's **matrix view** (bar height = duration per run) or `system.lakeflow` tables beyond 60 days
+- **Upstream blockers** → the run's **Graph** view. `Upstream failed` tasks point back to the real failure
+- **Succeeded with failures** = all leaf tasks succeeded, but some other task failed
+- **Timed Out** → raise the task **timeout**. The run-duration **warning** threshold only alerts
+- **Skipped** runs usually mean max concurrent runs was already reached
+- **Repair run** re-runs failed tasks and their dependents, not the whole DAG
 
 ## Key Takeaways
 
-- **Run Status**: PENDING, RUNNING, SUCCESS, FAILED, TIMEOUT, SKIPPED
-- **Logs**: Access via UI or API; contain execution details
-- **Email Alerts**: on_success/on_failure notifications
-- **Slack Integration**: Webhook-based alerting
-- **Performance Metrics**: Duration, CPU, memory, shuffle I/O
-- **Timeout**: Task execution time limit
-- **Max Concurrent Runs**: Prevents duplicate execution
-- **OOM Errors**: Increase cluster size or repartition
-- **Skipped Runs**: Previous run still executing
-- **Audit Trail**: Track user, time, status via metrics tables
+- Jobs & Pipelines list → job Runs tab (matrix view) → run details (Graph, Timeline, List) → task → Spark UI
+- Run outcome is decided by leaf tasks. Know Upstream failed vs Excluded
+- Notifications (email, webhooks) fire on start, success, failure, and duration thresholds
+- Run history is kept for 60 days. Use system tables for longer analysis
 
 ## Related Topics
 
-- [Databricks Jobs](../04-working-with-lakeflow-jobs/01-lakeflow-jobs-and-tasks.md)
+- [Lakeflow Jobs and Tasks](../04-working-with-lakeflow-jobs/01-lakeflow-jobs-and-tasks.md)
 - [Scheduling and Triggers](../04-working-with-lakeflow-jobs/02-scheduling-triggers.md)
-- [Spark UI Debugging (DE Professional)](../../data-engineer-professional/06-debugging-and-deploying/07-spark-ui-debugging.md)
+- [Spark UI Debugging (DE Professional)](../../data-engineer-professional/08-debugging-and-deploying/01-spark-ui-debugging.md)
 
 ## Official Documentation
 
-- [Monitor Job Runs](https://docs.databricks.com/en/workflows/jobs/monitor-job-runs.html)
-- [Job Run Notifications](https://docs.databricks.com/en/workflows/jobs/notifications.html)
+- [Monitor Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/monitor)
+- [Diagnose Lakeflow Jobs performance](https://docs.databricks.com/aws/en/jobs/diagnose-job-performance)
+- [Add notifications on a job](https://docs.databricks.com/aws/en/jobs/notifications)
+- [Repair a failed job run](https://docs.databricks.com/aws/en/jobs/repair-job-failures)
 
 ---
 

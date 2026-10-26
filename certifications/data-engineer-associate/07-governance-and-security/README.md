@@ -64,7 +64,7 @@ flowchart TD
 
 - [Unity Catalog Basics](../../../shared/fundamentals/unity-catalog-basics.md)
 - [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
-- [Governance & Security Interview Prep](../../../shared/interview-prep/governance-security.md)
+- [Governance & Security Interview Prep](../../../shared/interview-prep/10-governance-security.md)
 
 ## Next Steps
 

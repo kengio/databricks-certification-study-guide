@@ -24,6 +24,9 @@ Delta Sharing is a secure, open protocol for sharing data across organizations w
 > - Not part of the August 2026 exam outline. Keep it as background for governance scenarios and the DE Professional exam
 > - Telling sharing (no copy, cross-org) apart from Lakehouse Federation (querying external databases)
 
+> [!note] Platform update (Oct 2026)
+> "Following the release of open-source OpenSharing, Delta Sharing is now OpenSharing" (Jun 10, 2026, [release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/june)). This file keeps the Delta Sharing name used by older exam material. Data sharing doesn't appear in the August 2026 DE Associate outline, so treat this file as background reading.
+
 ---
 
 ## Delta Sharing Architecture
@@ -540,7 +543,7 @@ ORDER BY query_count DESC;
 
 - [Access Control and Permissions](./03-access-control-permissions.md)
 - [Unity Catalog Basics](./01-unity-catalog-basics.md)
-- [Data Sharing (DE Professional)](../../data-engineer-professional/02-data-ingestion-and-acquisition/06-opensharing.md)
+- [OpenSharing (DE Professional)](../../data-engineer-professional/02-data-ingestion-and-acquisition/06-opensharing.md)
 
 ## Official Documentation
 
