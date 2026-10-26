@@ -13,7 +13,7 @@ status: published
 
 ## Overview
 
-**Lakeflow Connect** managed database connectors replicate inserts, updates, and deletes from relational databases — **SQL Server, MySQL, and PostgreSQL** on this exam — into Unity Catalog streaming tables with no custom CDC code. The connector reads the database's own change log (SQL Server change tracking / CDC, the MySQL binary log, PostgreSQL logical replication), stages the changes, and applies them incrementally through a managed Lakeflow Pipelines pipeline that is governed by Unity Catalog.
+**Lakeflow Connect** managed database connectors replicate inserts, updates, and deletes from relational databases — **SQL Server, MySQL, and PostgreSQL** on this exam — into Unity Catalog streaming tables with no custom CDC code. The connector reads the database's own change log (SQL Server change tracking / CDC, the MySQL binary log, PostgreSQL logical replication), stages the changes, and applies them incrementally through a managed Lakeflow pipeline that is governed by Unity Catalog.
 
 > [!abstract]
 >

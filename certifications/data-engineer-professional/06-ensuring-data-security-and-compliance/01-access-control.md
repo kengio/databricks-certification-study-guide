@@ -29,6 +29,12 @@ flowchart TB
     AccessControl --> WS[Workspace Object ACLs]
 ```
 
+> [!abstract]
+>
+> - **Unity Catalog grants** secure data securables (catalogs, schemas, tables, volumes, functions); grant to groups, at the narrowest level that works
+> - **Workspace object ACLs** secure resources such as jobs, compute, notebooks, folders, SQL warehouses and pipelines
+> - **Row filters and column masks** restrict rows and values per table; **ABAC policies** do the same centrally from governed tags
+
 > [!tip] What the Exam Tests
 >
 > - Apply least-privilege access control lists (ACLs) to secure Unity Catalog securable objects and workspace resources.

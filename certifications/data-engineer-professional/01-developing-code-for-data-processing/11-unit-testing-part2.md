@@ -371,66 +371,6 @@ targets:
                 num_workers: 0
 ```
 
-## Best Practices
-
-### Test Organization
-
-```text
-tests/
-├── conftest.py              # Shared fixtures
-├── unit/                    # Unit tests (no external deps)
-│   ├── test_transformations.py
-│   ├── test_validations.py
-│   └── test_utils.py
-├── integration/             # Integration tests (real Spark)
-│   ├── test_bronze_layer.py
-│   ├── test_silver_layer.py
-│   └── test_gold_layer.py
-└── e2e/                     # End-to-end tests
-    └── test_full_pipeline.py
-```
-
-### Naming Conventions
-
-```python
-# Good test names - descriptive and specific
-
-def test_remove_nulls_removes_rows_with_null_values():
-    pass
-
-def test_calculate_totals_returns_zero_for_empty_input():
-    pass
-
-def test_merge_updates_existing_records_when_key_matches():
-    pass
-
-# Bad test names - vague
-
-def test_function():
-    pass
-
-def test_it_works():
-    pass
-```
-
-### Test Isolation
-
-```python
-# Each test should be independent
-
-class TestTransformations:
-
-    def test_transformation_a(self, spark):
-        """Test A - creates its own data."""
-        df = spark.createDataFrame([(1,)], ["id"])
-        # ... test logic
-
-    def test_transformation_b(self, spark):
-        """Test B - doesn't depend on Test A."""
-        df = spark.createDataFrame([(2,)], ["id"])
-        # ... test logic
-```
-
 ## Use Cases
 
 - **Ensuring Transformation Correctness**: Writing PyTest tests with Chispa to verify that a complex custom PySpark aggregation function outputs the exact expected DataFrame before the code allows for merging.
@@ -492,6 +432,66 @@ spark = (SparkSession.builder
     .config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0")
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
     .getOrCreate())
+```
+
+## Best Practices
+
+### Test Organization
+
+```text
+tests/
+├── conftest.py              # Shared fixtures
+├── unit/                    # Unit tests (no external deps)
+│   ├── test_transformations.py
+│   ├── test_validations.py
+│   └── test_utils.py
+├── integration/             # Integration tests (real Spark)
+│   ├── test_bronze_layer.py
+│   ├── test_silver_layer.py
+│   └── test_gold_layer.py
+└── e2e/                     # End-to-end tests
+    └── test_full_pipeline.py
+```
+
+### Naming Conventions
+
+```python
+# Good test names - descriptive and specific
+
+def test_remove_nulls_removes_rows_with_null_values():
+    pass
+
+def test_calculate_totals_returns_zero_for_empty_input():
+    pass
+
+def test_merge_updates_existing_records_when_key_matches():
+    pass
+
+# Bad test names - vague
+
+def test_function():
+    pass
+
+def test_it_works():
+    pass
+```
+
+### Test Isolation
+
+```python
+# Each test should be independent
+
+class TestTransformations:
+
+    def test_transformation_a(self, spark):
+        """Test A - creates its own data."""
+        df = spark.createDataFrame([(1,)], ["id"])
+        # ... test logic
+
+    def test_transformation_b(self, spark):
+        """Test B - doesn't depend on Test A."""
+        df = spark.createDataFrame([(2,)], ["id"])
+        # ... test logic
 ```
 
 ## Exam Tips
