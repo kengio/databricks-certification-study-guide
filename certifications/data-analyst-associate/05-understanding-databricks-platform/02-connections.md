@@ -14,6 +14,19 @@ tags:
 
 Databricks SQL warehouses connect to external tools and applications via JDBC, ODBC, REST API, and native integrations. This enables analysts to use their preferred tools while leveraging Databricks compute.
 
+> [!abstract]
+>
+> - BI tools connect to SQL warehouses through JDBC/ODBC drivers (server hostname + HTTP path)
+> - Programmatic access: Databricks SQL Connector for Python, Statement Execution API
+> - Authentication: OAuth for people, service principals for automation, PATs where needed
+
+> [!tip] What the Exam Tests
+>
+> - Which connection method fits a BI tool or script
+> - What Partner Connect automates
+
+---
+
 ## Connection Methods
 
 ```mermaid
@@ -519,4 +532,4 @@ Ports required:
 
 ---
 
-**[← Previous: Query Editor & Execution](../01-executing-queries-databricks-sql-warehouses/02-query-editor.md) | [↑ Back to Databricks SQL](./README.md)**
+**[← Previous: Unity Catalog](./01-unity-catalog.md) | [↑ Back to Section](./README.md) | [Next: Platform Components, Catalog Explorer & Marketplace →](./03-platform-components-and-marketplace.md)**

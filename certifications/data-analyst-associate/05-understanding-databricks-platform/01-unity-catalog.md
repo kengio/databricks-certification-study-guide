@@ -14,6 +14,20 @@ tags:
 
 Unity Catalog is Databricks' centralized governance solution that provides a three-level namespace for organizing data across workspaces, with fine-grained access control and data lineage tracking.
 
+> [!abstract]
+>
+> - Metastore (one per region) → catalog → schema → tables, views, volumes, functions
+> - Managed vs external tables and volumes; external locations govern cloud paths
+> - Central permissions, lineage, and auditing
+
+> [!tip] What the Exam Tests
+>
+> - Reading and writing three-level names; `USE CATALOG` / `USE SCHEMA`
+> - What Catalog Explorer shows for an object
+> - Managed vs external drop behaviour
+
+---
+
 ## Unity Catalog Architecture
 
 ```mermaid
@@ -390,7 +404,7 @@ SELECT * FROM production.shared.customer_gold;
 -- Access shared data from different workspace!
 ```
 
-## Best Practices
+## Unity Catalog Best Practices
 
 ### Naming Conventions
 
@@ -483,4 +497,4 @@ TO `engineer@company.com`;
 
 ---
 
-**[← Previous: Tables & Schemas](../06-managing-data/01-tables-schemas.md) | [↑ Back to Data Management in Databricks](./README.md) | [Next: Access Control & Security](../07-securing-data/01-access-control.md) →**
+**[↑ Back to Section](./README.md) | [Next: Connections & Integrations →](./02-connections.md)**

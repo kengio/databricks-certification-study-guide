@@ -2,7 +2,7 @@
   "cert": "data-analyst-associate-mock-2",
   "certTitle": "Data Analyst Associate — Mock Exam 2",
   "blueprintVersion": "Oct 2025",
-  "generated": "2026-05-22",
+  "generated": "2026-10-26",
   "domains": [
     {
       "id": "databricks-sql",
@@ -121,15 +121,15 @@
       "domain": "databricks-sql",
       "title": "Question 6",
       "difficulty": "medium",
-      "question": "Which Databricks workspace role is required to create a new SQL warehouse?",
+      "question": "Who can create a new SQL warehouse?",
       "choices": {
-        "A": "Any authenticated user can create a SQL warehouse",
-        "B": "Users with the \"Can Use\" permission on an existing warehouse",
-        "C": "Workspace Admin or users explicitly granted the \"Create SQL warehouse\" entitlement",
-        "D": "Only the account admin can create SQL warehouses"
+        "A": "Any authenticated user",
+        "B": "Users with the CAN USE permission on an existing warehouse",
+        "C": "Workspace admins, or users with unrestricted cluster creation permission",
+        "D": "Only account admins"
       },
       "correctAnswer": "C",
-      "shortAnswer": "Creating a SQL warehouse requires either Workspace Admin privileges or the \"Create SQL\nwarehouse\" entitlement explicitly granted to the user by an admin. Regular workspace users\ncan use existing warehouses they have permission on, but cannot create new ones without\nthis entitlement.",
+      "shortAnswer": "Creating a SQL warehouse requires being a workspace admin or having unrestricted cluster\ncreation permission. CAN USE only lets a user run queries on an existing warehouse (B).",
       "explanation": ""
     },
     {
@@ -217,15 +217,15 @@
       "domain": "data-management",
       "title": "Question 12",
       "difficulty": "hard",
-      "question": "A data engineer wants to grant a user the ability to read only the `email` column in a table, not the `ssn` column. Which Unity Catalog feature enables this?",
+      "question": "A data engineer wants analysts to read the `email` column of a table but never see the real `ssn` values. Which Unity Catalog approach enables this?",
       "choices": {
-        "A": "Row-level security policy",
-        "B": "Column-level permissions via `GRANT SELECT (column_name) ON TABLE ...`",
-        "C": "Table clone with only the allowed columns",
-        "D": "A view that selects only `email`, with SELECT granted on the view"
+        "A": "A row filter on the table",
+        "B": "A column mask on `ssn` (or a view that excludes `ssn`, with `SELECT` granted on the view)",
+        "C": "A table clone that copies all columns",
+        "D": "Hiding the `ssn` column in a dashboard"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Unity Catalog supports column-level permissions: `GRANT SELECT (email) ON TABLE t TO user`.\nThis restricts the user to only the specified columns. Selecting `ssn` in a query will fail\nwith a permission denied error. Creating a view (Option D) also works but requires maintaining\nan additional object.",
+      "shortAnswer": "Column-level protection in Unity Catalog uses column masks (a SQL UDF attached with\n`ALTER TABLE ... ALTER COLUMN ... SET MASK`) or views that expose only allowed columns. A row\nfilter limits rows, not columns (A). Hiding a column in one tool does not protect it (D).",
       "explanation": ""
     },
     {
@@ -632,16 +632,16 @@
       "id": "data-analyst-associate-mock-2-q038",
       "domain": "dashboards-visualization",
       "title": "Question 38",
-      "difficulty": "hard",
-      "question": "A dashboard is scheduled to refresh daily using Warehouse A. Warehouse A is then deleted by an admin. What happens to the scheduled refresh?",
+      "difficulty": "medium",
+      "question": "A dashboard schedule has a Microsoft Teams channel as a subscriber. What does the channel receive on each scheduled run?",
       "choices": {
-        "A": "The refresh fails and the dashboard owner receives an error notification",
-        "B": "The refresh automatically switches to the default warehouse",
-        "C": "The refresh runs on any available warehouse in the workspace",
-        "D": "The refresh silently fails with no notification until manually reconfigured"
+        "A": "Nothing; Teams cannot subscribe to dashboards",
+        "B": "A PNG snapshot in the channel, a link to the dashboard, and a PDF",
+        "C": "Only a CSV export of every dataset",
+        "D": "The dashboard's SQL text"
       },
-      "correctAnswer": "A",
-      "shortAnswer": "The scheduled refresh fails because the assigned warehouse no longer exists. The dashboard\nowner receives a failure notification. The refresh does not automatically migrate to another\nwarehouse — an admin or owner must update the dashboard's refresh schedule to select a\nnew warehouse.",
+      "correctAnswer": "B",
+      "shortAnswer": "Slack and Microsoft Teams destinations (set up by a workspace admin) receive a PNG snapshot,\na link, and a PDF. Email subscribers receive a PDF snapshot, optionally with CSV, TSV, or\nExcel attachments.",
       "explanation": ""
     },
     {
@@ -681,15 +681,15 @@
       "domain": "analytics-applications",
       "title": "Question 41",
       "difficulty": "easy",
-      "question": "A dashboard filter needs to let users pick a date range (start date and end date). Does Databricks SQL support a native date range parameter type?",
+      "question": "A dashboard filter needs to let users pick a date range (start date and end date). How does an AI/BI dashboard dataset use a date range parameter?",
       "choices": {
-        "A": "No — date range must be implemented as two separate text parameters",
-        "B": "Yes — Databricks SQL supports a Date Range parameter type that provides a calendar picker with start and end date selection",
-        "C": "Yes — but only for Serverless SQL warehouses",
-        "D": "No — date ranges require a custom dropdown with hard-coded values"
+        "A": "It cannot — a date range must be two separate text parameters",
+        "B": "A date range parameter exposes `.min` and `.max`, for example `WHERE order_date BETWEEN :date_range.min AND :date_range.max`",
+        "C": "Only serverless SQL warehouses support date ranges",
+        "D": "A date range needs a custom dropdown with hard-coded values"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Databricks SQL supports several parameter types including Text, Number, Dropdown List, Query\nDropdown, Date, Date and Time, and Date Range. The Date Range type renders a calendar picker\nwith start and end date selection and injects both values into the query using the\n`{{parameter_name.start}}` and `{{parameter_name.end}}` syntax.",
+      "shortAnswer": "Date range parameters in AI/BI dashboards create `.min` and `.max` values used with named\nparameter markers. Adding `OR :date_range IS NULL` handles the \"All\" selection. Dashboards do\nnot support the legacy mustache (`{{ }}`) syntax.",
       "explanation": ""
     },
     {
@@ -697,15 +697,15 @@
       "domain": "analytics-applications",
       "title": "Question 42",
       "difficulty": "medium",
-      "question": "A query parameter `{{min_revenue}}` is used in a dashboard filter. The analyst wants new users to see data filtered to `100000` until they change the filter. How is this configured?",
+      "question": "A dashboard dataset uses the parameter `:min_revenue`. The author wants viewers to see data filtered to `100000` until they change the filter. How is this configured?",
       "choices": {
-        "A": "Default values cannot be set — users must always select a value before the query runs",
-        "B": "Set a default value for the parameter in the query settings — this value is used when no user selection has been made",
-        "C": "Hard-code `100000` in the SQL and add `{{min_revenue}}` as a comment",
-        "D": "Use `COALESCE({{min_revenue}}, 100000)` in the SQL"
+        "A": "Default values cannot be set — viewers must always pick a value first",
+        "B": "In the dataset editor, type `100000` in the field under the parameter name and run the query; that value becomes the default",
+        "C": "Hard-code `100000` in the SQL and keep `:min_revenue` in a comment",
+        "D": "Use `COALESCE(:min_revenue, 100000)` and leave the parameter without a default"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Databricks SQL query parameters support default values configured in the query or dashboard\nparameter settings. When a user opens the dashboard without having selected a value, the\ndefault is used, ensuring the query runs immediately with sensible initial data rather than\nfailing or showing no filter.",
+      "shortAnswer": "To test a dashboard parameter, you type a value under the parameter name and run the query.\nRunning the query also saves that value as the parameter's default, so the dashboard opens\nwith it.",
       "explanation": ""
     },
     {
@@ -728,16 +728,16 @@
       "id": "data-analyst-associate-mock-2-q044",
       "domain": "analytics-applications",
       "title": "Question 44",
-      "difficulty": "hard",
-      "question": "A SQL alert monitors a query that returns no rows (an empty result). The alert condition is `WHEN VALUE > 0`. Does the alert fire?",
+      "difficulty": "medium",
+      "question": "Which states can a latest-version Databricks SQL alert evaluate to?",
       "choices": {
-        "A": "Yes — an empty result is treated as 0, which is not greater than 0, so no alert fires",
-        "B": "No — when the query returns no rows, the alert condition evaluates to UNKNOWN and does not fire",
-        "C": "Yes — an empty result always triggers an alert as an error condition",
-        "D": "The alert raises an error and sends an error notification"
+        "A": "OK, TRIGGERED, ERROR",
+        "B": "OK, TRIGGERED, UNKNOWN only",
+        "C": "GREEN, YELLOW, RED",
+        "D": "RUNNING and STOPPED"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "When a monitored query returns no rows, the alert value is effectively undefined (NULL).\nDatabricks SQL treats a NULL result as UNKNOWN, which does not satisfy the threshold\ncondition. The alert does not fire. If detecting the absence of data (zero rows) is the\ngoal, rewrite the query to return a `COUNT(*)` which will return 0 instead of no rows.",
+      "correctAnswer": "A",
+      "shortAnswer": "Each evaluation resolves to OK, TRIGGERED, or ERROR. The latest alerts no longer use the\nUNKNOWN status from legacy alerts.",
       "explanation": ""
     },
     {
@@ -745,7 +745,7 @@
       "domain": "analytics-applications",
       "title": "Question 45",
       "difficulty": "medium",
-      "question": "Which approach is the documented and safest fit?",
+      "question": "What should the space author add?",
       "choices": {
         "A": "Standard view: `CREATE VIEW gold.daily_revenue AS SELECT date, SUM(amount) ... GROUP BY date`",
         "B": "Materialized view: `CREATE MATERIALIZED VIEW gold.daily_revenue AS ...` with an hourly refresh schedule",
@@ -753,7 +753,7 @@
         "D": "Convert the orders table to bucketing on date"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Genie Spaces is the documented natural-language analytics surface for exactly this use case. UC permissions, including column masks and row filters, apply to every Genie-generated SQL query — so CS users physically cannot see PII columns they're not granted on, regardless of how Genie phrases the question. Option A reinvents Genie poorly. Option C duplicates data and creates a refresh / drift problem. Option D is a retrieval-augmentation pattern over *unstructured* data — vector search returns similar rows by embedding distance, which is the wrong tool for structured analytic queries (counts, aggregates, joins).",
+      "shortAnswer": "Trusted assets are parameterized example queries and Unity Catalog SQL functions whose exact logic an author verified; answers built on them come from that verified logic. Parameters use the `:name` syntax. A text instruction (A) is the documented last resort and does not produce verified answers. Benchmarks (C) only score accuracy — they never feed Genie's context. A Field SQL expression (D) defines a per-row value, not a verified answer.",
       "explanation": ""
     }
   ],

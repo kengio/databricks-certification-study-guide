@@ -14,6 +14,19 @@ tags:
 
 Tables are the fundamental storage units in Databricks SQL for organizing and accessing data. Schemas provide logical organization of tables, while Delta provides ACID compliance and performance optimization.
 
+> [!abstract]
+>
+> - Managed vs external tables; temporary views
+> - Schemas, table properties, comments, and Delta features
+> - Liquid clustering for data layout
+
+> [!tip] What the Exam Tests
+>
+> - `DROP TABLE` behaviour for managed vs external tables
+> - DDL for schemas and tables, including `CREATE OR REPLACE`
+
+---
+
 ## Table Types Architecture
 
 ```mermaid
@@ -288,35 +301,24 @@ CREATE TABLE events (
 | Categories | STRING + ENUM | Can be optimized |
 | Binary data | BINARY | Native support |
 
-### Partitioning Strategy
+### Data Layout: Liquid Clustering (and Legacy Partitioning)
+
+Databricks recommends **liquid clustering** for all new tables. It replaces partitioning and `ZORDER`, and the keys can change later without rewriting data:
 
 ```sql
--- Partition by date (useful for time-series data)
-CREATE TABLE sales_partitioned (
+CREATE TABLE sales_clustered (
     id INT,
     customer_name STRING,
     amount DECIMAL(10, 2),
     transaction_date DATE
 )
-USING DELTA
-PARTITIONED BY (transaction_date);
+CLUSTER BY (transaction_date);
 
--- Insert data (automatically partitions)
-INSERT INTO sales_partitioned
-VALUES (1, 'Alice', 100.50, '2024-01-15');
-
--- Query specific partition (faster)
-SELECT * FROM sales_partitioned
-WHERE transaction_date = '2024-01-15';
--- Scans only 2024-01-15 partition
+SELECT * FROM sales_clustered
+WHERE transaction_date = '2024-01-15';   -- files outside the date are skipped
 ```
 
-**Partitioning benefits:**
-
-- Faster queries on large tables
-- Parallel processing
-- Better data management
-- Easier retention policies
+`PARTITIONED BY` still works on existing tables, but it cannot be combined with liquid clustering. See [Delta History & Liquid Clustering](../03-analyzing-queries/02-delta-history-and-liquid-clustering.md).
 
 ### Column Comments
 
@@ -463,7 +465,7 @@ AND status = 'active';
 
 - Dropping a managed table deletes both data and metadata; dropping an external table deletes only metadata
 - Delta is the default table format and supports ACID transactions, time travel, and schema evolution
-- Partition large tables by date columns for faster time-based queries
+- For large tables filtered on a few columns, use liquid clustering (`CLUSTER BY`) rather than partitioning — Databricks recommends it for all new tables
 - Temporary tables are session-scoped and automatically dropped when the session ends
 
 ## Key Takeaways
@@ -472,7 +474,7 @@ AND status = 'active';
 - **External tables**: Databricks manages metadata; data stays in cloud storage
 - **Delta format**: Default, ACID-compliant, supports time travel
 - **Schemas**: Logical containers for tables, organize by domain/layer/owner
-- **Partitioning**: Split large tables by column (usually date)
+- **Liquid clustering**: `CLUSTER BY` the columns you filter on most (replaces partitioning for new tables)
 - **Data types**: Choose appropriate types for storage efficiency
 - **Temporary tables**: Session-scoped, useful for intermediate results
 
@@ -484,9 +486,9 @@ AND status = 'active';
 
 ## Official Documentation
 
-- [Databricks Tables](https://docs.databricks.com/sql/language-manual/sql-ref-tables.html)
+- [CREATE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table)
 - [Delta Lake Overview](https://docs.databricks.com/delta/index.html)
 
 ---
 
-**[↑ Back to Data Management in Databricks](./README.md) | [Next: Unity Catalog](../05-understanding-databricks-platform/01-unity-catalog.md) →**
+**[↑ Back to Section](./README.md) | [Next: Discovering, Tagging & Cleaning Data →](./02-discovering-tagging-and-cleaning-data.md)**

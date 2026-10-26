@@ -14,6 +14,20 @@ tags:
 
 Window functions perform calculations across a set of rows related to the current row without collapsing groups. They're essential for time-series analysis, ranking, and running totals.
 
+> [!abstract]
+>
+> - `OVER (PARTITION BY ... ORDER BY ...)` and window frames
+> - Ranking (`ROW_NUMBER`, `RANK`, `DENSE_RANK`) and offsets (`LAG`, `LEAD`)
+> - Running totals and moving averages
+
+> [!tip] What the Exam Tests
+>
+> - Window functions are not named in the October 2025 exam guide; they support its "sorting and filtering" and "fix a query" skills
+> - Ties: `RANK` leaves gaps, `DENSE_RANK` does not, `ROW_NUMBER` never ties
+> - Filtering window results with `QUALIFY`
+
+---
+
 ## Window Function Architecture
 
 ```mermaid
@@ -479,8 +493,8 @@ FROM events_with_gaps;
 ## Official Documentation
 
 - [Databricks Window Functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin.html#window-functions)
-- [Analytic Functions Guide](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-window.html)
+- [Window functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions)
 
 ---
 
-**[← Previous: Aggregations & Grouping](./02-aggregations-grouping.md) | [↑ Back to Advanced SQL Queries](./README.md)**
+**[← Previous: Aggregations, Sorting & Filtering](./04-aggregations-grouping.md) | [↑ Back to Section](./README.md) | [Next: Creating Tables & Delta Time Travel →](./06-creating-tables-and-time-travel.md)**

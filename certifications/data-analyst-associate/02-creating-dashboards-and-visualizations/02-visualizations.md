@@ -12,7 +12,34 @@ tags:
 
 ## Overview
 
-Different visualization types communicate data in different ways. Choosing the right chart type is critical for effective data storytelling.
+Different visualization types communicate data in different ways. Section 6 of the October 2025 exam guide asks you to "create visualizations in notebooks and the SQL editor" and to "identify the effective visualization type to communicate insights clearly".
+
+> [!abstract]
+>
+> - In the SQL editor and notebooks: click **+** above a result, then **Visualization**
+> - AI/BI dashboard visualization types include bar, line, area, pie, scatter, counter, table, pivot, histogram, heatmap, funnel, maps, and more
+> - Pick the chart from the question: compare, trend, part of whole, distribution, relationship
+
+> [!tip] What the Exam Tests
+>
+> - Matching a business question to the right visualization
+> - Where visualizations can be created and added to dashboards
+
+---
+
+## Creating Visualizations in the SQL Editor and Notebooks
+
+1. Run a query (SQL editor) or a cell (notebook).
+2. Click **+** above the result and select **Visualization**.
+3. Choose the **Visualization Type**, map the columns, and save.
+
+- In a notebook, a visualization from a SQL cell can be added to an AI/BI dashboard (**Add to dashboard**). Visualizations from non-SQL cells and data profiles can be added only to a notebook dashboard.
+- Filters applied to a result table also affect its visualizations.
+- A notebook **data profile** gives summary statistics and histograms for each column.
+
+AI/BI dashboard visualization types: area, bar, box, bubble, choropleth map, cohort, combo, counter, custom, funnel, Gantt, heatmap, histogram, line, path map, pie, pivot, point map, Sankey, scatter, table, and waterfall.
+
+Sources: [Visualizations in notebooks and the SQL editor](https://docs.databricks.com/aws/en/visualizations/), [Dashboard visualization types](https://docs.databricks.com/aws/en/dashboards/visualizations/types) (checked 2026-10-26).
 
 ## Chart Selection Guide
 
@@ -224,31 +251,15 @@ Fill: Semi-transparent for visibility
 - ✅ Resource allocation over time
 - ✅ Portfolio composition changes
 
-### Gauge / Number Chart
+### Counter
 
-**Purpose**: Display single KPI with context
+**Purpose**: Display a single KPI prominently, optionally compared with an offset value
 
 ```sql
--- Current month performance vs target
-SELECT
-    SUM(amount) as current_revenue,
-    1000000 as monthly_target
+-- Current month revenue
+SELECT SUM(amount) AS current_revenue
 FROM orders
-WHERE month = MONTH(CURRENT_DATE);
-```
-
-**Gauge Configuration:**
-
-```yaml
-Type: Gauge Chart
-Min Value: 0
-Max Value: 1000000 (target)
-Current Value: 625000 (actual)
-Thresholds:
-  Red: 0-499999 (< 50%)
-  Yellow: 500000-799999 (50-80%)
-  Green: 800000-1000000 (80-100%)
-Show: Percentage (62.5%)
+WHERE order_date >= DATE_TRUNC('MONTH', CURRENT_DATE);
 ```
 
 ### Table
@@ -460,7 +471,7 @@ Alternative:
 - **Pie chart**: Part-of-whole (3-5 slices only)
 - **Scatter plot**: Correlation analysis
 - **Area chart**: Cumulative/stacked over time
-- **Gauge**: Single KPI with context
+- **Counter**: Single KPI, optionally compared with an offset value
 - **Table**: Detailed data exploration
 - **Colors**: Sequential, diverging, categorical strategies
 - **Formatting**: Axes labels, number formats, legends
@@ -470,14 +481,13 @@ Alternative:
 
 - [Dashboards & Dashboard Design](./01-dashboards.md) - Building dashboards with visualizations
 - [Alerts & Scheduling](./03-alerts-scheduling.md) - Triggering alerts from query results
-- [SQL Query Optimization](../03-analyzing-queries/README.md) - Writing efficient queries for charts
+- [Analyzing Queries](../03-analyzing-queries/README.md) - Making the queries behind charts faster
 
 ## Official Documentation
 
-- [Databricks Visualizations](https://docs.databricks.com/sql/user/visualizations/index.html)
-- [Visualization Types](https://docs.databricks.com/sql/user/visualizations/visualization-types.html)
-- [Databricks SQL Dashboards](https://docs.databricks.com/sql/user/dashboards/index.html)
+- [Visualizations in Databricks notebooks and SQL editor](https://docs.databricks.com/aws/en/visualizations/)
+- [Dashboard visualization types](https://docs.databricks.com/aws/en/dashboards/visualizations/types)
 
 ---
 
-**[← Previous: Dashboards & Dashboard Design](./01-dashboards.md) | [↑ Back to Dashboards & Visualization](./README.md) | [Next: Alerts & Scheduling](./03-alerts-scheduling.md) →**
+**[← Previous: AI/BI Dashboards & Dashboard Design](./01-dashboards.md) | [↑ Back to Section](./README.md) | [Next: Alerts & Scheduling →](./03-alerts-scheduling.md)**

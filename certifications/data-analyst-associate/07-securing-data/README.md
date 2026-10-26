@@ -10,37 +10,51 @@ status: published
 
 # Securing Data (8 % of Exam)
 
-Row- and column-level security, access control, and the UC governance controls analysts need to know to share data safely.
+Unity Catalog roles, privileges, and ownership; the three-level namespace including volumes; row filters, column masks, and dynamic views; workspace object permissions; and PII protection (Section 9 in the PDF).
 
 ## Topics Overview
 
 ```mermaid
 flowchart LR
-    SD[Securing Data] --> AC[Access Control]
-    SD --> RF[Row Filters / Column Masks]
-    SD --> Share[Safe sharing patterns]
+    SD[Securing Data] --> AC[Privileges & ACLs<br/>01]
+    SD --> OWN[Roles & ownership<br/>02]
+    SD --> RF[Row filters /<br/>column masks<br/>02]
+    SD --> PII[PII protection<br/>02]
 ```
 
 ## Section Contents
 
 | File | Topic | Priority |
 | :--- | :--- | :--- |
-| [01-access-control.md](./01-access-control.md) | GRANT / REVOKE, ownership, row filters, column masks | High |
+| [01-access-control.md](./01-access-control.md) | Authentication, workspace object ACLs, `GRANT` / `REVOKE`, privilege inheritance | High |
+| [02-ownership-fine-grained-access-and-pii.md](./02-ownership-fine-grained-access-and-pii.md) | Admin roles, ownership and `MANAGE`, namespace and volumes, row filters, column masks, ABAC, PII checklist | High |
+
+## Exam Guide Coverage
+
+| Exam-guide skill (Section 9) | Where it is covered |
+| :--- | :--- |
+| Use Unity Catalog roles and sharing settings to ensure workspace objects are secure | [02 — Roles & ownership](./02-ownership-fine-grained-access-and-pii.md) · [01 — Workspace ACLs](./01-access-control.md) · [Dashboard sharing](../02-creating-dashboards-and-visualizations/04-sharing-collaboration.md) |
+| Understand how the 3-level namespace (Catalog / Schema / Tables or Volumes) works in the Unity Catalog | [02 — Namespace](./02-ownership-fine-grained-access-and-pii.md) · [Unity Catalog](../05-understanding-databricks-platform/01-unity-catalog.md) |
+| Apply best practices for storage and management to ensure data security, including table ownership and PII protection | [02 — Ownership & PII](./02-ownership-fine-grained-access-and-pii.md) |
 
 ## Key Concepts
 
 | Concept | Why it matters |
 | :--- | :--- |
-| **GRANT vs OWNER** | Owners can grant; non-owners can only consume what's been granted |
-| **Row filter** | A SQL function that returns true/false per row — UC enforces it on every query |
-| **Column mask** | A SQL function applied per column — returns the original value or a masked one |
-| **DENY** | Overrides GRANT — used to enforce hard restrictions (e.g., "no exec staff sees salaries") |
-| **Privilege hierarchy** | Catalog-level grants cascade to schemas; schema-level grants cascade to tables |
+| **Owner vs grantee** | Owners have all privileges and can grant; grantees have only what they were granted |
+| **`MANAGE`** | Manage privileges, transfer ownership, or drop without owning |
+| **Inheritance** | Catalog- and schema-level grants apply to current and future children |
+| **No `DENY` in Unity Catalog** | `DENY` exists only for the legacy `hive_metastore`; use `REVOKE` |
+| **Row filter** | SQL UDF that returns TRUE/FALSE per row, attached to the table |
+| **Column mask** | SQL UDF that returns the original or a masked value, one per column |
+| **ABAC policies** | Tag-based rules across many tables; Databricks' recommendation at scale |
+| **Volumes** | Third-level objects for files: `/Volumes/<catalog>/<schema>/<volume>/` |
 
 ## Related Resources
 
 - [Unity Catalog cheat sheet (shared)](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
-- [Row filters and column masks documentation](https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html)
+- [Row filters and column masks documentation](https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/)
+- [Practice questions — Securing Data](../resources/practice-questions/07-securing-data.md)
 
 ---
 

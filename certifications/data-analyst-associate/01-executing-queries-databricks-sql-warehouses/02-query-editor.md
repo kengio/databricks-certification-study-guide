@@ -1,5 +1,5 @@
 ---
-title: Query Editor & Execution
+title: Query Editor, Assistant & Execution
 type: study-material
 tags:
   - sql-query-editor
@@ -8,11 +8,25 @@ tags:
   - query-files
 ---
 
-# Query Editor & Execution
+# Query Editor, Assistant & Execution
 
 ## Overview
 
 The Databricks SQL Query Editor is a web-based IDE for writing, executing, and visualizing SQL queries. It provides syntax highlighting, autocomplete, result visualization, and performance insights.
+
+> [!abstract]
+>
+> - The SQL editor: writing, running, saving, and visualizing queries
+> - Named parameter markers (`:name`); legacy `{{ }}` only in the legacy editor
+> - Databricks Assistant (now Genie Code) for writing and debugging SQL
+
+> [!tip] What the Exam Tests
+>
+> - Which assistant command explains a query (`/explain`) and which fixes an error (`/fix`)
+> - Current parameter syntax vs legacy mustache syntax
+> - Where query history lives and how to open a query profile
+
+---
 
 ## Query Editor Interface
 
@@ -137,51 +151,57 @@ Display in UI / Cache
 
 ```sql
 -- View query execution details
-SELECT * FROM system.query_history
-WHERE query_id = 'abc123'
+SELECT * FROM system.query.history
+WHERE statement_id = 'abc123'
 LIMIT 1;
 
--- Returns: user_name, warehouse_id, execution_time_ms,
---          rows_produced, query_start_time, query_end_time
+-- Returns columns such as executed_by, compute.warehouse_id, total_duration_ms,
+--          produced_rows, start_time, end_time
 ```
 
 ## Parameters in Queries
 
-### Using Query Parameters
+### Named parameter markers (current syntax)
 
-Query parameters allow dynamic queries without editing code:
+Type a colon followed by a name to add a parameter. A widget appears above the results; use its gear icon to set the type (String, Integer, Decimal, Date, or Timestamp).
 
 ```sql
--- Define parameter with syntax: {{ parameter_name }}
 SELECT *
 FROM sales
-WHERE region = '{{ region }}'
-AND date >= '{{ start_date }}';
+WHERE region = :region             -- String: Databricks adds the quotes
+  AND order_date >= :start_date;   -- Date
 ```
 
-### Parameter Types
+| Need | Pattern |
+| :--- | :--- |
+| Date range | Date or Timestamp type with a Range widget: `BETWEEN :date_range.min AND :date_range.max` |
+| Column name as a parameter | `IDENTIFIER(:column_name)` |
+| Several values | Pass a comma-separated string and use `array_contains(TRANSFORM(SPLIT(:list, ','), s -> TRIM(s)), col)` |
 
-| Type | Example | Use Case |
-|------|---------|----------|
-| **Text** | `{{ customer_name }}` | String values |
-| **Number** | `{{ min_amount }}` | Numeric filtering |
-| **Date** | `{{ selected_date }}` | Time-based queries |
-| **List** | `{{ status }}` | Multiple choice from dropdown |
+> [!note] Legacy syntax
+> Double-curly-brace **mustache** parameters (`'{{ region }}'`) work only in the **legacy** SQL editor. Databricks recommends named parameter markers for new queries, and a mustache query copied into a notebook, an AI/BI dashboard dataset, or a Genie Agent must be converted before it will run. In the conversion, the quotes go away: `'{{date_param}}'` becomes `:date_param`.
 
-### Parameter in Dashboard Context
+Dashboard parameters, filters, and testing are covered in [Dashboard and Query Parameters](../02-creating-dashboards-and-visualizations/05-parameters.md).
 
-```sql
--- When embedded in dashboard, users select values
-SELECT
-    customer_id,
-    SUM(amount) as total_sales
-FROM sales
-WHERE region = '{{ region }}'      -- User selects region
-AND year = {{ year }}              -- User selects year
-GROUP BY customer_id
-ORDER BY total_sales DESC
-LIMIT {{ top_n }};                 -- User selects top N
-```
+## Databricks Assistant (Genie Code)
+
+> [!note] Platform update (Oct 2026)
+> The exam guide says **Databricks Assistant**. Databricks renamed it **Genie Code** on March 11, 2026 ([release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/march)). The slash commands below work under either name.
+
+The assistant is available in notebooks, the SQL editor, and the file editor. Use it to write, explain, and debug queries.
+
+| Command / action | What it does |
+| :--- | :--- |
+| `/explain` | Explains the code in a cell or query, step by step |
+| `/fix` | Proposes fixes for code errors in a diff view |
+| **Diagnose error** | Button on a failed cell; runs `/fix` automatically |
+| **Quick Fix** | Suggests a one-line fix for simple errors ("Accept and run") |
+| `/optimize` | Suggests performance improvements for SQL queries |
+| `/doc` | Adds comments to code |
+| `/prettify` | Formats SQL for readability |
+| `/findTables`, `/findQueries` | Finds relevant tables or queries using Unity Catalog metadata |
+
+Source: [Get coding help from Genie Code](https://docs.databricks.com/aws/en/notebooks/code-assistant) (checked 2026-10-26).
 
 ## Result Visualization
 
@@ -285,20 +305,20 @@ Navigation: SQL Editor → History sidebar
 ```sql
 -- Query history stored in system table
 SELECT
-    query_id,
-    user_name,
-    query_text,
+    statement_id,
+    executed_by,
+    statement_text,
     statement_type,      -- SELECT, INSERT, UPDATE, etc.
-    execution_time_ms,
-    rows_produced,
-    query_status,        -- SUCCESS, FAILED, CANCELLED
+    total_duration_ms,
+    produced_rows,
+    execution_status,
     error_message,
-    warehouse_id,
-    query_start_time,
-    query_end_time
-FROM system.query_history
-WHERE query_start_time > CURRENT_TIMESTAMP - INTERVAL 7 DAYS
-ORDER BY query_start_time DESC;
+    compute.warehouse_id,
+    start_time,
+    end_time
+FROM system.query.history
+WHERE start_time > CURRENT_TIMESTAMP - INTERVAL 7 DAYS
+ORDER BY start_time DESC;
 ```
 
 ### API Access to Query History
@@ -317,8 +337,8 @@ conn = connect(
 
 cursor = conn.cursor()
 cursor.execute("""
-SELECT query_id, query_text, execution_time_ms
-FROM system.query_history
+SELECT statement_id, statement_text, total_duration_ms
+FROM system.query.history
 LIMIT 10
 """)
 
@@ -357,7 +377,7 @@ EXPLAIN SELECT * FROM sales WHERE status = 'active';
 | Issue | Cause | Solution |
 |-------|-------|----------|
 | Slow query | Full table scan | Add WHERE clause filter |
-| Slow join | No index on join key | Ensure proper indexing |
+| Slow join | Exploding join or missing join key | Check row counts per operator in the query profile |
 | OOM error | Too much data in memory | Add LIMIT, partition, sample |
 | Timeout | Query too complex | Break into steps, materialize intermediate |
 
@@ -450,7 +470,8 @@ curl -X POST \
 ## Use Cases
 
 - **Ad-hoc Data Exploration**: Analysts use the query editor to quickly explore datasets, test hypotheses, and prototype queries before embedding them in dashboards.
-- **Parameterized Reporting**: Building reusable queries with `{{ parameters }}` that non-technical stakeholders can filter without modifying SQL code.
+- **Parameterized Reporting**: Building reusable queries with named parameter markers (`:region`) that non-technical stakeholders can filter without modifying SQL code.
+- **Debugging**: Using `/explain` and `/fix` (Diagnose error) from Databricks Assistant, now Genie Code, to understand and repair a failing query.
 
 ## Common Issues & Errors
 
@@ -461,18 +482,20 @@ curl -X POST \
 
 ## Exam Tips
 
-- Know the parameter syntax: double curly braces `{{ parameter_name }}`
+- Parameter syntax is a named marker, `:parameter_name`; `{{ }}` is legacy-editor only
+- Databricks Assistant (now Genie Code): `/explain` explains, `/fix` repairs errors, `/optimize` tunes
 - Understand that Ctrl+Enter (Cmd+Enter on macOS) executes the full query or selected text
-- Result caching lasts 24 hours and is invalidated when underlying data changes
-- Query history is stored in `system.query_history` and is queryable via SQL
+- Result caches keep entries for up to 24 hours and are invalidated when underlying tables change
+- Account-wide query history is in the `system.query.history` system table (admins by default)
 
 ## Key Takeaways
 
 - **Query Editor**: Web IDE for SQL development with visualization
-- **Parameters**: Dynamic queries using `{{ parameter_name }}` syntax
+- **Parameters**: Dynamic queries using named markers (`:parameter_name`)
+- **Assistant**: `/explain`, `/fix`, `/optimize` — now called Genie Code
 - **Autocomplete**: Suggestions for tables, columns, functions
 - **Execution**: Ctrl+Enter runs query, results auto-visualized
-- **Query History**: Stored in `system.query_history` table
+- **Query History**: UI per workspace; `system.query.history` for SQL analysis
 - **Visualization**: Auto-suggested based on result shape (table, chart, etc.)
 - **Sharing**: Queries shareable with fine-grained access controls
 - **API**: Programmable via Python SqlAlchemy, REST API, or CLI
@@ -481,13 +504,16 @@ curl -X POST \
 
 - [SQL Essentials](../../../shared/fundamentals/sql-essentials.md) - Core SQL concepts used in the query editor
 - [SQL Functions Cheat Sheet](../../../shared/cheat-sheets/sql-functions.md) - Quick reference for common SQL functions
-- [Query Parameters & Dynamic Queries](../03-analyzing-queries/04-parameters-queries.md) - Deep dive into parameterized queries
+- [Dashboard and Query Parameters](../02-creating-dashboards-and-visualizations/05-parameters.md) - Deep dive into parameterized queries
+- [Photon and Query Performance](../03-analyzing-queries/01-photon-and-query-performance.md) - Query history, query profile, and caching
 
 ## Official Documentation
 
-- [Databricks SQL Query Editor](https://docs.databricks.com/sql/user/queries/index.html)
-- [Query Parameters](https://docs.databricks.com/sql/user/queries/query-parameters.html)
+- [Write queries and explore data in the SQL editor](https://docs.databricks.com/aws/en/sql/user/sql-editor/)
+- [Work with query parameters](https://docs.databricks.com/aws/en/sql/user/queries/query-parameters)
+- [Mustache parameter syntax (legacy)](https://docs.databricks.com/aws/en/sql/user/sql-editor/mustache-parameters)
+- [Get coding help from Genie Code](https://docs.databricks.com/aws/en/notebooks/code-assistant)
 
 ---
 
-**[← Previous: SQL Warehouses](./01-sql-warehouses.md) | [↑ Back to Databricks SQL](./README.md) | [Next: Connections & Integrations](../05-understanding-databricks-platform/02-connections.md) →**
+**[← Previous: SQL Warehouses](./01-sql-warehouses.md) | [↑ Back to Section](./README.md) | [Next: Joins & Set Operations →](./03-joins-and-set-operations.md)**

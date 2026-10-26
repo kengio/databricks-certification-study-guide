@@ -2,7 +2,7 @@
   "cert": "data-analyst-associate-mock-1",
   "certTitle": "Data Analyst Associate — Mock Exam 1",
   "blueprintVersion": "Oct 2025",
-  "generated": "2026-05-22",
+  "generated": "2026-10-26",
   "domains": [
     {
       "id": "databricks-sql",
@@ -57,15 +57,15 @@
       "domain": "databricks-sql",
       "title": "Question 2",
       "difficulty": "medium",
-      "question": "A team needs 8 concurrent analyst sessions without queue buildup. Which warehouse configuration supports this best?",
+      "question": "A team needs 8 concurrent analyst sessions plus bursts of dashboard traffic without queue buildup. Which warehouse configuration supports this best?",
       "choices": {
-        "A": "Classic — single cluster with extra memory",
-        "B": "Pro — multi-cluster auto-scaling up to 10 clusters",
-        "C": "X-Large Classic — larger size reduces queuing",
-        "D": "Assign personal clusters to each analyst"
+        "A": "Classic warehouse with Scaling set to a minimum and maximum of 1 cluster",
+        "B": "A warehouse whose Scaling maximum allows more than one cluster, so it adds clusters under load",
+        "C": "An X-Large warehouse with 1 cluster, because a larger size removes queuing",
+        "D": "A personal all-purpose cluster for each analyst"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Pro SQL warehouses support multi-cluster scaling. When one cluster reaches capacity, additional\nclusters spin up automatically (up to the configured maximum of 10). Classic warehouses are\nsingle-cluster only — every session queues behind others when that cluster is at capacity.",
+      "shortAnswer": "Scaling (minimum and maximum number of clusters) controls concurrency. Pro and classic warehouses\nadd clusters when queued load grows, and serverless warehouses scale with Intelligent Workload\nManagement. Databricks recommends about one cluster per 10 concurrent queries. A larger size\nlowers each query's latency but does not add concurrency (C).",
       "explanation": ""
     },
     {
@@ -73,15 +73,15 @@
       "domain": "databricks-sql",
       "title": "Question 3",
       "difficulty": "easy",
-      "question": "What does the SQL warehouse auto-stop feature do?",
+      "question": "What does the SQL warehouse auto stop feature do?",
       "choices": {
         "A": "Stops all running queries after the configured timeout",
-        "B": "Shuts down warehouse compute when idle for the configured duration (default 120 minutes)",
-        "C": "Stops only Serverless warehouse queries",
+        "B": "Shuts down warehouse compute after it has been idle for the configured time (default 10 minutes for serverless, 45 minutes for pro and classic)",
+        "C": "Stops only serverless warehouse queries",
         "D": "Prevents a warehouse from starting if another is already running"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Auto-stop conserves cost by terminating warehouse compute when no queries have run for the\nidle timeout period. The default is 120 minutes. Running queries are never stopped by auto-stop\n— it only triggers when the warehouse is idle.",
+      "shortAnswer": "Auto stop saves cost by stopping compute when no queries have run for the idle period. The\nUI defaults are 10 minutes for serverless and 45 minutes for pro and classic. Running queries\nare never stopped by auto stop — it only triggers when the warehouse is idle.",
       "explanation": ""
     },
     {
@@ -105,7 +105,7 @@
       "domain": "databricks-sql",
       "title": "Question 5",
       "difficulty": "easy",
-      "question": "Row-level security via Unity Catalog row access policies is available on which SQL warehouse types?",
+      "question": "Which SQL warehouse types can run Lakehouse Federation queries against a foreign catalog?",
       "choices": {
         "A": "Classic and Pro",
         "B": "Pro and Serverless",
@@ -113,7 +113,7 @@
         "D": "All warehouse types equally"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Row-level security (implemented through Unity Catalog row access policies) requires Pro or\nServerless SQL warehouses. Classic warehouses do not support Unity Catalog's fine-grained\naccess controls such as row filters and column masks.",
+      "shortAnswer": "Lakehouse Federation requires a pro or serverless SQL warehouse (version 2023.40 or above).\nClassic warehouses cannot run federated queries.",
       "explanation": ""
     },
     {
@@ -161,7 +161,7 @@
         "D": "It must be restarted manually from the SQL Warehouses UI"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Serverless warehouses auto-stop when idle (default 10 minutes for Serverless vs 120 for\nClassic/Pro). Because compute is managed by Databricks, Serverless warehouses restart\nnear-instantly on the next query — there is no cold-start wait as with Classic/Pro.",
+      "shortAnswer": "Serverless warehouses auto stop when idle (default 10 minutes; pro and classic default to\n45 minutes). Because Databricks manages the compute, serverless warehouses start in about\n2–6 seconds on the next query, compared with about 4 minutes for pro and classic.",
       "explanation": ""
     },
     {
@@ -601,15 +601,15 @@
       "domain": "dashboards-visualization",
       "title": "Question 36",
       "difficulty": "easy",
-      "question": "What is the `{{parameter_name}}` syntax used for in Databricks SQL queries?",
+      "question": "In the current SQL editor and in AI/BI dashboard datasets, what does `:region` in `WHERE region = :region` represent?",
       "choices": {
-        "A": "Variable substitution in Python notebook cells",
-        "B": "Query parameters — replaced with user-selected values at query runtime",
-        "C": "Column aliasing in SELECT statements",
-        "D": "Referencing the output of a previously run query"
+        "A": "A Python variable from a notebook cell",
+        "B": "A named parameter marker, replaced with the value a user selects when the query runs",
+        "C": "A column alias",
+        "D": "A reference to the output of a previously run query"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Double curly braces `{{parameter_name}}` are Databricks SQL's query parameter (mustache)\nsyntax. When a query containing this syntax is added to a dashboard, a corresponding filter\nwidget is automatically created. The selected value is injected into the SQL at runtime.",
+      "shortAnswer": "Named parameter markers (a colon plus a name) are the current parameter syntax in the SQL\neditor, AI/BI dashboards, notebooks, and Genie. For strings, Databricks adds the quotes. The\nlegacy double-curly-brace (mustache) syntax works only in the legacy SQL editor.",
       "explanation": ""
     },
     {
@@ -633,15 +633,15 @@
       "domain": "dashboards-visualization",
       "title": "Question 38",
       "difficulty": "easy",
-      "question": "Which notification destination is NOT natively supported by Databricks SQL alerts?",
+      "question": "An alert author wants a SQL alert to post to a Slack channel, but no Slack option appears in the alert's notification list. What is needed?",
       "choices": {
-        "A": "Email",
-        "B": "Slack via webhook",
-        "C": "PagerDuty",
-        "D": "SMS text message"
+        "A": "Paste the Slack channel password into the alert query",
+        "B": "A workspace admin must first create a Slack notification destination",
+        "C": "Slack is never supported; use SMS",
+        "D": "Convert the alert to a dashboard"
       },
-      "correctAnswer": "D",
-      "shortAnswer": "Databricks SQL alerts natively support email, Slack (via webhook), PagerDuty, and custom\nwebhooks. SMS is not a built-in destination. SMS notifications could be achieved by routing\nthrough a custom webhook to an SMS gateway service.",
+      "correctAnswer": "B",
+      "shortAnswer": "Workspace admins set up notification destinations (such as Slack, Microsoft Teams, and\nwebhooks). Alert authors then select users or destinations in the alert's notification\nsettings.",
       "explanation": ""
     },
     {
@@ -649,15 +649,15 @@
       "domain": "dashboards-visualization",
       "title": "Question 39",
       "difficulty": "medium",
-      "question": "A Lakeview Dashboard is shared with a user with \"Can View\" permission. What can that user do?",
+      "question": "An AI/BI dashboard is shared with a user who has CAN VIEW / CAN RUN permission. What can that user do?",
       "choices": {
-        "A": "Edit the underlying query SQL",
-        "B": "View the dashboard, interact with filter widgets, and export data — but not modify queries or layout",
-        "C": "Create new visualization widgets on the dashboard",
-        "D": "Change the dashboard's refresh schedule"
+        "A": "Edit the dataset SQL",
+        "B": "View the published dashboard and interact with its filters, but not edit the draft",
+        "C": "Add new visualization widgets",
+        "D": "Change who else can access the dashboard"
       },
       "correctAnswer": "B",
-      "shortAnswer": "\"Can View\" permission allows a user to view the dashboard and interact with filter parameters.\nThey can also export data from individual visualizations. They cannot edit SQL queries, change\nthe layout, add widgets, or modify the refresh schedule.",
+      "shortAnswer": "Viewers of a published AI/BI dashboard (formerly a Lakeview dashboard) can open it and use its\nfilters. Editing the draft needs CAN EDIT, and changing permissions needs CAN MANAGE.",
       "explanation": ""
     },
     {
@@ -681,15 +681,15 @@
       "domain": "analytics-applications",
       "title": "Question 41",
       "difficulty": "easy",
-      "question": "A dashboard filter passes a selected date to all underlying queries. Which SQL snippet correctly uses this parameter?",
+      "question": "A dashboard filter passes a selected date to an AI/BI dashboard dataset. Which SQL snippet correctly uses this parameter?",
       "choices": {
         "A": "`WHERE order_date = :selected_date`",
         "B": "`WHERE order_date = {{selected_date}}`",
         "C": "`WHERE order_date = @selected_date`",
         "D": "`WHERE order_date = $selected_date`"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "`{{parameter_name}}` is the Databricks SQL parameter substitution syntax. The value selected\nin the dashboard filter widget is injected into the query at runtime. The colon (`:`) syntax\nis used in some other SQL tools but not Databricks SQL.",
+      "correctAnswer": "A",
+      "shortAnswer": "AI/BI dashboards use named parameter markers (`:name`). Dashboards do not support the legacy\nmustache syntax (`{{ }}`), which works only in the legacy SQL editor and must be converted\nbefore use in a dashboard.",
       "explanation": ""
     },
     {
@@ -700,12 +700,12 @@
       "question": "An analyst needs a summary table refreshed nightly without manually running the query. What is the most appropriate approach?",
       "choices": {
         "A": "Open Databricks SQL each morning and run the query manually",
-        "B": "Schedule the query in Databricks SQL to run nightly at midnight using a SQL warehouse",
+        "B": "Create a materialized view with a nightly `SCHEDULE CRON` refresh",
         "C": "Write a Python script that runs on the analyst's laptop at midnight",
-        "D": "Use Lakeflow Declarative Pipelines — it is the only supported option for automated query execution"
+        "D": "Use Lakeflow Spark Declarative Pipelines — it is the only supported option for automated refreshes"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Databricks SQL has built-in query scheduling. Configure a schedule (e.g., nightly at midnight),\nselect a SQL warehouse, and the platform runs the query automatically. No external scripts,\njobs, or Lakeflow Declarative Pipelines are required for simple scheduled query execution.",
+      "shortAnswer": "A materialized view can be created from a SQL warehouse with a `SCHEDULE` clause, and\nDatabricks runs the refresh automatically. Lakeflow Jobs can also schedule SQL, so pipelines\n(the exam's \"Delta Live Tables\", now Lakeflow Spark Declarative Pipelines) are not the only\noption (D).",
       "explanation": ""
     },
     {

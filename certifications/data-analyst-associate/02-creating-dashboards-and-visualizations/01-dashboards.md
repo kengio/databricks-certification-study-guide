@@ -1,5 +1,5 @@
 ---
-title: Dashboards & Dashboard Design
+title: AI/BI Dashboards & Dashboard Design
 type: study-material
 tags:
   - dashboards
@@ -8,11 +8,41 @@ tags:
   - interactive
 ---
 
-# Dashboards & Dashboard Design
+# AI/BI Dashboards & Dashboard Design
 
 ## Overview
 
-Dashboards are interactive collections of visualizations that communicate data insights. Effective dashboard design balances aesthetic appeal with functionality and user context.
+Dashboards are interactive collections of visualizations that communicate data insights. In Databricks the current product is **AI/BI dashboards** (previously called Lakeview dashboards). Section 6 of the October 2025 exam guide asks you to "build dashboards using AI/BI Dashboards, including multi-tabs/page layouts, multiple data sources/datasets, and widgets (visualizations, text, images)".
+
+> [!abstract]
+>
+> - A dashboard has a **Data** tab (datasets) and a **canvas** with one or more **pages**
+> - Widgets: visualizations, filters, text, and images
+> - Drafts are edited; **published** versions are shared with shared or individual data permissions
+
+> [!tip] What the Exam Tests
+>
+> - Adding pages and multiple datasets to one dashboard
+> - Which widget fits which need (counter, table, chart, text, image, filter)
+> - Scheduling refreshes and subscriptions
+
+> [!note] Legacy dashboards
+> Legacy Databricks SQL dashboards are no longer supported: you can no longer create them, and Databricks recommends AI/BI dashboards ([legacy dashboards page](https://docs.databricks.com/aws/en/sql/user/dashboards/)).
+
+---
+
+## AI/BI Dashboard Anatomy
+
+| Part | What it is |
+| :--- | :--- |
+| **Data tab** | Defines the dashboard's **datasets** — from tables, views, or custom SQL queries. A dashboard can have many datasets, and datasets travel with the dashboard when it is shared, imported, or exported. |
+| **Pages** | New dashboards start with one page ("Untitled page"); add more with the plus icon beside the page title. Hidden pages stay visible to authors in the draft and are excluded when you publish. |
+| **Widgets** | Visualizations, filters, text, and images placed on a page. Each visualization reads from one dataset. |
+| **Filters and parameters** | Global, page-level, and widget-level filters; parameters (`:name`) change the dataset query itself — see [Parameters](./05-parameters.md). |
+| **Draft vs published** | Authors edit the draft; viewers see the published version. |
+| **Genie** | A Genie Agent can be published with a dashboard for natural-language exploration. |
+
+Sources: [AI/BI dashboards](https://docs.databricks.com/aws/en/dashboards/), [Author dashboards](https://docs.databricks.com/aws/en/dashboards/manage/) (checked 2026-10-26).
 
 ## Dashboard Architecture
 
@@ -85,7 +115,8 @@ flowchart LR
     Widgets --> KPI["KPI Card<br/>Single metric"]
     Widgets --> Chart["Chart<br/>Visual analysis"]
     Widgets --> Table["Table<br/>Detailed data"]
-    Widgets --> Gauge["Gauge<br/>Progress"]
+    Widgets --> Image["Image<br/>Logo or diagram"]
+    Widgets --> Filter["Filter<br/>Viewer input"]
     Widgets --> Text["Text<br/>Context"]
 ```
 
@@ -163,32 +194,17 @@ Drill-down: Click region for detailed view
 Show Values: On bars
 ```
 
-### Gauge/Progress Widget
+### Progress Against a Target
+
+AI/BI dashboards have no gauge visualization. Show progress with a **counter** (which can compare a value against an offset value) or a bar chart of actual vs target.
 
 ```sql
--- Performance against target
 SELECT
-    SUM(amount) as actual,
-    500000 as target,
-    ROUND(SUM(amount) * 100.0 / 500000, 1) as pct_of_target
+    SUM(amount) AS actual,
+    500000 AS target,
+    ROUND(SUM(amount) * 100.0 / 500000, 1) AS pct_of_target
 FROM orders
 WHERE order_date >= CURRENT_DATE - 30;
-
--- Output: actual=475000, target=500000, pct_of_target=95%
-```
-
-**Visualization Configuration:**
-
-```yaml
-Type: Gauge Chart
-Min: 0
-Max: 500000 (target)
-Current: 475000 (actual)
-Threshold:
-  Green: 85-100%
-  Yellow: 70-84%
-  Red: <70%
-Display: Percentage (95%)
 ```
 
 ## Dashboard Layout & Design
@@ -259,22 +275,17 @@ SELECT
     region,
     SUM(amount) as revenue
 FROM orders
-WHERE order_date >= '{{ start_date }}'
-  AND order_date <= '{{ end_date }}'
-  AND region = '{{ selected_region }}'
+WHERE order_date BETWEEN :date_range.min AND :date_range.max   -- date range parameter
+  AND (region = :selected_region OR :selected_region IS NULL)
 GROUP BY DATE_TRUNC('day', order_date), region;
 ```
 
 **Filter Widget Configuration:**
 
 ```yaml
-Parameter: start_date
-  Type: Date Picker
-  Default: CURRENT_DATE - 30
-
-Parameter: end_date
-  Type: Date Picker
-  Default: CURRENT_DATE
+Parameter: date_range
+  Type: Date (range)
+  Widget: Date range picker
 
 Parameter: selected_region
   Type: Dropdown
@@ -300,7 +311,7 @@ SELECT
     COUNT(*) as orders,
     SUM(amount) as revenue
 FROM orders
-WHERE region = '{{ selected_region }}'
+WHERE region = :selected_region
 GROUP BY region, store_id;
 ```
 
@@ -317,69 +328,27 @@ Dashboard:
 
 ### Scheduled Refresh
 
-```yaml
-Refresh Options:
-  Manual: Click "Refresh" button
-  Every 8 hours: Good for stable dashboards
-  Every hour: For active monitoring
-  Every 5 minutes: Real-time dashboards
-  Never: Static snapshots
-```
+Click **Schedule** on the dashboard and set the frequency, start time, and time zone (or use cron syntax). By default the scheduled run uses the dashboard's SQL warehouse; another warehouse can be chosen in the advanced settings. Details: [Alerts & Scheduling](./03-alerts-scheduling.md).
 
 ### Query Caching
 
-```yaml
-Cache Strategy:
-  Result Cache: 24 hours (default)
-  Dashboard Refresh: Uses warehouse cache
-  Avoid refreshing same query repeatedly
-
-  Manual Cache Clear:
-  - Edit query
-  - Change parameters
-  - Re-run to bypass cache
-```
+Dashboard queries benefit from the warehouse result caches, which keep results for up to 24 hours and are invalidated when the underlying tables change.
 
 ## Sharing & Collaboration
 
 ### Permission Levels
 
-```yaml
-Dashboard Permissions:
-  Owner:
-    - View, Edit, Delete, Share
-    - Can change permissions
-    - Can set refresh schedule
+| Level | Can do |
+| :--- | :--- |
+| CAN VIEW / CAN RUN | View the published dashboard and interact with filters |
+| CAN EDIT | Edit the draft, manage subscribers |
+| CAN MANAGE | Everything, including permissions |
 
-  Editor:
-    - View, Edit, Share
-    - Cannot change owner permissions
+Users outside the workspace (but in the account) are limited to CAN RUN. Sharing methods, publishing credentials, and embedding are covered in [Sharing & Collaboration](./04-sharing-collaboration.md).
 
-  Viewer:
-    - View only
-    - Can interact with filters
-    - Cannot modify dashboard
-```
+### Subscriptions
 
-### Share Dashboard
-
-```text
-Dashboard Settings:
-  Share → Add People/Groups
-  ├─ Email: analyst@company.com (Editor)
-  ├─ Email: executive@company.com (Viewer)
-  └─ Group: Sales Team (Viewer)
-```
-
-### Email Subscriptions
-
-```yaml
-Scheduled Email:
-  Frequency: Daily, Weekly, Monthly
-  Recipients: team@company.com
-  Include: Dashboard snapshot (PNG)
-  Attachment: CSV export of data
-```
+Schedules can have up to 100 subscribers. Email subscribers get a PDF snapshot (optionally with CSV, TSV, or Excel attachments). Slack and Microsoft Teams destinations, set up by a workspace admin, get a PNG snapshot, a link, and a PDF.
 
 ## Dashboard Performance
 
@@ -458,7 +427,8 @@ Dashboards/
 
 ## Exam Tips
 
-- Dashboard refresh frequency depends on use case: 8 hours for stable data, hourly for monitoring, 5 minutes for real-time
+- One dashboard can have several pages and several datasets; widgets include visualizations, filters, text, and images
+- Refresh frequency depends on use case; configure it with **Schedule**
 - A shared parameter can filter multiple widgets simultaneously when used in each widget's query
 - Editing a shared dashboard updates it for all viewers with access
 - Optimize load time by filtering queries (date range), pre-aggregating data, and leveraging result caching
@@ -466,11 +436,11 @@ Dashboards/
 ## Key Takeaways
 
 - **Dashboard**: Collection of visualizations with interactivity
-- **Widgets**: Individual components (KPI, chart, table, text)
-- **Filters**: Parameters for dynamic queries
-- **Grid layout**: 12-column flexible layout system
-- **Refresh**: Scheduled or manual; uses result cache
-- **Permissions**: Owner, Editor, Viewer roles
+- **AI/BI dashboards**: the current product; legacy dashboards are retired
+- **Data tab + pages**: many datasets, many pages per dashboard
+- **Widgets**: visualizations, filters, text, images
+- **Refresh**: Schedule button; subscribers get snapshots
+- **Permissions**: CAN VIEW / CAN RUN, CAN EDIT, CAN MANAGE
 - **Sharing**: Via email, links, or groups
 - **Performance**: Queries should run < 5 seconds
 - **Drill-down**: Navigate from summary to detail
@@ -483,9 +453,10 @@ Dashboards/
 
 ## Official Documentation
 
-- [Databricks SQL Dashboards](https://docs.databricks.com/sql/user/dashboards/index.html)
-- [Dashboard Widgets](https://docs.databricks.com/sql/user/dashboards/dashboard-widgets.html)
+- [AI/BI dashboards](https://docs.databricks.com/aws/en/dashboards/)
+- [Author dashboards](https://docs.databricks.com/aws/en/dashboards/manage/)
+- [Schedule dashboards for periodic updates](https://docs.databricks.com/aws/en/dashboards/schedule-subscribe)
 
 ---
 
-**[↑ Back to Dashboards & Visualization](./README.md) | [Next: Visualizations & Chart Types](./02-visualizations.md) →**
+**[↑ Back to Section](./README.md) | [Next: Visualizations & Chart Types →](./02-visualizations.md)**
