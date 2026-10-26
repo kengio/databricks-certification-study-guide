@@ -278,7 +278,7 @@ v5.count()  # 1100 rows
 
 # Find new rows
 
-new_rows = v5.except(v3)  # Rows in v5 not in v3
+new_rows = v5.exceptAll(v3)  # Rows in v5 not in v3 (SQL EXCEPT ALL)
 new_rows.show()
 ```
 

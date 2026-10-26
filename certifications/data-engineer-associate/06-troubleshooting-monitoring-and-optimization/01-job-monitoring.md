@@ -345,7 +345,7 @@ spark.createDataFrame([
 
 ```json
 {
-  "timeout_seconds": 7200  // Increase from 3600
+  "timeout_seconds": 7200
 }
 ```
 
