@@ -429,10 +429,10 @@ print(f"Created cluster: {resp['cluster_id']}")
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### ML Libraries Missing on the Cluster
 
-**Scenario:** The default settings for Compute Clusters for ML do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Compute Clusters for ML to handle production-scale workloads.
+**Scenario:** `import xgboost` or `from databricks import automl` fails in a notebook.
+**Fix:** The cluster is on the standard runtime. Switch to a Databricks Runtime ML version (AutoML is not built in from Databricks Runtime 18.0 ML), rather than installing a stack by hand with init scripts.
 
 ### GPU Cluster Out of Memory
 

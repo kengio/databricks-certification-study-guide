@@ -332,10 +332,10 @@ df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Notebook Cannot Read a Unity Catalog Table
 
-**Scenario:** The default settings for Databricks ML Workspace & Notebooks do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Databricks ML Workspace & Notebooks to handle production-scale workloads.
+**Scenario:** `spark.read.table("ml_dev.churn.customers")` fails with a permission error from a notebook.
+**Fix:** Check `USE CATALOG`, `USE SCHEMA`, and `SELECT` grants for your identity, and attach the notebook to compute whose access mode supports Unity Catalog (Dedicated for ML runtimes).
 
 ### Notebook Cannot Access MLflow Experiment
 

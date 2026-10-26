@@ -481,10 +481,10 @@ client.delete_experiment(old_exp.experiment_id)
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Best Run Query Returns the Worst Run
 
-**Scenario:** The default settings for Experiments & Runs do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Experiments & Runs to handle production-scale workloads.
+**Scenario:** `search_runs(..., order_by=["metrics.rmse DESC"], max_results=1)` returns the run with the highest error.
+**Fix:** Sort loss metrics (RMSE, log loss) ascending and score metrics (AUC, F1) descending.
 
 ### Runs Spread Across Several Experiments
 

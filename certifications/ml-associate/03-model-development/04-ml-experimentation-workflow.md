@@ -548,10 +548,10 @@ Deploy & Monitor
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Test Set Used for Tuning
 
-**Scenario:** The default settings for ML Experimentation Workflow do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for ML Experimentation Workflow to handle production-scale workloads.
+**Scenario:** Hyperparameters are chosen by comparing scores on the test set, and production performance is lower than reported.
+**Fix:** Tune on validation data or cross-validation; evaluate the final model on the untouched test set exactly once.
 
 ### Experiment Reproducibility Issues
 
