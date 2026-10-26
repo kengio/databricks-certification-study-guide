@@ -519,4 +519,4 @@ Ports required:
 
 ---
 
-**[← Previous: Query Editor & Execution](../01-executing-queries-databricks-sql-warehouses/02-query-editor.md) | [↑ Back to Databricks SQL](./README.md)**
+**[← Previous: Unity Catalog](./01-unity-catalog.md) | [↑ Back to Section](./README.md) | [Next: Platform Components, Catalog Explorer & Marketplace →](./03-platform-components-and-marketplace.md)**

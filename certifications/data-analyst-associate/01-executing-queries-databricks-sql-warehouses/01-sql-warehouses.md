@@ -12,7 +12,21 @@ tags:
 
 ## Overview
 
-Databricks SQL provides SQL warehouses (formerly SQL endpoints) as managed, serverless compute resources optimized for SQL analytics. These are purpose-built for running SQL queries with enterprise-grade reliability, security, and performance.
+A SQL warehouse (formerly SQL endpoint) is the compute that runs SQL in Databricks SQL. The SQL editor, AI/BI dashboards, alerts, Genie, and BI tools all send their queries to a warehouse, which plans and executes them with Photon against data governed by Unity Catalog. Section 4 of the October 2025 exam guide asks you to "explain the role a SQL Warehouse plays in query execution".
+
+> [!abstract]
+>
+> - Three types: **serverless**, **pro**, and **classic**
+> - Size (workers per cluster) controls query latency; scaling (min/max clusters) controls concurrency
+> - Auto stop shuts idle warehouses down: 10 minutes default for serverless, 45 minutes for pro and classic
+
+> [!tip] What the Exam Tests
+>
+> - What a warehouse does when a query runs, and which features each type has
+> - Size vs number of clusters
+> - Default auto stop values and start-up times
+
+---
 
 ## SQL Warehouse Architecture
 
@@ -48,124 +62,75 @@ flowchart TD
 
 ## SQL Warehouse Types
 
-Databricks offers three SQL warehouse types optimized for different use cases:
+Databricks SQL supports **serverless**, **pro**, and **classic** warehouses.
 
-### **Pro Warehouses**
+| | Serverless | Pro | Classic |
+| :--- | :---: | :---: | :---: |
+| Photon | Yes | Yes | Yes |
+| Predictive I/O | Yes | Yes | No |
+| Intelligent Workload Management (IWM) | Yes | No | No |
+| Typical start-up time | 2–6 seconds | About 4 minutes | About 4 minutes |
+| Compute runs in | Databricks account | Your cloud account | Your cloud account |
 
-- **Best for**: Production analytics workloads
-- **Compute**: On-demand, scales automatically
-- **Features**:
-  - Serverless scaling up to hundreds of nodes
-  - Spot instances for cost optimization
-  - Shared queues for fair resource allocation
-- **Cost model**: Pay per DBU (Databricks Unit) consumed
-- **Performance**: Best for unpredictable, variable workloads
-- **Use cases**: Dashboard refresh, ad-hoc queries, batch jobs
+- **Serverless** is the default type in the UI for eligible workspaces and the usual choice for bursty, interactive, and dashboard workloads. Through the API with default parameters, the default is classic.
+- **Pro** suits workloads that must run in your own cloud account; it supports features such as Lakehouse Federation that classic does not.
+- **Classic** is the most basic type, and it scales less responsively than serverless.
+- Lakehouse Federation, Genie, and other newer features need a **pro or serverless** warehouse.
 
-```sql
--- Pro warehouse is ideal for mixed workloads
-SELECT COUNT(*), customer_segment
-FROM sales
-GROUP BY customer_segment;
-```
-
-### **Classic Warehouses (Legacy)**
-
-- **Deprecated in favor of Pro**
-- Still available for legacy systems
-- Slower startup time
-- Recommend migration to Pro
-
-### **Serverless SQL Warehouses**
-
-- **Best for**: Predictable, consistent workloads
-- **Setup**: Fully managed, no configuration needed
-- **Scaling**: Automatic based on query load
-- **Pricing**: Simplified per-query billing
-- **Performance**: Optimized for common query patterns
-- **Use cases**: Real-time dashboards, frequent queries
+> [!note] Platform update (Oct 2026)
+> A fourth, Beta serverless type, **Lakehouse Real-Time (Lakehouse//RT)**, targets low-latency, high-concurrency `SELECT` workloads ([release notes, June 30, 2026](https://docs.databricks.com/aws/en/release-notes/product/2026/june)). It is not on the exam.
 
 ## SQL Warehouse Configuration
 
-### Size and Auto-scaling
+### Size and Scaling
 
-```mermaid
-flowchart LR
-    Start["Min Size"] --> S1["2X-Small<br/>2 DBU/h"]
-    S1 --> S2["X-Small<br/>4 DBU/h"]
-    S2 --> S3["Small<br/>8 DBU/h"]
-    S3 --> S4["Medium<br/>16 DBU/h"]
-    S4 --> S5["Large<br/>32 DBU/h"]
-    S5 --> S6["X-Large<br/>64 DBU/h"]
-    S6 --> S7["2X-Large<br/>128 DBU/h"]
-    S7 --> S8["Max Size<br/>512 DBU/h"]
-```
+**Size** sets the number of workers in each cluster. A bigger size lowers the latency of heavy queries. The default size is X-Large.
 
-| Size | CPU Cores | Memory | DBU/hour | Best For |
-|------|-----------|--------|----------|----------|
-| 2X-Small | 8 | 16 GB | 2 | Light queries, low concurrency |
-| X-Small | 16 | 32 GB | 4 | Small to medium queries |
-| Small | 32 | 64 GB | 8 | Standard analytics |
-| Medium | 64 | 128 GB | 16 | Complex joins, aggregations |
-| Large | 128 | 256 GB | 32 | Large datasets, concurrency |
-| X-Large | 256 | 512 GB | 64 | Enterprise workloads |
-| 2X-Large | 512 | 1024 GB | 128 | Massive parallel processing |
+| Size | Workers (classic and pro) |
+| :--- | :---: |
+| 2X-Small | 1 |
+| X-Small | 2 |
+| Small | 4 |
+| Medium | 8 |
+| Large | 16 |
+| X-Large | 32 |
+| 2X-Large | 64 |
+| 3X-Large | 128 |
+| 4X-Large | 256 |
+| 5X-Large (Public Preview, pro and serverless) | 512 |
 
-### Important Configuration Parameters
+**Scaling** sets the minimum and maximum number of clusters. More clusters let more queries run at once; Databricks recommends about one cluster for every 10 concurrent queries.
 
-```yaml
-# Auto-scaling Settings
+- Pro and classic add clusters based on the estimated time to process running and queued queries (for example, 2–6 minutes of load adds one cluster), scale up if a query waits 5 minutes in the queue, and scale down after 15 minutes of low load.
+- Serverless uses IWM: it starts a query immediately when capacity exists and provisions clusters quickly when queues grow.
+- Every warehouse type queues at most 1,000 queries.
 
-min_num_clusters: 1        # Minimum instances to keep running
-max_num_clusters: 10       # Maximum instances to scale to
-auto_stop_mins: 20         # Minutes before shutdown
+### Auto Stop
 
-# Performance Settings
+| Type | Default | Minimum |
+| :--- | :---: | :---: |
+| Serverless | 10 minutes | 5 minutes in the UI (1 minute through the API) |
+| Pro and classic | 45 minutes | 10 minutes |
 
-enable_spot_instances: true        # Cost optimization with spot VMs
-enable_result_cache: true          # Cache query results
-enable_schema_evolution: true      # Allow schema changes
+The idle timer runs only when no queries are running.
 
-# Concurrency Settings
+## Cost Model
 
-sql_max_connections: 100           # Max concurrent connections
-query_queue_timeout_mins: 30       # Wait time in queue
-```
-
-## DBU Consumption Model
-
-**DBU (Databricks Unit)**: Pricing metric = 0.4 AWS vCPU-hours or GCP vCPU-hours
-
-### Calculation Example
-
-```python
-# DBU Cost Calculation
-
-warehouse_size_dbu_per_hour = 16      # Medium warehouse
-hours_run = 8                          # 8 hours
-total_dbu = warehouse_size_dbu_per_hour * hours_run
-
-# total_dbu = 128 DBUs
-
-dbu_cost = total_dbu * 0.40           # ~$0.40/DBU average
-# Cost = 128 * 0.40 = $51.20
-
-```
+Warehouses consume DBUs (Databricks Units) while they run; larger sizes and more clusters consume more. Rates depend on the warehouse type, cloud, and contract, so check the [pricing page](https://www.databricks.com/product/pricing/databricks-sql) rather than memorising a number.
 
 ### Cost Optimization Strategies
 
 1. **Right-size your warehouse**: Start small, monitor usage, scale gradually
 2. **Use auto-scaling**: Let Databricks scale to demand, pay only for what you use
-3. **Enable spot instances**: Up to 70% cost savings with spot VMs
-4. **Set auto-stop**: Pause warehouses during off-hours automatically
-5. **Share warehouses**: Multiple teams on one warehouse reduces per-team cost
-6. **Use result caching**: Repeat queries return cached results instantly
+3. **Set auto-stop**: Pause warehouses during off-hours automatically
+4. **Share warehouses**: Multiple teams on one warehouse reduces per-team cost
+5. **Use result caching**: Repeat queries return cached results instantly
 
 ## SQL Warehouse Lifecycle
 
 ```mermaid
 flowchart LR
-    Create["Create Warehouse"] --> Starting["STARTING<br/>2-5 mins"]
+    Create["Create Warehouse"] --> Starting["STARTING<br/>seconds (serverless) to ~4 min"]
     Starting --> Running["RUNNING<br/>Available"]
     Running --> Busy["BUSY<br/>Query Executing"]
     Busy --> Running
@@ -183,7 +148,7 @@ flowchart LR
 | **RUNNING** | Yes | Accepting queries | Ongoing |
 | **IDLE** | Yes | No queries, countdown to stop | Until auto-stop timeout |
 | **STOPPED** | No | No cost, can restart | Indefinite |
-| **STARTING** | Limited | Initialization, queries queued | 2-5 minutes |
+| **STARTING** | Limited | Initialization, queries queued | 2–6 seconds (serverless); about 4 minutes (pro, classic) |
 | **STOPPING** | No | Graceful shutdown initiated | 1-2 minutes |
 
 ## Query Execution & Performance
@@ -212,37 +177,23 @@ Results (Return to client)
 
 ```sql
 -- Set query timeout (5 minutes)
-SET statement_timeout = 300000;  -- milliseconds
+SET STATEMENT_TIMEOUT = 300;  -- seconds
 
 -- Check active queries
-SELECT * FROM system.query_history
-WHERE query_start_time > CURRENT_TIMESTAMP - INTERVAL 1 HOUR
-ORDER BY query_start_time DESC;
+SELECT * FROM system.query.history
+WHERE start_time > CURRENT_TIMESTAMP - INTERVAL 1 HOUR
+ORDER BY start_time DESC;
 ```
 
 ## Result Caching
 
-Databricks automatically caches query results for 24 hours:
+| Cache | Where | Lifetime |
+| :--- | :--- | :--- |
+| Local result cache | In memory, per cluster | Cluster lifetime, up to 24 hours per entry; cleared on stop |
+| Remote result cache | Serverless only, shared by all warehouses in the workspace | 24 hours; survives restarts |
+| Disk cache | Local SSDs, data read from storage | Like the local cache |
 
-```sql
--- This query result is cached
-SELECT COUNT(*) FROM sales WHERE year = 2024;
-
--- Exact same query uses cache (returned instantly)
-SELECT COUNT(*) FROM sales WHERE year = 2024;
-
--- Different query or different year - no cache
-SELECT COUNT(*) FROM sales WHERE year = 2025;
-```
-
-### Cache Invalidation
-
-Cache is invalidated when:
-
-- Underlying table data changes (INSERT, UPDATE, DELETE, MERGE)
-- Table schema changes
-- Table is replaced or recreated
-- 24-hour TTL expires
+Result caches are invalidated when the underlying tables are updated. See [Photon & Query Performance](../03-analyzing-queries/01-photon-and-query-performance.md) for details and for `SET use_cached_result = false`.
 
 ## SQL Warehouse Monitoring
 
@@ -250,8 +201,8 @@ Cache is invalidated when:
 
 | Metric | What It Measures | Healthy Range | Action If High |
 |--------|------------------|---------------|-----------------|
-| **Query Latency** | Time from submission to completion | < 30s for dashboards | Check query plan, add indexes |
-| **Concurrency** | Queries running simultaneously | 20-50 queries | Increase warehouse size |
+| **Query Latency** | Time from submission to completion | < 30s for dashboards | Check the query profile |
+| **Concurrency** | Queries running simultaneously | About 10 per cluster | Raise the maximum number of clusters |
 | **Queue Wait Time** | Time query waits before execution | < 5 seconds | Add warehouse capacity |
 | **Warehouse Utilization** | % time warehouse is busy | 60-80% | Right-size or consolidate |
 | **Cache Hit Rate** | % of queries using cached results | > 40% for dashboards | Optimize caching strategy |
@@ -261,15 +212,15 @@ Cache is invalidated when:
 ```sql
 -- Query performance history
 SELECT
-    query_id,
-    user_name,
-    query_text,
-    execution_time_ms,
-    rows_produced,
-    query_start_time
-FROM system.query_history
-WHERE warehouse_id = 'abc123'
-ORDER BY query_start_time DESC
+    statement_id,
+    executed_by,
+    statement_text,
+    total_duration_ms,
+    produced_rows,
+    start_time
+FROM system.query.history
+WHERE compute.warehouse_id = 'abc123'
+ORDER BY start_time DESC
 LIMIT 100;
 ```
 
@@ -305,22 +256,23 @@ CREATE TABLE users (id STRING, name STRING, age STRING);
 CREATE TABLE users (id INT, name STRING, age INT);
 ```
 
-### **Partition Large Tables**
+### **Cluster Large Tables**
 
 ```sql
--- Partition by date for faster filtering
+-- Liquid clustering replaces partitioning and ZORDER for new tables
 CREATE TABLE sales (
     id INT,
     amount DECIMAL(10,2),
     sale_date DATE
 )
-PARTITIONED BY (sale_date);
+CLUSTER BY (sale_date);
 
--- Query only relevant partitions
 SELECT SUM(amount)
 FROM sales
-WHERE sale_date >= '2024-01-01';  -- Fast!
+WHERE sale_date >= '2024-01-01';  -- files outside the range are skipped
 ```
+
+See [Delta History & Liquid Clustering](../03-analyzing-queries/02-delta-history-and-liquid-clustering.md).
 
 ### **Schedule Peak Workloads**
 
@@ -363,27 +315,25 @@ testing:
 
 ### Query Timeout on Large Datasets
 
-**Scenario:** Queries on unpartitioned large tables time out on small SQL warehouses.
+**Scenario:** Queries on large, unclustered tables time out on small SQL warehouses.
 **Fix:** Scale up the warehouse size or add `WHERE` filters to reduce data scanned. Use `EXPLAIN` to check scan size before running.
 
 ## Exam Tips
 
-- Know the three warehouse types (Pro, Classic/legacy, Serverless) and when to use each
-- Understand DBU cost calculations: warehouse size (DBU/h) multiplied by hours run
-- Remember result cache duration is 24 hours and is invalidated by data changes or schema updates
+- Know the three warehouse types and their features: IWM is serverless-only; Predictive I/O is pro and serverless; Photon is everywhere
+- Size = latency of each query; max clusters = concurrency
+- Auto stop defaults: 10 minutes serverless, 45 minutes pro and classic
+- Result caches last up to 24 hours and are invalidated when tables change
 - Scaling mid-query does not affect running queries; only new queries use the scaled size
 
 ## Key Takeaways
 
-- **SQL Warehouses**: Serverless, managed compute for SQL analytics
-- **Three types**: Pro (default), Classic (legacy), Serverless
-- **Auto-scaling**: Automatically adjusts cluster size 2-512 DBUs
-- **DBU pricing**: Consumption-based, ~$0.40 per DBU (AWS/GCP)
-- **Result caching**: 24-hour cache for identical queries
-- **Concurrency**: Handles multiple queries with fair queuing
-- **Auto-stop**: Automatically stops warehouses to save costs
-- **Monitoring**: Use `system.query_history` for performance insights
-- **Performance**: Spot instances, query optimization, right-sizing are key
+- **Role**: the warehouse is the compute that plans and runs every Databricks SQL query, with Photon
+- **Three types**: serverless (UI default), pro, classic
+- **Start-up**: 2–6 seconds serverless; about 4 minutes pro and classic
+- **Size vs scaling**: workers per cluster vs number of clusters (about one per 10 concurrent queries)
+- **Auto stop**: 10 minutes (serverless) / 45 minutes (pro, classic) by default
+- **Monitoring**: query history and `system.query.history`
 
 ## Related Topics
 
@@ -393,9 +343,10 @@ testing:
 
 ## Official Documentation
 
-- [Databricks SQL Warehouses](https://docs.databricks.com/sql/admin/sql-endpoints.html)
-- [SQL Warehouse Types](https://docs.databricks.com/sql/admin/warehouse-type.html)
+- [SQL warehouse types](https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-types)
+- [Create a SQL warehouse](https://docs.databricks.com/aws/en/compute/sql-warehouse/create)
+- [SQL warehouse sizing, scaling, and queuing behavior](https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-behavior)
 
 ---
 
-**[↑ Back to Databricks SQL](./README.md) | [Next: Query Editor & Execution](./02-query-editor.md) →**
+**[↑ Back to Section](./README.md) | [Next: Query Editor, Assistant & Execution →](./02-query-editor.md)**

@@ -483,4 +483,4 @@ TO `engineer@company.com`;
 
 ---
 
-**[← Previous: Tables & Schemas](../06-managing-data/01-tables-schemas.md) | [↑ Back to Data Management in Databricks](./README.md) | [Next: Access Control & Security](../07-securing-data/01-access-control.md) →**
+**[↑ Back to Section](./README.md) | [Next: Connections & Integrations →](./02-connections.md)**

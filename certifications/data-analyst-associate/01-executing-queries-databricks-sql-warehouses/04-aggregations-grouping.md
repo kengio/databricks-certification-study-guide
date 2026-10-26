@@ -1,5 +1,5 @@
 ---
-title: Aggregations & Grouping
+title: Aggregations, Sorting & Filtering
 type: study-material
 tags:
   - aggregations
@@ -8,11 +8,25 @@ tags:
   - sql-queries
 ---
 
-# Aggregations & Grouping
+# Aggregations, Sorting & Filtering
 
 ## Overview
 
-Aggregations condense multiple rows into summary statistics. GROUP BY enables aggregating by categories, enabling analytics like "revenue by region" or "count of orders by status."
+Aggregations condense multiple rows into summary statistics. GROUP BY enables aggregating by categories, enabling analytics like "revenue by region" or "count of orders by status." Section 4 of the October 2025 exam guide asks you to "perform aggregate operations such as count, approximate count distinct, mean, and summary statistics" and to "perform sorting and filtering operations on a table".
+
+> [!abstract]
+>
+> - `COUNT`, `SUM`, `AVG` (`mean`), `MIN`/`MAX`, `approx_count_distinct`
+> - Summary statistics: notebook data profiles and `dbutils.data.summarize`
+> - `GROUP BY`, `HAVING`, `ROLLUP`/`CUBE`; `WHERE`, `ORDER BY ... NULLS FIRST/LAST`, `LIMIT`
+
+> [!tip] What the Exam Tests
+>
+> - Exact vs approximate distinct counts
+> - Where summary statistics come from in a notebook
+> - `WHERE` vs `HAVING`, and the default position of NULLs when sorting
+
+---
 
 ## Aggregation Functions
 
@@ -429,6 +443,39 @@ LEFT JOIN order_counts oc ON c.customer_id = oc.customer_id
 GROUP BY c.region;
 ```
 
+## Approximate Counts and Summary Statistics
+
+### `approx_count_distinct`
+
+```sql
+SELECT approx_count_distinct(visitor_id) AS approx_visitors,  -- HyperLogLog++ estimate
+       count(DISTINCT visitor_id)        AS exact_visitors
+FROM web.page_views;
+```
+
+`approx_count_distinct(expr [, relativeSD])` returns a `BIGINT` estimate using HyperLogLog++. By default the result is accurate within 5 %; `relativeSD` sets the allowed error. Use it when an exact `COUNT(DISTINCT)` over billions of rows is too slow. `mean` is a synonym for `avg`.
+
+### Summary statistics in a notebook
+
+- On a notebook result table, a **data profile** shows summary statistics for numeric, string, and date columns, with histograms of each column's distribution.
+- In Python, `dbutils.data.summarize(df)` calculates and displays the same kind of profile for a Spark or pandas DataFrame (Public Preview). Some statistics are approximate unless you pass `precise=True`.
+
+## Sorting and Filtering
+
+```sql
+SELECT order_id, region, amount
+FROM sales.orders
+WHERE order_date >= '2026-01-01'      -- filter rows before grouping
+  AND region IN ('EMEA', 'APAC')
+ORDER BY amount DESC NULLS LAST, order_id
+LIMIT 100;
+```
+
+- NULLs sort **first** for `ASC` and **last** for `DESC` unless you add `NULLS FIRST` or `NULLS LAST`.
+- `WHERE` filters rows; `HAVING` filters groups; `QUALIFY` filters window-function results.
+
+Sources: [approx_count_distinct](https://docs.databricks.com/aws/en/sql/language-manual/functions/approx_count_distinct), [ORDER BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby), [Databricks Utilities — data utility](https://docs.databricks.com/aws/en/dev-tools/databricks-utils) (checked 2026-10-26).
+
 ## Use Cases
 
 - **Executive KPI Reporting**: Summarizing revenue, order counts, and averages by region, category, or time period for dashboard widgets and scheduled reports.
@@ -447,6 +494,8 @@ GROUP BY c.region;
 - Aggregates cannot be used in WHERE; use HAVING to filter on aggregate results
 - Know the query execution order: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT
 - ROLLUP produces hierarchical subtotals and a grand total; CUBE produces all dimension combinations
+- `approx_count_distinct` trades a small error (5 % by default) for speed
+- NULLs sort first for `ASC`, last for `DESC`
 
 ## Key Takeaways
 
@@ -458,6 +507,7 @@ GROUP BY c.region;
 - **CUBE**: All dimension combinations
 - **NULL handling**: NULLs ignored in aggregates, NULL is its own group
 - **Order matters**: FROM → WHERE → GROUP BY → HAVING → SELECT
+- **Approximate**: `approx_count_distinct`; **summary statistics**: data profile / `dbutils.data.summarize`
 
 ## Related Topics
 
@@ -467,9 +517,10 @@ GROUP BY c.region;
 
 ## Official Documentation
 
-- [Databricks SQL GROUP BY](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-groupby.html)
-- [Aggregate Functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin.html#aggregate-functions)
+- [GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby)
+- [Built-in functions — aggregate functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-builtin)
+- [approx_count_distinct](https://docs.databricks.com/aws/en/sql/language-manual/functions/approx_count_distinct)
 
 ---
 
-**[← Previous: Joins & Multi-table Operations](./01-joins.md) | [↑ Back to Advanced SQL Queries](./README.md) | [Next: Window Functions & Analytics](./03-window-functions.md) →**
+**[← Previous: Joins & Set Operations](./03-joins-and-set-operations.md) | [↑ Back to Section](./README.md) | [Next: Window Functions & Analytics →](./05-window-functions.md)**

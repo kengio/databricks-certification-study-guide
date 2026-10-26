@@ -12,7 +12,21 @@ tags:
 
 ## Overview
 
-Databricks SQL provides comprehensive access control through Unity Catalog RBAC, row-level and column-level security, and workspace-level permissions. These mechanisms protect sensitive data while enabling collaboration.
+Databricks protects data with Unity Catalog privileges, row filters and column masks, dynamic views, and workspace-level permissions (ACLs) on objects such as queries and dashboards. Section 9 of the October 2025 exam guide covers this; the newer topics (admin roles, ownership, volumes, row filters, column masks, and PII) are in [Ownership, Fine-Grained Access & PII](./02-ownership-fine-grained-access-and-pii.md).
+
+> [!abstract]
+>
+> - Authentication: OAuth/SSO for people, service principals for automation, PATs where needed
+> - Unity Catalog privileges: `USE CATALOG`, `USE SCHEMA`, `SELECT`, `MODIFY`, ... granted with `GRANT` and removed with `REVOKE`
+> - Privileges on a catalog or schema are inherited by current and future child objects
+
+> [!tip] What the Exam Tests
+>
+> - The privileges needed to read a table
+> - `GRANT` / `REVOKE` syntax
+> - Masking and filtering patterns for sensitive data
+
+---
 
 ## Access Control Hierarchy
 
@@ -122,40 +136,18 @@ def query_databricks():
 
 ## Workspace-Level Permissions
 
-### User Roles
+### Workspace Entitlements and Object ACLs
 
-```sql
--- User
--- • Can create notebooks, clusters, jobs
--- • Limited to own workspace
--- • Cannot manage workspace settings
+Workspace admins manage users, groups, and entitlements. Workspace objects — notebooks, folders, queries, dashboards, alerts, Genie Agents, and SQL warehouses — are protected by access control lists (ACLs):
 
--- Advanced User
--- • Can create and manage clusters
--- • Can install libraries
--- • Limited admin capabilities
+| Object | Permission levels |
+| :--- | :--- |
+| Queries, notebooks | CAN VIEW, CAN RUN, CAN EDIT, CAN MANAGE |
+| Dashboards | CAN VIEW / CAN READ, CAN RUN, CAN EDIT, CAN MANAGE |
+| Alerts | CAN RUN, CAN MANAGE |
+| SQL warehouses | CAN VIEW, CAN MONITOR, CAN USE, IS OWNER, CAN MANAGE |
 
--- Admin
--- • Full workspace control
--- • Can manage workspace settings, users, policies
--- • Can create and modify SQL warehouses
--- • Access to all workspace resources
-```
-
-### Managing Workspace Access
-
-```yaml
-Workspace Settings:
-  Users & Groups:
-    → User email
-    → Role (User, Advanced User, Admin)
-    → Status (Active, Inactive)
-
-  Groups:
-    → Create custom groups
-    → Assign members
-    → Assign roles as group
-```
+Workspace admins have CAN MANAGE on all workspace objects; creators get CAN MANAGE on what they create; objects inherit their folder's permissions. Object ACLs never replace Unity Catalog privileges on the data.
 
 ## Catalog-Level Permissions
 
@@ -169,7 +161,7 @@ GRANT SELECT ON CATALOG production TO `analyst@company.com`;
 GRANT SELECT ON CATALOG production TO `analysts`;
 
 -- Grant multiple privileges
-GRANT SELECT, CREATE_TABLE ON CATALOG production
+GRANT SELECT, CREATE TABLE ON CATALOG production
 TO `engineer@company.com`;
 
 -- Grant with admin grant option (can grant to others)
@@ -183,8 +175,8 @@ TO `admin@company.com` WITH GRANT OPTION;
 |-----------|--------|---|
 | **SELECT** | Read tables, views, volumes | Analysts, BI Tools |
 | **MODIFY** | INSERT, UPDATE, DELETE data | Engineers |
-| **CREATE_TABLE** | Create new tables/views | Data Engineers |
-| **CREATE_SCHEMA** | Create schemas | Data Engineers |
+| **CREATE TABLE** | Create new tables/views | Data Engineers |
+| **CREATE SCHEMA** | Create schemas | Data Engineers |
 | **ALL PRIVILEGES** | Full control | Admins |
 | **EXECUTE** | Run functions/procedures | Various |
 
@@ -207,7 +199,7 @@ GRANT SELECT ON SCHEMA production.sales
 TO `analyst@company.com`;
 
 -- Grant to create tables in schema
-GRANT CREATE_TABLE ON SCHEMA production.sales
+GRANT CREATE TABLE ON SCHEMA production.sales
 TO `engineer@company.com`;
 
 -- View permissions on object
@@ -347,28 +339,17 @@ SELECT * FROM production.sales.customers_masked;
 
 ### Masking Strategy
 
+Prefer a **column mask** on the table itself (a SQL UDF attached with `ALTER TABLE ... ALTER COLUMN ... SET MASK`) so the rule applies to every query. Check group membership with `is_account_group_member()`:
+
 ```sql
--- Email masking
-CASE
-    WHEN has_privilege(current_user(), 'SENSITIVE')
-    THEN email
-    ELSE CONCATENATE(SUBSTRING(email, 1, 1), '***@company.com')
-END as email
+CREATE FUNCTION main.hr.mask_ssn(ssn STRING) RETURNS STRING
+RETURN CASE WHEN is_account_group_member('hr_admins') THEN ssn
+            ELSE CONCAT('***-**-', RIGHT(ssn, 4)) END;
 
--- Phone masking
-CASE
-    WHEN has_privilege(current_user(), 'SENSITIVE')
-    THEN phone
-    ELSE CONCATENATE(SUBSTRING(phone, 1, 3), '-***-****')
-END as phone
-
--- SSN masking
-CASE
-    WHEN has_privilege(current_user(), 'SENSITIVE')
-    THEN ssn
-    ELSE CONCATENATE('***-**-', SUBSTRING(ssn, 8, 4))
-END as ssn
+ALTER TABLE main.hr.employees ALTER COLUMN ssn SET MASK main.hr.mask_ssn;
 ```
+
+See [Ownership, Fine-Grained Access & PII](./02-ownership-fine-grained-access-and-pii.md).
 
 ## Current User Functions
 
@@ -409,12 +390,8 @@ TO `user@company.com`;
 ### Use Groups
 
 ```sql
--- Create group one time
-CREATE GROUP analysts;
-
--- Add members to group
-ALTER GROUP analysts ADD MEMBER `alice@company.com`;
-ALTER GROUP analysts ADD MEMBER `bob@company.com`;
+-- Groups and their members are managed by admins
+-- (account console, workspace admin settings, or SCIM provisioning)
 
 -- Grant permission to group
 GRANT SELECT ON CATALOG production TO `analysts`;
@@ -424,21 +401,16 @@ GRANT SELECT ON CATALOG production TO `analysts`;
 ### Audit Regularly
 
 ```sql
--- Who has what permissions?
-SELECT *
-FROM system.information_schema.role_principals;
+-- Who has access to a table?
+SHOW GRANTS ON TABLE main.sales.orders;
 
--- Recent permission changes
-SELECT
-    timestamp,
-    principal,
-    action,
-    resource_type
-FROM system.audit_logs
-WHERE action IN ('GRANT', 'REVOKE')
-ORDER BY timestamp DESC
-LIMIT 100;
+-- Privileges across a catalog (information schema)
+SELECT grantee, table_schema, table_name, privilege_type
+FROM main.information_schema.table_privileges
+WHERE table_schema = 'sales';
 ```
+
+Grant and revoke events are also recorded in the audit log system table (`system.access.audit`), which admins can query.
 
 ### Secure PII
 
@@ -470,19 +442,20 @@ CREATE TABLE production.meta.pii_columns (
 
 ## Exam Tips
 
-- PII should be protected using masked views with CASE statements checking `current_user()`
-- Row-level security cannot be applied directly to tables; use dynamic views that filter based on `current_user()`
+- Protect PII with column masks on the table (or dynamic views); check groups with `is_account_group_member()`
+- Row filters apply row-level security directly to a table with `ALTER TABLE ... SET ROW FILTER`
+- `DENY` is not supported in Unity Catalog; remove access with `REVOKE`
 - Service Principal (M2M) authentication is best for CI/CD pipelines and automation
 - Use `SHOW GRANTS ON TABLE tablename` to verify who has access to a table
 
 ## Key Takeaways
 
 - **Authentication**: PAT (programmatic), SSO (enterprise), Service Principals (automation)
-- **Workspace permissions**: User, Advanced User, Admin roles
-- **Catalog RBAC**: SELECT, MODIFY, CREATE_TABLE, CREATE_SCHEMA privileges
+- **Workspace permissions**: ACLs on queries, dashboards, notebooks, folders, warehouses
+- **Catalog RBAC**: SELECT, MODIFY, CREATE TABLE, CREATE SCHEMA privileges
 - **Hierarchy**: Permissions cascade (Catalog → Schema → Table → Row/Column)
-- **Row-level**: Dynamic views using current_user()
-- **Column-level**: CASE statements for masking sensitive data
+- **Row-level**: Row filters on tables, or dynamic views
+- **Column-level**: Column masks on tables, or dynamic views
 - **Groups**: Simplify permission management across many users
 - **Current user**: Use current_user(), current_catalog(), current_schema()
 
@@ -494,9 +467,9 @@ CREATE TABLE production.meta.pii_columns (
 
 ## Official Documentation
 
-- [Databricks Access Control](https://docs.databricks.com/security/access-control/index.html)
-- [Unity Catalog Privileges](https://docs.databricks.com/data-governance/unity-catalog/manage-privileges/privileges.html)
+- [Access control lists](https://docs.databricks.com/aws/en/security/auth/access-control/)
+- [Unity Catalog privileges and securable objects](https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/privileges)
 
 ---
 
-**[← Previous: Unity Catalog](../05-understanding-databricks-platform/01-unity-catalog.md) | [↑ Back to Data Management in Databricks](./README.md)**
+**[↑ Back to Section](./README.md) | [Next: Ownership, Fine-Grained Access & PII →](./02-ownership-fine-grained-access-and-pii.md)**

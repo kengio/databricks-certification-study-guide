@@ -1,5 +1,5 @@
 ---
-title: Joins & Multi-table Operations
+title: Joins & Set Operations
 type: study-material
 tags:
   - joins
@@ -8,11 +8,25 @@ tags:
   - multi-table
 ---
 
-# Joins & Multi-table Operations
+# Joins & Set Operations
 
 ## Overview
 
-Joins combine data from multiple tables by matching values on key columns. Mastering different join types is critical for complex analytics queries in Databricks SQL.
+Joins combine data from multiple tables by matching values on key columns. Set operations (`UNION`, `INTERSECT`, `EXCEPT`) stack or compare the results of two queries. Both are listed in Section 4 of the October 2025 exam guide: "Write queries to combine tables using various join operations ... with single or multiple keys, as well as set operations like union and union all".
+
+> [!abstract]
+>
+> - Join types: inner, left, right, full outer, cross, semi, anti
+> - Single-key and composite (multi-column) join conditions
+> - Set operations: `UNION` / `UNION ALL`, `INTERSECT`, `EXCEPT` (`MINUS`)
+
+> [!tip] What the Exam Tests
+>
+> - Picking the join type that keeps (or drops) unmatched rows
+> - Joining on every key column so rows do not multiply
+> - `UNION` removes duplicates by default; `UNION ALL` keeps them
+
+---
 
 ## Join Types
 
@@ -424,6 +438,39 @@ FROM source s
 FULL OUTER JOIN target t ON s.id = t.id;
 ```
 
+## Set Operations
+
+Set operations combine the results of two queries that return the **same number of columns** with compatible types. A column-count mismatch raises `NUM_COLUMNS_MISMATCH`.
+
+| Operator | Returns | Default |
+| :--- | :--- | :--- |
+| `UNION` | Rows from either query | `DISTINCT` (duplicates removed) |
+| `UNION ALL` | Rows from either query, duplicates kept | — |
+| `INTERSECT` | Rows in both queries | `DISTINCT` |
+| `EXCEPT` (or `MINUS`) | Rows in the first query but not the second | `DISTINCT` |
+
+```sql
+-- Customers active in either year (each once)
+SELECT customer_id FROM sales_2024
+UNION
+SELECT customer_id FROM sales_2025;
+
+-- Stack two monthly extracts, keeping every row
+SELECT * FROM orders_jan
+UNION ALL
+SELECT * FROM orders_feb;
+
+-- Customers lost between years
+SELECT customer_id FROM sales_2024
+EXCEPT
+SELECT customer_id FROM sales_2025;
+```
+
+> [!tip]
+> Joins add **columns** from another table; set operations add or compare **rows**. `UNION ALL` is cheaper than `UNION` because it skips duplicate removal — use it when duplicates are impossible or wanted.
+
+Source: [Set operators](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops) (checked 2026-10-26).
+
 ## Use Cases
 
 - **Large Scale Transformations**: Leveraging Spark SQL distributed execution semantics to transform multi-terabyte datasets efficiently.
@@ -447,6 +494,8 @@ FULL OUTER JOIN target t ON s.id = t.id;
 - CROSS JOIN produces a Cartesian product: row count = left rows multiplied by right rows
 - SEMI JOIN is often more optimized than IN or EXISTS for existence checks
 - Always filter rows before joining for better performance (WHERE before JOIN)
+- When a key has two columns, join on both — joining on one multiplies rows
+- `UNION` defaults to `DISTINCT`; `UNION ALL` keeps duplicates
 
 ## Key Takeaways
 
@@ -459,6 +508,7 @@ FULL OUTER JOIN target t ON s.id = t.id;
 - **Join condition**: Can use expressions, ranges, multiple columns
 - **Order matters**: Filter before join for performance
 - **NULL handling**: IS NULL checks for unmatched rows
+- **Set operations**: `UNION` (distinct) vs `UNION ALL` (keeps duplicates); `INTERSECT`; `EXCEPT`/`MINUS`
 
 ## Related Topics
 
@@ -468,9 +518,9 @@ FULL OUTER JOIN target t ON s.id = t.id;
 
 ## Official Documentation
 
-- [Databricks SQL JOIN Syntax](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-join.html)
-- [Query Performance Tuning](https://docs.databricks.com/sql/admin/query-tuning.html)
+- [JOIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join)
+- [Set operators](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops)
 
 ---
 
-**[↑ Back to Advanced SQL Queries](./README.md) | [Next: Aggregations & Grouping](./02-aggregations-grouping.md) →**
+**[← Previous: Query Editor, Assistant & Execution](./02-query-editor.md) | [↑ Back to Section](./README.md) | [Next: Aggregations, Sorting & Filtering →](./04-aggregations-grouping.md)**
