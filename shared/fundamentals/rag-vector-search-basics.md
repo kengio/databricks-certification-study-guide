@@ -10,6 +10,7 @@ aliases:
   - RAG
   - Retrieval-Augmented Generation
   - Vector Search
+  - AI Search
 ---
 
 # RAG & Vector Search Basics
@@ -35,7 +36,7 @@ flowchart TB
         Docs[Source Documents<br>PDFs, Wikis, DBs]
         Chunk[Chunking<br>Split into segments]
         Embed[Embedding Model<br>text-to-vector]
-        VectorDB[(Vector Store<br>Databricks Vector Search)]
+        VectorDB[(Vector Store<br>Databricks Vector Search / AI Search)]
         Docs --> Chunk --> Embed --> VectorDB
     end
 
@@ -94,9 +95,16 @@ Vector search finds the K nearest vectors to a query embedding:
 | Dot product | `sum(a * b)` | When vectors are normalized |
 | Euclidean (L2) | `sqrt(sum((a-b)²))` | Image embeddings |
 
-## Databricks Vector Search
+## Databricks Vector Search (now AI Search)
 
 Databricks Vector Search is a serverless vector database integrated directly into the Lakehouse.
+
+> [!note] Platform update (Oct 2026)
+>
+> - The docs now say **"Databricks AI Search (formerly Databricks Vector Search)"**. The GenAI Engineer Associate exam guide still says *Vector Search*, so expect that name on the exam.
+> - New SDK: `pip install databricks-ai-search` → `from databricks.ai_search.client import AISearchClient`. The `databricks-vectorsearch` package is deprecated but kept as a re-export shim; `VectorSearchClient` remains a backward-compatible alias, so the code below still runs.
+> - Endpoint types: `STANDARD` or `STORAGE_OPTIMIZED` (for very large indexes). Delta Sync indexes on standard endpoints need **Change Data Feed** on the source table.
+> - Agents that call the index: author with MLflow `ResponsesAgent` (`ChatAgent` / `ChatModel` are deprecated). For new code agents, Databricks now recommends the **Agent Bricks CLI** (Beta); agents deployed to Model Serving are a legacy path since Oct 5, 2026.
 
 ```mermaid
 flowchart LR
@@ -205,22 +213,30 @@ Answer:"""
 
 | Metric | Measures | Tool |
 | :--- | :--- | :--- |
-| **Faithfulness** | Is the answer grounded in retrieved context? | MLflow evaluate, RAGAS |
-| **Answer Relevance** | Is the answer relevant to the question? | RAGAS |
+| **Faithfulness / groundedness** | Is the answer grounded in retrieved context? | MLflow 3 `RetrievalGroundedness` scorer, RAGAS |
+| **Answer Relevance** | Is the answer relevant to the question? | MLflow 3 `RelevanceToQuery` scorer, RAGAS |
 | **Context Recall** | Did retrieval find the right chunks? | RAGAS |
 | **Context Precision** | Are retrieved chunks actually useful? | RAGAS |
 
 ```python
 import mlflow
+from mlflow.genai.scorers import RelevanceToQuery, Safety
 
-with mlflow.start_run():
-    results = mlflow.evaluate(
-        model=rag_query,
-        data=eval_dataset,  # DataFrame with "question" and "ground_truth" columns
-        model_type="question-answering",
-        evaluators="default"
-    )
+eval_data = [
+    {"inputs": {"user_question": "How do I configure Auto Loader?"}},
+    {"inputs": {"user_question": "What is a Delta Sync index?"}},
+]
+
+# MLflow 3: each row's `inputs` dict is passed to predict_fn as keyword arguments
+results = mlflow.genai.evaluate(
+    data=eval_data,
+    predict_fn=rag_query,
+    scorers=[RelevanceToQuery(), Safety()],
+)
 ```
+
+> [!note]
+> MLflow 3 replaced the older `mlflow.evaluate(...)` call (including Databricks Agent Evaluation's `model_type="databricks-agent"`) with `mlflow.genai.evaluate()` + **scorers** for GenAI apps. `RetrievalGroundedness` needs a traced app with a retriever span, so it isn't used on the untraced `rag_query` above.
 
 ## Prompt Engineering for RAG
 
@@ -290,7 +306,7 @@ Sources: [doc_1_title], [doc_2_title]"""
 1. **RAG vs fine-tuning** — RAG adds knowledge at inference time (no model retraining); fine-tuning changes model weights (expensive, for behavior/style changes)
 2. **Chunking matters** — Chunks too large lose precision; chunks too small lose context
 3. **Embedding model consistency** — The same model must be used for indexing and querying; mixing models produces incomparable vectors
-4. **Vector Search requires Delta Sync** — The source table must be a Delta table for automatic sync; non-Delta sources require Direct Vector Access
+4. **Delta Sync needs a Delta source** — The source table must be a Delta table (with Change Data Feed on standard endpoints) for automatic sync; vectors from other sources go into a Direct Vector Access index
 5. **Hallucination risk** — RAG reduces hallucinations but does not eliminate them; always evaluate faithfulness
 
 ## Practice Questions
@@ -369,7 +385,10 @@ D) Pre-compute all possible questions and answers and store them in a lookup tab
 
 ## Official Documentation
 
-- [Databricks Vector Search](https://docs.databricks.com/en/generative-ai/vector-search.html)
+- [Databricks AI Search (formerly Vector Search)](https://docs.databricks.com/aws/en/vector-search/vector-search)
+- [Create AI Search endpoints and indexes](https://docs.databricks.com/aws/en/ai-search/create-ai-search)
 - [Databricks Foundation Model APIs](https://docs.databricks.com/en/machine-learning/foundation-models/index.html)
 - [MLflow Evaluate for RAG](https://mlflow.org/docs/latest/llms/rag/index.html)
-- [Mosaic AI Agent Framework](https://docs.databricks.com/en/generative-ai/agent-framework/index.html)
+- [Agent Bricks CLI (Beta) — recommended for new code agents](https://docs.databricks.com/aws/en/agents/custom-agents/agent-bricks-cli)
+- [Legacy agent schemas (`ChatAgent` / `ChatModel` → `ResponsesAgent`)](https://learn.microsoft.com/en-us/azure/databricks/generative-ai/agent-framework/agent-legacy-schema)
+- [MLflow 3 evaluation for GenAI](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/evaluate-app)

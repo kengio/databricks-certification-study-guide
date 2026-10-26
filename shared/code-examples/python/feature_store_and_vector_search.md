@@ -4,21 +4,27 @@ tags:
   - python
   - feature-store
   - vector-search
+  - ai-search
   - genai
   - ml
 ---
 
 # Feature Store and Vector Search — Python
 
-PySpark/Python examples for Databricks Feature Store and Vector Search (Mosaic AI).
+PySpark/Python examples for Feature Engineering in Unity Catalog (the Databricks Feature Store) and Mosaic AI Vector Search (now called **AI Search** in the docs).
+
+> [!note] Platform update (Oct 2026)
+>
+> - **Feature tables:** in Unity Catalog workspaces use `FeatureEngineeringClient` from `databricks.feature_engineering`. The older `databricks.feature_store.FeatureStoreClient` belongs to the legacy Workspace Feature Store and still appears in older material.
+> - **Vector Search → AI Search:** "Databricks AI Search (formerly Databricks Vector Search)". The new SDK is `databricks-ai-search` (`from databricks.ai_search.client import AISearchClient`); the `databricks-vectorsearch` package is deprecated but kept as a shim, and `VectorSearchClient` remains a backward-compatible alias — so the `VectorSearchClient` code below still runs and matches the exam-guide wording.
 
 ## Feature Store — Create and Write
 
 ```python
-from databricks.feature_store import FeatureStoreClient
+from databricks.feature_engineering import FeatureEngineeringClient
 from pyspark.sql.functions import current_timestamp
 
-fs = FeatureStoreClient()
+fe = FeatureEngineeringClient()
 
 # Compute features from raw data
 transactions = spark.table("my_catalog.bronze.transactions")
@@ -32,18 +38,19 @@ user_features = (transactions
     .withColumnRenamed("count(1)", "total_transactions")
     .withColumn("computed_at", current_timestamp()))
 
-# Create feature table (first time)
-fs.create_table(
+# Create feature table (first time) — a UC Delta table with a primary key
+fe.create_table(
     name="my_catalog.user_features.user_spending",
     primary_keys=["user_id"],
+    df=user_features,
     description="User spending features from transactions"
 )
 
-# Write features — merge keeps existing records, overwrite replaces all
-fs.write_table(
+# Upsert later batches — rows whose key isn't in the DataFrame stay unchanged
+fe.write_table(
     name="my_catalog.user_features.user_spending",
     df=user_features,
-    mode="merge"   # or "overwrite"
+    mode="merge"
 )
 ```
 
@@ -51,24 +58,23 @@ fs.write_table(
 
 ```python
 # Read entire feature table as a DataFrame
-features_df = fs.read_table("my_catalog.user_features.user_spending")
+features_df = fe.read_table(name="my_catalog.user_features.user_spending")
 
 # Filter after reading
 high_value_users = features_df.filter("lifetime_value > 1000")
 
-# Time-travel read (as of a specific version/timestamp)
-historical_features = fs.read_table(
-    name="my_catalog.user_features.user_spending",
-    as_of_delta_timestamp="2024-01-01"
-)
+# Time-travel read — feature tables are Delta tables, so Delta time travel works
+historical_features = spark.sql("""
+    SELECT * FROM my_catalog.user_features.user_spending TIMESTAMP AS OF '2024-01-01'
+""")
 ```
 
 ## Feature Store — Training Set
 
 ```python
-from databricks.feature_store import FeatureStoreClient, FeatureLookup
+from databricks.feature_engineering import FeatureEngineeringClient, FeatureLookup
 
-fs = FeatureStoreClient()
+fe = FeatureEngineeringClient()
 
 # Define which features to look up and how to join them
 feature_lookups = [
@@ -88,7 +94,7 @@ feature_lookups = [
 labels_df = spark.table("my_catalog.training.churn_labels")
 
 # Create the training dataset (joins features automatically)
-training_set = fs.create_training_set(
+training_set = fe.create_training_set(
     df=labels_df,
     feature_lookups=feature_lookups,
     label="churned",
@@ -98,11 +104,11 @@ training_set = fs.create_training_set(
 training_df = training_set.load_df().toPandas()
 ```
 
-## Vector Search — Create Endpoint and Index
+## Vector Search (AI Search) — Create Endpoint and Index
 
 ### Delta Sync Index (text → embedding auto-generated)
 
-Source table must have CDF enabled. The index auto-syncs with the table.
+Source table must have CDF enabled (required on standard endpoints; tables with row tracking get it automatically). The index auto-syncs with the table.
 
 ```python
 from databricks.vector_search.client import VectorSearchClient
@@ -115,7 +121,7 @@ spark.sql("""
     SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
 """)
 
-# Create endpoint
+# Create endpoint ("STANDARD" or "STORAGE_OPTIMIZED")
 vsc.create_endpoint(name="rag_endpoint", endpoint_type="STANDARD")
 
 # Create Delta Sync index — Databricks generates embeddings automatically
@@ -165,7 +171,7 @@ index.upsert([
 index.delete(["doc_old_chunk0", "doc_old_chunk1"])
 ```
 
-## Vector Search — Similarity Search
+## Vector Search (AI Search) — Similarity Search
 
 ```python
 index = vsc.get_index(

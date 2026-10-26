@@ -20,9 +20,9 @@ flowchart TB
         subgraph Row1[" "]
             direction LR
             Notebooks[Notebooks]
-            Repos[Repos]
-            Jobs[Jobs]
-            Workflows[Workflows]
+            GitFolders[Git Folders]
+            Jobs[Lakeflow Jobs]
+            Pipelines[Lakeflow Pipelines]
         end
         subgraph Row2[" "]
             direction LR
@@ -43,10 +43,10 @@ flowchart TB
 | Section          | Purpose                                             |
 | ---------------- | --------------------------------------------------- |
 | **Workspace**    | Browse and manage notebooks, folders, and files     |
-| **Repos**        | Git integration for version control                 |
+| **Git folders**  | Git integration for version control (formerly Repos; lives in the Workspace browser) |
 | **Data**         | Access to catalogs, schemas, tables (Unity Catalog) |
 | **Compute**      | Manage clusters and SQL warehouses                  |
-| **Workflows**    | Create and monitor jobs and pipelines               |
+| **Jobs & Pipelines** | Create and monitor Lakeflow Jobs and pipelines (replaced the separate Workflows and Pipelines items in Jun 2025) |
 | **Machine Learning** | Experiments, models, feature store              |
 
 ## Notebooks
@@ -204,12 +204,12 @@ Serverless or classic compute optimized for SQL workloads.
 - Bitbucket
 - AWS CodeCommit
 
-## Jobs and Workflows
+## Lakeflow Jobs (formerly Databricks Jobs / Workflows)
 
 ### Creating a Job
 
-1. Navigate to Workflows
-2. Click "Create Job"
+1. Click **Jobs & Pipelines** in the sidebar
+2. Click **Create**, then **Job**
 3. Configure tasks:
    - Notebook task
    - Python script
@@ -228,7 +228,7 @@ flowchart LR
 
 ![Databricks job workflow task visualization](../../images/databricks-ui/workspace/job-task-dag.png)
 
-*Task dependencies visualized in the Databricks Workflows UI*
+*Task dependencies visualized in the Lakeflow Jobs UI (formerly the Workflows UI)*
 
 ### Job Scheduling
 
@@ -250,27 +250,28 @@ date = dbutils.widgets.get("date")
 date = spark.conf.get("spark.databricks.job.parameters.date")
 ```
 
-## Delta Live Tables (DLT)
+## Lakeflow Spark Declarative Pipelines (formerly DLT)
 
-Declarative ETL framework for building reliable data pipelines.
+Declarative ETL framework for building reliable data pipelines — formerly Delta Live Tables (DLT), then Lakeflow Declarative Pipelines (renamed Lakeflow Spark Declarative Pipelines on Nov 12, 2025). The current Python API is `pyspark.pipelines`; the older `import dlt` style still runs. See the [pipelines cheat sheet](../cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) for the full API and a legacy `dlt` mapping.
 
 ```python
-import dlt
+from pyspark import pipelines as dp
+from pyspark.sql import functions as F
 
-@dlt.table
+@dp.materialized_view
 def bronze_orders():
-    return spark.read.format("json").load("/data/orders/")
+    return spark.read.format("json").load("/Volumes/main/landing/raw/orders/")
 
-@dlt.table
+@dp.materialized_view
 def silver_orders():
-    return dlt.read("bronze_orders").filter("amount > 0")
+    return spark.read.table("bronze_orders").filter("amount > 0")
 
-@dlt.table
+@dp.materialized_view
 def gold_daily_summary():
     return (
-        dlt.read("silver_orders")
+        spark.read.table("silver_orders")
         .groupBy("order_date")
-        .agg(sum("amount").alias("total"))
+        .agg(F.sum("amount").alias("total"))
     )
 ```
 
@@ -353,7 +354,7 @@ print(password)  # Shows [REDACTED]
 
 | Use Case           | Workspace Components                  |
 | ------------------ | ------------------------------------- |
-| Data Engineering   | Notebooks, Jobs, DLT, Clusters        |
+| Data Engineering   | Notebooks, Lakeflow Jobs, Lakeflow pipelines (formerly DLT), Clusters |
 | Data Analysis      | SQL Warehouses, Notebooks, Dashboards |
 | Machine Learning   | MLflow, Experiments, Model Registry   |
 | BI/Reporting       | SQL Warehouses, Dashboards            |

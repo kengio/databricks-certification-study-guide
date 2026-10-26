@@ -10,7 +10,7 @@ tags:
 
 # CDC and MERGE Patterns — SQL
 
-SQL examples for SCD MERGE, APPLY CHANGES (DLT), Change Data Feed queries, and deduplication.
+SQL examples for SCD MERGE, AUTO CDC (formerly APPLY CHANGES, in Lakeflow Spark Declarative Pipelines), Change Data Feed queries, and deduplication.
 
 ## SCD Type 1 MERGE — Overwrite Current State
 
@@ -94,17 +94,17 @@ WHERE __START_AT <= '2024-06-01'
       OR __END_AT IS NULL);
 ```
 
-## APPLY CHANGES SQL Syntax (DLT)
+## AUTO CDC SQL Syntax (formerly APPLY CHANGES)
 
-Full syntax for the APPLY CHANGES INTO statement used inside Lakeflow Pipelines:
+Syntax for the AUTO CDC flow used inside Lakeflow Spark Declarative Pipelines (formerly DLT). "The `AUTO CDC` APIs replace the `APPLY CHANGES` APIs and have the same syntax" — older code and exam stems may still show `APPLY CHANGES INTO`, which works the same way.
 
 ```sql
--- Create target streaming table first
-CREATE OR REFRESH STREAMING TABLE my_catalog.silver.customers;
+-- Create the target streaming table first
+CREATE OR REFRESH STREAMING TABLE customers;
 
 -- SCD Type 1
-APPLY CHANGES INTO LIVE.customers
-FROM STREAM(LIVE.customers_cdc)
+CREATE FLOW customers_cdc_flow AS AUTO CDC INTO customers
+FROM STREAM(customers_cdc)
 KEYS (customer_id)
 SEQUENCE BY updated_at
 COLUMNS * EXCEPT (_commit_version, _commit_timestamp)
@@ -112,25 +112,27 @@ STORED AS SCD TYPE 1;
 ```
 
 ```sql
--- SCD Type 2 with history columns
-CREATE OR REFRESH STREAMING TABLE my_catalog.silver.customers_history;
+-- SCD Type 2 with history columns (__START_AT / __END_AT)
+CREATE OR REFRESH STREAMING TABLE customers_history;
 
-APPLY CHANGES INTO LIVE.customers_history
-FROM STREAM(LIVE.customers_cdc)
+CREATE FLOW customers_history_flow AS AUTO CDC INTO customers_history
+FROM STREAM(customers_cdc)
 KEYS (customer_id)
 SEQUENCE BY updated_at
-COLUMNS email, name, phone          -- Only track changes to these columns
-STORED AS SCD TYPE 2;
+COLUMNS * EXCEPT (op)
+STORED AS SCD TYPE 2
+TRACK HISTORY ON email, name, phone;   -- only changes to these columns create new versions
 ```
 
 ```sql
--- With delete and truncate support
-APPLY CHANGES INTO LIVE.customers
-FROM STREAM(LIVE.customers_cdc)
+-- With delete and truncate support (truncate: SCD Type 1 only)
+CREATE FLOW customers_cdc_flow AS AUTO CDC INTO customers
+FROM STREAM(customers_cdc)
 KEYS (customer_id)
+APPLY AS DELETE WHEN op = 'D'
+APPLY AS TRUNCATE WHEN op = 'TRUNCATE'
 SEQUENCE BY updated_at
-APPLY AS DELETES WHEN op = 'D'
-APPLY AS TRUNCATES WHEN op = 'TRUNCATE'
+COLUMNS * EXCEPT (op)
 STORED AS SCD TYPE 1;
 ```
 
@@ -138,10 +140,12 @@ STORED AS SCD TYPE 1;
 | :--- | :--- |
 | `KEYS (cols)` | Primary key columns |
 | `SEQUENCE BY col` | Column for ordering changes (latest wins) |
-| `COLUMNS * EXCEPT (...)` | Exclude metadata columns from target |
-| `APPLY AS DELETES WHEN expr` | Treat matching rows as deletes |
-| `APPLY AS TRUNCATES WHEN expr` | Treat matching rows as table truncate |
+| `IGNORE NULL UPDATES` | Keep existing target values when an update carries nulls |
+| `COLUMNS * EXCEPT (...)` | Choose which source columns land in the target |
+| `APPLY AS DELETE WHEN expr` | Treat matching rows as deletes |
+| `APPLY AS TRUNCATE WHEN expr` | Treat matching rows as a full-table truncate (SCD Type 1 only) |
 | `STORED AS SCD TYPE 1\|2` | Overwrite vs full history |
+| `TRACK HISTORY ON cols` | SCD Type 2: only changes to these columns create a new version |
 
 ## CDF Query Patterns
 

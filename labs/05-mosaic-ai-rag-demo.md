@@ -1,18 +1,19 @@
 ---
-title: "Lab 05 — Mosaic AI Vector Search + RAG Demo"
+title: "Lab 05 — Vector Search (AI Search) + RAG Demo"
 type: lab
 tags:
   - labs
   - mosaic-ai
   - vector-search
+  - ai-search
   - rag
   - genai
 status: published
 ---
 
-# Lab 05 — Mosaic AI Vector Search + RAG Demo
+# Lab 05 — Vector Search (AI Search) + RAG Demo
 
-End-to-end RAG demo: prepare a small documentation corpus, embed it into a Mosaic AI Vector Search index, build a `ResponsesAgent` compound app that retrieves + generates, register it in UC, and deploy via `databricks.agents.deploy()`.
+End-to-end RAG demo: prepare a small documentation corpus, embed it into a Mosaic AI Vector Search index (the product is now called **Databricks AI Search** in the docs), build a `ResponsesAgent` compound app that retrieves + generates, register it in UC, and deploy via `databricks.agents.deploy()`.
 
 > [!abstract]
 >
@@ -27,6 +28,12 @@ End-to-end RAG demo: prepare a small documentation corpus, embed it into a Mosai
 > - Building a Vector Search endpoint and a sync index
 > - Writing a compound app as one `ResponsesAgent` subclass
 > - The full deploy → invoke → audit loop
+
+> [!note] Platform update (Oct 2026)
+>
+> - **Vector Search → AI Search.** "Databricks AI Search (formerly Databricks Vector Search)". The new SDK is `pip install databricks-ai-search` with `from databricks.ai_search.client import AISearchClient`; the `databricks-vectorsearch` package is deprecated but kept as a shim, and `VectorSearchClient` remains a backward-compatible alias. This lab keeps the `VectorSearchClient` spelling because the GenAI exam guide still says *Vector Search*.
+> - **Agents on Model Serving are now legacy.** On Oct 5, 2026 Databricks moved "agents deployed to Model Serving" (the `agents.deploy()` path used in Steps 6–7) and the MLflow `AgentServer` to a Legacy docs section. On Oct 12, 2026 it said: "For new agents written in code, Databricks recommends the Agent Bricks CLI" (Beta) — `pip install databricks-agentbricks`, then `agentbricks init --framework langgraph|openai <name>`, `agentbricks dev`, `agentbricks deploy <name>`, which deploys to **Agent Runtime** with `DurableAgentServer`.
+> - **Why the lab keeps the legacy path:** the GenAI Engineer Associate exam (Mar 18, 2026 version) still tests Agent Framework + Model Serving deployment. Use this lab to learn the exam flow; use the Agent Bricks CLI for new production agents.
 
 ---
 
@@ -77,7 +84,7 @@ endpoint_name = "rag_lab_endpoint"
 if not any(e["name"] == endpoint_name for e in vsc.list_endpoints().get("endpoints", [])):
     vsc.create_endpoint(
         name=endpoint_name,
-        endpoint_type="STANDARD",  # Standard is the documented default; check current docs for cost-optimised tiers
+        endpoint_type="STANDARD",  # or "STORAGE_OPTIMIZED" for very large indexes
     )
     print(f"Created endpoint {endpoint_name}; provisioning...")
 else:
@@ -96,7 +103,7 @@ vsc.create_delta_sync_index(
     pipeline_type="TRIGGERED",       # alternatives: CONTINUOUS
     primary_key="doc_id",
     embedding_source_column="content",
-    embedding_model_endpoint_name="databricks-gte-large-en",  # FMAPI-hosted embedding model (current default; BGE remains available)
+    embedding_model_endpoint_name="databricks-gte-large-en",  # FMAPI-hosted embedding model; any available embedding endpoint works
 )
 
 print(f"Created sync index {index_name}; wait for first sync...")
@@ -130,8 +137,11 @@ Expected: D001 (Auto Loader) ranks first.
 ## Step 5 — Build the compound RAG app as a `ResponsesAgent`
 
 ```python
+import uuid
+
 import mlflow
-from mlflow.pyfunc import ResponsesAgent, ResponsesAgentRequest, ResponsesAgentResponse
+from mlflow.pyfunc import ResponsesAgent
+from mlflow.types.responses import ResponsesAgentRequest, ResponsesAgentResponse
 from databricks.vector_search.client import VectorSearchClient
 from databricks_openai import DatabricksOpenAI  # current Databricks chat client
 
@@ -139,10 +149,12 @@ class RagAgent(ResponsesAgent):
     """Compound: retrieve top-k chunks → augment prompt → generate via FMAPI."""
 
     def predict(self, request: ResponsesAgentRequest) -> ResponsesAgentResponse:
-        # ResponsesAgent puts chat turns in request.input (not .messages)
+        # ResponsesAgent puts chat turns in request.input (not .messages);
+        # items are pydantic objects, so convert them to dicts first
+        messages = [item.model_dump() for item in request.input]
         last_user = next(
-            (msg for msg in reversed(request.input) if msg.get("role") == "user"),
-            request.input[-1],
+            (msg for msg in reversed(messages) if msg.get("role") == "user"),
+            messages[-1],
         )
         user_msg = last_user["content"]
 
@@ -175,17 +187,22 @@ class RagAgent(ResponsesAgent):
             temperature=0.0,
         )
 
-        # ResponsesAgentResponse expects an `output` list of message-shaped dicts
+        # ResponsesAgentResponse expects Responses-API output items — use the helper
         return ResponsesAgentResponse(
-            output=[{
-                "role":    "assistant",
-                "content": completion.choices[0].message.content,
-            }],
+            output=[
+                self.create_text_output_item(
+                    text=completion.choices[0].message.content,
+                    id=str(uuid.uuid4()),
+                )
+            ],
             custom_outputs={"usage": completion.usage.model_dump()},
         )
 ```
 
 ## Step 6 — Log + register + deploy in one shot
+
+> [!tip]
+> For production, Databricks recommends *models-from-code* logging (`python_model="agent.py"` plus `mlflow.models.set_model(...)` in that file). Logging the in-notebook instance below keeps the lab to one notebook.
 
 ```python
 mlflow.set_registry_uri("databricks-uc")
@@ -193,19 +210,20 @@ mlflow.set_registry_uri("databricks-uc")
 with mlflow.start_run(run_name="rag_lab_agent"):
     info = mlflow.pyfunc.log_model(
         python_model=RagAgent(),
-        artifact_path="agent",
+        name="agent",  # MLflow 3 uses name= (artifact_path= is the older spelling)
         registered_model_name="main.rag_lab.docs_agent",
     )
 
 from databricks import agents
-agents.deploy(
+deployment = agents.deploy(
     model_name="main.rag_lab.docs_agent",
     model_version=info.registered_model_version,
     scale_to_zero=True,
 )
+print(deployment.query_endpoint)  # REST URL used in Step 7
 ```
 
-`agents.deploy()` creates the endpoint, enables Inference Tables, and wires MLflow tracing.
+`agents.deploy()` creates a Model Serving endpoint, a Review App, AI Gateway inference tables, and real-time MLflow tracing to the active experiment. (This is the legacy Model Serving path — see the Platform update callout at the top.)
 
 ## Step 7 — Invoke and observe
 
@@ -214,13 +232,14 @@ import requests
 import json
 import os
 
-endpoint = "https://<workspace>/serving-endpoints/docs_agent/invocations"
+endpoint = deployment.query_endpoint  # from Step 6
 headers = {
     "Authorization": f"Bearer {dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()}",
     "Content-Type": "application/json",
 }
 payload = {
-    "messages": [
+    # ResponsesAgent endpoints take an `input` list (ChatCompletions-style agents took `messages`)
+    "input": [
         {"role": "user", "content": "How does Liquid Clustering replace partitioning?"},
     ],
 }
@@ -233,33 +252,47 @@ Expected: an answer citing `[D004]`.
 
 ## Step 8 — Inspect the Inference Table
 
+The inference table is created after the endpoint's first request. Copy its full name from the endpoint's page in the **Serving** UI (AI Gateway section), then:
+
 ```sql
--- Wait a few minutes after invocations
-SELECT timestamp_ms, request:messages, response:choices
-FROM main.rag_lab.docs_agent_payload
-ORDER BY timestamp_ms DESC
+-- Wait a few minutes after invocations; replace the placeholder with your table name
+SELECT status_code, request, response
+FROM main.rag_lab.<payload_table>
 LIMIT 5;
 ```
 
-## Step 9 — Score the agent with Databricks Agent Evaluation
+## Step 9 — Score the agent with MLflow 3 evaluation
+
+MLflow 3 replaces the older Agent Evaluation call (`mlflow.evaluate(model_type="databricks-agent")`) with `mlflow.genai.evaluate()` and **scorers**.
 
 ```python
-eval_set = spark.createDataFrame([
-    ("How do I ingest new files incrementally?",                "D001"),
-    ("What's the modern alternative to Z-ORDER?",               "D004"),
-    ("Where are served model requests audited?",                "D007"),
-    ("What two billing modes does FMAPI offer?",                "D005"),
-], schema="request STRING, expected_doc_id STRING").toPandas()
+import mlflow
+from mlflow.genai.scorers import Guidelines, RelevanceToQuery, Safety
 
-with mlflow.start_run(run_name="rag_lab_eval"):
-    mlflow.evaluate(
-        data=eval_set,
-        model_type="databricks-agent",
-        model="endpoints:/docs_agent",
-    )
+questions = [
+    "How do I ingest new files incrementally?",
+    "What's the modern alternative to Z-ORDER?",
+    "Where are served model requests audited?",
+    "What two billing modes does FMAPI offer?",
+]
+# Each row's `inputs` are passed to the endpoint unchanged, so use the ResponsesAgent `input` shape
+eval_data = [{"inputs": {"input": [{"role": "user", "content": q}]}} for q in questions]
+
+endpoint_name = "<endpoint name shown in the Serving UI>"
+predict_fn = mlflow.genai.to_predict_fn(f"endpoints:/{endpoint_name}")
+
+mlflow.genai.evaluate(
+    data=eval_data,
+    predict_fn=predict_fn,
+    scorers=[
+        RelevanceToQuery(),
+        Safety(),
+        Guidelines(name="cites_doc_id", guidelines="The response must cite a doc_id in square brackets, such as [D001]."),
+    ],
+)
 ```
 
-The built-in RAG judges (groundedness, answer relevance, correctness, safety) score each response.
+Built-in LLM judges score each response; results appear in the active MLflow experiment's evaluation view.
 
 ## Cleanup
 
@@ -282,7 +315,7 @@ DROP SCHEMA IF EXISTS main.rag_lab CASCADE;
 
 ## Related Study Material
 
-- [RAG / Vector Search basics (shared)](../shared/fundamentals/rag-vector-search-basics.md)
+- [RAG / Vector Search (AI Search) basics (shared)](../shared/fundamentals/rag-vector-search-basics.md)
 - [GenAI — Application Development](../certifications/genai-engineer-associate/01-application-development/README.md)
 - [GenAI — Data Preparation](../certifications/genai-engineer-associate/04-data-preparation/README.md)
 - [GenAI — Compound AI Apps](../certifications/genai-engineer-associate/02-assembling-and-deploying-apps/03-compound-ai-apps.md)

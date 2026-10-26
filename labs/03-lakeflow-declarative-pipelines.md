@@ -1,32 +1,37 @@
 ---
-title: "Lab 03 — Lakeflow Declarative Pipelines"
+title: "Lab 03 — Lakeflow Spark Declarative Pipelines"
 type: lab
 tags:
   - labs
   - lakeflow-pipelines
+  - lakeflow-spark-declarative-pipelines
   - dlt
   - expectations
   - apply-changes
+  - auto-cdc
 status: published
 ---
 
-# Lab 03 — Lakeflow Declarative Pipelines
+# Lab 03 — Lakeflow Spark Declarative Pipelines
 
-Build a complete declarative pipeline that ingests a CDC change feed, applies `APPLY CHANGES INTO` for SCD Type 2, and enforces data-quality expectations. Inspect the pipeline event log to confirm everything worked.
+Build a complete declarative pipeline in **Lakeflow Spark Declarative Pipelines** (formerly Lakeflow Declarative Pipelines / Delta Live Tables) that ingests a CDC change feed, applies an **AUTO CDC** flow (formerly `APPLY CHANGES`) for SCD Type 2, and enforces data-quality expectations. Inspect the pipeline event log to confirm everything worked.
 
 > [!abstract]
 >
-> - Define **streaming tables** and **materialized views** with `@dlt.table`
+> - Define **streaming tables** with `@dp.table` and **materialized views** with `@dp.materialized_view`
 > - Add **expectations** with `expect_or_drop`, `expect_or_fail`, `expect`
-> - Use **`APPLY CHANGES INTO`** for SCD Type 1 + Type 2
+> - Use **AUTO CDC** (`dp.create_auto_cdc_flow`, formerly `dlt.apply_changes` / `APPLY CHANGES INTO`) for SCD Type 2
 > - Query the **pipeline event log** for expectation metrics + flow progress
 
 > [!tip] What you'll exercise
 >
-> - The `@dlt.table` decorator pattern (Python)
+> - The `from pyspark import pipelines as dp` decorator pattern (Python)
 > - `expect_or_drop` vs `expect_or_fail` vs `expect` semantics
-> - `APPLY CHANGES INTO` with `SEQUENCE BY` for ordered CDC
-> - The event-log Delta table that every pipeline writes
+> - AUTO CDC with `sequence_by` for ordered CDC
+> - The `event_log()` table-valued function every pipeline can be queried with
+
+> [!note] Platform update (Oct 2026)
+> The product was renamed **Lakeflow Spark Declarative Pipelines** on Nov 12, 2025 (the docs also say "Lakeflow pipelines"), and the Python API moved from `import dlt` to `from pyspark import pipelines as dp`. The old `dlt` names still run, so you may still see `@dlt.table` and `APPLY CHANGES INTO` in exam stems — the [pipelines cheat sheet](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) maps old names to new.
 
 ---
 
@@ -58,20 +63,17 @@ for i, evt in enumerate(events):
 print(dbutils.fs.ls(cdc_path))
 ```
 
-## Step 1 — Author the pipeline (single Python notebook)
+## Step 1 — Author the pipeline (one Python source file)
 
 > [!note]
-> The code below lives in a notebook that you'll select when **creating** a pipeline. It is not run directly — Lakeflow Declarative Pipelines parses the `@dlt.*` decorators and builds the DAG.
-
-> [!tip]
-> **API naming.** The `import dlt` + `@dlt.table` names work and are still widely used, but the *current* Databricks naming is `from pyspark import pipelines as dp` with `@dp.table` and `dp.create_auto_cdc_flow(...)` (the new name for `dlt.apply_changes`). Both styles work; use either consistently.
+> The code below is a pipeline **source file** (for example `transformations/customers_cdc.py`) that you add in the Lakeflow Pipelines Editor in Step 2. It is not run like a notebook cell — the pipeline parses the `@dp.*` decorators and builds the DAG.
 
 ```python
-import dlt
+from pyspark import pipelines as dp
 from pyspark.sql import functions as F
 
-# Bronze: stream raw JSON files
-@dlt.table(
+# Bronze: stream raw JSON files (the pipeline manages Auto Loader's schema + checkpoint locations)
+@dp.table(
     name="customers_bronze",
     comment="Raw CDC events landed as JSON",
 )
@@ -80,28 +82,27 @@ def customers_bronze():
         spark.readStream
         .format("cloudFiles")
         .option("cloudFiles.format", "json")
-        .option("cloudFiles.schemaLocation", "/Volumes/main/bronze/landing/_schema/customers_cdc/")
         .load("/Volumes/main/bronze/landing/customers_cdc/")
     )
 
-# Silver-staging: validate + transform
-@dlt.view(name="customers_silver_staging")
-@dlt.expect_or_drop("valid_tier", "tier IN ('STD', 'GOLD', 'PLAT')")
-@dlt.expect_or_fail("non_null_id", "customer_id IS NOT NULL")
+# Silver-staging: validate + transform (temporary view — not published to the catalog)
+@dp.temporary_view(name="customers_silver_staging")
+@dp.expect_or_drop("valid_tier", "tier IN ('STD', 'GOLD', 'PLAT')")
+@dp.expect_or_fail("non_null_id", "customer_id IS NOT NULL")
 def customers_silver_staging():
     return (
-        dlt.read_stream("customers_bronze")
+        spark.readStream.table("customers_bronze")
         .withColumn("event_ts", F.to_timestamp("_ts"))
         .select("customer_id", "name", "tier", "_op", "event_ts")
     )
 
-# Silver: SCD Type 2 history using APPLY CHANGES INTO
-dlt.create_streaming_table(
+# Silver: SCD Type 2 history using an AUTO CDC flow (formerly APPLY CHANGES)
+dp.create_streaming_table(
     name="customers_silver",
     comment="SCD Type 2 customer history",
 )
 
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="customers_silver",
     source="customers_silver_staging",
     keys=["customer_id"],
@@ -112,13 +113,13 @@ dlt.apply_changes(
 )
 
 # Gold: current-state materialized view
-@dlt.table(
+@dp.materialized_view(
     name="customers_gold_current",
     comment="Current customer state (no history)",
 )
 def customers_gold_current():
     return (
-        dlt.read("customers_silver")
+        spark.read.table("customers_silver")
         .where("__END_AT IS NULL")  # SCD2 current rows
         .select("customer_id", "name", "tier", F.col("__START_AT").alias("effective_from"))
     )
@@ -126,14 +127,13 @@ def customers_gold_current():
 
 ## Step 2 — Create + run the pipeline
 
-In the Lakeflow Pipelines UI:
+In the workspace (Lakeflow Pipelines Editor):
 
-1. **Create Pipeline** → name `customers-cdc`
-2. **Source code**: point at the notebook containing the code above
-3. **Storage**: choose a UC catalog + schema (e.g. `main.silver`)
-4. **Target**: leave blank — schema set above is used
-5. **Pipeline mode**: **Triggered** for this lab (cheaper); use Continuous in production
-6. **Run** the pipeline
+1. Click **New** → **ETL pipeline** and rename the pipeline `customers-cdc`
+2. Next to the name, choose a default **catalog + schema** you can write to (e.g. `main` / `silver`) — unqualified dataset names are published there
+3. In the asset browser, **Add** a transformation file and paste the code from Step 1
+4. Leave the pipeline **triggered** (not continuous) for this lab — it's cheaper; use continuous mode only when you need always-on low latency
+5. Click **Run pipeline** and watch the pipeline graph fill in
 
 ## Step 3 — Verify
 
@@ -141,10 +141,10 @@ In the Lakeflow Pipelines UI:
 -- Bronze: how many raw events landed?
 SELECT count(*) FROM main.silver.customers_bronze;
 
--- Silver staging: should have 6 events (the BOGUS-tier row was dropped by the expectation)
-SELECT count(*) FROM main.silver.customers_silver_staging;
+-- The staging dataset is a temporary view, so it can't be queried from outside the pipeline.
+-- Use the event log (Step 4) to confirm the BOGUS-tier row was dropped.
 
--- Silver: SCD2 should show history rows + a current row per customer
+-- Silver: SCD2 should show history rows + a current row per customer (customer 4 never arrives)
 SELECT customer_id, name, tier, __START_AT, __END_AT
 FROM main.silver.customers_silver
 ORDER BY customer_id, __START_AT;
@@ -155,44 +155,41 @@ SELECT * FROM main.silver.customers_gold_current ORDER BY customer_id;
 
 ## Step 4 — Query the pipeline event log
 
-The event log is a regular Delta table under the pipeline's storage location.
-
-```python
-# Find the pipeline's event-log location from the UI's Configuration tab, then:
-event_log_path = "<copy from UI>/system/events"
-
-events = spark.read.format("delta").load(event_log_path)
-events.createOrReplaceTempView("pipeline_events")
-```
+Query the event log with the `event_log()` table-valued function — pass either `TABLE(<streaming table or materialized view>)` or the pipeline ID (shown on the pipeline's page in the UI).
 
 ```sql
--- Expectation metrics
+-- Expectation pass/fail counts per dataset + expectation
 SELECT
-  timestamp,
-  details:flow_definition.flow_name AS flow,
-  details:expectation_metrics.expectation_name AS exp,
-  details:expectation_metrics.passed_records   AS passed,
-  details:expectation_metrics.failed_records   AS failed
-FROM pipeline_events
-WHERE event_type = 'flow_progress'
-  AND details:expectation_metrics IS NOT NULL
-ORDER BY timestamp DESC;
+  row_expectations.dataset AS dataset,
+  row_expectations.name    AS expectation,
+  SUM(row_expectations.passed_records) AS passing_records,
+  SUM(row_expectations.failed_records) AS failing_records
+FROM (
+  SELECT explode(
+    from_json(
+      details:flow_progress.data_quality.expectations,
+      "array<struct<name: string, dataset: string, passed_records: int, failed_records: int>>"
+    )
+  ) AS row_expectations
+  FROM event_log('<pipeline-id>')
+  WHERE event_type = 'flow_progress'
+)
+GROUP BY row_expectations.dataset, row_expectations.name;
 
--- Look for the BOGUS-tier drop event
-SELECT *
-FROM pipeline_events
-WHERE event_type = 'flow_progress'
-  AND details:expectation_metrics.expectation_name = 'valid_tier';
+-- Recent events for one published dataset
+SELECT timestamp, event_type, message
+FROM event_log(TABLE(main.silver.customers_silver))
+ORDER BY timestamp DESC;
 ```
 
-You should see `failed_records = 1` on the `valid_tier` expectation — that's our Diego/BOGUS row.
+You should see `failing_records = 1` on the `valid_tier` expectation — that's our Diego/BOGUS row.
 
 ## Step 5 — Watch the expectation modes
 
 | Mode | Effect on the failing row | Effect on the pipeline |
 | :--- | :--- | :--- |
 | `expect_or_drop` | Row is dropped from the output | Pipeline succeeds; failed-records counter increments |
-| `expect_or_fail` | Pipeline run is **aborted** | Subsequent updates blocked until source is fixed |
+| `expect_or_fail` | The update **stops** for that flow | Only the flow that hit the violation fails; fix the data, then re-run |
 | `expect` | Row is **kept**; only metric recorded | Pipeline succeeds; useful for SLO tracking |
 
 > [!tip]
@@ -200,23 +197,26 @@ You should see `failed_records = 1` on the `valid_tier` expectation — that's o
 
 ## Cleanup
 
-Delete the pipeline from the UI, then:
+Delete the pipeline from the UI, then drop anything that remains:
 
 ```sql
-DROP TABLE IF EXISTS main.silver.customers_gold_current;
+DROP MATERIALIZED VIEW IF EXISTS main.silver.customers_gold_current;
 DROP TABLE IF EXISTS main.silver.customers_silver;
-DROP VIEW  IF EXISTS main.silver.customers_silver_staging;
 DROP TABLE IF EXISTS main.silver.customers_bronze;
--- Remove the synthesized source files
+```
+
+```python
+# Remove the synthesized source files
 dbutils.fs.rm("/Volumes/main/bronze/landing/customers_cdc/", recurse=True)
 ```
 
 ## Related Study Material
 
-- [DLT / Lakeflow Declarative Pipelines cheat sheet (shared)](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
+- [Lakeflow Spark Declarative Pipelines cheat sheet (shared, formerly DLT)](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
+- [Pipelines code examples (shared)](../shared/code-examples/python/dlt_pipelines.md)
 - [DE Pro — Declarative Pipelines](../certifications/data-engineer-professional/01-developing-code-for-data-processing/06-declarative-pipelines.md)
 - [DE Pro — Expectations and Data Quality](../certifications/data-engineer-professional/03-data-manipulation/06-expectations-data-quality.md)
-- [DE Pro — `APPLY CHANGES INTO`](../certifications/data-engineer-professional/01-developing-code-for-data-processing/07-auto-cdc-api.md)
+- [DE Pro — AUTO CDC (`APPLY CHANGES INTO`)](../certifications/data-engineer-professional/01-developing-code-for-data-processing/07-auto-cdc-api.md)
 
 ---
 
