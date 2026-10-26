@@ -67,7 +67,7 @@ Replaces `window.confirm()` with a theme-aware dialog throughout the app:
 
 The actionbar uses a CSS-grid 3-column layout (`1fr auto 1fr`) for predictable kbd-hint centering and primary-action placement:
 
-```
+```text
 Row 1: [Timer ←]   …   [kbd-hint centered]   [Next / Skip / Submit →]
 Row 2: [session · bank stats · Stats Settings Reset Switch bank]
 ```
