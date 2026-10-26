@@ -43,7 +43,7 @@ flowchart LR
 
 ## Related Resources
 
-- [DE Pro — Debugging and Deploying (deeper)](../../data-engineer-professional/06-debugging-and-deploying/README.md)
+- [DE Pro — Debugging and Deploying (deeper)](../../data-engineer-professional/08-debugging-and-deploying/README.md)
 - [DE Pro — Monitoring and Alerting (deeper)](../../data-engineer-professional/04-monitoring-and-alerting/README.md)
 - [Hands-on Lab 03 — Lakeflow Declarative Pipelines](../../../labs/03-lakeflow-declarative-pipelines.md)
 - [Databricks Asset Bundles documentation](https://docs.databricks.com/en/dev-tools/bundles/index.html)

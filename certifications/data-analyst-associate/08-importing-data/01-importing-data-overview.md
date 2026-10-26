@@ -63,7 +63,7 @@ Idempotency: `COPY INTO` records which files have been ingested in the target ta
 
 **When**: you want to query an external database (Snowflake, BigQuery, PostgreSQL, …) without ETL'ing the data into Delta first.
 
-For depth, see the DE Pro [Lakehouse Federation](../../data-engineer-professional/10-data-sharing-and-federation/02-lakehouse-federation.md) topic. For the analyst exam, just recognise:
+For depth, see the DE Pro [Lakehouse Federation](../../data-engineer-professional/02-data-ingestion-and-acquisition/08-lakehouse-federation.md) topic. For the analyst exam, just recognise:
 
 - Federation = read-mostly query path
 - Credentials live in a UC `CREATE CONNECTION` securable
@@ -112,7 +112,7 @@ If a question asks "which Databricks tool would a data engineer use to continuou
 ## Related Topics
 
 - [Managing Data](../06-managing-data/01-tables-schemas.md)
-- [Lakehouse Federation (DE Pro)](../../data-engineer-professional/10-data-sharing-and-federation/02-lakehouse-federation.md)
+- [Lakehouse Federation (DE Pro)](../../data-engineer-professional/02-data-ingestion-and-acquisition/08-lakehouse-federation.md)
 
 ## Official Documentation
 

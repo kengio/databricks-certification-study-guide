@@ -224,8 +224,8 @@ DROP TABLE IF EXISTS main.bronze.orders;
 
 - [Medallion Architecture (shared)](../shared/fundamentals/medallion-architecture.md)
 - [Delta Lake basics (shared)](../shared/fundamentals/delta-lake-basics.md)
-- [DE Pro — Data Modelling](../certifications/data-engineer-professional/09-data-modelling/README.md)
-- [DE Pro — COPY INTO](../certifications/data-engineer-professional/07-data-ingestion-and-acquisition/02-copy-into.md)
+- [DE Pro — Data Modelling](../certifications/data-engineer-professional/09-data-modeling/README.md)
+- [DE Pro — COPY INTO](../certifications/data-engineer-professional/02-data-ingestion-and-acquisition/02-copy-into.md)
 
 ---
 

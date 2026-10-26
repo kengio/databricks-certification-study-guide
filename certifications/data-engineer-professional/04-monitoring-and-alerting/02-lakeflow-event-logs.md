@@ -9,9 +9,9 @@ tags:
 status: published
 ---
 
-# Lakeflow/Lakeflow Declarative Pipelines Event Logs
+# Lakeflow/Lakeflow Pipelines Event Logs
 
-Lakeflow Declarative Pipelines (formerly DLT) / Lakeflow pipelines generate detailed event logs that provide observability into pipeline execution, data quality, and maintenance operations. Understanding these logs is essential for monitoring and debugging production pipelines.
+Lakeflow Pipelines (formerly DLT) / Lakeflow pipelines generate detailed event logs that provide observability into pipeline execution, data quality, and maintenance operations. Understanding these logs is essential for monitoring and debugging production pipelines.
 
 ## Overview
 
@@ -99,7 +99,7 @@ ORDER BY timestamp DESC;
 | Metric | Description |
 | :--- | :--- |
 | `num_output_rows` | Rows written to target |
-| `num_upserted_rows` | Rows upserted (APPLY CHANGES) |
+| `num_upserted_rows` | Rows upserted (AUTO CDC flows) |
 | `num_deleted_rows` | Rows deleted |
 | `seconds_of_processing` | Processing duration |
 | `seconds_of_backlog` | Streaming backlog time |
@@ -528,16 +528,16 @@ WHERE event_type = 'flow_progress';
 
 ## Related Topics
 
-- [Lakeflow Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) - Lakeflow Declarative Pipelines basics
-- [Expectations](../03-data-transformation-cleansing-quality/03-expectations-data-quality.md) - Data quality
+- [Lakeflow Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) - Lakeflow Pipelines basics
+- [Expectations](../03-data-manipulation/06-expectations-data-quality.md) - Data quality
 - [System Tables](01-system-tables.md) - Account-level monitoring
 
 ## Official Documentation
 
-- [Lakeflow Declarative Pipelines Event Logs](https://docs.databricks.com/delta-live-tables/observability.html)
-- [Monitoring Lakeflow Declarative Pipelines Pipelines](https://docs.databricks.com/delta-live-tables/monitoring.html)
+- [Lakeflow Pipelines Event Logs](https://docs.databricks.com/delta-live-tables/observability.html)
+- [Monitoring Lakeflow Pipelines](https://docs.databricks.com/delta-live-tables/monitoring.html)
 - [Event Log Schema](https://docs.databricks.com/delta-live-tables/observability.html#event-log-schema)
 
 ---
 
-**[← Previous: Spark UI Debugging](../06-debugging-and-deploying/07-spark-ui-debugging.md) | [↑ Back to Monitoring & Logging](./README.md) | [Next: Query Profiler](./03-query-profiler.md) →**
+**[← Previous: System Tables](./01-system-tables.md) | [↑ Back to Section](./README.md) | [Next: Lakehouse Alerts →](./03-lakehouse-alerts.md)**

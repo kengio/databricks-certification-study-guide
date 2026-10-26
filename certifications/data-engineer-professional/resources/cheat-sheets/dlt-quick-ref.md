@@ -2,288 +2,163 @@
 tags: [cheat-sheet, dlt, lakeflow-pipelines, data-engineer-professional]
 ---
 
-# DLT (Lakeflow Pipelines) Quick Reference
+# Lakeflow Pipelines Quick Reference
 
-## Table Types
+> [!note] Platform update (Oct 2026)
+> The exam says **Lakeflow Pipelines** and **AUTO CDC APIs (formerly APPLY CHANGES)**. The docs call the product **Lakeflow Spark Declarative Pipelines** (renamed from Lakeflow Declarative Pipelines on Nov 12, 2025; formerly DLT) and also use "Lakeflow pipelines". The Python `dlt` module has been replaced by `pyspark.pipelines` — `import dlt` still works, but `from pyspark import pipelines as dp` is recommended. Sources: [November 2025 release notes](https://docs.databricks.com/aws/en/release-notes/product/2025/november), [Python language reference](https://docs.databricks.com/aws/en/ldp/developer/python-ref)
 
-| Type | Keyword | Description | Use Case |
-|------|---------|-------------|----------|
-| Streaming Table | `STREAMING` | Append-only, incremental | Raw data ingestion |
-| Materialized View | (default) | Recomputed on refresh | Aggregations, transforms |
+Full study notes: [Declarative Pipelines](../../01-developing-code-for-data-processing/06-declarative-pipelines.md) · [AUTO CDC API](../../01-developing-code-for-data-processing/07-auto-cdc-api.md) · [Expectations](../../03-data-manipulation/06-expectations-data-quality.md)
+
+## Dataset Types
+
+| Type | SQL | Python | Processing | Use for |
+| :--- | :--- | :--- | :--- | :--- |
+| Streaming table | `CREATE OR REFRESH STREAMING TABLE` | `@dp.table` returning a streaming DataFrame | Each source row processed **once** (append-only source) | Ingestion (Auto Loader, Kafka), AUTO CDC targets, lowest latency |
+| Materialized view | `CREATE OR REFRESH MATERIALIZED VIEW` | `@dp.materialized_view` returning a batch DataFrame | Result always equals the query; **incremental refresh on serverless** when possible, full recompute otherwise | Joins and aggregates that must reflect late updates/deletes; gold tables |
+| Temporary view | `CREATE TEMPORARY VIEW` | `@dp.temporary_view` | Not persisted | Intermediate logic inside one pipeline |
 
 ```sql
--- Streaming table (append-only)
-CREATE OR REFRESH STREAMING TABLE raw_events
-AS SELECT * FROM STREAM(source_table);
+-- Streaming table: Auto Loader via read_files with STREAM
+CREATE OR REFRESH STREAMING TABLE bronze_orders
+AS SELECT * FROM STREAM read_files('/Volumes/main/landing/orders/', format => 'json');
 
--- Materialized view (full recompute)
-CREATE OR REFRESH MATERIALIZED VIEW aggregated_sales
-AS SELECT region, SUM(amount) as total
-FROM sales GROUP BY region;
+-- Materialized view: refreshed incrementally on serverless when the query allows
+CREATE OR REFRESH MATERIALIZED VIEW gold_daily_totals
+AS SELECT order_date, SUM(amount) AS total_amount
+FROM silver_orders
+GROUP BY order_date;
 ```
 
 ```python
-import dlt
+from pyspark import pipelines as dp
 
-# Streaming table
+@dp.table
+def bronze_orders():
+    return (spark.readStream.format("cloudFiles")
+        .option("cloudFiles.format", "json")
+        .load("/Volumes/main/landing/orders/"))
 
-@dlt.table
-def raw_events():
-    return spark.readStream.table("source_table")
-
-# Materialized view
-
-@dlt.table
-def aggregated_sales():
-    return (spark.read.table("live.sales")
-        .groupBy("region").agg(sum("amount").alias("total")))
+@dp.materialized_view
+def gold_daily_totals():
+    return (spark.read.table("silver_orders")
+        .groupBy("order_date")
+        .sum("amount"))
 ```
 
-## DLT Decorator Options
+### Streaming table or materialized view?
 
-```python
-@dlt.table(
-    name="my_table",                    # Table name
-    comment="Table description",         # Documentation
-    spark_conf={"key": "value"},        # Spark config
-    table_properties={"quality": "gold"}, # Delta properties
-    path="/custom/path",                 # Storage location
-    partition_cols=["date"],            # Partitioning
-    schema="id INT, name STRING"        # Explicit schema
-)
-def my_table():
-    return df
-```
+| Scenario | Choose |
+| :--- | :--- |
+| Ingest files or Kafka events exactly once | Streaming table |
+| Aggregate must reflect **late-arriving updates to prior days** or upstream deletes | Materialized view |
+| Join where dimension changes must update old results | Materialized view |
+| Sub-minute latency in a continuous pipeline | Streaming table |
+| Apply inserts / updates / deletes from a CDC feed | Streaming table + AUTO CDC flow |
 
-| Parameter | Description |
-|-----------|-------------|
-| `name` | Override function name as table name |
-| `comment` | Table description |
-| `spark_conf` | Spark configurations |
-| `table_properties` | Delta table properties |
-| `path` | Custom storage path |
-| `partition_cols` | Partitioning columns |
-| `schema` | Explicit schema (string or StructType) |
-| `temporary` | True for temp tables (not materialized) |
+## AUTO CDC (formerly APPLY CHANGES)
 
-## Expectations (Data Quality)
-
-### Syntax
-
-| Action | SQL | Python |
-|--------|-----|--------|
-| Warn (log) | `EXPECT (condition)` | `@dlt.expect("name", "condition")` |
-| Drop row | `EXPECT (condition) ON VIOLATION DROP ROW` | `@dlt.expect_or_drop("name", "condition")` |
-| Fail | `EXPECT (condition) ON VIOLATION FAIL UPDATE` | `@dlt.expect_or_fail("name", "condition")` |
-
-### SQL Examples
+| Older material | Current |
+| :--- | :--- |
+| `APPLY CHANGES INTO LIVE.target FROM STREAM(LIVE.src) ...` | `CREATE FLOW f AS AUTO CDC INTO target FROM STREAM(src) ...` |
+| `dlt.apply_changes(...)` | `dp.create_auto_cdc_flow(...)` (same arguments) |
+| `dlt.apply_changes_from_snapshot(...)` | `dp.create_auto_cdc_from_snapshot_flow(...)` |
+| `dlt.create_streaming_table(...)` | `dp.create_streaming_table(...)` |
 
 ```sql
--- Warn only (default)
-CREATE OR REFRESH STREAMING TABLE validated_events (
-  CONSTRAINT valid_id EXPECT (id IS NOT NULL),
-  CONSTRAINT valid_amount EXPECT (amount > 0)
-)
-AS SELECT * FROM STREAM(raw_events);
+CREATE OR REFRESH STREAMING TABLE customers_current;
 
--- Drop invalid rows
-CREATE OR REFRESH STREAMING TABLE clean_events (
-  CONSTRAINT valid_id EXPECT (id IS NOT NULL) ON VIOLATION DROP ROW
-)
-AS SELECT * FROM STREAM(raw_events);
-
--- Fail pipeline on violation
-CREATE OR REFRESH STREAMING TABLE critical_events (
-  CONSTRAINT valid_id EXPECT (id IS NOT NULL) ON VIOLATION FAIL UPDATE
-)
-AS SELECT * FROM STREAM(raw_events);
-```
-
-### Python Examples
-
-```python
-# Warn only
-
-@dlt.table
-@dlt.expect("valid_id", "id IS NOT NULL")
-@dlt.expect("positive_amount", "amount > 0")
-def validated_events():
-    return spark.readStream.table("live.raw_events")
-
-# Drop invalid rows
-
-@dlt.table
-@dlt.expect_or_drop("valid_id", "id IS NOT NULL")
-def clean_events():
-    return spark.readStream.table("live.raw_events")
-
-# Fail pipeline
-
-@dlt.table
-@dlt.expect_or_fail("valid_id", "id IS NOT NULL")
-def critical_events():
-    return spark.readStream.table("live.raw_events")
-
-# Multiple expectations
-
-@dlt.table
-@dlt.expect_all({
-    "valid_id": "id IS NOT NULL",
-    "valid_date": "event_date IS NOT NULL"
-})
-def multi_validated():
-    return spark.readStream.table("live.raw_events")
-
-# Multiple with drop
-
-@dlt.table
-@dlt.expect_all_or_drop({
-    "valid_id": "id IS NOT NULL",
-    "positive_amount": "amount > 0"
-})
-def multi_clean():
-    return spark.readStream.table("live.raw_events")
-```
-
-## APPLY CHANGES (CDC)
-
-### SQL Syntax
-
-```sql
--- Basic CDC
-CREATE OR REFRESH STREAMING TABLE target;
-
-APPLY CHANGES INTO live.target
-FROM STREAM(live.cdc_source)
-KEYS (id)
-SEQUENCE BY timestamp
-COLUMNS * EXCEPT (_commit_version, _commit_timestamp)
+CREATE FLOW customers_current_cdc AS AUTO CDC INTO customers_current
+FROM STREAM(main.cdc.customers_feed)
+KEYS (customer_id)
+APPLY AS DELETE WHEN operation = 'DELETE'
+SEQUENCE BY event_ts
+COLUMNS * EXCEPT (operation, event_ts)
 STORED AS SCD TYPE 1;
 ```
 
-### Python Syntax
-
 ```python
-import dlt
-from pyspark.sql.functions import *
+from pyspark import pipelines as dp
 
-# Create target table
+dp.create_streaming_table("customers_history")
 
-dlt.create_streaming_table("target")
-
-# Apply changes
-
-dlt.apply_changes(
-    target="target",
-    source="cdc_source",
-    keys=["id"],
-    sequence_by="timestamp",
-    stored_as_scd_type=1  # or 2
-)
-```
-
-### SCD Types
-
-| Type | Behavior | Result |
-|------|----------|--------|
-| Type 1 | Overwrite | Current state only |
-| Type 2 | Preserve history | All versions with `__START_AT`, `__END_AT` |
-
-```python
-# SCD Type 2 with history
-
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="customers_history",
     source="customers_cdc",
     keys=["customer_id"],
-    sequence_by="updated_at",
+    sequence_by="event_ts",
+    apply_as_deletes="operation = 'DELETE'",
+    except_column_list=["operation", "event_ts"],
     stored_as_scd_type=2,
-    track_history_column_list=["name", "email", "status"]
+    track_history_column_list=["address", "email"],
 )
 ```
 
-### APPLY CHANGES Options
+| Argument / clause | Meaning |
+| :--- | :--- |
+| `keys` / `KEYS` | Columns that identify a row (required) |
+| `sequence_by` / `SEQUENCE BY` | Logical order of events; resolves out-of-order arrivals (required) |
+| `stored_as_scd_type` / `STORED AS` | `1` (default, latest value) or `2` (history with `__START_AT` / `__END_AT`) |
+| `apply_as_deletes` | Condition that turns an event into a delete |
+| `apply_as_truncates` | Condition that truncates the target — **SCD Type 1 only** |
+| `track_history_column_list` | SCD Type 2: only changes to these columns open a new history row |
+| `except_column_list` / `COLUMNS * EXCEPT` | Drop operational columns from the target |
 
-| Option | Description |
-|--------|-------------|
-| `target` | Target table name |
-| `source` | Source table/stream |
-| `keys` | Primary key columns |
-| `sequence_by` | Column for ordering changes |
-| `stored_as_scd_type` | 1 or 2 |
-| `ignore_null_updates` | Skip null values in updates |
-| `apply_as_deletes` | Expression for delete operations |
-| `apply_as_truncates` | Expression for truncate operations |
-| `track_history_column_list` | Columns to track for SCD Type 2 |
+Current rows in an SCD Type 2 target have `__END_AT IS NULL`. `__START_AT` / `__END_AT` hold the `SEQUENCE BY` value, with the same data type.
 
-## Pipeline Settings
+## Expectations
 
-```json
-{
-  "name": "my_pipeline",
-  "target_schema": "my_schema",
-  "catalog": "my_catalog",
-  "configuration": {
-    "env": "production"
-  },
-  "continuous": false,
-  "development": false,
-  "channel": "CURRENT"
-}
-```
+| Action | SQL | Python | Invalid rows | Update |
+| :--- | :--- | :--- | :--- | :--- |
+| Warn (default) | `CONSTRAINT c EXPECT (cond)` | `@dp.expect("c", "cond")` | Kept, counted | Succeeds |
+| Drop | `... ON VIOLATION DROP ROW` | `@dp.expect_or_drop("c", "cond")` | Dropped, counted | Succeeds |
+| Fail | `... ON VIOLATION FAIL UPDATE` | `@dp.expect_or_fail("c", "cond")` | — | Flow update fails and is rolled back |
 
-| Setting | Description |
-|---------|-------------|
-| `target_schema` | Output schema |
-| `catalog` | Unity Catalog catalog |
-| `continuous` | Continuous vs triggered mode |
-| `development` | Dev mode (relaxed expectations) |
-| `channel` | CURRENT or PREVIEW |
-
-## Referencing Tables
-
-```python
-# Reference another DLT table
-
-@dlt.table
-def silver_events():
-    return spark.read.table("live.bronze_events")
-
-# Reference streaming table
-
-@dlt.table
-def silver_events_stream():
-    return spark.readStream.table("live.bronze_events")
-```
-
-| Reference | Syntax | Use |
-|-----------|--------|-----|
-| DLT table | `live.table_name` | Same pipeline |
-| External | `catalog.schema.table` | Other tables |
-
-## Event Log Queries
+Several rules at once: `@dp.expect_all({...})`, `@dp.expect_all_or_drop({...})`, `@dp.expect_all_or_fail({...})`. **Quarantine** = keep bad rows with a warn expectation, flag them, and route them to a separate table for review.
 
 ```sql
--- Query expectations results
-SELECT
-  details:flow_name AS flow,
-  details:expectation:name AS expectation,
-  details:expectation:passed_records AS passed,
-  details:expectation:failed_records AS failed
-FROM event_log(TABLE(my_catalog.my_schema.__dlt_event_log))
-WHERE event_type = 'flow_progress'
-  AND details:expectation IS NOT NULL;
+CREATE OR REFRESH STREAMING TABLE silver_orders (
+  CONSTRAINT valid_id EXPECT (order_id IS NOT NULL) ON VIOLATION DROP ROW,
+  CONSTRAINT positive_amount EXPECT (amount > 0) ON VIOLATION FAIL UPDATE
+)
+AS SELECT * FROM STREAM(bronze_orders);
 ```
+
+## Event Log
+
+```sql
+-- Expectation pass / fail counts per dataset
+SELECT
+  row_expectations.dataset AS dataset,
+  row_expectations.name AS expectation,
+  SUM(row_expectations.passed_records) AS passing_records,
+  SUM(row_expectations.failed_records) AS failing_records
+FROM (
+  SELECT explode(
+    from_json(
+      details:flow_progress:data_quality:expectations,
+      "array<struct<name: string, dataset: string, passed_records: int, failed_records: int>>"
+    )
+  ) AS row_expectations
+  FROM event_log(<pipeline-id>)
+  WHERE event_type = 'flow_progress'
+)
+GROUP BY row_expectations.dataset, row_expectations.name;
+```
+
+More queries: [Lakeflow Event Logs](../../04-monitoring-and-alerting/02-lakeflow-event-logs.md).
 
 ## Common Exam Tips
 
-1. Streaming tables = append-only, incremental processing
-2. Materialized views = full recompute on each refresh
-3. `EXPECT` logs only; `DROP ROW` removes bad data; `FAIL UPDATE` stops pipeline
-4. `APPLY CHANGES` for CDC with automatic MERGE logic
-5. SCD Type 1 = current state; Type 2 = full history
-6. Use `live.table_name` to reference tables in same pipeline
-7. `sequence_by` required for APPLY CHANGES (determines latest)
-8. Dev mode relaxes expectations (warn instead of fail)
-9. Event log tracks expectations results and pipeline metrics
-10. Continuous mode = always running; Triggered = on-demand refresh
+1. Streaming table = each appended row processed once; materialized view = always equals the query, incremental on serverless
+2. Late updates to already-aggregated days → materialized view
+3. `EXPECT` warns, `DROP ROW` removes, `FAIL UPDATE` stops and rolls back that flow's update
+4. AUTO CDC (formerly APPLY CHANGES): `KEYS` + `SEQUENCE BY` are required; `STORED AS` defaults to SCD Type 1
+5. SCD Type 2 current rows: `__END_AT IS NULL`; `apply_as_truncates` is SCD Type 1 only
+6. Reference tables by name (`spark.read.table("silver_orders")`); the `LIVE.` prefix is legacy
+7. Expectation metrics live in `flow_progress` events of the pipeline event log
+8. Triggered mode processes available data and stops; continuous mode keeps running for low latency
+9. Python dataset functions return DataFrames — never call `writeStream`, `save()` or `collect()` inside them
+
+---
+
+**[← Back to Cheat Sheets](./README.md)**

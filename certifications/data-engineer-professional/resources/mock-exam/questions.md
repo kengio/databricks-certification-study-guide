@@ -10,15 +10,15 @@ aliases:
 
 # Mock Exam — Databricks Data Engineer Professional
 
-63 scenario-based questions matching the exam's section weights. Attempt all questions before revealing answers.
+63 scenario-based questions, each labelled with its Oct 9, 2026 exam section. Attempt all questions before revealing answers.
 
-**Total: 63 questions | Time: 120 minutes | Passing: 70% (44/63)**
+**Total: 63 questions | Time: 120 minutes | Self-check target: 70 % (44/63) — Databricks publishes no passing score**
 
 [← Back to Mock Exam](./README.md)
 
 ---
 
-## Section 1: Data Processing (Questions 1–18)
+## Data Ingestion & Acquisition (Question 1)
 
 ## Question 1 *(Easy)*
 
@@ -38,6 +38,8 @@ D) `cloudFiles.schemaEvolutionMode = addNewColumns`
 
 ---
 
+## Cost & Performance Optimization (Question 2)
+
 ## Question 2 *(Medium)*
 
 **Scenario**: A streaming pipeline processes clickstream data with an average of 50,000 events per second. The pipeline writes to a Delta table that downstream analysts query frequently. The team notices query performance degrading due to many small files.
@@ -55,6 +57,8 @@ D) `trigger(once=True)`
 > A 1-minute processing time trigger allows sufficient data to accumulate for larger file writes while maintaining reasonable latency. Option A processes all available data at once (batch-like). Option B writes too frequently, creating small files. Option D is for one-time batch processing, not continuous streaming.
 
 ---
+
+## Data Modeling (Question 3)
 
 ## Question 3 *(Hard)*
 
@@ -74,6 +78,8 @@ D) Use `DELETE` followed by `INSERT` to replace the customer record
 
 ---
 
+## Data Ingestion & Acquisition (Question 4)
+
 ## Question 4 *(Medium)*
 
 **Scenario**: A pipeline uses Auto Loader to ingest JSON files. The data engineer wants to ensure that the inferred schema is persisted and reused across stream restarts, and that any data not matching the schema is captured for later analysis rather than causing failures.
@@ -92,6 +98,8 @@ D) Set `cloudFiles.format = json` with `mode = PERMISSIVE`
 
 ---
 
+## Developing Code for Data Processing using Python and SQL (Question 5)
+
 ## Question 5 *(Medium)*
 
 **Scenario**: A streaming pipeline processes transaction data and must ensure exactly-once semantics when writing to a Delta table. The pipeline occasionally fails and restarts from checkpoints.
@@ -109,6 +117,8 @@ D) `outputMode("update")` with watermarking
 > Exactly-once semantics require checkpointing (for tracking progress) combined with idempotent writes (Delta Lake's transaction log ensures writes are atomic and can be retried safely). Option A lacks idempotency mention. Option B requires manual handling. Option D is for stateful aggregations.
 
 ---
+
+## Cost & Performance Optimization (Questions 6–7)
 
 ## Question 6 *(Medium)*
 
@@ -146,6 +156,8 @@ D) Enable `spark.databricks.delta.merge.enableLowShuffle`
 
 ---
 
+## Developing Code for Data Processing using Python and SQL (Question 8)
+
 ## Question 8 *(Medium)*
 
 **Scenario**: A streaming pipeline uses watermarking to handle late-arriving data. The watermark is set to 10 minutes. A data quality check shows that some events arriving 15 minutes late are being dropped.
@@ -163,6 +175,8 @@ D) Use `outputMode("complete")` to include all data
 > Watermarking intentionally drops data arriving after the threshold to bound state store size. Events 15 minutes late with a 10-minute watermark will be dropped by design. Option A could work but increases state size. Options C and D don't address late data handling. The engineer should evaluate if 10 minutes is the right threshold for their use case.
 
 ---
+
+## Data Ingestion & Acquisition (Question 9)
 
 ## Question 9 *(Medium)*
 
@@ -182,6 +196,8 @@ D) Use `readStream.format("kafka").option("subscribe", "topic1,topic2")` with sc
 
 ---
 
+## Ensuring Data Security and Compliance (Question 10)
+
 ## Question 10 *(Easy)*
 
 **Scenario**: A table uses `DELETE` operations to remove records that are older than 90 days for compliance. After running deletes for several weeks, the table's storage size hasn't decreased despite fewer rows.
@@ -199,6 +215,8 @@ D) Run `VACUUM` with an appropriate retention period
 > DELETE in Delta Lake marks records as removed but doesn't physically delete files (to support time travel). VACUUM removes files older than the retention period that are no longer referenced. Option A compacts but doesn't remove old files. Option C checks table integrity. Option B is inefficient.
 
 ---
+
+## Developing Code for Data Processing using Python and SQL (Question 11)
 
 ## Question 11 *(Medium)*
 
@@ -218,6 +236,8 @@ D) Set `spark.sql.streaming.stateStore.maintenanceInterval` to "1 hour"
 
 ---
 
+## Debugging and Deploying (Question 12)
+
 ## Question 12 *(Hard)*
 
 **Scenario**: A data engineer is debugging a streaming pipeline that stopped processing data. The query shows `ACTIVE` status but the `processedRowsPerSecond` metric shows 0. New files are continuously arriving in the source location.
@@ -235,6 +255,8 @@ D) The stream is waiting for the trigger interval
 > A stream showing ACTIVE with 0 rows processed while files are arriving typically indicates the configured source path doesn't match where files are being written. Option A would cause errors, not zero processing. Option B would limit throughput but not stop it entirely. Option D wouldn't show persistent zero processing.
 
 ---
+
+## Data Manipulation (Question 13)
 
 ## Question 13 *(Hard)*
 
@@ -254,6 +276,8 @@ D) Deduplicate within the MERGE using `ROW_NUMBER()` in a subquery
 
 ---
 
+## Data Ingestion & Acquisition (Question 14)
+
 ## Question 14 *(Easy)*
 
 **Scenario**: A pipeline processes IoT sensor data using Auto Loader. The sensors occasionally send malformed JSON that causes parsing errors. The team wants to capture bad records for analysis without failing the pipeline.
@@ -272,6 +296,8 @@ D) Wrap the read in a try-catch block
 
 ---
 
+## Cost & Performance Optimization (Question 15)
+
 ## Question 15 *(Medium)*
 
 **Scenario**: A batch ETL job reads from a Delta table and writes to another Delta table. The job runs daily and should only process records that changed since the last run. The source table has Change Data Feed enabled.
@@ -289,6 +315,8 @@ D) Read the `_delta_log` directly to find changed files
 > Reading CDF with `startingVersion` returns all changes (inserts, updates, deletes) since that version, including `_change_type` column. Option B reads snapshots, not changes. Option C is not valid syntax. Option D is fragile and not recommended.
 
 ---
+
+## Data Manipulation (Questions 16–17)
 
 ## Question 16 *(Easy)*
 
@@ -326,6 +354,8 @@ D) `WHEN MATCHED THEN UPDATE SET * HAVING source.timestamp > target.timestamp`
 
 ---
 
+## Developing Code for Data Processing using Python and SQL (Questions 18–20)
+
 ## Question 18 *(Hard)*
 
 **Scenario**: A streaming pipeline uses `foreachBatch()` to write to multiple Delta tables. The engineer wants to ensure atomicity across all writes within each batch--either all tables are updated or none are.
@@ -343,8 +373,6 @@ D) Use `foreachPartition()` instead for transactional guarantees
 > Delta Lake doesn't support multi-table transactions. The recommended approach is to make each write idempotent (using merge keys or batch IDs) so failed batches can be safely reprocessed. Options A and B describe non-existent features. Option D doesn't provide multi-table atomicity.
 
 ---
-
-## Section 2: Databricks Tooling (Questions 19–30)
 
 ## Question 19 *(Medium)*
 
@@ -382,6 +410,8 @@ D) Use `%run` to execute a SQL notebook and capture results
 
 ---
 
+## Ensuring Data Security and Compliance (Question 21)
+
 ## Question 21 *(Easy)*
 
 **Scenario**: A data engineer needs to securely access a third-party API from a Databricks notebook. The API requires an authentication token that should not be stored in code or version control.
@@ -399,6 +429,8 @@ D) Use `dbutils.secrets.get(scope="api_scope", key="api_token")`
 > Databricks Secrets provides secure credential storage with access control. Secrets are encrypted at rest and redacted in logs. Option A exposes secrets in notebook history. Option B is not designed for secrets. Option C requires cluster admin access and isn't as secure.
 
 ---
+
+## Developing Code for Data Processing using Python and SQL (Question 22)
 
 ## Question 22 *(Easy)*
 
@@ -418,6 +450,8 @@ D) Store utilities in a Delta table and read them at runtime
 
 ---
 
+## Debugging and Deploying (Question 23)
+
 ## Question 23 *(Medium)*
 
 **Scenario**: A data engineer is configuring the Databricks CLI for a CI/CD pipeline. The pipeline runs in a containerized environment where storing credentials in `~/.databrickscfg` is not practical.
@@ -435,6 +469,8 @@ D) Username and password authentication
 > Service principals with OAuth are the recommended approach for CI/CD automation. They provide machine identity without personal credentials and can be scoped with specific permissions. Option A requires user interaction. Option B uses personal tokens that expire. Option D is deprecated.
 
 ---
+
+## Monitoring and Alerting (Question 24)
 
 ## Question 24 *(Medium)*
 
@@ -454,6 +490,8 @@ D) Rate limiting is preventing the second API call
 
 ---
 
+## Developing Code for Data Processing using Python and SQL (Question 25)
+
 ## Question 25 *(Medium)*
 
 **Scenario**: A team is deciding between all-purpose clusters and job clusters for their production ETL workloads that run on a schedule four times daily.
@@ -472,6 +510,8 @@ D) Use job clusters which are automatically created and terminated per job run
 
 ---
 
+## Data Governance (Question 26)
+
 ## Question 26 *(Medium)*
 
 **Scenario**: A data engineer needs to list all files in a Unity Catalog volume and filter for Parquet files created in the last 24 hours.
@@ -489,6 +529,8 @@ D) `os.listdir("/dbfs/Volumes/catalog/schema/volume")`
 > Unity Catalog volumes are accessed via the `/Volumes` path without the `dbfs:` prefix. Option A uses the wrong path format. Option C reads file content, not metadata. Option D may work but `dbutils.fs` is the recommended approach for Databricks.
 
 ---
+
+## Developing Code for Data Processing using Python and SQL (Questions 27–28)
 
 ## Question 27 *(Easy)*
 
@@ -526,6 +568,8 @@ D) POST `/api/2.1/jobs/run-now` with `notebook_params` in the request
 
 ---
 
+## Data Governance (Question 29)
+
 ## Question 29 *(Medium)*
 
 **Scenario**: A team is migrating from DBFS mounts to Unity Catalog external locations. Their existing code uses paths like `dbfs:/mnt/data/bronze/`.
@@ -543,6 +587,8 @@ D) Use storage credentials to access cloud storage via `dbutils.fs`
 > Unity Catalog volumes provide governed access to cloud storage with paths like `/Volumes/catalog/schema/volume/`. External locations and volumes replace the ungoverned mount pattern. Option A bypasses governance. Option C mixes patterns incorrectly. Option D doesn't leverage Unity Catalog.
 
 ---
+
+## Monitoring and Alerting (Question 30)
 
 ## Question 30 *(Medium)*
 
@@ -562,7 +608,7 @@ D) `databricks api post /api/2.0/sql/statements -d '{"statement": "SELECT * FROM
 
 ---
 
-## Section 3: Data Modeling (Questions 31–39)
+## Data Modeling (Questions 31–34)
 
 ## Question 31 *(Easy)*
 
@@ -636,6 +682,8 @@ D) Depends on the number of historical records for that customer
 
 ---
 
+## Cost & Performance Optimization (Question 35)
+
 ## Question 35 *(Hard)*
 
 **Scenario**: A fact table containing 5 years of transaction data is partitioned by `transaction_date`. Most queries filter on `customer_id` and `product_id`, rarely filtering on date. Query performance is poor.
@@ -653,6 +701,8 @@ D) Convert to Liquid Clustering on `customer_id, product_id`
 > Liquid Clustering on the frequently filtered columns provides automatic data organization and maintenance. Since queries rarely filter on date, date partitioning provides little benefit. Option B loses time-based data management benefits. Option C combines both but has more maintenance overhead than liquid clustering. Option A creates too many small partitions.
 
 ---
+
+## Data Manipulation (Question 36)
 
 ## Question 36 *(Medium)*
 
@@ -672,6 +722,8 @@ D) Use Delta Lake versioning with `delta.logRetentionDuration = 30 days`
 
 ---
 
+## Data Modeling (Question 37)
+
 ## Question 37 *(Medium)*
 
 **Scenario**: A table has schema evolution enabled with `mergeSchema = true`. The source data occasionally includes columns with names that differ from existing columns only by case (e.g., "CustomerId" vs "customerid").
@@ -689,6 +741,8 @@ D) Delta automatically renames conflicting columns with suffixes
 > By default, Delta Lake (following Spark SQL) treats column names as case-insensitive. "CustomerId" and "customerid" refer to the same column. This behavior can be changed with `spark.sql.caseSensitive = true`. Options B, C, and D describe non-default behaviors.
 
 ---
+
+## Data Manipulation (Question 38)
 
 ## Question 38 *(Easy)*
 
@@ -708,6 +762,8 @@ D) The clone is completely independent; changes don't propagate
 
 ---
 
+## Data Modeling (Question 39)
+
 ## Question 39 *(Medium)*
 
 **Scenario**: A dimension table needs to track corrections to historical records. When an error is discovered in a past record, the correction should be applied, but there must also be an audit trail showing the original incorrect value.
@@ -726,7 +782,7 @@ D) SCD Type 6 (hybrid) with Type 1, 2, and 3 elements
 
 ---
 
-## Section 4: Security & Governance (Questions 40–45)
+## Data Governance (Question 40)
 
 ## Question 40 *(Medium)*
 
@@ -746,6 +802,8 @@ D) Grant USE SCHEMA and SELECT on SCHEMA to give access to all current and futur
 
 ---
 
+## Ensuring Data Security and Compliance (Question 41)
+
 ## Question 41 *(Medium)*
 
 **Scenario**: A table contains employee data including salary information. The HR department should see all columns, but managers should only see employee name, department, and title--not salary.
@@ -764,6 +822,8 @@ D) Implement application-level security in the BI tool
 
 ---
 
+## Data Ingestion & Acquisition (Question 42)
+
 ## Question 42 *(Easy)*
 
 **Scenario**: An organization wants to share a curated dataset with an external partner who uses Snowflake. The partner should receive daily updates but should not have direct access to the Databricks workspace.
@@ -771,16 +831,18 @@ D) Implement application-level security in the BI tool
 **Question**: Which feature enables secure data sharing with external organizations?
 
 A) Create a service principal for the partner to access via API
-B) Use Delta Sharing to share data via open protocol
+B) Use OpenSharing to share data via open protocol
 C) Export data daily to a shared cloud storage location
 D) Create a Databricks workspace for the partner with access to the dataset
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Delta Sharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.
+> OpenSharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.
 
 ---
+
+## Ensuring Data Security and Compliance (Question 43)
 
 ## Question 43 *(Easy)*
 
@@ -800,6 +862,8 @@ D) `%keyvault get db-password`
 
 ---
 
+## Data Governance (Question 44)
+
 ## Question 44 *(Easy)*
 
 **Scenario**: A Unity Catalog metastore is shared across multiple workspaces. A user has SELECT permission on a table granted in Workspace A. The same user accesses Workspace B.
@@ -817,6 +881,8 @@ D) Permissions depend on workspace-level settings
 > Unity Catalog provides centralized governance across all workspaces attached to the same metastore. Permissions granted on objects apply regardless of which workspace is used to access them. This is a key benefit of Unity Catalog over legacy Hive metastore.
 
 ---
+
+## Ensuring Data Security and Compliance (Question 45)
 
 ## Question 45 *(Hard)*
 
@@ -836,7 +902,7 @@ D) Implement filtering in the application layer only
 
 ---
 
-## Section 5: Monitoring & Logging (Questions 46–51)
+## Monitoring and Alerting (Question 46)
 
 ## Question 46 *(Easy)*
 
@@ -856,6 +922,8 @@ D) `system.workflow.jobs`
 
 ---
 
+## Debugging and Deploying (Question 47)
+
 ## Question 47 *(Medium)*
 
 **Scenario**: A streaming job is running slower than expected. The Spark UI shows that one task in a stage takes 10x longer than the others, while most executors sit idle.
@@ -874,6 +942,8 @@ D) Network bottleneck; check cluster networking
 
 ---
 
+## Monitoring and Alerting (Question 48)
+
 ## Question 48 *(Medium)*
 
 **Scenario**: A Lakeflow (DLT) pipeline shows "Update Failed" status. The data engineer needs to identify which specific expectation caused the failure.
@@ -888,9 +958,11 @@ D) Query the pipeline's event log table for expectation metrics
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Lakeflow Declarative Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.
+> Lakeflow Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.
 
 ---
+
+## Cost & Performance Optimization (Question 49)
 
 ## Question 49 *(Medium)*
 
@@ -910,6 +982,8 @@ D) Review the table's `DESCRIBE DETAIL` output
 
 ---
 
+## Monitoring and Alerting (Question 50)
+
 ## Question 50 *(Easy)*
 
 **Scenario**: The security team requests a report of all users who accessed a specific table containing PII data in the last 7 days.
@@ -927,6 +1001,8 @@ D) `system.compute.clusters`
 > The `system.access.audit` table contains audit logs of actions including table reads, with user identity and timestamp. Filter by `action_name` and `request_params` for table access events. Option A has billing data. Option C has table metadata. Option D has cluster info.
 
 ---
+
+## Cost & Performance Optimization (Question 51)
 
 ## Question 51 *(Medium)*
 
@@ -946,11 +1022,11 @@ D) Network latency to cloud storage
 
 ---
 
-## Section 6: Testing & Deployment (Questions 52–57)
+## Debugging and Deploying (Question 52)
 
 ## Question 52 *(Easy)*
 
-**Scenario**: A data engineering team is setting up Databricks Asset Bundles (DAB) for their project. They need separate configurations for development, staging, and production environments.
+**Scenario**: A data engineering team is setting up Declarative Automation Bundles (DABs) for their project. They need separate configurations for development, staging, and production environments.
 
 **Question**: Which `databricks.yml` structure correctly defines these environments?
 
@@ -965,6 +1041,8 @@ D) Create separate bundles for each environment in different directories
 > DAB uses a `targets:` section to define environment-specific configurations. Each target can override bundle settings like workspace host, cluster configs, and variables. Option A doesn't support DAB's inheritance model. Option B uses invalid syntax. Option D duplicates code.
 
 ---
+
+## Developing Code for Data Processing using Python and SQL (Question 53)
 
 ## Question 53 *(Medium)*
 
@@ -983,6 +1061,8 @@ D) Use local Spark session in pytest with mocked data
 > Local Spark sessions in pytest allow fast unit tests without cluster costs or dependencies. Mock DataFrames test transformation logic efficiently. Option A is slow and costly for unit tests. Option C still requires cluster resources. Option B misses the value of unit testing.
 
 ---
+
+## Debugging and Deploying (Questions 54–55)
 
 ## Question 54 *(Easy)*
 
@@ -1004,7 +1084,7 @@ D) Make changes in a separate notebook outside Git folders
 
 ## Question 55 *(Medium)*
 
-**Scenario**: A GitHub Actions workflow deploys Databricks Asset Bundles to a staging environment. The workflow needs to authenticate with Databricks.
+**Scenario**: A GitHub Actions workflow deploys Declarative Automation Bundles to a staging environment. The workflow needs to authenticate with Databricks.
 
 **Question**: Which authentication method is recommended for GitHub Actions?
 
@@ -1019,6 +1099,8 @@ D) Create a dedicated user account for GitHub Actions
 > OIDC federation with service principals is the recommended approach for CI/CD authentication. GitHub Actions can authenticate using short-lived tokens without storing long-lived credentials. Option A uses personal tokens that expire. Option C is deprecated. Option D creates management overhead.
 
 ---
+
+## Developing Code for Data Processing using Python and SQL (Question 56)
 
 ## Question 56 *(Medium)*
 
@@ -1038,6 +1120,8 @@ D) Use Nutter's built-in empty table generator
 
 ---
 
+## Debugging and Deploying (Question 57)
+
 ## Question 57 *(Medium)*
 
 **Scenario**: A bundle deployment fails with the error: "Resource already exists". The data engineer confirms the resource was created by a previous partial deployment.
@@ -1056,7 +1140,7 @@ D) Run `databricks bundle deploy --force` to overwrite
 
 ---
 
-## Section 7: Lakeflow Pipelines & Performance (Questions 58–63)
+## Developing Code for Data Processing using Python and SQL (Questions 58–59)
 
 ## Question 58 *(Medium)*
 
@@ -1072,15 +1156,15 @@ D) The materialized view requires a manual REFRESH command
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Declarative Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
+> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
 
 ---
 
 ## Question 59 *(Medium)*
 
-**Scenario**: A Lakeflow Declarative Pipelines pipeline implements CDC from a source database using APPLY CHANGES. Some records are arriving with out-of-order timestamps due to source system behavior.
+**Scenario**: A Lakeflow pipeline implements CDC from a source database using AUTO CDC (formerly APPLY CHANGES). Some records are arriving with out-of-order timestamps due to source system behavior.
 
-**Question**: How does APPLY CHANGES handle out-of-order records by default?
+**Question**: How does AUTO CDC handle out-of-order records by default?
 
 A) Records are processed in arrival order, ignoring timestamps
 B) Records are processed by sequence column; out-of-order records are dropped
@@ -1090,13 +1174,15 @@ D) The pipeline fails on out-of-order detection
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> APPLY CHANGES uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.
+> AUTO CDC uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.
 
 ---
 
+## Monitoring and Alerting (Question 60)
+
 ## Question 60 *(Medium)*
 
-**Scenario**: A Lakeflow Declarative Pipelines pipeline has an expectation `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After processing, the engineer wants to know how many rows were dropped.
+**Scenario**: A Lakeflow pipeline has an expectation `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After processing, the engineer wants to know how many rows were dropped.
 
 **Question**: How can the dropped row count be retrieved?
 
@@ -1108,9 +1194,11 @@ D) Query the pipeline event log for expectation metrics
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Lakeflow Declarative Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Declarative Pipelines tracks this automatically.
+> Lakeflow Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Pipelines tracks this automatically.
 
 ---
+
+## Cost & Performance Optimization (Questions 61–63)
 
 ## Question 61 *(Medium)*
 
@@ -1170,29 +1258,29 @@ D) Set `spark.executor.memoryOverhead` to 0 for maximum heap space
 
 ---
 
-## New questions for the November 30, 2025 blueprint refresh
+## Supplementary questions (not in the timed set)
 
-The questions below cover the newly elevated **Data Sharing and Federation** domain. They are tagged so you can self-score them against the new domain weight (5 %).
+These five questions were added for the Nov 30, 2025 guide and are not part of the timed set or the practice-quiz bank. Each is labelled with its Oct 9, 2026 exam section — the former *Data Sharing and Federation* questions now belong to **Data Ingestion & Acquisition** (12 %).
 
-### Question DSF-1 *(Medium — Data Sharing and Federation)*
+### Question DSF-1 *(Medium — Data Ingestion & Acquisition)*
 
 **Scenario**: A data engineering team needs to give a partner company read-only access to a Delta table that's updated every hour. The partner uses Databricks too, but is in a different cloud account. The team wants to avoid copying data and wants UC to enforce all access.
 
 **Question**: Which pattern fits best?
 
 A) Export the table to S3 as Parquet and email the partner a presigned URL  
-B) Create a Databricks-to-Databricks (D2D) Delta Share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
-C) Replicate the table to the partner's account using Lakeflow Declarative Pipelines  
+B) Create a Databricks-to-Databricks (D2D) OpenSharing share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
+C) Replicate the table to the partner's account using Lakeflow Pipelines  
 D) Set up a foreign catalog in the partner's workspace pointing at the team's table  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks-to-Databricks Delta Sharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Declarative Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
+> Databricks-to-Databricks OpenSharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
 
 ---
 
-### Question DSF-2 *(Medium — Data Sharing and Federation)*
+### Question DSF-2 *(Medium — Data Ingestion & Acquisition)*
 
 **Scenario**: An analytics team wants to query a Snowflake `orders` table for ad-hoc analysis without ETL'ing it into Delta. They need filter pushdown to keep performance reasonable, and credentials must be governed centrally.
 
@@ -1200,13 +1288,13 @@ D) Set up a foreign catalog in the partner's workspace pointing at the team's ta
 
 A) Create a Databricks `JDBC` connection in `spark.conf` and read with `spark.read.format("jdbc")`  
 B) Create a Unity Catalog `CONNECTION` of type `SNOWFLAKE`, then `CREATE FOREIGN CATALOG` over it; query as `catalog.schema.table`  
-C) Use Delta Sharing — Snowflake supports being a Delta Share recipient  
+C) Use OpenSharing — Snowflake supports being a OpenSharing share recipient  
 D) Use Auto Loader with the Snowflake source connector  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a Delta Share recipient platform. Option D is for object-store file ingestion, not relational sources.
+> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a OpenSharing share recipient platform. Option D is for object-store file ingestion, not relational sources.
 
 ---
 
