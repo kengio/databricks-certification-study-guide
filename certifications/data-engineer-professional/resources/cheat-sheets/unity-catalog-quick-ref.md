@@ -4,7 +4,7 @@ tags: [cheat-sheet, unity-catalog, data-engineer-professional]
 
 # Unity Catalog — DE Professional Supplement
 
-> For the full Unity Catalog reference (object creation, permissions, external locations, Delta Sharing), see
+> For the full Unity Catalog reference (object creation, permissions, external locations, OpenSharing), see
 > [shared/cheat-sheets/unity-catalog-quick-ref.md](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md).
 
 This file covers DE Professional-specific patterns not in the shared reference.

@@ -1,5 +1,5 @@
 ---
-title: Asset Bundles — Part 2
+title: Declarative Automation Bundles — Part 2
 type: topic
 tags:
   - data-engineering
@@ -9,9 +9,9 @@ tags:
 status: published
 ---
 
-# Databricks Asset Bundles (DAB) — Part 2
+# Declarative Automation Bundles (DABs) — Part 2
 
-This part covers sync and state management, CI/CD integration, bundle templates, common patterns, common issues, and exam tips for Databricks Asset Bundles.
+This part covers sync and state management, CI/CD integration, bundle templates, common patterns, common issues, and exam tips for Declarative Automation Bundles.
 
 > For bundle structure, resource definitions, variables, commands, target configuration, and artifact packaging, see [Part 1](./03-declarative-automation-bundles-part1.md).
 
@@ -284,7 +284,7 @@ spark.sql(f"USE CATALOG {catalog}")
 ## Use Cases
 
 - **Environment Promotion**: Defining `dev`, `staging`, and `prod` targets in `databricks.yml` to deploy the exact same pipeline configuration across different workspaces with environment-specific variables.
-- **Infrastructure as Code**: Managing job schedules, cluster definitions, and Lakeflow Declarative Pipelines pipeline configurations alongside the Python code in a single version-controlled repository.
+- **Infrastructure as Code**: Managing job schedules, cluster definitions, and Lakeflow pipeline configurations alongside the Python code in a single version-controlled repository.
 
 ## Common Issues & Errors
 
@@ -409,11 +409,11 @@ artifacts:
 
 ## Official Documentation
 
-- [Databricks Asset Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
+- [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
 - [Bundle Configuration](https://docs.databricks.com/dev-tools/bundles/settings.html)
 - [Bundle Templates](https://docs.databricks.com/dev-tools/bundles/templates.html)
 - [CI/CD with Bundles](https://docs.databricks.com/dev-tools/bundles/ci-cd.html)
 
 ---
 
-**[← Previous: Asset Bundles — Part 1](./03-declarative-automation-bundles-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: CI/CD Integration — Part 1 (Platforms & Configuration)](./05-cicd-integration-part1.md) →**
+**[← Previous: Declarative Automation Bundles — Part 1](./03-declarative-automation-bundles-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: CI/CD Integration — Part 1 (Platforms & Configuration)](./05-cicd-integration-part1.md) →**

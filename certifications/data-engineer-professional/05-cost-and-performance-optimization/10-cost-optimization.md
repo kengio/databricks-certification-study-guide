@@ -46,7 +46,7 @@ DBU (Databricks Unit):
   - All-Purpose Compute
   - Jobs Compute
   - SQL Compute
-  - Lakeflow Declarative Pipelines
+  - Lakeflow Pipelines
 
 Pricing tiers (example):
 - All-Purpose: ~0.40 DBU/hour
@@ -283,7 +283,7 @@ Example:
 | :--- | :--- | :--- |
 | Serverless SQL | Analytics queries | Per query DBU |
 | Serverless Compute | Notebooks, jobs | Per execution DBU |
-| Serverless Lakeflow Declarative Pipelines | Pipeline execution | Per pipeline DBU |
+| Serverless Lakeflow Pipelines | Pipeline execution | Per pipeline DBU |
 
 ### Serverless Benefits
 
@@ -594,7 +594,7 @@ dev_cluster:
 
 - [Databricks Compute](../01-developing-code-for-data-processing/09-databricks-compute.md) - Cluster types
 - [System Tables](../04-monitoring-and-alerting/01-system-tables.md) - Usage monitoring
-- [Asset Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Job configuration
+- [Declarative Automation Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Job configuration
 
 ## Official Documentation
 

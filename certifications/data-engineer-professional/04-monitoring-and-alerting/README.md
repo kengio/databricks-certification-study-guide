@@ -10,7 +10,7 @@ status: published
 
 # Monitoring and Alerting (10 % of Exam)
 
-Observability *and* alerting for Lakeflow Jobs, Lakeflow Declarative Pipelines, and Databricks SQL — using **system tables**, the **Lakeflow event log**, the **query profiler**, structured-streaming progress metrics, **SQL Alerts**, and **Lakeflow Jobs notifications** (email + webhook).
+Observability *and* alerting for Lakeflow Jobs, Lakeflow Pipelines, and Databricks SQL — using **system tables**, the **Lakeflow event log**, the **query profiler**, structured-streaming progress metrics, **SQL Alerts**, and **Lakeflow Jobs notifications** (email + webhook).
 
 ## Topics Overview
 

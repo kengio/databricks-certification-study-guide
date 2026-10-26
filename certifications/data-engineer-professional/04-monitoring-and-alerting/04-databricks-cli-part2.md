@@ -10,7 +10,7 @@ status: published
 
 # Databricks CLI — Part 2
 
-This file covers cluster management, secrets, Databricks Asset Bundles (DAB), Unity Catalog CLI commands, output formats, common scripting patterns, and exam preparation.
+This file covers cluster management, secrets, Declarative Automation Bundles (DABs), Unity Catalog CLI commands, output formats, common scripting patterns, and exam preparation.
 
 ## Cluster Commands
 
@@ -142,7 +142,7 @@ databricks secrets delete-acl --scope my-scope --principal user@company.com
 
 ## Bundle Commands (DAB)
 
-Databricks Asset Bundles (DAB) enable infrastructure-as-code for Databricks resources.
+Declarative Automation Bundles (DABs) enable infrastructure-as-code for Databricks resources.
 
 ### Initialize Bundle
 
@@ -358,7 +358,7 @@ DATABRICKS_CONFIG_PROFILE=target databricks jobs create --json-file job_clean.js
 
 ## Use Cases
 
-- **CI/CD Automation**: Integrating Databricks Asset Bundles (DABs) deployment into GitHub Actions or Azure DevOps pipelines.
+- **CI/CD Automation**: Integrating Declarative Automation Bundles (DABs) deployment into GitHub Actions or Azure DevOps pipelines.
 - **Bulk Operations**: Managing hundreds of secrets, creating cluster policies, or syncing workspace directories automatically.
 - **Local IDE Integration**: Interacting with the remote Databricks workspace directly from a local terminal or IDE.
 
@@ -439,7 +439,7 @@ databricks configure --token
 ## Key Takeaways
 
 - **Authentication precedence**: environment variables (`DATABRICKS_HOST`, `DATABRICKS_TOKEN`) override profile flag (`--profile`), which overrides the default profile in `~/.databrickscfg`
-- **Databricks Asset Bundle (DAB) workflow**: `bundle validate` → `bundle deploy --target <env>` → `bundle run <resource>`; `databricks.yml` defines resources, targets, and workspace settings
+- **Declarative Automation Bundle (DAB) workflow**: `bundle validate` → `bundle deploy --target <env>` → `bundle run <resource>`; `databricks.yml` defines resources, targets, and workspace settings
 - **`jobs run-now`** triggers an existing job by ID; **`jobs submit`** creates a one-time run without a persistent job definition
 - **Secret scope management**: `databricks secrets create-scope` creates the scope; `databricks secrets put --scope ... --key ... --string-value ...` adds or updates a secret; values can never be retrieved via CLI, only key names are listed
 - **DBFS paths** in CLI commands require the `dbfs:/` prefix (e.g., `databricks fs ls dbfs:/data/`)
@@ -450,14 +450,14 @@ databricks configure --token
 ## Related Topics
 
 - [REST API — Part 1](./05-rest-api-part1.md) - Programmatic API access
-- [Asset Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Infrastructure as code
+- [Declarative Automation Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Infrastructure as code
 - [CI/CD Integration](../08-debugging-and-deploying/05-cicd-integration-part1.md) - Pipeline automation
 
 ## Official Documentation
 
 - [Databricks CLI Reference](https://docs.databricks.com/dev-tools/cli/index.html)
 - [CLI Authentication](https://docs.databricks.com/dev-tools/cli/authentication.html)
-- [Databricks Asset Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
+- [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
 
 ---
 

@@ -112,7 +112,7 @@ When to federate vs ingest:
 
 ## Related Topics
 
-- [Delta Sharing](./06-opensharing.md) — open cross-org sharing of Delta tables (different problem, same domain)
+- [OpenSharing](./06-opensharing.md) — open cross-org sharing of Delta tables (different problem, same domain)
 - [Unity Catalog](../07-data-governance/01-unity-catalog.md) — the governance plane for federation
 
 ## Official Documentation
@@ -124,4 +124,4 @@ When to federate vs ingest:
 
 ---
 
-**[← Previous: Delta Sharing](./06-opensharing.md) | [↑ Back to Data Sharing & Federation](./README.md)**
+**[← Previous: OpenSharing](./06-opensharing.md) | [↑ Back to Data Sharing & Federation](./README.md)**

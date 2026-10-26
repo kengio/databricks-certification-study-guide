@@ -11,7 +11,7 @@ tags:
 A second timed mock with different scenarios — take after Mock Exam 1.
 
 > [!important]
-> **Refreshed for the November 30, 2025 blueprint.** Terminology updated to current product names (Lakeflow Jobs, Lakeflow Declarative Pipelines). Domain weighting and section labels now match the 10-domain official structure.
+> **Refreshed for the November 30, 2025 blueprint.** Terminology updated to current product names (Lakeflow Jobs, Lakeflow Pipelines). Domain weighting and section labels now match the 10-domain official structure.
 
 ## Exam Instructions
 
@@ -34,7 +34,7 @@ A second timed mock with different scenarios — take after Mock Exam 1.
 | Debugging and Deploying | 10 % | 6 |
 | Data Ingestion & Acquisition | 7 % | 4 |
 | Data Governance | 7 % | 4 |
-| Data Modelling | 6 % | 4 |
+| Data Modeling | 6 % | 4 |
 | Data Sharing and Federation | 5 % | 3 |
 
 ## Scoring Guide

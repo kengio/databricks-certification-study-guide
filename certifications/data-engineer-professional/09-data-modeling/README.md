@@ -1,5 +1,5 @@
 ---
-title: Data Modelling
+title: Data Modeling
 type: category
 tags:
   - data-engineer-professional
@@ -8,7 +8,7 @@ tags:
 status: published
 ---
 
-# Data Modelling (6 % of Exam)
+# Data Modeling (6 % of Exam)
 
 Bronze / Silver / Gold layering with Delta Lake, schema management (enforcement + evolution), and slowly changing dimension (SCD) patterns.
 
@@ -16,7 +16,7 @@ Bronze / Silver / Gold layering with Delta Lake, schema management (enforcement 
 
 ```mermaid
 flowchart LR
-    DM[Data Modelling] --> Medal[Medallion Architecture]
+    DM[Data Modeling] --> Medal[Medallion Architecture]
     DM --> DL[Delta Lake Fundamentals]
     DM --> Schema[Schema Management]
     DM --> SCD[SCD Patterns]

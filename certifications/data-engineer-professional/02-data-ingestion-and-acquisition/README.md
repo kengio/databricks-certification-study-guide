@@ -46,7 +46,7 @@ flowchart LR
 - [Streaming Fundamentals (shared)](../../../shared/fundamentals/streaming-fundamentals.md)
 - [Auto Loader documentation](https://docs.databricks.com/en/ingestion/auto-loader/index.html)
 - [Structured Streaming — Part 1 (developing code domain)](../01-developing-code-for-data-processing/04-structured-streaming-part1.md) — Auto Loader is most often consumed as a streaming source via `cloudFiles`
-- [Lakeflow Declarative Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) — `@Dlt.table` + `cloudFiles` is the canonical declarative ingestion pattern
+- [Lakeflow Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) — `@Dlt.table` + `cloudFiles` is the canonical declarative ingestion pattern
 
 > [!note]
 > Three pillars of ingestion now covered: **Auto Loader** (continuous file ingest), **`COPY INTO`** (idempotent batch file ingest), and **streaming from message buses** (Kafka / Kinesis / Event Hubs). Partner connectors (Fivetran / Lakeflow Connect) remain a [follow-up](../../../README.md#roadmap-for-the-guide-itself).

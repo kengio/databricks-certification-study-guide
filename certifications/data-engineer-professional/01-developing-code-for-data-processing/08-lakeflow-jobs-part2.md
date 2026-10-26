@@ -395,8 +395,8 @@ tasks:
 
 ## Related Topics
 
-- [Declarative Pipelines](./06-declarative-pipelines.md) - Lakeflow Declarative Pipelines pipeline task type
-- [Asset Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Job deployment via DABs
+- [Declarative Pipelines](./06-declarative-pipelines.md) - Lakeflow pipeline task type
+- [Declarative Automation Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Job deployment via DABs
 - [CI/CD Integration](../08-debugging-and-deploying/05-cicd-integration-part1.md) - Automated deployment
 
 ## Official Documentation

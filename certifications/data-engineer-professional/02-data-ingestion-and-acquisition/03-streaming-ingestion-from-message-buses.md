@@ -15,7 +15,7 @@ status: published
 
 ## Overview
 
-Object-storage ingest covers files. Message buses — **Apache Kafka**, **Confluent Cloud**, **AWS Kinesis**, **Azure Event Hubs**, **GCP Pub/Sub** — cover events. Databricks reads them through Structured Streaming sources (`kafka`, `kinesis`, `eventhubs`) and writes to Delta with the same `writeStream` patterns used for any streaming sink. This page covers the canonical configurations, credential handling, exactly-once semantics, and how to combine with **Lakeflow Declarative Pipelines** for declarative ingest.
+Object-storage ingest covers files. Message buses — **Apache Kafka**, **Confluent Cloud**, **AWS Kinesis**, **Azure Event Hubs**, **GCP Pub/Sub** — cover events. Databricks reads them through Structured Streaming sources (`kafka`, `kinesis`, `eventhubs`) and writes to Delta with the same `writeStream` patterns used for any streaming sink. This page covers the canonical configurations, credential handling, exactly-once semantics, and how to combine with **Lakeflow Pipelines** for declarative ingest.
 
 > [!abstract]
 >
@@ -24,7 +24,7 @@ Object-storage ingest covers files. Message buses — **Apache Kafka**, **Conflu
 > - **Event Hubs source** — Azure-native; uses the Kafka-compatible endpoint or the dedicated `eventhubs` connector
 > - **Exactly-once writes** via Delta + checkpointing
 > - **Credentials live in UC connections or secret scopes** — never in `spark.conf`
-> - **Lakeflow Declarative Pipelines** wrap the streaming source with `@dlt.table` + `cloudFiles`-style ergonomics
+> - **Lakeflow Pipelines** wrap the streaming source with `@dlt.table` + `cloudFiles`-style ergonomics
 
 > [!tip] What the Exam Tests
 >
@@ -32,7 +32,7 @@ Object-storage ingest covers files. Message buses — **Apache Kafka**, **Conflu
 > - Required options per source (Kafka: bootstrap servers + topic; Kinesis: stream name + region; Event Hubs: namespace + name)
 > - That checkpointing is what gives you exactly-once into Delta
 > - That credentials should come from a UC connection or secret scope, not hard-coded
-> - The trade-off between streaming source + `writeStream` (full control) vs Lakeflow Declarative Pipelines (declarative)
+> - The trade-off between streaming source + `writeStream` (full control) vs Lakeflow Pipelines (declarative)
 
 ---
 
@@ -99,7 +99,7 @@ Kinesis supports **enhanced fan-out** for multi-consumer high-throughput reads �
 
 Event Hubs exposes a Kafka-compatible endpoint, so the simplest path is to use the Kafka source pointed at the Event Hubs broker. Required JAAS config uses the Event Hubs SAS connection string as the password.
 
-## Lakeflow Declarative Pipelines wrapper
+## Lakeflow Pipelines wrapper
 
 For declarative ingest where you want pipeline-level expectations, automatic dependency tracking, and the Lakeflow event log:
 
@@ -155,14 +155,14 @@ Delta + checkpointing gives you exactly-once **into Delta**. The contract:
 > - **Checkpointing + Delta = exactly-once** into the lakehouse. Same pattern for all three sources.
 > - Credentials live in **secret scopes** or **UC connections**, never in code.
 > - `startingOffsets = latest` is the **streaming** default for Kafka — set to `earliest` for history. (Batch reads default to `earliest`.)
-> - Lakeflow Declarative Pipelines wrap the streaming source ergonomically and add the pipeline event log; standard `writeStream` gives you more control.
+> - Lakeflow Pipelines wrap the streaming source ergonomically and add the pipeline event log; standard `writeStream` gives you more control.
 
 ## Key Takeaways
 
 - Message-bus ingestion uses Structured Streaming sources: `kafka` / `kinesis` / `eventhubs`
 - Delta + checkpointing provides exactly-once into the lakehouse
 - Credentials must be externalised to secret scopes or UC connections
-- Lakeflow Declarative Pipelines wrap the source for declarative ergonomics
+- Lakeflow Pipelines wrap the source for declarative ergonomics
 - `startingOffsets` and `maxOffsetsPerTrigger` are the two most-tuned options
 
 ## Related Topics
@@ -170,7 +170,7 @@ Delta + checkpointing gives you exactly-once **into Delta**. The contract:
 - [Auto Loader](./01-auto-loader.md) — for file sources
 - [COPY INTO](./02-copy-into.md) — for batch file ingest
 - [Structured Streaming Part 1](../01-developing-code-for-data-processing/04-structured-streaming-part1.md)
-- [Lakeflow Declarative Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md)
+- [Lakeflow Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md)
 - [Change Data Capture](04-change-data-capture-part1.md)
 
 ## Official Documentation
@@ -178,7 +178,7 @@ Delta + checkpointing gives you exactly-once **into Delta**. The contract:
 - [Apache Kafka source for Structured Streaming](https://docs.databricks.com/en/structured-streaming/kafka.html)
 - [Amazon Kinesis source](https://docs.databricks.com/en/structured-streaming/kinesis.html)
 - [Azure Event Hubs source](https://learn.microsoft.com/en-us/azure/databricks/structured-streaming/eventhubs)
-- [Lakeflow Declarative Pipelines syntax](https://docs.databricks.com/en/delta-live-tables/index.html)
+- [Lakeflow Pipelines syntax](https://docs.databricks.com/en/delta-live-tables/index.html)
 
 ---
 

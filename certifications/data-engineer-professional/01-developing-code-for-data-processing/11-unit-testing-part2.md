@@ -426,7 +426,7 @@ spark = (SparkSession.builder
 
 ## Related Topics
 
-- [Asset Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Test deployment
+- [Declarative Automation Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - Test deployment
 - [CI/CD Integration](../08-debugging-and-deploying/05-cicd-integration-part1.md) - Pipeline testing
 - [Git Folders](../08-debugging-and-deploying/06-git-folders.md) - Test versioning
 

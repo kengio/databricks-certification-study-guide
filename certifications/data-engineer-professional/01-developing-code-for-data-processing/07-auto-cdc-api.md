@@ -9,7 +9,7 @@ status: published
 
 # APPLY CHANGES API
 
-The APPLY CHANGES API enables Change Data Capture (CDC) processing in Lakeflow Pipelines (Lakeflow Declarative Pipelines). It simplifies the implementation of SCD (Slowly Changing Dimension) patterns by automatically handling inserts, updates, and deletes from source systems.
+The APPLY CHANGES API enables Change Data Capture (CDC) processing in Lakeflow Pipelines (Lakeflow Pipelines). It simplifies the implementation of SCD (Slowly Changing Dimension) patterns by automatically handling inserts, updates, and deletes from source systems.
 
 ## Overview
 
@@ -674,7 +674,7 @@ TRACK HISTORY ON (salary, department, title)
 ## Official Documentation
 
 - [APPLY CHANGES API](https://docs.databricks.com/delta-live-tables/cdc.html)
-- [SCD Type 2 in Lakeflow Declarative Pipelines](https://docs.databricks.com/delta-live-tables/cdc.html#scd-type-2)
+- [SCD Type 2 in Lakeflow Pipelines](https://docs.databricks.com/delta-live-tables/cdc.html#scd-type-2)
 - [SQL Reference - APPLY CHANGES](https://docs.databricks.com/delta-live-tables/sql-ref.html#apply-changes)
 - [Python Reference - apply_changes](https://docs.databricks.com/delta-live-tables/python-ref.html#apply-changes)
 

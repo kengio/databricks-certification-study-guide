@@ -10,7 +10,7 @@ status: published
 
 # Data Transformation, Cleansing, and Quality (10 % of Exam)
 
-Covers CDC patterns, deduplication, Lakeflow Declarative Pipelines `expectations`, and the `APPLY CHANGES INTO` API used to land cleaned data into Silver and Gold layers.
+Covers CDC patterns, deduplication, Lakeflow Pipelines `expectations`, and the `APPLY CHANGES INTO` API used to land cleaned data into Silver and Gold layers.
 
 ## Topics Overview
 
@@ -45,7 +45,7 @@ flowchart LR
 ## Related Resources
 
 - [Delta Lake cheat sheet (shared)](../../../shared/cheat-sheets/delta-lake-commands.md)
-- [Lakeflow Declarative Pipelines / Lakeflow Declarative Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
+- [Lakeflow Pipelines cheat sheet (shared)](../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
 
 ---
 

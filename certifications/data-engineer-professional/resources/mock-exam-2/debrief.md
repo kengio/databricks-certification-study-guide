@@ -26,7 +26,7 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 | :---: | :---: | :--- | :--- | :--- |
 | 1 | Medium | Monitoring & Alerting | [link](../../04-monitoring-and-alerting/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 | 2 | Hard | Ingestion | [link](../../02-data-ingestion-and-acquisition/README.md) | [link](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
-| 3 | Hard | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 3 | Hard | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 4 | Hard | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 5 | Hard | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 6 | Medium | Transformation & Quality | [link](../../03-data-manipulation/README.md) | [link](../../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) |
@@ -41,7 +41,7 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 | 15 | Medium | Transformation & Quality | [link](../../03-data-manipulation/README.md) | [link](../../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) |
 | 16 | Hard | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 17 | Medium | Ingestion | [link](../../02-data-ingestion-and-acquisition/README.md) | [link](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
-| 18 | Hard | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 18 | Hard | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 19 | Medium | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 20 | Medium | Debugging & Deploying | [link](../../08-debugging-and-deploying/README.md) | [link](../../../../shared/cheat-sheets/spark-configurations.md) |
 | 21 | Medium | Debugging & Deploying | [link](../../08-debugging-and-deploying/README.md) | [link](../../../../shared/cheat-sheets/spark-configurations.md) |
@@ -54,10 +54,10 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 | 28 | Medium | Data Governance | [link](../../07-data-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 | 29 | Hard | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 30 | Medium | Data Governance | [link](../../07-data-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 31 | Hard | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 32 | Hard | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 31 | Hard | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 32 | Hard | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 33 | Hard | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 34 | Medium | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 34 | Medium | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 35 | Medium | Cost & Performance | [link](../../05-cost-and-performance-optimization/README.md) | [link](../../../../shared/cheat-sheets/performance-optimization.md) |
 | 36 | Hard | Cost & Performance | [link](../../05-cost-and-performance-optimization/README.md) | [link](../../../../shared/cheat-sheets/performance-optimization.md) |
 | 37 | Medium | Cost & Performance | [link](../../05-cost-and-performance-optimization/README.md) | [link](../../../../shared/cheat-sheets/performance-optimization.md) |
@@ -74,7 +74,7 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 | 48 | Medium | Monitoring & Alerting | [link](../../04-monitoring-and-alerting/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 | 49 | Hard | Cost & Performance | [link](../../05-cost-and-performance-optimization/README.md) | [link](../../../../shared/cheat-sheets/performance-optimization.md) |
 | 50 | Hard | Monitoring & Alerting | [link](../../04-monitoring-and-alerting/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 51 | Hard | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 51 | Hard | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 52 | Medium | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 53 | Hard | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 54 | Medium | Monitoring & Alerting | [link](../../04-monitoring-and-alerting/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
@@ -96,7 +96,7 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 | :--- | :--- | :---: |
 | Section 1: Data Processing | Developing Code + Transformation + Ingestion | ~17 |
 | Section 2: Databricks Tooling | Debugging and Deploying + Developing Code | ~12 |
-| Section 3: Data Modeling | Data Modelling + Cost & Performance | ~9 |
+| Section 3: Data Modeling | Data Modeling + Cost & Performance | ~9 |
 | Section 4: Security & Governance | Security & Compliance + Data Governance | ~6 |
 | Section 5: Monitoring & Logging | Monitoring and Alerting | ~6 |
 | Section 6: Testing & Deployment | Debugging and Deploying | ~6 |
@@ -116,10 +116,10 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 
 ## Common Mock-2 traps
 
-- **Lakeflow Declarative Pipelines event-log queries** — multiple questions test reading the pipeline event log; know the column shape
-- **Asset Bundles `mode: development` vs `mode: production`** — dev pauses schedules and prefixes resources; production uses the run-as identity
+- **Lakeflow Pipelines event-log queries** — multiple questions test reading the pipeline event log; know the column shape
+- **Declarative Automation Bundles `mode: development` vs `mode: production`** — dev pauses schedules and prefixes resources; production uses the run-as identity
 - **APPLY CHANGES INTO** vs hand-written MERGE — APPLY CHANGES INTO is preferred for SCD inside declarative pipelines
-- **Delta Sharing identifier vs activation URL** — D2D uses sharing identifiers; open Delta Sharing uses activation URLs
+- **OpenSharing identifier vs activation URL** — D2D uses sharing identifiers; open OpenSharing uses activation URLs
 
 ---
 

@@ -298,7 +298,7 @@ SELECT
 FROM prod.silver.orders
 GROUP BY customer_id;
 
--- Materialized view (Lakeflow Declarative Pipelines only)
+-- Materialized view (Lakeflow Pipelines only)
 -- See Lakeflow Pipelines section
 ```
 
@@ -615,7 +615,7 @@ Unity Catalog automatically tracks data lineage.
 | Governance | Limited | Comprehensive |
 | Lineage | None | Automatic |
 | Access control | Basic ACLs | Fine-grained |
-| Data sharing | Not supported | Delta Sharing |
+| Data sharing | Not supported | OpenSharing |
 
 ### Migration Approaches
 
@@ -744,7 +744,7 @@ GRANT USE CATALOG ON CATALOG prod TO `data-team`;
 ## Related Topics
 
 - [Access Control](../06-ensuring-data-security-and-compliance/01-access-control.md) - Row/column level security
-- [Data Sharing](../02-data-ingestion-and-acquisition/06-opensharing.md) - Delta Sharing
+- [Data Sharing](../02-data-ingestion-and-acquisition/06-opensharing.md) - OpenSharing
 - [Secret Management](../06-ensuring-data-security-and-compliance/05-secret-management.md) - Secure credentials
 
 ## Official Documentation

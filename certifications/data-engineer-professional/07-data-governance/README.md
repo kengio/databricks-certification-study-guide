@@ -45,4 +45,4 @@ flowchart TD
 
 ---
 
-**[← Previous: Data Ingestion & Acquisition](../02-data-ingestion-and-acquisition/README.md) | [↑ Back to DE Professional](../README.md) | [Next: Data Modelling →](../09-data-modeling/README.md)**
+**[← Previous: Data Ingestion & Acquisition](../02-data-ingestion-and-acquisition/README.md) | [↑ Back to DE Professional](../README.md) | [Next: Data Modeling →](../09-data-modeling/README.md)**

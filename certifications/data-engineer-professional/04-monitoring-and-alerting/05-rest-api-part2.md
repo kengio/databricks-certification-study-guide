@@ -310,7 +310,7 @@ if cluster.state != "RUNNING":
 
 - [Databricks CLI — Part 1](./04-databricks-cli-part1.md) - CLI wraps REST API
 - [CI/CD Integration](../08-debugging-and-deploying/05-cicd-integration-part1.md) - API in pipelines
-- [Asset Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - IaC for Databricks
+- [Declarative Automation Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - IaC for Databricks
 
 ## Official Documentation
 

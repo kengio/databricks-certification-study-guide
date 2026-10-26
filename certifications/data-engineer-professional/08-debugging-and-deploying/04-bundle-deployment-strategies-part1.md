@@ -11,7 +11,7 @@ status: published
 
 # Bundle Deployment Strategies — Part 1: Bundle Patterns & CI/CD Pipelines
 
-This part covers advanced Databricks Asset Bundle patterns, CI/CD pipeline DAGs, and blue/green and canary deployment strategies. For rollback, feature flags, schema migration, and OIDC federation see Part 2.
+This part covers advanced Declarative Automation Bundle patterns, CI/CD pipeline DAGs, and blue/green and canary deployment strategies. For rollback, feature flags, schema migration, and OIDC federation see Part 2.
 
 ## Overview
 
@@ -42,7 +42,7 @@ flowchart TB
     AdvancedCD --> GitOps
 ```
 
-## Advanced Asset Bundle Patterns
+## Advanced Declarative Automation Bundle Patterns
 
 ### Multi-Project Bundle Organization
 
@@ -129,7 +129,7 @@ resources:
 
 ### Custom Variable Interpolation
 
-Databricks Asset Bundles support several variable interpolation patterns.
+Declarative Automation Bundles support several variable interpolation patterns.
 
 | Variable Pattern | Description | Example Value |
 | :--- | :--- | :--- |

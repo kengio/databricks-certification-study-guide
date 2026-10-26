@@ -633,7 +633,7 @@ GRANT CREATE EXTERNAL TABLE ON EXTERNAL LOCATION my_landing TO `data-engineers`;
 A) Information Schema
 B) Data Lineage and Impact Analysis
 C) Audit Logging
-D) Delta Sharing
+D) OpenSharing
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -720,7 +720,7 @@ D) GRANT OPTION
 
 - [Unity Catalog](../07-data-governance/01-unity-catalog.md) - UC basics, hierarchy, metastore, permissions
 - [Access Control](./01-access-control.md) - Row/column security, dynamic views
-- [Data Sharing](../02-data-ingestion-and-acquisition/06-opensharing.md) - Delta Sharing
+- [Data Sharing](../02-data-ingestion-and-acquisition/06-opensharing.md) - OpenSharing
 - [Secret Management](./05-secret-management.md) - Secrets, Key Vault
 
 ---

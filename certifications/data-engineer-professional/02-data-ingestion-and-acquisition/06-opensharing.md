@@ -10,7 +10,7 @@ status: published
 
 # Data Sharing
 
-Delta Sharing is an open protocol for secure data sharing across organizations and platforms. It enables sharing data without copying, while maintaining governance and audit capabilities.
+OpenSharing is an open protocol for secure data sharing across organizations and platforms. It enables sharing data without copying, while maintaining governance and audit capabilities.
 
 ## Overview
 
@@ -23,7 +23,7 @@ flowchart LR
     end
 
     subgraph Consumer["Data Consumer"]
-        Client[Delta Sharing Client]
+        Client[OpenSharing Client]
         Query[Query Data]
     end
 
@@ -33,7 +33,7 @@ flowchart LR
     Client --> Query
 ```
 
-## Delta Sharing Architecture
+## OpenSharing Architecture
 
 ### Components
 
@@ -48,7 +48,7 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    DeltaSharing[Delta Sharing] --> Open[Open Protocol]
+    DeltaSharing[OpenSharing] --> Open[Open Protocol]
     DeltaSharing --> Secure[Secure Access]
     DeltaSharing --> CrossPlatform[Cross-Platform]
     DeltaSharing --> Governed[Governed]
@@ -248,7 +248,7 @@ df = delta_sharing.load_as_spark(f"{profile_path}#share_name.schema_name.table_n
 ```text
 1. Download credential file from provider
 2. In Power BI:
-   - Get Data → Delta Sharing
+   - Get Data → OpenSharing
    - Provide credential file path
    - Select tables to import
 ```
@@ -260,7 +260,7 @@ df = delta_sharing.load_as_spark(f"{profile_path}#share_name.schema_name.table_n
 ```mermaid
 sequenceDiagram
     participant Provider as Your Company
-    participant Share as Delta Share
+    participant Share as OpenSharing share
     participant Recipient as Partner
 
     Provider->>Share: Create share
@@ -427,7 +427,7 @@ flowchart LR
     end
 
     AWSData --> AWSShare
-    AWSShare --> |Delta Sharing Protocol| AzureRecipient
+    AWSShare --> |OpenSharing Protocol| AzureRecipient
     AzureRecipient --> AzureCatalog
 ```
 
@@ -582,7 +582,7 @@ WITH PARTITION (region = 'US');
 
 ## Exam Tips
 
-1. **Delta Sharing protocol** - Open protocol, REST API, cross-platform
+1. **OpenSharing protocol** - Open protocol, REST API, cross-platform
 2. **Share components** - Share contains tables, recipient accesses shares
 3. **Recipient types** - Databricks (cloud ID) or open sharing (credential file)
 4. **GRANT syntax** - GRANT SELECT ON SHARE ... TO RECIPIENT ...
@@ -595,7 +595,7 @@ WITH PARTITION (region = 'US');
 
 ## Key Takeaways
 
-- **Delta Sharing is an open protocol**: data never moves — the consumer reads directly from the provider's storage via a REST API using a bearer token; no data duplication occurs
+- **OpenSharing is an open protocol**: data never moves — the consumer reads directly from the provider's storage via a REST API using a bearer token; no data duplication occurs
 - **Share components**: a Share is a named collection of tables/schemas; a Recipient is an entity authorized to access a share; access is granted with `GRANT SELECT ON SHARE <share> TO RECIPIENT <recipient>`
 - **Recipient types**: Databricks-to-Databricks sharing uses a cloud identifier (`USING ID`); open sharing for non-Databricks clients generates a credential `.share` JSON file with a bearer token
 - **Partition filtering in shares**: `ALTER SHARE ... ADD TABLE ... WITH PARTITION (col = 'value')` restricts the recipient to only seeing the matching partition — used for multi-tenant or regional data isolation
@@ -612,10 +612,10 @@ WITH PARTITION (region = 'US');
 
 ## Official Documentation
 
-- [Delta Sharing](https://docs.databricks.com/data-sharing/index.html)
+- [OpenSharing](https://docs.databricks.com/data-sharing/index.html)
 - [Create and Manage Shares](https://docs.databricks.com/data-sharing/create-share.html)
 - [Create and Manage Recipients](https://docs.databricks.com/data-sharing/create-recipient.html)
-- [Delta Sharing Protocol](https://github.com/delta-io/delta-sharing)
+- [OpenSharing Protocol](https://github.com/delta-io/delta-sharing)
 
 ---
 

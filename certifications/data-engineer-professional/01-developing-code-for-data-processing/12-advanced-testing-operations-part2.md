@@ -14,7 +14,7 @@ status: published
 
 This file covers deployment validation, automated rollback, GitOps patterns, and common troubleshooting scenarios.
 
-> For property-based testing, Lakeflow Declarative Pipelines testing, streaming tests, and integration patterns, see [Part 1](./12-advanced-testing-operations-part1.md).
+> For property-based testing, Lakeflow Pipelines testing, streaming tests, and integration patterns, see [Part 1](./12-advanced-testing-operations-part1.md).
 
 ## Deployment Validation
 
@@ -439,7 +439,7 @@ flowchart LR
 
 ## Practice Questions
 
-**Question 1:** A data engineer is setting up CI/CD for a Databricks project that spans three teams, each owning separate pipelines. All teams share common cluster configurations and notification settings. What is the recommended approach for organizing their Databricks Asset Bundles?
+**Question 1:** A data engineer is setting up CI/CD for a Databricks project that spans three teams, each owning separate pipelines. All teams share common cluster configurations and notification settings. What is the recommended approach for organizing their Declarative Automation Bundles?
 
 A) Create a single databricks.yml with all resources and use variables to toggle per team
 B) Use the `include` directive to reference shared YAML files from each team's bundle
@@ -463,19 +463,19 @@ D) SSH keys stored in the repository
 >
 > OIDC (OpenID Connect) federation allows GitHub Actions to authenticate with Databricks using short-lived JWT tokens. The CI runner requests a token from GitHub's OIDC provider, and Databricks validates it against a federation policy configured on the service principal. This eliminates storing long-lived secrets entirely.
 
-**Question 3:** A data engineer needs to test Lakeflow Declarative Pipelines pipeline transformation logic in a local pytest environment. What is the correct approach?
+**Question 3:** A data engineer needs to test Lakeflow pipeline transformation logic in a local pytest environment. What is the correct approach?
 
-A) Install the Lakeflow Declarative Pipelines runtime locally and import `dlt` decorators in tests
+A) Install the Lakeflow Pipelines runtime locally and import `dlt` decorators in tests
 B) Extract transformation logic into plain PySpark functions and test those
-C) Run `databricks bundle run` from within pytest to execute Lakeflow Declarative Pipelines tests
-D) Use `unittest.mock` to fully mock the Lakeflow Declarative Pipelines runtime
+C) Run `databricks bundle run` from within pytest to execute Lakeflow Pipelines tests
+D) Use `unittest.mock` to fully mock the Lakeflow Pipelines runtime
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
 > DLT pipelines depend on the Databricks DLT runtime, which cannot run locally. The recommended pattern is to extract transformation logic (joins, filters, aggregations) into standalone PySpark functions, then test those functions with a local SparkSession and standard pytest. The DLT notebook simply calls these functions within `@dlt.table` decorated functions.
 
-**Question 4:** A team has deployed a new version of their production ETL pipeline, but post-deployment smoke tests are failing. They are using Databricks Asset Bundles. What is the fastest way to rollback?
+**Question 4:** A team has deployed a new version of their production ETL pipeline, but post-deployment smoke tests are failing. They are using Declarative Automation Bundles. What is the fastest way to rollback?
 
 A) Delete the production job and recreate it manually from the Databricks UI
 B) Run `databricks bundle destroy` and then redeploy from the previous commit
@@ -645,7 +645,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 2. **Bundle includes** - Know that `include` merges YAML files and paths are relative to the bundle root (databricks.yml location)
 3. **Lookup references** - `${resources.jobs.my_job.id}` resolves after deployment; cannot be used before the resource is created
 4. **Blue/green vs canary** - Blue/green swaps entire environments; canary routes a subset of traffic to the new version
-5. **Testing Lakeflow Declarative Pipelines** - Extract transformation logic into plain functions; test those with local SparkSession; Lakeflow Declarative Pipelines decorators cannot run outside the Lakeflow Declarative Pipelines runtime
+5. **Testing Lakeflow Pipelines** - Extract transformation logic into plain functions; test those with local SparkSession; Lakeflow Pipelines decorators cannot run outside the Lakeflow Pipelines runtime
 6. **Test isolation** - Use unique schemas per test run (`test_<uuid>`) and `DROP SCHEMA CASCADE` in teardown
 7. **Coverage gating** - Use `--cov-fail-under=80` in pytest to enforce minimum coverage in CI
 8. **Rollback with DAB** - Checkout previous commit and `databricks bundle deploy`; Delta Time Travel for data-level rollback
@@ -665,7 +665,7 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 
 ## Related Topics
 
-- [Asset Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - DAB fundamentals, structure, and targets
+- [Declarative Automation Bundles](../08-debugging-and-deploying/03-declarative-automation-bundles-part1.md) - DAB fundamentals, structure, and targets
 - [CI/CD Integration](../08-debugging-and-deploying/05-cicd-integration-part1.md) - GitHub Actions, Azure DevOps basics
 - [Git Folders](../08-debugging-and-deploying/06-git-folders.md) - Git integration and branching strategies
 - [Unit Testing](11-unit-testing-part1.md) - pytest, Nutter, and basic testing patterns
@@ -673,13 +673,13 @@ GRANT SELECT ON SCHEMA prod_catalog.prod_green TO `prod-deploy-sp`;
 
 ## Official Documentation
 
-- [Databricks Asset Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
+- [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
 - [OIDC Federation with Databricks](https://docs.databricks.com/dev-tools/auth/oauth-m2m.html)
 - [Databricks Connect](https://docs.databricks.com/dev-tools/databricks-connect/index.html)
 - [CI/CD Best Practices](https://docs.databricks.com/dev-tools/ci-cd/index.html)
 - [Delta Lake Time Travel](https://docs.databricks.com/delta/history.html)
 - [Great Expectations with Databricks](https://docs.databricks.com/integrations/great-expectations.html)
-- [Lakeflow Declarative Pipelines Pipeline Testing](https://docs.databricks.com/delta-live-tables/testing.html)
+- [Lakeflow Pipelines Pipeline Testing](https://docs.databricks.com/delta-live-tables/testing.html)
 
 ---
 

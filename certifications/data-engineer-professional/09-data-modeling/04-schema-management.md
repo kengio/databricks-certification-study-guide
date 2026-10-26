@@ -521,9 +521,9 @@ SELECT
 FROM bronze.events_raw;
 ```
 
-## Lakeflow Declarative Pipelines Schema Management
+## Lakeflow Pipelines Schema Management
 
-### Schema Hints in Lakeflow Declarative Pipelines
+### Schema Hints in Lakeflow Pipelines
 
 ```python
 import dlt

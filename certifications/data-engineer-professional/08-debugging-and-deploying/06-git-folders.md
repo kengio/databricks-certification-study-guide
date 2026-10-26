@@ -454,9 +454,9 @@ Enforce in Git Provider:
 Databricks follows Git provider rules
 ```
 
-## Comparison: Git Folders vs Asset Bundles
+## Comparison: Git Folders vs Declarative Automation Bundles
 
-| Aspect | Git Folders | Asset Bundles |
+| Aspect | Git Folders | Declarative Automation Bundles |
 | :--- | :--- | :--- |
 | Purpose | Version control UI | Deployment automation |
 | Workflow | Interactive development | CI/CD deployment |
@@ -473,7 +473,7 @@ Git Folders:
 - Quick prototyping
 - Viewing version history
 
-Asset Bundles:
+Declarative Automation Bundles:
 - Automated deployments
 - Environment promotion
 - Resource configuration as code
@@ -646,12 +646,12 @@ flowchart TB
 - **Permission levels**: Git Folder permissions are `CAN_READ`, `CAN_RUN`, `CAN_EDIT`, and `CAN_MANAGE`, following the workspace folder permission hierarchy.
 - **%run and imports**: `%run ./relative/path` executes another notebook; `sys.path.append(workspace_path)` enables importing Python modules from the same Git Folder.
 - **Conflict resolution options**: When a pull detects conflicts, the user can keep local changes, take remote changes, or manually merge — Databricks does not auto-merge conflicting notebooks.
-- **Combined workflow**: Git Folders are best for interactive development; Databricks Asset Bundles are best for automated CI/CD deployment — use both together in production workflows.
+- **Combined workflow**: Git Folders are best for interactive development; Declarative Automation Bundles are best for automated CI/CD deployment — use both together in production workflows.
 - **CLI operations**: Use `databricks repos update --repo-id <id> --branch <branch>` to programmatically pull the latest branch, enabling webhook-triggered auto-updates.
 
 ## Related Topics
 
-- [Asset Bundles](03-declarative-automation-bundles-part1.md) - Deployment automation
+- [Declarative Automation Bundles](03-declarative-automation-bundles-part1.md) - Deployment automation
 - [CI/CD Integration](05-cicd-integration-part1.md) - Pipeline workflows
 - [Workspace and Notebooks](../01-developing-code-for-data-processing/10-workspace-and-notebooks.md) - Notebook features
 

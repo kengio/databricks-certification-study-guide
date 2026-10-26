@@ -66,7 +66,7 @@ tags: [reference, official-docs, data-engineer-professional, certification]
 - [Manage Privileges](https://docs.databricks.com/data-governance/unity-catalog/manage-privileges/index.html)
 - [Best Practices](https://docs.databricks.com/data-governance/unity-catalog/best-practices.html)
 - [External Locations](https://docs.databricks.com/data-governance/unity-catalog/manage-external-locations-and-credentials.html)
-- [Delta Sharing](https://docs.databricks.com/data-sharing/index.html)
+- [OpenSharing](https://docs.databricks.com/data-sharing/index.html)
 - [Data Lineage](https://docs.databricks.com/data-governance/unity-catalog/lineage.html)
 
 ## Databricks Tooling
@@ -92,7 +92,7 @@ tags: [reference, official-docs, data-engineer-professional, certification]
 
 ## CI/CD & Deployment
 
-- [Databricks Asset Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
+- [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
 - [Git Integration](https://docs.databricks.com/repos/index.html)
 - [CI/CD Patterns](https://docs.databricks.com/dev-tools/ci-cd/index.html)
 

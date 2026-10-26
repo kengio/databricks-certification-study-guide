@@ -771,14 +771,14 @@ D) Implement application-level security in the BI tool
 **Question**: Which feature enables secure data sharing with external organizations?
 
 A) Create a service principal for the partner to access via API
-B) Use Delta Sharing to share data via open protocol
+B) Use OpenSharing to share data via open protocol
 C) Export data daily to a shared cloud storage location
 D) Create a Databricks workspace for the partner with access to the dataset
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Delta Sharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.
+> OpenSharing provides an open protocol for secure data sharing across organizations and platforms. Partners can use compatible clients (including Snowflake, Spark, pandas) without Databricks access. Option A requires workspace access. Option C requires file transfer management. Option D is costly and requires Databricks licenses.
 
 ---
 
@@ -888,7 +888,7 @@ D) Query the pipeline's event log table for expectation metrics
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Lakeflow Declarative Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.
+> Lakeflow Pipelines stores detailed metrics including expectation results in the event log. Querying the event log with filters for the update ID shows which expectations failed and the row counts. Option A has limited detail. Option C isn't a valid API. Option B shows configuration, not runtime details.
 
 ---
 
@@ -950,7 +950,7 @@ D) Network latency to cloud storage
 
 ## Question 52 *(Easy)*
 
-**Scenario**: A data engineering team is setting up Databricks Asset Bundles (DAB) for their project. They need separate configurations for development, staging, and production environments.
+**Scenario**: A data engineering team is setting up Declarative Automation Bundles (DABs) for their project. They need separate configurations for development, staging, and production environments.
 
 **Question**: Which `databricks.yml` structure correctly defines these environments?
 
@@ -1004,7 +1004,7 @@ D) Make changes in a separate notebook outside Git folders
 
 ## Question 55 *(Medium)*
 
-**Scenario**: A GitHub Actions workflow deploys Databricks Asset Bundles to a staging environment. The workflow needs to authenticate with Databricks.
+**Scenario**: A GitHub Actions workflow deploys Declarative Automation Bundles to a staging environment. The workflow needs to authenticate with Databricks.
 
 **Question**: Which authentication method is recommended for GitHub Actions?
 
@@ -1072,13 +1072,13 @@ D) The materialized view requires a manual REFRESH command
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Declarative Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
+> In triggered execution mode, materialized views only refresh when the pipeline runs. For near real-time updates, use continuous mode or schedule frequent pipeline runs. In continuous mode, materialized views refresh as streaming tables update. Options B and D are incorrect; Lakeflow Pipelines handles refreshes automatically within pipeline runs. Option C would cause errors, not stale data.
 
 ---
 
 ## Question 59 *(Medium)*
 
-**Scenario**: A Lakeflow Declarative Pipelines pipeline implements CDC from a source database using APPLY CHANGES. Some records are arriving with out-of-order timestamps due to source system behavior.
+**Scenario**: A Lakeflow pipeline implements CDC from a source database using APPLY CHANGES. Some records are arriving with out-of-order timestamps due to source system behavior.
 
 **Question**: How does APPLY CHANGES handle out-of-order records by default?
 
@@ -1096,7 +1096,7 @@ D) The pipeline fails on out-of-order detection
 
 ## Question 60 *(Medium)*
 
-**Scenario**: A Lakeflow Declarative Pipelines pipeline has an expectation `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After processing, the engineer wants to know how many rows were dropped.
+**Scenario**: A Lakeflow pipeline has an expectation `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After processing, the engineer wants to know how many rows were dropped.
 
 **Question**: How can the dropped row count be retrieved?
 
@@ -1108,7 +1108,7 @@ D) Query the pipeline event log for expectation metrics
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Lakeflow Declarative Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Declarative Pipelines tracks this automatically.
+> Lakeflow Pipelines stores detailed expectation metrics in the event log including `num_dropped_records` for each expectation. Query the event log filtering for expectation events. Option A doesn't exist. Option C shows Delta operations, not expectation details. Option B is incorrect; Lakeflow Pipelines tracks this automatically.
 
 ---
 
@@ -1181,14 +1181,14 @@ The questions below cover the newly elevated **Data Sharing and Federation** dom
 **Question**: Which pattern fits best?
 
 A) Export the table to S3 as Parquet and email the partner a presigned URL  
-B) Create a Databricks-to-Databricks (D2D) Delta Share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
-C) Replicate the table to the partner's account using Lakeflow Declarative Pipelines  
+B) Create a Databricks-to-Databricks (D2D) OpenSharing share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
+C) Replicate the table to the partner's account using Lakeflow Pipelines  
 D) Set up a foreign catalog in the partner's workspace pointing at the team's table  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks-to-Databricks Delta Sharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Declarative Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
+> Databricks-to-Databricks OpenSharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
 
 ---
 
@@ -1200,13 +1200,13 @@ D) Set up a foreign catalog in the partner's workspace pointing at the team's ta
 
 A) Create a Databricks `JDBC` connection in `spark.conf` and read with `spark.read.format("jdbc")`  
 B) Create a Unity Catalog `CONNECTION` of type `SNOWFLAKE`, then `CREATE FOREIGN CATALOG` over it; query as `catalog.schema.table`  
-C) Use Delta Sharing — Snowflake supports being a Delta Share recipient  
+C) Use OpenSharing — Snowflake supports being a OpenSharing share recipient  
 D) Use Auto Loader with the Snowflake source connector  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a Delta Share recipient platform. Option D is for object-store file ingestion, not relational sources.
+> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a OpenSharing share recipient platform. Option D is for object-store file ingestion, not relational sources.
 
 ---
 

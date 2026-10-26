@@ -1,5 +1,5 @@
 ---
-title: Asset Bundles — Part 1
+title: Declarative Automation Bundles — Part 1
 type: topic
 tags:
   - data-engineering
@@ -9,9 +9,9 @@ tags:
 status: published
 ---
 
-# Databricks Asset Bundles (DAB) — Part 1
+# Declarative Automation Bundles (DABs) — Part 1
 
-Databricks Asset Bundles provide a standardized way to package, validate, and deploy Databricks resources as code. This part covers bundle structure, resource definitions, variables, commands, target configuration, and artifact packaging.
+Declarative Automation Bundles provide a standardized way to package, validate, and deploy Databricks resources as code. This part covers bundle structure, resource definitions, variables, commands, target configuration, and artifact packaging.
 
 ## Overview
 
@@ -191,7 +191,7 @@ resources:
               spark.databricks.delta.preview.enabled: "true"
 ```
 
-### Lakeflow Declarative Pipelines Pipeline Configuration
+### Lakeflow Pipelines Pipeline Configuration
 
 ```yaml
 # resources/pipelines.yml
@@ -485,4 +485,4 @@ resources:
 
 ---
 
-**[↑ Back to Testing & Deployment](./README.md) | [Next: Asset Bundles — Part 2](./03-declarative-automation-bundles-part2.md) →**
+**[↑ Back to Testing & Deployment](./README.md) | [Next: Declarative Automation Bundles — Part 2](./03-declarative-automation-bundles-part2.md) →**

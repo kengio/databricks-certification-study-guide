@@ -27,11 +27,11 @@ After timing yourself through the 63 + new-domain questions, use this debrief to
 | Data Transformation, Cleansing, Quality (10 %) | [`03-data-transformation-cleansing-quality/`](../../03-data-manipulation/README.md) | [`delta-lake-commands`](../../../../shared/cheat-sheets/delta-lake-commands.md), [`dlt-quick-ref`](../../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) | CDC, dedup, expectations, APPLY CHANGES INTO |
 | Monitoring and Alerting (10 %) | [`04-monitoring-and-alerting/`](../../04-monitoring-and-alerting/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) | System tables, Lakeflow event log, SQL Alerts |
 | Ensuring Data Security and Compliance (10 %) | [`05-ensuring-data-security-and-compliance/`](../../06-ensuring-data-security-and-compliance/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) | GRANT/DENY, row filters, column masks, secrets |
-| Debugging and Deploying (10 %) | [`06-debugging-and-deploying/`](../../08-debugging-and-deploying/README.md) | [`spark-configurations`](../../../../shared/cheat-sheets/spark-configurations.md) | Asset Bundles, CI/CD, Spark UI, CLI, REST API |
+| Debugging and Deploying (10 %) | [`06-debugging-and-deploying/`](../../08-debugging-and-deploying/README.md) | [`spark-configurations`](../../../../shared/cheat-sheets/spark-configurations.md) | Declarative Automation Bundles, CI/CD, Spark UI, CLI, REST API |
 | Data Ingestion & Acquisition (7 %) | [`07-data-ingestion-and-acquisition/`](../../02-data-ingestion-and-acquisition/README.md) | [`auto-loader-quick-ref`](../../../../shared/cheat-sheets/auto-loader-quick-ref.md), [`streaming-quick-ref`](../../../../shared/cheat-sheets/streaming-quick-ref.md) | Auto Loader, COPY INTO, Kafka/Kinesis |
 | Data Governance (7 %) | [`08-data-governance/`](../../07-data-governance/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) | UC three-level namespace, managed vs external |
-| Data Modelling (6 %) | [`09-data-modelling/`](../../09-data-modeling/README.md) | [`delta-lake-commands`](../../../../shared/cheat-sheets/delta-lake-commands.md) | Medallion, schema management, SCD |
-| Data Sharing and Federation (5 %) | [`10-data-sharing-and-federation/`](../../02-data-ingestion-and-acquisition/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) | Delta Sharing, Lakehouse Federation |
+| Data Modeling (6 %) | [`09-data-modelling/`](../../09-data-modeling/README.md) | [`delta-lake-commands`](../../../../shared/cheat-sheets/delta-lake-commands.md) | Medallion, schema management, SCD |
+| Data Sharing and Federation (5 %) | [`10-data-sharing-and-federation/`](../../02-data-ingestion-and-acquisition/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) | OpenSharing, Lakehouse Federation |
 
 ## Per-question quick map
 
@@ -41,10 +41,10 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 | :---: | :---: | :--- | :--- | :--- |
 | 1 | Easy | Ingestion | [link](../../02-data-ingestion-and-acquisition/README.md) | [link](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
 | 2 | Medium | Cost & Performance | [link](../../05-cost-and-performance-optimization/README.md) | [link](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 3 | Hard | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 3 | Hard | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 4 | Medium | Ingestion | [link](../../02-data-ingestion-and-acquisition/README.md) | [link](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
 | 5 | Medium | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 6 | Medium | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 6 | Medium | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 7 | Medium | Cost & Performance | [link](../../05-cost-and-performance-optimization/README.md) | [link](../../../../shared/cheat-sheets/performance-optimization.md) |
 | 8 | Medium | Transformation & Quality | [link](../../03-data-manipulation/README.md) | [link](../../../../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) |
 | 9 | Medium | Ingestion | [link](../../02-data-ingestion-and-acquisition/README.md) | [link](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
@@ -75,7 +75,7 @@ Heuristic mapping of every question in this mock to its primary domain + the top
 | 34 | Easy | Security & Compliance | [link](../../06-ensuring-data-security-and-compliance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 | 35 | Hard | Cost & Performance | [link](../../05-cost-and-performance-optimization/README.md) | [link](../../../../shared/cheat-sheets/performance-optimization.md) |
 | 36 | Medium | Data Governance | [link](../../07-data-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 37 | Medium | Data Modelling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 37 | Medium | Data Modeling | [link](../../09-data-modeling/README.md) | [link](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 38 | Easy | Developing Code | [link](../../01-developing-code-for-data-processing/README.md) | [link](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 39 | Medium | Security & Compliance | [link](../../06-ensuring-data-security-and-compliance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 | 40 | Medium | Data Governance | [link](../../07-data-governance/README.md) | [link](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
@@ -116,7 +116,7 @@ The original mock has 63 questions plus the new-domain refresh additions at the 
 | :--- | :--- | :---: |
 | Section 1: Data Processing | Developing Code + Data Transformation + Data Ingestion | 18 |
 | Section 2: Databricks Tooling | Debugging and Deploying + Developing Code | 12 |
-| Section 3: Data Modeling | Data Modelling + Cost & Performance | 9 |
+| Section 3: Data Modeling | Data Modeling + Cost & Performance | 9 |
 | Section 4: Security & Governance | Ensuring Data Security and Compliance + Data Governance | 6 |
 | Section 5: Monitoring & Logging | Monitoring and Alerting | 6 |
 | Section 6: Testing & Deployment | Debugging and Deploying | 6 |
@@ -146,11 +146,11 @@ The original mock has 63 questions plus the new-domain refresh additions at the 
 | Transformation | `APPLY CHANGES INTO` examples in `03-data-transformation-cleansing-quality/04-apply-changes-api.md` |
 | Monitoring | Query `system.serving.endpoint_usage` and the Lakeflow event log yourself in a workspace |
 | Security & Compliance | Walk through row filters + column masks in `05-ensuring-data-security-and-compliance/01-access-control.md` |
-| Debugging & Deploying | Build a minimal Asset Bundle from scratch end-to-end |
+| Debugging & Deploying | Build a minimal Declarative Automation Bundle from scratch end-to-end |
 | Data Ingestion | Run Auto Loader + COPY INTO + Kafka source side-by-side in a notebook |
 | Governance | Walk through every UC object type — catalog, schema, table, volume, model — and run a GRANT on each |
 | Modelling | Implement SCD Type 1 vs Type 2 with `APPLY CHANGES INTO` |
-| Sharing & Federation | Create a Delta Share + a Lakehouse Federation foreign catalog in your workspace |
+| Sharing & Federation | Create a OpenSharing share + a Lakehouse Federation foreign catalog in your workspace |
 
 ---
 

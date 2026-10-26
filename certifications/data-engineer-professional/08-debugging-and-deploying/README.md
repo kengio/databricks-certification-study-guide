@@ -11,13 +11,13 @@ status: published
 
 # Debugging and Deploying (10 % of Exam)
 
-Databricks Asset Bundles, CI/CD integration, Git folders, unit testing, advanced testing operations, plus the runtime diagnostics tools (Spark UI), the Databricks CLI, and the REST API used to operate pipelines from outside the workspace.
+Declarative Automation Bundles, CI/CD integration, Git folders, unit testing, advanced testing operations, plus the runtime diagnostics tools (Spark UI), the Databricks CLI, and the REST API used to operate pipelines from outside the workspace.
 
 ## Topics Overview
 
 ```mermaid
 flowchart TD
-    DD[Debugging & Deploying] --> AB[Asset Bundles]
+    DD[Debugging & Deploying] --> AB[Declarative Automation Bundles]
     DD --> CICD[CI/CD Integration]
     DD --> GF[Git Folders]
     DD --> UT[Unit Testing]
@@ -53,7 +53,7 @@ flowchart TD
 
 | Concept | Why it matters |
 | :--- | :--- |
-| **Databricks Asset Bundles** | YAML-driven deployment unit covering jobs, pipelines, ML experiments, dashboards |
+| **Declarative Automation Bundles** | YAML-driven deployment unit covering jobs, pipelines, ML experiments, dashboards |
 | **`mode: development` vs `mode: production`** | Dev mode pauses schedules and prefixes resource names; production runs as the configured service principal |
 | **Git folders** | Workspace-resident Git working tree (formerly Repos) — supports branch operations from the UI |
 | **Spark UI** | The primary runtime diagnostic; understand stages, tasks, shuffle, and skew indicators |
@@ -61,7 +61,7 @@ flowchart TD
 
 ## Related Resources
 
-- [Databricks Asset Bundles documentation](https://docs.databricks.com/en/dev-tools/bundles/index.html)
+- [Declarative Automation Bundles documentation](https://docs.databricks.com/en/dev-tools/bundles/index.html)
 - [Performance Troubleshooting appendix (shared)](../../../shared/appendix/performance-troubleshooting.md)
 - [Compute selection (cost & performance domain)](../01-developing-code-for-data-processing/09-databricks-compute.md) — picking the right cluster is also a debugging concern (which cluster is the failing job on?)
 

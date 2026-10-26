@@ -214,7 +214,7 @@ flowchart LR
 | `spark_python_task` | Run Python file | `python_file`, `parameters` |
 | `python_wheel_task` | Run Python wheel | `package_name`, `entry_point` |
 | `sql_task` | Run SQL query | `query`, `warehouse_id` |
-| `pipeline_task` | Run Lakeflow Declarative Pipelines pipeline | `pipeline_id` |
+| `pipeline_task` | Run Lakeflow pipeline | `pipeline_id` |
 | `dbt_task` | Run dbt project | `project_directory`, `commands` |
 
 ### Run Job (run-now)

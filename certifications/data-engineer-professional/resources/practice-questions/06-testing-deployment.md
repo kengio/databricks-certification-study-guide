@@ -6,11 +6,11 @@ tags: [data-engineer-professional, practice-questions, testing-deployment]
 
 # Practice Questions - Section 06: Testing & Deployment (10%)
 
-## Question 6.1: Databricks Asset Bundles
+## Question 6.1: Declarative Automation Bundles
 
 **Scenario**: A team needs to deploy the same pipeline to dev, staging, and production environments.
 
-**Question** *(Medium)*: How should environments be configured in Databricks Asset Bundles?
+**Question** *(Medium)*: How should environments be configured in Declarative Automation Bundles?
 
 A) Create separate bundle files for each environment
 B) Use targets in databricks.yml with environment-specific settings
@@ -50,7 +50,7 @@ D) `mode: sandbox`
 
 A) Git Folders require manual sync after each change
 B) Git Folders can only connect to GitHub
-C) Git Folders replace the need for Databricks Asset Bundles
+C) Git Folders replace the need for Declarative Automation Bundles
 D) Git Folders provide native Git operations like pull, commit, and push
 
 > [!success]- Answer
@@ -118,7 +118,7 @@ D) Configure SSH key-based authentication between GitHub Actions runners and the
 
 **Scenario**: A production pipeline processes financial data and cannot tolerate downtime during updates. The team needs a zero-downtime deployment strategy.
 
-**Question** *(Hard)*: How should a blue/green deployment be implemented with Databricks Asset Bundles?
+**Question** *(Hard)*: How should a blue/green deployment be implemented with Declarative Automation Bundles?
 
 A) Deploy the new version to the same target and rely on Databricks to handle the transition automatically
 B) Maintain two separate DAB targets (blue and green), deploy the new version to the inactive target, run validation, then switch traffic
@@ -150,21 +150,21 @@ D) Define variables in the bundle and override them per target using `variables:
 
 ---
 
-## Question 6.9: Integration Testing Lakeflow Declarative Pipelines Pipelines
+## Question 6.9: Integration Testing Lakeflow Pipelines
 
-**Scenario**: A team needs to test a Lakeflow Declarative Pipelines pipeline end-to-end as part of CI/CD, validating that expectations pass and output data is correct.
+**Scenario**: A team needs to test a Lakeflow pipeline end-to-end as part of CI/CD, validating that expectations pass and output data is correct.
 
-**Question** *(Hard)*: What is the recommended approach for integration testing Lakeflow Declarative Pipelines pipelines?
+**Question** *(Hard)*: What is the recommended approach for integration testing Lakeflow pipelines?
 
 A) Deploy the pipeline to a test target with a test catalog/schema, trigger a full refresh, then validate the output tables and event log
-B) Mock the Lakeflow Declarative Pipelines framework locally using pytest and validate transformation logic without deploying
+B) Mock the Lakeflow Pipelines framework locally using pytest and validate transformation logic without deploying
 C) Run the pipeline in `development` mode which automatically validates all expectations and reports results
-D) Use the Lakeflow Declarative Pipelines testing API `dlt.test_pipeline()` to run the pipeline in a sandbox environment
+D) Use the Lakeflow Pipelines testing API `dlt.test_pipeline()` to run the pipeline in a sandbox environment
 
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> Lakeflow Declarative Pipelines pipelines must run on Databricks infrastructure. Deploy to a test target (using a test catalog/schema for isolation), trigger a full refresh via the API, then query the output tables and event log for expectation results. Local mocking doesn't test Lakeflow Declarative Pipelines-specific behavior. Development mode runs the pipeline but doesn't automatically validate outputs. There is no `dlt.test_pipeline()` API.
+> Lakeflow pipelines must run on Databricks infrastructure. Deploy to a test target (using a test catalog/schema for isolation), trigger a full refresh via the API, then query the output tables and event log for expectation results. Local mocking doesn't test Lakeflow Pipelines-specific behavior. Development mode runs the pipeline but doesn't automatically validate outputs. There is no `dlt.test_pipeline()` API.
 
 ---
 
@@ -206,11 +206,11 @@ D) Lock the production workspace to read-only and require API-only deployments
 
 ## Question 6.12: Testing Strategies - Unit vs Integration
 
-**Scenario**: A data engineer writes a Python function that transforms a DataFrame (adding calculated columns, filtering invalid rows). The function is used inside a Lakeflow Declarative Pipelines pipeline.
+**Scenario**: A data engineer writes a Python function that transforms a DataFrame (adding calculated columns, filtering invalid rows). The function is used inside a Lakeflow pipeline.
 
 **Question** *(Medium)*: What is the correct testing strategy for this function?
 
-A) Only test within the Lakeflow Declarative Pipelines pipeline since the function depends on the Lakeflow Declarative Pipelines runtime
+A) Only test within the Lakeflow pipeline since the function depends on the Lakeflow Pipelines runtime
 B) Write integration tests that deploy the full pipeline and verify end-to-end output
 C) Use `unittest.mock` to mock the entire SparkSession and DataFrame API
 D) Extract the function to a separate module, unit test it with a local SparkSession and sample data, then integration test the full pipeline
@@ -218,7 +218,7 @@ D) Extract the function to a separate module, unit test it with a local SparkSes
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Pure transformation functions should be extracted to testable modules and unit tested locally with a SparkSession (no Lakeflow Declarative Pipelines dependency needed). This gives fast feedback. Integration tests run the full pipeline on Databricks for end-to-end validation. Mocking the entire DataFrame API is brittle and doesn't test actual Spark behavior. Testing only in Lakeflow Declarative Pipelines is slow and expensive.
+> Pure transformation functions should be extracted to testable modules and unit tested locally with a SparkSession (no Lakeflow Pipelines dependency needed). This gives fast feedback. Integration tests run the full pipeline on Databricks for end-to-end validation. Mocking the entire DataFrame API is brittle and doesn't test actual Spark behavior. Testing only in Lakeflow Pipelines is slow and expensive.
 
 ---
 

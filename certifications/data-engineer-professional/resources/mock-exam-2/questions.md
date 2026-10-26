@@ -366,19 +366,19 @@ D) Use `spark.conf.set("business_unit", "operations")` in an init script attache
 
 ## Question 20 *(Medium)*
 
-**Scenario**: A platform team is migrating their deployment pipelines from the legacy Databricks CLI (version 0.x) to Databricks Asset Bundles (DABs) using the new Databricks CLI (version 0.200+). They currently use JSON template files and shell scripts to deploy jobs, clusters, and notebooks. A team member asks what key difference they should expect during the migration.
+**Scenario**: A platform team is migrating their deployment pipelines from the legacy Databricks CLI (version 0.x) to Declarative Automation Bundles (DABs) using the new Databricks CLI (version 0.200+). They currently use JSON template files and shell scripts to deploy jobs, clusters, and notebooks. A team member asks what key difference they should expect during the migration.
 
-**Question**: Which statement correctly describes a key difference between Databricks Asset Bundles and the legacy CLI approach?
+**Question**: Which statement correctly describes a key difference between Declarative Automation Bundles and the legacy CLI approach?
 
-A) Asset Bundles require all resources to be defined in Python rather than YAML or JSON
-B) Asset Bundles only support job deployments and cannot manage clusters or permissions
-C) Asset Bundles use declarative YAML configuration files (`databricks.yml`) that define resources, environments, and deployment targets in a single project structure
-D) Asset Bundles replace the REST API entirely and cannot be used alongside direct API calls
+A) Declarative Automation Bundles require all resources to be defined in Python rather than YAML or JSON
+B) Declarative Automation Bundles only support job deployments and cannot manage clusters or permissions
+C) Declarative Automation Bundles use declarative YAML configuration files (`databricks.yml`) that define resources, environments, and deployment targets in a single project structure
+D) Declarative Automation Bundles replace the REST API entirely and cannot be used alongside direct API calls
 
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> Databricks Asset Bundles introduce a declarative, project-based approach using `databricks.yml` files where resources (jobs, pipelines, etc.), environment-specific overrides, and deployment targets are defined together. This replaces the imperative scripting approach of the legacy CLI. Option A is wrong because DABs use YAML, Option B understates their capabilities, and Option D is incorrect since the API and bundles can coexist.
+> Declarative Automation Bundles introduce a declarative, project-based approach using `databricks.yml` files where resources (jobs, pipelines, etc.), environment-specific overrides, and deployment targets are defined together. This replaces the imperative scripting approach of the legacy CLI. Option A is wrong because DABs use YAML, Option B understates their capabilities, and Option D is incorrect since the API and bundles can coexist.
 
 ---
 
@@ -768,17 +768,17 @@ D) Use a cluster-level Spark configuration to set `spark.sql.region.filter` to t
 
 **Scenario**: A pharmaceutical company wants to share de-identified clinical trial results with three external research institutions. Two of the institutions use Databricks, but the third institution uses only Apache Spark on their own Hadoop cluster. The data must be shared securely without giving any institution direct access to the company's workspace.
 
-**Question**: How does the third institution (the non-Databricks recipient) authenticate and access data shared via Delta Sharing?
+**Question**: How does the third institution (the non-Databricks recipient) authenticate and access data shared via OpenSharing?
 
 A) They receive a Databricks personal access token that grants read-only access to the shared tables
 B) They connect via OAuth using the pharmaceutical company's identity provider
 C) They install a Databricks Connect client that tunnels into the provider's workspace
-D) They download an activation link that provisions a bearer token, which the open-source Delta Sharing client uses to authenticate with the sharing server
+D) They download an activation link that provisions a bearer token, which the open-source OpenSharing client uses to authenticate with the sharing server
 
 > [!success]- Answer
 > **Correct Answer: D**
 >
-> Delta Sharing uses an open protocol where recipients receive an activation link to generate a bearer token stored in a credential file. The open-source Delta Sharing connector (available for Spark, pandas, and other platforms) uses this token to authenticate directly with the sharing server without requiring a Databricks account. Options A and C incorrectly assume the recipient needs Databricks credentials or workspace connectivity, and Option B is not how Delta Sharing authenticates external recipients.
+> OpenSharing uses an open protocol where recipients receive an activation link to generate a bearer token stored in a credential file. The open-source OpenSharing connector (available for Spark, pandas, and other platforms) uses this token to authenticate directly with the sharing server without requiring a Databricks account. Options A and C incorrectly assume the recipient needs Databricks credentials or workspace connectivity, and Option B is not how OpenSharing authenticates external recipients.
 
 ---
 
@@ -858,11 +858,11 @@ D) The driver node is running out of memory from collecting results; increase dr
 
 ## Question 47 *(Hard)*
 
-**Scenario**: A Lakeflow Declarative Pipelines (formerly DLT) pipeline ingests clickstream events from Kafka and materializes several streaming tables. The pipeline has been running for several hours but the gold-layer aggregation table is lagging significantly behind the bronze ingestion layer. The data engineer needs to quantify the exact backlog at each stage to identify which flow is the bottleneck.
+**Scenario**: A Lakeflow Pipelines (formerly DLT) pipeline ingests clickstream events from Kafka and materializes several streaming tables. The pipeline has been running for several hours but the gold-layer aggregation table is lagging significantly behind the bronze ingestion layer. The data engineer needs to quantify the exact backlog at each stage to identify which flow is the bottleneck.
 
-**Question**: What is the most effective method to identify backlog metrics across individual flows in the Lakeflow Declarative Pipelines pipeline?
+**Question**: What is the most effective method to identify backlog metrics across individual flows in the Lakeflow pipeline?
 
-A) Check the Lakeflow Declarative Pipelines pipeline UI graph view and look for red-highlighted tables indicating failures
+A) Check the Lakeflow pipeline UI graph view and look for red-highlighted tables indicating failures
 B) Query `system.billing.usage` filtered by the pipeline ID to find the slowest compute phase
 C) Query the pipeline's event log for `flow_progress` events and examine the `metrics.backlog_bytes` field for each flow
 D) Examine the Spark UI Streaming tab for each cluster to view micro-batch processing rates
@@ -870,7 +870,7 @@ D) Examine the Spark UI Streaming tab for each cluster to view micro-batch proce
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> The Lakeflow Declarative Pipelines event log stores `flow_progress` event types that include detailed metrics such as `backlog_bytes` and `num_output_rows` for each individual flow in the pipeline. Querying these events lets you pinpoint exactly which flow has the largest backlog and is causing downstream lag. Option A shows status but not quantitative backlog metrics, Option B provides cost data not pipeline throughput, and Option D is not directly accessible for DLT-managed clusters.
+> The Lakeflow Pipelines event log stores `flow_progress` event types that include detailed metrics such as `backlog_bytes` and `num_output_rows` for each individual flow in the pipeline. Querying these events lets you pinpoint exactly which flow has the largest backlog and is causing downstream lag. Option A shows status but not quantitative backlog metrics, Option B provides cost data not pipeline throughput, and Option D is not directly accessible for DLT-managed clusters.
 
 ---
 
@@ -986,7 +986,7 @@ D) Databricks converts the GitHub OIDC token into a workspace-level API key that
 
 ## Question 54 *(Medium)*
 
-**Scenario**: A team is deploying a new version of a production Lakeflow Declarative Pipelines pipeline that processes 500 million records per day. They need to validate the new pipeline version with real production data before fully switching over, while ensuring zero downtime and the ability to instantly revert if issues are detected.
+**Scenario**: A team is deploying a new version of a production Lakeflow pipeline that processes 500 million records per day. They need to validate the new pipeline version with real production data before fully switching over, while ensuring zero downtime and the ability to instantly revert if issues are detected.
 
 **Question**: Which deployment strategy best meets these requirements?
 
@@ -1004,25 +1004,25 @@ D) Feature flag deployment: wrap all new transformation logic in feature flags a
 
 ## Question 55 *(Hard)*
 
-**Scenario**: A CI/CD pipeline runs automated tests against a Lakeflow Declarative Pipelines pipeline that uses expectations such as `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After the test pipeline run completes, the team needs to programmatically verify that no more than 0.1% of rows were dropped by expectations before promoting the code to production.
+**Scenario**: A CI/CD pipeline runs automated tests against a Lakeflow pipeline that uses expectations such as `CONSTRAINT valid_amount EXPECT (amount > 0) ON VIOLATION DROP ROW`. After the test pipeline run completes, the team needs to programmatically verify that no more than 0.1% of rows were dropped by expectations before promoting the code to production.
 
 **Question**: How should the team validate the expectation results in their CI/CD pipeline?
 
-A) Parse the Lakeflow Declarative Pipelines pipeline logs from the cluster driver output to count dropped rows
-B) Query the Lakeflow Declarative Pipelines event log for expectation metrics using `expectations.dropped_records` and compare the drop rate against the 0.1% threshold
+A) Parse the Lakeflow pipeline logs from the cluster driver output to count dropped rows
+B) Query the Lakeflow Pipelines event log for expectation metrics using `expectations.dropped_records` and compare the drop rate against the 0.1% threshold
 C) Add a downstream notebook that reads the target table's row count and compares it to the source table's row count
-D) Configure a Lakeflow Declarative Pipelines alert that sends an email notification if the drop rate exceeds 0.1%
+D) Configure a Lakeflow Pipelines alert that sends an email notification if the drop rate exceeds 0.1%
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> The Lakeflow Declarative Pipelines event log captures detailed metrics for each expectation, including the number of records that passed, failed, and were dropped. By querying the event log for `expectations` events, the CI/CD pipeline can programmatically extract the drop counts, calculate the drop rate, and fail the pipeline promotion if the rate exceeds the defined threshold. This approach is precise, automatable, and uses the purpose-built observability layer rather than indirect row-count comparisons or non-programmatic alerts.
+> The Lakeflow Pipelines event log captures detailed metrics for each expectation, including the number of records that passed, failed, and were dropped. By querying the event log for `expectations` events, the CI/CD pipeline can programmatically extract the drop counts, calculate the drop rate, and fail the pipeline promotion if the rate exceeds the defined threshold. This approach is precise, automatable, and uses the purpose-built observability layer rather than indirect row-count comparisons or non-programmatic alerts.
 
 ---
 
 ## Question 56 *(Medium)*
 
-**Scenario**: A data engineering team deploys a production job using Databricks Asset Bundles. The job should be runnable by members of the `data-ops` group but not editable by them. Only the deploying service principal should have full management permissions.
+**Scenario**: A data engineering team deploys a production job using Declarative Automation Bundles. The job should be runnable by members of the `data-ops` group but not editable by them. Only the deploying service principal should have full management permissions.
 
 **Question**: Which `databricks.yml` configuration correctly implements these permission requirements?
 
@@ -1042,7 +1042,7 @@ D) Add a `permissions` block granting `CAN_VIEW` and `CAN_MANAGE_RUN` to `group_
 
 **Scenario**: A team deployed a new version of their DAB-managed production pipeline 30 minutes ago. Monitoring alerts now indicate that the new version is producing incorrect aggregation results due to a logic error in a transformation. The team needs to revert to the previous working version as quickly as possible.
 
-**Question**: What is the fastest way to roll back the deployment using Databricks Asset Bundles?
+**Question**: What is the fastest way to roll back the deployment using Declarative Automation Bundles?
 
 A) Check out the previous Git commit in the repository and run `databricks bundle deploy --target production` to redeploy the last known good version
 B) Run `databricks bundle destroy --target production` to remove the broken deployment, then manually recreate the resources from the Databricks UI
@@ -1062,7 +1062,7 @@ D) Navigate to the Databricks workspace UI, locate each deployed resource, and m
 
 **Scenario**: A data engineering team is building a Lakeflow (DLT) pipeline that ingests clickstream events from Kafka and produces aggregated session metrics consumed by two downstream systems. A real-time dashboard queries the latest session data every 30 seconds, and a nightly batch process generates a daily summary report from the same session metrics.
 
-**Question**: How should the team define the session metrics dataset in the Lakeflow Declarative Pipelines pipeline to best serve both downstream consumers?
+**Question**: How should the team define the session metrics dataset in the Lakeflow pipeline to best serve both downstream consumers?
 
 A) Define it as a materialized view so that both the dashboard and batch process always read a consistent, pre-computed result
 B) Define it as a streaming table with Change Data Feed enabled so the batch process can read incremental changes
@@ -1127,14 +1127,14 @@ The questions below cover the newly elevated **Data Sharing and Federation** dom
 **Question**: Which pattern fits best?
 
 A) Export the table to S3 as Parquet and email the partner a presigned URL  
-B) Create a Databricks-to-Databricks (D2D) Delta Share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
-C) Replicate the table to the partner's account using Lakeflow Declarative Pipelines  
+B) Create a Databricks-to-Databricks (D2D) OpenSharing share with the partner's UC sharing identifier and grant the share to a `RECIPIENT`  
+C) Replicate the table to the partner's account using Lakeflow Pipelines  
 D) Set up a foreign catalog in the partner's workspace pointing at the team's table  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks-to-Databricks Delta Sharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Declarative Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
+> Databricks-to-Databricks OpenSharing is purpose-built for this: it shares the live Delta table (the partner sees updates as they land), uses UC identities on both sides, and the provider grants a `SHARE` to a `RECIPIENT` identified by the partner's UC sharing identifier. No data copy, full UC audit trail. Option A loses governance and freshness. Option C (Lakeflow Pipelines replication) creates a parallel pipeline you have to maintain AND loses freshness — pipelines run on a schedule, while D2D Share is live. Option D is Lakehouse Federation, which is for the *consumer* to query *external* (non-Delta) sources — not for cross-Databricks data sharing.
 
 ---
 
@@ -1146,13 +1146,13 @@ D) Set up a foreign catalog in the partner's workspace pointing at the team's ta
 
 A) Create a Databricks `JDBC` connection in `spark.conf` and read with `spark.read.format("jdbc")`  
 B) Create a Unity Catalog `CONNECTION` of type `SNOWFLAKE`, then `CREATE FOREIGN CATALOG` over it; query as `catalog.schema.table`  
-C) Use Delta Sharing — Snowflake supports being a Delta Share recipient  
+C) Use OpenSharing — Snowflake supports being a OpenSharing share recipient  
 D) Use Auto Loader with the Snowflake source connector  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a Delta Share recipient platform. Option D is for object-store file ingestion, not relational sources.
+> Lakehouse Federation is the documented path for federated, read-mostly access to external databases. The two-step DDL — `CREATE CONNECTION ... TYPE SNOWFLAKE ...` followed by `CREATE FOREIGN CATALOG ... USING CONNECTION ...` — stores the credential in UC (auditable, rotatable), exposes the Snowflake database as a UC catalog, and supports filter / projection / aggregation pushdown to Snowflake where the dialect allows. Option A scatters credentials in cluster config and bypasses UC. Option C is wrong direction — Snowflake is not a OpenSharing share recipient platform. Option D is for object-store file ingestion, not relational sources.
 
 ---
 

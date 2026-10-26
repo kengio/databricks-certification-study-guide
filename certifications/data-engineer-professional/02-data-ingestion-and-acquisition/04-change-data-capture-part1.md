@@ -257,9 +257,9 @@ WHEN NOT MATCHED THEN INSERT *;
 -- For not matched: _change_type = 'insert'
 ```
 
-## APPLY CHANGES (Lakeflow/Lakeflow Declarative Pipelines)
+## APPLY CHANGES (Lakeflow/Lakeflow Pipelines)
 
-APPLY CHANGES is the declarative CDC API in Lakeflow Declarative Pipelines (formerly DLT).
+APPLY CHANGES is the declarative CDC API in Lakeflow Pipelines (formerly DLT).
 
 ### Basic Syntax
 
@@ -338,7 +338,7 @@ gantt
     Version 3 (Name: John D.) :active, v3, 2024-06-01, 2024-12-31
 ```
 
-### SQL Syntax (Lakeflow Declarative Pipelines)
+### SQL Syntax (Lakeflow Pipelines)
 
 ```sql
 -- Create streaming table

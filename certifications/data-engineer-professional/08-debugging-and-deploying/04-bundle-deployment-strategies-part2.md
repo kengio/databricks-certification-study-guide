@@ -342,12 +342,12 @@ az ad app federated-credential create \
 
 - [CI/CD Integration](./05-cicd-integration-part1.md) - Platform-specific CI/CD configuration
 - [CI/CD Integration Part 2](./05-cicd-integration-part2.md) - Testing and secret management patterns
-- [Asset Bundles](./03-declarative-automation-bundles-part1.md) - Core DAB configuration reference
-- [Advanced Testing & Operations](../01-developing-code-for-data-processing/12-advanced-testing-operations-part1.md) - Property-based and Lakeflow Declarative Pipelines testing
+- [Declarative Automation Bundles](./03-declarative-automation-bundles-part1.md) - Core DAB configuration reference
+- [Advanced Testing & Operations](../01-developing-code-for-data-processing/12-advanced-testing-operations-part1.md) - Property-based and Lakeflow Pipelines testing
 
 ## Official Documentation
 
-- [Databricks Asset Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
+- [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
 - [Bundle Configuration Reference](https://docs.databricks.com/dev-tools/bundles/settings.html)
 - [OIDC Federation](https://docs.databricks.com/dev-tools/authentication-oidc.html)
 - [Delta Time Travel](https://docs.databricks.com/delta/history.html)

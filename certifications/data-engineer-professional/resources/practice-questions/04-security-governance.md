@@ -42,21 +42,21 @@ D) Use secret scopes for each region
 
 ---
 
-## Question 4.3: Delta Sharing
+## Question 4.3: OpenSharing
 
 **Scenario**: A company needs to share data with an external partner who uses Snowflake.
 
-**Question** *(Easy)*: Which statement about Delta Sharing is correct?
+**Question** *(Easy)*: Which statement about OpenSharing is correct?
 
 A) The recipient must have a Databricks workspace
-B) The recipient can read shared data using any Delta Sharing client
+B) The recipient can read shared data using any OpenSharing client
 C) Data is physically copied to the recipient's storage
-D) Delta Sharing only works within the same cloud provider
+D) OpenSharing only works within the same cloud provider
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Delta Sharing is an open protocol. Recipients can use any compatible client (Spark, pandas, Power BI, Snowflake, etc.) without needing Databricks. Data is read in place, not copied. It works across cloud providers.
+> OpenSharing is an open protocol. Recipients can use any compatible client (Spark, pandas, Power BI, Snowflake, etc.) without needing Databricks. Data is read in place, not copied. It works across cloud providers.
 
 ---
 
@@ -102,15 +102,15 @@ D) Materialized view
 
 **Question** *(Medium)*: How does Unity Catalog capture this lineage information?
 
-A) Lineage is automatically captured from Spark jobs, Lakeflow Declarative Pipelines pipelines, and SQL queries without additional configuration
+A) Lineage is automatically captured from Spark jobs, Lakeflow pipelines, and SQL queries without additional configuration
 B) Engineers must manually register lineage by calling `dbutils.lineage.register()` after each transformation
-C) Lineage is only available for Lakeflow Declarative Pipelines pipelines, not for general Spark jobs
+C) Lineage is only available for Lakeflow pipelines, not for general Spark jobs
 D) Lineage requires enabling a separate "Lineage Tracking" feature at the metastore level
 
 > [!success]- Answer
 > **Correct Answer: A**
 >
-> Unity Catalog automatically captures column-level and table-level lineage from Spark operations, Lakeflow Declarative Pipelines pipelines, and SQL queries. No manual registration is needed. The lineage is available in the Catalog Explorer UI and via REST API. It works across notebooks, jobs, and Lakeflow Declarative Pipelines pipelines.
+> Unity Catalog automatically captures column-level and table-level lineage from Spark operations, Lakeflow pipelines, and SQL queries. No manual registration is needed. The lineage is available in the Catalog Explorer UI and via REST API. It works across notebooks, jobs, and Lakeflow pipelines.
 
 ---
 

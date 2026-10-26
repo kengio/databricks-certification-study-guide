@@ -15,8 +15,8 @@ aliases:
 > **What changed in the November 30, 2025 exam guide**
 >
 > - Restructured from 5 broad topics into **10 explicitly weighted domains**
-> - **Data Sharing and Federation** (Delta Sharing, Lakehouse Federation) is now a first-class domain (5 %)
-> - **Data Modelling** is now a first-class domain (6 %) — renamed and re-weighted; previously a top-level section in the older blueprint
+> - **Data Sharing and Federation** (OpenSharing, Lakehouse Federation) is now a first-class domain (5 %)
+> - **Data Modeling** is now a first-class domain (6 %) — renamed and re-weighted; previously a top-level section in the older blueprint
 > - Stronger emphasis on **Cost & Performance Optimization** (13 %)
 > - Pass / fail — **the Nov 30, 2025 exam guide does not publish a numeric passing score**
 >
@@ -50,7 +50,7 @@ pie title Exam Topic Distribution (10 domains)
     "Debugging and Deploying" : 10
     "Data Ingestion & Acquisition" : 7
     "Data Governance" : 7
-    "Data Modelling" : 6
+    "Data Modeling" : 6
     "Data Sharing and Federation" : 5
 ```
 
@@ -60,16 +60,16 @@ The folder structure below matches the November 30, 2025 official 10-domain blue
 
 | Section                                                                                | Weight | Focus |
 | -------------------------------------------------------------------------------------- | :----: | :--- |
-| [01 — Developing Code for Data Processing](./01-developing-code-for-data-processing/README.md) | 22 %   | Batch + streaming code, Delta ops, Lakeflow Declarative Pipelines, Lakeflow Jobs |
+| [01 — Developing Code for Data Processing](./01-developing-code-for-data-processing/README.md) | 22 %   | Batch + streaming code, Delta ops, Lakeflow Pipelines, Lakeflow Jobs |
 | [02 — Cost & Performance Optimization](05-cost-and-performance-optimization/README.md) | 13 %   | File sizing, Z-ORDER / liquid clustering, Spark tuning, Photon, compute selection |
 | [03 — Data Transformation, Cleansing, Quality](03-data-manipulation/README.md) | 10 % | CDC, deduplication, expectations, `APPLY CHANGES INTO` |
 | [04 — Monitoring and Alerting](./04-monitoring-and-alerting/README.md)                 | 10 %   | System tables, Lakeflow event log, query profiler, streaming monitoring |
 | [05 — Ensuring Data Security and Compliance](06-ensuring-data-security-and-compliance/README.md) | 10 % | Access control, secrets, audit/lineage, network security |
-| [06 — Debugging and Deploying](08-debugging-and-deploying/README.md)                 | 10 %   | Asset Bundles, CI/CD, Git folders, unit testing, Spark UI, CLI, REST API |
+| [06 — Debugging and Deploying](08-debugging-and-deploying/README.md)                 | 10 %   | Declarative Automation Bundles, CI/CD, Git folders, unit testing, Spark UI, CLI, REST API |
 | [07 — Data Ingestion & Acquisition](02-data-ingestion-and-acquisition/README.md)     |  7 %   | Auto Loader, batch ingestion patterns |
 | [08 — Data Governance](07-data-governance/README.md)                                 |  7 %   | Unity Catalog, UC Volumes vs DBFS |
-| [09 — Data Modelling](09-data-modeling/README.md)                                   |  6 %   | Medallion architecture, Delta fundamentals, schema management, SCD |
-| [10 — Data Sharing and Federation](02-data-ingestion-and-acquisition/README.md)         |  5 %   | Delta Sharing, Lakehouse Federation |
+| [09 — Data Modeling](09-data-modeling/README.md)                                   |  6 %   | Medallion architecture, Delta fundamentals, schema management, SCD |
+| [10 — Data Sharing and Federation](02-data-ingestion-and-acquisition/README.md)         |  5 %   | OpenSharing, Lakehouse Federation |
 
 ### Practice Exams
 
@@ -127,7 +127,7 @@ Before starting this certification, review:
 
 - [ ] Domain 05 — Ensuring Data Security and Compliance
 - [ ] Domain 08 — Data Governance
-- [ ] Domain 09 — Data Modelling
+- [ ] Domain 09 — Data Modeling
 - [ ] Domain 10 — Data Sharing and Federation
 
 ### Phase 5: Exam Prep (week 8)
@@ -148,5 +148,5 @@ Before starting this certification, review:
 
 1. **Advanced Data Engineering with Databricks** — primary exam-prep course
 2. **Data Management and Governance with Unity Catalog**
-3. **Build Data Pipelines with Lakeflow Declarative Pipelines**
-4. **Automated Deployment with Databricks Asset Bundles**
+3. **Build Data Pipelines with Lakeflow Pipelines**
+4. **Automated Deployment with Declarative Automation Bundles**

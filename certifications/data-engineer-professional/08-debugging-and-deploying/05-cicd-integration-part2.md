@@ -366,7 +366,7 @@ def mock_spark():
 
 ## Related Topics
 
-- [Asset Bundles](03-declarative-automation-bundles-part1.md) - DAB configuration
+- [Declarative Automation Bundles](03-declarative-automation-bundles-part1.md) - DAB configuration
 - [Git Folders](06-git-folders.md) - Version control
 - [Unit Testing](../01-developing-code-for-data-processing/11-unit-testing-part1.md) - Testing practices
 - [Databricks CLI — Part 1](../04-monitoring-and-alerting/04-databricks-cli-part1.md) - CLI commands
