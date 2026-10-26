@@ -76,6 +76,7 @@ from mlflow import MlflowClient
 mlflow.set_registry_uri("databricks-uc")   # default in MLflow 3; required on MLflow 2.x
 model_name = "prod_catalog.ml_models.churn_model"
 
+# Pick one option; each registration creates a new model version
 # Option 1: register while logging
 mlflow.sklearn.log_model(model, name="model", registered_model_name=model_name)
 
