@@ -442,7 +442,7 @@ ORDER BY shared_date DESC;
 | **Delta Sharing** | No | Table/view level | Live | Token-based, no creds |
 | **Snowflake Share** | No | Table-level | Live | Snowflake specific |
 
-## Best Practices
+## Sharing Best Practices
 
 ### Share Views, Not Raw Tables
 

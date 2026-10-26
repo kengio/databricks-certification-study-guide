@@ -154,7 +154,7 @@ How to answer DENY questions:
 - To stop someone from **reading data** in Unity Catalog, **don't grant** the privilege, or **REVOKE** it (including from the groups they belong to). Restrict *rows or columns* with **row filters, column masks, or ABAC** (see [Row Filters, Column Masks, and ABAC](./04-row-filters-column-masks-abac.md))
 - A `DENY` that overrides grants applies to the **legacy Hive metastore**. In Unity Catalog, the deny concept is the ABAC DENY policy, which currently governs only `MANAGE ACCESS CONTROL`
 
-## Best Practices
+## Access Control Best Practices
 
 - **Least privilege**: grant only what the role needs, at the narrowest sensible level
 - **Grant to groups**, never to individuals in production
