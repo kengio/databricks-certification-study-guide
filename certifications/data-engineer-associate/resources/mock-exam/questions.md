@@ -15,23 +15,23 @@ tags:
 ---
 
 > [!note] Platform update (Oct 2026)
-> Questions are grouped by the 7 domains of the August 2026 exam guide. Some stems still use legacy names: **DLT / Delta Live Tables** = Lakeflow Declarative Pipelines (now **Lakeflow Spark Declarative Pipelines**, renamed Nov 12, 2025), and `@dlt.*` decorators still work, although the `pyspark.pipelines` (`dp`) module is now recommended. **Delta Sharing** is now **OpenSharing** (Jun 10, 2026).
+> Questions are grouped by the 7 domains of the August 2026 exam guide. Some stems still use legacy names: **DLT / Delta Live Tables** = Lakeflow Declarative Pipelines (now **Lakeflow Spark Declarative Pipelines**, renamed Nov 12, 2025), and `@dlt.*` decorators still work, although the `pyspark.pipelines` (`dp`) module is now recommended.
 
 ---
 
-## Databricks Intelligence Platform (Questions 1–11)
+## Databricks Intelligence Platform (Questions 1–3)
 
 ## Question 1 *(Medium)*
 
 A data engineering team is evaluating whether to migrate their existing data warehouse to a Databricks Lakehouse. The primary concern is maintaining ACID guarantees for concurrent reads and writes on large tables. Which Databricks technology directly addresses this requirement?
 
-A) Apache Parquet file format with schema enforcement
-B) Delta Lake with transaction log (`_delta_log`)
-C) Databricks SQL Serverless warehouses
-D) Unity Catalog with row-level security
+A) Apache Parquet file format with schema enforcement  
+B) Unity Catalog with row-level security  
+C) Databricks SQL Serverless warehouses  
+D) Delta Lake with transaction log (`_delta_log`)  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Delta Lake provides ACID transactions through its transaction log (`_delta_log`), which records every operation as an atomic commit. This enables concurrent readers and writers without data corruption. Parquet alone has no transaction support, Serverless warehouses are a compute option, and Unity Catalog handles governance — not storage-level ACID.
 
@@ -41,10 +41,10 @@ D) Unity Catalog with row-level security
 
 An engineer is setting up a new Databricks workspace and needs to run interactive notebooks for development while also running scheduled production jobs. Which cluster type should they use for each workload?
 
-A) All-purpose clusters for both — they are more flexible
-B) Job clusters for both — they are cheaper and auto-terminate
-C) All-purpose clusters for interactive notebooks; job clusters for scheduled production jobs
-D) SQL warehouses for notebooks; job clusters for scheduled jobs
+A) All-purpose clusters for both — they are more flexible  
+B) Job clusters for both — they are cheaper and auto-terminate  
+C) All-purpose clusters for interactive notebooks; job clusters for scheduled production jobs  
+D) SQL warehouses for notebooks; job clusters for scheduled jobs  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -55,124 +55,12 @@ D) SQL warehouses for notebooks; job clusters for scheduled jobs
 
 ## Question 3 *(Medium)*
 
-A company wants to reduce cluster startup time for their machine learning jobs that run every 30 minutes. The jobs require identical cluster configurations each time. Which Databricks feature should they configure?
-
-A) Autoscaling enabled on job clusters
-B) Instance pools with pre-warmed instances
-C) Photon engine acceleration
-D) Serverless compute for ML workloads
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Instance pools maintain a set of idle, pre-warmed virtual machines that clusters can acquire immediately, drastically reducing startup time from minutes to seconds. Autoscaling adjusts the number of workers during a run but doesn't reduce initial startup time. Photon accelerates query execution. Serverless compute is currently available for SQL and Delta Live Tables, not general ML jobs.
-
----
-
-## Question 4 *(Easy)*
-
-A team member asks about the difference between the Databricks Control Plane and the Data Plane. Which statement correctly describes this architecture?
-
-A) The Control Plane stores all data; the Data Plane manages cluster configuration
-B) The Control Plane is managed by Databricks in its cloud account; the Data Plane runs in the customer's cloud account and processes data
-C) The Control Plane and Data Plane are both in the customer's cloud account for security
-D) The Data Plane manages the web UI; the Control Plane runs Spark jobs
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> The Control Plane (web UI, job scheduler, cluster manager) runs in Databricks' cloud account. The Data Plane (clusters, DBFS, customer data) runs in the customer's own cloud account. This architecture ensures that sensitive data never leaves the customer's environment, while Databricks manages the platform overhead.
-
----
-
-## Question 5 *(Medium)*
-
-A data engineer is comparing Databricks Photon engine to standard Spark. In which scenario does Photon provide the greatest performance benefit?
-
-A) Python UDFs running complex custom logic
-B) SQL queries on Delta Lake tables with aggregations and joins
-C) Streaming jobs using foreachBatch sinks
-D) Machine learning model training with MLlib
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Photon is a native vectorized query engine written in C++ that accelerates SQL workloads on Delta Lake, especially aggregations, joins, and scans. It does not accelerate Python UDFs (which require serialization between JVM and Python), and provides limited benefit for MLlib model training or streaming micro-batch logic.
-
----
-
-## Question 6 *(Easy)*
-
-A team wants to use Databricks Runtime for Machine Learning (ML Runtime) instead of the standard Databricks Runtime. What is the primary reason to choose the ML Runtime?
-
-A) ML Runtime supports Delta Lake operations; standard Runtime does not
-B) ML Runtime includes pre-installed ML libraries such as TensorFlow, PyTorch, and scikit-learn
-C) ML Runtime enables GPU acceleration automatically on all node types
-D) ML Runtime provides faster SQL query execution via Photon
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Databricks Runtime for Machine Learning comes pre-installed with popular ML libraries (TensorFlow, PyTorch, scikit-learn, XGBoost, etc.) so teams don't need to install them manually. Both runtimes support Delta Lake. GPU acceleration requires GPU-enabled instance types regardless of runtime. Photon is available on the standard runtime.
-
----
-
-## Question 7 *(Medium)*
-
-A data engineer wants to understand the Lakehouse architecture. Which statement best describes what differentiates a Lakehouse from a traditional two-tier Lambda architecture (data lake + data warehouse)?
-
-A) A Lakehouse stores data only in columnar formats, while Lambda uses row-based storage
-B) A Lakehouse consolidates storage and compute so that BI tools can query data directly from cloud storage with ACID guarantees
-C) A Lakehouse requires all data to be structured; Lambda architecture supports unstructured data
-D) A Lakehouse eliminates the need for data transformation; Lambda requires full ETL pipelines
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> The Lakehouse pattern eliminates the costly ETL copy step from data lake to data warehouse by adding metadata layers (like Delta Lake) that bring ACID transactions, schema enforcement, and performance optimizations directly to cloud storage. BI and ML tools can query the same data store. It supports both structured and unstructured data, and transformation is still required.
-
----
-
-## Question 8 *(Medium)*
-
-An organization runs a multi-tenant Databricks workspace. A cluster policy is configured with `spark.executor.memory` set as a fixed value. What is the effect of this policy on users?
-
-A) Users can override the fixed value by setting it in their notebook
-B) Users cannot change the fixed value when creating clusters governed by this policy
-C) The fixed value applies only to SQL warehouse clusters, not all-purpose clusters
-D) Cluster policies only restrict admin users; regular users are unaffected
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Cluster policies enforce configuration constraints. When a value is set as "fixed" in a policy, users cannot override it — the UI hides the field or makes it read-only. This ensures cost control and security compliance. Policies apply to any cluster type the policy is assigned to, not only warehouses.
-
----
-
-## Question 9 *(Medium)*
-
-A data engineer needs to run a notebook that performs interactive EDA (exploratory data analysis) with visualizations, then automatically hand off to a scheduled production pipeline. Which Databricks features best match these two phases respectively?
-
-A) All-purpose cluster for EDA; DLT pipeline for production
-B) Job cluster for EDA; all-purpose cluster for production
-C) SQL warehouse for EDA; serverless compute for production
-D) All-purpose cluster for EDA; job cluster with Lakeflow Jobs for production
-
-> [!success]- Answer
-> **Correct Answer: D**
->
-> All-purpose clusters support interactive notebook sessions ideal for EDA with visualizations and iterative development. Lakeflow Jobs with job clusters provide automated, scheduled, cost-efficient execution for production pipelines. Job clusters terminate after the job completes, reducing cost. SQL warehouses are optimized for SQL queries, not general notebook EDA.
-
----
-
-## Question 10 *(Medium)*
-
 A data engineer needs to query data as it existed 7 days ago from a Delta table named `transactions`. Which command correctly retrieves this historical snapshot?
 
-A) `SELECT * FROM transactions WHERE _commit_timestamp >= date_sub(current_date(), 7)`
-B) `SELECT * FROM transactions VERSION AS OF 7`
-C) `SELECT * FROM transactions TIMESTAMP AS OF date_sub(current_date(), 7)`
-D) `RESTORE TABLE transactions TO TIMESTAMP AS OF date_sub(current_date(), 7)`
+A) `SELECT * FROM transactions WHERE _commit_timestamp >= date_sub(current_date(), 7)`  
+B) `SELECT * FROM transactions VERSION AS OF 7`  
+C) `SELECT * FROM transactions TIMESTAMP AS OF date_sub(current_date(), 7)`  
+D) `RESTORE TABLE transactions TO TIMESTAMP AS OF date_sub(current_date(), 7)`  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -181,48 +69,77 @@ D) `RESTORE TABLE transactions TO TIMESTAMP AS OF date_sub(current_date(), 7)`
 
 ---
 
-## Question 11 *(Medium)*
+## Data Ingestion and Loading (Questions 4–12)
 
-A data engineer wants job clusters to start quickly for scheduled jobs without paying for always-running compute. Which Databricks feature achieves fast startup while keeping costs low?
+## Question 4 *(Medium)*
 
-A) All-purpose cluster shared via cluster ID
-B) Job cluster without any optimization — they always start from scratch
-C) Interactive cluster attached to the job
-D) Instance pool that job clusters acquire for fast startup, then release after the job completes
+A SQL analyst runs this statement every morning:
+
+```sql
+COPY INTO main.bronze.orders
+FROM '/Volumes/main/raw/landing/orders'
+FILEFORMAT = CSV
+FORMAT_OPTIONS ('header' = 'true');
+```
+
+On Tuesday a vendor re-uploads Monday's file, `orders_0901.csv`, with corrected values under the same name. Tuesday's run loads 0 rows. What explains this, and how can the analyst load the corrected file?
+
+A) `COPY INTO` is idempotent and skips files it has already loaded, even if they were modified. Re-run it with `FILES = ('orders_0901.csv')` and `COPY_OPTIONS ('force' = 'true')`  
+B) `COPY INTO` only reads files written after the table's latest commit. Run `OPTIMIZE` on the table first  
+C) The corrected file failed schema validation. Add `VALIDATE ALL` to load it  
+D) `COPY INTO` needs a checkpoint location to track files. Add one with `COPY_OPTIONS`  
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
-> Instance pools maintain pre-warmed instances that job clusters can acquire instantly, reducing startup time to seconds. The pool persists between runs while the job cluster itself is created and destroyed per run, maintaining cost isolation. All-purpose clusters are not managed by Workflows and incur continuous cost.
+> `COPY INTO` is retriable and idempotent: files in the source location that were already loaded are skipped on later runs, even if they changed after loading.
+>
+> Setting `'force' = 'true'` turns idempotency off and reloads files whether or not they were loaded before. Listing just that file with `FILES` keeps the reload from duplicating every other file. `VALIDATE` only checks data without loading it, so it can't load anything. A checkpoint location belongs to Auto Loader and Structured Streaming, not `COPY INTO`, which tracks loaded files internally.
 
 ---
 
-## Data Ingestion and Loading (Questions 12–14)
-
-## Question 12 *(Medium)*
+## Question 5 *(Medium)*
 
 A data engineer configures Auto Loader to ingest CSV files from an S3 bucket. The pipeline runs every hour. What happens if 5 new files arrive between runs?
 
-A) Only the first file is processed; subsequent files are queued for the next run
-B) Auto Loader automatically detects and processes all 5 new files in the next trigger
-C) Auto Loader processes files only when triggered manually
-D) Auto Loader fails if more than 1 file arrives between runs
+A) Auto Loader automatically detects and processes all 5 new files in the next trigger  
+B) Only the first file is processed; subsequent files are queued for the next run  
+C) Auto Loader processes files only when triggered manually  
+D) Auto Loader fails if more than 1 file arrives between runs  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Auto Loader uses cloud storage notifications or directory listing combined with a checkpoint to track which files have been processed. On the next trigger, it automatically detects all new, unprocessed files and ingests them. This checkpointing mechanism ensures exactly-once processing without manual intervention or file tracking.
 
 ---
 
-## Question 13 *(Medium)*
+## Question 6 *(Easy)*
+
+A team must ingest Salesforce objects into Unity Catalog tables incrementally, with as little custom code as possible. Which option does Databricks recommend?
+
+A) A notebook that calls the Salesforce REST API, scheduled with Lakeflow Jobs  
+B) Auto Loader pointed at the Salesforce instance URL  
+C) A Lakeflow Connect managed connector, which creates an ingestion pipeline that writes streaming tables  
+D) A Lakehouse Federation foreign catalog, queried by every downstream job  
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> SaaS applications such as Salesforce map to a Lakeflow Connect **managed connector**: no code, incremental, serverless, and governed by Unity Catalog.
+>
+> Databricks recommends starting with the most managed layer and moving down only when it can't meet the requirement. A hand-written REST notebook is the fallback for sources without a connector. Auto Loader reads files in cloud storage, not a SaaS API. Federation queries a source in place without ingesting it, and the requirement here is to land the data in Unity Catalog tables.
+
+---
+
+## Question 7 *(Medium)*
 
 A streaming job reads from a Kafka topic and writes to a Delta table. The engineer wants the job to process all currently available data and then stop automatically. Which trigger type should they configure?
 
-A) `trigger(processingTime="0 seconds")` for continuous mode
-B) `trigger(availableNow=True)` to process all available data then stop
-C) `trigger(continuous="10 seconds")` for low-latency micro-batch processing
-D) No trigger configuration — streaming jobs stop automatically when the source is empty
+A) `trigger(processingTime="0 seconds")` for continuous mode  
+B) `trigger(availableNow=True)` to process all available data then stop  
+C) `trigger(continuous="10 seconds")` for low-latency micro-batch processing  
+D) No trigger configuration — streaming jobs stop automatically when the source is empty  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -231,14 +148,32 @@ D) No trigger configuration — streaming jobs stop automatically when the sourc
 
 ---
 
-## Question 14 *(Hard)*
+## Question 8 *(Medium)*
+
+A notebook reads a 200-million-row PostgreSQL table with `spark.read.format("jdbc")`, setting only `url`, `dbtable`, `user`, and `password`. The Spark UI shows the read running as a single task while the other cores sit idle. Which change parallelizes the read?
+
+A) Raise `fetchSize` to 1,000,000 rows  
+B) Call `.repartition(64)` right after `.load()`  
+C) Switch from `spark.read` to `spark.readStream`  
+D) Set `partitionColumn` (an indexed numeric column), `lowerBound`, `upperBound`, and `numPartitions`  
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> A JDBC read uses one thread by default. `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` split the key range into parallel queries against the database.
+>
+> `fetchSize` only sets how many rows come back per network round trip, and a very large value can cause out-of-memory errors. `repartition` runs after the single-threaded read has finished, so the read itself stays serial. The JDBC source isn't a streaming source, so `readStream` doesn't help.
+
+---
+
+## Question 9 *(Hard)*
 
 A data engineer notices that a Delta streaming job fails with `StreamingQueryException: Detected a data update in the source table`. What caused this error?
 
-A) The source Delta table had `OPTIMIZE` run on it while the stream was reading
-B) The source Delta table had rows `UPDATE`d or `DELETE`d, which is not supported by default streaming reads
-C) The streaming job ran out of memory due to large state size
-D) The checkpoint directory was deleted, causing the stream to restart
+A) The source Delta table had `OPTIMIZE` run on it while the stream was reading  
+B) The source Delta table had rows `UPDATE`d or `DELETE`d, which is not supported by default streaming reads  
+C) The streaming job ran out of memory due to large state size  
+D) The checkpoint directory was deleted, causing the stream to restart  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -247,25 +182,63 @@ D) The checkpoint directory was deleted, causing the stream to restart
 
 ---
 
-## Data Transformation and Modeling (Questions 15–33)
+## Question 10 *(Medium)*
 
-## Question 15 *(Medium)*
+An Auto Loader stream feeds a Bronze table whose schema downstream teams rely on, so it must not change. The vendor sometimes adds new JSON fields. The stream must keep running when that happens, and the unexpected values must not be lost. Which `cloudFiles.schemaEvolutionMode` fits?
 
-A Databricks cluster is configured with a driver node (16 cores) and 4 worker nodes (8 cores each). A user runs a SQL query. What is the total parallelism available for task execution?
-
-A) 16 cores (driver only coordinates)
-B) 32 cores (workers only)
-C) 48 cores (driver + workers)
-D) Depends on the number of partitions in the data
+A) `addNewColumns`  
+B) `failOnNewColumns`  
+C) `none`, with no rescued data column configured  
+D) `rescue`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> In Spark, the driver node coordinates tasks but does not execute them. Task execution happens exclusively on worker nodes. With 4 workers × 8 cores = 32 cores available for parallel task execution. The number of partitions determines how many tasks run simultaneously, but available parallelism is capped by worker cores.
+> In `rescue` mode the schema never evolves and the stream doesn't fail. Values for unknown columns go into the `_rescued_data` column, so nothing is lost.
+>
+> `addNewColumns` changes the schema, and it stops the stream with `UnknownFieldException` before picking up the new column on restart. `failOnNewColumns` stops the stream and keeps it failed until someone updates the schema. `none` ignores new columns, and without a rescued data column their values are dropped.
 
 ---
 
-## Question 16 *(Easy)*
+## Question 11 *(Easy)*
+
+A business user sends a data engineer a 40 MB CSV file. The engineer wants it in Unity Catalog quickly, with no code, as a governed file that other teams can later load with `read_files` or `COPY INTO`. Which path fits?
+
+A) **New → Add or upload data → Upload files to a volume**, which needs `WRITE VOLUME` on the target volume  
+B) Mount a cloud storage bucket to DBFS and copy the file there  
+C) Configure a Lakeflow Connect managed connector for the file  
+D) Publish the file to a Kafka topic and read it with Structured Streaming  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> The **Add or upload data** UI can upload local files into a Unity Catalog volume (`/Volumes/<catalog>/<schema>/<volume>/...`). It needs `WRITE VOLUME` on the volume and `USE CATALOG` and `USE SCHEMA` on its parents, and UI uploads accept up to 5 GB per file. Once the file is in a volume, `read_files`, `COPY INTO`, or Auto Loader can load it.
+>
+> DBFS mounts are deprecated in favor of Unity Catalog volumes and external locations. Managed connectors are for SaaS applications and databases. A Kafka topic is a streaming source for events, not a way to land one file.
+
+---
+
+## Question 12 *(Medium)*
+
+A Bronze table has a `STRING` column named `raw` that holds JSON documents such as `{"customer": {"id": 42}, "line_items": [{"sku": "A1"}, {"sku": "B7"}]}`. Which Databricks SQL expression returns the first item's SKU (`A1`)?
+
+A) `raw:line_items[0].sku`  
+B) `raw.line_items[0].sku`  
+C) `raw:line_items[1].sku`  
+D) `explode(raw.line_items)`  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> When a column holds JSON **strings**, Databricks SQL extracts fields with the `:` path syntax, and array indexes are 0-based, so `raw:line_items[0].sku` returns `A1`.
+>
+> Dot notation works on `STRUCT` columns, not on a plain string. Index `[1]` returns the second element (`B7`). `explode` turns an array into rows and can't run on a string field reference like this. For new tables, Databricks recommends the `VARIANT` type over JSON strings.
+
+---
+
+## Data Transformation and Modeling (Questions 13–22)
+
+## Question 13 *(Easy)*
 
 A data engineer runs the following SQL command. What is the result?
 
@@ -276,26 +249,26 @@ FROM transactions
 GROUP BY region;
 ```
 
-A) Creates a new table only if it does not already exist
-B) Creates a new table or replaces the entire table if it already exists
-C) Appends aggregated results to the existing table
-D) Creates a temporary view of the aggregated results
+A) Creates a new table only if it does not already exist  
+B) Creates a temporary view of the aggregated results  
+C) Appends aggregated results to the existing table  
+D) Creates a new table or replaces the entire table if it already exists  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `CREATE OR REPLACE TABLE ... AS SELECT` (CRAS) creates a new table with the query results. If a table with that name already exists, it is completely replaced (dropped and recreated). Use `CREATE TABLE IF NOT EXISTS` to skip creation when the table exists, or `INSERT INTO` to append rows.
 
 ---
 
-## Question 17 *(Easy)*
+## Question 14 *(Easy)*
 
 A Databricks SQL query must return all rows from the `orders` table and only the matching rows from the `customers` table. Which JOIN type accomplishes this?
 
-A) INNER JOIN
-B) RIGHT JOIN
-C) LEFT JOIN
-D) CROSS JOIN
+A) INNER JOIN  
+B) RIGHT JOIN  
+C) LEFT JOIN  
+D) CROSS JOIN  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -304,14 +277,14 @@ D) CROSS JOIN
 
 ---
 
-## Question 18 *(Medium)*
+## Question 15 *(Medium)*
 
 A data engineer needs to find the top 3 highest-selling products within each product category. Which SQL feature is most appropriate?
 
-A) GROUP BY with HAVING clause
-B) Correlated subquery with LIMIT
-C) Window function with `RANK() OVER (PARTITION BY category ORDER BY sales DESC)`
-D) PIVOT table with category as columns
+A) GROUP BY with HAVING clause  
+B) Correlated subquery with LIMIT  
+C) Window function with `RANK() OVER (PARTITION BY category ORDER BY sales DESC)`  
+D) PIVOT table with category as columns  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -320,37 +293,14 @@ D) PIVOT table with category as columns
 
 ---
 
-## Question 19 *(Medium)*
-
-A data engineer writes the following PySpark code. What does it accomplish?
-
-```python
-(df.filter(col("status") == "active")
-   .groupBy("department")
-   .agg(avg("salary").alias("avg_salary"))
-   .orderBy("avg_salary", ascending=False))
-```
-
-A) Updates salaries for active employees grouped by department
-B) Returns the average salary per department for active employees, sorted highest to lowest
-C) Deletes inactive employees and calculates department headcount
-D) Creates a new Delta table with department salary averages
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> The code filters rows where `status == "active"`, groups by `department`, calculates the average salary as `avg_salary`, and sorts descending. It is a read-only transformation — no writes or deletes occur. `write()` or `save()` would be needed to persist results to storage.
-
----
-
-## Question 20 *(Medium)*
+## Question 16 *(Medium)*
 
 A data engineer needs to apply a custom Python function to a column in a large Spark DataFrame. The function uses a third-party library not available as a built-in Spark function. What is the recommended approach?
 
-A) Use `df.apply()` to apply the function row by row
-B) Register the function as a Spark UDF with `spark.udf.register()` or `udf()`
-C) Export the DataFrame to Pandas, apply the function, then convert back
-D) Use `df.withColumn()` with a Python lambda directly without registration
+A) Use `df.apply()` to apply the function row by row  
+B) Register the function as a Spark UDF with `spark.udf.register()` or `udf()`  
+C) Export the DataFrame to Pandas, apply the function, then convert back  
+D) Use `df.withColumn()` with a Python lambda directly without registration  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -359,66 +309,30 @@ D) Use `df.withColumn()` with a Python lambda directly without registration
 
 ---
 
-## Question 21 *(Easy)*
+## Question 17 *(Easy)*
 
 A data engineer uses `explode()` on a column containing arrays. What does this function do?
 
-A) Removes all NULL values from array columns
-B) Converts an array column into multiple rows, one row per array element
-C) Flattens nested structs into separate columns
-D) Converts an array column into a string by joining elements
+A) Converts an array column into multiple rows, one row per array element  
+B) Removes all NULL values from array columns  
+C) Flattens nested structs into separate columns  
+D) Converts an array column into a string by joining elements  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `explode()` takes an array (or map) column and generates one new row per element, duplicating all other column values. This is the standard way to "unnest" array data in Spark. `flatten()` flattens nested arrays. Struct flattening uses `col("field.*")`. `array_join()` converts an array to a string.
 
 ---
 
-## Question 22 *(Easy)*
-
-A data engineer needs to add a column to an existing Delta table without rewriting the data. Which SQL command accomplishes this?
-
-A) `UPDATE table_name SET new_col = NULL`
-B) `ALTER TABLE table_name ADD COLUMN new_col STRING`
-C) `INSERT INTO table_name SELECT *, NULL AS new_col FROM table_name`
-D) `CREATE OR REPLACE TABLE table_name AS SELECT *, NULL AS new_col FROM table_name`
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `ALTER TABLE ... ADD COLUMN` adds a new column to the Delta table schema without rewriting existing data files — the new column returns NULL for existing rows until populated. `UPDATE` modifies existing rows. `INSERT INTO` adds new rows. `CREATE OR REPLACE` rewrites the entire table, which is expensive and unnecessary.
-
----
-
-## Question 23 *(Hard)*
-
-A data engineer writes SQL to calculate a running total of sales by date using the following window specification. What does it return?
-
-```sql
-SUM(amount) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
-```
-
-A) This syntax is invalid — `ROWS BETWEEN` is not supported
-B) The cumulative sum of `amount` from the earliest date up to and including the current row
-C) The total sum of all rows repeated for every date (grand total)
-D) The sum of only the current row and the immediately following row
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` defines a window that starts at the very first row (in `ORDER BY date` order) and ends at the current row, producing a cumulative running total. `ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING` would return the grand total for every row.
-
----
-
-## Question 24 *(Easy)*
+## Question 18 *(Easy)*
 
 A data engineer needs to combine two DataFrames that have the same schema, keeping all rows from both including duplicates. Which operation should they use?
 
-A) `df1.join(df2, how="full")`
-B) `df1.union(df2)`
-C) `df1.intersect(df2)`
-D) `df1.merge(df2)`
+A) `df1.join(df2, how="full")`  
+B) `df1.union(df2)`  
+C) `df1.intersect(df2)`  
+D) `df1.merge(df2)`  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -427,14 +341,14 @@ D) `df1.merge(df2)`
 
 ---
 
-## Question 25 *(Easy)*
+## Question 19 *(Easy)*
 
 A data engineer needs to pivot sales data so that each product category becomes a separate column showing total sales. Which SQL keyword accomplishes this?
 
-A) UNPIVOT
-B) CROSSTAB
-C) PIVOT
-D) TRANSPOSE
+A) UNPIVOT  
+B) CROSSTAB  
+C) PIVOT  
+D) TRANSPOSE  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -443,39 +357,7 @@ D) TRANSPOSE
 
 ---
 
-## Question 26 *(Medium)*
-
-A data engineer wants to select only distinct combinations of `customer_id` and `product_id` from a table with millions of rows. Which approach is most efficient?
-
-A) `SELECT DISTINCT customer_id, product_id FROM orders`
-B) `SELECT customer_id, product_id FROM orders GROUP BY ALL`
-C) Both A and B produce identical results and the Spark optimizer handles them the same way
-D) Use `dropDuplicates()` in PySpark only — `DISTINCT` is not supported in Databricks SQL
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> `SELECT DISTINCT col1, col2` and `GROUP BY col1, col2` with no aggregation are logically and physically equivalent in Spark's optimizer. Both generate the same query plan. `DISTINCT` is fully supported in Databricks SQL. Either syntax is valid — the choice is stylistic.
-
----
-
-## Question 27 *(Medium)*
-
-A data engineer uses higher-order functions to work with an array column. Which function filters array elements based on a lambda condition?
-
-A) `array_contains(arr, value)`
-B) `filter(arr, x -> x > 100)`
-C) `transform(arr, x -> x * 2)`
-D) `aggregate(arr, 0, (acc, x) -> acc + x)`
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `filter(array, lambda)` applies a boolean lambda to each array element and returns only elements where the condition is true. `array_contains()` checks if a specific value exists (returns boolean, not an array). `transform()` applies a transformation to every element (equivalent to map). `aggregate()` reduces an array to a single value (equivalent to fold/reduce).
-
----
-
-## Question 28 *(Medium)*
+## Question 20 *(Medium)*
 
 A data engineer needs to upsert records into a Delta table: update existing customer records when `customer_id` matches, and insert new records when there is no match. Which clause correctly completes the MERGE statement?
 
@@ -489,10 +371,10 @@ WHEN NOT MATCHED THEN
   ___________
 ```
 
-A) `INSERT VALUES (source.customer_id, source.name, source.email)`
-B) `INSERT INTO customers SELECT * FROM source`
-C) `INSERT (customer_id, name, email) VALUES (source.customer_id, source.name, source.email)`
-D) `INSERT * FROM source`
+A) `INSERT VALUES (source.customer_id, source.name, source.email)`  
+B) `INSERT INTO customers SELECT * FROM source`  
+C) `INSERT (customer_id, name, email) VALUES (source.customer_id, source.name, source.email)`  
+D) `INSERT * FROM source`  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -501,30 +383,14 @@ D) `INSERT * FROM source`
 
 ---
 
-## Question 29 *(Medium)*
-
-A data engineer enables Change Data Feed (CDF) on a Delta table. What additional metadata columns does CDF expose when reading changes?
-
-A) The Spark execution plan for each change operation
-B) Columns `_change_type`, `_commit_version`, and `_commit_timestamp` showing what changed and when
-C) A separate audit log table in the same database
-D) A JSON file in the `_delta_log` directory with changed row details
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Change Data Feed adds three metadata columns: `_change_type` (insert, update_preimage, update_postimage, delete), `_commit_version` (Delta version number), and `_commit_timestamp` (when the change occurred). These are read using `.option("readChangeFeed", "true")`. CDF data is stored within the Delta table, not a separate table or JSON file.
-
----
-
-## Question 30 *(Easy)*
+## Question 21 *(Easy)*
 
 A data engineer uses the medallion architecture. Which layer is responsible for enforcing data quality rules, deduplication, and applying business logic transformations?
 
-A) Bronze layer — stores raw, unmodified ingested data
-B) Silver layer — stores cleaned, filtered, and enriched data with quality checks applied
-C) Gold layer — stores aggregate KPIs and metrics for reporting
-D) The medallion architecture has no dedicated quality enforcement layer
+A) Bronze layer — stores raw, unmodified ingested data  
+B) Silver layer — stores cleaned, filtered, and enriched data with quality checks applied  
+C) Gold layer — stores aggregate KPIs and metrics for reporting  
+D) The medallion architecture has no dedicated quality enforcement layer  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -533,30 +399,14 @@ D) The medallion architecture has no dedicated quality enforcement layer
 
 ---
 
-## Question 31 *(Easy)*
-
-A data engineer uses Delta Live Tables (DLT) to build a pipeline. Which Python decorator defines a table that is computed and materialized from a query?
-
-A) `@dlt.table`
-B) `@dlt.view`
-C) `@dlt.materialized_view`
-D) `@dlt.expect`
-
-> [!success]- Answer
-> **Correct Answer: A**
->
-> In Delta Live Tables, `@dlt.table` defines a materialized table that DLT computes and stores. When the query uses `spark.readStream`, DLT creates a streaming table; otherwise it creates a batch materialized table. `@dlt.view` creates a virtual, non-materialized view. `@dlt.expect` is not a table decorator — it adds data quality expectations to tables decorated with `@dlt.table`.
-
----
-
-## Question 32 *(Medium)*
+## Question 22 *(Medium)*
 
 A DLT pipeline has an `EXPECT` constraint: `EXPECT (amount > 0) ON VIOLATION DROP ROW`. A batch of 1,000 records arrives and 50 have `amount <= 0`. What happens?
 
-A) The entire batch fails and no records are written
-B) All 1,000 records are written, and the 50 violating records are flagged in the event log
-C) The 50 violating records are dropped and 950 valid records are written to the table
-D) The pipeline pauses and waits for manual intervention to resolve the violations
+A) The entire batch fails and no records are written  
+B) All 1,000 records are written, and the 50 violating records are flagged in the event log  
+C) The 50 violating records are dropped and 950 valid records are written to the table  
+D) The pipeline pauses and waits for manual intervention to resolve the violations  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -565,48 +415,84 @@ D) The pipeline pauses and waits for manual intervention to resolve the violatio
 
 ---
 
-## Question 33 *(Medium)*
+## Working with Lakeflow Jobs (Questions 23–29)
 
-A DLT pipeline is configured in `CONTINUOUS` mode. How does this differ from `TRIGGERED` mode?
+## Question 23 *(Medium)*
 
-A) Continuous mode runs the pipeline once and exits; Triggered mode runs indefinitely
-B) Triggered mode processes data on a schedule or manually and then stops; Continuous mode streams with minimal latency
-C) Continuous mode only supports SQL; Triggered mode supports both SQL and Python
-D) There is no functional difference; the setting only affects UI display
+A data engineer needs to run a notebook that performs interactive EDA (exploratory data analysis) with visualizations, then automatically hand off to a scheduled production pipeline. Which Databricks features best match these two phases respectively?
+
+A) All-purpose cluster for EDA; DLT pipeline for production  
+B) Job cluster for EDA; all-purpose cluster for production  
+C) SQL warehouse for EDA; serverless compute for production  
+D) All-purpose cluster for EDA; job cluster with Lakeflow Jobs for production  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> In Continuous mode, DLT keeps the pipeline running indefinitely, processing new data as it arrives with low latency (true streaming). In Triggered mode, the pipeline runs when scheduled or triggered manually, processes all available data, and then stops — suitable for batch workloads. Both modes support SQL and Python.
+> All-purpose clusters support interactive notebook sessions ideal for EDA with visualizations and iterative development. Lakeflow Jobs with job clusters provide automated, scheduled, cost-efficient execution for production pipelines. Job clusters terminate after the job completes, reducing cost. SQL warehouses are optimized for SQL queries, not general notebook EDA.
 
 ---
 
-## Working with Lakeflow Jobs (Questions 34–36)
+## Question 24 *(Medium)*
 
-## Question 34 *(Medium)*
+A partner drops files into a Unity Catalog volume at unpredictable times, from zero to several drops a day. The team wants each drop processed within minutes and doesn't want runs that find no new data. Which Lakeflow Jobs trigger fits best?
+
+A) A scheduled trigger that runs every 5 minutes  
+B) A continuous trigger  
+C) A file arrival trigger on the volume, with Auto Loader in the job to process only the new files  
+D) A table update trigger on the Bronze table that the job writes to  
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> A file arrival trigger monitors a Unity Catalog external location or volume and starts a run when new files land. It checks for new files about every minute, on a best-effort basis. Inside the job, Auto Loader processes exactly the new files.
+>
+> A 5-minute schedule starts many runs that find no data. A continuous trigger keeps a run active all the time. A table update trigger fires when a monitored table changes, but here the Bronze table is the job's own output, so it can't tell the job that new files have arrived.
+
+---
+
+## Question 25 *(Medium)*
 
 A data engineer is designing a Lakeflow Job with three tasks: `ingest → transform → report`. The `report` task must only run if `transform` succeeds. How should task dependencies be configured?
 
-A) Use a single-task job with all logic in one notebook to avoid dependency issues
-B) Configure `transform` as a dependency of `report` using the `depends_on` task setting
-C) Use separate jobs for each task and chain them with external orchestration
-D) Set `transform` and `report` to run in parallel to reduce total execution time
+A) Use a single-task job with all logic in one notebook to avoid dependency issues  
+B) Set `transform` and `report` to run in parallel to reduce total execution time  
+C) Use separate jobs for each task and chain them with external orchestration  
+D) Configure `transform` as a dependency of `report` using the `depends_on` task setting  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Lakeflow Jobs supports multi-task jobs with explicit task dependencies via `depends_on`. When `transform` fails, downstream tasks (`report`) don't run and are marked `Upstream failed` (default Run if: *All succeeded*). Running tasks in parallel would not enforce the required sequential dependency. Separate jobs with external orchestration adds unnecessary complexity.
 
 ---
 
-## Question 35 *(Medium)*
+## Question 26 *(Medium)*
+
+A Lakeflow Job must run the same `load_table` notebook for 40 source tables, passing a different table name each time, with up to 5 loads running at once. What is the documented way to build this?
+
+A) Add 40 notebook tasks, one per table, each with a hard-coded table name  
+B) Add an If/else condition task that checks the table name  
+C) Add a Run Job task that triggers the job again for each table  
+D) Add a For each task over a JSON array of table names, with the notebook as its nested task and concurrency set to 5  
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> The **For each** task runs one nested task once per element of an input array. Each iteration reads its value with `{{input}}` (or `{{input.<key>}}` for objects), and **concurrency** sets how many iterations run in parallel. It defaults to 1.
+>
+> Forty copied tasks work, but every change has to be repeated 40 times. If/else branches on a condition. It doesn't loop. A Run Job task triggers another job as a step, which isn't a loop over inputs.
+
+---
+
+## Question 27 *(Medium)*
 
 A production job fails intermittently due to transient cloud API errors. What built-in Lakeflow Jobs feature can automatically retry failed tasks without manual intervention?
 
-A) Task timeout configuration — the task retries when it exceeds the timeout
-B) Per-task retry policy with configurable maximum retries and retry interval
-C) Workflow-level SLA notifications that page the on-call engineer
-D) Databricks auto-recovers all failed tasks by default with no configuration needed
+A) Task timeout configuration — the task retries when it exceeds the timeout  
+B) Per-task retry policy with configurable maximum retries and retry interval  
+C) Workflow-level SLA notifications that page the on-call engineer  
+D) Databricks auto-recovers all failed tasks by default with no configuration needed  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -615,14 +501,32 @@ D) Databricks auto-recovers all failed tasks by default with no configuration ne
 
 ---
 
-## Question 36 *(Medium)*
+## Question 28 *(Medium)*
+
+The last task of a job, `cleanup`, drops staging tables. It depends on the `transform` task and uses the default dependency settings. Whenever `transform` fails, `cleanup` is skipped and marked `Upstream failed`. Which setting makes `cleanup` run whatever happens upstream?
+
+A) Set `cleanup`'s **Run if** condition to **All done**  
+B) Add a retry policy to `transform`  
+C) Set `cleanup`'s **Run if** condition to **At least one succeeded**  
+D) Raise the timeout on `cleanup`  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> **All done** runs a task once all its dependencies have finished, whatever their outcome, which is the documented choice for cleanup tasks. The default, **All succeeded**, marks the task `Upstream failed` when a dependency fails.
+>
+> **At least one succeeded** still skips `cleanup` here, because its only dependency failed. Retries make `transform` more likely to succeed, but `cleanup` is still skipped if every attempt fails. A timeout limits how long a task runs. It doesn't decide whether the task starts.
+
+---
+
+## Question 29 *(Medium)*
 
 A data engineer configures a Lakeflow Job with a schedule of `0 0 8 * * ?` (Quartz cron format). When does this job run?
 
-A) Every 8 minutes
-B) Every hour at minute 8
-C) At 8:00 AM every day
-D) At 8:00 AM on the 8th of every month
+A) Every 8 minutes  
+B) Every hour at minute 8  
+C) At 8:00 AM every day  
+D) At 8:00 AM on the 8th of every month  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -631,16 +535,108 @@ D) At 8:00 AM on the 8th of every month
 
 ---
 
-## Troubleshooting, Monitoring, and Optimization (Questions 37–40)
+## Implementing CI/CD (Questions 30–34)
 
-## Question 37 *(Hard)*
+## Question 30 *(Easy)*
+
+An engineer deploys a bundle with `databricks bundle deploy -t dev`. The `dev` target sets `mode: development`. The deployed job has a daily schedule in its YAML, but the schedule never fires. Why?
+
+A) Development mode pauses schedules and triggers on deployed resources  
+B) Bundles can't deploy job schedules. Schedules must be added in the Jobs UI  
+C) Scheduled jobs deployed from a bundle must run as a service principal  
+D) The schedule fires only after the bundle is also deployed to the `prod` target  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> `mode: development` pauses schedules and triggers on the resources it deploys. It also prefixes their names with `[dev <user>]`, so personal copies don't run on their own or clash with shared ones.
+>
+> Run the job with `databricks bundle run`, or unpause it explicitly in dev. Bundles do deploy schedules (`schedule.quartz_cron_expression` in the job YAML), and in `mode: production` they stay active. A service principal is recommended for production deployments, but it isn't why a dev schedule is paused.
+
+---
+
+## Question 31 *(Easy)*
+
+An engineer has committed and pushed the branch `feature/orders-dedup` from a Databricks Git folder. The team requires a review before any change is merged into `main`. Where is the pull request opened, reviewed, and merged?
+
+A) In the Git folder, with **Merge** from the Git dialog's kebab menu  
+B) In the notebook's revision history  
+C) By running `databricks bundle deploy -t prod`  
+D) In the Git provider's interface, such as GitHub, GitLab, or Azure DevOps  
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> Git folders handle branches, commits, pushes, and pulls in the workspace. The Databricks docs say to use your Git provider's interface to create a pull request and merge it into the default branch, where branch protection and reviews are enforced.
+>
+> Merging locally from the Git dialog skips the review the team requires. Notebook revision history has no branches or pull requests. Deploying a bundle releases code. It doesn't review or merge it.
+
+---
+
+## Question 32 *(Medium)*
+
+A bundle needs a source database password at deploy time. A reviewer finds the password set as the `default` of a variable in `databricks.yml`. What is the recommended fix?
+
+A) Base64-encode the password before saving it as the default  
+B) Move the password under `targets.prod.variables` so it only applies to production  
+C) Store the password in a notebook widget's default value instead  
+D) Remove the default, rotate the password, and have the CI runner export `BUNDLE_VAR_db_password` from its secret store  
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> Secrets never belong in bundle YAML or notebooks, because both are committed to Git. Declare the variable with no default and let CI supply it as the `BUNDLE_VAR_<name>` environment variable from its secret store, so the value never touches the repository. A password that was committed should also be rotated.
+>
+> Base64 is an encoding, not encryption. A target-level value and a widget default are both still in Git. At run time, notebooks can read credentials with `dbutils.secrets.get`.
+
+---
+
+## Question 33 *(Medium)*
+
+A team's GitHub Actions workflow should fail a pull request check when the bundle configuration is malformed, without deploying anything. Which command should the workflow run?
+
+A) `databricks bundle validate`  
+B) `databricks bundle summary`  
+C) `databricks bundle destroy`  
+D) `databricks bundle generate`  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> `databricks bundle validate` checks that the bundle configuration files are syntactically correct, which makes it the standard first step of a CI pipeline before `deploy -t <target>`.
+>
+> `summary` lists the bundle's identity and already deployed resources. `destroy` deletes previously deployed jobs, pipelines, and artifacts. `generate` writes bundle YAML for a resource that already exists in the workspace.
+
+---
+
+## Question 34 *(Medium)*
+
+Two engineers work on the same feature branch, each in their own Git folder. Engineer B has pushed new commits. Engineer A has no local changes and wants B's commits in their Git folder. Which Git folder operation should A use?
+
+A) **Pull**  
+B) **Reset**  
+C) **Rebase**  
+D) **Commit & Push**  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> **Pull** updates the Git folder's notebooks and files to the remote version. It also clears notebook state, so cells need to be re-run.
+>
+> **Reset** is the equivalent of `git reset --hard` plus `git push --force`, and it discards both uncommitted and committed changes on the local and the remote branch. **Rebase** ends with a force push that rewrites history for collaborators. **Commit & Push** sends local changes to the remote, and there aren't any here.
+
+---
+
+## Troubleshooting, Monitoring, and Optimization (Questions 35–38)
+
+## Question 35 *(Hard)*
 
 A data engineer writes a SQL query joining three large tables. The query is slow and the Spark UI shows excessive shuffle volume. Which optimization should they apply first?
 
-A) Increase the number of shuffle partitions with `spark.sql.shuffle.partitions`
-B) Use broadcast join hints for small dimension tables: `/*+ BROADCAST(dim) */`
-C) Convert all joins to CROSS JOINs for performance
-D) Add more worker nodes to the cluster
+A) Increase the number of shuffle partitions with `spark.sql.shuffle.partitions`  
+B) Use broadcast join hints for small dimension tables: `/*+ BROADCAST(dim) */`  
+C) Convert all joins to CROSS JOINs for performance  
+D) Add more worker nodes to the cluster  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -649,30 +645,30 @@ D) Add more worker nodes to the cluster
 
 ---
 
-## Question 38 *(Easy)*
+## Question 36 *(Easy)*
 
 A Delta table has accumulated many small Parquet files over several months of streaming ingestion. A data engineer runs `OPTIMIZE` on the table. What is the primary effect?
 
-A) Deletes files marked for deletion by previous VACUUM operations
-B) Rewrites small Parquet files into larger, more efficient files to improve read performance
-C) Recalculates column statistics and updates the transaction log
-D) Converts the table from Parquet format to a different columnar format
+A) Rewrites small Parquet files into larger, more efficient files to improve read performance  
+B) Deletes files marked for deletion by previous VACUUM operations  
+C) Recalculates column statistics and updates the transaction log  
+D) Converts the table from Parquet format to a different columnar format  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `OPTIMIZE` compacts small files into larger files (typically targeting 1GB) to reduce the overhead of reading many small files and improve scan efficiency. It does not delete files — `VACUUM` handles that. Statistics updates are a secondary benefit. Delta Lake always uses Parquet as its underlying storage format.
 
 ---
 
-## Question 39 *(Medium)*
+## Question 37 *(Medium)*
 
 A data engineer runs `VACUUM transactions RETAIN 168 HOURS`. What is the effect on time travel capabilities?
 
-A) No effect — VACUUM only removes duplicated data, not historical versions
-B) Historical data files older than 168 hours (7 days) are permanently deleted and time travel to those versions is no longer possible
-C) Delta Lake automatically creates a backup before running VACUUM
-D) VACUUM retains exactly 168 versions of the table, not based on time
+A) No effect — VACUUM only removes duplicated data, not historical versions  
+B) Historical data files older than 168 hours (7 days) are permanently deleted and time travel to those versions is no longer possible  
+C) Delta Lake automatically creates a backup before running VACUUM  
+D) VACUUM retains exactly 168 versions of the table, not based on time  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -681,32 +677,32 @@ D) VACUUM retains exactly 168 versions of the table, not based on time
 
 ---
 
-## Question 40 *(Medium)*
+## Question 38 *(Medium)*
 
 A data engineer wants to Z-ORDER a Delta table by the `customer_id` column to improve query performance. When does Z-ORDER provide the most benefit?
 
-A) When queries always perform full table scans without any filters
-B) When queries frequently filter on `customer_id`, enabling Delta's data skipping to skip entire files
-C) When the table has fewer than 10 files and is already compact
-D) Z-ORDER provides no benefit on Delta tables; use partitioning for all performance needs
+A) When queries always perform full table scans without any filters  
+B) Z-ORDER provides no benefit on Delta tables; use partitioning for all performance needs  
+C) When the table has fewer than 10 files and is already compact  
+D) When queries frequently filter on `customer_id`, enabling Delta's data skipping to skip entire files  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Z-ORDER co-locates related values within the same set of files, enabling Delta Lake's data skipping to skip entire files that don't contain queried `customer_id` values. This is most beneficial for high-cardinality columns frequently used in `WHERE` clauses. If queries always scan the full table, or the table is very small, Z-ORDER provides no benefit.
 
 ---
 
-## Governance and Security (Questions 41–45)
+## Governance and Security (Questions 39–45)
 
-## Question 41 *(Medium)*
+## Question 39 *(Medium)*
 
 An analyst needs to access data stored in an external S3 bucket from a Databricks cluster without hardcoding credentials in notebooks. Which approach is most appropriate?
 
-A) Store credentials in a notebook cell marked as hidden
-B) Use Databricks Secrets with `dbutils.secrets.get()` to retrieve credentials at runtime
-C) Export credentials as environment variables in the cluster init script
-D) Pass credentials as job parameters in the Lakeflow Jobs UI
+A) Store credentials in a notebook cell marked as hidden  
+B) Use Databricks Secrets with `dbutils.secrets.get()` to retrieve credentials at runtime  
+C) Export credentials as environment variables in the cluster init script  
+D) Pass credentials as job parameters in the Lakeflow Jobs UI  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -715,14 +711,32 @@ D) Pass credentials as job parameters in the Lakeflow Jobs UI
 
 ---
 
-## Question 42 *(Hard)*
+## Question 40 *(Medium)*
+
+Members of the `emea_sales` group must see only the EMEA rows of `main.silver.orders`, and members of `admins` must see every row. Which Unity Catalog implementation fits?
+
+A) A SQL UDF that returns `BOOLEAN` using `is_account_group_member()`, attached with `ALTER TABLE main.silver.orders SET ROW FILTER <function> ON (region)`  
+B) A column mask on the `region` column that returns `NULL` for non-EMEA values  
+C) `DENY SELECT ON TABLE main.silver.orders TO emea_sales`  
+D) A separate copy of the table for each region, with `SELECT` granted per group  
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> A **row filter** is a SQL UDF that returns `BOOLEAN` for each row. For example, `is_account_group_member('admins') OR (is_account_group_member('emea_sales') AND region = 'EMEA')`, attached with `SET ROW FILTER ... ON (region)`. Unity Catalog applies it to every query on the table.
+>
+> A column mask changes the values in a column but returns every row. The classic `DENY` statement works only on the legacy Hive metastore, and it would hide the whole table anyway. Per-region copies duplicate data and drift out of sync.
+
+---
+
+## Question 41 *(Hard)*
 
 A data engineer needs to grant a user access to query a specific table in Unity Catalog without giving access to the entire schema. What is the minimum set of privileges required?
 
-A) `GRANT SELECT ON TABLE catalog.schema.table TO user` only
-B) `GRANT SELECT ON SCHEMA catalog.schema TO user` only
-C) `USE CATALOG` on the catalog + `USE SCHEMA` on the schema + `SELECT` on the table
-D) `GRANT ALL PRIVILEGES ON TABLE catalog.schema.table TO user`
+A) `GRANT SELECT ON TABLE catalog.schema.table TO user` only  
+B) `GRANT SELECT ON SCHEMA catalog.schema TO user` only  
+C) `USE CATALOG` on the catalog + `USE SCHEMA` on the schema + `SELECT` on the table  
+D) `GRANT ALL PRIVILEGES ON TABLE catalog.schema.table TO user`  
 
 > [!success]- Answer
 > **Correct Answer: C**
@@ -731,19 +745,39 @@ D) `GRANT ALL PRIVILEGES ON TABLE catalog.schema.table TO user`
 
 ---
 
-## Question 43 *(Medium)*
+## Question 42 *(Medium)*
 
-A company wants to share a Delta table with an external partner organization that uses a different cloud provider, without copying the underlying data. Which Databricks feature enables this?
+A team registered the external Delta table `main.bronze.vendor_feed` over an existing cloud storage path. Nothing writes to that path directly any more, and the team now wants Unity Catalog to own the table's storage, without changing its name, permissions, or history. Ten days after the change, they may still need to undo it. Which approach fits?
 
-A) External Location with cross-account IAM role
-B) Delta Sharing — an open protocol for sharing live data across organizations
-C) Unity Catalog data lineage export
-D) DBFS mount with public access enabled
+A) Drop the external table and re-create it as a managed table with `CREATE TABLE ... AS SELECT`  
+B) Run `RESTORE TABLE main.bronze.vendor_feed TO VERSION AS OF 0`, which restores the table as managed  
+C) Run `DEEP CLONE` into a new managed table and swap the names  
+D) Run `ALTER TABLE main.bronze.vendor_feed SET MANAGED`, and roll back with `ALTER TABLE ... UNSET MANAGED` within 14 days if needed  
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> `ALTER TABLE ... SET MANAGED` converts an external Delta table to a managed table in place. It keeps the name, settings, permissions, views, and table history, and needs Databricks Runtime 17.3 LTS+ or serverless and ownership of the table. `UNSET MANAGED` points the table back to its original external location, and it is available for 14 days after the conversion.
+>
+> Dropping and re-creating, or cloning and swapping names, produces a new table that loses its grants and history. `RESTORE` restores data versions, not the table type. Existing read and write streams fail after the conversion and need a restart.
+
+---
+
+## Question 43 *(Hard)*
+
+In a Unity Catalog-enabled workspace, an engineer runs `DENY SELECT ON TABLE prod.gold.revenue TO contractors`, and the statement fails. Contractors must not read the table. What is the correct approach?
+
+A) Run the same `DENY` statement as the table owner, because `DENY` requires ownership  
+B) `REVOKE SELECT ON TABLE prod.gold.revenue FROM contractors` (and from any groups that give them access), or don't grant it at all  
+C) Apply the `DENY` at the catalog level instead, so it is inherited by the table  
+D) Run `ALTER TABLE prod.gold.revenue SET DENY SELECT FOR contractors`  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Delta Sharing is an open, REST-based protocol that enables sharing live Delta Lake data with external organizations without copying data or requiring the recipient to use Databricks. Recipients access shared data using open-source Delta Sharing clients in Python, Spark, or pandas. External Locations manage access to cloud storage within the same organization, not across organizations.
+> The classic `DENY` statement is a legacy Hive metastore feature. In Unity Catalog, read access comes from `SELECT` granted on the table or inherited from a parent catalog or schema, directly or through a group, so you remove access with `REVOKE`, including from the groups the contractors belong to, or by never granting it. Partial access is handled with row filters, column masks, or ABAC policies.
+>
+> Unity Catalog's only deny mechanism is the ABAC DENY policy (Beta), which currently covers just `MANAGE ACCESS CONTROL`, not `SELECT`. `SET DENY` is not valid syntax.
 
 ---
 
@@ -751,10 +785,10 @@ D) DBFS mount with public access enabled
 
 A data engineering team creates Unity Catalog external tables pointing to existing data in S3. Which Unity Catalog objects must be configured, and in what order?
 
-A) Storage Credential only — it automatically creates External Locations for referenced paths
-B) External Location only — it includes embedded credential configuration
-C) Catalog first, then Schema, then External Location
-D) Storage Credential first (defines the IAM identity), then External Location (maps the cloud path to the credential)
+A) Storage Credential only — it automatically creates External Locations for referenced paths  
+B) External Location only — it includes embedded credential configuration  
+C) Catalog first, then Schema, then External Location  
+D) Storage Credential first (defines the IAM identity), then External Location (maps the cloud path to the credential)  
 
 > [!success]- Answer
 > **Correct Answer: D**
@@ -767,10 +801,10 @@ D) Storage Credential first (defines the IAM identity), then External Location (
 
 A data engineer wants to audit who accessed a specific Unity Catalog table and when. Which Databricks feature provides this capability?
 
-A) Delta Lake transaction log (`_delta_log`) — records all read and write operations
-B) Databricks system tables (`system.access.audit`) — captures access events including table reads
-C) Unity Catalog lineage graph — shows data flow but not individual user access events
-D) Spark UI history server — stores query history with user attribution
+A) Delta Lake transaction log (`_delta_log`) — records all read and write operations  
+B) Databricks system tables (`system.access.audit`) — captures access events including table reads  
+C) Unity Catalog lineage graph — shows data flow but not individual user access events  
+D) Spark UI history server — stores query history with user attribution  
 
 > [!success]- Answer
 > **Correct Answer: B**
@@ -783,21 +817,21 @@ D) Spark UI history server — stores query history with user attribution
 
 | # | Answer | # | Answer | # | Answer |
 |---|--------|---|--------|---|--------|
-| 1 | B | 16 | B | 31 | A |
-| 2 | C | 17 | C | 32 | C |
-| 3 | B | 18 | C | 33 | B |
-| 4 | B | 19 | B | 34 | B |
-| 5 | B | 20 | B | 35 | B |
-| 6 | B | 21 | B | 36 | C |
-| 7 | B | 22 | B | 37 | B |
-| 8 | B | 23 | B | 38 | B |
-| 9 | D | 24 | B | 39 | B |
-| 10 | C | 25 | C | 40 | B |
-| 11 | D | 26 | C | 41 | B |
-| 12 | B | 27 | B | 42 | C |
-| 13 | B | 28 | C | 43 | B |
-| 14 | B | 29 | B | 44 | D |
-| 15 | B | 30 | B | 45 | B |
+| 1 | D | 16 | B | 31 | D |
+| 2 | C | 17 | A | 32 | D |
+| 3 | C | 18 | B | 33 | A |
+| 4 | A | 19 | C | 34 | A |
+| 5 | A | 20 | C | 35 | B |
+| 6 | C | 21 | B | 36 | A |
+| 7 | B | 22 | C | 37 | B |
+| 8 | D | 23 | D | 38 | D |
+| 9 | B | 24 | C | 39 | B |
+| 10 | D | 25 | D | 40 | A |
+| 11 | A | 26 | D | 41 | C |
+| 12 | A | 27 | B | 42 | D |
+| 13 | D | 28 | A | 43 | B |
+| 14 | C | 29 | C | 44 | D |
+| 15 | C | 30 | A | 45 | B |
 
 ---
 
@@ -815,13 +849,13 @@ D) Spark UI history server — stores query history with user attribution
 
 | Domain (Aug 2026 weight) | Questions | Your Score | Percentage |
 | ------ | --------- | ---------- | ---------- |
-| Databricks Intelligence Platform (6 %) | 1–11 (11 questions) | ___/11 | ___% |
-| Data Ingestion and Loading (21 %) | 12–14 (3 questions) | ___/3 | ___% |
-| Data Transformation and Modeling (22 %) | 15–33 (19 questions) | ___/19 | ___% |
-| Working with Lakeflow Jobs (16 %) | 34–36 (3 questions) | ___/3 | ___% |
-| Implementing CI/CD (10 %) | none in this mock (see practice questions) | — | — |
-| Troubleshooting, Monitoring, and Optimization (10 %) | 37–40 (4 questions) | ___/4 | ___% |
-| Governance and Security (15 %) | 41–45 (5 questions) | ___/5 | ___% |
+| Databricks Intelligence Platform (6 %) | 1–3 (3 questions) | ___/3 | ___% |
+| Data Ingestion and Loading (21 %) | 4–12 (9 questions) | ___/9 | ___% |
+| Data Transformation and Modeling (22 %) | 13–22 (10 questions) | ___/10 | ___% |
+| Working with Lakeflow Jobs (16 %) | 23–29 (7 questions) | ___/7 | ___% |
+| Implementing CI/CD (10 %) | 30–34 (5 questions) | ___/5 | ___% |
+| Troubleshooting, Monitoring, and Optimization (10 %) | 35–38 (4 questions) | ___/4 | ___% |
+| Governance and Security (15 %) | 39–45 (7 questions) | ___/7 | ___% |
 | **Total** | **45 questions** | **___/45** | **___%** |
 
 ---

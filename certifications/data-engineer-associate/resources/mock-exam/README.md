@@ -21,17 +21,17 @@ Simulate the real exam under timed conditions before your test date.
 
 ## Domain Distribution
 
-Questions are grouped by the 7 domains of the August 2026 exam guide. The last column shows the share of 45 questions each domain would get at its official weight. This mock was written before the 2026 blueprint, so it over-samples platform and transformation topics. Cover the gap with the matching [practice questions](../practice-questions/README.md).
+Questions are grouped by the 7 domains of the August 2026 exam guide. Since the October 2026 rebalance, each domain gets its share of the 45 questions at the official weight, rounded to whole questions. CI/CD and Troubleshooting both come to 4.5, so they are split 5 and 4.
 
-| Domain | Official weight | Questions in this mock | ≈ Official share of 45 |
+| Domain | Official weight | Share of 45 at that weight | Questions in this mock |
 | ------ | :---: | :---: | :---: |
-| Databricks Intelligence Platform | 6 % | 11 | ~3 |
-| Data Ingestion and Loading | 21 % | 3 | ~9 |
-| Data Transformation and Modeling | 22 % | 19 | ~10 |
-| Working with Lakeflow Jobs | 16 % | 3 | ~7 |
-| Implementing CI/CD | 10 % | 0 | ~5 |
-| Troubleshooting, Monitoring, and Optimization | 10 % | 4 | ~4 |
-| Governance and Security | 15 % | 5 | ~7 |
+| Databricks Intelligence Platform | 6 % | 2.7 | 3 |
+| Data Ingestion and Loading | 21 % | 9.45 | 9 |
+| Data Transformation and Modeling | 22 % | 9.9 | 10 |
+| Working with Lakeflow Jobs | 16 % | 7.2 | 7 |
+| Implementing CI/CD | 10 % | 4.5 | 5 |
+| Troubleshooting, Monitoring, and Optimization | 10 % | 4.5 | 4 |
+| Governance and Security | 15 % | 6.75 | 7 |
 | **Total** | **100 %** | **45** | **45** |
 
 ## How to Take This Exam

@@ -11,17 +11,17 @@ tags:
 
 ## Domain → study-resource mapping
 
-| Domain (weight) | Topic folder | Cheat sheet |
-| :--- | :--- | :--- |
-| Executing Queries (20 %) | [`01-executing-queries-databricks-sql-warehouses/`](../../01-executing-queries-databricks-sql-warehouses/README.md) | [`sql-functions`](../../../../shared/cheat-sheets/sql-functions.md) |
-| Creating Dashboards & Visualizations (16 %) | [`02-creating-dashboards-and-visualizations/`](../../02-creating-dashboards-and-visualizations/README.md) | — |
-| Analyzing Queries (15 %) | [`03-analyzing-queries/`](../../03-analyzing-queries/README.md) | [`sql-functions`](../../../../shared/cheat-sheets/sql-functions.md) |
-| AI/BI Genie Spaces (12 %) | [`04-developing-sharing-maintaining-genie-spaces/`](../../04-developing-sharing-maintaining-genie-spaces/README.md) | — |
-| Understanding Platform (11 %) | [`05-understanding-databricks-platform/`](../../05-understanding-databricks-platform/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| Managing Data (8 %) | [`06-managing-data/`](../../06-managing-data/README.md) | [`delta-lake-commands`](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| Securing Data (8 %) | [`07-securing-data/`](../../07-securing-data/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| Importing Data (5 %) | [`08-importing-data/`](../../08-importing-data/README.md) | [`auto-loader-quick-ref`](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
-| Data Modeling with DBSQL (5 %) | [`09-data-modeling-with-databricks-sql/`](../../09-data-modeling-with-databricks-sql/README.md) | — |
+| Domain (weight) | Topic folder | Cheat sheet | Questions in this mock |
+| :--- | :--- | :--- | :---: |
+| Executing Queries (20 %) | [`01-executing-queries-databricks-sql-warehouses/`](../../01-executing-queries-databricks-sql-warehouses/README.md) | [`sql-functions`](../../../../shared/cheat-sheets/sql-functions.md) | 9 |
+| Creating Dashboards & Visualizations (16 %) | [`02-creating-dashboards-and-visualizations/`](../../02-creating-dashboards-and-visualizations/README.md) | — | 7 |
+| Analyzing Queries (15 %) | [`03-analyzing-queries/`](../../03-analyzing-queries/README.md) | [`sql-functions`](../../../../shared/cheat-sheets/sql-functions.md) | 7 |
+| AI/BI Genie Spaces (12 %) | [`04-developing-sharing-maintaining-genie-spaces/`](../../04-developing-sharing-maintaining-genie-spaces/README.md) | — | 5 |
+| Understanding Platform (11 %) | [`05-understanding-databricks-platform/`](../../05-understanding-databricks-platform/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) | 5 |
+| Managing Data (8 %) | [`06-managing-data/`](../../06-managing-data/README.md) | [`delta-lake-commands`](../../../../shared/cheat-sheets/delta-lake-commands.md) | 4 |
+| Securing Data (8 %) | [`07-securing-data/`](../../07-securing-data/README.md) | [`unity-catalog-quick-ref`](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) | 4 |
+| Importing Data (5 %) | [`08-importing-data/`](../../08-importing-data/README.md) | [`auto-loader-quick-ref`](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) | 2 |
+| Data Modeling with DBSQL (5 %) | [`09-data-modeling-with-databricks-sql/`](../../09-data-modeling-with-databricks-sql/README.md) | — | 2 |
 
 ## Per-question quick map
 
@@ -29,60 +29,55 @@ Every question in this mock mapped to its primary October 2025 domain, with the 
 
 | Q# | Difficulty | Domain | Topic folder | Cheat sheet |
 | :---: | :---: | :--- | :--- | :--- |
-| 1 | Medium | Platform | [05-understanding-databricks-platform](../../05-understanding-databricks-platform/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 2 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 3 | Easy | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 4 | Easy | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 5 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 6 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 7 | Medium | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 8 | Easy | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 1 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 2 | Easy | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 3 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 4 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 5 | Easy | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 6 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 7 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 8 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
 | 9 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 10 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 11 | Easy | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 12 | Hard | Securing Data | [07-securing-data](../../07-securing-data/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 13 | Easy | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 14 | Medium | Securing Data | [07-securing-data](../../07-securing-data/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 15 | Easy | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 16 | Medium | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 17 | Easy | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 18 | Medium | Platform | [05-understanding-databricks-platform](../../05-understanding-databricks-platform/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 19 | Easy | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 20 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 21 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 22 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 23 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 24 | Medium | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 25 | Easy | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 26 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 27 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 28 | Medium | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 29 | Hard | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 30 | Easy | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 31 | Easy | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 32 | Hard | Executing Queries | [01-executing-queries-databricks-sql-warehouses](../../01-executing-queries-databricks-sql-warehouses/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 33 | Easy | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 34 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 35 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 36 | Easy | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 37 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 38 | Hard | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 39 | Hard | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 40 | Hard | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 41 | Easy | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 42 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 43 | Medium | Securing Data | [07-securing-data](../../07-securing-data/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 44 | Hard | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| 45 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| GS-1 | Medium | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| GS-2 | Medium | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| GS-3 | Medium | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| DASH-1 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
-| DM-1 | Medium | Data Modeling | [09-data-modeling-with-databricks-sql](../../09-data-modeling-with-databricks-sql/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 10 | Easy | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 11 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 12 | Hard | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 13 | Easy | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 14 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 15 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 16 | Medium | Dashboards & Visualizations | [02-creating-dashboards-and-visualizations](../../02-creating-dashboards-and-visualizations/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 17 | Easy | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 18 | Medium | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 19 | Medium | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 20 | Easy | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 21 | Easy | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 22 | Hard | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 23 | Medium | Analyzing Queries | [03-analyzing-queries](../../03-analyzing-queries/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 24 | Medium | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 25 | Medium | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 26 | Medium | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 27 | Easy | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 28 | Medium | AI/BI Genie Spaces | [04-developing-sharing-maintaining-genie-spaces](../../04-developing-sharing-maintaining-genie-spaces/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 29 | Medium | Platform | [05-understanding-databricks-platform](../../05-understanding-databricks-platform/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 30 | Medium | Platform | [05-understanding-databricks-platform](../../05-understanding-databricks-platform/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 31 | Easy | Platform | [05-understanding-databricks-platform](../../05-understanding-databricks-platform/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 32 | Medium | Platform | [05-understanding-databricks-platform](../../05-understanding-databricks-platform/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 33 | Easy | Platform | [05-understanding-databricks-platform](../../05-understanding-databricks-platform/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 34 | Easy | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 35 | Medium | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 36 | Easy | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 37 | Medium | Managing Data | [06-managing-data](../../06-managing-data/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 38 | Medium | Securing Data | [07-securing-data](../../07-securing-data/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 39 | Hard | Securing Data | [07-securing-data](../../07-securing-data/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 40 | Medium | Securing Data | [07-securing-data](../../07-securing-data/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 41 | Medium | Securing Data | [07-securing-data](../../07-securing-data/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 42 | Easy | Importing Data | [08-importing-data](../../08-importing-data/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 43 | Medium | Importing Data | [08-importing-data](../../08-importing-data/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 44 | Easy | Data Modeling | [09-data-modeling-with-databricks-sql](../../09-data-modeling-with-databricks-sql/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
+| 45 | Medium | Data Modeling | [09-data-modeling-with-databricks-sql](../../09-data-modeling-with-databricks-sql/README.md) | [sql-functions](../../../../shared/cheat-sheets/sql-functions.md) |
 
 ## Per-section question map
 
-The mock's `questions.md` still uses the five pre-2025 section headings (Databricks SQL, Data Management, SQL Queries, Dashboards & Visualization, Analytics Applications), followed by five refresh questions. Use the per-question map above, or the table below, to translate a missed question to the October 2025 domains.
+`questions.md` groups the questions under the nine official domain headings. Use the per-question map above, or the table below, to match a scenario topic to its October 2025 domain.
 
 | Topic in the scenario | Maps to official domain (weight) |
 | :--- | :--- |
@@ -96,9 +91,6 @@ The mock's `questions.md` still uses the five pre-2025 section headings (Databri
 | Namespace, GRANT/REVOKE, row filters, column masks, audit | Securing Data (8 %) |
 | UI upload / `COPY INTO` / Lakehouse Federation read | Importing Data (5 %) |
 | Star vs snowflake, view vs MV, medallion | Data Modeling with DBSQL (5 %) |
-| Refresh: GS-1, GS-2, GS-3 | Genie Spaces (12 %) |
-| Refresh: DASH-1 | Creating Dashboards (16 %) |
-| Refresh: DM-1 | Data Modeling with DBSQL (5 %) |
 
 ## Study plan by miss count (45-question mock)
 
