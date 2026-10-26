@@ -741,9 +741,9 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 
 ## Related Topics
 
-- [Expectations and Data Quality](../03-data-transformation-cleansing-quality/03-expectations-data-quality.md) - Quality constraints
-- [APPLY CHANGES API](../03-data-transformation-cleansing-quality/04-apply-changes-api.md) - CDC processing
-- [Lakeflow Jobs](./07-lakeflow-jobs-part1.md) - Pipeline orchestration
+- [Expectations and Data Quality](../03-data-manipulation/06-expectations-data-quality.md) - Quality constraints
+- [APPLY CHANGES API](07-auto-cdc-api.md) - CDC processing
+- [Lakeflow Jobs](./08-lakeflow-jobs-part1.md) - Pipeline orchestration
 - [Event Logs](../04-monitoring-and-alerting/02-lakeflow-event-logs.md) - Monitoring
 
 ## Official Documentation
@@ -755,4 +755,4 @@ databricks pipelines start --pipeline-id abc123 --full-refresh
 
 ---
 
-**[↑ Back to Lakeflow Pipelines](./README.md) | [Next: Expectations and Data Quality](../03-data-transformation-cleansing-quality/03-expectations-data-quality.md) →**
+**[↑ Back to Lakeflow Pipelines](./README.md) | [Next: Expectations and Data Quality](../03-data-manipulation/06-expectations-data-quality.md) →**

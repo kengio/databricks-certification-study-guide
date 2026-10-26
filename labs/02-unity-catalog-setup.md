@@ -205,8 +205,8 @@ DROP SCHEMA IF EXISTS lab_uc.hr CASCADE;
 
 - [Unity Catalog basics (shared)](../shared/fundamentals/unity-catalog-basics.md)
 - [Unity Catalog cheat sheet (shared)](../shared/cheat-sheets/unity-catalog-quick-ref.md)
-- [DE Pro — Data Governance](../certifications/data-engineer-professional/08-data-governance/README.md)
-- [DE Pro — Ensuring Data Security and Compliance](../certifications/data-engineer-professional/05-ensuring-data-security-and-compliance/README.md)
+- [DE Pro — Data Governance](../certifications/data-engineer-professional/07-data-governance/README.md)
+- [DE Pro — Ensuring Data Security and Compliance](../certifications/data-engineer-professional/06-ensuring-data-security-and-compliance/README.md)
 - [DA — Securing Data](../certifications/data-analyst-associate/07-securing-data/README.md)
 
 ---

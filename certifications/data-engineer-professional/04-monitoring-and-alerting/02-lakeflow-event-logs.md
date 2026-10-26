@@ -529,7 +529,7 @@ WHERE event_type = 'flow_progress';
 ## Related Topics
 
 - [Lakeflow Pipelines](../01-developing-code-for-data-processing/06-declarative-pipelines.md) - Lakeflow Declarative Pipelines basics
-- [Expectations](../03-data-transformation-cleansing-quality/03-expectations-data-quality.md) - Data quality
+- [Expectations](../03-data-manipulation/06-expectations-data-quality.md) - Data quality
 - [System Tables](01-system-tables.md) - Account-level monitoring
 
 ## Official Documentation
@@ -540,4 +540,4 @@ WHERE event_type = 'flow_progress';
 
 ---
 
-**[← Previous: Spark UI Debugging](../06-debugging-and-deploying/07-spark-ui-debugging.md) | [↑ Back to Monitoring & Logging](./README.md) | [Next: Query Profiler](./03-query-profiler.md) →**
+**[← Previous: Spark UI Debugging](../08-debugging-and-deploying/01-spark-ui-debugging.md) | [↑ Back to Monitoring & Logging](./README.md) | [Next: Query Profiler](../05-cost-and-performance-optimization/05-query-profiler.md) →**

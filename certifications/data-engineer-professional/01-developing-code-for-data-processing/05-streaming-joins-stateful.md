@@ -13,7 +13,7 @@ status: published
 
 This guide covers advanced Structured Streaming join patterns and stateful operations: stream-stream joins, stream-static joins, stateful aggregations, advanced watermarking, and streaming deduplication.
 
-> For streaming basics (triggers, output modes, sources, sinks, foreachBatch), see [Structured Streaming](03-structured-streaming-part1.md).
+> For streaming basics (triggers, output modes, sources, sinks, foreachBatch), see [Structured Streaming](04-structured-streaming-part1.md).
 
 ## Stream-Stream Joins
 
@@ -767,8 +767,8 @@ D) `foreachBatch` with MERGE on sensor_id
 
 ## Next
 
-Continue with [Streaming Monitoring & Optimization](../04-monitoring-and-alerting/04-streaming-monitoring-optimization.md) for back-pressure management, streaming monitoring & troubleshooting, state store deep dive, practice questions, and exam tips.
+Continue with [Streaming Monitoring & Optimization](../04-monitoring-and-alerting/06-streaming-monitoring-optimization.md) for back-pressure management, streaming monitoring & troubleshooting, state store deep dive, practice questions, and exam tips.
 
 ---
 
-**[← Previous: Data Deduplication](../03-data-transformation-cleansing-quality/02-data-deduplication.md) | [↑ Back to Data Processing](./README.md) | [Next: Streaming Monitoring & Optimization](../04-monitoring-and-alerting/04-streaming-monitoring-optimization.md) →**
+**[← Previous: Data Deduplication](../03-data-manipulation/03-data-deduplication.md) | [↑ Back to Data Processing](./README.md) | [Next: Streaming Monitoring & Optimization](../04-monitoring-and-alerting/06-streaming-monitoring-optimization.md) →**

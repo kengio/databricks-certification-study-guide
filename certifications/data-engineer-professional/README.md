@@ -61,15 +61,15 @@ The folder structure below matches the November 30, 2025 official 10-domain blue
 | Section                                                                                | Weight | Focus |
 | -------------------------------------------------------------------------------------- | :----: | :--- |
 | [01 — Developing Code for Data Processing](./01-developing-code-for-data-processing/README.md) | 22 %   | Batch + streaming code, Delta ops, Lakeflow Declarative Pipelines, Lakeflow Jobs |
-| [02 — Cost & Performance Optimization](./02-cost-and-performance-optimization/README.md) | 13 %   | File sizing, Z-ORDER / liquid clustering, Spark tuning, Photon, compute selection |
-| [03 — Data Transformation, Cleansing, Quality](./03-data-transformation-cleansing-quality/README.md) | 10 % | CDC, deduplication, expectations, `APPLY CHANGES INTO` |
+| [02 — Cost & Performance Optimization](05-cost-and-performance-optimization/README.md) | 13 %   | File sizing, Z-ORDER / liquid clustering, Spark tuning, Photon, compute selection |
+| [03 — Data Transformation, Cleansing, Quality](03-data-manipulation/README.md) | 10 % | CDC, deduplication, expectations, `APPLY CHANGES INTO` |
 | [04 — Monitoring and Alerting](./04-monitoring-and-alerting/README.md)                 | 10 %   | System tables, Lakeflow event log, query profiler, streaming monitoring |
-| [05 — Ensuring Data Security and Compliance](./05-ensuring-data-security-and-compliance/README.md) | 10 % | Access control, secrets, audit/lineage, network security |
-| [06 — Debugging and Deploying](./06-debugging-and-deploying/README.md)                 | 10 %   | Asset Bundles, CI/CD, Git folders, unit testing, Spark UI, CLI, REST API |
-| [07 — Data Ingestion & Acquisition](./07-data-ingestion-and-acquisition/README.md)     |  7 %   | Auto Loader, batch ingestion patterns |
-| [08 — Data Governance](./08-data-governance/README.md)                                 |  7 %   | Unity Catalog, UC Volumes vs DBFS |
-| [09 — Data Modelling](./09-data-modelling/README.md)                                   |  6 %   | Medallion architecture, Delta fundamentals, schema management, SCD |
-| [10 — Data Sharing and Federation](./10-data-sharing-and-federation/README.md)         |  5 %   | Delta Sharing, Lakehouse Federation |
+| [05 — Ensuring Data Security and Compliance](06-ensuring-data-security-and-compliance/README.md) | 10 % | Access control, secrets, audit/lineage, network security |
+| [06 — Debugging and Deploying](08-debugging-and-deploying/README.md)                 | 10 %   | Asset Bundles, CI/CD, Git folders, unit testing, Spark UI, CLI, REST API |
+| [07 — Data Ingestion & Acquisition](02-data-ingestion-and-acquisition/README.md)     |  7 %   | Auto Loader, batch ingestion patterns |
+| [08 — Data Governance](07-data-governance/README.md)                                 |  7 %   | Unity Catalog, UC Volumes vs DBFS |
+| [09 — Data Modelling](09-data-modeling/README.md)                                   |  6 %   | Medallion architecture, Delta fundamentals, schema management, SCD |
+| [10 — Data Sharing and Federation](02-data-ingestion-and-acquisition/README.md)         |  5 %   | Delta Sharing, Lakehouse Federation |
 
 ### Practice Exams
 

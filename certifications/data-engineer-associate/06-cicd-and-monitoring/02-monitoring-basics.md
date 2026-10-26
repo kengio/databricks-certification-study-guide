@@ -133,7 +133,7 @@ ORDER BY start_time DESC;
 - [Asset Bundles and Git Folders](./01-asset-bundles-and-git-folders.md)
 - [DE Associate — Workflows & Orchestration](../04-workflows-orchestration/03-job-monitoring.md)
 - [DE Pro — Monitoring and Alerting (deeper)](../../data-engineer-professional/04-monitoring-and-alerting/README.md)
-- [DE Pro — Spark UI debugging](../../data-engineer-professional/06-debugging-and-deploying/07-spark-ui-debugging.md)
+- [DE Pro — Spark UI debugging](../../data-engineer-professional/08-debugging-and-deploying/01-spark-ui-debugging.md)
 
 ## Official Documentation
 

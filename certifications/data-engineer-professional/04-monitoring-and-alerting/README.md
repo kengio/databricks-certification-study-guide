@@ -28,8 +28,8 @@ flowchart LR
 | :--- | :--- | :--- |
 | [01-system-tables.md](./01-system-tables.md) | `system.access`, `system.compute`, `system.billing` — querying audit, lineage, usage | High |
 | [02-lakeflow-event-logs.md](./02-lakeflow-event-logs.md) | Pipeline event log: expectations, flow progress, data quality events | High |
-| [03-query-profiler.md](./03-query-profiler.md) | Databricks SQL query profiler, reading task timelines | High |
-| [04-streaming-monitoring-optimization.md](./04-streaming-monitoring-optimization.md) | StreamingQueryListener, back-pressure, state-store monitoring, troubleshooting | High |
+| [03-query-profiler.md](../05-cost-and-performance-optimization/05-query-profiler.md) | Databricks SQL query profiler, reading task timelines | High |
+| [04-streaming-monitoring-optimization.md](./06-streaming-monitoring-optimization.md) | StreamingQueryListener, back-pressure, state-store monitoring, troubleshooting | High |
 
 ## Key Concepts to Master
 
@@ -50,4 +50,4 @@ flowchart LR
 
 ---
 
-**[← Previous: Data Transformation](../03-data-transformation-cleansing-quality/README.md) | [↑ Back to DE Professional](../README.md) | [Next: Ensuring Data Security and Compliance →](../05-ensuring-data-security-and-compliance/README.md)**
+**[← Previous: Data Transformation](../03-data-manipulation/README.md) | [↑ Back to DE Professional](../README.md) | [Next: Ensuring Data Security and Compliance →](../06-ensuring-data-security-and-compliance/README.md)**

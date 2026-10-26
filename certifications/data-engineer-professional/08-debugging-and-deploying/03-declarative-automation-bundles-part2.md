@@ -1,0 +1,419 @@
+---
+title: Asset Bundles — Part 2
+type: topic
+tags:
+  - data-engineering
+  - dab
+  - deployment
+  - bundles
+status: published
+---
+
+# Databricks Asset Bundles (DAB) — Part 2
+
+This part covers sync and state management, CI/CD integration, bundle templates, common patterns, common issues, and exam tips for Databricks Asset Bundles.
+
+> For bundle structure, resource definitions, variables, commands, target configuration, and artifact packaging, see [Part 1](./03-declarative-automation-bundles-part1.md).
+
+## Sync and State Management
+
+### Sync Configuration
+
+```yaml
+# databricks.yml
+
+sync:
+  include:
+    - "src/**"
+    - "resources/**"
+  exclude:
+    - "**/__pycache__"
+    - "*.pyc"
+    - ".git/**"
+    - "tests/**"
+```
+
+### State Files
+
+```text
+Bundle state is stored locally:
+
+.databricks/
+├── bundle/
+│   ├── dev/
+│   │   └── terraform.tfstate
+│   └── prod/
+│       └── terraform.tfstate
+
+# Add to .gitignore:
+
+.databricks/
+```
+
+## Integration with CI/CD
+
+### GitHub Actions Workflow
+
+```yaml
+# .github/workflows/deploy.yml
+
+name: Deploy Bundle
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Validate bundle
+        run: databricks bundle validate -t staging
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+  deploy-staging:
+    needs: validate
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: databricks/setup-cli@main
+
+      - name: Deploy to staging
+        run: databricks bundle deploy -t staging
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+      - name: Run integration tests
+        run: databricks bundle run integration_tests -t staging
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+  deploy-prod:
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: databricks/setup-cli@main
+
+      - name: Deploy to production
+        run: databricks bundle deploy -t prod
+        env:
+          DATABRICKS_HOST: ${{ secrets.PROD_DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.PROD_DATABRICKS_TOKEN }}
+```
+
+### Azure DevOps Pipeline
+
+```yaml
+# azure-pipelines.yml
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Validate
+    jobs:
+      - job: ValidateBundle
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.10'
+
+          - script: |
+              curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+            displayName: 'Install Databricks CLI'
+
+          - script: databricks bundle validate -t staging
+            displayName: 'Validate Bundle'
+            env:
+              DATABRICKS_HOST: $(DATABRICKS_HOST)
+              DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+
+  - stage: DeployProd
+    dependsOn: Validate
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployProduction
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: databricks bundle deploy -t prod
+                  env:
+                    DATABRICKS_HOST: $(PROD_HOST)
+                    DATABRICKS_TOKEN: $(PROD_TOKEN)
+```
+
+## Bundle Templates
+
+### Available Templates
+
+```bash
+# List available templates
+
+databricks bundle init --help
+
+# Initialize from default template
+
+databricks bundle init
+
+# Initialize from specific template
+
+databricks bundle init default-python
+
+# Initialize from custom template URL
+
+databricks bundle init https://github.com/company/bundle-template
+```
+
+### Custom Template Structure
+
+```text
+my-template/
+├── databricks_template_schema.json
+├── template/
+│   ├── databricks.yml.tmpl
+│   ├── resources/
+│   │   └── {{.project_name}}_job.yml.tmpl
+│   └── src/
+│       └── notebooks/
+│           └── main.py.tmpl
+```
+
+### Template Schema
+
+```json
+{
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "description": "Project name",
+      "default": "my_project"
+    },
+    "include_dlt": {
+      "type": "boolean",
+      "description": "Include Lakeflow Declarative Pipeline",
+      "default": false
+    }
+  }
+}
+```
+
+## Common Patterns
+
+### Multi-Environment Deployment
+
+```yaml
+# databricks.yml
+
+variables:
+  environment:
+    default: dev
+
+targets:
+  dev:
+    variables:
+      environment: dev
+    workspace:
+      host: https://dev.cloud.databricks.com
+
+  staging:
+    variables:
+      environment: staging
+    workspace:
+      host: https://staging.cloud.databricks.com
+
+  prod:
+    variables:
+      environment: prod
+    workspace:
+      host: https://prod.cloud.databricks.com
+    run_as:
+      service_principal_name: prod-sp
+```
+
+### Shared Resources Across Teams
+
+```yaml
+# Include shared configurations
+
+include:
+  - ./shared/common-clusters.yml
+  - ./shared/notification-settings.yml
+  - ./team-specific/*.yml
+```
+
+### Parameterized Notebooks
+
+```python
+# In notebook
+
+dbutils.widgets.text("catalog", "dev_catalog")
+dbutils.widgets.text("environment", "dev")
+
+catalog = dbutils.widgets.get("catalog")
+environment = dbutils.widgets.get("environment")
+
+# Use in queries
+
+spark.sql(f"USE CATALOG {catalog}")
+```
+
+## Use Cases
+
+- **Environment Promotion**: Defining `dev`, `staging`, and `prod` targets in `databricks.yml` to deploy the exact same pipeline configuration across different workspaces with environment-specific variables.
+- **Infrastructure as Code**: Managing job schedules, cluster definitions, and Lakeflow Declarative Pipelines pipeline configurations alongside the Python code in a single version-controlled repository.
+
+## Common Issues & Errors
+
+### Bundle Validation Fails
+
+**Scenario:** `databricks bundle validate` returns errors.
+
+**Common causes and fixes:**
+
+```bash
+
+# Missing required variables
+# Error: variable 'db_password' is required but not set
+
+# Fix: Provide variable
+
+databricks bundle validate --var db_password=secret
+
+# Or set environment variable
+
+export BUNDLE_VAR_db_password=secret
+```
+
+### Permission Denied on Deploy
+
+**Scenario:** Deploy fails with permission error.
+
+**Fix:** Check workspace permissions and run_as configuration:
+
+```yaml
+targets:
+  prod:
+    run_as:
+      service_principal_name: sp-with-correct-permissions
+    permissions:
+      - level: CAN_MANAGE
+        group_name: data-engineers
+```
+
+### Resource Already Exists
+
+**Scenario:** Deploy fails because resource exists.
+
+**Fix:** Either destroy existing or import:
+
+```bash
+# Destroy and redeploy
+
+databricks bundle destroy -t dev
+databricks bundle deploy -t dev
+
+# Or modify to allow updates
+# Check for naming conflicts in development mode
+
+```
+
+### State File Conflicts
+
+**Scenario:** State file out of sync with workspace.
+
+**Fix:** Refresh or remove state:
+
+```bash
+# Remove local state (will recreate)
+
+rm -rf .databricks/bundle/dev/
+
+# Redeploy
+
+databricks bundle deploy -t dev
+```
+
+### Artifact Build Failure
+
+**Scenario:** Wheel build fails during deploy.
+
+**Fix:** Verify build command and dependencies:
+
+```bash
+# Test build locally first
+
+cd src/python
+poetry build  # or python setup.py bdist_wheel
+
+# Check artifact configuration
+
+artifacts:
+  my_package:
+    type: whl
+    path: ./src/python
+    build: poetry build  # Ensure command is correct
+```
+
+## Exam Tips
+
+1. **Bundle structure** - Know standard project layout (databricks.yml, resources/, src/)
+2. **Target modes** - development vs production mode differences
+3. **Variable syntax** - `${var.name}`, `${bundle.target}`, `${workspace.current_user.userName}`
+4. **Commands** - validate, deploy, run, destroy, summary
+5. **Development mode** - Prefixes names, pauses schedules, uses personal paths
+6. **run_as** - Required for production deployments, uses service principal
+7. **Include directive** - Combine multiple YAML files
+8. **Artifacts** - Build and deploy Python wheels, JARs
+9. **Sync exclude** - Prevent unwanted files from deploying
+10. **State management** - Local .databricks/ folder, target-specific state
+
+## Key Takeaways
+
+- **Development mode behavior**: When `mode: development` is set, DAB automatically prefixes resource names with the user's name, pauses all job schedules, and deploys to user-specific workspace paths.
+- **Variable syntax**: Reference bundle variables with `${var.name}`, dynamic context with `${bundle.target}` and `${workspace.current_user.userName}`.
+- **Core CLI commands**: `validate` checks configuration without deploying; `deploy` creates/updates resources; `run` triggers a specific job or pipeline; `destroy` removes all bundle resources.
+- **run_as requirement**: Production deployments must specify `run_as` with a service principal name so the job runs under a fixed identity rather than the deploying user's credentials.
+- **State files**: DAB stores Terraform state in `.databricks/bundle/<target>/` locally — always add `.databricks/` to `.gitignore` and never commit state files.
+- **Sync exclude**: Use `sync.exclude` patterns to prevent test files, `__pycache__`, and `.git` from being uploaded to the workspace during deployment.
+- **Artifacts**: DAB can build and deploy Python wheel (`.whl`) and JAR artifacts automatically as part of `bundle deploy` using the `artifacts:` section.
+- **Multi-YAML composition**: Use the `include:` directive to merge shared cluster definitions, notification settings, and permission configurations across team bundles without duplication.
+
+## Related Topics
+
+- [CI/CD Integration](05-cicd-integration-part1.md) - Pipeline workflows
+- [Git Folders](06-git-folders.md) - Version control integration
+
+## Official Documentation
+
+- [Databricks Asset Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
+- [Bundle Configuration](https://docs.databricks.com/dev-tools/bundles/settings.html)
+- [Bundle Templates](https://docs.databricks.com/dev-tools/bundles/templates.html)
+- [CI/CD with Bundles](https://docs.databricks.com/dev-tools/bundles/ci-cd.html)
+
+---
+
+**[← Previous: Asset Bundles — Part 1](./03-declarative-automation-bundles-part1.md) | [↑ Back to Testing & Deployment](./README.md) | [Next: CI/CD Integration — Part 1 (Platforms & Configuration)](./05-cicd-integration-part1.md) →**

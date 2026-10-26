@@ -583,9 +583,9 @@ WHERE event_time >= current_timestamp() - INTERVAL 7 DAYS
 
 ## Related Topics
 
-- [Spark UI Debugging](../06-debugging-and-deploying/07-spark-ui-debugging.md) - Job-level monitoring
-- [Query Profiler](./03-query-profiler.md) - Query optimization
-- [Access Control](../05-ensuring-data-security-and-compliance/01-access-control.md) - Audit for compliance
+- [Spark UI Debugging](../08-debugging-and-deploying/01-spark-ui-debugging.md) - Job-level monitoring
+- [Query Profiler](../05-cost-and-performance-optimization/05-query-profiler.md) - Query optimization
+- [Access Control](../06-ensuring-data-security-and-compliance/01-access-control.md) - Audit for compliance
 
 ## Official Documentation
 
@@ -596,4 +596,4 @@ WHERE event_time >= current_timestamp() - INTERVAL 7 DAYS
 
 ---
 
-**[↑ Back to Monitoring & Logging](./README.md) | [Next: Spark UI Debugging](../06-debugging-and-deploying/07-spark-ui-debugging.md) →**
+**[↑ Back to Monitoring & Logging](./README.md) | [Next: Spark UI Debugging](../08-debugging-and-deploying/01-spark-ui-debugging.md) →**

@@ -6,10 +6,10 @@ Screenshots for the Databricks Jobs scheduling product (now **Lakeflow Jobs**, f
 
 | File | Purpose | Referenced from |
 | :--- | :--- | :--- |
-| `workflow_dag_view.png` | Job DAG visualizer showing task dependencies | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part1.md` |
-| `workflow_task_types.png` | Job task creation sidebar — Notebook, Python, dbt, SQL, Pipeline task types | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part1.md` |
-| `workflow_trigger_schedule.png` | Job scheduling UI — Cron, continuous, file-arrival triggers | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part2.md` |
-| `workflow_run_matrix.png` | Job Runs matrix view tracking historical success/failure | `certifications/data-engineer-professional/01-developing-code-for-data-processing/07-lakeflow-jobs-part2.md` |
+| `workflow_dag_view.png` | Job DAG visualizer showing task dependencies | `certifications/data-engineer-professional/01-developing-code-for-data-processing/08-lakeflow-jobs-part1.md` |
+| `workflow_task_types.png` | Job task creation sidebar — Notebook, Python, dbt, SQL, Pipeline task types | `certifications/data-engineer-professional/01-developing-code-for-data-processing/08-lakeflow-jobs-part1.md` |
+| `workflow_trigger_schedule.png` | Job scheduling UI — Cron, continuous, file-arrival triggers | `certifications/data-engineer-professional/01-developing-code-for-data-processing/08-lakeflow-jobs-part2.md` |
+| `workflow_run_matrix.png` | Job Runs matrix view tracking historical success/failure | `certifications/data-engineer-professional/01-developing-code-for-data-processing/08-lakeflow-jobs-part2.md` |
 
 ## Contributing new screenshots
 
