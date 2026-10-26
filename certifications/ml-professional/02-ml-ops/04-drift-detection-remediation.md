@@ -25,6 +25,20 @@ The four types of drift you need to distinguish for the exam:
 
 The key practical distinction: **data drift and prediction drift are detectable immediately** (no labels required). **Concept drift requires ground truth labels**, which often arrive with a delay. In production systems, you use prediction drift as a leading indicator and wait for labels to confirm or rule out concept drift.
 
+> [!abstract]
+>
+> - **Data, concept, prediction, and label drift** differ in what changes and whether labels are needed
+> - The Lakehouse Monitoring **drift metrics table** has numeric tests (KS, Wasserstein, PSI) and categorical tests (chi-square, TV, L-infinity, JS)
+> - `BASELINE` drift compares to a baseline table; `CONSECUTIVE` drift compares successive windows
+
+> [!tip] What the Exam Tests
+>
+> - Applying the right statistical test from the drift metrics table to numeric vs categorical columns
+> - Judging significance (p-value) together with magnitude (distance / PSI) and business impact
+> - Choosing a remediation: retrain, roll back, or fix the upstream pipeline
+
+---
+
 ## Drift Taxonomy
 
 ```mermaid

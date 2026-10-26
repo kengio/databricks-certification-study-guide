@@ -28,6 +28,20 @@ risk spectrum:
 - **Canary deployment**: small percentage of traffic routed to challenger, real users affected
 - **Full A/B test**: 50/50 traffic split after initial canary validation, statistical comparison
 
+> [!abstract]
+>
+> - **Shadow, canary, A/B, and blue-green** trade user exposure against speed and rollback ease
+> - On Model Serving, a rollout = a second served entity + `traffic_config` percentages, ramped while monitoring
+> - **Route optimization** (set at creation) raises QPS and lowers overhead latency for high-traffic endpoints
+
+> [!tip] What the Exam Tests
+>
+> - Comparing blue-green and canary for high-traffic, business-critical applications
+> - Implementing a rollout strategy with served entities and traffic splits, including rollback
+> - Promoting the winner in Unity Catalog with aliases
+
+---
+
 ## Deployment Strategy Comparison
 
 ```mermaid

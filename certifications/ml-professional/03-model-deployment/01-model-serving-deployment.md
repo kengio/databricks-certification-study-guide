@@ -30,6 +30,20 @@ does the consumer need a result **right now** (real-time), or is a **periodic ba
 acceptable? And, is the data volume so large that a distributed Spark job is cheaper than
 per-record HTTP calls?
 
+> [!abstract]
+>
+> - Custom models deploy to **Model Serving** through the Serving UI, the REST API, or an SDK (Databricks SDK or MLflow Deployments)
+> - Query endpoints with MLflow Deployments `predict()` or REST `POST /serving-endpoints/<name>/invocations` (Bearer header, `dataframe_split` body)
+> - A custom **PyFunc** packages artifacts with the model; Unity Catalog registration needs a signature
+
+> [!tip] What the Exam Tests
+>
+> - Registering a custom PyFunc with custom artifacts in Unity Catalog
+> - Querying custom models via REST API or the MLflow Deployments SDK
+> - Choosing between real-time endpoints, batch `spark_udf`, and streaming inference
+
+---
+
 ## Deployment Architecture
 
 ```mermaid

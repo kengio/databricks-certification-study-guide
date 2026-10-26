@@ -29,6 +29,20 @@ Each change type has different triggers and validation gates. The unifying patte
 **multi-task orchestrated pipeline** that enforces quality checks at every stage before any change
 reaches production.
 
+> [!abstract]
+>
+> - A **multi-task Lakeflow Job** (DAG) runs validation → features → training → evaluation gate → integration tests → deployment
+> - An **evaluation gate** compares challenger and champion (by alias) on the same hold-out set before promotion
+> - Retraining is **scheduled**, **drift- or performance-triggered** (from monitor metric tables), or **data-volume** triggered
+
+> [!tip] What the Exam Tests
+>
+> - Implementing retraining triggered by drift detection or performance-degradation alerts
+> - Choosing the selection metric that matches how predictions drive decisions (for example log loss for probability thresholds)
+> - Using task dependencies (`run_if: ALL_SUCCESS`) to gate promotion
+
+---
+
 ## ML Pipeline Architecture
 
 ```mermaid
