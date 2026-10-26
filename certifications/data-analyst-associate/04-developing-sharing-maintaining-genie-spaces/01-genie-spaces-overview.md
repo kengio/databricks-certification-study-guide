@@ -40,7 +40,7 @@ Databricks now uses "Genie" for three different products. Only the first is in t
 | :--- | :--- | :--- |
 | **Genie Agents** (formerly Genie spaces) | Analysts curate; business users consume | Natural-language Q&A over a curated set of UC data |
 | **Genie One** | Business users | One chat interface across data assets, dashboards, and apps |
-| **Genie Code** | Developers and technical practitioners | Coding agent that writes code, pipelines, and dashboards; also suggests table descriptions and example queries when you create a Genie Agent |
+| **Genie Code** (formerly Databricks Assistant, renamed March 11, 2026) | Developers and technical practitioners | Coding agent that writes code, pipelines, and dashboards; also suggests table descriptions and example queries when you create a Genie Agent |
 
 ## How Genie answers a question
 

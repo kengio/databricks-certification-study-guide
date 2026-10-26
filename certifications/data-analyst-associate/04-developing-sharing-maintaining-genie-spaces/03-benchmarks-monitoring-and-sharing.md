@@ -68,6 +68,7 @@ Remember the other half: sharing the agent does **not** share the data. Each con
 | :--- | :--- | :--- |
 | **Direct link** | **Share → Copy link** | Recipient has agent access and data access |
 | **Embedded iframe** | **Share → Embed space**, copy the iframe code into an internal portal; add `allow="clipboard-write"` so users can copy CSV data and conversation links | A workspace admin adds the host to the allowed embedding surfaces in **Genie access management** settings; the author has `CAN MANAGE`; end users have explicit agent and data access (unauthenticated users are prompted to sign in); embedded users can ask but not edit |
+| **OpenSharing** (Beta, June 17, 2026) | Share a Genie Agent with users **outside your organisation** through OpenSharing (formerly Delta Sharing) | Provider-side OpenSharing setup; see the [June 2026 release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/june) |
 | **External app integrations** | Call the **Genie Conversation API** from your own app, or add the agent as a resource of a **Databricks App** | See [Genie API and Integrations](./04-genie-api-and-integrations.md) |
 
 > [!warning]
@@ -192,6 +193,7 @@ A typical round after a week of usage:
 - [Test and monitor a Genie Agent](https://docs.databricks.com/aws/en/genie-agents/monitor)
 - [Create and manage a Genie Agent — sharing](https://docs.databricks.com/aws/en/genie-agents/set-up)
 - [Embed a Genie Agent in an external app](https://docs.databricks.com/aws/en/genie-agents/embed)
+- [Release notes, June 2026 — share Genie Agents externally using OpenSharing](https://docs.databricks.com/aws/en/release-notes/product/2026/june)
 
 ---
 
