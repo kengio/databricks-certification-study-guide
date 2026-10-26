@@ -40,15 +40,19 @@ Before starting, you should have:
 
 ## Phase 2: Exam Domain Preparation
 
-The Data Analyst Associate exam covers these domains:
+The Data Analyst Associate exam (Oct 30, 2025 version — 9 domains, 45 questions) covers these domains:
 
 | Domain | Weight | Key Topics |
 | :--- | :--- | :--- |
-| Databricks SQL | ~25% | SQL warehouses, query editor, history |
-| Data Visualization | ~20% | Chart types, dashboards, query-based visuals |
-| Dashboard Building | ~20% | Dashboard layout, refresh schedules, alerts |
-| Data Management | ~15% | Delta tables, schemas, Unity Catalog |
-| SQL in the Lakehouse | ~20% | Advanced SQL, window functions, performance |
+| Executing Queries Using Databricks SQL and Warehouses | 20 % | SQL warehouses, query editor, views, joins, aggregations |
+| Creating Dashboards and Visualizations | 16 % | AI/BI dashboards, chart types, publishing, sharing |
+| Analyzing Queries | 15 % | Query history, query profile, Liquid Clustering |
+| Developing, Sharing, and Maintaining AI/BI Genie spaces | 12 % | Natural-language analytics (Genie spaces were renamed **Genie Agents** on Jul 8, 2026) |
+| Understanding the Databricks Data + AI Platform | 11 % | Platform architecture, Unity Catalog |
+| Managing Data | 8 % | Delta tables, schemas, certified datasets |
+| Securing Data | 8 % | Permissions, storage best practices |
+| Importing Data | 5 % | UI upload, Auto Loader, Delta Sharing (now OpenSharing), Marketplace |
+| Data Modeling with Databricks SQL | 5 % | Dimensional modeling with Databricks SQL |
 
 ### Databricks SQL
 

@@ -185,12 +185,12 @@ What do `delta.autoOptimize.optimizeWrite` and `delta.autoOptimize.autoCompact` 
 > - `optimizeWrite = true` — Spark rebalances data across files **at write time** for better file sizing. Lower write latency cost; recommended for most workloads.
 > - `autoCompact = true` — Spark runs a *small* OPTIMIZE **after** every write that produces many small files. More expensive per write; turn on for streaming sinks producing micro-batches.
 
-## Delta Sharing — what is it?
+## Delta Sharing (now OpenSharing) — what is it?
 
-What does the Delta Sharing protocol let you do?
+What does the Delta Sharing protocol (renamed OpenSharing in Jun 2026) let you do?
 
 > [!success]- Answer
-> Share Delta tables (and Volumes) across orgs / clouds **without copying data**. Recipients query a signed URL endpoint that streams Parquet directly. Two flavours: **Open Sharing** (any client, token-auth) and **Databricks-to-Databricks** (full UC-backed sharing with views, row filters, audit).
+> Share Delta tables (and Volumes) across orgs / clouds **without copying data**. Recipients query a signed URL endpoint that streams Parquet directly. Two flavours: **Databricks-to-Open** (formerly open sharing; any client, token-auth) and **Databricks-to-Databricks** (full UC-backed sharing with views, row filters, audit).
 
 ## UniForm — Delta as Iceberg
 

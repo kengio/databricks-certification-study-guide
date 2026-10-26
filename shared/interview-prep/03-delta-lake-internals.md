@@ -87,9 +87,9 @@ You have a Silver table that's written by two jobs simultaneously — one append
 >
 > 1. **Partition isolation**: If your table is partitioned by `event_date`, the append job writes to today's partition while the MERGE targets yesterday's. No conflict.
 >
-> 2. **Schedule separation**: Run the MERGE first, then trigger the append. Use Databricks Workflows with `depends_on` to enforce order.
+> 2. **Schedule separation**: Run the MERGE first, then trigger the append. Use Lakeflow Jobs (formerly Databricks Workflows) with `depends_on` to enforce order.
 >
-> 3. **Use DLT**: Delta Live Tables handles concurrent write orchestration automatically by managing the execution order of pipeline stages.
+> 3. **Use Lakeflow pipelines (formerly DLT)**: Lakeflow Spark Declarative Pipelines handles concurrent write orchestration automatically by managing the execution order of pipeline stages.
 >
 > 4. **Retry logic**: For non-critical appends, wrap in a retry loop — Delta's conflict detection is designed for this:
 >

@@ -16,7 +16,7 @@ How do you set up a CI/CD pipeline for Databricks? Walk me through your promotio
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: Use Databricks Asset Bundles (DABs) to define entire projects — code, jobs, clusters, and configs — as YAML templates, stored in Git and deployed across Dev/QA/Prod via CI/CD. Databricks Repos sync notebooks from Git branches, PRs gate promotion with code review, CI runs tests (nutter or pytest), and `databricks bundle deploy --target prod` pushes validated changes to production.
+> **Short Answer**: Use Declarative Automation Bundles (formerly Databricks Asset Bundles, DABs) to define entire projects — code, jobs, clusters, and configs — as YAML templates, stored in Git and deployed across Dev/QA/Prod via CI/CD. Databricks Repos sync notebooks from Git branches, PRs gate promotion with code review, CI runs tests (nutter or pytest), and `databricks bundle deploy --target prod` pushes validated changes to production.
 >
 > ### Key Points to Cover
 >
@@ -181,7 +181,7 @@ You're responsible for 50+ production ETL pipelines. How do you design a monitor
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: Configure Databricks Workflows with email and webhook alerts for job success/failure/SLA breach, write execution metadata (row counts, durations, error messages) to Delta audit tables via structured logging, integrate with Slack/PagerDuty for on-call alerting, monitor cluster resources through the compute metrics tab, and build Databricks SQL dashboards showing pipeline health trends and SLA compliance.
+> **Short Answer**: Configure Lakeflow Jobs (formerly Databricks Workflows) with email and webhook alerts for job success/failure/SLA breach, write execution metadata (row counts, durations, error messages) to Delta audit tables via structured logging, integrate with Slack/PagerDuty for on-call alerting, monitor cluster resources through the compute metrics tab, and build Databricks SQL dashboards showing pipeline health trends and SLA compliance.
 >
 > ### Key Points to Cover
 >

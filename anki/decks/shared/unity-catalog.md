@@ -122,7 +122,7 @@ What's a Volume, and what's the difference between managed and external?
 If a notebook reads `silver.events` and writes `gold.daily_metrics`, what does UC lineage capture automatically?
 
 > [!success]- Answer
-> Table-level lineage AND column-level lineage (which input columns feed which output columns), captured for SQL, PySpark DataFrame API, and `dlt.*` declarative pipelines. No instrumentation required. Visible in Catalog Explorer's Lineage tab + queryable in `system.access.table_lineage`.
+> Table-level lineage AND column-level lineage (which input columns feed which output columns), captured for SQL, PySpark DataFrame API, and Lakeflow declarative pipelines (formerly DLT; `dp.*` / legacy `dlt.*`). No instrumentation required. Visible in Catalog Explorer's Lineage tab + queryable in `system.access.table_lineage`.
 
 ## Tags
 

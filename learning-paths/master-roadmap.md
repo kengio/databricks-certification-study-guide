@@ -53,14 +53,16 @@ flowchart TB
 
 ## Certification Quick Reference
 
-| Certification | Level | Questions | Duration | Pass | Language | Prerequisites |
-|:---|:---|:---:|:---:|:---:|:---|:---|
-| Data Analyst Associate | Associate | 45 | 90 min | 70% | SQL | SQL basics |
-| Data Engineer Associate | Associate | 45 | 90 min | 70% | Python, SQL | SQL + Python basics |
-| Data Engineer Professional | Professional | 60 | 120 min | 70% | Python, SQL | DE Associate recommended |
-| ML Associate | Associate | 45 | 90 min | 70% | Python | Python + stats basics |
-| ML Professional | Professional | 60 | 120 min | 70% | Python | ML Associate recommended |
-| GenAI Engineer Associate | Associate | 45 | 90 min | 70% | Python | Python + ML basics |
+Scored-question counts and durations from the current exam guides (Oct 2026). Databricks no longer publishes a numeric passing score — treat each exam as pass/fail. Exam-guide versions: [Version History](../shared/appendix/version-history.md).
+
+| Certification | Level | Scored Questions | Duration | Exam version | Language | Prerequisites |
+|:---|:---|:---:|:---:|:---|:---|:---|
+| Data Analyst Associate | Associate | 45 | 90 min | Oct 30, 2025 | SQL | SQL basics |
+| Data Engineer Associate | Associate | 45 | 90 min | May 4, 2026 (guide Aug 6, 2026) | Python, SQL | SQL + Python basics |
+| Data Engineer Professional | Professional | 60 | 120 min | Oct 9, 2026 (new) | Python, SQL | DE Associate recommended |
+| ML Associate | Associate | 48 | 90 min | Mar 1, 2025 | Python | Python + stats basics |
+| ML Professional | Professional | 59 | 120 min | Sep 30, 2025 | Python | ML Associate recommended |
+| GenAI Engineer Associate | Associate | 45 | 90 min | Mar 18, 2026 | Python | Python + ML basics |
 
 ## Which Path Should I Choose?
 
@@ -119,7 +121,7 @@ Review these before starting any certification. Check off topics as you complete
 |:---:|:---|:---|:---|
 | 12 | MLflow Basics | [mlflow-basics.md](../shared/fundamentals/mlflow-basics.md) | MLA, MLP, GenAI |
 | 13 | Feature Engineering Basics | [feature-engineering-basics.md](../shared/fundamentals/feature-engineering-basics.md) | MLA, MLP |
-| 14 | RAG & Vector Search Basics | [rag-vector-search-basics.md](../shared/fundamentals/rag-vector-search-basics.md) | GenAI |
+| 14 | RAG & Vector Search (AI Search) Basics | [rag-vector-search-basics.md](../shared/fundamentals/rag-vector-search-basics.md) | GenAI |
 
 ---
 
@@ -135,13 +137,13 @@ Choose one (or both) based on your path.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Data Transformation and Modeling (22%) | [03-data-transformation-and-modeling](../certifications/data-engineer-associate/03-data-transformation-and-modeling/README.md) |
-| 2 | Data Ingestion and Loading (21%) | [02-data-ingestion-and-loading](../certifications/data-engineer-associate/02-data-ingestion-and-loading/README.md) |
-| 3 | Working with Lakeflow Jobs (16%) | [04-working-with-lakeflow-jobs](../certifications/data-engineer-associate/04-working-with-lakeflow-jobs/README.md) |
-| 4 | Governance and Security (15%) | [07-governance-and-security](../certifications/data-engineer-associate/07-governance-and-security/README.md) |
-| 5 | Implementing CI/CD (10%) | [05-implementing-cicd](../certifications/data-engineer-associate/05-implementing-cicd/README.md) |
-| 6 | Troubleshooting, Monitoring, and Optimization (10%) | [06-troubleshooting-monitoring-and-optimization](../certifications/data-engineer-associate/06-troubleshooting-monitoring-and-optimization/README.md) |
-| 7 | Databricks Intelligence Platform (6%) | [01-databricks-intelligence-platform](../certifications/data-engineer-associate/01-databricks-intelligence-platform/README.md) |
+| 1 | Data Transformation and Modeling (22 %) | [02-etl-spark-sql](../certifications/data-engineer-associate/02-etl-spark-sql/README.md) |
+| 2 | Data Ingestion and Loading (21 %) | [03-delta-lake](../certifications/data-engineer-associate/03-delta-lake/README.md) |
+| 3 | Working with Lakeflow Jobs (16 %) | [04-workflows-orchestration](../certifications/data-engineer-associate/04-workflows-orchestration/README.md) |
+| 4 | Governance and Security (15 %) | [05-data-governance](../certifications/data-engineer-associate/05-data-governance/README.md) |
+| 5 | Implementing CI/CD (10 %) | See the Full Study Guide |
+| 6 | Troubleshooting, Monitoring, and Optimization (10 %) | See the Full Study Guide |
+| 7 | Databricks Intelligence Platform (6 %) | [01-lakehouse-platform](../certifications/data-engineer-associate/01-lakehouse-platform/README.md) |
 
 **Practice & Review:**
 
@@ -156,11 +158,15 @@ Choose one (or both) based on your path.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Databricks SQL (~25%) | [01-databricks-sql](../certifications/data-analyst-associate/01-executing-queries-databricks-sql-warehouses/README.md) |
-| 2 | Data Visualization (~20%) | [04-dashboards-visualization](../certifications/data-analyst-associate/02-creating-dashboards-and-visualizations/README.md) |
-| 3 | SQL in the Lakehouse (~20%) | [03-sql-queries](../certifications/data-analyst-associate/03-analyzing-queries/README.md) |
-| 4 | Dashboard Building (~20%) | [04-dashboards-visualization](../certifications/data-analyst-associate/02-creating-dashboards-and-visualizations/README.md) |
-| 5 | Data Management (~15%) | [02-data-management](../certifications/data-analyst-associate/06-managing-data/README.md) |
+| 1 | Executing Queries Using Databricks SQL and Warehouses (20 %) | [01-executing-queries](../certifications/data-analyst-associate/01-executing-queries-databricks-sql-warehouses/README.md) |
+| 2 | Creating Dashboards and Visualizations (16 %) | [02-dashboards-visualizations](../certifications/data-analyst-associate/02-creating-dashboards-and-visualizations/README.md) |
+| 3 | Analyzing Queries (15 %) | [03-analyzing-queries](../certifications/data-analyst-associate/03-analyzing-queries/README.md) |
+| 4 | Developing, Sharing, and Maintaining AI/BI Genie spaces — now Genie Agents (12 %) | See the Full Study Guide |
+| 5 | Understanding the Databricks Data + AI Platform (11 %) | See the Full Study Guide |
+| 6 | Managing Data (8 %) | [06-managing-data](../certifications/data-analyst-associate/06-managing-data/README.md) |
+| 7 | Securing Data (8 %) | See the Full Study Guide |
+| 8 | Importing Data (5 %) | See the Full Study Guide |
+| 9 | Data Modeling with Databricks SQL (5 %) | See the Full Study Guide |
 
 **Practice & Review:**
 
@@ -177,18 +183,19 @@ After completing an entry certification, choose your specialization.
 
 [Full Study Guide](../certifications/data-engineer-professional/README.md) | [Exam Tips](../certifications/data-engineer-professional/resources/exam-tips.md) | Prereq: DE Associate
 
-**Study order (highest exam weight first):**
+**Study order (highest exam weight first).** Domains from the new **Oct 9, 2026** exam guide (9 domains, 60 questions):
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Data Processing (30%) | [01-data-processing](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
-| 2 | Databricks Tooling (20%) | [02-databricks-tooling](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
-| 3 | Data Modeling (15%) | [03-data-modeling](../certifications/data-engineer-professional/09-data-modeling/README.md) |
-| 4 | Security & Governance (10%) | [04-security-governance](../certifications/data-engineer-professional/06-ensuring-data-security-and-compliance/README.md) |
-| 5 | Monitoring & Logging (10%) | [05-monitoring-logging](../certifications/data-engineer-professional/04-monitoring-and-alerting/README.md) |
-| 6 | Testing & Deployment (10%) | [06-testing-deployment](../certifications/data-engineer-professional/08-debugging-and-deploying/README.md) |
-| 7 | Lakeflow Pipelines | [07-lakeflow-pipelines](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
-| 8 | Performance Optimization | [08-performance-optimization](../certifications/data-engineer-professional/05-cost-and-performance-optimization/README.md) |
+| 1 | Developing Code for Data Processing using Python and SQL (23 %) | [01-developing-code](../certifications/data-engineer-professional/01-developing-code-for-data-processing/README.md) |
+| 2 | Cost & Performance Optimization (15 %) | [02-cost-performance](../certifications/data-engineer-professional/02-cost-and-performance-optimization/README.md) |
+| 3 | Data Ingestion & Acquisition (12 %) | See the Full Study Guide |
+| 4 | Data Manipulation (12 %) | See the Full Study Guide |
+| 5 | Monitoring and Alerting (10 %) | [04-monitoring-alerting](../certifications/data-engineer-professional/04-monitoring-and-alerting/README.md) |
+| 6 | Debugging and Deploying (10 %) | [06-debugging-deploying](../certifications/data-engineer-professional/06-debugging-and-deploying/README.md) |
+| 7 | Ensuring Data Security and Compliance (8 %) | [05-security-compliance](../certifications/data-engineer-professional/05-ensuring-data-security-and-compliance/README.md) |
+| 8 | Data Governance (5 %) | See the Full Study Guide |
+| 9 | Data Modeling (5 %) | [09-data-modelling](../certifications/data-engineer-professional/09-data-modelling/README.md) |
 
 **Practice & Review:**
 
@@ -204,10 +211,10 @@ After completing an entry certification, choose your specialization.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Databricks Machine Learning (38%) | [01-databricks-machine-learning](../certifications/ml-associate/01-databricks-machine-learning/README.md) |
-| 2 | Model Development (31%) | [03-model-development](../certifications/ml-associate/03-model-development/README.md) |
-| 3 | Data Processing (19%) | [02-data-processing](../certifications/ml-associate/02-data-processing/README.md) |
-| 4 | Model Deployment (12%) | [04-model-deployment](../certifications/ml-associate/04-model-deployment/README.md) |
+| 1 | Databricks Machine Learning (38 %) | [01-databricks-machine-learning](../certifications/ml-associate/01-databricks-machine-learning/README.md) |
+| 2 | Model Development (31 %) | [02-model-development](../certifications/ml-associate/02-model-development/README.md) |
+| 3 | Data Processing — "ML Workflows" on the cert page (19 %) | [03-ml-workflows](../certifications/ml-associate/03-ml-workflows/README.md) |
+| 4 | Model Deployment (12 %) | [04-model-deployment](../certifications/ml-associate/04-model-deployment/README.md) |
 
 **Practice & Review:**
 
@@ -228,10 +235,9 @@ Choose based on your career direction after Stage 3.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Deployment (35%) | [03-model-production-lifecycle](../certifications/ml-professional/03-model-deployment/README.md) |
-| 2 | Monitoring (25%) | [04-model-governance-mlops](../certifications/ml-professional/02-ml-ops/README.md) |
-| 3 | Solution Design (20%) | [01-advanced-feature-engineering](../certifications/ml-professional/01-model-development/README.md) |
-| 4 | Experimentation (20%) | [02-hyperparameter-optimization](../certifications/ml-professional/01-model-development/README.md) |
+| 1 | Model Development (44 %) | [01-model-development](../certifications/ml-professional/01-model-development/README.md) |
+| 2 | ML Ops (44 %) | [02-ml-ops](../certifications/ml-professional/02-ml-ops/README.md) |
+| 3 | Model Deployment (12 %) | [03-model-deployment](../certifications/ml-professional/03-model-deployment/README.md) |
 
 **Practice & Review:**
 
@@ -246,7 +252,7 @@ Choose based on your career direction after Stage 3.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Application Development (30%) | [01-application-development](../certifications/genai-engineer-associate/01-application-development/README.md) |
+| 1 | Application Development (30 %) | [01-application-development](../certifications/genai-engineer-associate/01-application-development/README.md) |
 | 2 | Assembling and Deploying Apps (22%) | [02-assembling-and-deploying-apps](../certifications/genai-engineer-associate/02-assembling-and-deploying-apps/README.md) |
 | 3 | Design Applications (14%) | [03-design-applications](../certifications/genai-engineer-associate/03-design-applications/README.md) |
 | 4 | Data Preparation (14%) | [04-data-preparation](../certifications/genai-engineer-associate/04-data-preparation/README.md) |
@@ -271,7 +277,7 @@ Choose based on your career direction after Stage 3.
 | [Unity Catalog Quick Ref](../shared/cheat-sheets/unity-catalog-quick-ref.md) | All |
 | [PySpark API Quick Ref](../shared/cheat-sheets/pyspark-api-quick-ref.md) | DEA, DEP, MLA |
 | [Spark Configurations](../shared/cheat-sheets/spark-configurations.md) | DEP |
-| [DLT / Lakeflow Quick Ref](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) | DEP |
+| [Lakeflow Spark Declarative Pipelines Quick Ref (formerly DLT)](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md) | DEA, DEP |
 | [Auto Loader Quick Ref](../shared/cheat-sheets/auto-loader-quick-ref.md) | DEA, DEP |
 | [Streaming Quick Ref](../shared/cheat-sheets/streaming-quick-ref.md) | DEP |
 | [MLflow Quick Ref](../shared/cheat-sheets/mlflow-quick-ref.md) | MLA, MLP, GenAI |
@@ -285,7 +291,7 @@ Choose based on your career direction after Stage 3.
 | Python: Delta Lake Operations | [delta_lake_operations.md](../shared/code-examples/python/delta_lake_operations.md) |
 | Python: Streaming | [streaming_examples.md](../shared/code-examples/python/streaming_examples.md) |
 | Python: CDC & Deduplication | [cdc_and_deduplication.md](../shared/code-examples/python/cdc_and_deduplication.md) |
-| Python: Feature Store & Vector Search | [feature_store_and_vector_search.md](../shared/code-examples/python/feature_store_and_vector_search.md) |
+| Python: Feature Store & Vector Search (AI Search) | [feature_store_and_vector_search.md](../shared/code-examples/python/feature_store_and_vector_search.md) |
 | Python: Patterns | [python_patterns.md](../shared/code-examples/python/python_patterns.md) |
 | Python: Unity Catalog Setup | [unity_catalog_setup.md](../shared/code-examples/python/unity_catalog_setup.md) |
 | SQL: Delta Lake Operations | [delta_lake_operations.md](../shared/code-examples/sql/delta_lake_operations.md) |

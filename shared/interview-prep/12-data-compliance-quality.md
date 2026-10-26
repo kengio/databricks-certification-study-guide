@@ -347,7 +347,7 @@ You need to implement a data quality framework for a Lakehouse with 200+ Delta t
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: Use DLT Expectations as the first line of defense — `EXPECT` logs violations, `EXPECT ... ON VIOLATION DROP ROW` discards bad rows, and `EXPECT ... ON VIOLATION FAIL UPDATE` halts the pipeline; complement this with Auto Loader's `_rescued_data` column for schema violations, PyTest for unit testing transformation logic, and a data quality dashboard tracking null rates, duplicate rates, and freshness SLAs over time.
+> **Short Answer**: Use Lakeflow pipelines (formerly DLT) Expectations as the first line of defense — `EXPECT` logs violations, `EXPECT ... ON VIOLATION DROP ROW` discards bad rows, and `EXPECT ... ON VIOLATION FAIL UPDATE` halts the pipeline; complement this with Auto Loader's `_rescued_data` column for schema violations, PyTest for unit testing transformation logic, and a data quality dashboard tracking null rates, duplicate rates, and freshness SLAs over time.
 >
 > ### Key Points to Cover
 >
@@ -366,22 +366,22 @@ You need to implement a data quality framework for a Lakehouse with 200+ Delta t
 > **Layer 1 — DLT Expectations (pipeline-level quality gates):**
 >
 > ```python
-> import dlt
+> from pyspark import pipelines as dp
 > from pyspark.sql.functions import col
 >
-> @dlt.table
-> @dlt.expect("valid_amount", "amount > 0")
-> @dlt.expect_or_drop("valid_email", "email IS NOT NULL")
-> @dlt.expect_or_fail("valid_order_id", "order_id IS NOT NULL")
+> @dp.materialized_view
+> @dp.expect("valid_amount", "amount > 0")
+> @dp.expect_or_drop("valid_email", "email IS NOT NULL")
+> @dp.expect_or_fail("valid_order_id", "order_id IS NOT NULL")
 > def silver_orders():
->     return (dlt.read("bronze_orders")
+>     return (spark.read.table("bronze_orders")
 >         .filter(col("status") != "CANCELLED")
 >         .select("order_id", "customer_id", "amount", "email"))
 > ```
 >
-> - `@dlt.expect`: logs violations in the event log but passes all rows through
-> - `@dlt.expect_or_drop`: silently drops rows that violate the constraint
-> - `@dlt.expect_or_fail`: halts the entire pipeline update on violation — use for critical invariants
+> - `@dp.expect`: logs violations in the event log but passes all rows through
+> - `@dp.expect_or_drop`: silently drops rows that violate the constraint
+> - `@dp.expect_or_fail`: halts the entire pipeline update on violation — use for critical invariants
 >
 > **Layer 2 — Auto Loader rescued data:**
 >

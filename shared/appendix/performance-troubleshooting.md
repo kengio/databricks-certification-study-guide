@@ -374,7 +374,7 @@ query.lastProgress
 query.status
 ```
 
-## Vector Search Performance
+## Vector Search (AI Search) Performance
 
 ### Symptom: High Query Latency on Vector Index
 

@@ -77,13 +77,13 @@ You need to replicate changes from a PostgreSQL OLTP database (orders table, ~10
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: Use Debezium to read PostgreSQL's WAL into Kafka, store raw CDC events in an append-only Bronze table as your audit log, then apply `APPLY CHANGES INTO` (DLT) or a manual MERGE in Silver to maintain current row state; handle deletes explicitly and add SCD Type 2 columns if historical state tracking is required.
+> **Short Answer**: Use Debezium to read PostgreSQL's WAL into Kafka, store raw CDC events in an append-only Bronze table as your audit log, then apply AUTO CDC (formerly `APPLY CHANGES INTO` in DLT) or a manual MERGE in Silver to maintain current row state; handle deletes explicitly and add SCD Type 2 columns if historical state tracking is required.
 >
 > ### Key Points to Cover
 >
 > - Debezium (or similar CDC tool) reading PostgreSQL WAL into Kafka
 > - Bronze: raw CDC events (insert/update/delete) as append-only log
-> - Silver: apply MERGE using APPLY CHANGES (DLT) or manual MERGE logic
+> - Silver: apply MERGE using AUTO CDC / APPLY CHANGES (Lakeflow pipelines, formerly DLT) or manual MERGE logic
 > - Handle deletes explicitly — soft delete vs. hard delete strategy
 > - Exactly-once semantics via checkpoint + idempotent MERGE on primary key
 > - SCD Type 2 considerations for history tracking
@@ -94,14 +94,16 @@ You need to replicate changes from a PostgreSQL OLTP database (orders table, ~10
 >
 > **Bronze** stores the raw CDC events verbatim — this is your audit log and replay source. I'd partition by date and retain for 30+ days.
 >
-> **Silver** applies changes to produce the current state of each row. Using DLT's `APPLY CHANGES INTO` is the cleanest approach:
+> **Silver** applies changes to produce the current state of each row. Using a Lakeflow pipelines AUTO CDC flow (formerly DLT's `APPLY CHANGES INTO`) is the cleanest approach:
 >
 > ```sql
-> APPLY CHANGES INTO silver.orders
+> CREATE OR REFRESH STREAMING TABLE silver.orders;
+>
+> CREATE FLOW orders_cdc AS AUTO CDC INTO silver.orders
 > FROM STREAM(bronze.orders_cdc)
 > KEYS (order_id)
-> SEQUENCE BY _commit_timestamp
 > APPLY AS DELETE WHEN operation = 'd'
+> SEQUENCE BY _commit_timestamp
 > STORED AS SCD TYPE 1;
 > ```
 >
