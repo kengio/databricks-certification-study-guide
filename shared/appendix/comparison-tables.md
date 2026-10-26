@@ -93,24 +93,26 @@ tags: [reference, comparison, data-engineering, ml, genai]
 | ----------------- | --------------- | --------- | ------- | ------------------- |
 | **All-Purpose**   | Interactive     | Higher    | Minutes | Development         |
 | **Job Cluster**   | Production jobs | Lower     | Minutes | Scheduled workloads |
-| **Serverless**    | On-demand       | Per-query | Seconds | SQL analytics       |
+| **Serverless**    | On-demand       | Per-use   | Seconds | Notebooks, jobs, Lakeflow pipelines; serverless SQL warehouses for SQL analytics |
 | **Instance Pool** | Fast startup    | Moderate  | Seconds | Frequent restarts   |
 
-## DLT Table Types
+## Lakeflow Pipelines Dataset Types (formerly DLT Table Types)
+
+Lakeflow Spark Declarative Pipelines was formerly Lakeflow Declarative Pipelines / Delta Live Tables (DLT).
 
 | Type                  | Processing     | Refresh      | Use Case                |
 | --------------------- | -------------- | ------------ | ----------------------- |
-| **Streaming Table**   | Incremental    | Continuous   | Append-only sources     |
-| **Materialized View** | Full recompute | On change    | Aggregations, joins     |
-| **View**              | On-demand      | Never stored | Intermediate transforms |
+| **Streaming Table** (`@dp.table`) | Incremental — each source row processed once | Each pipeline update (triggered or continuous) | Append-only sources, AUTO CDC targets |
+| **Materialized View** (`@dp.materialized_view`) | Incremental on serverless when possible, otherwise full recompute | Each pipeline update / refresh | Aggregations, joins     |
+| **Temporary View** (`@dp.temporary_view`) | Computed when queried | Not stored; not published to the catalog | Intermediate transforms |
 
 ## Expectation Types
 
 | Expectation              | Violation Behavior | Data    | Pipeline  |
 | ------------------------ | ------------------ | ------- | --------- |
-| **EXPECT**               | Log warning        | Kept    | Continues |
+| **EXPECT**               | Record metric (warn) | Kept    | Continues |
 | **EXPECT...DROP ROW**    | Drop row           | Removed | Continues |
-| **EXPECT...FAIL UPDATE** | Fail update        | Kept    | Stops     |
+| **EXPECT...FAIL UPDATE** | Fail update        | Not written | The failing flow stops; other flows continue |
 
 ## Unity Catalog vs Hive Metastore
 
@@ -120,7 +122,7 @@ tags: [reference, comparison, data-engineering, ml, genai]
 | **Governance**     | Centralized   | Per-workspace   |
 | **Access Control** | Fine-grained  | Basic           |
 | **Audit Logging**  | Built-in      | Manual setup    |
-| **Data Sharing**   | Delta Sharing | Not native      |
+| **Data Sharing**   | OpenSharing (formerly Delta Sharing) | Not native      |
 | **Lineage**        | Automatic     | Not available   |
 
 ## Optimize Write vs Auto Compact
@@ -160,7 +162,7 @@ tags: [reference, comparison, data-engineering, ml, genai]
 
 | Mode                  | API                          | Latency    | Use Case                       | Scales to Zero |
 | --------------------- | ---------------------------- | ---------- | ------------------------------ | -------------- |
-| **Real-time serving** | Model Serving REST endpoint  | < 100 ms   | Online inference, APIs         | Yes (optional) |
+| **Real-time serving** | Model Serving REST endpoint  | < 100 ms   | Online inference, APIs (agents: Agent Runtime via Agent Bricks CLI is now recommended; agents on Model Serving are legacy) | Yes (optional) |
 | **Batch (Spark)**     | `mlflow.pyfunc.spark_udf()`  | Minutes    | Bulk scoring, scheduled jobs   | N/A            |
 | **Streaming**         | `mlflow.pyfunc.spark_udf()` in `writeStream` | Seconds | Continuous scoring  | N/A            |
 
@@ -173,6 +175,8 @@ tags: [reference, comparison, data-engineering, ml, genai]
 | **A/B Test**      | 50%                   | Half users  | Medium  | Statistical comparison with outcome  |
 
 ## Dense vs Sparse vs Hybrid Vector Search
+
+Databricks Vector Search is now called **AI Search** in the docs — a managed vector **and keyword** search service, so hybrid retrieval is built in.
 
 | Aspect           | Dense (Semantic)         | Sparse (Keyword/BM25)      | Hybrid                        |
 | ---------------- | ------------------------ | -------------------------- | ----------------------------- |

@@ -8,7 +8,7 @@ Quick reference for Lakeflow Spark Declarative Pipelines (formerly Lakeflow Decl
 
 > [!note] Platform update (Oct 2026)
 >
-> - **Jun 11, 2025** — DLT was rebranded under Lakeflow (published at the time as *Lakeflow Declarative Pipelines*). **Nov 12, 2025** — "Lakeflow Declarative Pipelines has been renamed to Lakeflow Spark Declarative Pipelines." Current docs also say simply **Lakeflow pipelines**; the open-source base is **Apache Spark Declarative Pipelines (SDP)**.
+> - **Jun 11, 2025** — DLT was rebranded under Lakeflow (published at the time as *Lakeflow Declarative Pipelines*). **Nov 12, 2025** — "Lakeflow Declarative Pipelines has been renamed to Lakeflow Spark Declarative Pipelines." Current docs also say simply **Lakeflow pipelines** (the overview page is titled "Spark Declarative Pipelines on Lakeflow"); the open-source base is **Apache Spark Declarative Pipelines (SDP)**.
 > - **Python API:** `from pyspark import pipelines as dp`. "The `dlt` module has been replaced by the `pyspark.pipelines` module. You may still use `dlt`, but Databricks recommends using `pipelines`." A legacy `dlt` → `dp` mapping is at the end of this sheet.
 > - **Exam wording lags the product:** the DE Associate guide (Aug 2026) still says *Lakeflow Declarative Pipelines*, the DE Professional guide (Oct 2026) says *Lakeflow Pipelines*, and the ML Associate guide says *Delta Live Tables*. They are the same product — expect any of the names in a question stem.
 > - This file keeps its `lakeflow-declarative-pipelines-quick-ref.md` name so existing links keep working.
