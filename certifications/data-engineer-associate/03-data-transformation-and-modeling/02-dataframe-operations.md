@@ -373,10 +373,10 @@ sample_df = df.sampleBy("category", fractions={
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Driver OOM After `collect()`
 
-**Scenario:** The default settings for DataFrame Operations do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for DataFrame Operations to handle production-scale workloads.
+**Scenario:** `df.collect()` or `df.toPandas()` on a large table crashes the driver with an out-of-memory error.
+**Fix:** These pull every row to the driver. Use `display(df)`, `df.limit(n)`, or write results to a table instead. See [Compute Troubleshooting](../06-troubleshooting-monitoring-and-optimization/05-compute-troubleshooting.md).
 
 ### Column Name Ambiguity After Joins
 

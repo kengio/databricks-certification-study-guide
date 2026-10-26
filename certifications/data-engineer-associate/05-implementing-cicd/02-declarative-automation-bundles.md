@@ -1,39 +1,53 @@
 ---
-title: Asset Bundles and Git Folders
+title: Declarative Automation Bundles
 type: study-material
 tags:
   - data-engineer-associate
   - cicd
+  - declarative-automation-bundles
   - asset-bundles
-  - git-folders
+  - databricks-cli
 status: published
 ---
 
-# Asset Bundles and Git Folders
+# Declarative Automation Bundles
 
 ## Overview
 
-**Databricks Asset Bundles (DAB)** package Lakeflow Jobs, Lakeflow Declarative Pipelines, notebooks, ML models, and dashboards into a YAML-defined deployment unit. **Git folders** host the source code in the workspace and tie deployments to a branch. Together they give the DE Associate exam's CI/CD coverage: source code in Git → bundle YAML → deploy to dev / staging / prod targets.
+**Declarative Automation Bundles** (formerly **Databricks Asset Bundles**, often abbreviated **DABs**) describe Lakeflow Jobs, Lakeflow (Declarative) Pipelines, dashboards, and other workspace assets as YAML alongside your source code. The **Databricks CLI** validates and deploys them. **Targets** (dev, test, prod) with **variables** and **overrides** let one codebase be promoted across environments, which is the backbone of the exam's CI/CD domain.
+
+> [!note] Platform update (Oct 2026)
+> "Databricks Asset Bundles has been renamed to Declarative Automation Bundles" (Mar 16, 2026, [bundles release notes](https://docs.databricks.com/aws/en/release-notes/dev-tools/bundles)). The CLI command group is still `databricks bundle` and the root file is still `databricks.yml`. The exam guide uses the new name with "(formerly Databricks Asset Bundles)".
 
 > [!abstract]
 >
-> - **Asset Bundle** = `databricks.yml` (entry) + `resources/*.yml` (jobs, pipelines, etc.) + source code
-> - **Targets**: `development`, `staging`, `production` — each with its own workspace, identity, and overrides
-> - **`mode: development`** auto-prefixes resource names and pauses schedules
-> - **`mode: production`** runs as the configured service principal with no name prefix
-> - **Git folders** sync a Git repo into the workspace (formerly known as Repos)
-> - Deploy with `databricks bundle deploy --target production`
+> - A bundle is `databricks.yml` (root) plus included resource YAML plus source code, versioned in Git
+> - **Variables** (`${var.name}`) are resolved at deploy time from `--var`, `BUNDLE_VAR_<name>`, `variable-overrides.json`, target-level values, or the default, **in that order of precedence**
+> - **Targets** override settings per environment. `mode: development` prefixes names and pauses triggers. `mode: production` adds safety validations
+> - CLI: `databricks bundle validate`, `deploy -t <target>`, `run`, `summary`, `plan`, `destroy`
 
 > [!tip] What the Exam Tests
 >
-> - Recognising the YAML shape of a bundle (`bundle:`, `resources:`, `targets:`)
-> - Difference between dev and prod modes
-> - When to use Git folders vs the workspace file browser
-> - That production bundles should run as a service principal, not a personal token
+> - Exam guide skills: environment-specific configuration with bundle variables and overrides across dev, test, and prod; deploying bundles to package and promote jobs, pipelines, and other assets; using the Databricks CLI to validate, deploy, and manage bundles in automated CI/CD
+> - Keeping secrets out of YAML (`BUNDLE_VAR_` environment variables fed by CI secrets)
+> - Differences between development and production mode
+> - Which CLI command does what
 
 ---
 
-## Bundle anatomy
+## Bundle Anatomy
+
+```text
+orders-pipeline/
+├── databricks.yml            # bundle name, includes, variables, targets
+├── resources/
+│   ├── orders_job.yml        # Lakeflow Job definition
+│   └── orders_pipeline.yml   # Lakeflow (Declarative) Pipeline definition
+├── src/
+│   ├── ingest_orders.py
+│   └── silver_orders.sql
+└── tests/
+```
 
 ```yaml
 # databricks.yml
@@ -41,142 +55,210 @@ bundle:
   name: orders_pipeline
 
 include:
-  - resources/*.yml      # jobs, pipelines, dashboards
+  - resources/*.yml
 
 variables:
   catalog:
-    description: "UC catalog for the pipeline"
-    default: main_dev
-  schema:
-    description: "UC schema"
-    default: bronze
+    description: Unity Catalog catalog for this environment
+    default: dev
+  warehouse_id:
+    description: SQL warehouse used by SQL tasks
+    lookup:
+      warehouse: "Shared Serverless"     # resolved to an ID at deploy time
+  db_password:
+    description: Source database password (never committed; supplied by CI)
 
 targets:
-  development:
-    mode: development    # prefixes resource names with [dev <user>]; pauses schedules
+  dev:
+    mode: development
+    default: true
     workspace:
-      host: https://e2-demo-field-eng.cloud.databricks.com
+      host: https://dev-workspace.cloud.databricks.com
 
-  production:
-    mode: production     # no prefix; runs as the configured service principal
+  test:
     workspace:
-      host: https://prod.cloud.databricks.com
+      host: https://test-workspace.cloud.databricks.com
     variables:
-      catalog: main_prod
+      catalog: test
+
+  prod:
+    mode: production
+    workspace:
+      host: https://prod-workspace.cloud.databricks.com
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: prod
     run_as:
-      service_principal_name: orders-pipeline-sp
+      service_principal_name: 6d5c-orders-sp-application-id
 ```
 
 ```yaml
-# resources/jobs.orders.yml
+# resources/orders_job.yml
 resources:
   jobs:
-    orders_ingest:
-      name: orders_ingest
+    orders_job:
+      name: orders_job
       tasks:
-        - task_key: bronze_load
+        - task_key: refresh_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.orders_pipeline.id}
+        - task_key: publish
+          depends_on: [{task_key: refresh_pipeline}]
           notebook_task:
-            notebook_path: ../notebooks/bronze_load
+            notebook_path: ../src/ingest_orders.py
             base_parameters:
               catalog: ${var.catalog}
-              schema:  ${var.schema}
-          job_cluster_key: shared_cluster
-      job_clusters:
-        - job_cluster_key: shared_cluster
-          new_cluster:
-            spark_version: 15.4.x-scala2.12
-            node_type_id: i3.xlarge
-            num_workers: 2
       schedule:
-        quartz_cron_expression: "0 0 * * * ?"   # hourly
+        quartz_cron_expression: "0 0 2 * * ?"
         timezone_id: UTC
 ```
 
-## Deployment commands
+## Variables and Overrides
 
-```bash
-# Validate
-databricks bundle validate
+Declare variables in a top-level `variables` mapping and reference them as `${var.<name>}` ([Substitutions and variables](https://docs.databricks.com/aws/en/dev-tools/bundles/variables)).
 
-# Deploy to development (default target if --target is omitted)
-databricks bundle deploy --target development
+| Value source | Example | Precedence |
+| :--- | :--- | :---: |
+| `--var` CLI option | `databricks bundle deploy -t prod --var="catalog=prod"` | **1** (highest) |
+| `BUNDLE_VAR_<name>` environment variable | `export BUNDLE_VAR_db_password=$DB_PASSWORD` (from GitHub secrets) | 2 |
+| `.databricks/bundle/<target>/variable-overrides.json` | `{"catalog": "prod"}` | 3 |
+| `variables` under a **target** | `targets.prod.variables.catalog: prod` | 4 |
+| `default` in the top-level declaration | `default: dev` | 5 (lowest) |
 
-# Run a specific job from the bundle
-databricks bundle run orders_ingest --target development
+- **`lookup`** resolves an object's ID by name (`cluster`, `job`, `pipeline`, `warehouse`, ...). It errors if the name matches no object or more than one
+- `type: complex` allows structured values, such as a whole cluster definition
+- Variables are resolved at **deploy** time. Use **job parameters** for values that change on every run
+- Built-in substitutions: `${bundle.name}`, `${bundle.target}` (use this, not the old `${bundle.environment}`), `${workspace.current_user.userName}`, `${resources.jobs.<name>.id}`
 
-# Promote to production
-databricks bundle deploy --target production
+> [!tip] Secrets in CI
+> Never hard-code passwords in `databricks.yml` or notebooks. Declare a variable with no default and have the CI runner export `BUNDLE_VAR_<name>` from its secret store, so the value never touches Git. For runtime credentials, notebooks can read Databricks secrets with `dbutils.secrets.get`.
+
+**Target overrides** aren't limited to variables. Any top-level mapping (workspace host, `run_as`, permissions, or resource settings such as cluster size or schedule) can be overridden per target, so the same `resources/*.yml` serves every environment.
+
+## Deployment Modes
+
+| | `mode: development` | `mode: production` |
+| :--- | :--- | :--- |
+| Resource names | Prefixed `[dev ${workspace.current_user.short_name}]` and tagged `dev` | Unchanged |
+| Schedules and triggers | **Paused** on deployed resources | Active |
+| Concurrent runs | Enabled, for fast iteration | As configured |
+| Pipelines | Marked `development: true` | Validated as `development: false` |
+| Cluster override | `--cluster-id` / `cluster_id` allowed | **Not allowed** |
+| Git branch | — | Must match the target's configured branch (override with `--force`) |
+| Identity | The deployer | Service principal recommended. Validations check `run_as`, `permissions`, and that paths aren't user-specific |
+| Deployment lock | Disabled | Enabled |
+
+**Presets** customize target behaviour beyond the mode defaults, for example a name prefix, trigger pause status, or job concurrency. Individual resource settings override presets. Source: [Deployment modes](https://docs.databricks.com/aws/en/dev-tools/bundles/deployment-modes).
+
+## The `databricks bundle` CLI
+
+| Command | Purpose |
+| :--- | :--- |
+| `databricks bundle init` | "Initialize a new bundle using a bundle template" |
+| `databricks bundle validate` | "Validate bundle configuration files are syntactically correct" |
+| `databricks bundle plan` | "Show the deployment plan for the current bundle configuration" |
+| `databricks bundle deploy -t <target>` | "Deploy a bundle to the remote workspace" |
+| `databricks bundle run <resource> -t <target>` | "Run a job, pipeline, app, or script" |
+| `databricks bundle summary` | Summarize the bundle's identity and deployed resources, with workspace links |
+| `databricks bundle generate` | Generate bundle YAML for a resource that already exists in the workspace |
+| `databricks bundle deployment bind` / `unbind` | Link a bundle resource to an existing workspace resource, or remove that link |
+| `databricks bundle destroy` | "Delete jobs, pipelines, other resources, and artifacts that were previously deployed" |
+
+Global flags: `-t, --target` selects the target, and `--var="key=value"` sets variables. Source: [bundle command group](https://docs.databricks.com/aws/en/dev-tools/cli/bundle-commands).
+
+## A CI/CD Pipeline With Bundles
+
+```yaml
+# .github/workflows/deploy.yml (sketch)
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DATABRICKS_HOST: ${{ secrets.PROD_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}          # service principal OAuth
+      DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
+      BUNDLE_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle validate -t prod
+      - run: databricks bundle deploy -t prod
+      - run: databricks bundle run orders_job -t prod
 ```
 
-## Dev vs Prod mode side-by-side
-
-| Aspect | `development` | `production` |
-| :--- | :--- | :--- |
-| Resource names | `[dev <username>] orders_ingest` | `orders_ingest` |
-| Schedules | Paused on deploy | Active |
-| Run-as identity | Deployer's identity | Service principal (configured) |
-| Risk profile | Safe for iteration | Treat every deploy as a change-management event |
-
-## Git folders
-
-Git folders are the workspace's view of a Git repository.
-
-| Operation | Where it happens |
-| :--- | :--- |
-| Create a Git folder | Workspace UI: **+ New** → **Git folder** → paste repo URL |
-| Pull / branch / commit | The Git-folder UI (or CLI) |
-| Push / open PR | The remote Git host (GitHub, GitLab, Azure DevOps, Bitbucket) |
-
-A typical workflow:
-
-1. Developer creates a feature branch in the Git folder, edits notebooks + bundle YAML
-2. `databricks bundle deploy --target development` deploys their dev copy
-3. Pull request reviewed + merged to `main`
-4. CI runs `databricks bundle deploy --target production` against the production target
-5. Production runs under the configured service principal
+1. **Feature branch** → `databricks bundle deploy -t dev` (personal, prefixed, paused copy)
+2. **PR merged to `main`** → CI runs `validate`, then `deploy -t test` and integration tests
+3. **Release** → CI runs `deploy -t prod` as the **service principal**. The same YAML is used, with target overrides supplying prod values
 
 ## Use Cases
 
-- **Reproducible deployments** — every change to production traces back to a Git commit + a bundle target
-- **Multi-environment promotion** — dev → staging → prod with the same YAML, different overrides
-- **Pull-request review** — bundle YAML diffs are reviewable like any other code
-- **CI/CD** — GitHub Actions / Azure DevOps run `bundle deploy` after a merge to `main`
+- **Promote one pipeline across three workspaces** with target-level `catalog` and `host` overrides
+- **Secrets from CI**: `BUNDLE_VAR_db_password` injected from the CI secret store at deploy time
+- **Adopt existing jobs**: `bundle generate` turns a UI-built job into YAML, and `deployment bind` links it
+- **Lakeflow Connect ingestion as code**: ingestion pipelines are deployed with bundles like any other pipeline
 
 ## Common Issues & Errors
 
-- **Personal access tokens in production** — fragile and tied to a human user; use a service principal
-- **Mutating production schedules manually** — drift from the bundle; the next deploy may unexpectedly revert
-- **Skipping `databricks bundle validate`** — catches YAML errors before deploy
-- **Forgetting `--target production`** — `bundle deploy` defaults to the first listed target if none is specified
+### Password Committed to `databricks.yml`
+
+**Scenario:** A reviewer finds a database password in the bundle's `variables` default.
+**Fix:** Remove the default, rotate the password, and supply it through `BUNDLE_VAR_<name>` from CI secrets, or read it at runtime with `dbutils.secrets.get`.
+
+### Production Deploy Rejected
+
+**Scenario:** `databricks bundle deploy -t prod` fails validation.
+**Fix:** Production mode checks the Git branch, `run_as`/permissions, and user-specific paths. Deploy from the configured branch as a service principal, with shared `root_path` values.
+
+### Dev Deployment Schedules Never Fire
+
+**Scenario:** A job deployed with `-t dev` never runs on its schedule.
+**Fix:** Development mode pauses schedules and triggers by design. Run it with `databricks bundle run`, or unpause it explicitly in dev.
+
+### Wrong Environment Deployed
+
+**Scenario:** `databricks bundle deploy` without `-t` deploys to dev when prod was intended.
+**Fix:** Without `-t`, the bundle uses the target marked `default: true`. Always pass `-t` in CI.
+
+### Variable Value Ignored
+
+**Scenario:** A target sets `catalog: prod`, but the deploy still uses `dev`.
+**Fix:** A higher-precedence source is winning: a `--var` flag, a `BUNDLE_VAR_catalog` environment variable, or `variable-overrides.json`. Check those first.
 
 ## Exam Tips
 
-> [!tip]
+> [!tip] Exam Tips
 >
-> - `mode: development` vs `mode: production` — know the resource-name and schedule differences
-> - Production = service principal, not a personal token
-> - `databricks bundle deploy --target <name>` is the canonical deploy command
-> - Git folders are the *current* term (formerly Repos)
+> - **Declarative Automation Bundles** = the former **Databricks Asset Bundles**. Same CLI (`databricks bundle`), same `databricks.yml`
+> - Secrets → `BUNDLE_VAR_<name>` environment variables (or `--var`), never committed YAML
+> - Variable precedence: `--var` > `BUNDLE_VAR_` > `variable-overrides.json` > target `variables` > `default`
+> - `mode: development` prefixes names and **pauses** schedules. `mode: production` validates branch, identity, and paths
+> - `validate` checks the config, `deploy -t` deploys, `run` runs a job or pipeline, `destroy` removes deployed resources
 
 ## Key Takeaways
 
-- Asset Bundles = YAML + source code + targets
-- Dev mode prefixes resource names and pauses schedules; prod mode does neither
-- Git folders sync a repo into the workspace
-- The combination = reproducible deploys + CI/CD-ready workflow
+- Bundles make jobs, pipelines, and other assets versioned, reviewable, and repeatable
+- Targets plus variables and overrides promote one codebase from dev to test to prod
+- Production deploys run as a service principal, from CI, on the release branch
+- The Databricks CLI (`databricks bundle ...`) is the automation interface
 
 ## Related Topics
 
-- [Monitoring Basics](../06-troubleshooting-monitoring-and-optimization/02-spark-ui-and-system-tables.md)
-- [DE Pro — Asset Bundles (deeper)](../../data-engineer-professional/06-debugging-and-deploying/01-asset-bundles-part1.md)
+- [Git Folders](./01-git-folders.md)
+- [Lakeflow Jobs and Tasks](../04-working-with-lakeflow-jobs/01-lakeflow-jobs-and-tasks.md)
+- [DE Pro — Declarative Automation Bundles (deeper)](../../data-engineer-professional/08-debugging-and-deploying/03-declarative-automation-bundles-part1.md)
 - [Hands-on Lab 03 — Lakeflow Declarative Pipelines](../../../labs/03-lakeflow-declarative-pipelines.md)
 
 ## Official Documentation
 
-- [Databricks Asset Bundles](https://docs.databricks.com/en/dev-tools/bundles/index.html)
-- [Bundle settings reference](https://docs.databricks.com/en/dev-tools/bundles/reference.html)
-- [Git folders documentation](https://docs.databricks.com/en/repos/index.html)
+- [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+- [Substitutions and variables](https://docs.databricks.com/aws/en/dev-tools/bundles/variables)
+- [Deployment modes](https://docs.databricks.com/aws/en/dev-tools/bundles/deployment-modes)
+- [bundle command group](https://docs.databricks.com/aws/en/dev-tools/cli/bundle-commands)
+- [Bundles release notes](https://docs.databricks.com/aws/en/release-notes/dev-tools/bundles)
 
 ---
 
-**[↑ Back to CI/CD and Monitoring](./README.md) | [Next: Monitoring Basics →](../06-troubleshooting-monitoring-and-optimization/02-spark-ui-and-system-tables.md)**
+**[← Previous: Git Folders](./01-git-folders.md) | [↑ Back to Implementing CI/CD](./README.md)**

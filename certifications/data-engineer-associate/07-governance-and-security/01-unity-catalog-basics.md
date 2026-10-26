@@ -419,10 +419,10 @@ CREATE METASTORE ASSIGNMENT catalog_name
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Table Created in the Wrong Catalog
 
-**Scenario:** The default settings for Unity Catalog Basics do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Unity Catalog Basics to handle production-scale workloads.
+**Scenario:** A notebook runs `CREATE TABLE orders ...` and the table lands in the workspace's default catalog instead of `prod`.
+**Fix:** Two-part or one-part names resolve against the current catalog and schema. Use fully qualified `catalog.schema.table` names, or run `USE CATALOG` / `USE SCHEMA` first.
 
 ### INSUFFICIENT_PERMISSIONS When Querying Across Catalogs
 

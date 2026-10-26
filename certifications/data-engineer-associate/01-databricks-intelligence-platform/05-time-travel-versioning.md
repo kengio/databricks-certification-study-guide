@@ -400,10 +400,10 @@ log_path = "/mnt/data/employees/_delta_log"
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Time Travel Fails After Predictive Optimization Runs VACUUM
 
-**Scenario:** The default settings for Time Travel and Versioning do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Time Travel and Versioning to handle production-scale workloads.
+**Scenario:** A query `VERSION AS OF` a two-week-old version fails on a UC managed table, although no one ran `VACUUM` manually.
+**Fix:** Predictive optimization runs `VACUUM` automatically on UC managed tables, with a default retention window of 7 days (`delta.deletedFileRetentionDuration`). Raise that table property if you need a longer time-travel window ([predictive optimization](https://docs.databricks.com/aws/en/optimizations/predictive-optimization)).
 
 ### VersionNotFoundException After VACUUM
 

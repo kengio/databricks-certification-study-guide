@@ -28,101 +28,65 @@ A Lakeflow Job starts runs from a **trigger**. The exam guide names three trigge
 
 ---
 
-## Cron Scheduling
+## Trigger Types at a Glance
 
-### Cron Syntax Overview
+| Trigger | Starts a run when… | Kind | Pick it when |
+| :--- | :--- | :--- | :--- |
+| **Scheduled** | A time-based schedule fires (simple interval or Quartz cron + time zone) | Time-based | Data arrives at a known time, or consumers need output at a fixed time (for example a 6 AM report) |
+| **File arrival** | New files arrive in a monitored **UC external location or volume** | Data-driven | Files land at unpredictable times and should be processed soon after arrival, with no idle compute |
+| **Table update** | Monitored UC tables (including views, MVs, streaming tables, OpenSharing tables, system tables) are updated | Data-driven | A job depends on upstream tables produced by *other* jobs or teams |
+| **Continuous** | The previous run completes or fails, so a run is always active | Always-on | Streaming workloads that must keep running. It can't be combined with other triggers |
+| **None (manual)** | **Run now**, the API, or an external orchestrator | Manual | Ad hoc runs and externally orchestrated runs |
+| Model update *(Beta)* | A UC model version or alias changes | Data-driven | ML promotion steps (not on this exam) |
 
-```mermaid
-flowchart TB
-    Minute["Minute<br/>0-59"]
-    Hour["Hour<br/>0-23"]
-    DayOfMonth["Day of Month<br/>1-31"]
-    Month["Month<br/>1-12"]
-    DayOfWeek["Day of Week<br/>0-6<br/>0=Sunday"]
-    Command["Command"]
+Source: [Automate jobs with schedules and triggers](https://docs.databricks.com/aws/en/jobs/triggers).
 
-    Minute --> Syntax["Cron Expression<br/>M H DOM MON DOW"]
-    Hour --> Syntax
-    DayOfMonth --> Syntax
-    Month --> Syntax
-    DayOfWeek --> Syntax
-    Syntax --> Command
-```
+- By default only **one run** of a job can be active at a time. Runs that exceed max concurrency are skipped
+- Pausing a trigger stops new runs, but active runs continue. Each trigger can be paused independently
+- **Multiple triggers** per job (up to five) are in **Beta**
 
-### Cron Format: `minute hour day_of_month month day_of_week`
+## Scheduled Triggers (Time-Based)
 
-| Field | Range | Examples |
-|-------|-------|----------|
-| Minute | 0-59 | `0`, `15`, `*/15` |
-| Hour | 0-23 | `0`, `2`, `9-17` |
-| Day of Month | 1-31 | `1`, `15`, `*/2` |
-| Month | 1-12 | `1`, `6-8`, `*` |
-| Day of Week | 0-6 | `0=Sunday`, `5=Friday`, `1-5=Mon-Fri` |
+A schedule can be **simple** (every N units; the scheduler picks the first run time) or **advanced** (period, start time, and time zone, optionally shown as cron syntax). "Databricks enforces a minimum interval of 10 seconds between subsequent runs" ([Run jobs on a schedule](https://docs.databricks.com/aws/en/jobs/scheduled)).
 
-### Cron Examples
+### Quartz cron syntax
+
+Advanced schedules use **Quartz** cron: 6 or 7 fields, with seconds first and an optional year ([Quartz CronTrigger tutorial](https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html)):
 
 ```text
-# Daily at 2 AM UTC
-
-0 2 * * * ?
-
-# Every 15 minutes
-
-*/15 * * * * ?
-
-# Monday-Friday at 9 AM
-
-0 9 * * 1-5 ?
-
-# Every hour at the top of the hour
-
-0 * * * * ?
-
-# First day of month at midnight
-
-0 0 1 * * ?
-
-# Every Sunday at 3 PM
-
-0 15 * * 0 ?
-
-# Weekdays (Mon-Fri) at 8 AM and 5 PM
-
-0 8,17 * * 1-5 ?
-
-# Every 6 hours
-
-0 0,6,12,18 * * * ?
+┌ seconds (0-59)
+│ ┌ minutes (0-59)
+│ │ ┌ hours (0-23)
+│ │ │ ┌ day of month (1-31)
+│ │ │ │ ┌ month (1-12 or JAN-DEC)
+│ │ │ │ │ ┌ day of week (1-7 or SUN-SAT; 1 = Sunday)
+│ │ │ │ │ │ ┌ year (optional)
+0 0 2 * * ?
 ```
 
-### Databricks Cron Format
+- `?` means "no specific value". When you constrain day-of-week, put `?` in day-of-month, and vice versa
+- Unix cron has 5 fields and no seconds, so don't paste Unix cron into a Quartz schedule
 
-Databricks uses Quartz Cron, which requires a seconds field:
-
-```text
-second minute hour day_of_month month day_of_week ?
-```
-
-### Common Databricks Cron Expressions
+| Schedule | Quartz expression |
+| :--- | :--- |
+| Every day at 02:00 | `0 0 2 * * ?` |
+| Every day at noon | `0 0 12 * * ?` |
+| Every hour on the hour | `0 0 * * * ?` |
+| Every 15 minutes | `0 0/15 * * * ?` |
+| Weekdays at 09:00 | `0 0 9 ? * MON-FRI` |
+| Weekdays at 10:15 | `0 15 10 ? * MON-FRI` |
+| First day of each month at midnight | `0 0 0 1 * ?` |
+| Mondays at midnight | `0 0 0 ? * MON` |
 
 ```json
 {
   "schedule": {
     "quartz_cron_expression": "0 0 2 * * ?",
-    "timezone_id": "America/Los_Angeles"
+    "timezone_id": "America/Los_Angeles",
+    "pause_status": "UNPAUSED"
   }
 }
 ```
-
-| Frequency | Expression | Notes |
-|-----------|-----------|-------|
-| Every minute | `0 * * * * ?` | High frequency, not recommended |
-| Every 5 minutes | `0 */5 * * * ?` | Mid frequency |
-| Every hour | `0 0 * * * ?` | Hourly at :00 |
-| Daily 2 AM UTC | `0 0 2 * * ?` | Single run per day |
-| Business days 9 AM | `0 0 9 * * 1-5 ?` | Mon-Fri |
-| Weekly Monday midnight | `0 0 0 * * 1 ?` | Once per week |
-| Monthly 1st at midnight | `0 0 0 1 * ?` | Monthly schedule |
 
 ## Timezones
 
@@ -131,7 +95,7 @@ second minute hour day_of_month month day_of_week ?
 ```json
 {
   "schedule": {
-    "quartz_cron_expression": "0 0 9 * * 1-5 ?",
+    "quartz_cron_expression": "0 0 9 ? * MON-FRI",
     "timezone_id": "America/New_York"
   }
 }
@@ -179,7 +143,7 @@ If a job runs longer than the schedule interval with `max_concurrent_runs: 1`:
 {
   "tasks": [
     {
-      "timeout_seconds": 3600,  // 1 hour max
+      "timeout_seconds": 3600,
       "max_retries": 2
     }
   ]
@@ -193,64 +157,53 @@ When timeout exceeded:
 3. Retry logic triggered (if configured)
 4. Overall job run marked as failed
 
-## Event-Based Triggers
+## File Arrival Triggers (Data-Driven)
 
-### Webhook Triggers
+A file arrival trigger monitors the root or a subpath of a **Unity Catalog external location or volume**, recursively, and makes a "best effort to check for new files every minute" ([Trigger jobs when new files arrive](https://docs.databricks.com/aws/en/jobs/file-arrival-triggers)).
 
-External systems trigger jobs via webhook:
+| Setting | Effect |
+| :--- | :--- |
+| **Minimum time between triggers in seconds** | Cooldown: at most one run per interval (for example `900` = one run per 15 minutes) |
+| **Wait after last change in seconds** | Debounce: each new file resets the timer, and the run starts once arrivals pause (for example `60` for batched drops) |
 
-```bash
-# Example: Trigger job from CI/CD pipeline
+- Only **new** files trigger runs. Overwriting a file with the same name doesn't
+- Without file events, a workspace supports at most 50 such triggers, and the location can hold up to 10,000 files. **Enable file events** on the external location to remove the file-count limit
+- Permissions: `READ` on the storage location and **CAN MANAGE** on the job
+- Inside the triggered job, use **Auto Loader** (with a checkpoint outside the monitored path) to process exactly the new files. `{{job.trigger.file_arrival.location}}` passes the location to the task
 
-curl -X POST \
-  https://databricks-instance.cloud.databricks.com/api/2.1/jobs/run-now \
-  -H "Authorization: Bearer <PAT>" \
-  -d '{
-    "job_id": 123,
-    "notebook_params": {
-      "environment": "prod",
-      "version": "1.2.3"
-    }
-  }'
+## Table Update Triggers (Data-Driven)
+
+A table update trigger runs the job when monitored tables change (updates, merges, deletes), without a continuously running cluster ([Trigger jobs when source tables are updated](https://docs.databricks.com/aws/en/jobs/trigger-table-update)).
+
+| Setting | Effect |
+| :--- | :--- |
+| **Trigger when** | **Any table is updated** or **All tables are updated** (when you monitor several) |
+| **Minimum time between triggers in seconds** | Wait after a run completes before triggering again |
+| **Wait after last change in seconds** | Wait after an update before triggering; further updates reset the timer |
+
+- Supported sources: UC managed Delta and Iceberg tables, external Delta tables, materialized views, streaming tables, UC views and metric views (when their dependencies are supported), OpenSharing objects, and system tables
+- Up to **10 tables** per trigger
+- The job's **Run as** principal needs `SELECT` on each table, plus `USE CATALOG` and `USE SCHEMA`. Without them the trigger can't evaluate, and the job never runs
+
+```mermaid
+flowchart LR
+    A[Team A job<br/>writes main.silver.orders] -->|table updated| T{{Table update trigger<br/>All tables updated}}
+    B[Team B job<br/>writes main.silver.customers] -->|table updated| T
+    T --> J[Gold build job]
 ```
 
-### File-Based Triggers
+## Choosing Time-Based vs Data-Driven
 
-Monitor for new files in cloud storage:
+| Question | Points to |
+| :--- | :--- |
+| Does data arrive at an unpredictable time, and should it be processed soon after? | **File arrival** |
+| Does the job depend on tables maintained by other jobs or teams, with no shared schedule? | **Table update** (*All tables* when it needs every input fresh) |
+| Is the deadline fixed (report by 06:00), or does the source deliver on a fixed timetable? | **Scheduled** |
+| Should no compute run, and no empty runs start, during long idle gaps? | Data-driven (file arrival or table update) |
+| Must the workload never stop? | **Continuous** |
+| Are there dependencies *inside* one pipeline? | Neither: use task dependencies in **one** job DAG |
 
-```python
-# Check for new files before running (in notebook before main logic)
-
-import os
-from datetime import datetime
-
-wait_time = 0
-timeout = 300  # 5 minutes
-
-while not os.path.exists("/mnt/data/trigger_file.txt"):
-    if wait_time > timeout:
-        raise TimeoutError("Trigger file not found")
-
-    dbutils.notebook.run("wait", 60)  # Wait 1 minute
-    wait_time += 60
-
-# Continue with main logic
-
-```
-
-### Object Storage Events (S3, ADLS)
-
-```python
-
-# Databricks can monitor object storage for trigger events
-# Setup via Databricks Events API or UI
-
-# When configured, jobs trigger when:
-# - New files uploaded to S3/ADLS
-# - Specific pattern matches (e.g., *.csv)
-# - File size thresholds met
-
-```
+A scheduled job that polls every 5 minutes "just in case" starts runs that find no data. A data-driven trigger runs only when there's something to do.
 
 ## Scheduling Patterns
 
@@ -287,7 +240,7 @@ Runs every hour at :00.
 {
   "name": "business_hours_refresh",
   "schedule": {
-    "quartz_cron_expression": "0 0 9-17 * * 1-5 ?",
+    "quartz_cron_expression": "0 0 9-17 ? * MON-FRI",
     "timezone_id": "America/Chicago"
   }
 }
@@ -320,7 +273,7 @@ Stagger regional loads to distribute compute load.
 
 ### Pause Job from UI
 
-In Workflows > Jobs:
+In **Jobs & Pipelines**:
 
 1. Click job row
 2. Click "Pause" button
@@ -328,21 +281,16 @@ In Workflows > Jobs:
 
 ### Pause via API
 
-```bash
-curl -X POST \
-  https://databricks-instance.cloud.databricks.com/api/2.1/jobs/pause \
-  -H "Authorization: Bearer <PAT>" \
-  -d '{"job_id": 123}'
-```
-
-### Resume via API
+There is no separate pause endpoint. Set the trigger's `pause_status` in the job settings (the `jobs/update` API, or `pause_status` in bundle YAML):
 
 ```bash
 curl -X POST \
-  https://databricks-instance.cloud.databricks.com/api/2.1/jobs/unpause \
-  -H "Authorization: Bearer <PAT>" \
-  -d '{"job_id": 123}'
+  https://<workspace-host>/api/2.1/jobs/update \
+  -H "Authorization: Bearer <token>" \
+  -d '{"job_id": 123, "new_settings": {"schedule": {"quartz_cron_expression": "0 0 2 * * ?", "timezone_id": "UTC", "pause_status": "PAUSED"}}}'
 ```
+
+Set `"pause_status": "UNPAUSED"` to resume. Pausing stops new runs, and active runs continue.
 
 ## Manual Trigger
 
@@ -379,7 +327,7 @@ curl -X POST \
 ```json
 {
   "schedule": {
-    "quartz_cron_expression": "0 0 2 * * ?",  // 2 AM
+    "quartz_cron_expression": "0 0 2 * * ?",
     "timezone_id": "UTC"
   }
 }
@@ -401,7 +349,7 @@ Job C: 0 30 * * * ?      // 30 min past every hour
 {
   "tasks": [
     {
-      "timeout_seconds": 3600,  // 1 hour
+      "timeout_seconds": 3600,
       "max_retries": 2
     }
   ]
@@ -441,10 +389,9 @@ Separate schedules by environment prevent cross-environment issues.
 
 When DST changes occur:
 
-- Jobs scheduled with `timezone_id` automatically adjust
-- `UTC` timezone unaffected
-- Check your scheduled time before/after DST transition
-- Document timezone explicitly in job config
+- With a time zone that observes DST, "an hourly job is skipped or might appear to be delayed by an hour or two" around the change ([Run jobs on a schedule](https://docs.databricks.com/aws/en/jobs/scheduled))
+- Choose **UTC** when runs must happen at absolute intervals
+- Document the intended time zone in the job description
 
 ## Use Cases
 
@@ -453,10 +400,10 @@ When DST changes occur:
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Empty Runs From a Polling Schedule
 
-**Scenario:** The default settings for Scheduling and Triggers do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Scheduling and Triggers to handle production-scale workloads.
+**Scenario:** A job scheduled every 5 minutes to "check for vendor files" starts hundreds of runs a day, and most find nothing.
+**Fix:** Replace the schedule with a **file arrival** trigger on the vendor's UC external location or volume, and use Auto Loader inside the job.
 
 ### Cron Schedule Running at Wrong Time Due to Timezone
 
@@ -466,27 +413,23 @@ When DST changes occur:
 ### Overlapping Job Runs From File-Arrival Triggers
 
 **Scenario:** A file-arrival trigger fires multiple times in rapid succession (e.g., batch of files landing simultaneously), causing duplicate or concurrent job runs that corrupt downstream tables.
-**Fix:** Set `max_concurrent_runs = 1` in the job definition to prevent parallel execution. The overlapping trigger will be skipped, and data will be picked up on the next run.
+**Fix:** Set **Wait after last change** so a burst of files produces a single run, and **Minimum time between triggers** to cap the frequency. Keep `max_concurrent_runs = 1` so runs never overlap; Auto Loader picks up any files that arrive later on the next run.
 
 ## Exam Tips
 
-- Databricks uses Quartz Cron (7 fields including seconds): `second minute hour day_of_month month day_of_week ?`
-- Know common cron expressions: daily at 2 AM (`0 0 2 * * ?`), every hour (`0 0 * * * ?`), weekdays only (`0 0 9 * * 1-5 ?`)
-- `max_concurrent_runs: 1` prevents duplicate processing when a job takes longer than the schedule interval
-- Jobs scheduled with `timezone_id` automatically adjust for daylight saving time changes
+- The exam guide names three trigger types: **scheduled**, **file arrival**, and **table update**. Know which is time-based and which are data-driven
+- "Files arrive at unpredictable intervals, process soon after landing, no idle compute, no empty runs" → **file arrival**
+- "Run when upstream tables owned by another team change" → **table update** (choose *All tables* if every input must be fresh)
+- Quartz cron has **seconds first**. `?` goes in day-of-month or day-of-week. Weekdays at 9 AM is `0 0 9 ? * MON-FRI`
+- Continuous triggers can't be combined with other triggers. Schedules have a 10-second minimum interval
 
 ## Key Takeaways
 
-- **Cron Syntax**: `minute hour day month day_of_week`
-- **Quartz Format**: Requires seconds field (7 fields)
-- **Timezone**: Affects when cron fires (different regions)
-- **Max Concurrent Runs**: Prevents duplicate execution
-- **Timeout**: Maximum execution time per task
-- **Pause/Resume**: Control scheduling without deleting job
-- **Webhooks**: External systems trigger via API
-- **Off-Peak**: Schedule during low-demand hours
-- **Staggering**: Space jobs to avoid resource contention
-- **Daylight Saving**: Automatic adjustment with timezone
+- **Scheduled** = time-based (simple or Quartz cron with a time zone)
+- **File arrival** = new files in a UC external location or volume. Debounce with *wait after last change*
+- **Table update** = changes to up to 10 monitored UC tables, triggering on *any* or *all*
+- **Continuous** = always-on. **Manual** = Run now or the API
+- Pick data-driven triggers when data availability, not the clock, decides when work should run
 
 ## Related Topics
 
@@ -495,8 +438,10 @@ When DST changes occur:
 
 ## Official Documentation
 
-- [Schedule a Job](https://docs.databricks.com/en/workflows/jobs/schedule-jobs.html)
-- [Trigger a Job](https://docs.databricks.com/en/workflows/jobs/trigger-jobs.html)
+- [Automate jobs with schedules and triggers](https://docs.databricks.com/aws/en/jobs/triggers)
+- [Run jobs on a schedule](https://docs.databricks.com/aws/en/jobs/scheduled)
+- [Trigger jobs when new files arrive](https://docs.databricks.com/aws/en/jobs/file-arrival-triggers)
+- [Trigger jobs when source tables are updated](https://docs.databricks.com/aws/en/jobs/trigger-table-update)
 
 ---
 

@@ -51,266 +51,93 @@ flowchart TD
     W3 --> Storage
 ```
 
-## Cluster Types
+## Compute Services at a Glance
 
-### All-Purpose Clusters
+| Compute | Who manages it | Startup | Typical workload | Cost model |
+| :--- | :--- | :--- | :--- | :--- |
+| **Serverless compute** (notebooks, jobs, Lakeflow pipelines) | Databricks. Resources aren't provisioned in your cloud account | Fast | Most new notebooks, jobs, and pipelines | DBUs for the work done, with idle time minimized. Track it in `system.billing.usage` |
+| **All-purpose compute** (classic) | You: node types, workers, runtime, policies | Minutes | Interactive development, shared exploration | DBUs plus cloud VM cost while it runs, including idle time until auto termination |
+| **Jobs compute** (classic) | You define it in the job; it's created for the run and terminated at the end | Minutes (faster from a pool) | Scheduled production jobs | Pay only while the run executes. Priced as a separate jobs SKU from all-purpose compute ([price list](https://www.databricks.com/product/pricing)) |
+| **SQL warehouse** — serverless / pro / classic | Serverless: Databricks. Pro/classic: your cloud account | Serverless about 2–6 s; pro/classic about 4 min | BI dashboards, ad hoc SQL, many concurrent users | DBUs per warehouse size while running; auto stop ends idle billing |
+| **Instance pool** | You | Seconds for clusters drawn from warm instances | Classic clusters that must start fast | You pay the cloud provider for idle instances in the pool |
 
-**Use Case**: Interactive development and collaboration
+A **DBU** (Databricks Unit) "is a normalized unit of processing power" used for measurement and pricing, billed at per-second granularity ([Databricks pricing](https://www.databricks.com/product/pricing)). It is not "one hour on one worker". The DBU rate depends on the compute type and instance size.
 
-```yaml
-Startup Time: 5-10 minutes
-Billing: Per DBU (Databricks Unit) per second
-Max Uptime: Configurable auto-termination
-Multi-user: Yes, multiple users can attach
+### Serverless compute
 
-Typical Config:
-  - Node type: i3.xlarge (general purpose)
-  - Min workers: 2
-  - Max workers: 8
-  - Timeout: 30 minutes no activity
-```
+- "Serverless compute is available by default in most workspaces and does not require enablement". Workspaces without Unity Catalog must upgrade first
+- **Versionless**: "Serverless workloads always run on the latest runtime version"
+- Libraries are managed with **environments**, not cluster libraries. Most Spark properties can't be set (see [Spark Tuning Parameters](../03-data-transformation-and-modeling/07-spark-tuning-parameters.md))
+- Estimate cost by benchmarking a representative workload and querying `system.billing.usage`. Charges can take up to 24 hours to appear
 
-**Cost**: $0.40-$1.00 per DBU per hour (depends on region)
+Source: [Connect to serverless compute](https://docs.databricks.com/aws/en/compute/serverless/).
 
-### Job Clusters
+### Classic compute configuration
 
-**Use Case**: Automated batch or streaming jobs
+| Setting | What the docs say |
+| :--- | :--- |
+| **Access mode** | **Auto** (default) picks **Standard** unless you choose an ML runtime, GPU, or DBR below 14.3, in which case it picks **Dedicated**. Standard = multiple users with isolation (Python, SQL, Scala). Dedicated = one user or group (adds R) |
+| **Runtime** | Latest version for all-purpose compute. An **LTS** version for operational jobs. The **ML** runtime for data science |
+| **Photon** | Enabled by default on DBR 9.1 LTS and above |
+| **Autoscaling** | Min and max workers. Don't also enable `spark.dynamicAllocation.enabled` |
+| **Auto termination** | Inactivity period of 10–10,000 minutes (0 opts out) |
+| **Spot instances** | The driver is always on-demand. Workers can use spot |
+| **Single node** | No workers. Spark runs locally on the driver, for small data and single-machine libraries |
 
-```yaml
-Startup Time: 2-5 minutes (optimized)
-Billing: Per job run
-Max Uptime: Duration of job
-Multi-user: No, single job only
+Source: [Compute configuration reference](https://docs.databricks.com/aws/en/compute/configure), [Manage classic compute](https://docs.databricks.com/aws/en/compute/clusters-manage).
 
-Typical Config:
-  - Node type: m5.large (cost-optimized)
-  - Min workers: 1
-  - Max workers: 10
-  - Auto-terminate: When job finishes
-```
+### SQL warehouse types
 
-**Cost**: Lower per-DBU cost (optimized pricing)
+| Type | Photon | Predictive I/O | Intelligent Workload Management | Startup |
+| :--- | :---: | :---: | :---: | :--- |
+| **Serverless** | Yes | Yes | Yes | About 2–6 seconds |
+| **Pro** | Yes | Yes | No | About 4 minutes |
+| **Classic** | Yes | No | No | About 4 minutes |
 
-### SQL Warehouses (formerly SQL Endpoints)
+- Databricks recommends **serverless** for ETL, BI, and exploratory analysis, "especially when query demand varies widely"
+- **Scaling**: the default is a minimum and maximum of one cluster. Raise the maximum to serve more concurrent users
+- **Auto stop** defaults: 10 minutes (serverless), 45 minutes (pro and classic)
 
-**Use Case**: SQL queries and BI tool connectivity
+Sources: [SQL warehouse types](https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-types), [Create a SQL warehouse](https://docs.databricks.com/aws/en/compute/sql-warehouse/create).
 
-```yaml
-Startup Time: 1-2 minutes
-Billing: Per SQL endpoint per second
-Max Uptime: Always available
-Multi-user: Yes, multiple concurrent queries
+## Choosing Compute for a Workload
 
-Typical Config:
-  - Warehouse size: Small (2 clusters), Medium (4), Large (8)
-  - Auto-scaling: Enabled by default
-  - Spot instances: Enabled for cost savings
-```
-
-**Cost**: $2-$4 per DBU per hour (premium for always-on)
-
-## Cluster Configuration
-
-### Essential Settings
-
-| Setting | Purpose | Recommendation |
-|---------|---------|-----------------|
-| **Node Type** | VM size/capabilities | Use general-purpose for most workloads |
-| **Driver Type** | Leader node specs | Same as workers for balanced load |
-| **Workers** | Slave nodes count | Min 2, Max based on workload |
-| **Runtime** | Spark/Python versions | Latest stable (DBR 14.0+) |
-| **Auto-scaling** | Dynamic worker count | Enable for variable workloads |
-| **Timeout** | Auto-termination | 30-60 mins for dev clusters |
-
-### Node Types
-
-```text
-GPU Optimized (G4/A40):      ML workloads, distributed training
-General Purpose (i3/m5):      Most data engineering tasks
-Memory Optimized (r7/z1):     Large in-memory datasets
-Compute Optimized (c5/c6):    Complex transformations
-Spot Instances:               Cost savings (can be interrupted)
-```
-
-### Databricks Runtime (DBR)
-
-```python
-
-# DBR includes:
-# - Apache Spark with optimizations
-# - Python, R, Scala, SQL pre-installed
-# - ML libraries (MLlib, scikit-learn)
-# - High-level APIs
-
-# Available flavors:
-
-DBR Base              # Spark only
-DBR for ML           # Spark + ML libraries
-DBR SQL               # Optimized for SQL queries
-DBR for Serverless   # Auto-managed
-```
+| Scenario | Best choice | Why not the others |
+| :--- | :--- | :--- |
+| Many analysts running ad hoc SQL on curated Delta tables all day | **Serverless SQL warehouse** with autoscaling (raise max clusters) | Job compute is for scheduled ETL. A fixed all-purpose cluster can't balance concurrency against cost |
+| Nightly ETL notebook with no one watching | **Serverless jobs** or **jobs compute** | All-purpose compute keeps billing between commands and is meant for interactive use |
+| Interactive exploration and debugging | **Serverless notebook** or **all-purpose compute** | Jobs compute exists only for a run |
+| Small dataset, pandas or scikit-learn | **Single-node** compute | Workers add cost without benefit |
+| Classic job that must start within seconds | **Instance pool** (or serverless) | A cold classic cluster takes minutes to provision |
+| Code needs R, a GPU, or a custom init script | **Classic** compute (dedicated access mode where required) | Serverless doesn't expose these controls |
 
 ## Cluster Lifecycle
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Pending: User creates cluster
-    Pending --> Running: Nodes provisioned
-    Running --> Busy: Running workload
-    Busy --> Running: Workload complete
-    Running --> Terminated: Timeout/User stops
-    Running --> Restarting: Cluster restart
-    Restarting --> Running: Restart complete
-    Terminated --> [*]
-
-    note right of Running
-        Idle cluster incurs
-        ongoing charges
-    end note
+    [*] --> Pending: Create or start
+    Pending --> Running: Nodes provisioned, Spark started
+    Running --> Restarting: Restart
+    Restarting --> Running
+    Running --> Terminating: Auto termination or user stops
+    Terminating --> Terminated
+    Terminated --> Pending: Start again (same cluster ID)
 ```
 
-## Scaling Strategies
-
-### Vertical Scaling (Node Type)
-
-```python
-
-# Larger nodes = more memory/CPU per worker
-# Pros: Simpler, fewer network copies
-# Cons: More expensive, slower scaling
-
-Small:   i3.xlarge    (4 vCPU, 30.5 GB RAM)
-Medium:  i3.2xlarge   (8 vCPU, 61 GB RAM)
-Large:   i3.4xlarge   (16 vCPU, 122 GB RAM)
-```
-
-### Horizontal Scaling (Worker Count)
-
-```python
-
-# More workers = distributed processing
-# Pros: Faster scaling, handles growing data
-# Cons: More network I/O, coordination overhead
-
-Min Workers:  1-2  (development)
-Target:       3-8  (typical workload)
-Max Workers:  10+  (peak load)
-```
-
-### Dynamic Scaling (Databricks Managed)
-
-```python
-# Cluster auto-scales based on pending workload
-
-dbfs.conf.set("spark.databricks.cluster.profile", "singleNode")
-
-# Configuration in cluster settings:
-
-Auto-scaling: Enabled
-Min workers: 2
-Max workers: 8
-# Scales up/down automatically based on task queue
-
-```
+- "When you start a terminated compute, Databricks re-creates the compute with the same ID", reinstalls libraries, and reattaches notebooks
+- The compute **event log** keeps lifecycle events for 60 days. Startup failures are covered in [Compute Troubleshooting](../06-troubleshooting-monitoring-and-optimization/05-compute-troubleshooting.md)
 
 ## Cost Optimization
 
-### DBU Calculation
-
-```text
-1 DBU = 1 hour of processing on 1 worker
-        OR
-        1 hour of processing on 1 SQL warehouse
-
-Monthly Bill = (Nodes × Hours × DBU Rate) + Storage
-             = (3 nodes × 730 hours × $0.40) + Storage
-             = $876 + Storage
-```
-
-### Cost Reduction Tactics
-
-1. **Spot Instances** (-60% cost)
-
-   ```yaml
-   Enable Spot: Cluster will use cheaper interruptible VMs
-   Trade-off: Can be terminated without warning
-   Use for: Non-critical jobs with checkpointing
-   ```
-
-2. **Right-sizing** (-30-40%)
-
-   ```python
-   # Profile actual usage
-   # Don't over-provision
-   # Use smaller nodes, scale horizontally
-   ```
-
-3. **Auto-termination** (-20-50%)
-
-   ```python
-   # Set 15 min timeout for dev clusters
-   # Prevents forgotten clusters running 24/7
-   # Job clusters auto-terminate (no cost waste)
-   ```
-
-4. **Shared Clusters**
-
-   ```python
-   # All-purpose cluster for team
-   # Shares costs across users
-   # Higher utilization
-   ```
-
-## Monitoring & Troubleshooting
-
-### Cluster Metrics
-
-```python
-# Available in Cluster Details UI:
-
-CPU Utilization      # % of compute used
-Memory Usage         # RAM in use
-Disk I/O             # Read/Write speed
-Network I/O          # Communication overhead
-Task Execution Time  # Job performance
-```
-
-### Common Issues & Solutions
-
-| Problem | Cause | Solution |
-|---------|-------|----------|
-| **Cluster fails to start** | Insufficient quota | Request more capacity or use different region |
-| **Out of Memory (OOM)** | Dataset too large | Increase node type or add workers |
-| **Slow job execution** | Under-resourced cluster | Scale up horizontally or upgrade node type |
-| **High costs** | Over-provisioned | Use spot instances, smaller nodes, auto-terminate |
-| **Driver node OutOfMemory** | Large broadcast variables | Use distributed instead of broadcast |
-
-### Logging & Debugging
-
-```python
-# Access cluster logs
-
-dbutils.fs.ls("/mnt/logs/cluster-logs/")
-
-# Monitor in real-time
-# Spark UI: Available during job execution
-# Driver logs: Check for errors
-# Worker logs: Troubleshoot data processing issues
-
-```
-
-## Cluster as a Service (Premium Feature)
-
-```python
-
-# Databricks manages cluster lifecycle
-# Features:
-
-- Auto-scaling based on workload
-- Automatic updates and patches
-- Serverless SQL queries
-- No manual cluster management
-```
+| Lever | Effect |
+| :--- | :--- |
+| Jobs compute or serverless for scheduled work | No paying for idle interactive clusters |
+| Auto termination on all-purpose compute | Stops forgotten clusters from running overnight |
+| Auto stop on SQL warehouses | Ends billing after the idle period |
+| Spot workers | Cheaper, interruptible capacity for fault-tolerant work. The driver stays on-demand |
+| Pools | Faster starts. Idle pool instances still cost cloud VM money |
+| Compute policies | Admins cap node types, worker counts, and settings |
+| `system.billing.usage` | Find which jobs, warehouses, and users drive spend |
 
 ## Use Cases
 
@@ -319,10 +146,10 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Scheduled Jobs Running on All-Purpose Compute
 
-**Scenario:** The default settings for Compute and Clusters do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Compute and Clusters to handle production-scale workloads.
+**Scenario:** Nightly jobs are attached to a shared all-purpose cluster that stays up all day, and the monthly bill is high.
+**Fix:** Run scheduled work on serverless jobs or jobs compute, which exist only for the run. Keep all-purpose compute for interactive work and set auto termination.
 
 ### Auto-Termination Kills Long-Running Jobs
 
@@ -332,23 +159,22 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 ### Cluster Startup Time Delays
 
 **Scenario:** Job clusters take 5-10 minutes to provision, causing unacceptable latency for time-sensitive pipelines.
-**Fix:** Use cluster pools to pre-provision idle instances, reducing startup time to under a minute for new clusters drawn from the pool.
+**Fix:** Use serverless jobs compute, or an instance pool so classic clusters draw from pre-warmed instances.
 
 ## Exam Tips
 
-- Know the three cluster types: All-Purpose (interactive dev), Job Clusters (automated jobs), SQL Warehouses (SQL/BI)
-- Job clusters are more cost-efficient than all-purpose clusters because they auto-terminate when the job finishes
-- Understand DBU billing: 1 DBU = 1 hour of processing on 1 worker; job clusters have lower per-DBU rates
-- Spot instances save up to 60% but can be interrupted -- suitable for non-critical, checkpointed workloads
+- Many concurrent ad hoc SQL users → **serverless SQL warehouse** with autoscaling. Scheduled ETL → serverless jobs or jobs compute
+- Jobs compute is created for a run and terminated afterwards, so you never pay for idle interactive time
+- A DBU is a normalized unit of processing power, billed per second. It is not "one hour on one worker"
+- Serverless SQL warehouses start in seconds. Pro and classic take minutes
+- Spot instances apply to workers. The driver is always on-demand
 
 ## Key Takeaways
 
-- **All-Purpose vs Job Clusters**: Purpose, cost, multi-user support
-- **Node Types**: Impact on performance and cost
-- **Auto-scaling**: How it works, benefits, limitations
-- **DBU Pricing**: How charges are calculated
-- **Best Practice**: Right-size clusters, use auto-terminate
-- **Spot Instances**: Cost savings with trade-offs
+- **Serverless** (notebooks, jobs, pipelines, SQL warehouses) is managed by Databricks, starts fast, and always runs the latest runtime
+- **All-purpose** compute is for interactive work. **Jobs compute** is for scheduled runs
+- **SQL warehouses**: serverless is recommended. Scale out with max clusters for concurrency
+- **Cost levers**: auto termination, auto stop, spot workers, pools, policies, and `system.billing.usage`
 
 ## Related Topics
 
@@ -358,8 +184,10 @@ dbutils.fs.ls("/mnt/logs/cluster-logs/")
 
 ## Official Documentation
 
-- [Compute Overview](https://docs.databricks.com/en/compute/index.html)
-- [Cluster Configuration Best Practices](https://docs.databricks.com/en/compute/cluster-config-best-practices.html)
+- [Compute configuration reference](https://docs.databricks.com/aws/en/compute/configure)
+- [Connect to serverless compute](https://docs.databricks.com/aws/en/compute/serverless/)
+- [SQL warehouse types](https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-types)
+- [Databricks pricing](https://www.databricks.com/product/pricing)
 
 ---
 

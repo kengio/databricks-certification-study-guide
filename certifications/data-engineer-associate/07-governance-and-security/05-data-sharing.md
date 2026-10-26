@@ -501,10 +501,10 @@ ORDER BY query_count DESC;
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Table With Row Filters Can't Be Shared
 
-**Scenario:** The default settings for Data Sharing do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Data Sharing to handle production-scale workloads.
+**Scenario:** A provider tries to add a table that has a row filter and a column mask to a share.
+**Fix:** OpenSharing providers can't share tables with table-level row filters or column masks. Share a view that applies the filtering instead ([row filters and column masks](https://docs.databricks.com/aws/en/tables/row-and-column-filters)).
 
 ### Delta Sharing Recipient Cannot Read Shared Data
 

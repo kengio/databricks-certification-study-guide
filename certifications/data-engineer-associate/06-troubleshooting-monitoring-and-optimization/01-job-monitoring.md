@@ -186,7 +186,7 @@ try:
     debug_log("Starting ETL")
 
     # Read data
-    df = spark.read.delta("/mnt/data/raw")
+    df = spark.read.format("delta").load("/mnt/data/raw")
     debug_log(f"Read {df.count()} rows")
 
     # Transform
@@ -259,7 +259,7 @@ def send_slack_alert(message, webhook_url):
 
 try:
     # Job logic
-    df = spark.read.delta("/mnt/data/input")
+    df = spark.read.format("delta").load("/mnt/data/input")
 
     if df.count() == 0:
         send_slack_alert(
@@ -373,7 +373,7 @@ spark.createDataFrame([
 ```python
 # Repartition to use more workers
 
-df = (spark.read.delta("/mnt/data/large")
+df = (spark.read.format("delta").load("/mnt/data/large")
     .repartition(1000))  # Spread across workers
 ```
 
@@ -423,8 +423,8 @@ df = (spark.read.delta("/mnt/data/large")
 ```python
 # Add validation in notebook
 
-row_count_before = spark.read.delta("/mnt/data/raw").count()
-row_count_after = spark.read.delta("/mnt/data/clean").count()
+row_count_before = spark.read.format("delta").load("/mnt/data/raw").count()
+row_count_after = spark.read.format("delta").load("/mnt/data/clean").count()
 
 if row_count_after == 0:
     raise ValueError("Output table is empty!")

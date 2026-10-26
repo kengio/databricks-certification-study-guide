@@ -1,5 +1,5 @@
 ---
-title: Databricks Jobs
+title: Lakeflow Jobs and Tasks
 type: study-material
 tags:
   - jobs
@@ -7,7 +7,7 @@ tags:
   - execution
 ---
 
-# Databricks Jobs
+# Lakeflow Jobs and Tasks
 
 ## Overview
 
@@ -65,15 +65,43 @@ A job packages together:
 
 ### Supported Task Types
 
-| Task Type | Language | Use Case |
-|-----------|----------|----------|
-| **Notebook** | Python, SQL, Scala, R | Data processing, ETL |
-| **Python** | Python script | ML pipelines, custom logic |
-| **SQL** | SQL | Analytics, data prep |
-| **JAR** | Java/Scala | Spark jobs, legacy code |
-| **Spark Submit** | Python, Scala, Java | Direct spark-submit jobs |
-| **dbt** | SQL | Data transformation |
-| **Spark Python/SQL** | Python/SQL | Spark workloads |
+The task types listed in the current docs ([Configure and edit tasks](https://docs.databricks.com/aws/en/jobs/configure-task)):
+
+| Task type | Runs | Exam relevance |
+|-----------|------|----------------|
+| **Notebook** | A notebook (Python, SQL, Scala, R) on serverless or classic compute | **High**: the most common ETL task |
+| **SQL** | A SQL query or SQL file on a **SQL warehouse** | **High**: "SQL query task" in the exam guide |
+| **Dashboards** | Refreshes an AI/BI dashboard (and can notify subscribers) | **High**: "dashboard task" |
+| **Pipeline** | Triggers an update of a Lakeflow (Declarative) pipeline, including Lakeflow Connect ingestion pipelines | **High**: "pipeline task" |
+| **SQL Alert** | Evaluates a Databricks SQL alert | Medium |
+| **Python script** / **Python wheel** / **JAR** / **Spark Submit** | Packaged code | Low–medium |
+| **dbt** | A dbt project | Low |
+| **Run Job** | Triggers another Lakeflow Job | Medium: modular orchestration |
+| **If/else** / **For each** | Control flow (see [Control Flow](./03-control-flow.md)) | **High** |
+| Power BI, Clean Room notebook, and others | Specialized integrations | Low |
+
+```yaml
+# Notebook, SQL, dashboard, and pipeline tasks wired as one DAG (bundle YAML form)
+tasks:
+  - task_key: ingest
+    pipeline_task:
+      pipeline_id: ${resources.pipelines.orders_pipeline.id}
+  - task_key: quality_check
+    depends_on: [{task_key: ingest}]
+    sql_task:
+      warehouse_id: ${var.warehouse_id}
+      file:
+        path: ../sql/check_orders.sql
+  - task_key: enrich
+    depends_on: [{task_key: quality_check}]
+    notebook_task:
+      notebook_path: ../notebooks/enrich_orders
+  - task_key: refresh_dashboard
+    depends_on: [{task_key: enrich}]
+    dashboard_task:
+      dashboard_id: ${resources.dashboards.sales.id}
+      warehouse_id: ${var.warehouse_id}
+```
 
 ### Notebook Task Example
 
@@ -92,7 +120,7 @@ import pyspark.sql.functions as F
 
 # Read data
 
-df = spark.read.delta(f"/mnt/data/raw/{dbutils.widgets.get('date')}")
+df = spark.read.format("delta").load(f"/mnt/data/raw/{dbutils.widgets.get('date')}")
 
 # Process
 
@@ -131,7 +159,7 @@ def main():
     spark = SparkSession.builder.appName("ETL").getOrCreate()
 
     # Read
-    df = spark.read.delta(f"/mnt/data/raw/{args.date}")
+    df = spark.read.format("delta").load(f"/mnt/data/raw/{args.date}")
 
     # Transform
     result = df.filter(F.col("value") > 0)
@@ -150,15 +178,15 @@ if __name__ == "__main__":
 
 ### Step-by-Step in Databricks UI
 
-1. **Navigate to Workflows > Jobs**
-2. **Click "Create Job"**
+1. **Open Jobs & Pipelines** in the sidebar (formerly Workflows)
+2. **Click Create → Job**
 3. **Configure Task:**
    - Select task type (Notebook, Python, SQL, etc.)
    - Select cluster or create new
    - Add task name and source path
 4. **Add Parameters** (optional):
    - `environment`: "prod"
-   - `date`: "{{job.start_date}}"
+   - `date`: `{{job.start_time.iso_date}}`
 5. **Configure Schedule** (optional):
    - Cron expression
    - Timezone
@@ -175,7 +203,7 @@ if __name__ == "__main__":
 {
   "name": "daily_etl_pipeline",
   "description": "Daily ETL process",
-  "max_runs": 1,
+  "max_concurrent_runs": 1,
   "tasks": [
     {
       "task_key": "extract_data",
@@ -183,7 +211,7 @@ if __name__ == "__main__":
         "notebook_path": "/Users/user@company.com/etl/extract",
         "base_parameters": {
           "environment": "prod",
-          "date": "{{job.start_date}}"
+          "date": "{{job.start_time.iso_date}}"
         }
       },
       "existing_cluster_id": "cluster-123",
@@ -254,7 +282,7 @@ print(f"Created job: {job_id}")
 
 {
     "base_parameters": {
-        "run_date": "{{job.start_date}}",
+        "run_date": "{{job.start_time.iso_date}}",
         "run_id": "{{job.run_id}}",
         "task_run_id": "{{task.run_id}}"
     }
@@ -265,11 +293,17 @@ print(f"Created job: {job_id}")
 
 | Macro | Description | Example |
 |-------|-----------|---------|
-| `{{job.start_date}}` | Job execution date | "2025-01-15" |
-| `{{job.start_time}}` | Job start timestamp | "2025-01-15T10:30:00Z" |
-| `{{job.run_id}}` | Unique run ID | "1234567890" |
-| `{{task.run_id}}` | Task-specific run ID | "run_abc123" |
 | `{{job.id}}` | Job ID | "123456" |
+| `{{job.name}}` | Job name at run time | "daily_etl" |
+| `{{job.run_id}}` | Unique job run ID | "1234567890" |
+| `{{job.start_time.iso_date}}` | Run start date (ISO) | "2026-10-26" |
+| `{{job.trigger.type}}` | What started the run | — |
+| `{{job.trigger.file_arrival.location}}` | Location for a file arrival trigger | `/Volumes/main/raw/landing/` |
+| `{{job.parameters.<name>}}` | A job-level parameter | — |
+| `{{task.run_id}}` | Task run ID | — |
+| `{{tasks.<task>.values.<key>}}` | A task value set upstream | — |
+
+`{{start_date}}` and similar legacy variables are deprecated. Use `{{job.start_time.<argument>}}` ([dynamic value references](https://docs.databricks.com/aws/en/jobs/dynamic-value-references)).
 
 ### Accessing Parameters in Tasks
 
@@ -396,7 +430,7 @@ Cons: Startup latency (3-5 minutes)
 
 ```json
 {
-  "timeout_seconds": 3600,  // 1 hour timeout
+  "timeout_seconds": 3600,
   "max_retries": 2,
   "min_retry_interval_millis": 60000
 }
@@ -406,7 +440,7 @@ Cons: Startup latency (3-5 minutes)
 
 ```json
 {
-  "max_runs": 1,  // Only one run at a time
+  "max_concurrent_runs": 1,
   "tasks": [
     {
       "timeout_seconds": 7200,
@@ -486,7 +520,7 @@ flowchart LR
       "task_key": "incremental_load",
       "notebook_task": {
         "notebook_path": "/users/user/incremental_load",
-        "base_parameters": {"date": "{{job.start_date}}"}
+        "base_parameters": {"date": "{{job.start_time.iso_date}}"}
       },
       "new_cluster": {
         "spark_version": "14.3.x-scala2.12",
@@ -500,14 +534,14 @@ flowchart LR
 ## Use Cases
 
 - **Multi-Task ETL Pipelines**: Defining extract, transform, and load as separate tasks within a single job, using `depends_on` to create a DAG that runs tasks in the correct order with parallel branches where possible.
-- **Parameterized Backfill Jobs**: Using dynamic parameter macros like `{{job.start_date}}` to run the same job for different date ranges, enabling efficient historical data backfills without duplicating job definitions.
+- **Parameterized Backfill Jobs**: Using dynamic value references like `{{job.start_time.iso_date}}` to run the same job for different date ranges, enabling efficient historical data backfills without duplicating job definitions.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Inserting an Upstream Task in the Wrong Direction
 
-**Scenario:** The default settings for Databricks Jobs do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Databricks Jobs to handle production-scale workloads.
+**Scenario:** An engineer adds a new validation notebook that must run *before* the existing task, but sets the new task to depend on the old one, so it runs after.
+**Fix:** The new upstream task has no dependency. Edit the **original** task's **Depends on** to include the new task.
 
 ### Job Fails But No Alert Received
 
@@ -523,8 +557,9 @@ flowchart LR
 
 - Job clusters are more cost-efficient than all-purpose clusters for production jobs; they auto-terminate when the job finishes
 - Multi-task jobs use `depends_on` to define a DAG of task dependencies; tasks without dependencies run in parallel
-- Know the parameter macro syntax: `{{job.start_date}}`, `{{job.run_id}}`, `{{task.run_id}}`
-- `max_concurrent_runs: 1` prevents overlapping runs; skipped runs get status SKIPPED
+- Know dynamic value references: `{{job.run_id}}`, `{{job.start_time.iso_date}}`, `{{job.parameters.<name>}}`, `{{tasks.<task>.values.<key>}}`
+- Exam guide task types: **notebook, SQL query, dashboard, pipeline**. Know which compute each uses (SQL and dashboard tasks use a SQL warehouse)
+- `max_concurrent_runs: 1` prevents overlapping runs. A run that would exceed it is skipped (status **Skipped**)
 
 ## Key Takeaways
 
@@ -547,8 +582,10 @@ flowchart LR
 
 ## Official Documentation
 
-- [Databricks Jobs](https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html)
-- [Jobs API Reference](https://docs.databricks.com/en/workflows/jobs/jobs-api-updates.html)
+- [Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/)
+- [Configure and edit tasks in Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/configure-task)
+- [Configure task dependencies](https://docs.databricks.com/aws/en/jobs/conditional-tasks)
+- [Dynamic value references](https://docs.databricks.com/aws/en/jobs/dynamic-value-references)
 
 ---
 

@@ -282,7 +282,7 @@ df_strings = employees.select(
 ## Date and Timestamp Operations
 
 ```python
-from pyspark.sql.functions import to_date, to_timestamp, year, month, day, datediff, date_add, from_unixtime
+from pyspark.sql.functions import col, current_date, year, month, day, datediff, date_add, from_unixtime
 from datetime import datetime, timedelta
 
 df_dates = employees.select(
@@ -299,7 +299,7 @@ df_dates = employees.select(
 ## Conditional Logic
 
 ```python
-from pyspark.sql.functions import when, otherwise, case, coalesce
+from pyspark.sql.functions import when, coalesce, col, lit
 
 # Simple when/otherwise
 
@@ -375,7 +375,7 @@ df_pivoted = (employees
 ## Null Handling
 
 ```python
-from pyspark.sql.functions import isnan, isnull, fillna, dropna
+from pyspark.sql.functions import isnan, isnull, col   # fillna/dropna are DataFrame methods
 
 # Check for nulls
 
@@ -462,10 +462,10 @@ df_cleaned.unpersist()
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Python UDF Slows a Silver Job
 
-**Scenario:** The default settings for Advanced Transformations do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Advanced Transformations to handle production-scale workloads.
+**Scenario:** A Python UDF that lowercases and trims strings makes a Silver job several times slower.
+**Fix:** Use built-in functions (`lower`, `trim`, `regexp_replace`). The optimizer can't see inside Python UDFs, and every row is serialized to Python. If a UDF is unavoidable, use a vectorized pandas UDF.
 
 ### UDF Serialization Errors
 
