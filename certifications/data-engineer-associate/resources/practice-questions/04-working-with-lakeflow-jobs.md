@@ -12,13 +12,13 @@ Exam weight: **16 %** (August 2026 exam guide). Questions marked *(2026 blueprin
 
 **Question** *(Medium)*: A data engineer executes a single-task job each morning. Upon discovering an upstream data issue, they must add a new notebook to run before the original task. What is the correct approach to set up this new upstream task?
 
-A) Clone the existing Job and add the new notebook as a second task in the clone
+A) Create a new task in the existing Job, and then add the original task as a dependency of the new task
 B) Create a separate Job for the new notebook and schedule it to run 30 minutes before the original Job
-C) Create a new task in the existing Job, and then add the original task as a dependency of the new task
+C) Clone the existing Job and add the new notebook as a second task in the clone
 D) Replace the original task's notebook with a wrapper notebook that runs both notebooks sequentially
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > Create a new task in the existing Job, and then add the original task as a dependency of the new task.
 >
@@ -31,12 +31,12 @@ D) Replace the original task's notebook with a wrapper notebook that runs both n
 **Question** *(Medium)*: An engineering manager wants a query to refresh every minute for the first week after a project launch, with no compute costs after that week. What strategy ensures the query stops refreshing and generating costs beyond week one?
 
 A) Set the SQL warehouse to auto-stop after one week of total runtime
-B) Create a Databricks Job to disable the query refresh after seven days
+B) Set the query's refresh schedule to end on a specific date in the query scheduler
 C) Manually cancel the refresh schedule at the end of the week
-D) Set the query's refresh schedule to end on a specific date in the query scheduler
+D) Create a Databricks Job to disable the query refresh after seven days
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: B**
 >
 > Set the query's refresh schedule to end on a specific date in the query scheduler.
 >
@@ -49,12 +49,12 @@ D) Set the query's refresh schedule to end on a specific date in the query sched
 **Question** *(Medium)*: A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?
 
 A) Declarative Automation Bundles (formerly Databricks Asset Bundles) YAML configuration
-B) Cron syntax
-C) Apache Airflow DAG definitions
+B) Apache Airflow DAG definitions
+C) Cron syntax
 D) JSON job templates via the Databricks CLI
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Cron syntax.
 >
@@ -66,13 +66,13 @@ D) JSON job templates via the Databricks CLI
 
 **Question** *(Easy)*: An engineering manager reviews a query daily but currently reruns it manually and waits for results. What strategy guarantees the query results are refreshed daily automatically?
 
-A) Schedule the query to refresh every 1 day from the query's page in Databricks SQL
+A) Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh the query
 B) Create a Databricks Job that runs the query notebook on a daily cron schedule
 C) Set up an Apache Airflow DAG to trigger the query execution daily
-D) Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh the query
+D) Schedule the query to refresh every 1 day from the query's page in Databricks SQL
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > Schedule the query to refresh every 1 day from the query's page in Databricks SQL.
 >
@@ -84,13 +84,13 @@ D) Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh
 
 **Question** *(Easy)*: In what situations should a data engineer choose a task in the "Depends On" field when creating a new Databricks Job task?
 
-A) When the new task needs to run on a different cluster than other tasks
+A) When another task needs to successfully complete before the new task begins
 B) When the new task should only run if a previous task has completed successfully
 C) When the new task processes data from a different database than other tasks
-D) When another task needs to successfully complete before the new task begins
+D) When the new task needs to run on a different cluster than other tasks
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
 > When another task needs to successfully complete before the new task begins.
 >
@@ -120,13 +120,13 @@ D) Setting max concurrent runs to 0 when no data arrives
 
 **Question** *(Medium)*: The same load notebook must run for 30 source tables, at most five at a time, without defining 30 tasks. Which configuration meets this?
 
-A) A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5
+A) A single notebook task with `max_retries` set to 30
 B) Thirty notebook tasks with no dependencies
-C) A single notebook task with `max_retries` set to 30
+C) A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5
 D) A Run Job task pointing at itself
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5.
 >
@@ -139,12 +139,12 @@ D) A Run Job task pointing at itself
 **Question** *(Easy)*: A task that calls an external API fails a few times a week with transient network errors, and succeeds when re-run minutes later. What is the built-in way to handle this?
 
 A) Increase the task timeout
-B) Configure a retry policy on the task, with a retry interval
+B) Add an If/else task after it
 C) Set the job's max concurrent runs to 2
-D) Add an If/else task after it
+D) Configure a retry policy on the task, with a retry interval
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Configure a retry policy on the task, with a retry interval.
 >
@@ -156,13 +156,13 @@ D) Add an If/else task after it
 
 **Question** *(Medium)*: A job's final task drops temporary staging tables. It must run whether the upstream transform succeeds or fails. Which Run if condition should it use?
 
-A) All succeeded
+A) All done
 B) At least one succeeded
-C) All done
+C) All succeeded
 D) All failed
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > All done.
 >
@@ -192,13 +192,13 @@ D) Manual trigger by an operator
 
 **Question** *(Medium)*: A Gold build job must run after **both** `main.silver.orders` and `main.silver.customers` are updated. Those tables are maintained by two other teams' jobs, which run at varying times. Which trigger configuration fits?
 
-A) A table update trigger on both tables with "All tables are updated"
+A) A scheduled trigger at 06:00
 B) A table update trigger on both tables with "Any table is updated"
-C) A scheduled trigger at 06:00
+C) A table update trigger on both tables with "All tables are updated"
 D) A file arrival trigger on the tables' storage paths
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > A table update trigger on both tables with "All tables are updated".
 >
@@ -210,13 +210,13 @@ D) A file arrival trigger on the tables' storage paths
 
 **Question** *(Easy)*: A regulatory report must be published at exactly 07:00 every weekday, using whatever data has arrived by then. Which trigger fits best?
 
-A) Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`
+A) Continuous trigger
 B) File arrival trigger
 C) Table update trigger
-D) Continuous trigger
+D) Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`.
 >
@@ -265,12 +265,12 @@ D) `dbutils.notebook.exit(value)` in every task
 **Question** *(Easy)*: A Lakeflow Job schedule uses the Quartz expression `0 30 2 * * ?`. When does it run?
 
 A) Every 30 minutes past 2 o'clock, every hour
-B) At 02:30:00 every day
-C) At 00:30 on the 2nd of every month
+B) At 00:30 on the 2nd of every month
+C) At 02:30:00 every day
 D) Every 2 minutes at second 30
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > At 02:30:00 every day.
 >

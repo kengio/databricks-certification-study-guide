@@ -14,11 +14,11 @@ Exam weight: **10 %** (August 2026 exam guide). Questions marked *(2026 blueprin
 
 A) Committing and pushing changes
 B) Creating the feature branch
-C) Creating and merging the pull request into the default branch
-D) Pulling a teammate's latest changes
+C) Pulling a teammate's latest changes
+D) Creating and merging the pull request into the default branch
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > Creating and merging the pull request into the default branch.
 >
@@ -30,13 +30,13 @@ D) Pulling a teammate's latest changes
 
 **Question** *(Medium)*: A data engineer must decide between the built-in versioning of Databricks Notebooks and Databricks Git folders. What is one benefit of using Git folders (formerly Repos) instead?
 
-A) Git folders automatically back up notebooks to cloud storage every 5 minutes
+A) Databricks Git folders support the use of multiple branches
 B) Git folders eliminate the need for a Git provider by hosting repositories internally
 C) Git folders provide a visual diff tool for comparing notebook cell outputs
-D) Databricks Git folders support the use of multiple branches
+D) Git folders automatically back up notebooks to cloud storage every 5 minutes
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
 > Databricks Git folders support the use of multiple branches.
 >
@@ -49,12 +49,12 @@ D) Databricks Git folders support the use of multiple branches
 **Question** *(Easy)*: A data engineer's colleague has pushed updates to the central Git repository. The data engineer needs to sync their Databricks Git folder with these changes. Which Git operation accomplishes this?
 
 A) Clone
-B) Fetch
+B) Pull
 C) Rebase
-D) Pull
+D) Fetch
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: B**
 >
 > Pull.
 >
@@ -67,12 +67,12 @@ D) Pull
 **Question** *(Easy)*: A data engineer has edited two notebooks in a Databricks Git folder on branch `feature/dedup`. How do they get the changes to the remote repository from the workspace UI?
 
 A) Export the notebooks as DBC files and upload them to the Git provider
-B) Open the Git dialog, select the changes, enter a commit message, and click Commit & Push
-C) Run `databricks bundle deploy`
+B) Run `databricks bundle deploy`
+C) Open the Git dialog, select the changes, enter a commit message, and click Commit & Push
 D) Click Pull, which pushes local changes automatically
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Open the Git dialog, select the changes, enter a commit message, and click Commit & Push.
 >
@@ -84,13 +84,13 @@ D) Click Pull, which pushes local changes automatically
 
 **Question** *(Easy)*: Before starting new work, an engineer wants a separate branch based on `main` in their Git folder. What should they do?
 
-A) Use the Git dialog's Create Branch option, name the branch, and choose `main` as the base
+A) Rename the `main` branch in the Git dialog
 B) Clone the repository again into a new workspace folder
 C) Ask an admin to create the branch with the Repos API
-D) Rename the `main` branch in the Git dialog
+D) Use the Git dialog's Create Branch option, name the branch, and choose `main` as the base
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > Use the Git dialog's Create Branch option, name the branch, and choose `main` as the base.
 >
@@ -102,13 +102,13 @@ D) Rename the `main` branch in the Git dialog
 
 **Question** *(Hard)*: An engineer clicks **Reset** on a branch in a Git folder. What is the effect?
 
-A) Only uncommitted local changes are discarded
-B) It is equivalent to `git reset --hard` plus `git push --force`, so committed and uncommitted changes are lost locally and on the remote branch
+A) It is equivalent to `git reset --hard` plus `git push --force`, so committed and uncommitted changes are lost locally and on the remote branch
+B) Only uncommitted local changes are discarded
 C) The branch is restored from notebook revision history
 D) The Git folder is unlinked from the remote repository
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > It is equivalent to `git reset --hard` plus `git push --force`, so committed and uncommitted changes are lost locally and on the remote branch.
 >
@@ -120,13 +120,13 @@ D) The Git folder is unlinked from the remote repository
 
 **Question** *(Medium)*: A Declarative Automation Bundle deploys a job that needs a database password. The password must not appear in `databricks.yml`, in notebooks, or in Git. The CI system stores it as a secret. How should the bundle receive it at deploy time?
 
-A) Declare a bundle variable with no default, and have CI export `BUNDLE_VAR_<variable_name>` from its secret store
-B) Put the password in the variable's `default`
+A) Put the password in the variable's `default`
+B) Declare a bundle variable with no default, and have CI export `BUNDLE_VAR_<variable_name>` from its secret store
 C) Store it in a `passwords.txt` file in the bundle root
 D) Hard-code it with `spark.conf.set` in the notebook
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
 > Declare a bundle variable with no default, and have CI export `BUNDLE_VAR_<variable_name>` from its secret store.
 >
@@ -140,11 +140,11 @@ D) Hard-code it with `spark.conf.set` in the notebook
 
 A) `dev`
 B) `prod`
-C) `staging`
-D) `prod_v2`
+C) `prod_v2`
+D) `staging`
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: C**
 >
 > `prod_v2`.
 >
@@ -157,12 +157,12 @@ D) `prod_v2`
 **Question** *(Medium)*: A team wants the same job definition deployed to dev, test, and prod workspaces, each writing to a different Unity Catalog catalog. What is the bundle-native approach?
 
 A) Copy `resources/job.yml` into three folders, one per environment
-B) Define `dev`, `test`, and `prod` targets with their own workspace hosts, and override a `catalog` variable per target
+B) Edit the job in each workspace UI after deployment
 C) Create three Git repositories
-D) Edit the job in each workspace UI after deployment
+D) Define `dev`, `test`, and `prod` targets with their own workspace hosts, and override a `catalog` variable per target
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Define `dev`, `test`, and `prod` targets with their own workspace hosts, and override a `catalog` variable per target.
 >
@@ -174,13 +174,13 @@ D) Edit the job in each workspace UI after deployment
 
 **Question** *(Medium)*: An engineer deploys a bundle with `-t dev`, where the target has `mode: development`. The deployed job never runs on its daily schedule. Why?
 
-A) Development mode deletes schedules from the YAML
-B) Development mode pauses schedules and triggers on deployed resources, and prefixes resource names with `[dev <user>]`
+A) Development mode pauses schedules and triggers on deployed resources, and prefixes resource names with `[dev <user>]`
+B) Development mode deletes schedules from the YAML
 C) Development mode requires a service principal
 D) The `dev` target always deploys to a read-only workspace
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Development mode pauses schedules and triggers on deployed resources, and prefixes resource names with `[dev <user>]`.
 >
@@ -210,13 +210,13 @@ D) It skips YAML validation for faster deploys
 
 **Question** *(Easy)*: In a CI pipeline, which Databricks CLI command checks that the bundle configuration is syntactically correct before anything is deployed?
 
-A) `databricks bundle validate`
+A) `databricks bundle sync`
 B) `databricks bundle destroy`
-C) `databricks bundle sync`
+C) `databricks bundle validate`
 D) `databricks jobs list`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > `databricks bundle validate`.
 >
@@ -228,13 +228,13 @@ D) `databricks jobs list`
 
 **Question** *(Easy)*: After `databricks bundle deploy -t test`, the CI pipeline must start the bundle's `orders_job` in the test environment and wait for the result. Which command does this?
 
-A) `databricks bundle run orders_job -t test`
+A) `databricks bundle init orders_job`
 B) `databricks bundle deploy orders_job --run`
 C) `databricks bundle summary -t test`
-D) `databricks bundle init orders_job`
+D) `databricks bundle run orders_job -t test`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > `databricks bundle run orders_job -t test`.
 >

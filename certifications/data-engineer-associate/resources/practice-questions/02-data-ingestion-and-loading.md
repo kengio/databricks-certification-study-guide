@@ -31,12 +31,12 @@ D) `"odbc"`
 **Question** *(Medium)*: What advantage does creating an external table using Parquet have over CSV in a `CREATE TABLE AS SELECT` statement?
 
 A) Parquet files are human-readable and can be edited with a text editor
-B) Parquet files have a well-defined schema
-C) Parquet files support row-level locking for concurrent writes
+B) Parquet files support row-level locking for concurrent writes
+C) Parquet files have a well-defined schema
 D) Parquet files are smaller because they use row-based compression
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Parquet files have a well-defined schema.
 >
@@ -49,12 +49,12 @@ D) Parquet files are smaller because they use row-based compression
 **Question** *(Medium)*: Every day, a data engineer runs a command to transfer the previous day's sales data into a `transactions` table. Today, after running the command, the record count remains unchanged. Why were no new records copied?
 
 A) The table's schema rejected the incoming data due to a type mismatch
-B) The previous day's file has already been copied into the table
+B) The transaction log was full and could not accept new entries
 C) The COPY INTO command only works with streaming sources, not batch files
-D) The transaction log was full and could not accept new entries
+D) The previous day's file has already been copied into the table
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The previous day's file has already been copied into the table.
 >
@@ -85,12 +85,12 @@ D) Watermarking and session windows
 **Question** *(Easy)*: Which tool does Auto Loader use to incrementally process data?
 
 A) Apache Kafka consumer groups
-B) Delta Lake Change Data Feed
+B) Spark Structured Streaming
 C) COPY INTO with file tracking
-D) Spark Structured Streaming
+D) Delta Lake Change Data Feed
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: B**
 >
 > Spark Structured Streaming.
 >
@@ -115,12 +115,12 @@ D) Spark Structured Streaming
 If the data engineer aims to run a micro-batch query that processes data every 5 seconds, which line of code should be used to complete the blank?
 
 A) `.trigger(interval="5 seconds")`
-B) `.trigger(processingTime="5 seconds")`
-C) `.trigger(continuous="5 seconds")`
+B) `.trigger(continuous="5 seconds")`
+C) `.trigger(processingTime="5 seconds")`
 D) `.trigger(microBatch="5 seconds")`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > `.trigger(processingTime="5 seconds")`
 >
@@ -133,12 +133,12 @@ D) `.trigger(microBatch="5 seconds")`
 **Question** *(Medium)*: A data engineer's source system produces files in a shared directory that accumulate over time. The engineer must recognize which files are new since the last pipeline execution and ingest only those during each run. Which tool addresses this?
 
 A) COPY INTO with manual file listing
-B) Auto Loader
+B) Spark batch read with timestamp filtering
 C) Delta Lake MERGE with file metadata
-D) Spark batch read with timestamp filtering
+D) Auto Loader
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Auto Loader.
 >
@@ -174,12 +174,12 @@ D) The code is missing a schema definition, which is required for JSON reads
 **Question** *(Easy)*: A data engineer needs to create a table in Databricks using data from a CSV file. They run a `CREATE TABLE` command that already specifies the CSV path and format in the statement body. Which additional line of code completes the blank?
 
 A) `USING DELTA`
-B) `FORMAT_OPTIONS('header' = 'true')`
-C) No additional line is needed
+B) No additional line is needed
+C) `FORMAT_OPTIONS('header' = 'true')`
 D) `STORED AS TEXTFILE`
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > No additional line is needed.
 >
@@ -207,11 +207,11 @@ If the data engineer intends for the query to process all available data across 
 
 A) `.trigger(once=True)`
 B) `.trigger(processingTime="0 seconds")`
-C) `.trigger(continuous="1 second")`
-D) `.trigger(availableNow=True)`
+C) `.trigger(availableNow=True)`
+D) `.trigger(continuous="1 second")`
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: C**
 >
 > `.trigger(availableNow=True)`
 >
@@ -225,11 +225,11 @@ D) `.trigger(availableNow=True)`
 
 A) Auto Loader defaults to string type to prevent data loss during schema evolution
 B) The checkpoint metadata overrides column types to string for safety
-C) JSON data is a text-based format
-D) The Delta table's schema enforcement converts all incoming types to strings
+C) The Delta table's schema enforcement converts all incoming types to strings
+D) JSON data is a text-based format
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > JSON data is a text-based format.
 >
@@ -291,13 +291,13 @@ df = spark.readStream.format("delta").load("dbfs:/delta/events")
 df.write.csv("output")
 ```
 
-A) `df.write` must be `df.writeStream`
+A) A checkpoint location must be specified before calling `.write`
 B) The `.csv("output")` method is not supported for Delta format reads
-C) A checkpoint location must be specified before calling `.write`
+C) `df.write` must be `df.writeStream`
 D) The `readStream` API cannot read from Delta format tables
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > `df.write` must be `df.writeStream`.
 >
@@ -331,13 +331,13 @@ D) A checkpoint location is missing
 
 **Question** *(Easy)*: Sales leadership wants Salesforce accounts and opportunities in Unity Catalog, refreshed hourly. The data team has no capacity to write or maintain custom API code. Which approach fits best?
 
-A) A notebook that calls the Salesforce REST API, scheduled hourly with Lakeflow Jobs
-B) The Lakeflow Connect managed Salesforce connector with an hourly schedule
+A) The Lakeflow Connect managed Salesforce connector with an hourly schedule
+B) A notebook that calls the Salesforce REST API, scheduled hourly with Lakeflow Jobs
 C) Auto Loader reading Salesforce export files from a volume
 D) A JDBC read of the Salesforce database every hour
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > The Lakeflow Connect managed Salesforce connector with an hourly schedule.
 >
@@ -368,12 +368,12 @@ D) The Lakeflow Jobs schedule
 **Question** *(Medium)*: Which source is a typical case for a Lakeflow Connect **standard** (customizable) connector rather than a managed connector?
 
 A) Workday reports for an HR dashboard
-B) Events from an Apache Kafka topic that need custom parsing in Structured Streaming
-C) HubSpot CRM objects
+B) HubSpot CRM objects
+C) Events from an Apache Kafka topic that need custom parsing in Structured Streaming
 D) A MySQL database replicated with CDC
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Events from an Apache Kafka topic that need custom parsing in Structured Streaming.
 >
@@ -386,12 +386,12 @@ D) A MySQL database replicated with CDC
 **Question** *(Hard)*: An Auto Loader stream lands vendor JSON in a Bronze table whose schema downstream teams depend on. New fields occasionally appear. The stream must never stop because of them, the table schema must not change, and the unexpected values must be kept for review. Which setting meets this?
 
 A) `cloudFiles.schemaEvolutionMode = "addNewColumns"`
-B) `cloudFiles.schemaEvolutionMode = "rescue"`
+B) `cloudFiles.inferColumnTypes = "true"`
 C) `cloudFiles.schemaEvolutionMode = "failOnNewColumns"`
-D) `cloudFiles.inferColumnTypes = "true"`
+D) `cloudFiles.schemaEvolutionMode = "rescue"`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `cloudFiles.schemaEvolutionMode = "rescue"`.
 >
@@ -403,13 +403,13 @@ D) `cloudFiles.inferColumnTypes = "true"`
 
 **Question** *(Medium)*: An Auto Loader stream reads a Unity Catalog external location that receives hundreds of thousands of files per day. Directory listing has become slow. What does Databricks recommend?
 
-A) Enable `cloudFiles.useIncrementalListing`
-B) Switch to file notification mode with file events enabled on the external location
+A) Switch to file notification mode with file events enabled on the external location
+B) Enable `cloudFiles.useIncrementalListing`
 C) Reduce `cloudFiles.maxFilesPerTrigger` to 10
 D) Replace Auto Loader with a scheduled `spark.read` of the whole directory
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Switch to file notification mode with file events enabled on the external location.
 >
@@ -440,12 +440,12 @@ D) `COPY INTO` only loads files newer than the table's last `OPTIMIZE`
 **Question** *(Medium)*: A notebook reads a 300-million-row PostgreSQL table with `spark.read.format("jdbc")`, and the read runs for hours while most cluster cores sit idle. What change parallelizes the read?
 
 A) Set `fetchSize` to 1
-B) Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column
-C) Call `.repartition(64)` after `.load()`
+B) Call `.repartition(64)` after `.load()`
+C) Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column
 D) Increase `spark.sql.shuffle.partitions`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column.
 >
@@ -457,13 +457,13 @@ D) Increase `spark.sql.shuffle.partitions`
 
 **Question** *(Medium)*: A vendor exposes order data only through a REST API. The team wants an immutable raw copy for replay, schema-drift handling, and a nightly schedule. Which design fits?
 
-A) Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job
+A) Store the API token in the notebook and write directly to DBFS root
 B) Call the API from a notebook and `collect()` the results into a pandas DataFrame on the driver
 C) Create a Lakehouse Federation connection that queries the REST API in place
-D) Store the API token in the notebook and write directly to DBFS root
+D) Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job.
 >
@@ -475,13 +475,13 @@ D) Store the API token in the notebook and write directly to DBFS root
 
 **Question** *(Easy)*: A Bronze column `raw` holds JSON strings such as `{"customer": {"id": 42}, "total": "19.99"}`. Which Databricks SQL expression returns the customer ID?
 
-A) `raw.customer.id`
-B) `raw:customer.id`
+A) `raw:customer.id`
+B) `raw.customer.id`
 C) `get_json(raw, 'customer', 'id')`
 D) `raw['customer']['id']::json`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `raw:customer.id`.
 >

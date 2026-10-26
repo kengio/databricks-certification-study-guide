@@ -55,12 +55,12 @@
       "difficulty": "medium",
       "question": "A leader in data organization is frustrated because the reports from the data analysis team differ from those of the data engineering team. How might a data lakehouse resolve this issue?",
       "choices": {
-        "A": "Each team would maintain separate copies of data optimized for their specific workloads",
-        "B": "Both teams would utilize the same source of truth for their tasks",
+        "A": "Both teams would utilize the same source of truth for their tasks",
+        "B": "Each team would maintain separate copies of data optimized for their specific workloads",
         "C": "The data lakehouse would automatically reconcile differences between team reports",
         "D": "A dedicated ETL pipeline would synchronize data between team-specific databases"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "Both teams would utilize the same source of truth for their tasks.",
       "explanation": "A data lakehouse provides a single, unified platform where all teams access the same underlying data, eliminating discrepancies caused by siloed data systems or separate copies of data maintained by different teams."
     },
@@ -72,11 +72,11 @@
       "question": "Which option is entirely hosted within the control plane of the classic Databricks architecture?",
       "choices": {
         "A": "Worker nodes and executor processes",
-        "B": "Customer-managed cloud storage buckets",
-        "C": "The Databricks web application",
+        "B": "The Databricks web application",
+        "C": "Customer-managed cloud storage buckets",
         "D": "Driver nodes and cluster compute resources"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "B",
       "shortAnswer": "The Databricks web application.",
       "explanation": "The control plane hosts the Databricks web UI, REST APIs, notebook server, and cluster manager — all infrastructure managed by Databricks. Worker nodes and driver nodes reside in the customer's data plane (their cloud account)."
     },
@@ -89,10 +89,10 @@
       "choices": {
         "A": "The ability to run SQL queries without requiring a compute cluster",
         "B": "Automatic migration of legacy Hive tables to cloud-native formats",
-        "C": "Built-in machine learning model training on raw data files",
-        "D": "The ability to support both batch and streaming workloads"
+        "C": "The ability to support both batch and streaming workloads",
+        "D": "Built-in machine learning model training on raw data files"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "C",
       "shortAnswer": "The ability to support both batch and streaming workloads.",
       "explanation": "Delta Lake's transaction log and Structured Streaming integration allow the same Delta tables to be read and written by both batch jobs and streaming pipelines, eliminating the need for separate storage systems for each workload type."
     },
@@ -103,12 +103,12 @@
       "difficulty": "easy",
       "question": "What describes how a Delta table is organized for storage?",
       "choices": {
-        "A": "Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes",
+        "A": "Delta tables are stored as CSV files with a separate JSON manifest tracking schema changes",
         "B": "Delta tables are stored as a single monolithic binary file containing all rows and metadata",
         "C": "Delta tables are stored exclusively in the Databricks control plane with pointers to cloud storage",
-        "D": "Delta tables are stored as CSV files with a separate JSON manifest tracking schema changes"
+        "D": "Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes.",
       "explanation": "Data is stored in Parquet files, and the `_delta_log` directory contains JSON transaction log files and checkpoint files that track all changes, schema, and table properties."
     },
@@ -119,12 +119,12 @@
       "difficulty": "medium",
       "question": "A data engineer discovered an error while updating a table daily and needs to use Delta time travel to revert the table to a version from three days ago. However, when they try to access the older version, the data files are absent. What explains the absence of the data files?",
       "choices": {
-        "A": "The table was converted from Parquet to Delta, erasing its version history",
+        "A": "The VACUUM command was run on the table",
         "B": "The OPTIMIZE command was run, which compacted and removed older file versions",
-        "C": "The VACUUM command was run on the table",
+        "C": "The table was converted from Parquet to Delta, erasing its version history",
         "D": "The Delta transaction log automatically purges entries older than 24 hours"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "A",
       "shortAnswer": "The VACUUM command was run on the table.",
       "explanation": "`VACUUM` permanently deletes data files that are outside the retention threshold (default 7 days). Once vacuumed, older versions cannot be restored via time travel because the underlying Parquet files no longer exist."
     },
@@ -153,10 +153,10 @@
       "choices": {
         "A": "Gold tables store raw data while Silver tables store transformed data",
         "B": "Gold tables are temporary views derived from permanent Silver tables",
-        "C": "Gold tables and Silver tables always share the same schema and row count",
-        "D": "Gold tables are more likely to contain aggregations than Silver tables"
+        "C": "Gold tables are more likely to contain aggregations than Silver tables",
+        "D": "Gold tables and Silver tables always share the same schema and row count"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "C",
       "shortAnswer": "Gold tables are more likely to contain aggregations than Silver tables.",
       "explanation": "Gold tables represent business-level aggregates and metrics built for consumption in dashboards and reports. Silver tables contain cleaned and enriched data, but are typically at row-level granularity without the summarizations found in Gold."
     },
@@ -169,10 +169,10 @@
       "choices": {
         "A": "Bronze tables contain only validated and schema-enforced records from source systems",
         "B": "Bronze tables are external tables pointing directly to raw source files without any transformation",
-        "C": "Bronze tables contain raw data with a schema applied",
-        "D": "Bronze tables store aggregated summaries of raw data for downstream consumption"
+        "C": "Bronze tables store aggregated summaries of raw data for downstream consumption",
+        "D": "Bronze tables contain raw data with a schema applied"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "D",
       "shortAnswer": "Bronze tables contain raw data with a schema applied.",
       "explanation": "Bronze is the first layer in the medallion architecture. Data is ingested from source systems with minimal transformation, but is captured in a structured Delta table format with metadata columns added (e.g., ingestion timestamp, source file)."
     },
@@ -200,11 +200,11 @@
       "question": "Which file formats are primarily used to store data from Delta Lake tables?",
       "choices": {
         "A": "Avro",
-        "B": "ORC",
+        "B": "Parquet",
         "C": "CSV",
-        "D": "Parquet"
+        "D": "ORC"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "B",
       "shortAnswer": "Parquet.",
       "explanation": "Delta Lake stores all data in Parquet files, an open columnar format that provides efficient compression and predicate pushdown. The `_delta_log` directory stores transaction metadata as JSON and Parquet checkpoint files, but data itself is always Parquet."
     },
@@ -216,11 +216,11 @@
       "question": "What is stored in the cloud account of the Databricks customer?",
       "choices": {
         "A": "The Databricks web application and REST APIs",
-        "B": "Data",
-        "C": "Cluster management metadata and job configurations",
+        "B": "Cluster management metadata and job configurations",
+        "C": "Data",
         "D": "Notebook source code and revision history"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Data.",
       "explanation": "The customer's cloud account (AWS S3, Azure ADLS, GCP GCS) stores the actual data files. Databricks infrastructure — including the web application, cluster management metadata, repos, and notebooks — is managed in the Databricks-controlled plane, not the customer's account."
     },
@@ -231,12 +231,12 @@
       "difficulty": "medium",
       "question": "What methods can help streamline and integrate distinct data architectures tailored for particular applications?",
       "choices": {
-        "A": "A data lakehouse",
+        "A": "Building custom ETL pipelines between each pair of data systems",
         "B": "Deploying separate data warehouses for each business unit",
         "C": "Using a message queue to synchronize data between independent databases",
-        "D": "Building custom ETL pipelines between each pair of data systems"
+        "D": "A data lakehouse"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "A data lakehouse.",
       "explanation": "The lakehouse architecture unifies the flexibility of a data lake (support for unstructured data, low-cost storage, ML workloads) with the reliability and governance of a data warehouse (ACID transactions, SQL support, schema enforcement) into a single platform."
     },
@@ -247,12 +247,12 @@
       "difficulty": "medium",
       "question": "When would a data team use cluster pools?",
       "choices": {
-        "A": "When clusters need to share data between concurrent jobs",
-        "B": "When an automated report needs to be refreshed as quickly as possible",
+        "A": "When an automated report needs to be refreshed as quickly as possible",
+        "B": "When clusters need to share data between concurrent jobs",
         "C": "When reducing cloud storage costs for intermediate data is the priority",
         "D": "When enforcing uniform cluster configurations across all team members"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "When an automated report needs to be refreshed as quickly as possible.",
       "explanation": "Cluster pools maintain a set of pre-warmed, idle VM instances that can be assigned to clusters immediately on startup. This eliminates the VM provisioning delay (which can take several minutes), reducing cluster startup time to seconds for time-sensitive jobs."
     },
@@ -263,12 +263,12 @@
       "difficulty": "medium",
       "question": "A data analysis team's Databricks SQL queries perform poorly when multiple members execute small queries simultaneously on an always-on SQL warehouse. All queries use the same endpoint. What strategy improves performance?",
       "choices": {
-        "A": "Increase the maximum bound of the SQL warehouse's scaling range",
-        "B": "Switch from a Pro to a Classic SQL warehouse type",
+        "A": "Switch from a Pro to a Classic SQL warehouse type",
+        "B": "Increase the maximum bound of the SQL warehouse's scaling range",
         "C": "Increase the size (T-shirt size) of each individual cluster in the endpoint",
         "D": "Enable query result caching on the SQL warehouse"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "B",
       "shortAnswer": "Increase the maximum bound of the SQL warehouse's scaling range.",
       "explanation": "A SQL warehouse (warehouse) can auto-scale by adding more clusters when concurrent query load increases. Raising the maximum cluster count allows the endpoint to serve more parallel queries simultaneously, reducing wait times during peak concurrent usage."
     },
@@ -281,10 +281,10 @@
       "choices": {
         "A": "Downgrade the SQL warehouse to a smaller cluster size",
         "B": "Configure the SQL warehouse to start only during business hours",
-        "C": "Switch the dashboard to use a shared all-purpose cluster instead",
-        "D": "Turn on the Auto Stop feature for the SQL warehouse"
+        "C": "Turn on the Auto Stop feature for the SQL warehouse",
+        "D": "Switch the dashboard to use a shared all-purpose cluster instead"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "C",
       "shortAnswer": "Turn on the Auto Stop feature for the SQL warehouse.",
       "explanation": "Auto Stop automatically terminates the SQL warehouse after a configurable idle period. After the dashboard refresh completes, the endpoint shuts down automatically — avoiding continuous compute charges during the long idle period between daily refreshes."
     },
@@ -297,10 +297,10 @@
       "choices": {
         "A": "Increase the driver node memory allocation",
         "B": "Switch to a single-node cluster to avoid worker provisioning",
-        "C": "Use clusters from a cluster pool",
-        "D": "Enable autoscaling with a higher maximum worker count"
+        "C": "Enable autoscaling with a higher maximum worker count",
+        "D": "Use clusters from a cluster pool"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "D",
       "shortAnswer": "Use clusters from a cluster pool.",
       "explanation": "Cluster pools pre-provision and maintain idle instances that are immediately available for cluster creation. Tasks using pool-backed clusters skip the VM provisioning step, reducing startup from several minutes to a few seconds."
     },
@@ -311,12 +311,12 @@
       "difficulty": "medium",
       "question": "A data engineer has an hourly Databricks SQL dashboard whose underlying data is managed by an automated Databricks Job. How can they minimize the total running time of the SQL warehouse during the dashboard's hourly refresh?",
       "choices": {
-        "A": "Reduce the SQL warehouse cluster size to the smallest available",
+        "A": "Turn on the Auto Stop feature for the SQL warehouse",
         "B": "Use a shared all-purpose cluster instead of a SQL warehouse",
         "C": "Pre-compute dashboard results in the Databricks Job and cache them",
-        "D": "Turn on the Auto Stop feature for the SQL warehouse"
+        "D": "Reduce the SQL warehouse cluster size to the smallest available"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "A",
       "shortAnswer": "Turn on the Auto Stop feature for the SQL warehouse.",
       "explanation": "Auto Stop shuts down the SQL warehouse after a defined idle period following the last query. Since the dashboard only needs the endpoint during the brief refresh window each hour, Auto Stop ensures the endpoint is off for the remaining idle time between refreshes."
     },
@@ -328,11 +328,11 @@
       "question": "What scenario would prompt a data engineer to use a single-node cluster?",
       "choices": {
         "A": "When running a distributed join across tables with billions of rows",
-        "B": "When deploying a production Lakeflow Declarative Pipelines pipeline with multiple streaming sources",
-        "C": "When working interactively with a small amount of data",
+        "B": "When working interactively with a small amount of data",
+        "C": "When deploying a production Lakeflow Declarative Pipelines pipeline with multiple streaming sources",
         "D": "When maximizing parallelism for a large-scale ETL workload"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "B",
       "shortAnswer": "When working interactively with a small amount of data.",
       "explanation": "Single-node clusters run both the driver and executor on the same machine, making them suitable for development, exploratory data analysis on small datasets, and libraries that do not support distributed execution (e.g., some scikit-learn workflows). They are not appropriate for large-scale production jobs."
     },
@@ -343,12 +343,12 @@
       "difficulty": "easy",
       "question": "A data engineer is working in a Python notebook on Databricks but needs to use SQL for one specific cell. They prefer that all other cells remain Python. How can they incorporate SQL into only that cell?",
       "choices": {
-        "A": "Add `%sql` to the first line of the cell",
+        "A": "Change the notebook's default language to SQL and then switch back",
         "B": "Wrap the SQL query in `spark.sql()` and assign it to a variable",
-        "C": "Change the notebook's default language to SQL and then switch back",
+        "C": "Add `%sql` to the first line of the cell",
         "D": "Import the `sql` module and call `sql.execute()`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "Add `%sql` to the first line of the cell.",
       "explanation": "Databricks magic commands (`%sql`, `%python`, `%scala`, `%r`) override the cell language for that individual cell only. All other cells continue using the notebook's default language. This allows mixing languages within a single notebook without changing the global setting."
     },
@@ -360,11 +360,11 @@
       "question": "Throughout the day, dozens of business analysts run short, ad hoc SQL queries against curated Gold tables. The team wants fast startup, good performance as concurrency rises, and no paying for a large cluster that sits idle overnight. Which compute should they use?",
       "choices": {
         "A": "An all-purpose cluster with a fixed 20 workers, shared by all analysts",
-        "B": "A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop",
+        "B": "A single-node cluster per analyst",
         "C": "A jobs compute cluster created for each query",
-        "D": "A single-node cluster per analyst"
+        "D": "A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop.",
       "explanation": "Serverless SQL warehouses start in about 2–6 seconds, scale out by adding clusters as queries queue, and auto stop after idle time (10 minutes by default). A fixed all-purpose cluster pays for peak capacity all day. Jobs compute exists only for scheduled job runs. Single-node clusters don't share capacity or scale for concurrency ([SQL warehouse types](https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-types))."
     },
@@ -375,12 +375,12 @@
       "difficulty": "easy",
       "question": "Which statement about serverless compute for notebooks and jobs is correct?",
       "choices": {
-        "A": "You choose the Databricks Runtime version and instance types for each serverless job",
+        "A": "Serverless workloads always run on the latest runtime version, and compute is managed by Databricks",
         "B": "Serverless compute supports setting any Spark configuration and custom init scripts",
-        "C": "Serverless workloads always run on the latest runtime version, and compute is managed by Databricks",
+        "C": "You choose the Databricks Runtime version and instance types for each serverless job",
         "D": "Serverless compute is available only in workspaces that use the legacy Hive metastore"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "A",
       "shortAnswer": "Serverless workloads always run on the latest runtime version, and compute is managed by Databricks.",
       "explanation": "Serverless is versionless and Databricks-managed, so you don't pick runtimes or instance types. Only a short list of Spark properties can be set (for example `spark.sql.shuffle.partitions`), and dependencies are managed with environments. Workspaces without Unity Catalog must upgrade before they can use serverless ([Connect to serverless compute](https://docs.databricks.com/aws/en/compute/serverless/), [Spark configuration](https://docs.databricks.com/aws/en/spark/conf))."
     },
@@ -408,11 +408,11 @@
       "question": "What advantage does creating an external table using Parquet have over CSV in a `CREATE TABLE AS SELECT` statement?",
       "choices": {
         "A": "Parquet files are human-readable and can be edited with a text editor",
-        "B": "Parquet files have a well-defined schema",
-        "C": "Parquet files support row-level locking for concurrent writes",
+        "B": "Parquet files support row-level locking for concurrent writes",
+        "C": "Parquet files have a well-defined schema",
         "D": "Parquet files are smaller because they use row-based compression"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Parquet files have a well-defined schema.",
       "explanation": "Unlike CSV (a schema-less text format requiring manual type inference), Parquet embeds column names and data types directly in the file metadata. This enables schema enforcement, efficient columnar reads, and predicate pushdown without a separate schema definition."
     },
@@ -424,11 +424,11 @@
       "question": "Every day, a data engineer runs a command to transfer the previous day's sales data into a `transactions` table. Today, after running the command, the record count remains unchanged. Why were no new records copied?",
       "choices": {
         "A": "The table's schema rejected the incoming data due to a type mismatch",
-        "B": "The previous day's file has already been copied into the table",
+        "B": "The transaction log was full and could not accept new entries",
         "C": "The COPY INTO command only works with streaming sources, not batch files",
-        "D": "The transaction log was full and could not accept new entries"
+        "D": "The previous day's file has already been copied into the table"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "The previous day's file has already been copied into the table.",
       "explanation": "`COPY INTO` is idempotent — it maintains an internal record of which files have already been loaded. On subsequent runs, it automatically skips previously processed files, preventing duplicate ingestion. This makes it safe to rerun without creating duplicates."
     },
@@ -456,11 +456,11 @@
       "question": "Which tool does Auto Loader use to incrementally process data?",
       "choices": {
         "A": "Apache Kafka consumer groups",
-        "B": "Delta Lake Change Data Feed",
+        "B": "Spark Structured Streaming",
         "C": "COPY INTO with file tracking",
-        "D": "Spark Structured Streaming"
+        "D": "Delta Lake Change Data Feed"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "B",
       "shortAnswer": "Spark Structured Streaming.",
       "explanation": "Auto Loader is built on top of Structured Streaming and uses it to incrementally discover and ingest new files as they arrive in cloud storage. It maintains a checkpoint to ensure exactly-once processing and scales automatically with file volume."
     },
@@ -472,11 +472,11 @@
       "question": "A data engineer sets up a Structured Streaming job to read from a table, process the data, and subsequently write it to a new table in real-time. The code block is shown below:\n\n```python\n(spark.table(\"sales\")\n  .withColumn(\"avg_price\", col(\"sales\") / col(\"units\"))\n  .writeStream\n  .option(\"checkpointLocation\", checkpointPath)\n  .outputMode(\"append\")\n  ._____\n  .table(\"new_sales\"))\n```\n\nIf the data engineer aims to run a micro-batch query that processes data every 5 seconds, which line of code should be used to complete the blank?",
       "choices": {
         "A": "`.trigger(interval=\"5 seconds\")`",
-        "B": "`.trigger(processingTime=\"5 seconds\")`",
-        "C": "`.trigger(continuous=\"5 seconds\")`",
+        "B": "`.trigger(continuous=\"5 seconds\")`",
+        "C": "`.trigger(processingTime=\"5 seconds\")`",
         "D": "`.trigger(microBatch=\"5 seconds\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "`.trigger(processingTime=\"5 seconds\")`",
       "explanation": "This fixed-interval trigger causes Spark to kick off a new micro-batch every 5 seconds, processing all data that arrived since the last batch. If processing takes longer than the interval, the next batch starts immediately after completion."
     },
@@ -488,11 +488,11 @@
       "question": "A data engineer's source system produces files in a shared directory that accumulate over time. The engineer must recognize which files are new since the last pipeline execution and ingest only those during each run. Which tool addresses this?",
       "choices": {
         "A": "COPY INTO with manual file listing",
-        "B": "Auto Loader",
+        "B": "Spark batch read with timestamp filtering",
         "C": "Delta Lake MERGE with file metadata",
-        "D": "Spark batch read with timestamp filtering"
+        "D": "Auto Loader"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Auto Loader.",
       "explanation": "Auto Loader uses file notification (cloud storage events) or directory listing to detect new files incrementally. It maintains a checkpoint recording which files have been processed, so only unprocessed files are ingested on each pipeline run — without requiring manual file tracking."
     },
@@ -520,11 +520,11 @@
       "question": "A data engineer needs to create a table in Databricks using data from a CSV file. They run a `CREATE TABLE` command that already specifies the CSV path and format in the statement body. Which additional line of code completes the blank?",
       "choices": {
         "A": "`USING DELTA`",
-        "B": "`FORMAT_OPTIONS('header' = 'true')`",
-        "C": "No additional line is needed",
+        "B": "No additional line is needed",
+        "C": "`FORMAT_OPTIONS('header' = 'true')`",
         "D": "`STORED AS TEXTFILE`"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "B",
       "shortAnswer": "No additional line is needed.",
       "explanation": "When a `CREATE TABLE` statement already contains `USING CSV LOCATION '/path/to/csv'`, the format and location are fully specified within the command body itself. No extra keyword is required to complete the statement.\n\n> ⚠️ *This answer was generated by AI — verify against official Databricks documentation.*"
     },
@@ -537,10 +537,10 @@
       "choices": {
         "A": "`.trigger(once=True)`",
         "B": "`.trigger(processingTime=\"0 seconds\")`",
-        "C": "`.trigger(continuous=\"1 second\")`",
-        "D": "`.trigger(availableNow=True)`"
+        "C": "`.trigger(availableNow=True)`",
+        "D": "`.trigger(continuous=\"1 second\")`"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "C",
       "shortAnswer": "`.trigger(availableNow=True)`",
       "explanation": "This trigger processes all data that has arrived since the last checkpoint across one or more micro-batches, then shuts down automatically. It combines the efficiency of micro-batching (processing incrementally) with the convenience of a batch job (terminates when done)."
     },
@@ -553,10 +553,10 @@
       "choices": {
         "A": "Auto Loader defaults to string type to prevent data loss during schema evolution",
         "B": "The checkpoint metadata overrides column types to string for safety",
-        "C": "JSON data is a text-based format",
-        "D": "The Delta table's schema enforcement converts all incoming types to strings"
+        "C": "The Delta table's schema enforcement converts all incoming types to strings",
+        "D": "JSON data is a text-based format"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "D",
       "shortAnswer": "JSON data is a text-based format.",
       "explanation": "Without enabling schema inference (`cloudFiles.inferColumnTypes = true`), Auto Loader reads all JSON field values as strings by default. JSON itself does not enforce strict data types at the format level, so without explicit type hints, the safest default is to represent all values as strings."
     },
@@ -599,12 +599,12 @@
       "difficulty": "medium",
       "question": "Why will the following code fail?\n\n```python\ndf = spark.readStream.format(\"delta\").load(\"dbfs:/delta/events\")\ndf.write.csv(\"output\")\n```",
       "choices": {
-        "A": "`df.write` must be `df.writeStream`",
+        "A": "A checkpoint location must be specified before calling `.write`",
         "B": "The `.csv(\"output\")` method is not supported for Delta format reads",
-        "C": "A checkpoint location must be specified before calling `.write`",
+        "C": "`df.write` must be `df.writeStream`",
         "D": "The `readStream` API cannot read from Delta format tables"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "`df.write` must be `df.writeStream`.",
       "explanation": "A streaming DataFrame created with `readStream` must be written using the `writeStream` API. Using the batch `.write` API on a streaming DataFrame raises an `AnalysisException: Queries with streaming sources must be executed with writeStream.start()`."
     },
@@ -631,12 +631,12 @@
       "difficulty": "easy",
       "question": "Sales leadership wants Salesforce accounts and opportunities in Unity Catalog, refreshed hourly. The data team has no capacity to write or maintain custom API code. Which approach fits best?",
       "choices": {
-        "A": "A notebook that calls the Salesforce REST API, scheduled hourly with Lakeflow Jobs",
-        "B": "The Lakeflow Connect managed Salesforce connector with an hourly schedule",
+        "A": "The Lakeflow Connect managed Salesforce connector with an hourly schedule",
+        "B": "A notebook that calls the Salesforce REST API, scheduled hourly with Lakeflow Jobs",
         "C": "Auto Loader reading Salesforce export files from a volume",
         "D": "A JDBC read of the Salesforce database every hour"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "The Lakeflow Connect managed Salesforce connector with an hourly schedule.",
       "explanation": "Managed connectors are fully managed ingestion pipelines for popular SaaS apps and databases. They run on serverless compute, write to UC streaming tables, ingest incrementally, and Lakeflow Connect creates a job for each schedule. Databricks recommends starting with the most managed layer. Custom REST code adds maintenance, and Auto Loader needs files that someone else would have to export ([Lakeflow Connect](https://docs.databricks.com/aws/en/ingestion/overview))."
     },
@@ -664,11 +664,11 @@
       "question": "Which source is a typical case for a Lakeflow Connect **standard** (customizable) connector rather than a managed connector?",
       "choices": {
         "A": "Workday reports for an HR dashboard",
-        "B": "Events from an Apache Kafka topic that need custom parsing in Structured Streaming",
-        "C": "HubSpot CRM objects",
+        "B": "HubSpot CRM objects",
+        "C": "Events from an Apache Kafka topic that need custom parsing in Structured Streaming",
         "D": "A MySQL database replicated with CDC"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Events from an Apache Kafka topic that need custom parsing in Structured Streaming.",
       "explanation": "Standard connectors are the customizable SQL and Spark ingestion paths for cloud object storage (Auto Loader, `read_files`), message buses (Kafka, Kinesis, Pub/Sub), and SFTP. Managed connectors cover SaaS apps (Workday, HubSpot, Salesforce) and databases (MySQL, PostgreSQL, SQL Server) with no ingestion code ([Ingest with SQL and Spark APIs](https://docs.databricks.com/aws/en/ingestion/))."
     },
@@ -680,11 +680,11 @@
       "question": "An Auto Loader stream lands vendor JSON in a Bronze table whose schema downstream teams depend on. New fields occasionally appear. The stream must never stop because of them, the table schema must not change, and the unexpected values must be kept for review. Which setting meets this?",
       "choices": {
         "A": "`cloudFiles.schemaEvolutionMode = \"addNewColumns\"`",
-        "B": "`cloudFiles.schemaEvolutionMode = \"rescue\"`",
+        "B": "`cloudFiles.inferColumnTypes = \"true\"`",
         "C": "`cloudFiles.schemaEvolutionMode = \"failOnNewColumns\"`",
-        "D": "`cloudFiles.inferColumnTypes = \"true\"`"
+        "D": "`cloudFiles.schemaEvolutionMode = \"rescue\"`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`cloudFiles.schemaEvolutionMode = \"rescue\"`.",
       "explanation": "In `rescue` mode the schema never evolves and the stream doesn't fail. New columns are written to the `_rescued_data` column. `addNewColumns` evolves the schema and stops the stream with `UnknownFieldException` until it's restarted. `failOnNewColumns` stops until someone fixes the schema. `inferColumnTypes` only affects type inference ([schema inference and evolution](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema))."
     },
@@ -695,12 +695,12 @@
       "difficulty": "medium",
       "question": "An Auto Loader stream reads a Unity Catalog external location that receives hundreds of thousands of files per day. Directory listing has become slow. What does Databricks recommend?",
       "choices": {
-        "A": "Enable `cloudFiles.useIncrementalListing`",
-        "B": "Switch to file notification mode with file events enabled on the external location",
+        "A": "Switch to file notification mode with file events enabled on the external location",
+        "B": "Enable `cloudFiles.useIncrementalListing`",
         "C": "Reduce `cloudFiles.maxFilesPerTrigger` to 10",
         "D": "Replace Auto Loader with a scheduled `spark.read` of the whole directory"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "Switch to file notification mode with file events enabled on the external location.",
       "explanation": "Directory listing is the default mode. Databricks recommends file notification mode with **file events** for most workloads, as it's more performant and scalable, and needs no extra permissions once file events are enabled on the external location (DBR 14.3 LTS+). `cloudFiles.useIncrementalListing` is deprecated. You can switch modes across restarts and keep exactly-once processing ([file detection modes](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/file-detection-modes))."
     },
@@ -728,11 +728,11 @@
       "question": "A notebook reads a 300-million-row PostgreSQL table with `spark.read.format(\"jdbc\")`, and the read runs for hours while most cluster cores sit idle. What change parallelizes the read?",
       "choices": {
         "A": "Set `fetchSize` to 1",
-        "B": "Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column",
-        "C": "Call `.repartition(64)` after `.load()`",
+        "B": "Call `.repartition(64)` after `.load()`",
+        "C": "Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column",
         "D": "Increase `spark.sql.shuffle.partitions`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column.",
       "explanation": "A JDBC read uses one thread by default. The partitioning options split the read into parallel range queries. Repartitioning after `load()` only redistributes data that was already read serially. Shuffle partitions don't affect the read ([Query databases using JDBC](https://docs.databricks.com/aws/en/connect/external-systems/jdbc))."
     },
@@ -743,12 +743,12 @@
       "difficulty": "medium",
       "question": "A vendor exposes order data only through a REST API. The team wants an immutable raw copy for replay, schema-drift handling, and a nightly schedule. Which design fits?",
       "choices": {
-        "A": "Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job",
+        "A": "Store the API token in the notebook and write directly to DBFS root",
         "B": "Call the API from a notebook and `collect()` the results into a pandas DataFrame on the driver",
         "C": "Create a Lakehouse Federation connection that queries the REST API in place",
-        "D": "Store the API token in the notebook and write directly to DBFS root"
+        "D": "Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job.",
       "explanation": "Landing raw files in a governed volume keeps a replayable copy, and Auto Loader handles incremental loading and schema evolution. Lakeflow Jobs schedules and retries the tasks. The token belongs in Databricks secrets (`dbutils.secrets.get`). DBFS root is deprecated for data ([What is DBFS?](https://docs.databricks.com/aws/en/dbfs/))."
     },
@@ -759,12 +759,12 @@
       "difficulty": "easy",
       "question": "A Bronze column `raw` holds JSON strings such as `{\"customer\": {\"id\": 42}, \"total\": \"19.99\"}`. Which Databricks SQL expression returns the customer ID?",
       "choices": {
-        "A": "`raw.customer.id`",
-        "B": "`raw:customer.id`",
+        "A": "`raw:customer.id`",
+        "B": "`raw.customer.id`",
         "C": "`get_json(raw, 'customer', 'id')`",
         "D": "`raw['customer']['id']::json`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`raw:customer.id`.",
       "explanation": "For JSON **strings**, Databricks SQL uses `<column>:<path>`, with dot notation or brackets for nested fields and `::` for casting (for example `raw:total::double`). Dot notation without the colon works on **struct** columns, not on strings ([Query JSON strings](https://docs.databricks.com/aws/en/semi-structured/json)). For new semi-structured data, Databricks recommends the `VARIANT` type over JSON strings."
     },
@@ -776,11 +776,11 @@
       "question": "Which code block will delete rows from the Delta table `my_table` where the `age` column value exceeds 25?",
       "choices": {
         "A": "`REMOVE FROM my_table WHERE age > 25;`",
-        "B": "`DROP ROWS FROM my_table WHERE age > 25;`",
-        "C": "`DELETE FROM my_table WHERE age > 25;`",
+        "B": "`DELETE FROM my_table WHERE age > 25;`",
+        "C": "`DROP ROWS FROM my_table WHERE age > 25;`",
         "D": "`TRUNCATE my_table WHERE age > 25;`"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "B",
       "shortAnswer": "`DELETE FROM my_table WHERE age > 25;`",
       "explanation": "This standard SQL DML syntax works directly on Delta tables. Delta Lake supports full DML operations including DELETE, UPDATE, and MERGE with ACID guarantees, so the deleted rows are tracked in the transaction log and are recoverable via time travel."
     },
@@ -792,11 +792,11 @@
       "question": "A data analyst has developed a Delta table `sales` that the entire data analysis team uses. The data engineering team prefers Python. Which command can the engineering team use to access `sales` data in PySpark?",
       "choices": {
         "A": "`spark.read.delta(\"sales\")`",
-        "B": "`spark.table(\"sales\")`",
-        "C": "`spark.load(\"sales\")`",
+        "B": "`spark.load(\"sales\")`",
+        "C": "`spark.table(\"sales\")`",
         "D": "`spark.sql.table(\"sales\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "`spark.table(\"sales\")`",
       "explanation": "This loads the registered Delta table into a PySpark DataFrame, allowing the engineering team to use Python and Spark transformations on the same data the analyst queries with SQL. The table is accessible because it is registered in the shared metastore."
     },
@@ -807,12 +807,12 @@
       "difficulty": "medium",
       "question": "A data engineer intends to create a new table listing customers residing in France and wants to indicate the table contains PII. The incomplete SQL is shown below:\n\n```sql\nCREATE TABLE customerInFrance\n_____ AS\nSELECT id\n      ,firstName\n      ,lastName\nFROM customerLocations\nWHERE country = 'FRANCE';\n```\n\nWhich line of code correctly fills in the blank to add a table property indicating PII?",
       "choices": {
-        "A": "`TBLPROPERTIES ('contains_pii' = 'true')`",
+        "A": "`METADATA ('contains_pii' = 'true')`",
         "B": "`COMMENT 'contains_pii = true'`",
         "C": "`OPTIONS ('contains_pii' = 'true')`",
-        "D": "`METADATA ('contains_pii' = 'true')`"
+        "D": "`TBLPROPERTIES ('contains_pii' = 'true')`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "`TBLPROPERTIES ('contains_pii' = 'true')`",
       "explanation": "`TBLPROPERTIES` adds structured key-value metadata directly to the table definition — these are the actual \"table properties\" in Databricks SQL. `COMMENT` adds a human-readable description but is not a table property. Using `TBLPROPERTIES` to tag sensitivity classifications (e.g., PII, data classification) is the standard approach for policy-driven metadata in Databricks."
     },
@@ -823,12 +823,12 @@
       "difficulty": "easy",
       "question": "What benefits do the array functions from Spark SQL offer?",
       "choices": {
-        "A": "The ability to automatically flatten all nested structures into separate tables",
+        "A": "The ability to work with complex, nested data ingested from JSON files",
         "B": "The ability to convert JSON files into Parquet format without code",
         "C": "The ability to enforce strict schemas on semi-structured data at write time",
-        "D": "The ability to work with complex, nested data ingested from JSON files"
+        "D": "The ability to automatically flatten all nested structures into separate tables"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "A",
       "shortAnswer": "The ability to work with complex, nested data ingested from JSON files.",
       "explanation": "Functions like `explode`, `array_contains`, `transform`, and `filter` allow operations directly on nested array structures without flattening the entire schema first, making them essential for processing hierarchical JSON data at scale."
     },
@@ -840,11 +840,11 @@
       "question": "What commands can be utilized to insert data into a Delta table while preventing duplicate records?",
       "choices": {
         "A": "`INSERT DISTINCT`",
-        "B": "`UPSERT`",
+        "B": "`MERGE`",
         "C": "`COPY INTO`",
-        "D": "`MERGE`"
+        "D": "`UPSERT`"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "B",
       "shortAnswer": "`MERGE`.",
       "explanation": "The `MERGE INTO` statement matches source records against a target table on a key condition and conditionally inserts, updates, or skips records. This is the standard upsert pattern in Delta Lake for ensuring no duplicate rows are added."
     },
@@ -871,12 +871,12 @@
       "difficulty": "medium",
       "question": "A data engineer intends to run the last block of a Python program only if `day_of_week` is set to 1 and `review_period` is `True`. The incomplete code block is shown below:\n\n```python\nday_of_week = get_day_of_week()\nreview_period = check_review_period()\n\n_____\n    run_final_block()\n```\n\nWhat control flow statement should be used to complete the blank?",
       "choices": {
-        "A": "`if day_of_week == 1 and review_period:`",
+        "A": "`if day_of_week is 1 and review_period is True:`",
         "B": "`if day_of_week = 1 and review_period == \"True\":`",
         "C": "`if day_of_week == 1 or review_period:`",
-        "D": "`if day_of_week is 1 and review_period is True:`"
+        "D": "`if day_of_week == 1 and review_period:`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "`if day_of_week == 1 and review_period:`",
       "explanation": "In Python, `==` performs equality comparison (not assignment). A boolean variable is truthy when referenced directly — wrapping it in quotes (`\"True\"`) would compare against the string literal, not the boolean value. Using a single `=` would cause a `SyntaxError`."
     },
@@ -887,12 +887,12 @@
       "difficulty": "medium",
       "question": "A data engineer needs a data entity built from several tables that must be accessible to other data engineers in their sessions and stored in a physical location. Which data entity should be created?",
       "choices": {
-        "A": "A temporary view",
-        "B": "A table (Delta or Spark SQL table)",
+        "A": "A table (Delta or Spark SQL table)",
+        "B": "A temporary view",
         "C": "A global temporary view",
         "D": "A Common Table Expression (CTE)"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "A table (Delta or Spark SQL table).",
       "explanation": "Tables persist data physically at a storage location and are registered in the metastore, making them accessible across all sessions and users. Unlike temporary views (session-scoped) or views (no physical storage), tables outlive any individual session."
     },
@@ -903,12 +903,12 @@
       "difficulty": "easy",
       "question": "A data engineer needs to add a new record `('a1', 6, 9.4)` to the existing Delta table `my_table`. Which SQL command accomplishes this?",
       "choices": {
-        "A": "`INSERT INTO my_table VALUES ('a1', 6, 9.4);`",
-        "B": "`ADD ROW my_table VALUES ('a1', 6, 9.4);`",
+        "A": "`ADD ROW my_table VALUES ('a1', 6, 9.4);`",
+        "B": "`INSERT INTO my_table VALUES ('a1', 6, 9.4);`",
         "C": "`APPEND INTO my_table VALUES ('a1', 6, 9.4);`",
         "D": "`MERGE INTO my_table VALUES ('a1', 6, 9.4);`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "B",
       "shortAnswer": "`INSERT INTO my_table VALUES ('a1', 6, 9.4);`",
       "explanation": "`INSERT INTO ... VALUES` appends new rows to an existing Delta table without modifying existing records. Delta Lake records this as a new transaction in the log, making it reversible via time travel."
     },
@@ -921,10 +921,10 @@
       "choices": {
         "A": "`DROP TABLE IF EXISTS table_name; CREATE TABLE table_name (...)`",
         "B": "`CREATE TABLE IF NOT EXISTS table_name (...)`",
-        "C": "`ALTER TABLE table_name REPLACE COLUMNS (...)`",
-        "D": "`CREATE OR REPLACE TABLE table_name (...column definitions...)`"
+        "C": "`CREATE OR REPLACE TABLE table_name (...column definitions...)`",
+        "D": "`ALTER TABLE table_name REPLACE COLUMNS (...)`"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "C",
       "shortAnswer": "`CREATE OR REPLACE TABLE table_name (...column definitions...)`",
       "explanation": "This atomically drops and recreates the table if it exists, or creates it new if it does not. It avoids errors from pre-existing tables and ensures the table always reflects the latest schema definition."
     },
@@ -951,12 +951,12 @@
       "difficulty": "medium",
       "question": "A data engineer needs a relational object from two tables that will not be used by other engineers in different sessions. To minimize storage expenses, physical data should not be duplicated. Which relational object should be created?",
       "choices": {
-        "A": "A materialized view",
+        "A": "A temporary view",
         "B": "A managed Delta table",
         "C": "An external table",
-        "D": "A temporary view"
+        "D": "A materialized view"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "A",
       "shortAnswer": "A temporary view.",
       "explanation": "Temporary views exist only for the current Spark session, are not accessible to other users, and store no physical data — they are just a named query definition. This avoids both storage costs and data duplication while enabling SQL-based access within the session."
     },
@@ -967,12 +967,12 @@
       "difficulty": "easy",
       "question": "A data analyst has created a query that operates on a Delta table. They seek assistance from the data engineering team to perform a set of tests to verify that the data returned by the query is accurate and clean. However, the data engineering team utilizes Python for their tests instead of SQL. Which operations can the data engineering team use in PySpark to execute the query and process the results?",
       "choices": {
-        "A": "`spark.sql(\"SELECT ...\")`",
-        "B": "`spark.query(\"SELECT ...\")`",
+        "A": "`spark.query(\"SELECT ...\")`",
+        "B": "`spark.sql(\"SELECT ...\")`",
         "C": "`spark.execute(\"SELECT ...\")`",
         "D": "`spark.run(\"SELECT ...\")`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "B",
       "shortAnswer": "`spark.sql(\"SELECT ...\")`",
       "explanation": "`spark.sql()` accepts a SQL query string and executes it, returning the results as a PySpark DataFrame. `spark.table(\"table_name\")` loads an entire table as a DataFrame but does not execute a specific SQL query — it is not the correct tool when the goal is to run a particular SQL statement."
     },
@@ -983,12 +983,12 @@
       "difficulty": "medium",
       "question": "Which command shows the count of null values in the `member_id` column?",
       "choices": {
-        "A": "`SELECT count_if(member_id IS NULL) FROM my_table;`",
+        "A": "`SELECT count(member_id) FROM my_table WHERE member_id IS NULL;`",
         "B": "`SELECT sum(CASE WHEN member_id IS NULL THEN 0 ELSE 1 END) FROM my_table;`",
-        "C": "`SELECT count(member_id) FROM my_table WHERE member_id IS NULL;`",
+        "C": "`SELECT count_if(member_id IS NULL) FROM my_table;`",
         "D": "`SELECT count(NULL) FROM my_table;`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "`SELECT count_if(member_id IS NULL) FROM my_table;`",
       "explanation": "`count_if` counts rows that satisfy the given boolean condition. `IS NULL` evaluates to true for null values. Standard `count(member_id)` would exclude nulls, returning the opposite of what is needed."
     },
@@ -999,12 +999,12 @@
       "difficulty": "medium",
       "question": "A data engineer needs to implement custom logic for the `employees` array column in the `stores` table to find employees with more than 5 years of experience. The result should be a new column `exp_employees` containing only matching employees for each row. The incomplete SQL query is shown below:\n\n```sql\nSELECT store_id,\n       _____ AS exp_employees\nFROM stores\n```\n\nWhich code correctly completes the blank using the FILTER higher-order function?",
       "choices": {
-        "A": "`FILTER(employees, i -> i.years_exp > 5)`",
+        "A": "`TRANSFORM(employees, i -> i.years_exp > 5)`",
         "B": "`ARRAY_FILTER(employees, i -> i.years_exp > 5)`",
         "C": "`SELECT_FROM_ARRAY(employees, years_exp > 5)`",
-        "D": "`TRANSFORM(employees, i -> i.years_exp > 5)`"
+        "D": "`FILTER(employees, i -> i.years_exp > 5)`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "`FILTER(employees, i -> i.years_exp > 5)`",
       "explanation": "The `FILTER` higher-order function applies a lambda predicate to each element of an array column, returning a new array containing only elements where the condition is true. The arrow syntax (`->`) defines the anonymous function."
     },
@@ -1015,12 +1015,12 @@
       "difficulty": "easy",
       "question": "A data engineer has a Python variable `table_name` and wants to execute a SQL query using it in PySpark. The incomplete code block is shown below:\n\n```python\ntable_name = \"sales\"\nresult = _____(f\"SELECT * FROM {table_name}\")\n```\n\nWhich method completes the blank?",
       "choices": {
-        "A": "`spark.read`",
-        "B": "`spark.sql`",
+        "A": "`spark.sql`",
+        "B": "`spark.read`",
         "C": "`spark.query`",
         "D": "`spark.execute`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`spark.sql(f\"SELECT * FROM {table_name}\")`",
       "explanation": "`spark.sql()` accepts a SQL string, and Python f-strings embed variables directly into the query using `{variable_name}` syntax. This is the standard way to dynamically reference table names or other values from Python variables in SQL queries."
     },
@@ -1032,11 +1032,11 @@
       "question": "A data engineer new to Python needs a function that adds two integers and returns their sum. Which code block is correct?",
       "choices": {
         "A": "`function add_integers(x, y): return x + y`",
-        "B": "`def add_integers(x, y): print(x + y)`",
+        "B": "`def add_integers(x, y): return x + y`",
         "C": "`def add_integers(x, y): yield x + y`",
-        "D": "`def add_integers(x, y): return x + y`"
+        "D": "`def add_integers(x, y): print(x + y)`"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "B",
       "shortAnswer": "```python\ndef add_integers(x, y):\n    return x + y\n```",
       "explanation": "In Python, `def` defines a function and `return` outputs the result. Using `print` instead of `return` would output to the console but the function would return `None`, making it unusable in further computation. Using `function` (JavaScript syntax) would cause a `SyntaxError`."
     },
@@ -1048,11 +1048,11 @@
       "question": "When should a data engineer prefer the `MERGE INTO` command over the `INSERT INTO` command?",
       "choices": {
         "A": "When the target table needs to be completely overwritten with new data",
-        "B": "When the target table cannot contain duplicate records",
-        "C": "When inserting data from a streaming source into a batch table",
+        "B": "When inserting data from a streaming source into a batch table",
+        "C": "When the target table cannot contain duplicate records",
         "D": "When the source and target tables have different schemas"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "When the target table cannot contain duplicate records.",
       "explanation": "`MERGE INTO` matches source records against existing rows on a key condition and conditionally inserts, updates, or skips records. `INSERT INTO` always appends all rows regardless of existing data, which would create duplicates if records already exist."
     },
@@ -1064,11 +1064,11 @@
       "question": "What is wrong with the following SQL query?\n\n```sql\nSELECT name, count(*) FROM people GROUP BY 2\n```",
       "choices": {
         "A": "The `count(*)` function requires an alias to be used with `GROUP BY`",
-        "B": "`GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key",
+        "B": "The query is missing a `HAVING` clause to filter the aggregated results",
         "C": "`GROUP BY` using a numeric ordinal position is never valid in Spark SQL",
-        "D": "The query is missing a `HAVING` clause to filter the aggregated results"
+        "D": "`GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key.",
       "explanation": "Databricks SQL does allow grouping by column position (for example `GROUP BY 1` here would group by `name`). But \"if a positional reference resolves to an aggregate expression, Databricks raises GROUP_BY_POS_AGGREGATE\". Use `GROUP BY 1` or `GROUP BY name` ([GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby))."
     },
@@ -1079,12 +1079,12 @@
       "difficulty": "easy",
       "question": "During data ingestion, a data engineer observes that source data quality is declining. They want to automate the process of monitoring the quality level. Which tool addresses this?",
       "choices": {
-        "A": "Apache Airflow with custom validation DAGs",
+        "A": "Lakeflow Declarative Pipelines (formerly DLT)",
         "B": "Databricks SQL Alerts with scheduled queries",
-        "C": "Lakeflow Declarative Pipelines (formerly DLT)",
+        "C": "Apache Airflow with custom validation DAGs",
         "D": "Great Expectations library integrated with Spark"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "A",
       "shortAnswer": "Lakeflow Declarative Pipelines (formerly DLT).",
       "explanation": "Lakeflow Declarative Pipelines provides built-in data quality monitoring through expectations — declarative constraints that automatically track pass/fail metrics, record violations in the event log, and optionally drop or quarantine bad records. Quality statistics are visible per-table in the pipeline UI."
     },
@@ -1096,11 +1096,11 @@
       "question": "A Lakeflow Declarative Pipelines pipeline has two streaming tables and three materialized views. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?",
       "choices": {
         "A": "Only the two streaming datasets are updated continuously; the three materialized views are updated once and then stop",
-        "B": "All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources",
-        "C": "All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped",
+        "B": "All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped",
+        "C": "All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources",
         "D": "The pipeline fails because streaming and materialized view datasets cannot coexist in Continuous mode"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "B",
       "shortAnswer": "All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped.",
       "explanation": "In Continuous mode, the pipeline runs indefinitely — processing streaming tables as new data arrives and periodically refreshing materialized views. It does not shut down automatically; resources are released only when the pipeline is manually stopped."
     },
@@ -1111,12 +1111,12 @@
       "difficulty": "medium",
       "question": "A dataset established through Lakeflow Declarative Pipelines has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?",
       "choices": {
-        "A": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log",
+        "A": "Violating records are written to a separate quarantine table for manual review",
         "B": "The entire batch is rejected and the pipeline enters a failed state",
-        "C": "Violating records are written to a separate quarantine table for manual review",
+        "C": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log",
         "D": "The pipeline pauses and waits for manual approval before continuing"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.",
       "explanation": "The pipeline continues running. Dropped record counts and violation metrics are tracked in the Lakeflow Declarative Pipelines event log and displayed per-table in the pipeline UI under data quality statistics. The `FAIL UPDATE` variant would stop the pipeline instead."
     },
@@ -1143,12 +1143,12 @@
       "difficulty": "medium",
       "question": "Which type of Structured Streaming query represents the transition from a Silver table to a Gold table?",
       "choices": {
-        "A": "A query that reads raw data from cloud storage and applies schema enforcement before writing to a Silver table",
+        "A": "A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table",
         "B": "A query that deduplicates and cleanses Bronze data before writing to a Silver table",
-        "C": "A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table",
+        "C": "A query that reads raw data from cloud storage and applies schema enforcement before writing to a Silver table",
         "D": "A query that replicates Silver data to an external data warehouse for reporting"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "A",
       "shortAnswer": "A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table.",
       "explanation": "Gold tables typically contain business-level aggregates. Transforming cleaned Silver data into aggregated Gold data is the defining characteristic of the Silver-to-Gold transition in medallion architecture.\n\n> ⚠️ *This answer was generated by AI — verify against official Databricks documentation.*"
     },
@@ -1160,11 +1160,11 @@
       "question": "A data engineer manages three tables in a Lakeflow Declarative Pipelines pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?",
       "choices": {
         "A": "Query the Delta transaction log of each table to find DELETE operations",
-        "B": "Add explicit logging statements to each table's transformation code",
+        "B": "Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics",
         "C": "Run DESCRIBE HISTORY on each table to check for dropped record counts",
-        "D": "Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics"
+        "D": "Add explicit logging statements to each table's transformation code"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "B",
       "shortAnswer": "Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics.",
       "explanation": "The Lakeflow Declarative Pipelines pipeline UI shows per-table expectation metrics, including the number of records that passed, failed, or were dropped for each defined constraint. This makes it straightforward to pinpoint which table's expectation is causing record drops."
     },
@@ -1176,11 +1176,11 @@
       "question": "What needs to be specified when creating a new Lakeflow Declarative Pipelines pipeline?",
       "choices": {
         "A": "A target database and storage location",
-        "B": "At least one source code file or notebook that defines the datasets",
-        "C": "A cluster policy and node type configuration",
+        "B": "A cluster policy and node type configuration",
+        "C": "At least one source code file or notebook that defines the datasets",
         "D": "An explicit schedule or cron expression"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "At least one source code file or notebook that defines the datasets.",
       "explanation": "A pipeline must reference source code (notebooks or files) containing the dataset definitions, such as `CREATE OR REFRESH STREAMING TABLE` / `CREATE OR REFRESH MATERIALIZED VIEW` statements or `@dp.table` / `@dp.materialized_view` functions. Other settings — storage location, target database, cluster configuration — are optional and can use defaults."
     },
@@ -1191,12 +1191,12 @@
       "difficulty": "medium",
       "question": "A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a Lakeflow Declarative Pipelines SQL query. What explains its inclusion?",
       "choices": {
-        "A": "The referenced dataset is read as a streaming source (for example, a streaming table)",
+        "A": "The `STREAM()` function applies watermarking to handle late-arriving data",
         "B": "The `STREAM()` function enables parallel reads from the table across multiple clusters",
         "C": "It converts a batch table into a temporary streaming source for the current query only",
-        "D": "The `STREAM()` function applies watermarking to handle late-arriving data"
+        "D": "The referenced dataset is read as a streaming source (for example, a streaming table)"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "The referenced dataset is read as a streaming source (for example, a streaming table).",
       "explanation": "In Lakeflow Declarative Pipelines, `STREAM(table_name)` indicates that the table should be read as a streaming source — consuming only new records incrementally rather than reprocessing the full table. It is required when the source is a streaming table and the consuming dataset needs to process it incrementally."
     },
@@ -1207,12 +1207,12 @@
       "difficulty": "medium",
       "question": "A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Lakeflow Declarative Pipelines. What changes are necessary?",
       "choices": {
-        "A": "The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions",
+        "A": "No changes are required",
         "B": "The SQL code must be rewritten in Python because Lakeflow Declarative Pipelines only supports Python definitions",
         "C": "The streaming source must be converted to a batch source before migrating to Lakeflow Declarative Pipelines",
-        "D": "No changes are required"
+        "D": "The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "A",
       "shortAnswer": "No changes are required.",
       "explanation": "Lakeflow Declarative Pipelines natively supports both Python and SQL within the same pipeline. It supports the medallion architecture (Bronze/Silver/Gold layers) and handles streaming sources directly. The existing language mix and multi-hop architecture can migrate to Lakeflow Declarative Pipelines without modification to the underlying logic."
     },
@@ -1224,11 +1224,11 @@
       "question": "Which Spark method persists data to both memory and disk when memory is insufficient?",
       "choices": {
         "A": "`cache()` with `StorageLevel.MEMORY_ONLY`",
-        "B": "`checkpoint()` with eager evaluation",
-        "C": "`persist()` with `StorageLevel.MEMORY_AND_DISK`",
+        "B": "`persist()` with `StorageLevel.MEMORY_AND_DISK`",
+        "C": "`checkpoint()` with eager evaluation",
         "D": "`broadcast()` with local storage fallback"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "B",
       "shortAnswer": "`persist()` with `StorageLevel.MEMORY_AND_DISK`.",
       "explanation": "`persist()` allows specifying a `StorageLevel` such as `MEMORY_AND_DISK`, which stores partitions in memory and spills excess to disk when memory is exhausted. `cache()` is a shortcut for `persist(StorageLevel.MEMORY_ONLY)` and does not spill to disk automatically."
     },
@@ -1239,12 +1239,12 @@
       "difficulty": "medium",
       "question": "A 2 TB `sales` DataFrame is joined to a 15 MB `stores` DataFrame on `store_id`. The Spark UI shows a `SortMergeJoin` with a large shuffle of `sales`. Which change avoids shuffling the large side?",
       "choices": {
-        "A": "`sales.join(broadcast(stores), \"store_id\")`",
+        "A": "`sales.repartition(1).join(stores, \"store_id\")`",
         "B": "`sales.crossJoin(stores).filter(\"sales.store_id = stores.store_id\")`",
-        "C": "`sales.repartition(1).join(stores, \"store_id\")`",
+        "C": "`sales.join(broadcast(stores), \"store_id\")`",
         "D": "Lower `spark.sql.shuffle.partitions` to 10"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "`sales.join(broadcast(stores), \"store_id\")`.",
       "explanation": "`broadcast()` marks the small DataFrame for a broadcast join, which copies it to every executor so `sales` isn't shuffled. Its size (15 MB) is above the default `spark.sql.autoBroadcastJoinThreshold` of 10 MB, which is why Spark didn't broadcast it automatically. A cross join multiplies rows. One partition removes parallelism. Fewer shuffle partitions don't remove the shuffle ([SQL performance tuning](https://spark.apache.org/docs/latest/sql-performance-tuning.html))."
     },
@@ -1256,11 +1256,11 @@
       "question": "Two DataFrames hold the same columns in a different order: `df_a(id, name, city)` and `df_b(city, id, name)`. Which call combines them, keeping duplicate rows and matching columns correctly?",
       "choices": {
         "A": "`df_a.union(df_b)`",
-        "B": "`df_a.unionByName(df_b)`",
+        "B": "`df_a.join(df_b, \"id\", \"outer\")`",
         "C": "`df_a.union(df_b).distinct()`",
-        "D": "`df_a.join(df_b, \"id\", \"outer\")`"
+        "D": "`df_a.unionByName(df_b)`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`df_a.unionByName(df_b)`.",
       "explanation": "`union` resolves columns **by position**, so it would put `city` values into `id`. `unionByName` resolves them **by name**. Both keep duplicates, which is SQL `UNION ALL` semantics. Add `.distinct()` for SQL `UNION` behaviour. `allowMissingColumns=True` fills columns missing from one side with nulls ([PySpark unionByName](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.unionByName.html))."
     },
@@ -1271,12 +1271,12 @@
       "difficulty": "medium",
       "question": "A Silver table has a `tags` string column such as `\"red,large,sale\"`. Analysts need one row per tag. Which PySpark expression produces it?",
       "choices": {
-        "A": "`df.withColumn(\"tag\", F.split(\"tags\", \",\"))`",
-        "B": "`df.withColumn(\"tag\", F.explode(F.split(\"tags\", \",\")))`",
+        "A": "`df.withColumn(\"tag\", F.explode(F.split(\"tags\", \",\")))`",
+        "B": "`df.withColumn(\"tag\", F.split(\"tags\", \",\"))`",
         "C": "`df.withColumn(\"tag\", F.flatten(\"tags\"))`",
         "D": "`df.groupBy(\"tags\").agg(F.collect_list(\"tags\"))`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`df.withColumn(\"tag\", F.explode(F.split(\"tags\", \",\")))`.",
       "explanation": "`split` turns the string into an array using a (regular expression) pattern. `explode` then emits one row per array element. `split` alone leaves one row with an array. `flatten` works on arrays of arrays, and `collect_list` does the opposite of what's needed ([PySpark split](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.split.html))."
     },
@@ -1304,11 +1304,11 @@
       "question": "A DataFrame `groupBy` on 40 MB of data runs 200 tiny tasks after the shuffle on classic compute. An engineer wants to tune the post-shuffle partition count and then re-measure. Which setting controls it?",
       "choices": {
         "A": "`spark.default.parallelism`",
-        "B": "`spark.sql.shuffle.partitions`",
-        "C": "`spark.executor.memory`",
+        "B": "`spark.executor.memory`",
+        "C": "`spark.sql.shuffle.partitions`",
         "D": "`spark.sql.autoBroadcastJoinThreshold`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "`spark.sql.shuffle.partitions`.",
       "explanation": "It sets the number of partitions used when shuffling data for joins or aggregations in the DataFrame and SQL engine (default 200). On Databricks, setting it to `auto` lets Spark size it from the plan and the data. `spark.default.parallelism` applies to RDD operations, memory settings size the JVMs, and the broadcast threshold controls join strategy ([AQE](https://docs.databricks.com/aws/en/optimizations/aqe), [Spark SQL tuning](https://spark.apache.org/docs/latest/sql-performance-tuning.html))."
     },
@@ -1320,11 +1320,11 @@
       "question": "Two hundred users open a dashboard each morning that aggregates revenue by region from a large Silver table. Hourly freshness is acceptable. The team wants fast reads and doesn't want to maintain refresh code. Which Unity Catalog object should back the dashboard?",
       "choices": {
         "A": "A standard view over the Silver table",
-        "B": "A materialized view refreshed on a schedule",
+        "B": "A streaming table that appends Silver rows",
         "C": "A temporary view created by the dashboard query",
-        "D": "A streaming table that appends Silver rows"
+        "D": "A materialized view refreshed on a schedule"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "A materialized view refreshed on a schedule.",
       "explanation": "A materialized view stores precomputed results and refreshes them (incrementally when possible) on a schedule or when upstream data changes, so reads are cheap. A view recomputes the aggregation on every query. Temporary views are session-scoped. Streaming tables append new rows and don't recompute an aggregate ([standalone materialized views](https://docs.databricks.com/aws/en/views/materialized))."
     },
@@ -1335,12 +1335,12 @@
       "difficulty": "medium",
       "question": "A data engineer executes a single-task job each morning. Upon discovering an upstream data issue, they must add a new notebook to run before the original task. What is the correct approach to set up this new upstream task?",
       "choices": {
-        "A": "Clone the existing Job and add the new notebook as a second task in the clone",
+        "A": "Create a new task in the existing Job, and then add the original task as a dependency of the new task",
         "B": "Create a separate Job for the new notebook and schedule it to run 30 minutes before the original Job",
-        "C": "Create a new task in the existing Job, and then add the original task as a dependency of the new task",
+        "C": "Clone the existing Job and add the new notebook as a second task in the clone",
         "D": "Replace the original task's notebook with a wrapper notebook that runs both notebooks sequentially"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "A",
       "shortAnswer": "Create a new task in the existing Job, and then add the original task as a dependency of the new task.",
       "explanation": "In Databricks Jobs, task dependencies are defined by specifying which tasks a given task \"depends on.\" To insert an upstream step, the new task should have no dependencies (runs first), and the original task should be configured to depend on the new task (runs after)."
     },
@@ -1352,11 +1352,11 @@
       "question": "An engineering manager wants a query to refresh every minute for the first week after a project launch, with no compute costs after that week. What strategy ensures the query stops refreshing and generating costs beyond week one?",
       "choices": {
         "A": "Set the SQL warehouse to auto-stop after one week of total runtime",
-        "B": "Create a Databricks Job to disable the query refresh after seven days",
+        "B": "Set the query's refresh schedule to end on a specific date in the query scheduler",
         "C": "Manually cancel the refresh schedule at the end of the week",
-        "D": "Set the query's refresh schedule to end on a specific date in the query scheduler"
+        "D": "Create a Databricks Job to disable the query refresh after seven days"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "B",
       "shortAnswer": "Set the query's refresh schedule to end on a specific date in the query scheduler.",
       "explanation": "Databricks SQL query schedulers support an optional end date/time, allowing the refresh to automatically stop once the date is reached. No manual intervention is needed after the initial setup."
     },
@@ -1368,11 +1368,11 @@
       "question": "A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?",
       "choices": {
         "A": "Declarative Automation Bundles (formerly Databricks Asset Bundles) YAML configuration",
-        "B": "Cron syntax",
-        "C": "Apache Airflow DAG definitions",
+        "B": "Apache Airflow DAG definitions",
+        "C": "Cron syntax",
         "D": "JSON job templates via the Databricks CLI"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Cron syntax.",
       "explanation": "Databricks Jobs support quartz cron expressions for scheduling. Cron strings are compact, human-readable, and can be programmatically constructed and submitted via the Jobs API or embedded in Declarative Automation Bundles (formerly Databricks Asset Bundles) YAML configuration files."
     },
@@ -1383,12 +1383,12 @@
       "difficulty": "easy",
       "question": "An engineering manager reviews a query daily but currently reruns it manually and waits for results. What strategy guarantees the query results are refreshed daily automatically?",
       "choices": {
-        "A": "Schedule the query to refresh every 1 day from the query's page in Databricks SQL",
+        "A": "Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh the query",
         "B": "Create a Databricks Job that runs the query notebook on a daily cron schedule",
         "C": "Set up an Apache Airflow DAG to trigger the query execution daily",
-        "D": "Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh the query"
+        "D": "Schedule the query to refresh every 1 day from the query's page in Databricks SQL"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "Schedule the query to refresh every 1 day from the query's page in Databricks SQL.",
       "explanation": "Databricks SQL provides a built-in scheduler accessible directly from the query editor. Setting a recurring daily refresh interval ensures results are always up-to-date without manual intervention or external orchestration tools."
     },
@@ -1399,12 +1399,12 @@
       "difficulty": "easy",
       "question": "In what situations should a data engineer choose a task in the \"Depends On\" field when creating a new Databricks Job task?",
       "choices": {
-        "A": "When the new task needs to run on a different cluster than other tasks",
+        "A": "When another task needs to successfully complete before the new task begins",
         "B": "When the new task should only run if a previous task has completed successfully",
         "C": "When the new task processes data from a different database than other tasks",
-        "D": "When another task needs to successfully complete before the new task begins"
+        "D": "When the new task needs to run on a different cluster than other tasks"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "A",
       "shortAnswer": "When another task needs to successfully complete before the new task begins.",
       "explanation": "The \"Depends On\" field establishes execution order in a Databricks Job DAG. The new task will only start after all specified upstream tasks have completed successfully. With the default Run if condition (*All succeeded*), if a dependency fails the downstream task doesn't run and is marked `Upstream failed`."
     },
@@ -1431,12 +1431,12 @@
       "difficulty": "medium",
       "question": "The same load notebook must run for 30 source tables, at most five at a time, without defining 30 tasks. Which configuration meets this?",
       "choices": {
-        "A": "A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5",
+        "A": "A single notebook task with `max_retries` set to 30",
         "B": "Thirty notebook tasks with no dependencies",
-        "C": "A single notebook task with `max_retries` set to 30",
+        "C": "A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5",
         "D": "A Run Job task pointing at itself"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5.",
       "explanation": "For each runs one nested task once per input element, passing `{{input}}` (or `{{input.<key>}}`). Concurrency defaults to 1, and the nested task can't itself be a For each ([For each task](https://docs.databricks.com/aws/en/jobs/for-each))."
     },
@@ -1448,11 +1448,11 @@
       "question": "A task that calls an external API fails a few times a week with transient network errors, and succeeds when re-run minutes later. What is the built-in way to handle this?",
       "choices": {
         "A": "Increase the task timeout",
-        "B": "Configure a retry policy on the task, with a retry interval",
+        "B": "Add an If/else task after it",
         "C": "Set the job's max concurrent runs to 2",
-        "D": "Add an If/else task after it"
+        "D": "Configure a retry policy on the task, with a retry interval"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Configure a retry policy on the task, with a retry interval.",
       "explanation": "Task-level retries automatically re-run a failed task after the configured interval. A timeout limits how long one attempt may run, and when both are set the timeout applies to each retry. Concurrency and branching don't retry anything ([Configure and edit tasks](https://docs.databricks.com/aws/en/jobs/configure-task))."
     },
@@ -1463,12 +1463,12 @@
       "difficulty": "medium",
       "question": "A job's final task drops temporary staging tables. It must run whether the upstream transform succeeds or fails. Which Run if condition should it use?",
       "choices": {
-        "A": "All succeeded",
+        "A": "All done",
         "B": "At least one succeeded",
-        "C": "All done",
+        "C": "All succeeded",
         "D": "All failed"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "A",
       "shortAnswer": "All done.",
       "explanation": "*All done* runs the task after all dependencies finish, whatever their status. The default, *All succeeded*, would mark the task `Upstream failed` and skip it when the transform fails. *All failed* runs it only after failures ([Configure task dependencies](https://docs.databricks.com/aws/en/jobs/conditional-tasks))."
     },
@@ -1495,12 +1495,12 @@
       "difficulty": "medium",
       "question": "A Gold build job must run after **both** `main.silver.orders` and `main.silver.customers` are updated. Those tables are maintained by two other teams' jobs, which run at varying times. Which trigger configuration fits?",
       "choices": {
-        "A": "A table update trigger on both tables with \"All tables are updated\"",
+        "A": "A scheduled trigger at 06:00",
         "B": "A table update trigger on both tables with \"Any table is updated\"",
-        "C": "A scheduled trigger at 06:00",
+        "C": "A table update trigger on both tables with \"All tables are updated\"",
         "D": "A file arrival trigger on the tables' storage paths"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "A table update trigger on both tables with \"All tables are updated\".",
       "explanation": "Table update triggers start a run when monitored UC tables change. With multiple tables, *Trigger when* can be set to **All tables are updated** or **Any table is updated**. The job's Run as principal needs `SELECT` on the tables. File arrival triggers can't target managed table locations ([table update triggers](https://docs.databricks.com/aws/en/jobs/trigger-table-update))."
     },
@@ -1511,12 +1511,12 @@
       "difficulty": "easy",
       "question": "A regulatory report must be published at exactly 07:00 every weekday, using whatever data has arrived by then. Which trigger fits best?",
       "choices": {
-        "A": "Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`",
+        "A": "Continuous trigger",
         "B": "File arrival trigger",
         "C": "Table update trigger",
-        "D": "Continuous trigger"
+        "D": "Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`.",
       "explanation": "When the deadline, not data availability, decides when work runs, a time-based schedule is right. Quartz cron puts seconds first, and `?` goes in day-of-month when day-of-week is constrained. Data-driven triggers fit when work should follow data arrival ([schedules and triggers](https://docs.databricks.com/aws/en/jobs/triggers))."
     },
@@ -1560,11 +1560,11 @@
       "question": "A Lakeflow Job schedule uses the Quartz expression `0 30 2 * * ?`. When does it run?",
       "choices": {
         "A": "Every 30 minutes past 2 o'clock, every hour",
-        "B": "At 02:30:00 every day",
-        "C": "At 00:30 on the 2nd of every month",
+        "B": "At 00:30 on the 2nd of every month",
+        "C": "At 02:30:00 every day",
         "D": "Every 2 minutes at second 30"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "At 02:30:00 every day.",
       "explanation": "Quartz fields are seconds, minutes, hours, day-of-month, month, day-of-week, and an optional year. So `0 30 2 * * ?` means second 0, minute 30, hour 2, every day of every month, with no specific day-of-week ([Quartz CronTrigger tutorial](https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html))."
     },
@@ -1577,10 +1577,10 @@
       "choices": {
         "A": "Committing and pushing changes",
         "B": "Creating the feature branch",
-        "C": "Creating and merging the pull request into the default branch",
-        "D": "Pulling a teammate's latest changes"
+        "C": "Pulling a teammate's latest changes",
+        "D": "Creating and merging the pull request into the default branch"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "D",
       "shortAnswer": "Creating and merging the pull request into the default branch.",
       "explanation": "Git folders handle branch creation, switching, Commit & Push, pull, merge, rebase, and conflict resolution in the workspace UI. The docs say to \"use your Git provider's interface to create a pull request and merge it into the default branch\", where reviews and branch protections apply ([Git operations in Git folders](https://docs.databricks.com/aws/en/repos/git-operations-with-repos))."
     },
@@ -1591,12 +1591,12 @@
       "difficulty": "medium",
       "question": "A data engineer must decide between the built-in versioning of Databricks Notebooks and Databricks Git folders. What is one benefit of using Git folders (formerly Repos) instead?",
       "choices": {
-        "A": "Git folders automatically back up notebooks to cloud storage every 5 minutes",
+        "A": "Databricks Git folders support the use of multiple branches",
         "B": "Git folders eliminate the need for a Git provider by hosting repositories internally",
         "C": "Git folders provide a visual diff tool for comparing notebook cell outputs",
-        "D": "Databricks Git folders support the use of multiple branches"
+        "D": "Git folders automatically back up notebooks to cloud storage every 5 minutes"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "A",
       "shortAnswer": "Databricks Git folders support the use of multiple branches.",
       "explanation": "Built-in notebook versioning provides only a linear history of auto-saved snapshots. Git folders integrate fully with Git, enabling feature branches, pull requests, code reviews, and collaborative development workflows — essential for team-based software engineering practices."
     },
@@ -1608,11 +1608,11 @@
       "question": "A data engineer's colleague has pushed updates to the central Git repository. The data engineer needs to sync their Databricks Git folder with these changes. Which Git operation accomplishes this?",
       "choices": {
         "A": "Clone",
-        "B": "Fetch",
+        "B": "Pull",
         "C": "Rebase",
-        "D": "Pull"
+        "D": "Fetch"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "B",
       "shortAnswer": "Pull.",
       "explanation": "A `git pull` fetches changes from the remote repository and merges them into the current local branch. In a Databricks Git folder, this is the **Pull** action in the Git dialog (pull also clears notebook state), keeping the local copy synchronized with the latest upstream changes."
     },
@@ -1624,11 +1624,11 @@
       "question": "A data engineer has edited two notebooks in a Databricks Git folder on branch `feature/dedup`. How do they get the changes to the remote repository from the workspace UI?",
       "choices": {
         "A": "Export the notebooks as DBC files and upload them to the Git provider",
-        "B": "Open the Git dialog, select the changes, enter a commit message, and click Commit & Push",
-        "C": "Run `databricks bundle deploy`",
+        "B": "Run `databricks bundle deploy`",
+        "C": "Open the Git dialog, select the changes, enter a commit message, and click Commit & Push",
         "D": "Click Pull, which pushes local changes automatically"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Open the Git dialog, select the changes, enter a commit message, and click Commit & Push.",
       "explanation": "In Git folders, the UI \"commits and pushes in a single action\", and a commit message is required. Pull brings remote changes **in**. Bundle deploy pushes to a workspace, not to Git ([Git operations in Git folders](https://docs.databricks.com/aws/en/repos/git-operations-with-repos))."
     },
@@ -1639,12 +1639,12 @@
       "difficulty": "easy",
       "question": "Before starting new work, an engineer wants a separate branch based on `main` in their Git folder. What should they do?",
       "choices": {
-        "A": "Use the Git dialog's Create Branch option, name the branch, and choose `main` as the base",
+        "A": "Rename the `main` branch in the Git dialog",
         "B": "Clone the repository again into a new workspace folder",
         "C": "Ask an admin to create the branch with the Repos API",
-        "D": "Rename the `main` branch in the Git dialog"
+        "D": "Use the Git dialog's Create Branch option, name the branch, and choose `main` as the base"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "Use the Git dialog's Create Branch option, name the branch, and choose `main` as the base.",
       "explanation": "Git folders create and switch branches from the Git dialog. Switching branches can carry uncommitted changes over. It can also delete workspace assets that don't exist on the target branch, and recreate them with new IDs when you switch back ([Git operations in Git folders](https://docs.databricks.com/aws/en/repos/git-operations-with-repos))."
     },
@@ -1655,12 +1655,12 @@
       "difficulty": "hard",
       "question": "An engineer clicks **Reset** on a branch in a Git folder. What is the effect?",
       "choices": {
-        "A": "Only uncommitted local changes are discarded",
-        "B": "It is equivalent to `git reset --hard` plus `git push --force`, so committed and uncommitted changes are lost locally and on the remote branch",
+        "A": "It is equivalent to `git reset --hard` plus `git push --force`, so committed and uncommitted changes are lost locally and on the remote branch",
+        "B": "Only uncommitted local changes are discarded",
         "C": "The branch is restored from notebook revision history",
         "D": "The Git folder is unlinked from the remote repository"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "It is equivalent to `git reset --hard` plus `git push --force`, so committed and uncommitted changes are lost locally and on the remote branch.",
       "explanation": "The docs warn: \"When you reset, you lose all uncommitted and committed changes in both the local and remote version of the branch.\" Use it only when you really want to discard work ([Git operations in Git folders](https://docs.databricks.com/aws/en/repos/git-operations-with-repos))."
     },
@@ -1671,12 +1671,12 @@
       "difficulty": "medium",
       "question": "A Declarative Automation Bundle deploys a job that needs a database password. The password must not appear in `databricks.yml`, in notebooks, or in Git. The CI system stores it as a secret. How should the bundle receive it at deploy time?",
       "choices": {
-        "A": "Declare a bundle variable with no default, and have CI export `BUNDLE_VAR_<variable_name>` from its secret store",
-        "B": "Put the password in the variable's `default`",
+        "A": "Put the password in the variable's `default`",
+        "B": "Declare a bundle variable with no default, and have CI export `BUNDLE_VAR_<variable_name>` from its secret store",
         "C": "Store it in a `passwords.txt` file in the bundle root",
         "D": "Hard-code it with `spark.conf.set` in the notebook"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "B",
       "shortAnswer": "Declare a bundle variable with no default, and have CI export `BUNDLE_VAR_<variable_name>` from its secret store.",
       "explanation": "Bundle variables can be set from `BUNDLE_VAR_`-prefixed environment variables, so the value never enters source control. Runtime credentials can also be read in code with `dbutils.secrets.get` ([bundle variables](https://docs.databricks.com/aws/en/dev-tools/bundles/variables))."
     },
@@ -1689,10 +1689,10 @@
       "choices": {
         "A": "`dev`",
         "B": "`prod`",
-        "C": "`staging`",
-        "D": "`prod_v2`"
+        "C": "`prod_v2`",
+        "D": "`staging`"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "C",
       "shortAnswer": "`prod_v2`.",
       "explanation": "The CLI uses the first source that provides a value, in this order: the `--var` option, then `BUNDLE_VAR_` environment variables, then `variable-overrides.json`, then target `variables`, then the declaration's `default` ([bundle variables](https://docs.databricks.com/aws/en/dev-tools/bundles/variables))."
     },
@@ -1704,11 +1704,11 @@
       "question": "A team wants the same job definition deployed to dev, test, and prod workspaces, each writing to a different Unity Catalog catalog. What is the bundle-native approach?",
       "choices": {
         "A": "Copy `resources/job.yml` into three folders, one per environment",
-        "B": "Define `dev`, `test`, and `prod` targets with their own workspace hosts, and override a `catalog` variable per target",
+        "B": "Edit the job in each workspace UI after deployment",
         "C": "Create three Git repositories",
-        "D": "Edit the job in each workspace UI after deployment"
+        "D": "Define `dev`, `test`, and `prod` targets with their own workspace hosts, and override a `catalog` variable per target"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Define `dev`, `test`, and `prod` targets with their own workspace hosts, and override a `catalog` variable per target.",
       "explanation": "Targets override top-level settings (workspace, `run_as`, variables, resource settings) per environment, so one set of resource YAML is promoted with `databricks bundle deploy -t <target>`. Manual UI edits drift from source control, and the next deploy can overwrite them ([Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/))."
     },
@@ -1719,12 +1719,12 @@
       "difficulty": "medium",
       "question": "An engineer deploys a bundle with `-t dev`, where the target has `mode: development`. The deployed job never runs on its daily schedule. Why?",
       "choices": {
-        "A": "Development mode deletes schedules from the YAML",
-        "B": "Development mode pauses schedules and triggers on deployed resources, and prefixes resource names with `[dev <user>]`",
+        "A": "Development mode pauses schedules and triggers on deployed resources, and prefixes resource names with `[dev <user>]`",
+        "B": "Development mode deletes schedules from the YAML",
         "C": "Development mode requires a service principal",
         "D": "The `dev` target always deploys to a read-only workspace"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "Development mode pauses schedules and triggers on deployed resources, and prefixes resource names with `[dev <user>]`.",
       "explanation": "`mode: development` also marks pipelines as `development: true` and allows concurrent runs, so engineers can iterate safely. Run the job manually with `databricks bundle run`, or deploy to a production-mode target for scheduled runs ([deployment modes](https://docs.databricks.com/aws/en/dev-tools/bundles/deployment-modes))."
     },
@@ -1751,12 +1751,12 @@
       "difficulty": "easy",
       "question": "In a CI pipeline, which Databricks CLI command checks that the bundle configuration is syntactically correct before anything is deployed?",
       "choices": {
-        "A": "`databricks bundle validate`",
+        "A": "`databricks bundle sync`",
         "B": "`databricks bundle destroy`",
-        "C": "`databricks bundle sync`",
+        "C": "`databricks bundle validate`",
         "D": "`databricks jobs list`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "`databricks bundle validate`.",
       "explanation": "`validate` checks the bundle configuration. `deploy -t <target>` deploys it, `run` runs a job or pipeline, `plan` shows the deployment plan, and `destroy` deletes previously deployed resources ([bundle command group](https://docs.databricks.com/aws/en/dev-tools/cli/bundle-commands))."
     },
@@ -1767,12 +1767,12 @@
       "difficulty": "easy",
       "question": "After `databricks bundle deploy -t test`, the CI pipeline must start the bundle's `orders_job` in the test environment and wait for the result. Which command does this?",
       "choices": {
-        "A": "`databricks bundle run orders_job -t test`",
+        "A": "`databricks bundle init orders_job`",
         "B": "`databricks bundle deploy orders_job --run`",
         "C": "`databricks bundle summary -t test`",
-        "D": "`databricks bundle init orders_job`"
+        "D": "`databricks bundle run orders_job -t test`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "`databricks bundle run orders_job -t test`.",
       "explanation": "`bundle run` runs \"a job, pipeline, app, or script\" defined in the bundle, against the selected target. `summary` lists the bundle's identity and deployed resources, and `init` creates a bundle from a template ([bundle command group](https://docs.databricks.com/aws/en/dev-tools/cli/bundle-commands))."
     },
@@ -1816,11 +1816,11 @@
       "question": "A data engineer has discovered that the data files related to a Delta table are quite small. They aim to merge these small files into larger ones to enhance performance. Which keywords can be utilized to compact the small files?",
       "choices": {
         "A": "VACUUM",
-        "B": "OPTIMIZE",
-        "C": "COMPACT",
+        "B": "COMPACT",
+        "C": "OPTIMIZE",
         "D": "DEFRAGMENT"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "`OPTIMIZE`.",
       "explanation": "The `OPTIMIZE` command compacts small files in a Delta table into larger ones, improving read performance by reducing the number of files that need to be scanned. This is different from `VACUUM`, which removes old data files no longer referenced by the transaction log."
     },
@@ -1831,12 +1831,12 @@
       "difficulty": "medium",
       "question": "A data engineer uses a Databricks SQL dashboard to monitor data quality. When the count of NULL values in a query result reaches 100, the entire team should be alerted via a messaging webhook. What method accomplishes this?",
       "choices": {
-        "A": "Set up an Alert with a new webhook alert destination",
+        "A": "Configure a SQL warehouse event hook that triggers on query result thresholds",
         "B": "Add a conditional formatting rule to the dashboard visualization that sends a webhook",
         "C": "Create a Databricks Job that polls the query results and calls the webhook via Python",
-        "D": "Configure a SQL warehouse event hook that triggers on query result thresholds"
+        "D": "Set up an Alert with a new webhook alert destination"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "Set up an Alert with a new webhook alert destination.",
       "explanation": "Databricks SQL Alerts monitor query results against a threshold condition and trigger notifications when the condition is met. Webhook destinations allow alerts to be sent to external messaging services (Slack, Microsoft Teams, PagerDuty) in real-time."
     },
@@ -1847,12 +1847,12 @@
       "difficulty": "medium",
       "question": "A single Job executes two notebooks as distinct tasks. One notebook is performing slowly during the current Job run. What method can a tech lead use to diagnose the cause?",
       "choices": {
-        "A": "Check the Databricks SQL query history for slow-running queries",
-        "B": "Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook",
+        "A": "Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook",
+        "B": "Check the Databricks SQL query history for slow-running queries",
         "C": "Review the cluster event log for resource allocation errors",
         "D": "Open the Lakeflow Declarative Pipelines pipeline UI to inspect per-table processing metrics"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook.",
       "explanation": "Clicking into the active run opens a live view of the notebook execution, including links to the Spark UI for the current task. This allows inspection of active stages, task metrics, shuffle data, and memory usage to identify performance bottlenecks."
     },
@@ -1864,11 +1864,11 @@
       "question": "What approach should be taken to email the owner of a Databricks Job if it fails?",
       "choices": {
         "A": "Write a try/except block in the notebook that sends an email on failure",
-        "B": "Configure an external monitoring tool to watch the Jobs API for failure status",
-        "C": "Set up an Alert in the Job's notification settings (Job page)",
+        "B": "Set up an Alert in the Job's notification settings (Job page)",
+        "C": "Configure an external monitoring tool to watch the Jobs API for failure status",
         "D": "Create a downstream task that runs only on failure and sends the email"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "B",
       "shortAnswer": "Set up an Alert in the Job's notification settings (Job page).",
       "explanation": "Databricks Jobs support email notifications for job events (failure, success, or start). The job owner's email address is added directly from the Job's \"Notifications\" section, requiring no custom code or external alerting systems."
     },
@@ -1880,11 +1880,11 @@
       "question": "A data engineer tracks store-level records where sales equal zero. When this count exceeds zero, the entire team should be notified via a messaging webhook. What approach accomplishes this?",
       "choices": {
         "A": "Configure a Lakeflow Declarative Pipelines expectation that triggers a webhook when zero-sales records appear",
-        "B": "Set up an Alert with a new webhook alert destination",
-        "C": "Build a custom Python script that polls the query results and posts to the webhook",
+        "B": "Build a custom Python script that polls the query results and posts to the webhook",
+        "C": "Set up an Alert with a new webhook alert destination",
         "D": "Add a dashboard filter that highlights zero-sales stores and emails the team"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Set up an Alert with a new webhook alert destination.",
       "explanation": "Configure the alert condition on the query result (value > 0) and point the destination to the team's webhook URL. Databricks SQL Alerts evaluate the query result on each refresh and trigger the webhook notification when the threshold condition is met."
     },
@@ -1895,12 +1895,12 @@
       "difficulty": "easy",
       "question": "Stakeholders say a daily Lakeflow Job \"feels slower lately\". Where can the engineer compare recent run durations with the historical baseline, task by task?",
       "choices": {
-        "A": "The job's Runs tab matrix view",
+        "A": "The workspace admin settings",
         "B": "The cluster's Environment tab in the Spark UI",
         "C": "`DESCRIBE HISTORY` on the output table",
-        "D": "The workspace admin settings"
+        "D": "The job's Runs tab matrix view"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "The job's Runs tab matrix view.",
       "explanation": "The matrix view shows one column per run, with a Run total duration row and a row per task. Bar height reflects duration, so a growing bar exposes the regression and the task responsible. History is kept for 60 days. Use `system.lakeflow` tables for longer trends ([Monitor Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/monitor))."
     },
@@ -1911,12 +1911,12 @@
       "difficulty": "medium",
       "question": "A job run failed. In the Graph view, three downstream tasks show **Upstream failed** and one task shows **Failed**. Where should the engineer start investigating?",
       "choices": {
-        "A": "The three Upstream failed tasks, because they're the most numerous",
-        "B": "The Failed task. The Upstream failed tasks didn't run because their dependency failed",
+        "A": "The Failed task. The Upstream failed tasks didn't run because their dependency failed",
+        "B": "The three Upstream failed tasks, because they're the most numerous",
         "C": "The cluster event log of the last task in the DAG",
         "D": "The job's schedule"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "The Failed task. The Upstream failed tasks didn't run because their dependency failed.",
       "explanation": "With the default Run if (*All succeeded*), a task whose dependency fails is marked `Upstream failed`. The DAG graph shows where the failure started. Fix that task, then use **Repair run** to re-run it and its dependents ([Configure task dependencies](https://docs.databricks.com/aws/en/jobs/conditional-tasks))."
     },
@@ -1943,12 +1943,12 @@
       "difficulty": "easy",
       "question": "A task failed with status **Timed Out** after 45 minutes. With today's data volume it needs about 60 minutes. What should the engineer change so future runs complete?",
       "choices": {
-        "A": "The task's timeout, raised above 60 minutes with headroom",
+        "A": "The compute's auto termination setting",
         "B": "The job's max concurrent runs",
-        "C": "The compute's auto termination setting",
+        "C": "The task's timeout, raised above 60 minutes with headroom",
         "D": "The upstream dependency's Run if condition"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "The task's timeout, raised above 60 minutes with headroom.",
       "explanation": "If a task doesn't finish within its configured timeout, its status is set to Timed Out. With retries configured, the timeout applies to each attempt. The run-duration *warning* threshold only raises an alert, and the other settings don't control the timeout ([Configure and edit tasks](https://docs.databricks.com/aws/en/jobs/configure-task))."
     },
@@ -1961,10 +1961,10 @@
       "choices": {
         "A": "Add more workers to the cluster",
         "B": "Reduce `spark.sql.shuffle.partitions`",
-        "C": "Salt the aggregation key, then aggregate the partial results in a second pass",
-        "D": "Rely on AQE skew-join handling to split the partition"
+        "C": "Rely on AQE skew-join handling to split the partition",
+        "D": "Salt the aggregation key, then aggregate the partial results in a second pass"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "D",
       "shortAnswer": "Salt the aggregation key, then aggregate the partial results in a second pass.",
       "explanation": "One hot key overloads a single task. AQE splits skewed partitions only in sort-merge and shuffle-hash **joins**, not in `groupBy` aggregations. More workers leave the giant task on one core, and fewer shuffle partitions make partitions bigger. Salting spreads the hot key across many tasks ([Skew and spill](https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/long-spark-stage-page), [AQE](https://docs.databricks.com/aws/en/optimizations/aqe))."
     },
@@ -2007,12 +2007,12 @@
       "difficulty": "medium",
       "question": "A team wants Databricks to choose and evolve clustering keys from actual query patterns. What do they need?",
       "choices": {
-        "A": "`CLUSTER BY AUTO` on a Unity Catalog managed table with predictive optimization enabled",
+        "A": "Partitioning by every filter column",
         "B": "`ZORDER BY AUTO` in a nightly `OPTIMIZE` job",
-        "C": "Partitioning by every filter column",
+        "C": "`CLUSTER BY AUTO` on a Unity Catalog managed table with predictive optimization enabled",
         "D": "A Spark configuration that enables auto clustering on external tables"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "`CLUSTER BY AUTO` on a Unity Catalog managed table with predictive optimization enabled.",
       "explanation": "Automatic liquid clustering \"requires predictive optimization\" for key selection and clustering operations. Predictive optimization runs only on UC managed tables ([liquid clustering](https://docs.databricks.com/aws/en/delta/clustering), [predictive optimization](https://docs.databricks.com/aws/en/optimizations/predictive-optimization))."
     },
@@ -2023,12 +2023,12 @@
       "difficulty": "easy",
       "question": "Which statement about predictive optimization is correct?",
       "choices": {
-        "A": "It runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` automatically on Unity Catalog managed tables",
+        "A": "It runs `OPTIMIZE ... ZORDER BY` on all partitioned tables",
         "B": "It tunes Spark configurations for every notebook session",
         "C": "It applies to external tables and tables received through sharing",
-        "D": "It runs `OPTIMIZE ... ZORDER BY` on all partitioned tables"
+        "D": "It runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` automatically on Unity Catalog managed tables"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "It runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` automatically on Unity Catalog managed tables.",
       "explanation": "Predictive optimization runs on serverless jobs compute, applies only to UC managed tables, doesn't run `ZORDER`, and can be enabled, disabled, or inherited per catalog, schema, or table. Its history is in `system.storage.predictive_optimization_operations_history` ([predictive optimization](https://docs.databricks.com/aws/en/optimizations/predictive-optimization))."
     },
@@ -2039,12 +2039,12 @@
       "difficulty": "medium",
       "question": "A classic job cluster terminates during startup with `INIT_SCRIPT_FAILURE`. What should the engineer check first?",
       "choices": {
-        "A": "The Spark UI Stages tab",
-        "B": "The init script logs, to find why the cluster-scoped script failed (path, permissions, or a failing command)",
+        "A": "The init script logs, to find why the cluster-scoped script failed (path, permissions, or a failing command)",
+        "B": "The Spark UI Stages tab",
         "C": "The job's max concurrent runs",
         "D": "The Delta transaction log of the output table"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "The init script logs, to find why the cluster-scoped script failed (path, permissions, or a failing command).",
       "explanation": "`INIT_SCRIPT_FAILURE` means a cluster-scoped init script couldn't load or exited non-zero. The Spark UI doesn't exist yet because Spark never started. Other startup codes point to cloud capacity, quota, or subnet issues ([termination error codes](https://docs.databricks.com/aws/en/compute/troubleshooting/cluster-error-codes))."
     },
@@ -2055,12 +2055,12 @@
       "difficulty": "medium",
       "question": "Two notebooks on the same all-purpose cluster need different versions of a Python library. A compute-scoped install of one version breaks the other notebook. What is the recommended fix?",
       "choices": {
-        "A": "Install each version with notebook-scoped `%pip install pkg==x.y` in the notebook that needs it",
-        "B": "Install both versions as compute-scoped libraries",
+        "A": "Install both versions as compute-scoped libraries",
+        "B": "Install each version with notebook-scoped `%pip install pkg==x.y` in the notebook that needs it",
         "C": "Install the library with a global init script",
         "D": "Copy the library files to DBFS root"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "B",
       "shortAnswer": "Install each version with notebook-scoped `%pip install pkg==x.y` in the notebook that needs it.",
       "explanation": "Notebook-scoped libraries take precedence over compute-scoped libraries, which take precedence over Runtime built-ins, and they apply only to that notebook session. Databricks doesn't recommend installing libraries with init scripts, and DBFS library storage is deprecated ([Install libraries](https://docs.databricks.com/aws/en/libraries/))."
     },
@@ -2071,12 +2071,12 @@
       "difficulty": "medium",
       "question": "A notebook crashes with a driver `OutOfMemoryError` on `pdf = spark.table(\"events\").toPandas()`, where `events` has 300 million rows. Adding workers didn't help. What is the right fix?",
       "choices": {
-        "A": "Aggregate or filter in Spark and collect only the small result (or write results to a table)",
+        "A": "Increase `spark.sql.shuffle.partitions`",
         "B": "Add even more workers",
-        "C": "Increase `spark.sql.shuffle.partitions`",
+        "C": "Aggregate or filter in Spark and collect only the small result (or write results to a table)",
         "D": "Enable autoscaling on the cluster"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "Aggregate or filter in Spark and collect only the small result (or write results to a table).",
       "explanation": "`toPandas()` and `collect()` pull every row into driver memory. Workers add executor capacity, not driver memory. Raising `spark.driver.memory` at compute level is a last resort. The real fix is to keep large data distributed ([Spark configuration: driver memory](https://spark.apache.org/docs/latest/configuration.html))."
     },
@@ -2087,12 +2087,12 @@
       "difficulty": "medium",
       "question": "A platform team wants a weekly dashboard of failure rates for every Lakeflow Job over the past 90 days. Which source fits best?",
       "choices": {
-        "A": "The `system.lakeflow.job_run_timeline` system table",
+        "A": "The driver logs of the last run",
         "B": "Each job's matrix view, screenshotted weekly",
         "C": "`DESCRIBE HISTORY` on each job's output tables",
-        "D": "The driver logs of the last run"
+        "D": "The `system.lakeflow.job_run_timeline` system table"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "The `system.lakeflow.job_run_timeline` system table.",
       "explanation": "Job run system tables record runs and their result states across the account and can be queried with SQL for dashboards. The UI keeps run history for 60 days, and system tables aren't meant for real-time alerting ([System tables](https://docs.databricks.com/aws/en/admin/system-tables/), [Monitor Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/monitor))."
     },
@@ -2103,12 +2103,12 @@
       "difficulty": "medium",
       "question": "A data engineer drops `my_table` with `DROP TABLE IF EXISTS my_table`. The object no longer appears in `SHOW TABLES`, but the data files still exist on the filesystem. What explains this?",
       "choices": {
-        "A": "The DROP command failed silently due to insufficient permissions",
+        "A": "The table was an external table",
         "B": "The table had active streaming readers that prevented file deletion",
-        "C": "The table was an external table",
+        "C": "The DROP command failed silently due to insufficient permissions",
         "D": "The VACUUM command needs to be run separately to remove data files"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "A",
       "shortAnswer": "The table was an external table.",
       "explanation": "When an external table is dropped, Databricks removes only the metadata entry from the metastore. The underlying data files are stored at a user-defined location and are not managed by Databricks, so they remain intact after the table is dropped."
     },
@@ -2119,12 +2119,12 @@
       "difficulty": "easy",
       "question": "In a workspace still using the legacy `hive_metastore` catalog, a data engineer has established a new database with this command:\n\n```sql\nCREATE DATABASE IF NOT EXISTS customer360;\n```\n\nWhere will the `customer360` database be situated?",
       "choices": {
-        "A": "`dbfs:/user/hive/warehouse/customer360.db`",
-        "B": "`dbfs:/user/hive/warehouse/`",
+        "A": "`dbfs:/user/hive/warehouse/`",
+        "B": "`dbfs:/user/hive/warehouse/customer360.db`",
         "C": "`dbfs:/databricks/databases/customer360/`",
         "D": "`dbfs:/mnt/default/customer360.db`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "B",
       "shortAnswer": "`dbfs:/user/hive/warehouse/customer360.db`",
       "explanation": "When a database is created without specifying a `LOCATION`, Databricks stores it in the default Hive warehouse directory at `dbfs:/user/hive/warehouse/`. A subdirectory named `<database_name>.db` is automatically created for it. Specifying only `dbfs:/user/hive/warehouse` (without the `.db` suffix) is incorrect — that is the parent warehouse directory, not the database's own location."
     },
@@ -2153,10 +2153,10 @@
       "choices": {
         "A": "The VACUUM command was automatically triggered after the DROP",
         "B": "The table was stored in a temporary storage location",
-        "C": "The table was a managed table",
-        "D": "The table had a retention policy set to zero days"
+        "C": "The table had a retention policy set to zero days",
+        "D": "The table was a managed table"
       },
-      "correctAnswer": "C",
+      "correctAnswer": "D",
       "shortAnswer": "The table was a managed table.",
       "explanation": "When a managed (internal) table is dropped, Databricks deletes both the metastore entry and the underlying data files, because Databricks controls the full lifecycle of managed table data. This is the opposite behavior from external tables. In Unity Catalog, a dropped managed table can be recovered with `UNDROP TABLE` for 7 days by default, and the data files are deleted after that recovery period."
     },
@@ -2167,12 +2167,12 @@
       "difficulty": "medium",
       "question": "A data engineer has left the organization and no longer has access. The team must transfer ownership of the engineer's Unity Catalog tables to the new lead data engineer. Who can perform this transfer?",
       "choices": {
-        "A": "Any user with SELECT privilege on the tables",
-        "B": "A metastore admin, or the owner of the tables' parent schema (or a user with MANAGE on the tables)",
+        "A": "A metastore admin, or the owner of the tables' parent schema (or a user with MANAGE on the tables)",
+        "B": "Any user with SELECT privilege on the tables",
         "C": "The new lead data engineer, by running `ALTER TABLE ... OWNER TO` on their own",
         "D": "Any member of the data team with MODIFY privilege"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "A metastore admin, or the owner of the tables' parent schema (or a user with MANAGE on the tables).",
       "explanation": "In Unity Catalog, ownership can be transferred by the current owner, a metastore admin, the owner of the container (the schema for a table), or a user with the `MANAGE` privilege on the object. `SELECT` and `MODIFY` don't allow it. Use `ALTER TABLE ... OWNER TO <principal>` or the Owner field in Catalog Explorer ([Manage privileges](https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/))."
     },
@@ -2201,10 +2201,10 @@
       "choices": {
         "A": "`GRANT SELECT ON CATALOG customers TO team;`",
         "B": "`GRANT ALL PRIVILEGES ON CATALOG customers TO team;`",
-        "C": "`GRANT USAGE ON DATABASE customers TO team;`",
-        "D": "`GRANT BROWSE ON CATALOG customers TO team;`"
+        "C": "`GRANT BROWSE ON CATALOG customers TO team;`",
+        "D": "`GRANT USAGE ON DATABASE customers TO team;`"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "C",
       "shortAnswer": "`GRANT BROWSE ON CATALOG customers TO team;`",
       "explanation": "`BROWSE` lets users discover objects and view metadata without usage privileges, and Databricks recommends granting it on catalogs. `SELECT` and `ALL PRIVILEGES` would expose data. `USAGE` is a legacy Hive metastore privilege. In Unity Catalog the usage privileges are `USE CATALOG` / `USE SCHEMA`, and they don't grant data access on their own ([UC privileges reference](https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/privileges))."
     },
@@ -2216,11 +2216,11 @@
       "question": "A data engineer needs to use a Delta table but is unsure whether they have the necessary permissions. Where can they check their table permissions?",
       "choices": {
         "A": "The Databricks Admin Console under User Management",
-        "B": "Catalog Explorer",
+        "B": "The SQL warehouse's access control list",
         "C": "The cluster configuration page under Security settings",
-        "D": "The SQL warehouse's access control list"
+        "D": "Catalog Explorer"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Catalog Explorer.",
       "explanation": "The Catalog Explorer in Databricks provides a dedicated \"Permissions\" tab for each table, listing which users and groups have access and what privilege levels are granted. It is the primary interface for inspecting and managing object-level permissions."
     },
@@ -2231,12 +2231,12 @@
       "difficulty": "easy",
       "question": "A data engineer requires access to `new_table` but does not know who owns it. What method can be used to identify the owner?",
       "choices": {
-        "A": "Run `SHOW GRANT ON TABLE new_table` to list all privilege holders",
+        "A": "Review the Owner field in the table's page in Catalog Explorer",
         "B": "Check the cluster logs for the user who last wrote to the table",
         "C": "Query the `information_schema.tables` view for the table's creator",
-        "D": "Review the Owner field in the table's page in Catalog Explorer"
+        "D": "Run `SHOW GRANT ON TABLE new_table` to list all privilege holders"
       },
-      "correctAnswer": "D",
+      "correctAnswer": "A",
       "shortAnswer": "Review the Owner field in the table's page in Catalog Explorer.",
       "explanation": "Catalog Explorer displays the table owner in the table details panel. Any user with workspace access can view this field without needing special permissions, making it the standard way to identify who to contact for permission requests."
     },
@@ -2247,12 +2247,12 @@
       "difficulty": "hard",
       "question": "A data engineer converted an external table to a Unity Catalog managed table with `ALTER TABLE ... SET MANAGED`. Two days later, the team must undo it. What should they run?",
       "choices": {
-        "A": "`ALTER TABLE ... UNSET MANAGED`",
-        "B": "`RESTORE TABLE ... TO VERSION AS OF` the version before the conversion",
+        "A": "`RESTORE TABLE ... TO VERSION AS OF` the version before the conversion",
+        "B": "`ALTER TABLE ... UNSET MANAGED`",
         "C": "Drop the table and recreate it as external, because rollback isn't supported",
         "D": "`ALTER TABLE ... SET EXTERNAL`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "B",
       "shortAnswer": "`ALTER TABLE ... UNSET MANAGED`.",
       "explanation": "Rollback is supported within **14 days** of conversion. `UNSET MANAGED` points the table metadata back to the original external location and preserves writes made after conversion. Streams must be restarted, and Databricks deletes the managed copy seven days after rollback. `RESTORE` restores data versions, not the table type ([Convert to managed tables](https://docs.databricks.com/aws/en/tables/convert-external-managed))."
     },
@@ -2264,11 +2264,11 @@
       "question": "Which command converts an existing Unity Catalog external Delta table to a managed table while keeping its name, permissions, and history?",
       "choices": {
         "A": "`CREATE OR REPLACE TABLE t AS SELECT * FROM t`",
-        "B": "`ALTER TABLE t SET MANAGED` on Databricks Runtime 17.3 LTS+ or serverless",
-        "C": "`CONVERT TO DELTA t`",
+        "B": "`CONVERT TO DELTA t`",
+        "C": "`ALTER TABLE t SET MANAGED` on Databricks Runtime 17.3 LTS+ or serverless",
         "D": "`ALTER TABLE t SET LOCATION NULL`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "`ALTER TABLE t SET MANAGED` on Databricks Runtime 17.3 LTS+ or serverless.",
       "explanation": "The conversion copies data and the transaction log to managed storage, then switches metadata, with only brief writer downtime. It keeps the name, settings, permissions, views, and history. You must own the table, and existing streams must be restarted afterwards ([Convert to managed tables](https://docs.databricks.com/aws/en/tables/convert-external-managed))."
     },
@@ -2280,11 +2280,11 @@
       "question": "A Unity Catalog managed table was dropped by mistake yesterday. What can the team do?",
       "choices": {
         "A": "Nothing, because managed-table data is deleted immediately",
-        "B": "Run `UNDROP TABLE` within the recovery period (7 days by default)",
+        "B": "Recreate it with `CREATE TABLE ... LOCATION` pointing at the old path",
         "C": "Run `RESTORE TABLE` on the dropped name",
-        "D": "Recreate it with `CREATE TABLE ... LOCATION` pointing at the old path"
+        "D": "Run `UNDROP TABLE` within the recovery period (7 days by default)"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Run `UNDROP TABLE` within the recovery period (7 days by default).",
       "explanation": "Dropped managed tables can be recovered with `UNDROP TABLE` for 7 days by default, and the data files are deleted when the recovery period expires. Dropping an external table removes only metadata, and its files stay in cloud storage ([UC managed tables](https://docs.databricks.com/aws/en/tables/managed))."
     },
@@ -2295,12 +2295,12 @@
       "difficulty": "hard",
       "question": "An admin runs `DENY SELECT ON TABLE prod.gold.revenue TO contractors` in a Unity Catalog catalog, and the statement fails. Which statement is correct?",
       "choices": {
-        "A": "The syntax is wrong. It should be `DENY SELECT TO contractors ON prod.gold.revenue`",
-        "B": "The classic `DENY` statement applies only to the legacy `hive_metastore` catalog. In Unity Catalog, remove access by revoking (or not granting) `SELECT`, and use filters, masks, or ABAC for partial access",
+        "A": "The classic `DENY` statement applies only to the legacy `hive_metastore` catalog. In Unity Catalog, remove access by revoking (or not granting) `SELECT`, and use filters, masks, or ABAC for partial access",
+        "B": "The syntax is wrong. It should be `DENY SELECT TO contractors ON prod.gold.revenue`",
         "C": "`DENY` works only on schemas, not tables",
         "D": "`DENY` requires a metastore admin, and a workspace admin can't run it"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "The classic `DENY` statement applies only to the legacy `hive_metastore` catalog. In Unity Catalog, remove access by revoking (or not granting) `SELECT`, and use filters, masks, or ABAC for partial access.",
       "explanation": "The DENY reference states it \"is not supported by Unity Catalog\". Unity Catalog's deny mechanism is the ABAC DENY policy (Beta), which currently denies only `MANAGE ACCESS CONTROL` ([DENY](https://docs.databricks.com/aws/en/sql/language-manual/security-deny), [ABAC DENY policies](https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/deny-policies))."
     },
@@ -2327,12 +2327,12 @@
       "difficulty": "medium",
       "question": "Only members of `finance_team` may see full values in `credit_card_number`. Everyone else should see a masked value, and everyone queries the same table. What should be implemented?",
       "choices": {
-        "A": "A column mask function using `is_account_group_member('finance_team')`, attached with `ALTER TABLE ... ALTER COLUMN credit_card_number SET MASK`",
+        "A": "`DENY SELECT` on the column for everyone except `finance_team`",
         "B": "A separate copy of the table per group",
-        "C": "`DENY SELECT` on the column for everyone except `finance_team`",
+        "C": "A column mask function using `is_account_group_member('finance_team')`, attached with `ALTER TABLE ... ALTER COLUMN credit_card_number SET MASK`",
         "D": "Cloud IAM permissions on the column"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "C",
       "shortAnswer": "A column mask function using `is_account_group_member('finance_team')`, attached with `ALTER TABLE ... ALTER COLUMN credit_card_number SET MASK`.",
       "explanation": "A column mask is a SQL UDF that receives the value and returns either the original or a masked value, evaluated per query. Its return type must match the column type. Copies drift, and `DENY` isn't a Unity Catalog column-level mechanism ([row filters and column masks](https://docs.databricks.com/aws/en/tables/row-and-column-filters))."
     },
@@ -2343,12 +2343,12 @@
       "difficulty": "medium",
       "question": "Regional sales managers must see only the rows of `main.silver.orders` for their own region. Which implementation fits?",
       "choices": {
-        "A": "A row filter UDF returning `BOOLEAN` that checks group membership against `region`, attached with `ALTER TABLE main.silver.orders SET ROW FILTER fn ON (region)`",
+        "A": "`REVOKE SELECT` from all managers",
         "B": "A column mask on `region`",
         "C": "Partition the table by region and grant `SELECT` per partition",
-        "D": "`REVOKE SELECT` from all managers"
+        "D": "A row filter UDF returning `BOOLEAN` that checks group membership against `region`, attached with `ALTER TABLE main.silver.orders SET ROW FILTER fn ON (region)`"
       },
-      "correctAnswer": "A",
+      "correctAnswer": "D",
       "shortAnswer": "A row filter UDF returning `BOOLEAN` that checks group membership against `region`, attached with `ALTER TABLE main.silver.orders SET ROW FILTER fn ON (region)`.",
       "explanation": "Rows for which the row filter returns `FALSE` are excluded from results. Masks change column values, not row visibility, and Unity Catalog doesn't grant privileges per partition ([row filters and column masks](https://docs.databricks.com/aws/en/tables/row-and-column-filters))."
     },
@@ -2359,12 +2359,12 @@
       "difficulty": "hard",
       "question": "A privacy team must mask every email column in all tables of the `main.silver` schema, including tables created later. Table owners must not be able to remove the masking. What should they use?",
       "choices": {
-        "A": "A column mask set separately on each table by its owner",
-        "B": "A Unity Catalog ABAC column mask policy on the schema, matching columns tagged with a governed tag such as `pii = email`",
+        "A": "A Unity Catalog ABAC column mask policy on the schema, matching columns tagged with a governed tag such as `pii = email`",
+        "B": "A column mask set separately on each table by its owner",
         "C": "A dynamic view per table",
         "D": "An ABAC DENY policy on `SELECT`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "A Unity Catalog ABAC column mask policy on the schema, matching columns tagged with a governed tag such as `pii = email`.",
       "explanation": "ABAC policies (`CREATE POLICY ... COLUMN MASK ... FOR TABLES MATCH COLUMNS has_tag_value('pii','email')`) attach at catalog, schema, or table level and apply automatically to objects with matching governed tags. Because higher-level admins define them, table owners can't override or remove them. DENY policies currently deny only `MANAGE ACCESS CONTROL` ([ABAC](https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/), [ABAC policies](https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/policies))."
     }

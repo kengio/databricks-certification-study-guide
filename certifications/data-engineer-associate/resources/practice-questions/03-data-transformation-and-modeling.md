@@ -13,12 +13,12 @@ Exam weight: **22 %** (August 2026 exam guide). Questions marked *(2026 blueprin
 **Question** *(Easy)*: Which code block will delete rows from the Delta table `my_table` where the `age` column value exceeds 25?
 
 A) `REMOVE FROM my_table WHERE age > 25;`
-B) `DROP ROWS FROM my_table WHERE age > 25;`
-C) `DELETE FROM my_table WHERE age > 25;`
+B) `DELETE FROM my_table WHERE age > 25;`
+C) `DROP ROWS FROM my_table WHERE age > 25;`
 D) `TRUNCATE my_table WHERE age > 25;`
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > `DELETE FROM my_table WHERE age > 25;`
 >
@@ -31,12 +31,12 @@ D) `TRUNCATE my_table WHERE age > 25;`
 **Question** *(Easy)*: A data analyst has developed a Delta table `sales` that the entire data analysis team uses. The data engineering team prefers Python. Which command can the engineering team use to access `sales` data in PySpark?
 
 A) `spark.read.delta("sales")`
-B) `spark.table("sales")`
-C) `spark.load("sales")`
+B) `spark.load("sales")`
+C) `spark.table("sales")`
 D) `spark.sql.table("sales")`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > `spark.table("sales")`
 >
@@ -60,13 +60,13 @@ WHERE country = 'FRANCE';
 
 Which line of code correctly fills in the blank to add a table property indicating PII?
 
-A) `TBLPROPERTIES ('contains_pii' = 'true')`
+A) `METADATA ('contains_pii' = 'true')`
 B) `COMMENT 'contains_pii = true'`
 C) `OPTIONS ('contains_pii' = 'true')`
-D) `METADATA ('contains_pii' = 'true')`
+D) `TBLPROPERTIES ('contains_pii' = 'true')`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > `TBLPROPERTIES ('contains_pii' = 'true')`
 >
@@ -78,13 +78,13 @@ D) `METADATA ('contains_pii' = 'true')`
 
 **Question** *(Easy)*: What benefits do the array functions from Spark SQL offer?
 
-A) The ability to automatically flatten all nested structures into separate tables
+A) The ability to work with complex, nested data ingested from JSON files
 B) The ability to convert JSON files into Parquet format without code
 C) The ability to enforce strict schemas on semi-structured data at write time
-D) The ability to work with complex, nested data ingested from JSON files
+D) The ability to automatically flatten all nested structures into separate tables
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
 > The ability to work with complex, nested data ingested from JSON files.
 >
@@ -97,12 +97,12 @@ D) The ability to work with complex, nested data ingested from JSON files
 **Question** *(Easy)*: What commands can be utilized to insert data into a Delta table while preventing duplicate records?
 
 A) `INSERT DISTINCT`
-B) `UPSERT`
+B) `MERGE`
 C) `COPY INTO`
-D) `MERGE`
+D) `UPSERT`
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: B**
 >
 > `MERGE`.
 >
@@ -147,13 +147,13 @@ _____
 
 What control flow statement should be used to complete the blank?
 
-A) `if day_of_week == 1 and review_period:`
+A) `if day_of_week is 1 and review_period is True:`
 B) `if day_of_week = 1 and review_period == "True":`
 C) `if day_of_week == 1 or review_period:`
-D) `if day_of_week is 1 and review_period is True:`
+D) `if day_of_week == 1 and review_period:`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > `if day_of_week == 1 and review_period:`
 >
@@ -165,13 +165,13 @@ D) `if day_of_week is 1 and review_period is True:`
 
 **Question** *(Medium)*: A data engineer needs a data entity built from several tables that must be accessible to other data engineers in their sessions and stored in a physical location. Which data entity should be created?
 
-A) A temporary view
-B) A table (Delta or Spark SQL table)
+A) A table (Delta or Spark SQL table)
+B) A temporary view
 C) A global temporary view
 D) A Common Table Expression (CTE)
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > A table (Delta or Spark SQL table).
 >
@@ -183,13 +183,13 @@ D) A Common Table Expression (CTE)
 
 **Question** *(Easy)*: A data engineer needs to add a new record `('a1', 6, 9.4)` to the existing Delta table `my_table`. Which SQL command accomplishes this?
 
-A) `INSERT INTO my_table VALUES ('a1', 6, 9.4);`
-B) `ADD ROW my_table VALUES ('a1', 6, 9.4);`
+A) `ADD ROW my_table VALUES ('a1', 6, 9.4);`
+B) `INSERT INTO my_table VALUES ('a1', 6, 9.4);`
 C) `APPEND INTO my_table VALUES ('a1', 6, 9.4);`
 D) `MERGE INTO my_table VALUES ('a1', 6, 9.4);`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
 > `INSERT INTO my_table VALUES ('a1', 6, 9.4);`
 >
@@ -203,11 +203,11 @@ D) `MERGE INTO my_table VALUES ('a1', 6, 9.4);`
 
 A) `DROP TABLE IF EXISTS table_name; CREATE TABLE table_name (...)`
 B) `CREATE TABLE IF NOT EXISTS table_name (...)`
-C) `ALTER TABLE table_name REPLACE COLUMNS (...)`
-D) `CREATE OR REPLACE TABLE table_name (...column definitions...)`
+C) `CREATE OR REPLACE TABLE table_name (...column definitions...)`
+D) `ALTER TABLE table_name REPLACE COLUMNS (...)`
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: C**
 >
 > `CREATE OR REPLACE TABLE table_name (...column definitions...)`
 >
@@ -237,13 +237,13 @@ D) `PIVOT`
 
 **Question** *(Medium)*: A data engineer needs a relational object from two tables that will not be used by other engineers in different sessions. To minimize storage expenses, physical data should not be duplicated. Which relational object should be created?
 
-A) A materialized view
+A) A temporary view
 B) A managed Delta table
 C) An external table
-D) A temporary view
+D) A materialized view
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
 > A temporary view.
 >
@@ -255,13 +255,13 @@ D) A temporary view
 
 **Question** *(Easy)*: A data analyst has created a query that operates on a Delta table. They seek assistance from the data engineering team to perform a set of tests to verify that the data returned by the query is accurate and clean. However, the data engineering team utilizes Python for their tests instead of SQL. Which operations can the data engineering team use in PySpark to execute the query and process the results?
 
-A) `spark.sql("SELECT ...")`
-B) `spark.query("SELECT ...")`
+A) `spark.query("SELECT ...")`
+B) `spark.sql("SELECT ...")`
 C) `spark.execute("SELECT ...")`
 D) `spark.run("SELECT ...")`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
 > `spark.sql("SELECT ...")`
 >
@@ -273,13 +273,13 @@ D) `spark.run("SELECT ...")`
 
 **Question** *(Medium)*: Which command shows the count of null values in the `member_id` column?
 
-A) `SELECT count_if(member_id IS NULL) FROM my_table;`
+A) `SELECT count(member_id) FROM my_table WHERE member_id IS NULL;`
 B) `SELECT sum(CASE WHEN member_id IS NULL THEN 0 ELSE 1 END) FROM my_table;`
-C) `SELECT count(member_id) FROM my_table WHERE member_id IS NULL;`
+C) `SELECT count_if(member_id IS NULL) FROM my_table;`
 D) `SELECT count(NULL) FROM my_table;`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > `SELECT count_if(member_id IS NULL) FROM my_table;`
 >
@@ -299,13 +299,13 @@ FROM stores
 
 Which code correctly completes the blank using the FILTER higher-order function?
 
-A) `FILTER(employees, i -> i.years_exp > 5)`
+A) `TRANSFORM(employees, i -> i.years_exp > 5)`
 B) `ARRAY_FILTER(employees, i -> i.years_exp > 5)`
 C) `SELECT_FROM_ARRAY(employees, years_exp > 5)`
-D) `TRANSFORM(employees, i -> i.years_exp > 5)`
+D) `FILTER(employees, i -> i.years_exp > 5)`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > `FILTER(employees, i -> i.years_exp > 5)`
 >
@@ -324,13 +324,13 @@ result = _____(f"SELECT * FROM {table_name}")
 
 Which method completes the blank?
 
-A) `spark.read`
-B) `spark.sql`
+A) `spark.sql`
+B) `spark.read`
 C) `spark.query`
 D) `spark.execute`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `spark.sql(f"SELECT * FROM {table_name}")`
 >
@@ -343,12 +343,12 @@ D) `spark.execute`
 **Question** *(Easy)*: A data engineer new to Python needs a function that adds two integers and returns their sum. Which code block is correct?
 
 A) `function add_integers(x, y): return x + y`
-B) `def add_integers(x, y): print(x + y)`
+B) `def add_integers(x, y): return x + y`
 C) `def add_integers(x, y): yield x + y`
-D) `def add_integers(x, y): return x + y`
+D) `def add_integers(x, y): print(x + y)`
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: B**
 >
 > ```python
 > def add_integers(x, y):
@@ -364,12 +364,12 @@ D) `def add_integers(x, y): return x + y`
 **Question** *(Medium)*: When should a data engineer prefer the `MERGE INTO` command over the `INSERT INTO` command?
 
 A) When the target table needs to be completely overwritten with new data
-B) When the target table cannot contain duplicate records
-C) When inserting data from a streaming source into a batch table
+B) When inserting data from a streaming source into a batch table
+C) When the target table cannot contain duplicate records
 D) When the source and target tables have different schemas
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > When the target table cannot contain duplicate records.
 >
@@ -386,12 +386,12 @@ SELECT name, count(*) FROM people GROUP BY 2
 ```
 
 A) The `count(*)` function requires an alias to be used with `GROUP BY`
-B) `GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key
+B) The query is missing a `HAVING` clause to filter the aggregated results
 C) `GROUP BY` using a numeric ordinal position is never valid in Spark SQL
-D) The query is missing a `HAVING` clause to filter the aggregated results
+D) `GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key.
 >
@@ -403,13 +403,13 @@ D) The query is missing a `HAVING` clause to filter the aggregated results
 
 **Question** *(Easy)*: During data ingestion, a data engineer observes that source data quality is declining. They want to automate the process of monitoring the quality level. Which tool addresses this?
 
-A) Apache Airflow with custom validation DAGs
+A) Lakeflow Declarative Pipelines (formerly DLT)
 B) Databricks SQL Alerts with scheduled queries
-C) Lakeflow Declarative Pipelines (formerly DLT)
+C) Apache Airflow with custom validation DAGs
 D) Great Expectations library integrated with Spark
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > Lakeflow Declarative Pipelines (formerly DLT).
 >
@@ -422,12 +422,12 @@ D) Great Expectations library integrated with Spark
 **Question** *(Hard)*: A Lakeflow Declarative Pipelines pipeline has two streaming tables and three materialized views. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?
 
 A) Only the two streaming datasets are updated continuously; the three materialized views are updated once and then stop
-B) All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources
-C) All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped
+B) All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped
+C) All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources
 D) The pipeline fails because streaming and materialized view datasets cannot coexist in Continuous mode
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped.
 >
@@ -439,13 +439,13 @@ D) The pipeline fails because streaming and materialized view datasets cannot co
 
 **Question** *(Medium)*: A dataset established through Lakeflow Declarative Pipelines has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?
 
-A) Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log
+A) Violating records are written to a separate quarantine table for manual review
 B) The entire batch is rejected and the pipeline enters a failed state
-C) Violating records are written to a separate quarantine table for manual review
+C) Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log
 D) The pipeline pauses and waits for manual approval before continuing
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.
 >
@@ -475,13 +475,13 @@ D) When data needs to be processed incrementally
 
 **Question** *(Medium)*: Which type of Structured Streaming query represents the transition from a Silver table to a Gold table?
 
-A) A query that reads raw data from cloud storage and applies schema enforcement before writing to a Silver table
+A) A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table
 B) A query that deduplicates and cleanses Bronze data before writing to a Silver table
-C) A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table
+C) A query that reads raw data from cloud storage and applies schema enforcement before writing to a Silver table
 D) A query that replicates Silver data to an external data warehouse for reporting
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table.
 >
@@ -496,12 +496,12 @@ D) A query that replicates Silver data to an external data warehouse for reporti
 **Question** *(Medium)*: A data engineer manages three tables in a Lakeflow Declarative Pipelines pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?
 
 A) Query the Delta transaction log of each table to find DELETE operations
-B) Add explicit logging statements to each table's transformation code
+B) Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics
 C) Run DESCRIBE HISTORY on each table to check for dropped record counts
-D) Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics
+D) Add explicit logging statements to each table's transformation code
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: B**
 >
 > Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics.
 >
@@ -514,12 +514,12 @@ D) Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each t
 **Question** *(Easy)*: What needs to be specified when creating a new Lakeflow Declarative Pipelines pipeline?
 
 A) A target database and storage location
-B) At least one source code file or notebook that defines the datasets
-C) A cluster policy and node type configuration
+B) A cluster policy and node type configuration
+C) At least one source code file or notebook that defines the datasets
 D) An explicit schedule or cron expression
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > At least one source code file or notebook that defines the datasets.
 >
@@ -531,13 +531,13 @@ D) An explicit schedule or cron expression
 
 **Question** *(Medium)*: A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a Lakeflow Declarative Pipelines SQL query. What explains its inclusion?
 
-A) The referenced dataset is read as a streaming source (for example, a streaming table)
+A) The `STREAM()` function applies watermarking to handle late-arriving data
 B) The `STREAM()` function enables parallel reads from the table across multiple clusters
 C) It converts a batch table into a temporary streaming source for the current query only
-D) The `STREAM()` function applies watermarking to handle late-arriving data
+D) The referenced dataset is read as a streaming source (for example, a streaming table)
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > The referenced dataset is read as a streaming source (for example, a streaming table).
 >
@@ -549,13 +549,13 @@ D) The `STREAM()` function applies watermarking to handle late-arriving data
 
 **Question** *(Medium)*: A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Lakeflow Declarative Pipelines. What changes are necessary?
 
-A) The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions
+A) No changes are required
 B) The SQL code must be rewritten in Python because Lakeflow Declarative Pipelines only supports Python definitions
 C) The streaming source must be converted to a batch source before migrating to Lakeflow Declarative Pipelines
-D) No changes are required
+D) The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
 > No changes are required.
 >
@@ -568,12 +568,12 @@ D) No changes are required
 **Question** *(Medium)*: Which Spark method persists data to both memory and disk when memory is insufficient?
 
 A) `cache()` with `StorageLevel.MEMORY_ONLY`
-B) `checkpoint()` with eager evaluation
-C) `persist()` with `StorageLevel.MEMORY_AND_DISK`
+B) `persist()` with `StorageLevel.MEMORY_AND_DISK`
+C) `checkpoint()` with eager evaluation
 D) `broadcast()` with local storage fallback
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > `persist()` with `StorageLevel.MEMORY_AND_DISK`.
 >
@@ -585,13 +585,13 @@ D) `broadcast()` with local storage fallback
 
 **Question** *(Medium)*: A 2 TB `sales` DataFrame is joined to a 15 MB `stores` DataFrame on `store_id`. The Spark UI shows a `SortMergeJoin` with a large shuffle of `sales`. Which change avoids shuffling the large side?
 
-A) `sales.join(broadcast(stores), "store_id")`
+A) `sales.repartition(1).join(stores, "store_id")`
 B) `sales.crossJoin(stores).filter("sales.store_id = stores.store_id")`
-C) `sales.repartition(1).join(stores, "store_id")`
+C) `sales.join(broadcast(stores), "store_id")`
 D) Lower `spark.sql.shuffle.partitions` to 10
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > `sales.join(broadcast(stores), "store_id")`.
 >
@@ -604,12 +604,12 @@ D) Lower `spark.sql.shuffle.partitions` to 10
 **Question** *(Medium)*: Two DataFrames hold the same columns in a different order: `df_a(id, name, city)` and `df_b(city, id, name)`. Which call combines them, keeping duplicate rows and matching columns correctly?
 
 A) `df_a.union(df_b)`
-B) `df_a.unionByName(df_b)`
+B) `df_a.join(df_b, "id", "outer")`
 C) `df_a.union(df_b).distinct()`
-D) `df_a.join(df_b, "id", "outer")`
+D) `df_a.unionByName(df_b)`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `df_a.unionByName(df_b)`.
 >
@@ -621,13 +621,13 @@ D) `df_a.join(df_b, "id", "outer")`
 
 **Question** *(Medium)*: A Silver table has a `tags` string column such as `"red,large,sale"`. Analysts need one row per tag. Which PySpark expression produces it?
 
-A) `df.withColumn("tag", F.split("tags", ","))`
-B) `df.withColumn("tag", F.explode(F.split("tags", ",")))`
+A) `df.withColumn("tag", F.explode(F.split("tags", ",")))`
+B) `df.withColumn("tag", F.split("tags", ","))`
 C) `df.withColumn("tag", F.flatten("tags"))`
 D) `df.groupBy("tags").agg(F.collect_list("tags"))`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `df.withColumn("tag", F.explode(F.split("tags", ",")))`.
 >
@@ -658,12 +658,12 @@ D) `collect_set(visitor_id)`
 **Question** *(Medium)*: A DataFrame `groupBy` on 40 MB of data runs 200 tiny tasks after the shuffle on classic compute. An engineer wants to tune the post-shuffle partition count and then re-measure. Which setting controls it?
 
 A) `spark.default.parallelism`
-B) `spark.sql.shuffle.partitions`
-C) `spark.executor.memory`
+B) `spark.executor.memory`
+C) `spark.sql.shuffle.partitions`
 D) `spark.sql.autoBroadcastJoinThreshold`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > `spark.sql.shuffle.partitions`.
 >
@@ -676,12 +676,12 @@ D) `spark.sql.autoBroadcastJoinThreshold`
 **Question** *(Medium)*: Two hundred users open a dashboard each morning that aggregates revenue by region from a large Silver table. Hourly freshness is acceptable. The team wants fast reads and doesn't want to maintain refresh code. Which Unity Catalog object should back the dashboard?
 
 A) A standard view over the Silver table
-B) A materialized view refreshed on a schedule
+B) A streaming table that appends Silver rows
 C) A temporary view created by the dashboard query
-D) A streaming table that appends Silver rows
+D) A materialized view refreshed on a schedule
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > A materialized view refreshed on a schedule.
 >

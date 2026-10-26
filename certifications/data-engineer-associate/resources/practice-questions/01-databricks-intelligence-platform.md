@@ -12,13 +12,13 @@ Exam weight: **6 %** (August 2026 exam guide). Questions marked *(2026 blueprint
 
 **Question** *(Medium)*: A leader in data organization is frustrated because the reports from the data analysis team differ from those of the data engineering team. How might a data lakehouse resolve this issue?
 
-A) Each team would maintain separate copies of data optimized for their specific workloads
-B) Both teams would utilize the same source of truth for their tasks
+A) Both teams would utilize the same source of truth for their tasks
+B) Each team would maintain separate copies of data optimized for their specific workloads
 C) The data lakehouse would automatically reconcile differences between team reports
 D) A dedicated ETL pipeline would synchronize data between team-specific databases
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Both teams would utilize the same source of truth for their tasks.
 >
@@ -31,12 +31,12 @@ D) A dedicated ETL pipeline would synchronize data between team-specific databas
 **Question** *(Easy)*: Which option is entirely hosted within the control plane of the classic Databricks architecture?
 
 A) Worker nodes and executor processes
-B) Customer-managed cloud storage buckets
-C) The Databricks web application
+B) The Databricks web application
+C) Customer-managed cloud storage buckets
 D) Driver nodes and cluster compute resources
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > The Databricks web application.
 >
@@ -50,11 +50,11 @@ D) Driver nodes and cluster compute resources
 
 A) The ability to run SQL queries without requiring a compute cluster
 B) Automatic migration of legacy Hive tables to cloud-native formats
-C) Built-in machine learning model training on raw data files
-D) The ability to support both batch and streaming workloads
+C) The ability to support both batch and streaming workloads
+D) Built-in machine learning model training on raw data files
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: C**
 >
 > The ability to support both batch and streaming workloads.
 >
@@ -66,13 +66,13 @@ D) The ability to support both batch and streaming workloads
 
 **Question** *(Easy)*: What describes how a Delta table is organized for storage?
 
-A) Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes
+A) Delta tables are stored as CSV files with a separate JSON manifest tracking schema changes
 B) Delta tables are stored as a single monolithic binary file containing all rows and metadata
 C) Delta tables are stored exclusively in the Databricks control plane with pointers to cloud storage
-D) Delta tables are stored as CSV files with a separate JSON manifest tracking schema changes
+D) Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes.
 >
@@ -84,13 +84,13 @@ D) Delta tables are stored as CSV files with a separate JSON manifest tracking s
 
 **Question** *(Medium)*: A data engineer discovered an error while updating a table daily and needs to use Delta time travel to revert the table to a version from three days ago. However, when they try to access the older version, the data files are absent. What explains the absence of the data files?
 
-A) The table was converted from Parquet to Delta, erasing its version history
+A) The VACUUM command was run on the table
 B) The OPTIMIZE command was run, which compacted and removed older file versions
-C) The VACUUM command was run on the table
+C) The table was converted from Parquet to Delta, erasing its version history
 D) The Delta transaction log automatically purges entries older than 24 hours
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > The VACUUM command was run on the table.
 >
@@ -122,11 +122,11 @@ D) Built-in data visualization and dashboarding tools
 
 A) Gold tables store raw data while Silver tables store transformed data
 B) Gold tables are temporary views derived from permanent Silver tables
-C) Gold tables and Silver tables always share the same schema and row count
-D) Gold tables are more likely to contain aggregations than Silver tables
+C) Gold tables are more likely to contain aggregations than Silver tables
+D) Gold tables and Silver tables always share the same schema and row count
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: C**
 >
 > Gold tables are more likely to contain aggregations than Silver tables.
 >
@@ -140,11 +140,11 @@ D) Gold tables are more likely to contain aggregations than Silver tables
 
 A) Bronze tables contain only validated and schema-enforced records from source systems
 B) Bronze tables are external tables pointing directly to raw source files without any transformation
-C) Bronze tables contain raw data with a schema applied
-D) Bronze tables store aggregated summaries of raw data for downstream consumption
+C) Bronze tables store aggregated summaries of raw data for downstream consumption
+D) Bronze tables contain raw data with a schema applied
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > Bronze tables contain raw data with a schema applied.
 >
@@ -175,12 +175,12 @@ D) Providing free unlimited compute resources for open-source users
 **Question** *(Easy)*: Which file formats are primarily used to store data from Delta Lake tables?
 
 A) Avro
-B) ORC
+B) Parquet
 C) CSV
-D) Parquet
+D) ORC
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: B**
 >
 > Parquet.
 >
@@ -193,12 +193,12 @@ D) Parquet
 **Question** *(Easy)*: What is stored in the cloud account of the Databricks customer?
 
 A) The Databricks web application and REST APIs
-B) Data
-C) Cluster management metadata and job configurations
+B) Cluster management metadata and job configurations
+C) Data
 D) Notebook source code and revision history
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Data.
 >
@@ -210,13 +210,13 @@ D) Notebook source code and revision history
 
 **Question** *(Medium)*: What methods can help streamline and integrate distinct data architectures tailored for particular applications?
 
-A) A data lakehouse
+A) Building custom ETL pipelines between each pair of data systems
 B) Deploying separate data warehouses for each business unit
 C) Using a message queue to synchronize data between independent databases
-D) Building custom ETL pipelines between each pair of data systems
+D) A data lakehouse
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > A data lakehouse.
 >
@@ -228,13 +228,13 @@ D) Building custom ETL pipelines between each pair of data systems
 
 **Question** *(Medium)*: When would a data team use cluster pools?
 
-A) When clusters need to share data between concurrent jobs
-B) When an automated report needs to be refreshed as quickly as possible
+A) When an automated report needs to be refreshed as quickly as possible
+B) When clusters need to share data between concurrent jobs
 C) When reducing cloud storage costs for intermediate data is the priority
 D) When enforcing uniform cluster configurations across all team members
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > When an automated report needs to be refreshed as quickly as possible.
 >
@@ -246,13 +246,13 @@ D) When enforcing uniform cluster configurations across all team members
 
 **Question** *(Medium)*: A data analysis team's Databricks SQL queries perform poorly when multiple members execute small queries simultaneously on an always-on SQL warehouse. All queries use the same endpoint. What strategy improves performance?
 
-A) Increase the maximum bound of the SQL warehouse's scaling range
-B) Switch from a Pro to a Classic SQL warehouse type
+A) Switch from a Pro to a Classic SQL warehouse type
+B) Increase the maximum bound of the SQL warehouse's scaling range
 C) Increase the size (T-shirt size) of each individual cluster in the endpoint
 D) Enable query result caching on the SQL warehouse
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
 > Increase the maximum bound of the SQL warehouse's scaling range.
 >
@@ -266,11 +266,11 @@ D) Enable query result caching on the SQL warehouse
 
 A) Downgrade the SQL warehouse to a smaller cluster size
 B) Configure the SQL warehouse to start only during business hours
-C) Switch the dashboard to use a shared all-purpose cluster instead
-D) Turn on the Auto Stop feature for the SQL warehouse
+C) Turn on the Auto Stop feature for the SQL warehouse
+D) Switch the dashboard to use a shared all-purpose cluster instead
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: C**
 >
 > Turn on the Auto Stop feature for the SQL warehouse.
 >
@@ -284,11 +284,11 @@ D) Turn on the Auto Stop feature for the SQL warehouse
 
 A) Increase the driver node memory allocation
 B) Switch to a single-node cluster to avoid worker provisioning
-C) Use clusters from a cluster pool
-D) Enable autoscaling with a higher maximum worker count
+C) Enable autoscaling with a higher maximum worker count
+D) Use clusters from a cluster pool
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > Use clusters from a cluster pool.
 >
@@ -300,13 +300,13 @@ D) Enable autoscaling with a higher maximum worker count
 
 **Question** *(Medium)*: A data engineer has an hourly Databricks SQL dashboard whose underlying data is managed by an automated Databricks Job. How can they minimize the total running time of the SQL warehouse during the dashboard's hourly refresh?
 
-A) Reduce the SQL warehouse cluster size to the smallest available
+A) Turn on the Auto Stop feature for the SQL warehouse
 B) Use a shared all-purpose cluster instead of a SQL warehouse
 C) Pre-compute dashboard results in the Databricks Job and cache them
-D) Turn on the Auto Stop feature for the SQL warehouse
+D) Reduce the SQL warehouse cluster size to the smallest available
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
 > Turn on the Auto Stop feature for the SQL warehouse.
 >
@@ -319,12 +319,12 @@ D) Turn on the Auto Stop feature for the SQL warehouse
 **Question** *(Medium)*: What scenario would prompt a data engineer to use a single-node cluster?
 
 A) When running a distributed join across tables with billions of rows
-B) When deploying a production Lakeflow Declarative Pipelines pipeline with multiple streaming sources
-C) When working interactively with a small amount of data
+B) When working interactively with a small amount of data
+C) When deploying a production Lakeflow Declarative Pipelines pipeline with multiple streaming sources
 D) When maximizing parallelism for a large-scale ETL workload
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > When working interactively with a small amount of data.
 >
@@ -336,13 +336,13 @@ D) When maximizing parallelism for a large-scale ETL workload
 
 **Question** *(Easy)*: A data engineer is working in a Python notebook on Databricks but needs to use SQL for one specific cell. They prefer that all other cells remain Python. How can they incorporate SQL into only that cell?
 
-A) Add `%sql` to the first line of the cell
+A) Change the notebook's default language to SQL and then switch back
 B) Wrap the SQL query in `spark.sql()` and assign it to a variable
-C) Change the notebook's default language to SQL and then switch back
+C) Add `%sql` to the first line of the cell
 D) Import the `sql` module and call `sql.execute()`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > Add `%sql` to the first line of the cell.
 >
@@ -355,12 +355,12 @@ D) Import the `sql` module and call `sql.execute()`
 **Question** *(Medium)*: Throughout the day, dozens of business analysts run short, ad hoc SQL queries against curated Gold tables. The team wants fast startup, good performance as concurrency rises, and no paying for a large cluster that sits idle overnight. Which compute should they use?
 
 A) An all-purpose cluster with a fixed 20 workers, shared by all analysts
-B) A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop
+B) A single-node cluster per analyst
 C) A jobs compute cluster created for each query
-D) A single-node cluster per analyst
+D) A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop.
 >
@@ -372,13 +372,13 @@ D) A single-node cluster per analyst
 
 **Question** *(Easy)*: Which statement about serverless compute for notebooks and jobs is correct?
 
-A) You choose the Databricks Runtime version and instance types for each serverless job
+A) Serverless workloads always run on the latest runtime version, and compute is managed by Databricks
 B) Serverless compute supports setting any Spark configuration and custom init scripts
-C) Serverless workloads always run on the latest runtime version, and compute is managed by Databricks
+C) You choose the Databricks Runtime version and instance types for each serverless job
 D) Serverless compute is available only in workspaces that use the legacy Hive metastore
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > Serverless workloads always run on the latest runtime version, and compute is managed by Databricks.
 >

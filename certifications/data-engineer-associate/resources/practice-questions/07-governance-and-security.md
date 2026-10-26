@@ -12,13 +12,13 @@ Exam weight: **15 %** (August 2026 exam guide). Questions marked *(2026 blueprin
 
 **Question** *(Medium)*: A data engineer drops `my_table` with `DROP TABLE IF EXISTS my_table`. The object no longer appears in `SHOW TABLES`, but the data files still exist on the filesystem. What explains this?
 
-A) The DROP command failed silently due to insufficient permissions
+A) The table was an external table
 B) The table had active streaming readers that prevented file deletion
-C) The table was an external table
+C) The DROP command failed silently due to insufficient permissions
 D) The VACUUM command needs to be run separately to remove data files
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > The table was an external table.
 >
@@ -36,13 +36,13 @@ CREATE DATABASE IF NOT EXISTS customer360;
 
 Where will the `customer360` database be situated?
 
-A) `dbfs:/user/hive/warehouse/customer360.db`
-B) `dbfs:/user/hive/warehouse/`
+A) `dbfs:/user/hive/warehouse/`
+B) `dbfs:/user/hive/warehouse/customer360.db`
 C) `dbfs:/databricks/databases/customer360/`
 D) `dbfs:/mnt/default/customer360.db`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
 > `dbfs:/user/hive/warehouse/customer360.db`
 >
@@ -74,11 +74,11 @@ D) `LIST DATABASE customer360;`
 
 A) The VACUUM command was automatically triggered after the DROP
 B) The table was stored in a temporary storage location
-C) The table was a managed table
-D) The table had a retention policy set to zero days
+C) The table had a retention policy set to zero days
+D) The table was a managed table
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > The table was a managed table.
 >
@@ -90,13 +90,13 @@ D) The table had a retention policy set to zero days
 
 **Question** *(Medium)*: A data engineer has left the organization and no longer has access. The team must transfer ownership of the engineer's Unity Catalog tables to the new lead data engineer. Who can perform this transfer?
 
-A) Any user with SELECT privilege on the tables
-B) A metastore admin, or the owner of the tables' parent schema (or a user with MANAGE on the tables)
+A) A metastore admin, or the owner of the tables' parent schema (or a user with MANAGE on the tables)
+B) Any user with SELECT privilege on the tables
 C) The new lead data engineer, by running `ALTER TABLE ... OWNER TO` on their own
 D) Any member of the data team with MODIFY privilege
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > A metastore admin, or the owner of the tables' parent schema (or a user with MANAGE on the tables).
 >
@@ -128,11 +128,11 @@ D) `GRANT MANAGE ON DATABASE customers TO team;`
 
 A) `GRANT SELECT ON CATALOG customers TO team;`
 B) `GRANT ALL PRIVILEGES ON CATALOG customers TO team;`
-C) `GRANT USAGE ON DATABASE customers TO team;`
-D) `GRANT BROWSE ON CATALOG customers TO team;`
+C) `GRANT BROWSE ON CATALOG customers TO team;`
+D) `GRANT USAGE ON DATABASE customers TO team;`
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: C**
 >
 > `GRANT BROWSE ON CATALOG customers TO team;`
 >
@@ -145,12 +145,12 @@ D) `GRANT BROWSE ON CATALOG customers TO team;`
 **Question** *(Easy)*: A data engineer needs to use a Delta table but is unsure whether they have the necessary permissions. Where can they check their table permissions?
 
 A) The Databricks Admin Console under User Management
-B) Catalog Explorer
+B) The SQL warehouse's access control list
 C) The cluster configuration page under Security settings
-D) The SQL warehouse's access control list
+D) Catalog Explorer
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Catalog Explorer.
 >
@@ -162,13 +162,13 @@ D) The SQL warehouse's access control list
 
 **Question** *(Easy)*: A data engineer requires access to `new_table` but does not know who owns it. What method can be used to identify the owner?
 
-A) Run `SHOW GRANT ON TABLE new_table` to list all privilege holders
+A) Review the Owner field in the table's page in Catalog Explorer
 B) Check the cluster logs for the user who last wrote to the table
 C) Query the `information_schema.tables` view for the table's creator
-D) Review the Owner field in the table's page in Catalog Explorer
+D) Run `SHOW GRANT ON TABLE new_table` to list all privilege holders
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
 > Review the Owner field in the table's page in Catalog Explorer.
 >
@@ -180,13 +180,13 @@ D) Review the Owner field in the table's page in Catalog Explorer
 
 **Question** *(Hard)*: A data engineer converted an external table to a Unity Catalog managed table with `ALTER TABLE ... SET MANAGED`. Two days later, the team must undo it. What should they run?
 
-A) `ALTER TABLE ... UNSET MANAGED`
-B) `RESTORE TABLE ... TO VERSION AS OF` the version before the conversion
+A) `RESTORE TABLE ... TO VERSION AS OF` the version before the conversion
+B) `ALTER TABLE ... UNSET MANAGED`
 C) Drop the table and recreate it as external, because rollback isn't supported
 D) `ALTER TABLE ... SET EXTERNAL`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
 > `ALTER TABLE ... UNSET MANAGED`.
 >
@@ -199,12 +199,12 @@ D) `ALTER TABLE ... SET EXTERNAL`
 **Question** *(Medium)*: Which command converts an existing Unity Catalog external Delta table to a managed table while keeping its name, permissions, and history?
 
 A) `CREATE OR REPLACE TABLE t AS SELECT * FROM t`
-B) `ALTER TABLE t SET MANAGED` on Databricks Runtime 17.3 LTS+ or serverless
-C) `CONVERT TO DELTA t`
+B) `CONVERT TO DELTA t`
+C) `ALTER TABLE t SET MANAGED` on Databricks Runtime 17.3 LTS+ or serverless
 D) `ALTER TABLE t SET LOCATION NULL`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > `ALTER TABLE t SET MANAGED` on Databricks Runtime 17.3 LTS+ or serverless.
 >
@@ -217,12 +217,12 @@ D) `ALTER TABLE t SET LOCATION NULL`
 **Question** *(Easy)*: A Unity Catalog managed table was dropped by mistake yesterday. What can the team do?
 
 A) Nothing, because managed-table data is deleted immediately
-B) Run `UNDROP TABLE` within the recovery period (7 days by default)
+B) Recreate it with `CREATE TABLE ... LOCATION` pointing at the old path
 C) Run `RESTORE TABLE` on the dropped name
-D) Recreate it with `CREATE TABLE ... LOCATION` pointing at the old path
+D) Run `UNDROP TABLE` within the recovery period (7 days by default)
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Run `UNDROP TABLE` within the recovery period (7 days by default).
 >
@@ -234,13 +234,13 @@ D) Recreate it with `CREATE TABLE ... LOCATION` pointing at the old path
 
 **Question** *(Hard)*: An admin runs `DENY SELECT ON TABLE prod.gold.revenue TO contractors` in a Unity Catalog catalog, and the statement fails. Which statement is correct?
 
-A) The syntax is wrong. It should be `DENY SELECT TO contractors ON prod.gold.revenue`
-B) The classic `DENY` statement applies only to the legacy `hive_metastore` catalog. In Unity Catalog, remove access by revoking (or not granting) `SELECT`, and use filters, masks, or ABAC for partial access
+A) The classic `DENY` statement applies only to the legacy `hive_metastore` catalog. In Unity Catalog, remove access by revoking (or not granting) `SELECT`, and use filters, masks, or ABAC for partial access
+B) The syntax is wrong. It should be `DENY SELECT TO contractors ON prod.gold.revenue`
 C) `DENY` works only on schemas, not tables
 D) `DENY` requires a metastore admin, and a workspace admin can't run it
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > The classic `DENY` statement applies only to the legacy `hive_metastore` catalog. In Unity Catalog, remove access by revoking (or not granting) `SELECT`, and use filters, masks, or ABAC for partial access.
 >
@@ -270,13 +270,13 @@ D) `ALL PRIVILEGES` on catalog `prod`
 
 **Question** *(Medium)*: Only members of `finance_team` may see full values in `credit_card_number`. Everyone else should see a masked value, and everyone queries the same table. What should be implemented?
 
-A) A column mask function using `is_account_group_member('finance_team')`, attached with `ALTER TABLE ... ALTER COLUMN credit_card_number SET MASK`
+A) `DENY SELECT` on the column for everyone except `finance_team`
 B) A separate copy of the table per group
-C) `DENY SELECT` on the column for everyone except `finance_team`
+C) A column mask function using `is_account_group_member('finance_team')`, attached with `ALTER TABLE ... ALTER COLUMN credit_card_number SET MASK`
 D) Cloud IAM permissions on the column
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > A column mask function using `is_account_group_member('finance_team')`, attached with `ALTER TABLE ... ALTER COLUMN credit_card_number SET MASK`.
 >
@@ -288,13 +288,13 @@ D) Cloud IAM permissions on the column
 
 **Question** *(Medium)*: Regional sales managers must see only the rows of `main.silver.orders` for their own region. Which implementation fits?
 
-A) A row filter UDF returning `BOOLEAN` that checks group membership against `region`, attached with `ALTER TABLE main.silver.orders SET ROW FILTER fn ON (region)`
+A) `REVOKE SELECT` from all managers
 B) A column mask on `region`
 C) Partition the table by region and grant `SELECT` per partition
-D) `REVOKE SELECT` from all managers
+D) A row filter UDF returning `BOOLEAN` that checks group membership against `region`, attached with `ALTER TABLE main.silver.orders SET ROW FILTER fn ON (region)`
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > A row filter UDF returning `BOOLEAN` that checks group membership against `region`, attached with `ALTER TABLE main.silver.orders SET ROW FILTER fn ON (region)`.
 >
@@ -306,13 +306,13 @@ D) `REVOKE SELECT` from all managers
 
 **Question** *(Hard)*: A privacy team must mask every email column in all tables of the `main.silver` schema, including tables created later. Table owners must not be able to remove the masking. What should they use?
 
-A) A column mask set separately on each table by its owner
-B) A Unity Catalog ABAC column mask policy on the schema, matching columns tagged with a governed tag such as `pii = email`
+A) A Unity Catalog ABAC column mask policy on the schema, matching columns tagged with a governed tag such as `pii = email`
+B) A column mask set separately on each table by its owner
 C) A dynamic view per table
 D) An ABAC DENY policy on `SELECT`
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > A Unity Catalog ABAC column mask policy on the schema, matching columns tagged with a governed tag such as `pii = email`.
 >

@@ -13,12 +13,12 @@ Exam weight: **10 %** (August 2026 exam guide). Questions marked *(2026 blueprin
 **Question** *(Easy)*: A data engineer has discovered that the data files related to a Delta table are quite small. They aim to merge these small files into larger ones to enhance performance. Which keywords can be utilized to compact the small files?
 
 A) VACUUM
-B) OPTIMIZE
-C) COMPACT
+B) COMPACT
+C) OPTIMIZE
 D) DEFRAGMENT
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > `OPTIMIZE`.
 >
@@ -30,13 +30,13 @@ D) DEFRAGMENT
 
 **Question** *(Medium)*: A data engineer uses a Databricks SQL dashboard to monitor data quality. When the count of NULL values in a query result reaches 100, the entire team should be alerted via a messaging webhook. What method accomplishes this?
 
-A) Set up an Alert with a new webhook alert destination
+A) Configure a SQL warehouse event hook that triggers on query result thresholds
 B) Add a conditional formatting rule to the dashboard visualization that sends a webhook
 C) Create a Databricks Job that polls the query results and calls the webhook via Python
-D) Configure a SQL warehouse event hook that triggers on query result thresholds
+D) Set up an Alert with a new webhook alert destination
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > Set up an Alert with a new webhook alert destination.
 >
@@ -48,13 +48,13 @@ D) Configure a SQL warehouse event hook that triggers on query result thresholds
 
 **Question** *(Medium)*: A single Job executes two notebooks as distinct tasks. One notebook is performing slowly during the current Job run. What method can a tech lead use to diagnose the cause?
 
-A) Check the Databricks SQL query history for slow-running queries
-B) Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook
+A) Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook
+B) Check the Databricks SQL query history for slow-running queries
 C) Review the cluster event log for resource allocation errors
 D) Open the Lakeflow Declarative Pipelines pipeline UI to inspect per-table processing metrics
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook.
 >
@@ -67,12 +67,12 @@ D) Open the Lakeflow Declarative Pipelines pipeline UI to inspect per-table proc
 **Question** *(Easy)*: What approach should be taken to email the owner of a Databricks Job if it fails?
 
 A) Write a try/except block in the notebook that sends an email on failure
-B) Configure an external monitoring tool to watch the Jobs API for failure status
-C) Set up an Alert in the Job's notification settings (Job page)
+B) Set up an Alert in the Job's notification settings (Job page)
+C) Configure an external monitoring tool to watch the Jobs API for failure status
 D) Create a downstream task that runs only on failure and sends the email
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > Set up an Alert in the Job's notification settings (Job page).
 >
@@ -85,12 +85,12 @@ D) Create a downstream task that runs only on failure and sends the email
 **Question** *(Medium)*: A data engineer tracks store-level records where sales equal zero. When this count exceeds zero, the entire team should be notified via a messaging webhook. What approach accomplishes this?
 
 A) Configure a Lakeflow Declarative Pipelines expectation that triggers a webhook when zero-sales records appear
-B) Set up an Alert with a new webhook alert destination
-C) Build a custom Python script that polls the query results and posts to the webhook
+B) Build a custom Python script that polls the query results and posts to the webhook
+C) Set up an Alert with a new webhook alert destination
 D) Add a dashboard filter that highlights zero-sales stores and emails the team
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Set up an Alert with a new webhook alert destination.
 >
@@ -102,13 +102,13 @@ D) Add a dashboard filter that highlights zero-sales stores and emails the team
 
 **Question** *(Easy)*: Stakeholders say a daily Lakeflow Job "feels slower lately". Where can the engineer compare recent run durations with the historical baseline, task by task?
 
-A) The job's Runs tab matrix view
+A) The workspace admin settings
 B) The cluster's Environment tab in the Spark UI
 C) `DESCRIBE HISTORY` on the output table
-D) The workspace admin settings
+D) The job's Runs tab matrix view
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > The job's Runs tab matrix view.
 >
@@ -120,13 +120,13 @@ D) The workspace admin settings
 
 **Question** *(Medium)*: A job run failed. In the Graph view, three downstream tasks show **Upstream failed** and one task shows **Failed**. Where should the engineer start investigating?
 
-A) The three Upstream failed tasks, because they're the most numerous
-B) The Failed task. The Upstream failed tasks didn't run because their dependency failed
+A) The Failed task. The Upstream failed tasks didn't run because their dependency failed
+B) The three Upstream failed tasks, because they're the most numerous
 C) The cluster event log of the last task in the DAG
 D) The job's schedule
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > The Failed task. The Upstream failed tasks didn't run because their dependency failed.
 >
@@ -156,13 +156,13 @@ D) The run timed out after producing output
 
 **Question** *(Easy)*: A task failed with status **Timed Out** after 45 minutes. With today's data volume it needs about 60 minutes. What should the engineer change so future runs complete?
 
-A) The task's timeout, raised above 60 minutes with headroom
+A) The compute's auto termination setting
 B) The job's max concurrent runs
-C) The compute's auto termination setting
+C) The task's timeout, raised above 60 minutes with headroom
 D) The upstream dependency's Run if condition
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > The task's timeout, raised above 60 minutes with headroom.
 >
@@ -176,11 +176,11 @@ D) The upstream dependency's Run if condition
 
 A) Add more workers to the cluster
 B) Reduce `spark.sql.shuffle.partitions`
-C) Salt the aggregation key, then aggregate the partial results in a second pass
-D) Rely on AQE skew-join handling to split the partition
+C) Rely on AQE skew-join handling to split the partition
+D) Salt the aggregation key, then aggregate the partial results in a second pass
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > Salt the aggregation key, then aggregate the partial results in a second pass.
 >
@@ -228,13 +228,13 @@ D) Drop and recreate the table, because clustering keys can't change
 
 **Question** *(Medium)*: A team wants Databricks to choose and evolve clustering keys from actual query patterns. What do they need?
 
-A) `CLUSTER BY AUTO` on a Unity Catalog managed table with predictive optimization enabled
+A) Partitioning by every filter column
 B) `ZORDER BY AUTO` in a nightly `OPTIMIZE` job
-C) Partitioning by every filter column
+C) `CLUSTER BY AUTO` on a Unity Catalog managed table with predictive optimization enabled
 D) A Spark configuration that enables auto clustering on external tables
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > `CLUSTER BY AUTO` on a Unity Catalog managed table with predictive optimization enabled.
 >
@@ -246,13 +246,13 @@ D) A Spark configuration that enables auto clustering on external tables
 
 **Question** *(Easy)*: Which statement about predictive optimization is correct?
 
-A) It runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` automatically on Unity Catalog managed tables
+A) It runs `OPTIMIZE ... ZORDER BY` on all partitioned tables
 B) It tunes Spark configurations for every notebook session
 C) It applies to external tables and tables received through sharing
-D) It runs `OPTIMIZE ... ZORDER BY` on all partitioned tables
+D) It runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` automatically on Unity Catalog managed tables
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > It runs `OPTIMIZE`, `VACUUM`, and `ANALYZE` automatically on Unity Catalog managed tables.
 >
@@ -264,13 +264,13 @@ D) It runs `OPTIMIZE ... ZORDER BY` on all partitioned tables
 
 **Question** *(Medium)*: A classic job cluster terminates during startup with `INIT_SCRIPT_FAILURE`. What should the engineer check first?
 
-A) The Spark UI Stages tab
-B) The init script logs, to find why the cluster-scoped script failed (path, permissions, or a failing command)
+A) The init script logs, to find why the cluster-scoped script failed (path, permissions, or a failing command)
+B) The Spark UI Stages tab
 C) The job's max concurrent runs
 D) The Delta transaction log of the output table
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > The init script logs, to find why the cluster-scoped script failed (path, permissions, or a failing command).
 >
@@ -282,13 +282,13 @@ D) The Delta transaction log of the output table
 
 **Question** *(Medium)*: Two notebooks on the same all-purpose cluster need different versions of a Python library. A compute-scoped install of one version breaks the other notebook. What is the recommended fix?
 
-A) Install each version with notebook-scoped `%pip install pkg==x.y` in the notebook that needs it
-B) Install both versions as compute-scoped libraries
+A) Install both versions as compute-scoped libraries
+B) Install each version with notebook-scoped `%pip install pkg==x.y` in the notebook that needs it
 C) Install the library with a global init script
 D) Copy the library files to DBFS root
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
 > Install each version with notebook-scoped `%pip install pkg==x.y` in the notebook that needs it.
 >
@@ -300,13 +300,13 @@ D) Copy the library files to DBFS root
 
 **Question** *(Medium)*: A notebook crashes with a driver `OutOfMemoryError` on `pdf = spark.table("events").toPandas()`, where `events` has 300 million rows. Adding workers didn't help. What is the right fix?
 
-A) Aggregate or filter in Spark and collect only the small result (or write results to a table)
+A) Increase `spark.sql.shuffle.partitions`
 B) Add even more workers
-C) Increase `spark.sql.shuffle.partitions`
+C) Aggregate or filter in Spark and collect only the small result (or write results to a table)
 D) Enable autoscaling on the cluster
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: C**
 >
 > Aggregate or filter in Spark and collect only the small result (or write results to a table).
 >
@@ -318,13 +318,13 @@ D) Enable autoscaling on the cluster
 
 **Question** *(Medium)*: A platform team wants a weekly dashboard of failure rates for every Lakeflow Job over the past 90 days. Which source fits best?
 
-A) The `system.lakeflow.job_run_timeline` system table
+A) The driver logs of the last run
 B) Each job's matrix view, screenshotted weekly
 C) `DESCRIBE HISTORY` on each job's output tables
-D) The driver logs of the last run
+D) The `system.lakeflow.job_run_timeline` system table
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > The `system.lakeflow.job_run_timeline` system table.
 >
