@@ -31,6 +31,19 @@ flowchart TB
     Workspace --> Notebook
 ```
 
+> [!abstract]
+>
+> - **`%run` vs `dbutils.notebook.run`**: `%run` shares the caller's context; `dbutils.notebook.run` runs an isolated child with a timeout and a string return value
+> - **Widgets** (`text`, `dropdown`, `combobox`, `multiselect`) parameterize notebooks; in job runs, job parameters override widget defaults
+> - **`dbutils`** covers files, secrets (values are redacted), notebook chaining, and job task values
+> - **Paths**: `/Workspace/...` for code, `dbfs:/...` or `/dbfs/...` for DBFS data, `/Volumes/...` for Unity Catalog governed files
+
+> [!tip] What the Exam Tests
+>
+> - Create and automate ETL workloads using Lakeflow Jobs via the UI, API, and CLI. Notebooks are the most common job task, parameterized through widgets.
+> - Choose between `%run` and `dbutils.notebook.run` for a modularity or isolation need
+> - Know the notebook permission levels: No Permission < Can Read < Can Run < Can Edit < Can Manage
+
 ## Workspace Organization
 
 ### Workspace Structure

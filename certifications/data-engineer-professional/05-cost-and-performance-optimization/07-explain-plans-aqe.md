@@ -39,6 +39,19 @@ flowchart TB
     Acceleration --> Outcome
 ```
 
+> [!abstract]
+>
+> - **Reading plans**: physical plans run bottom-up from `FileScan`; `PartitionFilters` skip directories, `PushedFilters` skip data inside files
+> - **`EXPLAIN EXTENDED`** shows the parsed, analyzed, optimized logical, and physical plans
+> - **AQE** re-optimizes at shuffle boundaries, for example switching `SortMergeJoin` to `BroadcastHashJoin`; `AQEShuffleRead` / `CustomShuffleReaderExec` confirms it acted
+> - **Python UDFs block pushdown**; `ANALYZE TABLE` statistics feed the cost-based optimizer
+
+> [!tip] What the Exam Tests
+>
+> - Use the query profile to identify performance bottlenecks, such as data-skipping inefficiencies, join strategies, and shuffle operations.
+> - Tell from a plan whether partition pruning or predicate pushdown happened
+> - Confirm from a plan that AQE changed a join or split a skewed partition
+
 ## Reading EXPLAIN Plans
 
 ### EXPLAIN Variants

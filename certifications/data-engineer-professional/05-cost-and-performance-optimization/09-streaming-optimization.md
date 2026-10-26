@@ -33,6 +33,19 @@ flowchart TB
     Tuning --> Goals
 ```
 
+> [!abstract]
+>
+> - **Trigger choice** trades latency for cost: `processingTime` for near real time, `availableNow` to clear a backlog and stop
+> - **State**: watermarks bound state; RocksDB handles large state; deleting a checkpoint forces reprocessing
+> - **Rate limits**: `maxOffsetsPerTrigger` (Kafka) and `cloudFiles.maxBytesPerTrigger` (Auto Loader); notification mode for large directories
+> - **Streaming file sizes**: `optimizeWrite` and `autoCompact` prevent tiny micro-batch files
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Choose a trigger for a latency and cost target
+> - Detect back-pressure and pick the fix (rate limits or more compute)
+
 ## Trigger Interval Optimization
 
 ### Trigger Types

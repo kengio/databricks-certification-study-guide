@@ -11,9 +11,24 @@ status: published
 
 # Unit Testing — Part 2
 
+## Overview
+
 This part covers testing patterns for Delta Lake and streaming, integration tests, unit testing Lakeflow Pipelines (Beta), CI/CD integration, best practices, common issues, and exam tips for unit testing in Databricks.
 
 > For pytest fundamentals, `assertDataFrameEqual` / `assertSchemaEqual`, `DataFrame.transform`, chispa comparisons, mocking, and the Nutter framework, see [Part 1](./11-unit-testing-part1.md).
+
+> [!abstract]
+>
+> - **Testing patterns** for Delta Lake and streaming; run a test stream to completion with `processAllAvailable()` then `stop()`
+> - **Unit vs integration tests**: pure functions composed with `DataFrame.transform` are unit-tested; entry points are integration-tested on real compute
+> - **Pipeline unit testing (Beta)** runs in the Lakeflow Pipelines Editor with a `test_spark` session that redirects table operations to a temporary schema
+> - **CI integration**: pytest with `--junitxml` reports; a session-scoped SparkSession fixture keeps suites fast
+
+> [!tip] What the Exam Tests
+>
+> - Develop unit and integration tests using assertDataFrameEqual, assertSchemaEqual, DataFrame.transform, and testing frameworks to ensure code correctness.
+> - Separate unit tests from integration tests and know what each one needs
+> - Keep tests isolated and fast in CI (fixture scopes, low shuffle partitions)
 
 ## Testing Patterns
 

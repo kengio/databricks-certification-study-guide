@@ -31,6 +31,19 @@ flowchart TB
     Commands --> Bundle[bundle]
 ```
 
+> [!abstract]
+>
+> - **Installation and authentication**: personal access tokens, OAuth M2M, and profiles in `~/.databrickscfg`
+> - **Authentication precedence**: environment variables, then `--profile`, then the default profile
+> - **Workspace and file commands**: import and export notebooks; `fs` commands with `dbfs:/` paths
+> - **Jobs commands** to list, create, run, and manage job runs
+
+> [!tip] What the Exam Tests
+>
+> - Use Databricks REST APIs / CLI and SDK for monitoring and analyzing jobs and pipelines.
+> - Create and automate ETL workloads using Lakeflow Jobs via the UI, API, and CLI.
+> - Script CLI calls for automation and CI/CD
+
 ## Installation
 
 ### Install Methods

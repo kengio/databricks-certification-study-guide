@@ -12,9 +12,23 @@ status: published
 
 # Photon, Diagnostics & Query Optimization — Part 2
 
+## Overview
+
 This part covers query optimization strategies, common issues, exam tips, and practice questions for Photon and query diagnostics.
 
 > For Photon acceleration, memory diagnostics, and Spark UI analysis, see [Part 1](./08-photon-diagnostics-optimization-part1.md).
+
+> [!abstract]
+>
+> - **Catalyst optimizations**: predicate pushdown, column pruning, constant folding, join reordering, and subquery elimination
+> - **Statistics**: `ANALYZE TABLE ... COMPUTE STATISTICS FOR COLUMNS` with the cost-based optimizer settings
+> - **Photon in plans**: Photon operators carry a `Photon` prefix; Python UDFs force a fallback to Spark
+> - **Plan red flags**: `CartesianProduct` or `BroadcastNestedLoopJoin` usually means a missing join condition
+
+> [!tip] What the Exam Tests
+>
+> - Use the query profile to identify performance bottlenecks, such as data-skipping inefficiencies, join strategies, and shuffle operations.
+> - Fix a pushdown, spill, or broadcast problem from the evidence in a plan
 
 ## Query Optimization Strategies
 

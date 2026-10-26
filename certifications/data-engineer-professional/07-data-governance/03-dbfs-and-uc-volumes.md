@@ -32,6 +32,19 @@ flowchart TB
     Storage --> Cloud
 ```
 
+> [!abstract]
+>
+> - **DBFS paths**: `dbfs:/...` with Spark APIs, `/dbfs/...` with Python file I/O
+> - **Mounts are legacy**; Unity Catalog volumes (`/Volumes/<catalog>/<schema>/<volume>/`) are the governed replacement
+> - **Managed vs external volumes**: managed volume files are removed on drop; external volume files are not
+> - **Direct cloud access**: storage URI schemes and credential precedence, with Unity Catalog external locations first
+
+> [!tip] What the Exam Tests
+>
+> - Apply least-privilege access control lists (ACLs) to secure Unity Catalog securable objects and workspace resources.
+> - Pick the right path format for the API in use
+> - Replace mount-based access with Unity Catalog volumes
+
 ## DBFS (Databricks File System)
 
 DBFS is a distributed file system mounted into a Databricks workspace.

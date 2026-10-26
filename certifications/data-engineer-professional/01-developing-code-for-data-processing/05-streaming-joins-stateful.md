@@ -11,9 +11,24 @@ status: published
 
 # Streaming Joins & Stateful Operations
 
+## Overview
+
 This guide covers advanced Structured Streaming join patterns and stateful operations: stream-stream joins, stream-static joins, stateful aggregations, advanced watermarking, and streaming deduplication.
 
 > For streaming basics (triggers, output modes, sources, sinks, foreachBatch), see [Structured Streaming](04-structured-streaming-part1.md).
+
+> [!abstract]
+>
+> - **Stream-stream joins**: inner joins need watermarks on both sides plus a time range condition; outer joins need a watermark on the opposite side
+> - **Stream-static joins** need no watermark on the static side; an uncached static DataFrame is re-read each micro-batch
+> - **Arbitrary state**: `mapGroupsWithState` emits one record per group per batch, `flatMapGroupsWithState` zero or more, with processing-time or event-time timeouts
+> - **Watermark policy and dedup**: global policy `min` (default) vs `max`; `dropDuplicatesWithinWatermark` bounds deduplication state
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Identify the watermark and join-predicate requirements for each stream-stream join type
+> - Predict watermark boundary behavior: events at exactly the watermark are kept, earlier events are dropped
 
 ## Stream-Stream Joins
 

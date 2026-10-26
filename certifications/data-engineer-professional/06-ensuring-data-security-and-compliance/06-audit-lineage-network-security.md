@@ -38,6 +38,19 @@ flowchart TB
     Permissions --> Inheritance[Permission Inheritance]
 ```
 
+> [!abstract]
+>
+> - **Lineage**: Unity Catalog records table, column, and notebook or job lineage for UC tables (not `hive_metastore`); the lineage API supports impact analysis
+> - **Audit logs**: `system.access.audit` key columns and 365-day default retention; archive by copying to your own table
+> - **Information schema** results are filtered by the caller's permissions
+> - **Network security**: Secure Cluster Connectivity removes public IPs from cluster nodes; Private Link keeps traffic on the cloud provider's private network
+
+> [!tip] What the Exam Tests
+>
+> - Use Databricks system tables (billing, compute, access, lakeflow) for cost analysis, auditing, and workload monitoring.
+> - Use lineage to assess the impact of a schema change
+> - Distinguish Secure Cluster Connectivity from Private Link
+
 ---
 
 ## Data Lineage and Impact Analysis

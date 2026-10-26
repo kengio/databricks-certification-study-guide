@@ -10,7 +10,22 @@ status: published
 
 # Databricks CLI — Part 2
 
+## Overview
+
 This file covers cluster management, secrets, Declarative Automation Bundles (DABs), Unity Catalog CLI commands, output formats, common scripting patterns, and exam preparation.
+
+> [!abstract]
+>
+> - **Cluster, secrets, and Unity Catalog commands**
+> - **Bundle workflow**: `bundle validate`, then `bundle deploy --target <env>`, then `bundle run <resource>`
+> - **Secrets**: values can never be read back through the CLI; only key names are listed
+> - **Output formats**: `--output json` for scripting with tools such as `jq`
+
+> [!tip] What the Exam Tests
+>
+> - Use Databricks REST APIs / CLI and SDK for monitoring and analyzing jobs and pipelines.
+> - Choose between `jobs run-now` (existing job) and `jobs submit` (one-time run)
+> - Know what bundle `mode: development` does to deployed resource names
 
 ## Cluster Commands
 

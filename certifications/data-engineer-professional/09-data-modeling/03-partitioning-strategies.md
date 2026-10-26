@@ -25,6 +25,19 @@ flowchart TB
     Liquid --> Automatic[Automatic clustering]
 ```
 
+> [!abstract]
+>
+> - **Partition pruning** needs a direct filter on the partition column; a function on the column defeats it
+> - **When to partition**: only very large tables (100 TB or more), on a low-cardinality grain column with at least 1 GB per partition; otherwise use liquid clustering
+> - **Z-ORDER vs liquid clustering**: clustering keys change with `ALTER TABLE ... CLUSTER BY`, then `OPTIMIZE FULL` reclusters existing data
+> - **Overwrites and file size**: dynamic partition overwrite, `replaceWhere`, and autotuned target file sizes
+
+> [!tip] What the Exam Tests
+>
+> - Design scalable Delta/Iceberg table layouts for large data assets by mapping partitioning to data grain, aligning clustering to relationship access patterns, and maintaining balanced file sizes through compaction.
+> - Compare Liquid Clustering vs partitioning/ZORDER for a given table size and query pattern.
+> - Choose partition and clustering keys from table size, grain, and query filters
+
 ## Traditional Partitioning
 
 ### How Partitioning Works

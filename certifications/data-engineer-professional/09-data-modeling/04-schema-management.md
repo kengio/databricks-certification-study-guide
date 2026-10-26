@@ -25,6 +25,19 @@ flowchart TB
     Changes --> Alter[Alter existing schema]
 ```
 
+> [!abstract]
+>
+> - **Schema enforcement** rejects extra columns and wrong types; missing nullable columns are filled with NULL
+> - **Schema evolution**: `mergeSchema` adds columns and widens compatible types; `overwriteSchema` replaces the schema
+> - **Column mapping** (`delta.columnMapping.mode = 'name'`) is required for `RENAME COLUMN` and `DROP COLUMN`
+> - **Streaming and drift**: Auto Loader evolution modes with `cloudFiles.schemaLocation`, and VARIANT for unknown schemas
+
+> [!tip] What the Exam Tests
+>
+> - Develop data ingestion pipelines to ingest a variety of data formats, including Delta Lake, Parquet, JSON, Iceberg, CSV, and Binary from diverse sources such as message buses (Kafka, Kinesis, Pub/Sub) and cloud storage.
+> - Predict which writes schema enforcement rejects
+> - Choose the evolution option for a given schema change
+
 ## Schema Enforcement
 
 Schema enforcement prevents writes that don't match the table schema.

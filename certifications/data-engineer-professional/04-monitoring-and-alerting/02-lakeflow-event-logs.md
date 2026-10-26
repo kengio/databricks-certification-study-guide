@@ -30,6 +30,19 @@ flowchart TB
     Quality --> |Expectations| Expectations[Pass/fail counts]
 ```
 
+> [!abstract]
+>
+> - **Access**: query the event log with `event_log(TABLE(...))`, or by path for pipelines without a named target
+> - **Event types**: `flow_definition` (structure), `flow_progress` (metrics, expectation results, errors), and `maintenance_actions` (OPTIMIZE / VACUUM)
+> - **Extracting fields**: use `:` paths on the `details` column, for example `details:flow_progress.metrics.num_output_rows`
+> - **Health signals**: `seconds_of_backlog` shows streaming lag; filter `level` for `ERROR` and `WARN`
+
+> [!tip] What the Exam Tests
+>
+> - Use Pipeline event logs to monitor pipeline health and data quality.
+> - Find expectation pass and fail counts (inside `flow_progress` events, not a separate event type)
+> - Diagnose a failed update from the error fields
+
 ## Event Log Location
 
 ### Accessing Event Logs

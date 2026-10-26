@@ -28,6 +28,19 @@ flowchart TB
     Scope --> Backends
 ```
 
+> [!abstract]
+>
+> - **Scope types**: Databricks-backed and Azure Key Vault-backed; scopes are created with the CLI or REST API, not SQL
+> - **`dbutils.secrets.get()`** values are redacted in notebook output, but transforming the string can bypass redaction
+> - **Scope ACLs**: `READ`, `WRITE`, and `MANAGE`
+> - **Secrets vs Unity Catalog credentials**: secrets for application credentials, storage credentials for cloud storage; jobs reference secrets as `{{secrets/scope/key}}`
+
+> [!tip] What the Exam Tests
+>
+> - Apply least-privilege access control lists (ACLs) to secure Unity Catalog securable objects and workspace resources.
+> - Choose between a secret scope and a Unity Catalog storage credential
+> - Audit secret access in `system.access.audit`
+
 ## Secret Scope Types
 
 | Type | Backend | Management | Best For |

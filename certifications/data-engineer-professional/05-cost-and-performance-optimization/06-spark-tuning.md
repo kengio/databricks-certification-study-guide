@@ -27,6 +27,19 @@ flowchart TB
     Tuning --> Outcome
 ```
 
+> [!abstract]
+>
+> - **AQE** is on by default: it coalesces partitions, handles skew joins, and switches join strategies at runtime
+> - **Shuffle and joins**: size `spark.sql.shuffle.partitions` to about 128 MB per partition; the broadcast threshold defaults to 10 MB
+> - **`coalesce` vs `repartition`**: `coalesce` reduces partitions without a shuffle; `repartition` shuffles to rebalance
+> - **Memory and skew**: `spark.memory.fraction`, salting for extreme skew, and predicate and column pushdown
+
+> [!tip] What the Exam Tests
+>
+> - Use the query profile to identify performance bottlenecks, such as data-skipping inefficiencies, join strategies, and shuffle operations.
+> - Pick the configuration change for a shuffle, join, or skew symptom
+> - Know which tuning AQE already does without manual settings
+
 ## Key Configurations
 
 ### Shuffle Configuration

@@ -11,9 +11,23 @@ status: published
 
 # Bundle Deployment Strategies — Part 2: Rollback, Feature Flags & OIDC
 
+## Overview
+
 > For advanced bundle patterns, CI/CD pipeline DAGs, blue/green, and canary deployments, see [Part 1](./04-bundle-deployment-strategies-part1.md).
 
 This part covers rollback strategies, feature flags in data pipelines, schema migration patterns, and OIDC federation for secure CI/CD authentication.
+
+> [!abstract]
+>
+> - **Rollback**: redeploy the previous commit with `databricks bundle deploy`; undo bad data with `RESTORE TABLE`
+> - **Feature flags** in a Unity Catalog Delta table, and tracked, idempotent schema migrations
+> - **OIDC federation** with GitHub Actions replaces stored PATs and client secrets
+> - **Credential hygiene**: separate service principals per environment, and protection rules on production
+
+> [!tip] What the Exam Tests
+>
+> - Deploy Databricks resources using Declarative Automation Bundles (formerly Databricks Asset Bundles).
+> - Plan a rollback that covers both the deployed code and the data it wrote
 
 ## Rollback Strategies
 

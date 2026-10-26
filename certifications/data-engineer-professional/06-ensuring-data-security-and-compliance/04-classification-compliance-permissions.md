@@ -12,9 +12,24 @@ status: published
 
 # Data Classification, Compliance & Permissions
 
+## Overview
+
 This guide covers advanced data protection patterns: data classification & tagging, GDPR/CCPA compliance implementation, and advanced Unity Catalog permission models.
 
 > For audit logging, lineage tracking, and network security, see [Audit Logging, Data Lineage & Network Security](./06-audit-lineage-network-security.md).
+
+> [!abstract]
+>
+> - **Tags** on tables and columns (`SET TAGS`), queried through `information_schema.table_tags` and `column_tags`
+> - **GDPR and CCPA**: erasure is `DELETE` followed by `VACUUM`; subject access requests export a subject's records across tables
+> - **Permissions**: ownership vs privileges; `MANAGE` lets a principal grant without owning; grants inherit to future objects
+> - **Group-based access**: grant to groups synced from an identity provider through SCIM
+
+> [!tip] What the Exam Tests
+>
+> - Implement a compliant data pipeline that enforces PII detection and masking controls across batch and streaming workloads using Unity Catalog features.
+> - Implement a data purging strategy that satisfies data retention and deletion policies (e.g., GDPR right-to-erasure, GDPR right-to-be-forgotten deletion) using Delta Lake and Unity Catalog features.
+> - Explain why `DELETE` alone does not physically erase data
 
 ## Data Classification and Tagging
 

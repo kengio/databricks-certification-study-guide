@@ -31,6 +31,19 @@ flowchart TD
     end
 ```
 
+> [!abstract]
+>
+> - **Batch deduplication** with `dropDuplicates` or `row_number()`, which keeps exactly one row per key (`rank()` can keep ties)
+> - **MERGE is idempotent**; deduplicate the source first, because duplicate source keys make MERGE fail
+> - **Streaming deduplication** needs a watermark; `dropDuplicatesWithinWatermark` bounds the state
+> - **Medallion placement**: Silver is the main deduplication layer
+
+> [!tip] What the Exam Tests
+>
+> - Apply advanced data transformations, including window functions, joins, and aggregations, using Spark SQL and PySpark to process large datasets.
+> - Pick a deduplication method for batch vs streaming data
+> - Make streaming writes idempotent with `foreachBatch` and MERGE
+
 ## Why Duplicates Occur
 
 | Source | Cause | Example |

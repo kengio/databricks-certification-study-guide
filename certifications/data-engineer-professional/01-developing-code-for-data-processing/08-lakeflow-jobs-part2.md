@@ -10,9 +10,24 @@ status: published
 
 # Lakeflow Jobs — Part 2
 
+## Overview
+
 This part covers triggers and scheduling, compute configuration, notifications, job parameters, error handling, monitoring, common issues, and exam tips for Lakeflow Jobs (Lakeflow Jobs).
 
 > For job components, configuration, task dependencies, task values, and for-each loops, see [Part 1](./08-lakeflow-jobs-part1.md).
+
+> [!abstract]
+>
+> - **Triggers**: schedules use 7-field Quartz cron; the `file_arrival` trigger starts a run when new files land
+> - **Job clusters** are created per run and terminated afterwards, so they cost less than all-purpose clusters for scheduled work
+> - **Failure handling**: per-task retries (`max_retries`, `min_retry_interval_millis`, `retry_on_timeout`) and run conditions (`ALL_SUCCESS`, `AT_LEAST_ONE_FAILED`, `ALL_DONE`)
+> - **Monitoring**: `system.lakeflow.job_run_timeline` and `job_task_run_timeline` hold run history and durations
+
+> [!tip] What the Exam Tests
+>
+> - Create and automate ETL workloads using Lakeflow Jobs via the UI, API, and CLI.
+> - Use Lakeflow Jobs UI and Jobs API to monitor job status and performance metrics.
+> - Choose trigger, compute, retry, and notification settings for a production job
 
 ## Triggers and Scheduling
 

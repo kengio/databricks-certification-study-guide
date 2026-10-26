@@ -32,6 +32,19 @@ flowchart LR
     end
 ```
 
+> [!abstract]
+>
+> - **`format("cloudFiles")`** with `cloudFiles.format` incrementally ingests new files from cloud storage
+> - **File detection**: directory listing (default, no cloud setup) vs file notification mode (cloud events, scales to millions of files)
+> - **Schema handling**: `cloudFiles.schemaLocation` persists the inferred schema; evolution modes are `addNewColumns`, `rescue`, `failOnNewColumns`, and `none`
+> - **`availableNow=True`** gives scheduled, batch-style incremental ingestion with exactly-once semantics
+
+> [!tip] What the Exam Tests
+>
+> - Create production-ready data pipelines for streaming data using Lakeflow Pipelines and Auto Loader.
+> - Develop data ingestion pipelines to ingest a variety of data formats, including Delta Lake, Parquet, JSON, Iceberg, CSV, and Binary from diverse sources such as message buses (Kafka, Kinesis, Pub/Sub) and cloud storage.
+> - Pick the schema evolution mode and file detection mode for a scenario
+
 ## Why Auto Loader?
 
 | Challenge | Auto Loader Solution |

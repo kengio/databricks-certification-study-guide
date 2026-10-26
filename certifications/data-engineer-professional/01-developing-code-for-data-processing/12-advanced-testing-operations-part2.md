@@ -12,9 +12,24 @@ status: published
 
 # Advanced Testing & Operations — Part 2
 
+## Overview
+
 This file covers deployment validation, automated rollback, GitOps patterns, and common troubleshooting scenarios.
 
 > For property-based testing, Lakeflow Pipelines testing, streaming tests, and integration patterns, see [Part 1](./12-advanced-testing-operations-part1.md).
+
+> [!abstract]
+>
+> - **Deployment validation**: run a smoke test job right after deployment and roll back automatically (redeploy the previous commit) if it fails
+> - **GitOps**: mono-repo vs multi-repo, `paths:` filters that deploy only the changed bundle, and trunk-based development with feature flags
+> - **OIDC federation** (`permissions: id-token: write`) replaces stored CI secrets
+> - **CI guardrails**: coverage gating with `--cov-fail-under` and per-run test schemas dropped with `CASCADE`
+
+> [!tip] What the Exam Tests
+>
+> - Implement scalable Python project structures for Declarative Automation Bundles (formerly Databricks Asset Bundles / DABs) to support modular development and CI/CD integration.
+> - Design a validate-then-rollback step after a bundle deployment
+> - Choose a repository and branching strategy for a data engineering team
 
 ## Deployment Validation
 

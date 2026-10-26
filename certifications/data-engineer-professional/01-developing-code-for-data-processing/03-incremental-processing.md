@@ -29,6 +29,19 @@ flowchart TD
     end
 ```
 
+> [!abstract]
+>
+> - **High-water mark pattern**: track progress on a reliable timestamp or sequence column in a control table; it misses updates and deletes without CDC handling
+> - **`availableNow=True`** replaces the deprecated `once=True` trigger: it processes all available data in multiple batches, respecting rate limits, then stops
+> - **Checkpoints** give streaming queries exactly-once progress; `startingVersion` / `startingTimestamp` and `ignoreDeletes` / `ignoreChanges` control a Delta streaming source
+> - **MERGE is idempotent**, which makes it the safe write for reprocessed or `foreachBatch` batches
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Choose between a full load and an incremental load, and pick an incremental strategy (high-water mark, checkpointed stream, Delta source options) for a source
+> - Recognise which write patterns stay correct when a batch is rerun
+
 ## Full Load vs Incremental Load
 
 | Aspect | Full Load | Incremental Load |

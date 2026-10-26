@@ -12,9 +12,24 @@ status: published
 
 # Streaming Monitoring & Optimization
 
+## Overview
+
 This guide covers production streaming operations: back-pressure and rate limiting, monitoring and troubleshooting, state store internals, and performance tuning.
 
 > For streaming join patterns and stateful processing, see [Streaming Joins & Stateful Operations](../01-developing-code-for-data-processing/05-streaming-joins-stateful.md).
+
+> [!abstract]
+>
+> - **Back-pressure**: input rate above processing rate, or batch duration above the trigger interval; limit intake with `maxFilesPerTrigger` or `maxOffsetsPerTrigger`
+> - **Monitoring**: `StreamingQueryListener`, `query.lastProgress`, and `query.recentProgress`
+> - **Checkpoints**: compatibility rules and corruption recovery
+> - **State stores**: HDFS-backed vs RocksDB, and when to switch
+
+> [!tip] What the Exam Tests
+>
+> - Use Lakeflow Jobs UI and Jobs API to monitor job status and performance metrics.
+> - Read progress metrics such as `numRowsDroppedByWatermark` and state row counts to diagnose a stream
+> - Choose rate limits and a state store for a lagging stream
 
 ## Back-Pressure and Rate Limiting
 

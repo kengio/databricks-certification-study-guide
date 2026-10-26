@@ -10,9 +10,24 @@ status: published
 
 # Structured Streaming — Part 2
 
+## Overview
+
 This part covers stream-static joins, stateful operations, state store management, query management, checkpoints, use cases, and exam tips for Structured Streaming.
 
 > For streaming fundamentals, sources, sinks, triggers, output modes, watermarking, and windowed aggregations, see [Part 1](./04-structured-streaming-part1.md).
+
+> [!abstract]
+>
+> - **Stream-static joins**, stateful operations, and state timeouts (`ProcessingTimeTimeout`, `EventTimeTimeout`, `NoTimeout`)
+> - **State stores**: the HDFS-backed default suits small state; RocksDB suits state larger than executor memory
+> - **`foreachBatch`** runs batch operations such as MERGE inside a stream and, with checkpoints, gives exactly-once semantics
+> - **Checkpoint compatibility**: changing groupBy keys, watermark delay, output mode, or stateful operators needs a new checkpoint location
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Choose a state store and timeout for a given state size and expiry rule
+> - Know which query changes break an existing checkpoint, and detect unbounded state with `query.lastProgress`
 
 ## Stream-Static Joins
 
