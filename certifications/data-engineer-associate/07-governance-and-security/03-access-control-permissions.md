@@ -500,7 +500,7 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 ## Related Topics
 
 - [Unity Catalog Basics](./01-unity-catalog-basics.md)
-- [Data Sharing](./03-data-sharing.md)
+- [Data Sharing](./05-data-sharing.md)
 - [Unity Catalog Quick Reference](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
 
 ## Official Documentation
@@ -510,4 +510,4 @@ ADD TABLE prod.analytics.public_data TO SHARE partner_data_2025;
 
 ---
 
-**[← Previous: Unity Catalog Basics](./01-unity-catalog-basics.md) | [↑ Back to Data Governance](./README.md) | [Next: Data Sharing](./03-data-sharing.md) →**
+**[← Previous: Unity Catalog Basics](./01-unity-catalog-basics.md) | [↑ Back to Data Governance](./README.md) | [Next: Data Sharing](./05-data-sharing.md) →**

@@ -476,8 +476,8 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
 ## Related Topics
 
-- [Time Travel and Versioning](./02-time-travel-versioning.md)
-- [Delta Lake Fundamentals](./01-delta-lake-fundamentals.md)
+- [Time Travel and Versioning](../01-databricks-intelligence-platform/05-time-travel-versioning.md)
+- [Delta Lake Fundamentals](../01-databricks-intelligence-platform/04-delta-lake-fundamentals.md)
 - [Performance Optimization Cheat Sheet](../../../shared/cheat-sheets/performance-optimization.md)
 
 ## Official Documentation
@@ -487,4 +487,4 @@ spark.sql("DESCRIBE HISTORY employees LIMIT 1").show()
 
 ---
 
-**[← Previous: Time Travel and Versioning](./02-time-travel-versioning.md) | [↑ Back to Delta Lake](./README.md)**
+**[← Previous: Time Travel and Versioning](../01-databricks-intelligence-platform/05-time-travel-versioning.md) | [↑ Back to Delta Lake](./README.md)**

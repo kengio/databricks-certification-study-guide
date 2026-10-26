@@ -440,8 +440,8 @@ Each JSON file represents one committed transaction, enabling:
 
 ## Related Topics
 
-- [Time Travel and Versioning](./02-time-travel-versioning.md)
-- [Delta Lake Optimization](./03-delta-optimization.md)
+- [Time Travel and Versioning](./05-time-travel-versioning.md)
+- [Delta Lake Optimization](../06-troubleshooting-monitoring-and-optimization/03-delta-optimization.md)
 - [Delta Lake Basics (Shared)](../../../shared/fundamentals/delta-lake-basics.md)
 
 ## Official Documentation
@@ -451,4 +451,4 @@ Each JSON file represents one committed transaction, enabling:
 
 ---
 
-**[↑ Back to Delta Lake](./README.md) | [Next: Time Travel and Versioning](./02-time-travel-versioning.md) →**
+**[↑ Back to Delta Lake](../06-troubleshooting-monitoring-and-optimization/README.md) | [Next: Time Travel and Versioning](./05-time-travel-versioning.md) →**

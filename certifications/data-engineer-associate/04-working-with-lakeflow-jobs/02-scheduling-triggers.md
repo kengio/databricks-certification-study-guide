@@ -475,8 +475,8 @@ When DST changes occur:
 
 ## Related Topics
 
-- [Databricks Jobs](./01-databricks-jobs.md)
-- [Job Monitoring](./03-job-monitoring.md)
+- [Databricks Jobs](./01-lakeflow-jobs-and-tasks.md)
+- [Job Monitoring](../06-troubleshooting-monitoring-and-optimization/01-job-monitoring.md)
 
 ## Official Documentation
 
@@ -485,4 +485,4 @@ When DST changes occur:
 
 ---
 
-**[← Previous: Databricks Jobs](./01-databricks-jobs.md) | [↑ Back to Workflows and Orchestration](./README.md) | [Next: Job Monitoring](./03-job-monitoring.md) →**
+**[← Previous: Databricks Jobs](./01-lakeflow-jobs-and-tasks.md) | [↑ Back to Workflows and Orchestration](./README.md) | [Next: Job Monitoring](../06-troubleshooting-monitoring-and-optimization/01-job-monitoring.md) →**

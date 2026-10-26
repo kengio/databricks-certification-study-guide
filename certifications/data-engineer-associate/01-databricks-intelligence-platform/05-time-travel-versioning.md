@@ -421,8 +421,8 @@ log_path = "/mnt/data/employees/_delta_log"
 
 ## Related Topics
 
-- [Delta Lake Fundamentals](./01-delta-lake-fundamentals.md)
-- [Delta Lake Optimization](./03-delta-optimization.md)
+- [Delta Lake Fundamentals](./04-delta-lake-fundamentals.md)
+- [Delta Lake Optimization](../06-troubleshooting-monitoring-and-optimization/03-delta-optimization.md)
 - [Delta Lake Commands Cheat Sheet](../../../shared/cheat-sheets/delta-lake-commands.md)
 
 ## Official Documentation
@@ -432,4 +432,4 @@ log_path = "/mnt/data/employees/_delta_log"
 
 ---
 
-**[← Previous: Delta Lake Fundamentals](./01-delta-lake-fundamentals.md) | [↑ Back to Delta Lake](./README.md) | [Next: Delta Lake Optimization](./03-delta-optimization.md) →**
+**[← Previous: Delta Lake Fundamentals](./04-delta-lake-fundamentals.md) | [↑ Back to Delta Lake](../06-troubleshooting-monitoring-and-optimization/README.md) | [Next: Delta Lake Optimization](../06-troubleshooting-monitoring-and-optimization/03-delta-optimization.md) →**

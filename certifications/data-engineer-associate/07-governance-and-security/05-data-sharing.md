@@ -525,7 +525,7 @@ ORDER BY query_count DESC;
 
 ## Related Topics
 
-- [Access Control and Permissions](./02-access-control-permissions.md)
+- [Access Control and Permissions](./03-access-control-permissions.md)
 - [Unity Catalog Basics](./01-unity-catalog-basics.md)
 - [Data Sharing (DE Professional)](../../data-engineer-professional/02-data-ingestion-and-acquisition/06-opensharing.md)
 
@@ -536,4 +536,4 @@ ORDER BY query_count DESC;
 
 ---
 
-**[← Previous: Access Control and Permissions](./02-access-control-permissions.md) | [↑ Back to Data Governance](./README.md)**
+**[← Previous: Access Control and Permissions](./03-access-control-permissions.md) | [↑ Back to Data Governance](./README.md)**

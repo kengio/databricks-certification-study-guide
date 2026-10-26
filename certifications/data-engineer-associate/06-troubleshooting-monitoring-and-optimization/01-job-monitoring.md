@@ -544,9 +544,9 @@ for run in runs:
 
 ## Related Topics
 
-- [Databricks Jobs](./01-databricks-jobs.md)
-- [Scheduling and Triggers](./02-scheduling-triggers.md)
-- [Spark UI Debugging (DE Professional)](../../data-engineer-professional/08-debugging-and-deploying/01-spark-ui-debugging.md)
+- [Databricks Jobs](../04-working-with-lakeflow-jobs/01-lakeflow-jobs-and-tasks.md)
+- [Scheduling and Triggers](../04-working-with-lakeflow-jobs/02-scheduling-triggers.md)
+- [Spark UI Debugging (DE Professional)](../../data-engineer-professional/06-debugging-and-deploying/07-spark-ui-debugging.md)
 
 ## Official Documentation
 
@@ -555,4 +555,4 @@ for run in runs:
 
 ---
 
-**[← Previous: Scheduling and Triggers](./02-scheduling-triggers.md) | [↑ Back to Workflows and Orchestration](./README.md)**
+**[← Previous: Scheduling and Triggers](../04-working-with-lakeflow-jobs/02-scheduling-triggers.md) | [↑ Back to Workflows and Orchestration](../04-working-with-lakeflow-jobs/README.md)**

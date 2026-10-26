@@ -270,8 +270,8 @@ spark.sql("SELECT * FROM main.default.my_table")
 
 ## Related Topics
 
-- [Delta Lake Fundamentals](../03-delta-lake/01-delta-lake-fundamentals.md)
-- [Unity Catalog Basics](../05-data-governance/01-unity-catalog-basics.md)
+- [Delta Lake Fundamentals](04-delta-lake-fundamentals.md)
+- [Unity Catalog Basics](../07-governance-and-security/01-unity-catalog-basics.md)
 - [Medallion Architecture (Shared)](../../../shared/fundamentals/medallion-architecture.md)
 
 ## Official Documentation

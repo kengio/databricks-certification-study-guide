@@ -528,8 +528,8 @@ flowchart LR
 ## Related Topics
 
 - [Scheduling and Triggers](./02-scheduling-triggers.md)
-- [Job Monitoring](./03-job-monitoring.md)
-- [Compute and Clusters](../01-lakehouse-platform/03-compute-clusters.md)
+- [Job Monitoring](../06-troubleshooting-monitoring-and-optimization/01-job-monitoring.md)
+- [Compute and Clusters](../01-databricks-intelligence-platform/03-compute-clusters.md)
 
 ## Official Documentation
 

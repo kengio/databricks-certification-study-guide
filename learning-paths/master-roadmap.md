@@ -135,11 +135,11 @@ Choose one (or both) based on your path.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | ELT with Spark SQL & Python (29%) | [02-etl-spark-sql](../certifications/data-engineer-associate/02-etl-spark-sql/README.md) |
-| 2 | Lakehouse Platform (24%) | [01-lakehouse-platform](../certifications/data-engineer-associate/01-lakehouse-platform/README.md) |
-| 3 | Incremental Data Processing (22%) | [03-delta-lake](../certifications/data-engineer-associate/03-delta-lake/README.md) |
-| 4 | Production Pipelines (16%) | [04-workflows-orchestration](../certifications/data-engineer-associate/04-workflows-orchestration/README.md) |
-| 5 | Data Governance (9%) | [05-data-governance](../certifications/data-engineer-associate/05-data-governance/README.md) |
+| 1 | ELT with Spark SQL & Python (29%) | [02-etl-spark-sql](../certifications/data-engineer-associate/03-data-transformation-and-modeling/README.md) |
+| 2 | Lakehouse Platform (24%) | [01-lakehouse-platform](../certifications/data-engineer-associate/01-databricks-intelligence-platform/README.md) |
+| 3 | Incremental Data Processing (22%) | [03-delta-lake](../certifications/data-engineer-associate/06-troubleshooting-monitoring-and-optimization/README.md) |
+| 4 | Production Pipelines (16%) | [04-workflows-orchestration](../certifications/data-engineer-associate/04-working-with-lakeflow-jobs/README.md) |
+| 5 | Data Governance (9%) | [05-data-governance](../certifications/data-engineer-associate/07-governance-and-security/README.md) |
 
 **Practice & Review:**
 

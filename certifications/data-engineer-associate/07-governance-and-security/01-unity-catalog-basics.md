@@ -442,8 +442,8 @@ CREATE METASTORE ASSIGNMENT catalog_name
 
 ## Related Topics
 
-- [Access Control and Permissions](./02-access-control-permissions.md)
-- [Data Sharing](./03-data-sharing.md)
+- [Access Control and Permissions](./03-access-control-permissions.md)
+- [Data Sharing](./05-data-sharing.md)
 - [Unity Catalog Basics (Shared)](../../../shared/fundamentals/unity-catalog-basics.md)
 
 ## Official Documentation
@@ -453,4 +453,4 @@ CREATE METASTORE ASSIGNMENT catalog_name
 
 ---
 
-**[↑ Back to Data Governance](./README.md) | [Next: Access Control and Permissions](./02-access-control-permissions.md) →**
+**[↑ Back to Data Governance](./README.md) | [Next: Access Control and Permissions](./03-access-control-permissions.md) →**

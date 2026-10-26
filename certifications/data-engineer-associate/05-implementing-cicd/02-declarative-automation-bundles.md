@@ -167,8 +167,8 @@ A typical workflow:
 
 ## Related Topics
 
-- [Monitoring Basics](./02-monitoring-basics.md)
-- [DE Pro — Asset Bundles (deeper)](../../data-engineer-professional/08-debugging-and-deploying/03-declarative-automation-bundles-part1.md)
+- [Monitoring Basics](../06-troubleshooting-monitoring-and-optimization/02-spark-ui-and-system-tables.md)
+- [DE Pro — Asset Bundles (deeper)](../../data-engineer-professional/06-debugging-and-deploying/01-asset-bundles-part1.md)
 - [Hands-on Lab 03 — Lakeflow Declarative Pipelines](../../../labs/03-lakeflow-declarative-pipelines.md)
 
 ## Official Documentation
@@ -179,4 +179,4 @@ A typical workflow:
 
 ---
 
-**[↑ Back to CI/CD and Monitoring](./README.md) | [Next: Monitoring Basics →](./02-monitoring-basics.md)**
+**[↑ Back to CI/CD and Monitoring](./README.md) | [Next: Monitoring Basics →](../06-troubleshooting-monitoring-and-optimization/02-spark-ui-and-system-tables.md)**
