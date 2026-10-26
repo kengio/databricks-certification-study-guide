@@ -53,7 +53,7 @@ CERT_TITLES = {
     "data-analyst-associate": ("Data Analyst Associate", "Oct 2025"),
     "ml-associate": ("ML Associate", "Mar 1, 2025"),
     "ml-professional": ("ML Professional", "Sep 2025"),
-    "genai-engineer-associate": ("GenAI Engineer Associate", "Mar 2026"),
+    "genai-engineer-associate": ("GenAI Engineer Associate", "Mar 18, 2026"),
 }
 
 # Three heading formats found in the wild:

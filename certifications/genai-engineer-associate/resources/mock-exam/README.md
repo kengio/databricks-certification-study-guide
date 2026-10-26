@@ -10,6 +10,8 @@ tags:
 
 > [!important]
 > **Refreshed for the March 2026 blueprint.** Terminology updated to current product names (Unity AI Gateway, Mosaic AI Vector Search, Lakeflow Jobs). Domain weighting reflects the current 6-domain structure with Governance (8 %).
+>
+> Section headings inside `questions.md` keep the original four topic groupings so question IDs stay stable; the debrief maps each question to its exam-guide section. Bullets added in the March 18, 2026 guide (Agent Bricks, MCP, judges and scorers, AI Gateway monitoring) are drilled in [practice sets 05–07](../practice-questions/README.md).
 
 ## Exam Instructions
 
@@ -17,15 +19,15 @@ tags:
 | ------ | ----- |
 | Total Questions | 45 |
 | Time Limit | 90 minutes |
-| Result | Pass / fail (no numeric threshold in the March 2026 exam guide) |
-| Format | Multiple choice, single correct answer |
+| Result | Pass / fail (no numeric threshold in the exam guide) |
+| Format | Multiple choice, single correct answer (the real exam also includes multiple-selection questions) |
 
 ## Domain Distribution (refreshed to March 2026 blueprint)
 
 | Domain | Official weight | Questions in this mock |
 | ------ | :---: | :---: |
 | Application Development | 30 % | 14 |
-| Assembling and Deploying Apps | 22 % | 10 |
+| Assembling and Deploying Applications | 22 % | 10 |
 | Design Applications | 14 % | 6 |
 | Data Preparation | 14 % | 6 |
 | Evaluation and Monitoring | 12 % | 5 |

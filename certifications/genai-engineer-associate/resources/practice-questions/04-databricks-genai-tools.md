@@ -125,4 +125,4 @@ D) Both B and C are correct
 
 ---
 
-**[← Previous: Practice Questions — LLM Application Development](./03-llm-application-development.md) | [↑ Back to Practice Questions — GenAI Engineer Associate](./README.md)**
+**[← Previous: Practice Questions — LLM Application Development](./03-llm-application-development.md) | [↑ Back to Practice Questions — GenAI Engineer Associate](./README.md) | [Next: Design Applications & Data Preparation](./05-design-and-data-preparation.md) →**

@@ -1,8 +1,8 @@
 {
   "cert": "genai-engineer-associate-mock-2",
   "certTitle": "GenAI Engineer Associate — Mock Exam 2",
-  "blueprintVersion": "Mar 2026",
-  "generated": "2026-05-22",
+  "blueprintVersion": "Mar 18, 2026",
+  "generated": "2026-10-26",
   "domains": [
     {
       "id": "design-rag-solutions",
@@ -14,19 +14,19 @@
       "id": "vector-search-embeddings",
       "name": "Vector Search & Embeddings",
       "sourceFile": "certifications/genai-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 10
+      "questionCount": 11
     },
     {
       "id": "llm-application-development",
       "name": "LLM Application Development",
       "sourceFile": "certifications/genai-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 12
+      "questionCount": 13
     },
     {
       "id": "databricks-genai-tools",
       "name": "Databricks GenAI Tools",
       "sourceFile": "certifications/genai-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 6
+      "questionCount": 7
     }
   ],
   "questions": [
@@ -252,6 +252,22 @@
       },
       "correctAnswer": "B",
       "shortAnswer": "Retrieval quality is the foundation of RAG. If the wrong documents are retrieved (low answer_relevance foundation), improving generation quality (faithfulness) provides limited gains because the LLM is working with suboptimal context. Fix retrieval first (embedding model, chunking, metadata filtering), then optimize generation (prompting, context ordering, chain type). They can be improved independently through different components of the pipeline.",
+      "explanation": ""
+    },
+    {
+      "id": "genai-engineer-associate-mock-2-q015",
+      "domain": "vector-search-embeddings",
+      "title": "Question 15",
+      "difficulty": "medium",
+      "question": "A developer creates a Vector Search index named `product_search_idx` on the endpoint `my_vs_endpoint`. They want to query it with the text \"wireless noise-canceling headphones\". Which SDK call is CORRECT?",
+      "choices": {
+        "A": "`index = vsc.get_index(\"my_vs_endpoint\", \"product_search_idx\")` then `index.similarity_search(query_text=\"wireless noise-canceling headphones\", columns=[\"product_id\", \"title\", \"description\"], num_results=10)`",
+        "B": "`vsc.search(endpoint=\"my_vs_endpoint\", index=\"product_search_idx\", query=\"wireless noise-canceling headphones\", top_k=10)`",
+        "C": "`index = vsc.get_index(\"product_search_idx\")` then `index.query(query_text=\"wireless noise-canceling headphones\", limit=10)`",
+        "D": "`vsc.similarity_search(\"product_search_idx\", \"wireless noise-canceling headphones\", k=10)`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The correct SDK pattern is: (1) `vsc.get_index(endpoint_name, index_name)`, (2) `index.similarity_search(query_text=..., columns=[...], num_results=...)`. Option B (`vsc.search()`), C (missing endpoint param, `.query()`), and D (`vsc.similarity_search()`) use non-existent SDK methods.",
       "explanation": ""
     },
     {
@@ -591,6 +607,22 @@
       "explanation": ""
     },
     {
+      "id": "genai-engineer-associate-mock-2-q037",
+      "domain": "llm-application-development",
+      "title": "Question 37",
+      "difficulty": "medium",
+      "question": "A developer wants to load a LangChain chain that was logged with `mlflow.langchain.log_model()` and make predictions programmatically. The model URI is `runs:/abc123/rag-chain`. Which code produces a callable `.predict()` interface?",
+      "choices": {
+        "A": "`chain = mlflow.langchain.load_model(\"runs:/abc123/rag-chain\")` then `chain.invoke({\"query\": \"What is RAG?\"})`",
+        "B": "`model = mlflow.pyfunc.load_model(\"runs:/abc123/rag-chain\")` then `model.predict({\"query\": \"What is RAG?\"})`",
+        "C": "`model = mlflow.models.load_model(\"runs:/abc123/rag-chain\")` then `model({\"query\": \"What is RAG?\"})`",
+        "D": "Both A and B are valid"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Both are valid approaches. `mlflow.langchain.load_model()` loads the native LangChain chain object (use `.invoke()` or `.run()` per LangChain API). `mlflow.pyfunc.load_model()` loads it as a pyfunc wrapper (use `.predict()` per MLflow pyfunc API). Both work with the same artifact URI. Option C uses `mlflow.models.load_model()` which is not a valid MLflow Python API method.",
+      "explanation": ""
+    },
+    {
       "id": "genai-engineer-associate-mock-2-q038",
       "domain": "llm-application-development",
       "title": "Question 38",
@@ -668,6 +700,22 @@
       },
       "correctAnswer": "C",
       "shortAnswer": "MLflow AI Gateway supports per-route configuration including rate limits (requests per minute, tokens per minute). Routes can be configured for different teams or use cases, each with their own rate limit policies. Cluster policies govern cluster configuration, not LLM API access. Unity Catalog governs data and model access but not per-team LLM rate limits. Secrets store credentials but do not implement rate limiting.",
+      "explanation": ""
+    },
+    {
+      "id": "genai-engineer-associate-mock-2-q043",
+      "domain": "databricks-genai-tools",
+      "title": "Question 43",
+      "difficulty": "medium",
+      "question": "A team logs their RAG chain and evaluation results to MLflow. They want to register the chain as a model version and add a description explaining the chunking strategy used. Which MLflow API accomplishes this?",
+      "choices": {
+        "A": "`mlflow.log_param(\"chunking_strategy\", \"recursive-512-overlap-50\")`",
+        "B": "`MlflowClient().update_model_version(name=\"rag-chain\", version=1, description=\"Recursive chunking, 512 tokens, 50-token overlap\")`",
+        "C": "`mlflow.set_tag(\"chunking_strategy\", \"recursive-512-overlap-50\")`",
+        "D": "`mlflow.register_model(model_uri, \"rag-chain\", description=\"...\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`MlflowClient.update_model_version()` updates the description of a specific model version in the Model Registry. This is the correct API for adding human-readable descriptions to registered models. `mlflow.log_param()` and `mlflow.set_tag()` log to runs, not to model registry versions. `mlflow.register_model()` does not accept a `description` parameter in the Python API (description is set separately after registration).",
       "explanation": ""
     },
     {
