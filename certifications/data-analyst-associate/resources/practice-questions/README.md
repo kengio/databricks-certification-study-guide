@@ -17,6 +17,7 @@ Questions organized by exam domain. Expand `[!success]- Answer` callouts only af
 | SQL Queries | 29% | [03-sql-queries.md](03-sql-queries.md) | 18 |
 | Dashboards & Visualization | 18% | [04-dashboards-visualization.md](04-dashboards-visualization.md) | 10 |
 | Analytics Applications | 11% | [05-analytics-applications.md](05-analytics-applications.md) | 7 |
-| **Total** | **100%** | | **57 questions** |
+| AI/BI Genie Spaces (Genie Agents) | 12% | [06-genie-agents.md](06-genie-agents.md) | 15 |
+| **Total** | | | **72 questions** |
 
 [← Back to Resources](../README.md)

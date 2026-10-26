@@ -860,7 +860,7 @@ D) MLflow experiment tracking — stores query metadata
 
 ## New questions for the October 2025 blueprint refresh
 
-The questions below cover the newly added **Developing, Sharing, and Maintaining AI/BI Genie Spaces** domain (12 %).
+The questions below cover the newly added **Developing, Sharing, and Maintaining AI/BI Genie Spaces** domain (12 %). Genie Spaces were renamed **Genie Agents** on July 8, 2026; the exam still uses the original name.
 
 ### Question GS-1 *(Medium — AI/BI Genie Spaces)*
 
@@ -905,14 +905,14 @@ D) Add a column comment on `invoice_total` saying "this is revenue"
 **Question**: Which workflow best addresses recurring incorrect answers?
 
 A) Increase the model temperature so Genie produces more varied answers  
-B) Review the audit log of recent generated SQL, identify recurring failure patterns, add a SQL expression or example query for each pattern, monitor the next two weeks  
+B) Review the questions, ratings, and "Fix it" / review requests in the space's **Monitor** tab, add a SQL expression, example query, or trusted asset for each recurring failure, add the failing questions as benchmarks, and re-run the benchmarks  
 C) Disable Genie and replace it with hand-curated DBSQL dashboards  
 D) Train a custom embedding model on the team's vocabulary  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> The official Genie best-practices workflow is: audit log → identify failure patterns → curate (SQL expressions are preferred over text instructions) → monitor. The audit log captures every Genie-generated SQL so you can see exactly what failed. A makes answers worse, not better (temperature is for creativity, not accuracy). C abandons the value of natural-language analytics. D doesn't apply — Genie generates SQL, not embeddings.
+> The documented optimisation loop is: track user questions, accuracy, and feedback (the **Monitor** tab shows every question and answer, with user feedback and a Weekly digest) → curate (SQL expressions and example SQL are preferred over text instructions) → validate with **benchmarks**. Each fix should become a benchmark so a later change cannot silently break it. A makes answers worse, not better (temperature is for creativity, not accuracy). C abandons the value of natural-language analytics. D doesn't apply — Genie generates SQL, not embeddings.
 
 ---
 

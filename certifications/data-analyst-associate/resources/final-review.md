@@ -18,7 +18,7 @@ status: published
 - **Three SQL Warehouse types**: Pro (Photon-on, Predictive I/O), Serverless (instant start), Classic (legacy)
 - **Query result cache** is per-warehouse; identical queries return instantly until source data changes
 - **AI/BI Dashboards** is the *current* dashboarding product (replaces "Databricks SQL Dashboards")
-- **AI/BI Genie Spaces** generate SQL from natural language, **enforcing UC permissions** (row filters + column masks apply automatically)
+- **AI/BI Genie Spaces** (renamed **Genie Agents** on July 8, 2026 — the exam still says "spaces") generate read-only SQL from natural language, **enforcing UC permissions per asking user** (row filters + column masks apply automatically)
 - **Genie curation priorities** (per official best practice): **SQL expressions** first, **example SQL queries** second, **text instructions** last resort, **synonyms** as a complementary lever
 - **`COPY INTO` is idempotent**; UI upload supports CSV/TSV/JSON/Parquet/Avro/text (limit 10 files / 2 GB)
 - **Lakehouse Federation** = read-mostly query of external DBs
@@ -49,10 +49,13 @@ status: published
 
 ### 04 — Developing, Sharing, and Maintaining AI/BI Genie Spaces (12 %)
 
-- A **Genie Space** is curated UC tables + optional SQL expressions + example queries + instructions + synonyms
+- A **Genie Space** is curated UC data (aim for **five or fewer tables**, max 50) + knowledge store + example SQL + SQL functions + instructions, on a **pro or serverless** SQL warehouse
 - Genie generates SQL → runs on a SQL Warehouse → returns results. NOT "the model reads the data"
-- **Genie respects UC permissions** — column masks + row filters apply
-- Audit trail: every Genie-generated SQL captured
+- **Genie respects UC permissions** — column masks + row filters apply per user; consumers need `SELECT` but **no warehouse permission**
+- **Trusted assets** = parameterized example SQL (`:param`) + UC SQL functions → verified answers
+- **Sharing**: `CAN MANAGE` / `CAN EDIT` / `CAN RUN` / `CAN VIEW`; distribute by link, iframe embed, or app integrations (Genie API)
+- **Maintain**: Monitor tab (questions, feedback) → curate → refresh UC metadata → re-run **benchmarks** (Chat mode compares result sets; extra columns = Bad)
+- Generated queries are attributed to the end user in query history and on the Monitor tab
 
 ### 05 — Understanding Databricks Data Intelligence Platform (11 %)
 
@@ -96,6 +99,8 @@ status: published
 | "Threshold-based notification within minutes" | SQL Alert with webhook destination |
 | "Dashboard takes too long to load" | Materialised view as the backing table |
 | "First curation lever for Genie" | SQL expression (not text instruction) |
+| "Benchmarks improve Genie's answers" | False — benchmarks only score accuracy |
+| "Hide the column so nobody can read it" | Hiding only removes it from Genie's context — use UC grants / column masks |
 | "Re-running the load — will it duplicate?" | `COPY INTO` is idempotent — no |
 
 ## Today's exam — 90-minute time budget

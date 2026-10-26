@@ -74,7 +74,7 @@ The folder structure below matches the October 2025 official 9-domain blueprint.
 | [01 — Executing Queries Using Databricks SQL and Warehouses](./01-executing-queries-databricks-sql-warehouses/README.md) | 20 %   | SQL Warehouses, query editor, run-as identity |
 | [02 — Creating Dashboards and Visualizations](./02-creating-dashboards-and-visualizations/README.md) | 16 %   | AI/BI Dashboards, charts, alerts, sharing |
 | [03 — Analyzing Queries](./03-analyzing-queries/README.md)                              | 15 %   | Joins, aggregations, window functions, query parameters |
-| [04 — Developing, Sharing, and Maintaining AI/BI Genie Spaces](./04-developing-sharing-maintaining-genie-spaces/README.md) | 12 % | Genie Spaces creation, curation, tuning |
+| [04 — Developing, Sharing, and Maintaining AI/BI Genie Spaces](./04-developing-sharing-maintaining-genie-spaces/README.md) | 12 % | Genie Spaces (now Genie Agents) creation, curation, benchmarks, sharing, API |
 | [05 — Understanding Databricks Data Intelligence Platform](./05-understanding-databricks-platform/README.md) | 11 % | Unity Catalog, connections, lakehouse arch |
 | [06 — Managing Data](./06-managing-data/README.md)                                     |  8 %   | Tables, schemas, managed vs external |
 | [07 — Securing Data](./07-securing-data/README.md)                                     |  8 %   | GRANT/REVOKE, row filters, column masks |
@@ -110,7 +110,7 @@ Review these shared fundamentals:
 - [ ] Master Databricks SQL interface and warehouses
 - [ ] Build dashboards and visualizations
 - [ ] Practice complex SQL queries and analysis
-- [ ] Build a Genie Space on a UC schema (and tune it)
+- [ ] Build a Genie Space (Genie Agent) on a UC schema, tune it, and score it with benchmarks
 - [ ] Understand UC + lakehouse vocabulary
 - [ ] Manage tables and schemas safely
 - [ ] Apply row filters and column masks
@@ -121,4 +121,4 @@ Review these shared fundamentals:
 
 - [Databricks Certification Page](https://www.databricks.com/learn/certification/data-analyst-associate)
 - [Databricks SQL Documentation](https://docs.databricks.com/sql/)
-- [AI/BI Genie Documentation](https://docs.databricks.com/en/genie/index.html)
+- [Genie Agents documentation (formerly AI/BI Genie spaces)](https://docs.databricks.com/aws/en/genie-agents/)

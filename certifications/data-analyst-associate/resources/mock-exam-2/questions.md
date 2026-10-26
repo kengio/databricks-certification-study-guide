@@ -876,59 +876,59 @@ D) Partner Connect integration with an email tool
 
 ## New questions for the October 2025 blueprint refresh
 
-The questions below cover the newly added **Developing, Sharing, and Maintaining AI/BI Genie Spaces** domain (12 %).
+The questions below cover the newly added **Developing, Sharing, and Maintaining AI/BI Genie Spaces** domain (12 %). Genie Spaces were renamed **Genie Agents** on July 8, 2026; the exam still uses the original name.
 
 ### Question GS-1 *(Medium — AI/BI Genie Spaces)*
 
-**Scenario**: An analytics team has been asked to give the customer-success organisation a self-serve way to ask plain-English questions over a curated set of UC tables. The CS users do not write SQL. The team also needs to ensure that CS users cannot see PII columns even though those columns exist in the underlying tables.
+**Scenario**: The finance team asks a Genie space "What is revenue for EMEA?", "What is revenue for APAC?", and so on every week. The CFO wants these answers to come from logic the data team has verified, not from freshly generated SQL each time.
 
-**Question**: Which approach is the documented and safest fit?
+**Question**: What should the space author add?
 
-A) Build a Streamlit app that calls a fine-tuned LLM trained on the schema and let CS users authenticate with PATs  
-B) Create an AI/BI Genie Space scoped to the curated UC tables; rely on UC column masks and row filters to enforce PII restrictions; grant the CS group access to the space  
-C) Schedule daily exports of the curated tables to a separate UC schema with PII columns dropped, then grant access to that schema  
-D) Use Mosaic AI Vector Search to embed each row and let CS users query semantically  
+A) A text instruction: "Revenue for a region is SUM(invoice_total) filtered on region"  
+B) A parameterized example query titled "What is revenue for a region?" using `:region_name`, so it becomes a trusted asset  
+C) A benchmark question for each region  
+D) A Field SQL expression that returns the region name  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Genie Spaces is the documented natural-language analytics surface for exactly this use case. UC permissions, including column masks and row filters, apply to every Genie-generated SQL query — so CS users physically cannot see PII columns they're not granted on, regardless of how Genie phrases the question. Option A reinvents Genie poorly. Option C duplicates data and creates a refresh / drift problem. Option D is a retrieval-augmentation pattern over *unstructured* data — vector search returns similar rows by embedding distance, which is the wrong tool for structured analytic queries (counts, aggregates, joins).
+> Trusted assets are parameterized example queries and Unity Catalog SQL functions whose exact logic an author verified; answers built on them come from that verified logic. Parameters use the `:name` syntax. A text instruction (A) is the documented last resort and does not produce verified answers. Benchmarks (C) only score accuracy — they never feed Genie's context. A Field SQL expression (D) defines a per-row value, not a verified answer.
 
 ---
 
 ### Question GS-2 *(Medium — AI/BI Genie Spaces)*
 
-**Scenario**: A Genie Space frequently misinterprets the term "revenue" — sometimes summing `invoice_total`, sometimes `paid_amount`. The data team wants the space to *always* use `SUM(invoice_total)` for any question about revenue.
+**Scenario**: An analyst shared a Genie space with the operations group at `CAN RUN`. Operations users can open the space, but every answer comes back empty. The space author sees full results for the same questions.
 
-**Question**: Which curation lever is the *officially recommended first choice* per Databricks best practice?
+**Question**: What is the most likely cause?
 
-A) Add a free-text instruction: "Revenue means invoice_total"  
-B) Add a **SQL expression** named `revenue` defined as `SUM(invoice_total)` so Genie can call it directly  
-C) Train a custom embedding model on the team's vocabulary  
-D) Add a column comment on `invoice_total` saying "this is revenue"  
+A) Operations users lack `CAN USE` on the SQL warehouse  
+B) Operations users lack `SELECT` on the Unity Catalog tables the space uses  
+C) `CAN RUN` does not allow asking questions; they need `CAN MANAGE`  
+D) Genie caches results per author  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> The official Databricks Genie best-practice guidance is to **prefer SQL expressions over text instructions** when both could express the rule. A named SQL expression is exact and deterministic — Genie will compose it into the generated query verbatim. Free-text instructions (Option A) are the documented *last resort*. Option C is irrelevant — Genie generates SQL, not embeddings. Option D (column comments / metadata) is a complementary lever but less precise than a SQL expression for an aggregation rule.
+> Sharing the space does not share the data. Genie runs queries with the author's embedded warehouse credentials, so consumers need **no** warehouse permission (A is wrong), but every query is checked against the asking user's Unity Catalog permissions — without `SELECT` they get no rows. `CAN RUN` (or `CAN VIEW`) is enough to use a space (C), and results are not cached per author (D).
 
 ---
 
 ### Question GS-3 *(Medium — AI/BI Genie Spaces)*
 
-**Scenario**: A Genie Space has been live for three months. Usage analytics show 15 % of user questions get answers that the data team manually verifies as incorrect. The lead analyst wants to systematically improve accuracy.
+**Scenario**: The source system changed order status values from `CXL` to `CANCELLED`. Since the change, Genie answers "How many cancelled orders last week?" with zero, even though the data is correct. The `status` column has entity matching enabled and an outdated column comment.
 
-**Question**: Which workflow best addresses recurring incorrect answers?
+**Question**: Which maintenance steps fix this in the documented way?
 
-A) Increase the model temperature so Genie produces more varied answers  
-B) Review the audit log of recent generated SQL, identify recurring failure patterns, add a SQL expression or example query for each pattern, monitor the next two weeks  
-C) Disable Genie and replace it with hand-curated DBSQL dashboards  
-D) Train a custom embedding model on the team's vocabulary  
+A) Increase the SQL warehouse size and re-run the question  
+B) Update the `status` column comment in Unity Catalog, run **Refresh prompt matching** for the column, and re-run the benchmarks  
+C) Add a text instruction that says "CXL means cancelled"  
+D) Delete the space's conversation history  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> The official Genie best-practices workflow is: audit log → identify failure patterns → curate (SQL expressions are preferred over text instructions) → monitor. The audit log captures every Genie-generated SQL so you can see exactly what failed. A makes answers worse, not better (temperature is for creativity, not accuracy). C abandons the value of natural-language analytics. D doesn't apply — Genie generates SQL, not embeddings.
+> The exam's optimisation skill includes refreshing Unity Catalog metadata and validating with benchmarks. Entity matching stores representative column values, so after the values change you refresh them with **Refresh prompt matching**; updating the UC comment fixes the description for every consumer; benchmarks confirm the fix. Compute size (A) does not affect interpretation, an instruction about the old code (C) is now wrong, and deleting history (D) only removes evidence.
 
 ---
 
