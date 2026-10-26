@@ -92,12 +92,12 @@ D) `model = mlflow.pyfunc.load_model("models:/ml.pricing.estimator/champion")`
 A) Load the model with `mlflow.pyfunc.load_model()` and call `model.predict(df.toPandas())`  
 B) Use `mlflow.pyfunc.spark_udf()` to create a UDF and apply it to the Spark DataFrame  
 C) Deploy the model to a serving endpoint and send the DataFrame as a single HTTP request  
-D) Use `FeatureStoreClient.score_batch()` without any model URI
+D) Use `fe.score_batch()` without any model URI
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> `mlflow.pyfunc.spark_udf(spark, model_uri)` creates a Spark UDF that wraps the model, enabling distributed batch scoring across all Spark workers. Calling `.toPandas()` on 10 million rows collects all data to the driver, which can cause out-of-memory errors. Sending 10 million rows in a single HTTP request to a serving endpoint is not feasible. `score_batch()` requires Feature Store integration.
+> `mlflow.pyfunc.spark_udf(spark, model_uri)` creates a Spark UDF that wraps the model, enabling distributed batch scoring across all Spark workers. Calling `.toPandas()` on 10 million rows collects all data to the driver, which can cause out-of-memory errors. Sending 10 million rows in a single HTTP request to a serving endpoint is not feasible. `fe.score_batch()` needs a model URI and a model logged with `fe.log_model`.
 
 ---
 

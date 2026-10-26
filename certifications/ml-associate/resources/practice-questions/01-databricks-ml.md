@@ -66,7 +66,7 @@ D) Clustering
 **Question**: After running a Databricks AutoML experiment, where are the results stored?
 
 A) A Delta table in the default catalog  
-B) A set of Python scripts in a Repos folder  
+B) A set of Python scripts in a Git folder  
 C) An MLflow experiment with one run per trial  
 D) A JSON configuration file in DBFS
 
