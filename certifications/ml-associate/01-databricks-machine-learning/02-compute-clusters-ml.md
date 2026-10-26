@@ -2,17 +2,49 @@
 title: Compute Clusters for ML
 type: study-material
 tags:
+  - ml-associate
   - compute
   - clusters
-  - configuration
-  - ml
+  - databricks-runtime-ml
+status: published
 ---
 
 # Compute Clusters for ML
 
 ## Overview
 
-Clusters are the compute backbone for machine learning workloads. Databricks provides flexible, auto-scaling clusters optimized for different ML workflows.
+Clusters are the compute backbone for machine learning workloads. Databricks provides flexible, auto-scaling clusters optimized for different ML workflows — and the **Databricks Runtime for Machine Learning** (ML runtime) that the exam guide asks you to justify.
+
+> [!abstract]
+>
+> - The **ML runtime** ships a pre-built, version-tested ML stack (popular ML/DL libraries, MLflow, AutoML) on top of the standard Databricks Runtime
+> - GPU ML runtimes add GPU drivers and GPU-enabled deep-learning libraries for GPU instance types
+> - Single-node compute suits pandas / scikit-learn work; multi-node compute suits distributed Spark ML and distributed tuning
+> - To read Unity Catalog data from an ML runtime cluster, use **Dedicated** access mode
+
+> [!tip] What the Exam Tests
+>
+> - *Identify the advantages of using ML runtimes* — no manual library installs, compatible versions, MLflow + AutoML ready, GPU variants
+> - Choosing single-node vs multi-node vs GPU compute for a described workload
+> - Cost levers: autoscaling, auto-termination, job compute vs all-purpose compute
+
+---
+
+## Advantages of the Databricks Runtime for ML
+
+| Advantage | What it means in practice |
+| :--- | :--- |
+| **Pre-built ML infrastructure** | The ML runtime "automates the creation of a compute resource with pre-built machine learning and deep learning infrastructure" — no init scripts to assemble a stack |
+| **Popular libraries pre-installed and version-tested** | ML and deep-learning libraries plus MLflow are included — e.g. Databricks Runtime 17.3 LTS ML lists scikit-learn, PyTorch, TensorFlow, transformers, and MLflow as top-tier libraries, with XGBoost, LightGBM, Optuna, Ray, and the Feature Engineering client in its library tables |
+| **MLflow + Databricks Autologging ready** | Databricks Autologging is available on Databricks Runtime 10.4 LTS ML and above, capturing params, metrics, and models for supported frameworks |
+| **AutoML entry point** | AutoML runs on ML-runtime compute (see the platform note in [Databricks AutoML](./03-databricks-automl.md) for newer runtimes) |
+| **GPU variants** | Selecting a GPU instance type gives a GPU-enabled ML runtime with the drivers and GPU builds of deep-learning libraries |
+| **Performance options** | Photon and Graviton instances can speed up Spark DataFrame feature engineering and libraries such as XGBoost/LightGBM |
+
+Sources: [Databricks Runtime for Machine Learning](https://docs.databricks.com/aws/en/machine-learning/databricks-runtime-ml), [Databricks Runtime 17.3 LTS ML release notes](https://docs.databricks.com/aws/en/release-notes/runtime/17.3lts-ml), [Databricks Autologging](https://docs.databricks.com/aws/en/mlflow/databricks-autologging).
+
+> [!note] Platform update (Oct 2026)
+> To access Unity Catalog data from ML-runtime compute, the docs require **Dedicated** access mode (formerly called single-user; it can be assigned to a user or a group). For GPU deep learning, the docs now also point to **AI Runtime**, a serverless GPU compute offering ([Databricks Runtime for Machine Learning](https://docs.databricks.com/aws/en/machine-learning/databricks-runtime-ml)).
 
 ## Cluster Architecture
 
@@ -162,8 +194,8 @@ ml_cluster_config = {
     "driver_node_type_id": "i3.xlarge",  # Same as workers
 
     # Runtime
-    "spark_version": "14.3.x-scala2.12",  # ML Runtime
-    "runtime_engine": "photon",  # GPU-accelerated
+    "spark_version": "14.3.x-cpu-ml-scala2.12",  # ML runtime (CPU); GPU variant: 14.3.x-gpu-ml-scala2.12
+    "runtime_engine": "PHOTON",  # Photon = vectorized query engine on CPU (not GPU acceleration)
 
     # Autoscaling
     "autoscale": {
@@ -192,14 +224,14 @@ ml_cluster_config = {
 |---|---|---|---|
 | **i3.xlarge** | 30.5 GB | General ML | Medium |
 | **i3.2xlarge** | 61 GB | Large models | Medium-High |
-| **i3en.3xlarge** | 96 GB | GPU-heavy ML | High |
+| **i3en.3xlarge** | 96 GB | Memory/storage-heavy ML (no GPU) | High |
 | **g4dn.xlarge** | 16 GB + 1 GPU | Deep Learning | Very High |
 | **p3.2xlarge** | 61 GB + V100 | Large-scale DL | Very High |
 
 **Selection Guide:**
 
 - Small experiments: `i3.xlarge`
-- Large datasets: `i3.2xlarge` or `i3en.3xlarge`
+- Large datasets: `i3.2xlarge` or `i3en.3xlarge` (CPU only)
 - GPU-based ML: `g4dn` or `p3` series
 - Budget-conscious: Use SPOT instances (up to 90% savings)
 
@@ -231,7 +263,7 @@ init_config = {
 
 ```python
 cluster_config = {
-    "idle_timeout_minutes": 30,  # Auto-stop after 30 mins idle
+    "autotermination_minutes": 30,  # Auto-stop after 30 mins idle
     "enable_elastic_disk": True,  # Dynamically resize storage
     "cluster_log_conf": {
         "dbfs": {
@@ -297,10 +329,11 @@ spark_configs = {
     # Delta Optimization
     "spark.databricks.delta.optimizeWrite.enabled": "true",
     "spark.databricks.delta.autoCompact.enabled": "true",
-
-    # ML-specific
-    "spark.databricks.ml.autolog.enabled": "true",  # Enable MLflow autologging
 }
+
+# MLflow autologging is not a Spark conf: Databricks Autologging is available on
+# Databricks Runtime 10.4 LTS ML and above, and an admin can switch it on/off
+# for the workspace. In a notebook, opt out with mlflow.autolog(disable=True).
 ```
 
 ## Cost Optimization Strategies
@@ -338,7 +371,7 @@ def calculate_cluster_cost(num_workers, hours, price_per_dbu):
 
 ```python
 %python
-from databricks_.sdk import WorkspaceClient
+from databricks.sdk import WorkspaceClient
 
 # Initialize client
 
@@ -348,37 +381,33 @@ w = WorkspaceClient()
 
 cluster_create_request = {
     "cluster_name": "ml_training_prod",
-    "spark_version": "14.3.x-ml-scala2.12",
+    "spark_version": "14.3.x-cpu-ml-scala2.12",
     "num_workers": 8,
     "node_type_id": "i3.2xlarge",
     "driver_node_type_id": "i3.2xlarge",
     "spark_conf": {
         "spark.databricks.adaptive.execution.enabled": "true",
-        "spark.databricks.ml.autolog.enabled": "true",
         "spark.databricks.delta.optimizeWrite.enabled": "true"
     },
     "aws_attributes": {
         "availability": "SPOT_WITH_FALLBACK",
         "zone_id": "us-west-2a"
     },
-    "idle_timeout_minutes": 30,
+    "autotermination_minutes": 30,
     "enable_elastic_disk": True,
-    "cluster_log_conf": {
-        "dbfs": {
-            "destination": "dbfs:/cluster-logs/ml-training/"
-        }
-    },
+    "data_security_mode": "SINGLE_USER",  # Dedicated access mode for UC data on an ML runtime
+    "single_user_name": "ml-team@company.com",
     "init_scripts": [{
-        "dbfs": {
-            "destination": "dbfs:/init-scripts/ml-requirements.sh"
+        "workspace": {
+            "destination": "/Workspace/Shared/init-scripts/ml-requirements.sh"
         }
     }]
 }
 
-# Create cluster
+# Create cluster through the Clusters REST API (raw JSON body)
 
-cluster = w.clusters.create(**cluster_create_request)
-print(f"Created cluster: {cluster.cluster_id}")
+resp = w.api_client.do("POST", "/api/2.1/clusters/create", body=cluster_create_request)
+print(f"Created cluster: {resp['cluster_id']}")
 ```
 
 ## Comparison: Cluster Types for ML
@@ -400,10 +429,10 @@ print(f"Created cluster: {cluster.cluster_id}")
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### ML Libraries Missing on the Cluster
 
-**Scenario:** The default settings for Compute Clusters for ML do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Compute Clusters for ML to handle production-scale workloads.
+**Scenario:** `import xgboost` or `from databricks import automl` fails in a notebook.
+**Fix:** The cluster is on the standard runtime. Switch to a Databricks Runtime ML version (AutoML is not built in from Databricks Runtime 18.0 ML), rather than installing a stack by hand with init scripts.
 
 ### GPU Cluster Out of Memory
 
@@ -412,6 +441,7 @@ print(f"Created cluster: {cluster.cluster_id}")
 
 ## Exam Tips
 
+- ✅ Name the advantages of the ML runtime: pre-installed, version-compatible ML libraries + MLflow + AutoML, GPU variants
 - ✅ Know cluster vs job cluster trade-offs
 - ✅ Understand auto-scaling configuration
 - ✅ Recognize instance types and their use cases
@@ -421,6 +451,7 @@ print(f"Created cluster: {cluster.cluster_id}")
 
 ## Key Takeaways
 
+- The ML runtime removes environment setup: ML/DL libraries, MLflow, and AutoML come pre-installed and tested together
 - All-purpose clusters for development, job clusters for production
 - Autoscaling enables cost-effective handling of variable workloads
 - Instance type selection depends on workload (CPU, memory, GPU)
@@ -430,15 +461,16 @@ print(f"Created cluster: {cluster.cluster_id}")
 
 ## Related Topics
 
-- [Databricks ML Workspace](01-databricks-ml-workspace.md)
-- [Databricks AutoML](03-databricks-automl.md)
-- [ML Experimentation Workflow](../03-ml-workflows/03-ml-experimentation-workflow.md)
+- [Databricks ML Workspace](./01-databricks-ml-workspace.md)
+- [Databricks AutoML](./03-databricks-automl.md)
+- [Hyperparameter Tuning](../03-model-development/02-hyperparameter-tuning.md) — parallelising single-node models across a cluster
 
 ## Official Documentation
 
-- [Compute Configuration](https://docs.databricks.com/compute/configure.html)
-- [Cluster Best Practices](https://docs.databricks.com/compute/clusters-manage.html)
+- [Databricks Runtime for Machine Learning](https://docs.databricks.com/aws/en/machine-learning/databricks-runtime-ml)
+- [Compute Configuration](https://docs.databricks.com/aws/en/compute/configure)
+- [Databricks Autologging](https://docs.databricks.com/aws/en/mlflow/databricks-autologging)
 
 ---
 
-**[← Previous: Databricks ML Workspace & Notebooks](./01-databricks-ml-workspace.md) | [↑ Back to Databricks ML](./README.md) | [Next: Databricks AutoML](./03-databricks-automl.md) →**
+**[← Previous: Databricks ML Workspace & Notebooks](./01-databricks-ml-workspace.md) | [↑ Back to Section](./README.md) | [Next: Databricks AutoML →](./03-databricks-automl.md)**

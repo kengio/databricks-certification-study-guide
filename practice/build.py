@@ -51,7 +51,7 @@ CERT_TITLES = {
     "data-engineer-associate": ("Data Engineer Associate", "May 2026"),
     "data-engineer-professional": ("Data Engineer Professional", "Nov 30, 2025"),
     "data-analyst-associate": ("Data Analyst Associate", "Oct 2025"),
-    "ml-associate": ("ML Associate", "Mar 1, 2025"),
+    "ml-associate": ("ML Associate", "Mar 1, 2025 (Aug 2026 guide)"),
     "ml-professional": ("ML Professional", "Sep 2025"),
     "genai-engineer-associate": ("GenAI Engineer Associate", "Mar 18, 2026"),
 }

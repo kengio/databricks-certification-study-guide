@@ -1,32 +1,56 @@
 {
   "cert": "ml-associate",
   "certTitle": "ML Associate",
-  "blueprintVersion": "Mar 1, 2025",
-  "generated": "2026-05-22",
+  "blueprintVersion": "Mar 1, 2025 (Aug 2026 guide)",
+  "generated": "2026-10-26",
   "domains": [
     {
       "id": "databricks-ml",
-      "name": "Practice Questions — Databricks ML (Domain 1)",
+      "name": "Practice Questions — Databricks ML: Runtimes, Compute & AutoML (Section 1)",
       "sourceFile": "certifications/ml-associate/resources/practice-questions/01-databricks-ml.md",
       "questionCount": 13
     },
     {
       "id": "ml-workflows",
-      "name": "Practice Questions — ML Workflows (Domain 2)",
+      "name": "Practice Questions — MLflow Tracking & Experiments (Section 1)",
       "sourceFile": "certifications/ml-associate/resources/practice-questions/02-ml-workflows.md",
       "questionCount": 13
     },
     {
       "id": "feature-engineering",
-      "name": "Practice Questions — Feature Engineering (Domain 3)",
+      "name": "Practice Questions — Spark ML Pipelines, Tuning & Feature Tables (Sections 1 & 3)",
       "sourceFile": "certifications/ml-associate/resources/practice-questions/03-feature-engineering.md",
-      "questionCount": 14
+      "questionCount": 15
     },
     {
       "id": "mlflow-deployment",
-      "name": "Practice Questions — MLflow Deployment (Domain 4)",
+      "name": "Practice Questions — Model Registry & Deployment (Sections 1 & 4)",
       "sourceFile": "certifications/ml-associate/resources/practice-questions/04-mlflow-deployment.md",
-      "questionCount": 6
+      "questionCount": 8
+    },
+    {
+      "id": "unity-catalog-mlops",
+      "name": "Practice Questions — Unity Catalog, MLOps & MLflow Client (Section 1)",
+      "sourceFile": "certifications/ml-associate/resources/practice-questions/05-unity-catalog-mlops.md",
+      "questionCount": 14
+    },
+    {
+      "id": "data-processing",
+      "name": "Practice Questions — Data Processing (Section 2)",
+      "sourceFile": "certifications/ml-associate/resources/practice-questions/06-data-processing.md",
+      "questionCount": 15
+    },
+    {
+      "id": "model-development",
+      "name": "Practice Questions — Model Development (Section 3)",
+      "sourceFile": "certifications/ml-associate/resources/practice-questions/07-model-development.md",
+      "questionCount": 18
+    },
+    {
+      "id": "model-deployment",
+      "name": "Practice Questions — Model Deployment (Section 4)",
+      "sourceFile": "certifications/ml-associate/resources/practice-questions/08-model-deployment.md",
+      "questionCount": 11
     }
   ],
   "questions": [
@@ -38,12 +62,12 @@
       "question": "Which of the following libraries is pre-installed in the Databricks Runtime for Machine Learning but NOT in the standard Databricks Runtime?",
       "choices": {
         "A": "Apache Spark",
-        "B": "MLflow",
+        "B": "Delta Lake",
         "C": "pandas",
-        "D": "Delta Lake"
+        "D": "MLflow"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "The Databricks Runtime for ML pre-installs MLflow, TensorFlow, PyTorch, and scikit-learn on top of the standard Databricks Runtime. Apache Spark, pandas, and Delta Lake are all included in the standard runtime.",
+      "correctAnswer": "D",
+      "shortAnswer": "The Databricks Runtime for ML adds a pre-installed, version-tested ML stack — MLflow, PyTorch, TensorFlow, scikit-learn, XGBoost, and more — on top of the standard Databricks Runtime. Apache Spark, pandas, and Delta Lake are already part of the standard runtime.",
       "explanation": ""
     },
     {
@@ -54,11 +78,11 @@
       "question": "A data scientist is training a scikit-learn model on a 500 MB dataset that fits entirely in memory. Which cluster type is most appropriate?",
       "choices": {
         "A": "Multi-node cluster with 4 workers",
-        "B": "Single-node cluster",
+        "B": "Multi-node cluster with autoscaling enabled",
         "C": "High-concurrency cluster",
-        "D": "Multi-node cluster with autoscaling enabled"
+        "D": "Single-node cluster"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Single-node clusters are ideal for workloads that use libraries without native Spark support, such as scikit-learn, and for datasets that fit in memory. Using a multi-node cluster adds distributed computing overhead with no benefit for non-distributed workloads.",
       "explanation": ""
     },
@@ -86,12 +110,12 @@
       "question": "After running a Databricks AutoML experiment, where are the results stored?",
       "choices": {
         "A": "A Delta table in the default catalog",
-        "B": "A set of Python scripts in a Repos folder",
+        "B": "A set of Python scripts in a Git folder",
         "C": "An MLflow experiment with one run per trial",
         "D": "A JSON configuration file in DBFS"
       },
       "correctAnswer": "C",
-      "shortAnswer": "AutoML automatically creates and populates an MLflow experiment. Each trial is logged as a separate MLflow run with its parameters, metrics, and model artifact. The best model is also accompanied by an editable notebook that can be used as a starting point for further experimentation.",
+      "shortAnswer": "AutoML automatically creates and populates an MLflow experiment. Each trial is logged as a separate MLflow run with its parameters, metrics, and model artifact. For classification and regression, the best-trial notebook and a data exploration notebook are imported into the workspace as editable starting points.",
       "explanation": ""
     },
     {
@@ -102,11 +126,11 @@
       "question": "A platform engineer wants to prevent data science teams from launching GPU clusters without explicit approval. What is the best approach?",
       "choices": {
         "A": "Document a policy in a wiki and ask teams to follow it",
-        "B": "Create a cluster policy that restricts node type to CPU instance types only",
+        "B": "Restrict Unity Catalog permissions for the data science teams",
         "C": "Set up a budget alert that notifies the engineer when GPU spend exceeds a threshold",
-        "D": "Restrict Unity Catalog permissions for the data science teams"
+        "D": "Create a cluster policy that restricts node type to CPU instance types only"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Cluster policies allow administrators to enforce cluster configuration constraints, including restricting the allowed instance types to non-GPU options. Policies are enforced at the platform level and cannot be bypassed by regular users.",
       "explanation": ""
     },
@@ -123,7 +147,7 @@
         "D": "Databricks Runtime Photon"
       },
       "correctAnswer": "C",
-      "shortAnswer": "Databricks Runtime ML GPU includes CUDA, cuDNN, and GPU-optimized versions of deep learning libraries such as PyTorch and TensorFlow. The standard ML Runtime does not include GPU drivers. The standard Runtime and Photon Runtime do not include ML-specific pre-installed libraries.",
+      "shortAnswer": "The GPU variant of the ML runtime (selected when you choose a GPU instance type with an ML runtime) includes the GPU drivers and GPU-enabled builds of deep learning libraries such as PyTorch and TensorFlow. The CPU ML runtime has no GPU drivers, and the standard runtime (with or without Photon) does not include the ML library stack.",
       "explanation": ""
     },
     {
@@ -131,32 +155,32 @@
       "domain": "databricks-ml",
       "title": "Notebook %run Directive",
       "difficulty": "easy",
-      "question": "A team stores common data preprocessing utility functions in a notebook called `utils.py`. What is the correct way to execute that notebook's code in another notebook?",
+      "question": "A team stores common data preprocessing utility functions in a notebook called `utils` in the same folder. What is the correct way to execute that notebook's code in another notebook so its functions become available?",
       "choices": {
         "A": "`import utils`",
-        "B": "`%run ./utils`",
+        "B": "`spark.sql(\"RUN NOTEBOOK utils\")`",
         "C": "`dbutils.notebook.run(\"utils\", 60)`",
-        "D": "`spark.sql(\"RUN NOTEBOOK utils\")`"
+        "D": "`%run ./utils`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "The `%run` magic command executes another notebook in the context of the current notebook, making all defined functions and variables available in the current scope. `dbutils.notebook.run()` also executes a notebook but runs it in a separate context and only returns a string result, not the defined variables.",
       "explanation": ""
     },
     {
       "id": "01-databricks-ml-q008",
       "domain": "databricks-ml",
-      "title": "Databricks Repos Version Control",
+      "title": "Git Folders Version Control",
       "difficulty": "easy",
       "question": "A data scientist wants to track changes to their model training notebooks using Git. What Databricks feature should they use?",
       "choices": {
         "A": "Delta Lake change data feed",
         "B": "MLflow run history",
-        "C": "Databricks Repos",
+        "C": "Databricks Git folders (formerly Repos)",
         "D": "Lakeflow Jobs"
       },
       "correctAnswer": "C",
-      "shortAnswer": "Databricks Repos integrates with Git providers (GitHub, GitLab, Bitbucket, Azure DevOps) and allows you to version-control notebooks and code directly from the Databricks workspace. Delta Lake change data feed tracks table changes, MLflow run history tracks experiment results, and Lakeflow Jobs orchestrate workloads.",
-      "explanation": ""
+      "shortAnswer": "Git folders (formerly called Databricks Repos) integrate with Git providers such as GitHub, GitLab, Bitbucket, and Azure DevOps, so notebooks and code can be version-controlled directly from the workspace — the foundation of a \"deploy code\" MLOps workflow.",
+      "explanation": "Delta Lake change data feed tracks table changes, MLflow run history tracks experiment results, and Lakeflow Jobs orchestrate workloads."
     },
     {
       "id": "01-databricks-ml-q009",
@@ -166,11 +190,11 @@
       "question": "When configuring a Databricks AutoML forecasting experiment, which column is required in addition to the target variable?",
       "choices": {
         "A": "A feature importance column",
-        "B": "A time column",
+        "B": "A row ID column",
         "C": "A grouping column",
-        "D": "A row ID column"
+        "D": "A time column"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "AutoML forecasting requires a time column that identifies the time step for each observation. The time column is mandatory because forecasting is inherently a time-series problem. A grouping column is optional (for multi-series forecasting). Feature importance and row ID columns are not required inputs.",
       "explanation": ""
     },
@@ -179,16 +203,16 @@
       "domain": "databricks-ml",
       "title": "Standard vs ML Runtime",
       "difficulty": "medium",
-      "question": "A data scientist wants to use the `mlflow.autolog()` function in a notebook. They notice the function is not available. What is the most likely cause?",
+      "question": "A data scientist expects every scikit-learn training call in their notebook to be tracked automatically, with no MLflow code, but no runs appear. Which cluster choice is the most likely cause?",
       "choices": {
         "A": "The cluster is running the standard Databricks Runtime instead of Databricks Runtime ML",
         "B": "The cluster has autoscaling disabled",
-        "C": "The notebook is attached to a shared cluster",
-        "D": "The MLflow tracking server is offline"
+        "C": "The cluster uses spot instances for workers",
+        "D": "The cluster has auto-termination set to 30 minutes"
       },
       "correctAnswer": "A",
-      "shortAnswer": "MLflow is pre-installed on Databricks Runtime ML. On standard Databricks Runtime, MLflow may not be installed or may be a different version. The correct solution is to switch to Databricks Runtime ML, which includes a compatible version of MLflow out of the box.",
-      "explanation": ""
+      "shortAnswer": "Databricks Autologging is available on Databricks Runtime 10.4 LTS ML and above: on an ML runtime, supported frameworks such as scikit-learn are tracked automatically. On a standard runtime you would have to install MLflow yourself and call `mlflow.autolog()` explicitly.",
+      "explanation": "Autoscaling, spot instances, and auto-termination affect cost and capacity, not MLflow tracking."
     },
     {
       "id": "01-databricks-ml-q011",
@@ -198,11 +222,11 @@
       "question": "Which of the following workloads benefits MOST from using a multi-node Spark cluster instead of a single-node cluster?",
       "choices": {
         "A": "Training a logistic regression model with scikit-learn on a 1 GB CSV file",
-        "B": "Training a distributed gradient-boosted tree using Spark ML on a 500 GB Delta table",
+        "B": "Visualizing model performance with matplotlib",
         "C": "Running a hyperparameter sweep with Optuna on a single machine",
-        "D": "Visualizing model performance with matplotlib"
+        "D": "Training a distributed gradient-boosted tree using Spark ML on a 500 GB Delta table"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Multi-node clusters are beneficial when the workload can be parallelized across workers. Training a Spark ML model on a large Delta table leverages distributed computation. scikit-learn, Optuna, and matplotlib do not distribute work across Spark workers, so they receive no benefit from additional nodes.",
       "explanation": ""
     },
@@ -214,11 +238,11 @@
       "question": "After completing an AutoML experiment, a data scientist wants to retrain and customize the best model. What does AutoML provide to enable this?",
       "choices": {
         "A": "A compiled binary model file that can be fine-tuned",
-        "B": "A generated Python notebook containing the training code for the best model",
+        "B": "A Delta table containing the best model's feature importances",
         "C": "A REST API endpoint that exposes the best model's hyperparameters",
-        "D": "A Delta table containing the best model's feature importances"
+        "D": "A generated Python notebook containing the training code for the best model"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Databricks AutoML generates an editable Python notebook for the best model. This notebook contains all the code to reproduce and customize the model, including feature engineering, training, and MLflow logging. The data scientist can clone and modify this notebook as a starting point.",
       "explanation": ""
     },
@@ -230,11 +254,11 @@
       "question": "A platform administrator wants to ensure that ML training clusters are automatically terminated after 30 minutes of inactivity to reduce costs. Where is this configured?",
       "choices": {
         "A": "In the cluster policy definition",
-        "B": "In the cluster's auto-termination setting",
+        "B": "In the MLflow experiment configuration",
         "C": "In the Databricks workflow job settings",
-        "D": "In the MLflow experiment configuration"
+        "D": "In the cluster's auto-termination setting"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Each cluster has an auto-termination setting that specifies the number of minutes of inactivity before the cluster is shut down. This is configured directly on the cluster (or enforced via a cluster policy). It is independent of workflow job settings and MLflow configuration.",
       "explanation": ""
     },
@@ -246,11 +270,11 @@
       "question": "A data scientist writes the following code. What happens when the `with` block exits normally?\n\n```python\nwith mlflow.start_run():\n    mlflow.log_param(\"alpha\", 0.5)\n    mlflow.log_metric(\"rmse\", 1.23)\n```",
       "choices": {
         "A": "The run stays open until `mlflow.end_run()` is called manually",
-        "B": "The run is automatically ended and its status is set to FINISHED",
+        "B": "The run parameters and metrics are discarded",
         "C": "The run is automatically ended and its status is set to FAILED",
-        "D": "The run parameters and metrics are discarded"
+        "D": "The run is automatically ended and its status is set to FINISHED"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "When used as a context manager, `mlflow.start_run()` automatically calls `mlflow.end_run()` when the `with` block exits. If the block exits normally (no exception), the run status is set to FINISHED. If an exception is raised, the run status is set to FAILED.",
       "explanation": ""
     },
@@ -262,11 +286,11 @@
       "question": "A data scientist wants to log three metrics at once — `accuracy`, `precision`, and `recall` — without writing three separate log calls. Which function signature is correct?",
       "choices": {
         "A": "`mlflow.log_metric({\"accuracy\": 0.9, \"precision\": 0.85, \"recall\": 0.88})`",
-        "B": "`mlflow.log_metrics({\"accuracy\": 0.9, \"precision\": 0.85, \"recall\": 0.88})`",
+        "B": "`mlflow.log_metric(\"accuracy\", \"precision\", \"recall\", [0.9, 0.85, 0.88])`",
         "C": "`mlflow.log_metrics(accuracy=0.9, precision=0.85, recall=0.88)`",
-        "D": "`mlflow.log_metric(\"accuracy\", \"precision\", \"recall\", [0.9, 0.85, 0.88])`"
+        "D": "`mlflow.log_metrics({\"accuracy\": 0.9, \"precision\": 0.85, \"recall\": 0.88})`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.log_metrics()` (plural) accepts a dictionary of metric name to numeric value. `mlflow.log_metric()` (singular) accepts a single name-value pair. Neither function accepts keyword arguments or positional lists for multiple metrics.",
       "explanation": ""
     },
@@ -326,11 +350,11 @@
       "question": "A data scientist wants to save a confusion matrix image file (`confusion_matrix.png`) as part of their MLflow run. Which code is correct?",
       "choices": {
         "A": "`mlflow.log_metric(\"confusion_matrix\", \"confusion_matrix.png\")`",
-        "B": "`mlflow.log_artifact(\"confusion_matrix.png\")`",
+        "B": "`mlflow.save_artifact(\"confusion_matrix.png\")`",
         "C": "`mlflow.log_param(\"confusion_matrix\", \"confusion_matrix.png\")`",
-        "D": "`mlflow.save_artifact(\"confusion_matrix.png\")`"
+        "D": "`mlflow.log_artifact(\"confusion_matrix.png\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.log_artifact(local_path)` uploads a local file to the run's artifact store. Metrics are numeric values, parameters are string key-value pairs, and `save_artifact` is not a valid MLflow function.",
       "explanation": ""
     },
@@ -342,11 +366,11 @@
       "question": "What is the relationship between an MLflow experiment and an MLflow run?",
       "choices": {
         "A": "An experiment is a single training attempt; a run is a collection of experiments",
-        "B": "An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts",
+        "B": "A run contains multiple experiments, each representing a different dataset",
         "C": "An experiment and a run are the same concept with different names",
-        "D": "A run contains multiple experiments, each representing a different dataset"
+        "D": "An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "In MLflow, an **experiment** is a named container that groups related runs. A **run** represents a single execution of training code, capturing parameters, metrics, artifacts, and metadata. One experiment can contain many runs, making it easy to compare different model configurations.",
       "explanation": ""
     },
@@ -358,11 +382,11 @@
       "question": "A data scientist is running a hyperparameter sweep and wants to create a parent run that tracks the sweep, with each individual trial as a child run. Which code correctly creates a child run inside an existing parent run?",
       "choices": {
         "A": "`mlflow.start_run(parent=True)`",
-        "B": "`mlflow.start_run(nested=True)`",
+        "B": "`mlflow.start_run(run_type=\"child\")`",
         "C": "`mlflow.start_child_run()`",
-        "D": "`mlflow.start_run(run_type=\"child\")`"
+        "D": "`mlflow.start_run(nested=True)`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.start_run(nested=True)` creates a child run within the currently active parent run. There is no `parent=True`, `start_child_run()`, or `run_type` parameter in the MLflow API.",
       "explanation": ""
     },
@@ -374,29 +398,29 @@
       "question": "A data scientist generates multiple output files in a local directory called `./outputs/` and wants to log all of them as artifacts. Which function should they use?",
       "choices": {
         "A": "`mlflow.log_artifact(\"./outputs/\")`",
-        "B": "`mlflow.log_artifacts(\"./outputs/\")`",
+        "B": "`mlflow.log_model(\"./outputs/\")`",
         "C": "`mlflow.log_artifact(\"./outputs/*\")`",
-        "D": "`mlflow.log_model(\"./outputs/\")`"
+        "D": "`mlflow.log_artifacts(\"./outputs/\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`mlflow.log_artifacts(local_dir)` (plural) uploads all files in a local directory to the artifact store. `mlflow.log_artifact(local_path)` (singular) uploads a single file. Glob patterns are not supported, and `log_model` is for ML model objects, not arbitrary files.",
       "explanation": ""
     },
     {
       "id": "02-ml-workflows-q010",
       "domain": "ml-workflows",
-      "title": "Workspace vs Model Experiments",
+      "title": "Notebook vs Workspace Experiments",
       "difficulty": "medium",
-      "question": "When a data scientist registers a model in the MLflow Model Registry, which type of experiment is automatically associated with model versions?",
+      "question": "A data scientist runs `mlflow.start_run()` in a Databricks notebook without ever calling `mlflow.set_experiment()`. Where is the run logged?",
       "choices": {
-        "A": "Workspace experiment",
-        "B": "Model experiment",
-        "C": "Registry experiment",
-        "D": "Production experiment"
+        "A": "To the notebook's own experiment, which Databricks associates with the notebook",
+        "B": "To a workspace experiment that an admin must create first",
+        "C": "To a registry experiment attached to the Unity Catalog schema",
+        "D": "Nowhere — the call fails until an experiment is set"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "Databricks MLflow supports two types of experiments: workspace experiments (created manually by users in the workspace) and model experiments (automatically created for each registered model in the Model Registry). Model experiments store runs associated with registered model versions.",
-      "explanation": ""
+      "correctAnswer": "A",
+      "shortAnswer": "On Databricks, a notebook has a default **notebook experiment**; runs started without `set_experiment()` are logged there. **Workspace experiments** are created explicitly (UI or `mlflow.set_experiment(\"/path\")`) and can collect runs from many notebooks or jobs.",
+      "explanation": "There is no \"registry experiment\" type, and the call does not fail."
     },
     {
       "id": "02-ml-workflows-q011",
@@ -406,11 +430,11 @@
       "question": "A data scientist has run 10 experiments with different hyperparameters and wants to visually compare their metrics. Which MLflow UI feature enables this?",
       "choices": {
         "A": "The artifact browser in each individual run",
-        "B": "The \"Compare\" feature on the Experiments page, which creates parallel coordinate plots and scatter plots",
+        "B": "The run tags section, which can be filtered by metric value",
         "C": "The model registry page, which shows metric comparisons across versions",
-        "D": "The run tags section, which can be filtered by metric value"
+        "D": "The \"Compare\" feature on the Experiments page, which creates parallel coordinate plots and scatter plots"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "The MLflow Experiments page allows you to select multiple runs and click \"Compare\" to view parallel coordinate plots, scatter plots, and metric comparison tables. This makes it straightforward to identify which hyperparameter combinations produced the best results. The artifact browser, model registry page, and run tags do not provide side-by-side metric comparison views.",
       "explanation": ""
     },
@@ -453,12 +477,12 @@
       "difficulty": "easy",
       "question": "A data scientist wants to use `VectorAssembler` to combine columns `age`, `income`, and `credit_score` into a single feature vector column called `features`. Which code is correct?",
       "choices": {
-        "A": "`VectorAssembler(inputCol=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
-        "B": "`VectorAssembler(inputCols=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
+        "A": "`VectorAssembler(inputCols=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
+        "B": "`VectorAssembler(inputCol=[\"age\", \"income\", \"credit_score\"], outputCol=\"features\")`",
         "C": "`VectorAssembler(columns=[\"age\", \"income\", \"credit_score\"], output=\"features\")`",
         "D": "`VectorAssembler(features=[\"age\", \"income\", \"credit_score\"], label=\"features\")`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`VectorAssembler` requires `inputCols` (plural, a list of column names) and `outputCol` (singular, the output column name). Using `inputCol` (singular) is the common mistake — `VectorAssembler` always takes a list, so the parameter is always plural. The other options use non-existent parameter names.",
       "explanation": ""
     },
@@ -470,11 +494,11 @@
       "question": "A data scientist wants to one-hot encode a categorical column `color`. Which stage ordering in the Pipeline is correct?",
       "choices": {
         "A": "`OneHotEncoder` → `StringIndexer`",
-        "B": "`StringIndexer` → `OneHotEncoder`",
+        "B": "`OneHotEncoder` can be applied directly to a string column without `StringIndexer`",
         "C": "`VectorAssembler` → `StringIndexer` → `OneHotEncoder`",
-        "D": "`OneHotEncoder` can be applied directly to a string column without `StringIndexer`"
+        "D": "`StringIndexer` → `OneHotEncoder`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`StringIndexer` must come before `OneHotEncoder`. `StringIndexer` converts string categories to numeric indices (e.g., \"red\" → 0, \"blue\" → 1). `OneHotEncoder` then converts those integer indices into sparse binary vectors. `OneHotEncoder` does not accept raw string columns — it requires numeric index input.",
       "explanation": ""
     },
@@ -485,12 +509,12 @@
       "difficulty": "medium",
       "question": "A data scientist creates a `Pipeline` with a `StringIndexer` and a `LogisticRegression` estimator. They call `pipeline.fit(train_df)`. What is returned?",
       "choices": {
-        "A": "A trained `LogisticRegressionModel` object",
-        "B": "A `PipelineModel` object containing fitted stages",
+        "A": "A `PipelineModel` object containing fitted stages",
+        "B": "A trained `LogisticRegressionModel` object",
         "C": "The original `Pipeline` object with updated parameters",
         "D": "A pandas DataFrame with predictions"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`Pipeline.fit(df)` returns a `PipelineModel`, not a single model object. The `PipelineModel` contains all the fitted stages — in this case, a fitted `StringIndexerModel` and a fitted `LogisticRegressionModel`. You then call `pipeline_model.transform(test_df)` to generate predictions.",
       "explanation": ""
     },
@@ -527,6 +551,22 @@
       "explanation": ""
     },
     {
+      "id": "03-feature-engineering-q006",
+      "domain": "feature-engineering",
+      "title": "ParamGridBuilder Syntax",
+      "difficulty": "medium",
+      "question": "A data scientist wants to search over two values of `regParam` (0.01 and 0.1) and two values of `maxIter` (10 and 100) for a `LogisticRegression` model. Which code correctly builds the parameter grid?",
+      "choices": {
+        "A": "`ParamGridBuilder().addGrid(lr.regParam, [0.01, 0.1]).addGrid(lr.maxIter, [10, 100]).build()`",
+        "B": "`ParamGridBuilder().add(lr.regParam, [0.01, 0.1]).add(lr.maxIter, [10, 100])`",
+        "C": "`ParamGridBuilder(lr.regParam=[0.01, 0.1], lr.maxIter=[10, 100]).build()`",
+        "D": "`{\"regParam\": [0.01, 0.1], \"maxIter\": [10, 100]}` passed directly as `estimatorParamMaps`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`ParamGridBuilder` uses a builder pattern with chained `.addGrid(param, values)` calls followed by `.build()`, which returns the list of param maps (here 2 × 2 = 4 combinations). The `param` argument must be the actual parameter object from the estimator (e.g., `lr.regParam`), not a string.",
+      "explanation": "There is no `.add()` method, the constructor does not accept keyword arguments, and a plain dictionary is not a valid `estimatorParamMaps` value."
+    },
+    {
       "id": "03-feature-engineering-q007",
       "domain": "feature-engineering",
       "title": "CrossValidator vs TrainValidationSplit",
@@ -534,76 +574,76 @@
       "question": "A data scientist has a small dataset of 5,000 rows. They want to select hyperparameters using the most statistically reliable method. Which Spark ML class should they use?",
       "choices": {
         "A": "`TrainValidationSplit` — it is faster and more reliable on small datasets",
-        "B": "`CrossValidator` — it performs k-fold cross-validation, providing more reliable estimates on small datasets",
+        "B": "`Pipeline` — it automatically performs cross-validation when `numFolds` is set",
         "C": "`ParamGridBuilder` — it directly selects the best hyperparameter combination",
-        "D": "`Pipeline` — it automatically performs cross-validation when `numFolds` is set"
+        "D": "`CrossValidator` — it performs k-fold cross-validation, providing more reliable estimates on small datasets"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`CrossValidator` performs k-fold cross-validation, which provides more reliable hyperparameter estimates because every data point is used for both training and validation across different folds. This is especially valuable on small datasets. `TrainValidationSplit` uses a single random split, which is faster but less reliable on small datasets. `ParamGridBuilder` and `Pipeline` do not perform cross-validation themselves.",
       "explanation": ""
     },
     {
       "id": "03-feature-engineering-q008",
       "domain": "feature-engineering",
-      "title": "Feature Store create_feature_table Primary Keys",
+      "title": "Feature Table Primary Keys in Unity Catalog",
       "difficulty": "easy",
-      "question": "A data scientist calls `FeatureStoreClient.create_feature_table()` without specifying `primary_keys`. What happens?",
+      "question": "A data scientist calls `FeatureEngineeringClient().create_table(name=\"ml.features.customers\", df=features_df)` without specifying `primary_keys`. What happens?",
       "choices": {
-        "A": "The feature table is created with an auto-generated UUID as the primary key",
-        "B": "An error is raised because `primary_keys` is a required parameter",
+        "A": "The call fails because `primary_keys` is a required argument",
+        "B": "The feature table is created with an auto-generated UUID as the primary key",
         "C": "The feature table is created with no primary key, allowing duplicate rows",
         "D": "The feature table is created using the first column as the default primary key"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "`primary_keys` is a required parameter for `create_feature_table()`. The Feature Store uses primary keys to identify rows for point-in-time lookups, online store publishing, and feature retrieval during model inference. There is no default primary key behavior — omitting `primary_keys` raises a `ValueError`.",
-      "explanation": ""
+      "correctAnswer": "A",
+      "shortAnswer": "`primary_keys` is a required argument of `FeatureEngineeringClient.create_table` (it has no default). In Unity Catalog a feature table *is* a Delta table with a primary key; the key is what lookups, training-set joins, `score_batch`, and online publishing use to find rows.",
+      "explanation": "No key is ever invented for you. The legacy workspace `FeatureStoreClient.create_table` also required primary keys."
     },
     {
       "id": "03-feature-engineering-q009",
       "domain": "feature-engineering",
-      "title": "Feature Store write_table Modes",
+      "title": "Writing to a Feature Table",
       "difficulty": "medium",
-      "question": "A data scientist wants to update an existing feature table with new rows, preserving existing rows that are not in the new DataFrame. Which `write_table()` mode should they use?",
+      "question": "A data scientist wants to update an existing Unity Catalog feature table with new and changed rows while preserving existing rows that are not in the new DataFrame. Which `FeatureEngineeringClient.write_table()` call is correct?",
       "choices": {
-        "A": "`mode=\"overwrite\"` — replaces all existing data with the new DataFrame",
-        "B": "`mode=\"append\"` — adds new rows without touching existing rows",
-        "C": "`mode=\"merge\"` — upserts rows based on primary keys, updating existing and inserting new",
-        "D": "`mode=\"update\"` — updates only the rows present in the new DataFrame"
+        "A": "`fe.write_table(name=..., df=new_df, mode=\"overwrite\")`",
+        "B": "`fe.write_table(name=..., df=new_df, mode=\"append\")`",
+        "C": "`fe.write_table(name=..., df=new_df, mode=\"merge\")`",
+        "D": "`fe.write_table(name=..., df=new_df, mode=\"update\")`"
       },
       "correctAnswer": "C",
-      "shortAnswer": "`mode=\"merge\"` performs an upsert operation: rows with matching primary keys are updated, and rows with new primary keys are inserted. Existing rows not present in the new DataFrame are preserved. `mode=\"overwrite\"` deletes all existing data first. `append` and `update` are not valid modes for `write_table()`.",
-      "explanation": ""
+      "shortAnswer": "`mode=\"merge\"` upserts by primary key: matching keys are updated, new keys are inserted, and rows whose key is not in the DataFrame stay unchanged. In `FeatureEngineeringClient` it is the only supported `write_table` mode (and the default).",
+      "explanation": "To fully replace the data you would delete rows or recreate the table first; `append` and `update` are not `write_table` modes."
     },
     {
       "id": "03-feature-engineering-q010",
       "domain": "feature-engineering",
-      "title": "Feature Store score_batch()",
+      "title": "Scoring with Feature Tables",
       "difficulty": "medium",
-      "question": "A data scientist wants to perform offline batch inference using the Databricks Feature Store. The model was trained with Feature Store features. Which function retrieves features and scores a batch of entities?",
+      "question": "A model was trained on Unity Catalog feature tables and logged with `fe.log_model(...)`. A data scientist has a DataFrame containing only `customer_id` values to score. Which call retrieves the features and scores the batch?",
       "choices": {
-        "A": "`FeatureStoreClient.predict(model_uri, entities_df)`",
-        "B": "`FeatureStoreClient.score_batch(model_uri, entities_df)`",
-        "C": "`mlflow.pyfunc.load_model(model_uri).transform(entities_df)`",
-        "D": "`FeatureStoreClient.get_table(feature_table_name).join(entities_df)`"
+        "A": "`fe.predict(model_uri, entities_df)`",
+        "B": "`mlflow.pyfunc.load_model(model_uri).transform(entities_df)`",
+        "C": "`fe.score_batch(model_uri=model_uri, df=entities_df)`",
+        "D": "`fe.read_table(name=feature_table_name).join(entities_df)`"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "`FeatureStoreClient.score_batch(model_uri, df)` performs offline batch inference by automatically retrieving the features specified in the model's feature lookup configuration, joining them with the input DataFrame, and applying the model. This eliminates manual feature retrieval and prevents train-serve skew.",
-      "explanation": ""
+      "correctAnswer": "C",
+      "shortAnswer": "`FeatureEngineeringClient.score_batch(model_uri, df)` reads the feature-lookup metadata packaged by `fe.log_model`, joins the required features to the input keys, and applies the model — the same feature definitions as training, so no training-serving skew.",
+      "explanation": "There is no `fe.predict`, a pyfunc model has `predict` rather than `transform`, and `read_table(...).join(...)` only fetches features without scoring."
     },
     {
       "id": "03-feature-engineering-q011",
       "domain": "feature-engineering",
       "title": "Point-in-Time Lookups",
       "difficulty": "medium",
-      "question": "Why does the Databricks Feature Store support point-in-time lookups?",
+      "question": "Why do feature tables in Unity Catalog support point-in-time lookups?",
       "choices": {
         "A": "To ensure features are computed faster using parallel processing",
-        "B": "To prevent data leakage by retrieving feature values as they existed at the time of each training label's event",
+        "B": "To automatically version all feature tables when new data is ingested",
         "C": "To allow real-time feature updates without retraining the model",
-        "D": "To automatically version all feature tables when new data is ingested"
+        "D": "To prevent data leakage by retrieving feature values as they existed at the time of each training label's event"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "Point-in-time lookups retrieve the feature values that were available at the exact moment each training label was generated. This prevents data leakage, which occurs when future information is used to predict a past event. For example, when predicting a customer's purchase at time T, only features available before or at time T should be used.",
+      "correctAnswer": "D",
+      "shortAnswer": "Point-in-time lookups (a `timestamp_lookup_key` on the `FeatureLookup`) retrieve the feature values that were available at the exact moment each training label was generated. This prevents data leakage, which occurs when future information is used to predict a past event. For example, when predicting a customer's purchase at time T, only features available before or at time T should be used.",
       "explanation": ""
     },
     {
@@ -619,7 +659,7 @@
         "D": "The production Delta table uses a different partition scheme"
       },
       "correctAnswer": "B",
-      "shortAnswer": "Train-serve skew occurs when the features used at training time are computed differently from those computed at serving time. Even small differences in logic (e.g., different null handling, different aggregation windows) can cause significant accuracy degradation. The Databricks Feature Store prevents this by centralizing feature definitions so both training and serving use the same computation logic.",
+      "shortAnswer": "Train-serve skew occurs when the features used at training time are computed differently from those computed at serving time. Even small differences in logic (e.g., different null handling, different aggregation windows) can cause significant accuracy degradation. Feature tables in Unity Catalog prevent this by centralizing feature definitions: a model logged with `fe.log_model` gets its features from the same tables at training, batch scoring, and serving time.",
       "explanation": ""
     },
     {
@@ -643,7 +683,7 @@
       "domain": "feature-engineering",
       "title": "Feature Lookup in Feature Store",
       "difficulty": "easy",
-      "question": "When training a model with the Databricks Feature Store, a data scientist specifies a `FeatureLookup`. What is the purpose of the `lookup_key` parameter?",
+      "question": "When building a training set from Unity Catalog feature tables, a data scientist specifies a `FeatureLookup`. What is the purpose of the `lookup_key` parameter?",
       "choices": {
         "A": "It specifies the primary key column in the feature table to join on",
         "B": "It specifies the MLflow run ID used to retrieve the feature values",
@@ -651,7 +691,7 @@
         "D": "It specifies the maximum number of features to retrieve"
       },
       "correctAnswer": "A",
-      "shortAnswer": "The `lookup_key` parameter in `FeatureLookup` specifies the column in the training dataset that maps to the primary key in the feature table. This enables the Feature Store to join the training DataFrame with the feature table to retrieve the correct feature values for each entity.",
+      "shortAnswer": "The `lookup_key` parameter in `FeatureLookup` specifies the column in the training dataset that maps to the primary key in the feature table. This enables `create_training_set` to join the training DataFrame with the feature table to retrieve the correct feature values for each entity.",
       "explanation": ""
     },
     {
@@ -675,48 +715,64 @@
       "domain": "mlflow-deployment",
       "title": "register_model URI Format",
       "difficulty": "easy",
-      "question": "A data scientist has trained a model and its `run_id` is `abc123`. The model was logged with `mlflow.sklearn.log_model(model, artifact_path=\"model\")`. Which URI correctly registers this model to the Model Registry?",
+      "question": "A data scientist has trained a model and its `run_id` is `abc123`. The model was logged with `mlflow.sklearn.log_model(model, artifact_path=\"model\")`. With the registry URI set to `databricks-uc`, which call registers it as `ml.fraud.detector` in Unity Catalog?",
       "choices": {
-        "A": "`mlflow.register_model(\"model/abc123\", \"fraud-detector\")`",
-        "B": "`mlflow.register_model(\"runs:/abc123/model\", \"fraud-detector\")`",
-        "C": "`mlflow.register_model(\"mlflow:/abc123/model\", \"fraud-detector\")`",
-        "D": "`mlflow.register_model(\"artifacts:/abc123/model\", \"fraud-detector\")`"
+        "A": "`mlflow.register_model(\"model/abc123\", \"ml.fraud.detector\")`",
+        "B": "`mlflow.register_model(\"runs:/abc123/model\", \"ml.fraud.detector\")`",
+        "C": "`mlflow.register_model(\"mlflow:/abc123/model\", \"ml.fraud.detector\")`",
+        "D": "`mlflow.register_model(\"artifacts:/abc123/model\", \"ml.fraud.detector\")`"
       },
       "correctAnswer": "B",
-      "shortAnswer": "The correct URI format for referencing a logged model artifact is `runs:/<run_id>/<artifact_path>`. In this case, the artifact path is `model` (the value passed to `artifact_path` in `log_model()`), so the full URI is `runs:/abc123/model`. The `mlflow:/` and `artifacts:/` schemes do not exist.",
-      "explanation": ""
+      "shortAnswer": "The URI for a model logged in a run is `runs:/<run_id>/<artifact_path>` — here `runs:/abc123/model` — and Unity Catalog model names are three-level `catalog.schema.model`. The `mlflow:/` and `artifacts:/` schemes do not exist.",
+      "explanation": "In MLflow 3, `log_model` also returns a `models:/<model_id>` URI you can register directly."
+    },
+    {
+      "id": "04-mlflow-deployment-q002",
+      "domain": "mlflow-deployment",
+      "title": "Promoting a Version with an Alias",
+      "difficulty": "medium",
+      "question": "Version 3 of the Unity Catalog model `ml.churn.predictor` has passed validation. Production scoring code loads `models:/ml.churn.predictor@champion`. Which call makes production use version 3?",
+      "choices": {
+        "A": "`MlflowClient().transition_model_version_stage(\"ml.churn.predictor\", 3, \"Production\")`",
+        "B": "`MlflowClient().set_registered_model_alias(\"ml.churn.predictor\", \"champion\", 3)`",
+        "C": "`MlflowClient().set_model_version_tag(\"ml.churn.predictor\", \"3\", \"champion\", \"true\")`",
+        "D": "`mlflow.register_model(\"models:/ml.churn.predictor/3\", \"ml.churn.predictor\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "In Unity Catalog, promotion means pointing an **alias** at a version: `set_registered_model_alias(name, \"champion\", 3)` moves `@champion` to version 3, and code that loads `models:/ml.churn.predictor@champion` picks it up without changes.",
+      "explanation": "Stage transitions are a legacy workspace-registry feature and are not supported in UC. A tag is descriptive metadata and changes nothing that is served. Re-registering creates yet another version."
     },
     {
       "id": "04-mlflow-deployment-q003",
       "domain": "mlflow-deployment",
-      "title": "Valid Model Registry Stages",
+      "title": "Stages vs Aliases in Unity Catalog",
       "difficulty": "easy",
-      "question": "Which of the following is NOT a valid stage in the MLflow Model Registry?",
+      "question": "A team migrating from the workspace model registry to Models in Unity Catalog asks which registry feature does **not** carry over. Which one is it?",
       "choices": {
-        "A": "Staging",
-        "B": "Production",
-        "C": "Archived",
-        "D": "Deprecated"
+        "A": "Numbered model versions",
+        "B": "Model stages such as `Staging` and `Production`",
+        "C": "Tags on registered models and model versions",
+        "D": "Loading a specific version with `models:/<name>/<version>`"
       },
-      "correctAnswer": "D",
-      "shortAnswer": "The four valid stages in the MLflow Model Registry are: **None** (newly registered, no stage assigned), **Staging** (under testing), **Production** (live serving), and **Archived** (retired). \"Deprecated\" is not a valid stage.",
-      "explanation": ""
+      "correctAnswer": "B",
+      "shortAnswer": "\"Stages are not supported for models in Unity Catalog.\" UC uses **aliases** (for example `@champion` / `@challenger`) plus separate catalogs per environment instead.",
+      "explanation": "Versions, tags, and version-number URIs all work in UC."
     },
     {
       "id": "04-mlflow-deployment-q004",
       "domain": "mlflow-deployment",
       "title": "Loading a Registered Model for Inference",
       "difficulty": "medium",
-      "question": "A data scientist wants to load the Production version of a model named `price-estimator` using its `models:/` URI. Which code is correct?",
+      "question": "A data scientist wants to load whichever version of the Unity Catalog model `ml.pricing.estimator` currently holds the `champion` alias, in a way that works for any model flavor. Which code is correct?",
       "choices": {
-        "A": "`model = mlflow.load_model(\"models:/price-estimator/Production\")`",
-        "B": "`model = mlflow.pyfunc.load_model(\"models:/price-estimator/Production\")`",
-        "C": "`model = MlflowClient().load_model(\"price-estimator\", stage=\"Production\")`",
-        "D": "`model = mlflow.sklearn.load_model(\"models:/price-estimator/Production\")`"
+        "A": "`model = mlflow.load_model(\"models:/ml.pricing.estimator@champion\")`",
+        "B": "`model = mlflow.pyfunc.load_model(\"models:/ml.pricing.estimator@champion\")`",
+        "C": "`model = MlflowClient().load_model(\"ml.pricing.estimator\", alias=\"champion\")`",
+        "D": "`model = mlflow.pyfunc.load_model(\"models:/ml.pricing.estimator/champion\")`"
       },
       "correctAnswer": "B",
-      "shortAnswer": "`mlflow.pyfunc.load_model()` is the generic loader that works with any model flavor using the `models:/name/stage` URI format. `mlflow.load_model()` does not exist. `MlflowClient().load_model()` does not exist. `mlflow.sklearn.load_model()` is flavor-specific and also accepts the `models:/` URI, but using `pyfunc` is the recommended approach for flexibility.",
-      "explanation": ""
+      "shortAnswer": "`mlflow.pyfunc.load_model()` is the flavor-agnostic loader, and `models:/<name>@<alias>` resolves an alias. `mlflow.load_model()` and `MlflowClient().load_model()` do not exist.",
+      "explanation": "`models:/<name>/<x>` expects a version number (or, in the legacy workspace registry, a stage) — `@` is the alias syntax."
     },
     {
       "id": "04-mlflow-deployment-q005",
@@ -728,11 +784,27 @@
         "A": "Load the model with `mlflow.pyfunc.load_model()` and call `model.predict(df.toPandas())`",
         "B": "Use `mlflow.pyfunc.spark_udf()` to create a UDF and apply it to the Spark DataFrame",
         "C": "Deploy the model to a serving endpoint and send the DataFrame as a single HTTP request",
-        "D": "Use `FeatureStoreClient.score_batch()` without any model URI"
+        "D": "Use `fe.score_batch()` without any model URI"
       },
       "correctAnswer": "B",
-      "shortAnswer": "`mlflow.pyfunc.spark_udf(spark, model_uri)` creates a Spark UDF that wraps the model, enabling distributed batch scoring across all Spark workers. Calling `.toPandas()` on 10 million rows collects all data to the driver, which can cause out-of-memory errors. Sending 10 million rows in a single HTTP request to a serving endpoint is not feasible. `score_batch()` requires Feature Store integration.",
+      "shortAnswer": "`mlflow.pyfunc.spark_udf(spark, model_uri)` creates a Spark UDF that wraps the model, enabling distributed batch scoring across all Spark workers. Calling `.toPandas()` on 10 million rows collects all data to the driver, which can cause out-of-memory errors. Sending 10 million rows in a single HTTP request to a serving endpoint is not feasible. `fe.score_batch()` needs a model URI and a model logged with `fe.log_model`.",
       "explanation": ""
+    },
+    {
+      "id": "04-mlflow-deployment-q006",
+      "domain": "mlflow-deployment",
+      "title": "spark_udf Usage Pattern",
+      "difficulty": "medium",
+      "question": "A data scientist creates a `spark_udf` from a registered model. Which option correctly creates and applies the UDF to a DataFrame `df` that has a `features` column?",
+      "choices": {
+        "A": "`predict_udf = mlflow.pyfunc.spark_udf(spark, \"models:/ml.demo.mymodel@champion\")`, then `df.withColumn(\"prediction\", predict_udf(\"features\"))`",
+        "B": "`predict_udf = mlflow.pyfunc.spark_udf(\"models:/ml.demo.mymodel@champion\")`, then `predict_udf.transform(df)`",
+        "C": "`predict_udf = mlflow.pyfunc.spark_udf(spark, \"models:/ml.demo.mymodel@champion\")`, then `spark.sql(\"SELECT predict_udf(features) FROM df\")` with no registration",
+        "D": "`predict_udf = mlflow.load_model(\"models:/ml.demo.mymodel@champion\")`, then `df.withColumn(\"prediction\", predict_udf(df[\"features\"]))`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`mlflow.pyfunc.spark_udf(spark, model_uri)` takes the `spark` session as its first argument and returns a Spark UDF, applied with `df.withColumn(\"prediction\", predict_udf(\"features\"))` (column names as strings or `Column` objects).",
+      "explanation": "A Python UDF object is not visible to SQL until it is registered (`spark.udf.register`), `mlflow.load_model()` does not exist, and a UDF has no `transform()` method."
     },
     {
       "id": "04-mlflow-deployment-q007",
@@ -747,7 +819,7 @@
         "D": "`register_model()` can only be called immediately after `log_model()` in the same code block"
       },
       "correctAnswer": "B",
-      "shortAnswer": "`mlflow.sklearn.log_model()` (and other flavor-specific `log_model` functions) saves a model as an artifact within the current MLflow run. The model is associated with that specific run. `mlflow.register_model()` takes a `runs:/` or `models:/` URI and creates a named version in the Model Registry, making it discoverable and promotable through lifecycle stages. These are two separate steps, and `register_model()` can be called at any time after the model is logged.",
+      "shortAnswer": "`mlflow.sklearn.log_model()` (and other flavor-specific `log_model` functions) saves a model as an artifact within the current MLflow run. The model is associated with that specific run. `mlflow.register_model()` takes a `runs:/` or `models:/` URI and creates a numbered version of a registered model (in Unity Catalog, `catalog.schema.model`), making it discoverable, governed, and promotable with aliases. These are two separate steps, and `register_model()` can be called at any time after the model is logged.",
       "explanation": ""
     },
     {
@@ -764,6 +836,934 @@
       },
       "correctAnswer": "B",
       "shortAnswer": "Databricks Model Serving endpoints accept JSON payloads via HTTP POST requests. The standard input format uses either `dataframe_records` (list of row dictionaries) or `dataframe_split` (columnar format with `columns` and `data` keys). Parquet, pickle, and DBFS file references are not supported input formats for real-time serving endpoints.",
+      "explanation": ""
+    },
+    {
+      "id": "05-unity-catalog-mlops-q001",
+      "domain": "unity-catalog-mlops",
+      "title": "MLOps Environment Best Practice *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A team is formalising its MLOps process on Databricks. Which setup follows the recommended best practices?",
+      "choices": {
+        "A": "One shared catalog for all work, with production jobs running notebooks straight from each data scientist's home folder",
+        "B": "Separate development, staging, and production environments, each with its own Unity Catalog catalog, and ML pipeline code in Git promoted through branches with CI tests",
+        "C": "Training only in the development workspace and emailing the model file to the platform team for production",
+        "D": "A single production catalog where data scientists experiment directly so models always see live data"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Databricks recommends separate environments for development, staging, and production — each backed by its own Unity Catalog catalog — with ML pipelines kept as code in Git, tested in CI, and promoted from branch to branch.",
+      "explanation": "Running production from personal folders, sending model files around by hand, or experimenting directly on production data all skip review, testing, and governance."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q002",
+      "domain": "unity-catalog-mlops",
+      "title": "Deploy Code When Production Data Is Restricted *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "Data scientists at a bank cannot read production customer data from the development workspace. The company has a CI/CD process and wants automated monthly retraining. Which deployment pattern fits best?",
+      "choices": {
+        "A": "Deploy models — train in development and copy the model version to production",
+        "B": "Deploy models — train in staging on a sample and promote the artifact",
+        "C": "Deploy code — promote the reviewed training code so the model is trained in production on production data",
+        "D": "Neither — retraining must be done manually in a notebook each month"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "With **deploy code**, the training code moves through dev → staging → production and the model is trained in production, where the data lives. The docs list restricted production data access and safer automated retraining as advantages of this pattern, and recommend it in most situations.",
+      "explanation": "Deploy models may not be viable when production data is not accessible from development, and automated retraining is harder in that pattern."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q003",
+      "domain": "unity-catalog-mlops",
+      "title": "Deploy Models for Expensive Training *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A team fine-tunes a large vision model for three days on many GPUs. All of its work happens in a single Databricks workspace and it has no external CI/CD pipeline. Which approach is most appropriate?",
+      "choices": {
+        "A": "Deploy models — train once, validate the artifact, then promote that model version",
+        "B": "Deploy code — retrain the model from scratch in staging and again in production",
+        "C": "Deploy code — retrain in production every night to keep the model fresh",
+        "D": "Avoid the model registry and serve the model file from a volume"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The docs suggest **deploy models** when training is very expensive or hard to reproduce, when all work is in a single workspace, or when there is no external repo / CI/CD process. Training once and promoting the validated artifact avoids repeating a multi-day GPU job in every environment.",
+      "explanation": "Retraining in each environment multiplies the cost, and bypassing the registry loses versioning and governance."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q004",
+      "domain": "unity-catalog-mlops",
+      "title": "Account-Level Feature Tables *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Teams in two workspaces attached to the same Unity Catalog metastore want to reuse one set of customer features. What is the main benefit of keeping these feature tables in Unity Catalog rather than in a legacy workspace feature store?",
+      "choices": {
+        "A": "Unity Catalog feature tables refresh themselves automatically every hour",
+        "B": "Unity Catalog feature tables can be shared and discovered across workspaces, with centralised access control and lineage",
+        "C": "Unity Catalog feature tables do not need a primary key",
+        "D": "Unity Catalog feature tables can only be read by the workspace that created them, which improves security"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Unity Catalog is account-level: any workspace on the metastore can discover and use the table, governed by UC privileges, with lineage to the models that use it. The docs describe \"built-in governance, lineage, point-in-time joins, and cross-workspace feature sharing and discovery.\"",
+      "explanation": "Refresh is still your pipeline's job, a primary key is required, and per-workspace isolation is what the legacy store had."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q005",
+      "domain": "unity-catalog-mlops",
+      "title": "Turning an Existing Delta Table into a Feature Table *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "The Unity Catalog Delta table `ml.features.store_sales` already contains one row per `store_id`. What makes it usable as a feature table?",
+      "choices": {
+        "A": "`ALTER TABLE ml.features.store_sales SET AS FEATURE STORE`",
+        "B": "`fe.register_table(delta_table=\"ml.features.store_sales\")`",
+        "C": "`CREATE FEATURE TABLE ml.features.store_sales AS SELECT * FROM ml.features.store_sales`",
+        "D": "Make `store_id` `NOT NULL`, then `ALTER TABLE ml.features.store_sales ADD CONSTRAINT store_sales_pk PRIMARY KEY (store_id)`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "In Unity Catalog, any Delta table with a **primary key constraint** is a feature table. For an existing table, set the key column(s) to `NOT NULL` and add the `PRIMARY KEY` constraint.",
+      "explanation": "There is no `SET AS FEATURE STORE` or `CREATE FEATURE TABLE` syntax, and `register_table` is not the Unity Catalog path."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q006",
+      "domain": "unity-catalog-mlops",
+      "title": "Online vs Offline Feature Tables *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A fraud model served on a real-time endpoint must fetch a customer's latest aggregates within milliseconds using only `customer_id`. The same features are used for nightly retraining. How should the features be organised?",
+      "choices": {
+        "A": "Keep the offline Delta feature table for training and batch scoring, and publish it to an online store for low-latency lookups at serving time",
+        "B": "Query the offline Delta table with a full scan for each request",
+        "C": "Store the features only in the online store and train from there",
+        "D": "Copy the features into the model artifact at training time"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The **offline** feature table (a Delta table in Unity Catalog) is optimised for large scans and joins — training sets and batch scoring. An **online store** holds a published copy optimised for key-based millisecond lookups; a model logged with `fe.log_model` and deployed to Model Serving can look features up automatically.",
+      "explanation": "Scanning Delta per request is too slow, the online store is not the training source, and baking features into the artifact makes them stale."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q007",
+      "domain": "unity-catalog-mlops",
+      "title": "Building a Training Set from Feature Tables *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A label DataFrame has `customer_id` and `churned`. Which sequence produces a training DataFrame that joins features from `ml.features.customer_features`?",
+      "choices": {
+        "A": "`fe.read_table(...)` then `labels_df.union(...)`",
+        "B": "Define `FeatureLookup(table_name=\"ml.features.customer_features\", lookup_key=\"customer_id\")`, call `fe.create_training_set(df=labels_df, feature_lookups=[...], label=\"churned\")`, then `.load_df()`",
+        "C": "`fe.score_batch(model_uri, labels_df)` to add the features",
+        "D": "`fe.write_table(name=\"ml.features.customer_features\", df=labels_df, mode=\"merge\")`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "`FeatureLookup` says which table to join on which key; `create_training_set` combines the label DataFrame with the looked-up features, and `load_df()` returns the joined DataFrame. Logging the model later with `fe.log_model(..., training_set=training_set)` records the lookups for scoring.",
+      "explanation": "A union does not join on keys, `score_batch` needs a trained model, and `write_table` would write labels into the feature table."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q008",
+      "domain": "unity-catalog-mlops",
+      "title": "Best Run with the MLflow Client API *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "An experiment holds 60 runs, each logging `val_auc`. Which MLflow Client API call returns the single run with the **highest** `val_auc`?",
+      "choices": {
+        "A": "`MlflowClient().search_runs([exp_id], order_by=[\"metrics.val_auc ASC\"], max_results=1)[0]`",
+        "B": "`MlflowClient().get_run(exp_id)`",
+        "C": "`MlflowClient().search_runs([exp_id], order_by=[\"metrics.val_auc DESC\"], max_results=1)[0]`",
+        "D": "`MlflowClient().search_experiments(order_by=[\"metrics.val_auc DESC\"])[0]`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`search_runs` ranks runs server-side: for a score where higher is better, order by `metrics.val_auc DESC` and take the first result.",
+      "explanation": "`ASC` would return the *worst* AUC, `get_run` needs a run ID and does not rank, and `search_experiments` returns experiments, not runs."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q009",
+      "domain": "unity-catalog-mlops",
+      "title": "Unity Catalog Registry vs Workspace Registry *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Which is a benefit of registering models in Unity Catalog instead of the legacy workspace model registry?",
+      "choices": {
+        "A": "Models are automatically promoted to `Production` when their metrics improve",
+        "B": "Model versions no longer need a signature",
+        "C": "Models get centralised access control, auditing, lineage, and discovery across workspaces",
+        "D": "Model serving endpoints respond faster for UC models"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The docs state that Models in Unity Catalog extend \"centralized access control, auditing, lineage, and model discovery across workspaces\" to ML models.",
+      "explanation": "UC does not auto-promote (and has no stages), new UC versions *must* have a signature, and the registry choice does not change endpoint latency."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q010",
+      "domain": "unity-catalog-mlops",
+      "title": "Registering a Model with the MLflow Client API *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "With the registry URI set to `databricks-uc`, a data scientist wants to use the **MLflow Client API** (not the fluent API) to create the registered model `ml.churn.clf` and add the model from run `r42` as a version. Which calls are correct?",
+      "choices": {
+        "A": "`client.create_registered_model(\"ml.churn.clf\")` then `client.create_model_version(name=\"ml.churn.clf\", source=\"runs:/r42/model\", run_id=\"r42\")`",
+        "B": "`client.register_model(\"runs:/r42/model\")` with no name",
+        "C": "`client.create_model_version(name=\"ml.churn.clf\")` with no source",
+        "D": "`client.log_model(\"ml.churn.clf\", \"runs:/r42/model\")`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`MlflowClient.create_registered_model(name)` creates the registered model (three-level name in UC), and `create_model_version(name, source, run_id)` adds a numbered version pointing at the logged model. The fluent shortcut for the same thing is `mlflow.register_model(\"runs:/r42/model\", \"ml.churn.clf\")`.",
+      "explanation": "A version needs a source; `MlflowClient` has no `log_model` method."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q011",
+      "domain": "unity-catalog-mlops",
+      "title": "Removing a Model Version Tag *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Version 4 of `ml.churn.clf` carries the tag `validation_status=pending`. Validation was rerun, and the tag should be removed from that version only. Which call does this?",
+      "choices": {
+        "A": "`client.delete_registered_model_tag(\"ml.churn.clf\", \"validation_status\")`",
+        "B": "`client.set_model_version_tag(\"ml.churn.clf\", \"4\", \"validation_status\", None)`",
+        "C": "`client.delete_registered_model_alias(\"ml.churn.clf\", \"validation_status\")`",
+        "D": "`client.delete_model_version_tag(\"ml.churn.clf\", \"4\", \"validation_status\")`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`delete_model_version_tag(name, version, key)` removes a tag from one version; `set_model_version_tag(name, version, key, value)` sets it.",
+      "explanation": "`delete_registered_model_tag` removes a **model-level** tag, an alias is not a tag, and setting a value is not the same as removing the key."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q012",
+      "domain": "unity-catalog-mlops",
+      "title": "Rolling Back a Champion *(2026 guide)*",
+      "difficulty": "hard",
+      "question": "Yesterday the team moved the `champion` alias of `ml.churn.clf` from version 4 to version 5. Batch and serving code load `models:/ml.churn.clf@champion`. Version 5 is now misbehaving. What is the fastest rollback that needs no code change?",
+      "choices": {
+        "A": "`client.set_registered_model_alias(\"ml.churn.clf\", \"champion\", 4)`",
+        "B": "Delete version 5 so the registry falls back automatically",
+        "C": "`client.transition_model_version_stage(\"ml.churn.clf\", 4, \"Production\")`",
+        "D": "Edit every job to load `models:/ml.churn.clf/4`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Aliases are movable pointers: reassigning `champion` to version 4 makes every consumer of `@champion` use version 4 on its next load. Deployment is decoupled from inference code.",
+      "explanation": "Deleting versions is destructive and does not move an alias for you, stages are not supported in Unity Catalog, and hard-coding versions is exactly what aliases avoid."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q013",
+      "domain": "unity-catalog-mlops",
+      "title": "AutoML Feature Importance *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "After an AutoML classification run, a data scientist wants to see which features drive the best model's predictions. What should they do?",
+      "choices": {
+        "A": "Read the `feature_importance` Delta table that AutoML writes",
+        "B": "Open the best-trial notebook and enable the SHAP-based feature importance section (`shap_enabled = True`), then rerun it",
+        "C": "Query the `summary.best_trial.shap_values` attribute",
+        "D": "AutoML does not support any form of feature importance"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "AutoML's generated notebooks include a **Feature importance** section that computes Shapley values with the SHAP package. Because it is memory-intensive it is **off by default**; set `shap_enabled = True` and rerun the notebook.",
+      "explanation": "AutoML writes no feature-importance Delta table, and `TrialInfo` has no `shap_values` attribute."
+    },
+    {
+      "id": "05-unity-catalog-mlops-q014",
+      "domain": "unity-catalog-mlops",
+      "title": "Advantage of the ML Runtime *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Why would a team choose the Databricks Runtime for Machine Learning over the standard runtime for model development?",
+      "choices": {
+        "A": "It is the only runtime that can read Delta tables",
+        "B": "It runs Spark SQL queries on GPUs automatically",
+        "C": "It provides pre-installed, version-compatible ML and deep-learning libraries plus MLflow and AutoML, so no environment assembly is needed",
+        "D": "It removes the need for Unity Catalog permissions"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The ML runtime \"automates the creation of a compute resource with pre-built machine learning and deep learning infrastructure\": popular libraries (scikit-learn, PyTorch, TensorFlow, XGBoost, …) and MLflow are installed and tested together, and AutoML is available.",
+      "explanation": "Every runtime reads Delta, Spark SQL is not automatically GPU-accelerated, and Unity Catalog permissions still apply."
+    },
+    {
+      "id": "06-data-processing-q001",
+      "domain": "data-processing",
+      "title": "summary() vs describe() *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Which statistics does `df.summary()` return by default that `df.describe()` does not?",
+      "choices": {
+        "A": "Approximate 25 %, 50 %, and 75 % percentiles",
+        "B": "The number of null values per column",
+        "C": "The mode of each column",
+        "D": "The skewness and kurtosis of each column"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "With no arguments, `summary()` computes count, mean, stddev, min, approximate quartiles (25 %, 50 %, 75 %), and max; `describe()` returns count, mean, stddev, min, and max only.",
+      "explanation": "Neither returns null counts, mode, skewness, or kurtosis by default; `summary()` also accepts arbitrary percentiles such as `\"10%\"`."
+    },
+    {
+      "id": "06-data-processing-q002",
+      "domain": "data-processing",
+      "title": "Databricks Data Summaries *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "In a Databricks notebook, which call displays summary statistics (including histograms for numeric columns) for a Spark DataFrame `df`?",
+      "choices": {
+        "A": "`dbutils.fs.summarize(df)`",
+        "B": "`df.profile()`",
+        "C": "`dbutils.data.summarize(df)`",
+        "D": "`spark.summary(df)`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`dbutils.data.summarize(df)` \"calculates and displays summary statistics of an Apache Spark DataFrame or pandas DataFrame.\" It is the \"dbutils data summaries\" named in the exam guide.",
+      "explanation": "`dbutils.fs` is for files, and `df.profile()` and `spark.summary()` do not exist."
+    },
+    {
+      "id": "06-data-processing-q003",
+      "domain": "data-processing",
+      "title": "The precise Parameter *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "What does `dbutils.data.summarize(df, precise=True)` change compared with the default?",
+      "choices": {
+        "A": "It samples 1 % of the rows to run faster",
+        "B": "Statistics are computed with higher precision; with the default (`False`) some statistics are approximations",
+        "C": "It writes the summary to a Delta table",
+        "D": "It only summarises numeric columns"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The default `precise=False` uses approximations for some statistics to reduce run time; `precise=True` computes them with higher precision (all except histograms and percentiles for numeric columns become exact).",
+      "explanation": "The command still analyses the complete DataFrame, writes nothing to a table, and covers all column types."
+    },
+    {
+      "id": "06-data-processing-q004",
+      "domain": "data-processing",
+      "title": "IQR Fences *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "For a feature, Q1 = 20 and Q3 = 50. Using the 1.5 × IQR rule, what are the lower and upper fences outside which values are treated as outliers?",
+      "choices": {
+        "A": "5 and 65",
+        "B": "20 and 50",
+        "C": "−10 and 80",
+        "D": "−25 and 95"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "IQR = Q3 − Q1 = 30, so the fences are Q1 − 1.5 × 30 = −25 and Q3 + 1.5 × 30 = 95. Rows outside [−25, 95] are removed (or capped).",
+      "explanation": "In Spark: `q1, q3 = df.approxQuantile(\"x\", [0.25, 0.75], 0.01)` and then `df.filter(F.col(\"x\").between(lower, upper))`."
+    },
+    {
+      "id": "06-data-processing-q005",
+      "domain": "data-processing",
+      "title": "Standard-Deviation Rule *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A roughly normal feature `x` has mean `mu` and standard deviation `sigma`. Which filter keeps only values within three standard deviations of the mean?",
+      "choices": {
+        "A": "`df.filter(F.abs(F.col(\"x\") - mu) <= 3 * sigma)`",
+        "B": "`df.filter(F.col(\"x\") <= mu + 3)`",
+        "C": "`df.filter(F.col(\"x\") / sigma <= 3)`",
+        "D": "`df.filter(F.abs(F.col(\"x\")) <= 3 * mu)`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The z-score rule keeps rows where |x − μ| ≤ k·σ (k = 3 here), i.e. values in [μ − 3σ, μ + 3σ].",
+      "explanation": "The other filters ignore the mean, the standard deviation, or both."
+    },
+    {
+      "id": "06-data-processing-q006",
+      "domain": "data-processing",
+      "title": "Choosing an Outlier Rule for Skewed Data *(2026 guide)*",
+      "difficulty": "hard",
+      "question": "A `price` column is strongly right-skewed with a few extreme listings. Why are IQR fences usually preferred over a 3-standard-deviation rule here?",
+      "choices": {
+        "A": "The IQR rule removes more rows, which always improves models",
+        "B": "Standard deviation cannot be computed in Spark",
+        "C": "Quartiles barely move when extreme values are present, while the mean and standard deviation are inflated by the very outliers being detected",
+        "D": "The IQR rule only works on normally distributed data"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The z-score rule assumes a roughly symmetric distribution; extreme values pull the mean and inflate σ, widening the bounds so outliers can hide. Quartiles are robust to extremes, so IQR fences suit skewed features.",
+      "explanation": "Removing more rows is not automatically better, Spark computes stddev easily, and IQR is the rule that does *not* need normality."
+    },
+    {
+      "id": "06-data-processing-q007",
+      "domain": "data-processing",
+      "title": "Visualising a Categorical Feature *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "A data scientist wants to see how often each of the 6 values of `payment_method` occurs. Which visualisation is most appropriate?",
+      "choices": {
+        "A": "A scatter plot",
+        "B": "A bar chart of counts per category",
+        "C": "A line chart over row index",
+        "D": "A histogram with 50 numeric bins"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Categorical features are summarised by frequency per level — a bar (count) chart. Histograms, box plots, and density plots are for **continuous** features; scatter plots compare two continuous features.",
+      "explanation": ""
+    },
+    {
+      "id": "06-data-processing-q008",
+      "domain": "data-processing",
+      "title": "Comparing Two Continuous Features *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "What is the appropriate way to examine the relationship between two continuous features, `sqft` and `price`?",
+      "choices": {
+        "A": "A scatter plot plus a correlation coefficient (Pearson, or Spearman for monotonic/skewed relationships)",
+        "B": "A contingency table and a chi-square test",
+        "C": "A bar chart of the counts of each `sqft` value",
+        "D": "One-hot encode both features and compare the vectors"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Two continuous features are compared with a scatter plot and a correlation measure — `df.stat.corr(\"sqft\", \"price\")` (Pearson) or `pyspark.ml.stat.Correlation.corr(..., method=\"spearman\")`.",
+      "explanation": "Contingency tables and chi-square tests are for two **categorical** features."
+    },
+    {
+      "id": "06-data-processing-q009",
+      "domain": "data-processing",
+      "title": "Comparing Two Categorical Features *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A data scientist wants to know whether `plan_type` and `region` (both categorical) are related. Which method is appropriate?",
+      "choices": {
+        "A": "Pearson correlation of the raw strings",
+        "B": "A scatter plot of the two columns",
+        "C": "A box plot of `plan_type` per `region`",
+        "D": "A contingency table (`df.stat.crosstab(\"plan_type\", \"region\")`) and a chi-square test of independence"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "For two categorical variables, a cross-tabulation of counts shows the joint distribution, and a chi-square test (e.g. `pyspark.ml.stat.ChiSquareTest` on indexed columns) tests whether they are independent. A grouped/stacked bar chart visualises it.",
+      "explanation": "Correlation and scatter plots need numeric values; box plots compare a continuous feature across categories."
+    },
+    {
+      "id": "06-data-processing-q010",
+      "domain": "data-processing",
+      "title": "Mean vs Median Imputation *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "`annual_income` is right-skewed with a handful of extremely high earners, and 8 % of its values are missing. Which imputation is most appropriate?",
+      "choices": {
+        "A": "Mean, because it uses every value",
+        "B": "Median, because it is robust to the skew and outliers",
+        "C": "Mode, because income is continuous",
+        "D": "Zero, because missing income means no income"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Extreme earners pull the mean upward, so mean imputation would assign unrealistically high incomes. The median is robust to skew and outliers. Mean suits roughly symmetric continuous data; mode suits categorical or discrete data.",
+      "explanation": "Filling zero invents information that is probably wrong. In Spark: `Imputer(strategy=\"median\")`, fitted on the training split."
+    },
+    {
+      "id": "06-data-processing-q011",
+      "domain": "data-processing",
+      "title": "Imputing a String Category *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "The string column `preferred_channel` (email / sms / app) has missing values. Which imputation strategy fits this feature?",
+      "choices": {
+        "A": "Mode — fill with the most frequent category",
+        "B": "Mean of the column",
+        "C": "Median of the column",
+        "D": "Linear interpolation between neighbouring rows"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "For a categorical feature, the most frequent value (mode) is the standard simple imputation; mean and median are undefined for strings.",
+      "explanation": "Note that Spark's `Imputer` only accepts numeric columns, so for a string column compute the most frequent value and use `fillna({\"preferred_channel\": value})` (or add an explicit \"unknown\" level)."
+    },
+    {
+      "id": "06-data-processing-q012",
+      "domain": "data-processing",
+      "title": "Spark Imputer Strategies *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Which values does `pyspark.ml.feature.Imputer` accept for `strategy`?",
+      "choices": {
+        "A": "`\"mean\"` and `\"median\"` only",
+        "B": "`\"mean\"`, `\"median\"`, and `\"constant\"`",
+        "C": "`\"mean\"` (default), `\"median\"`, and `\"mode\"`",
+        "D": "`\"ffill\"` and `\"bfill\"`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`Imputer` supports `mean` (the default), `median`, and `mode`, computed after filtering out missing values; nulls (and `NaN` by default) are treated as missing. Input columns must be numeric.",
+      "explanation": "`constant` is a scikit-learn `SimpleImputer` strategy; forward/backward fill are pandas methods."
+    },
+    {
+      "id": "06-data-processing-q013",
+      "domain": "data-processing",
+      "title": "One-Hot Encoding a High-Cardinality Feature *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A logistic regression model will use `zip_code`, which has about 40,000 distinct values. Why is one-hot encoding a poor choice here?",
+      "choices": {
+        "A": "`OneHotEncoder` cannot process more than 100 categories",
+        "B": "It creates a huge, very sparse feature space that adds memory cost and overfitting risk; target/frequency encoding or hashing is usually better",
+        "C": "Logistic regression cannot use binary features",
+        "D": "One-hot encoding makes `zip_code` ordinal"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "One column per level means ~40,000 sparse columns with few observations each — expensive and prone to overfitting. High-cardinality features are better handled with target or frequency encoding (fitted on training data only), hashing, or grouping rare levels.",
+      "explanation": "There is no 100-category limit, linear models use binary indicators routinely, and one-hot encoding removes order rather than adding it."
+    },
+    {
+      "id": "06-data-processing-q014",
+      "domain": "data-processing",
+      "title": "When One-Hot Encoding Is Appropriate *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "In which situation is one-hot encoding most appropriate?",
+      "choices": {
+        "A": "A nominal feature with 5 unordered levels feeding a linear regression model",
+        "B": "An ordinal feature (`small` < `medium` < `large`) whose order matters",
+        "C": "A `user_id` column with 2 million distinct values",
+        "D": "A continuous `temperature` feature"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Linear and distance-based models treat numbers as magnitudes, so a nominal feature with a few levels should become indicator columns (`StringIndexer` → `OneHotEncoder`).",
+      "explanation": "Ordinal features keep their order with an ordinal mapping, very high-cardinality IDs need other encodings, and continuous features are not one-hot encoded. Tree-based models often do not need one-hot encoding at all."
+    },
+    {
+      "id": "06-data-processing-q015",
+      "domain": "data-processing",
+      "title": "Log Transform with Zeros *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "`num_reviews` is right-skewed, spans several orders of magnitude, and contains many zeros. Which transformation compresses the tail without failing on zeros?",
+      "choices": {
+        "A": "`F.log(\"num_reviews\")`",
+        "B": "`F.sqrt(F.col(\"num_reviews\") * -1)`",
+        "C": "`F.log1p(\"num_reviews\")`, i.e. log(1 + x)",
+        "D": "Min-max scaling to [0, 1]"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "A log transform suits positive, right-skewed values spanning orders of magnitude, but log(0) is undefined. `log1p` computes log(1 + x), so zeros map to 0 while large values are still compressed.",
+      "explanation": "The square root of a negative number is invalid, and min-max scaling rescales the range without reducing skew. If you log-transform a **target**, exponentiate the predictions (`expm1` after `log1p`) before reporting metrics."
+    },
+    {
+      "id": "07-model-development-q001",
+      "domain": "model-development",
+      "title": "Interpretable Algorithm Choice *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A lender must explain to a regulator how each input affects every approve/decline decision. Which algorithm is the most appropriate starting point?",
+      "choices": {
+        "A": "Logistic regression",
+        "B": "k-means clustering",
+        "C": "A deep neural network with many hidden layers",
+        "D": "Linear regression on the approve/decline label"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Approve/decline is binary classification, and logistic regression's coefficients explain each feature's effect on the log-odds — ideal when interpretability is required.",
+      "explanation": "k-means is unsupervised, a deep network is hard to explain, and linear regression is meant for continuous targets."
+    },
+    {
+      "id": "07-model-development-q002",
+      "domain": "model-development",
+      "title": "Non-Linear Tabular Regression *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A team predicts delivery time (minutes) from tabular features with strong non-linear effects and interactions. Interpretability is secondary. Which algorithm family is the best first choice?",
+      "choices": {
+        "A": "Logistic regression",
+        "B": "Gradient-boosted tree regression (e.g. `GBTRegressor`, XGBoost, LightGBM)",
+        "C": "k-means clustering",
+        "D": "Naive Bayes"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The target is continuous (regression), and tree ensembles capture non-linear effects and interactions without manual feature crosses.",
+      "explanation": "Logistic regression and Naive Bayes are classifiers, and k-means is unsupervised."
+    },
+    {
+      "id": "07-model-development-q003",
+      "domain": "model-development",
+      "title": "Where to Oversample *(2026 guide)*",
+      "difficulty": "hard",
+      "question": "Only 5 % of rows are fraud. A data scientist plans to oversample the fraud class. At which point should oversampling be applied?",
+      "choices": {
+        "A": "Before splitting, to the whole dataset, so every split is balanced",
+        "B": "To the test set only, so evaluation is fair",
+        "C": "To the training split only, after splitting; validation and test keep the real class distribution",
+        "D": "To the validation set only, so tuning sees more fraud"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Resampling changes the data the model **learns** from; evaluation must reflect reality. Oversampling before the split leaks duplicated minority rows into validation/test and inflates metrics. (AutoML follows the same rule: it balances only the training split.)",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q004",
+      "domain": "model-development",
+      "title": "Class Weights in Spark ML *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "How do you make a Spark ML `LogisticRegression` penalise errors on the minority class more heavily?",
+      "choices": {
+        "A": "Add a weight column (higher for minority rows) and set `weightCol` on the estimator",
+        "B": "Set `classWeight=\"balanced\"` on `LogisticRegression`",
+        "C": "Add a `StandardScaler` stage before the model",
+        "D": "Increase `maxIter`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Spark ML estimators such as `LogisticRegression` accept `weightCol`; giving minority rows a larger weight is cost-sensitive learning. `class_weight=\"balanced\"` is the scikit-learn equivalent — Spark's `LogisticRegression` has no `classWeight` parameter.",
+      "explanation": "Scaling and more iterations do not address imbalance."
+    },
+    {
+      "id": "07-model-development-q005",
+      "domain": "model-development",
+      "title": "Is Imputer an Estimator? *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "In Spark ML, what kind of pipeline stage is `Imputer`?",
+      "choices": {
+        "A": "A Transformer — it only has `transform()`",
+        "B": "An Evaluator",
+        "C": "An Estimator — `fit()` learns the fill values and returns an `ImputerModel`",
+        "D": "It cannot be used inside a `Pipeline`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Anything that must learn from data is an Estimator. `Imputer.fit(df)` computes the mean/median/mode and returns an `ImputerModel` (a Transformer). `StringIndexer`, `OneHotEncoder`, `StandardScaler`, and every learning algorithm are Estimators too; `VectorAssembler`, `Bucketizer`, and `SQLTransformer` are Transformers.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q006",
+      "domain": "model-development",
+      "title": "Leakage in a Training Pipeline *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A data scientist fits `StandardScaler` on the full dataset, then splits into train and test and trains a model. What is wrong, and what is the fix?",
+      "choices": {
+        "A": "Nothing — scaling statistics are harmless",
+        "B": "Test-set statistics leak into training; split first, then fit a `Pipeline` (scaler + model) on the training data and only `transform` the test data",
+        "C": "The scaler should be fitted on the test set only",
+        "D": "`StandardScaler` must always come after the model in a `Pipeline`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Fitting any Estimator (scaler, imputer, encoder) on data that includes the test set leaks information into training. Split first, fit the whole `Pipeline` on the training split, and apply the fitted `PipelineModel` to validation/test data.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q007",
+      "domain": "model-development",
+      "title": "What fmin Optimises *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A Hyperopt objective returns validation accuracy, and `fmin` keeps choosing the *worst* hyperparameters. What should the objective return instead?",
+      "choices": {
+        "A": "`{\"loss\": accuracy, \"status\": STATUS_OK}`",
+        "B": "`{\"accuracy\": accuracy}`",
+        "C": "`{\"loss\": -accuracy, \"status\": STATUS_OK}` (or `1 - accuracy`)",
+        "D": "Nothing — `fmin` reads metrics from MLflow"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`fmin` **minimises** the `loss` returned by the objective. To maximise a score, return its negative (or 1 − score). Loss-type metrics such as RMSE or log loss can be returned as-is.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q008",
+      "domain": "model-development",
+      "title": "Bayesian Search in Hyperopt *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Which Hyperopt `algo` performs Bayesian (adaptive) optimisation, choosing each trial based on earlier results?",
+      "choices": {
+        "A": "`rand.suggest`",
+        "B": "`grid.suggest`",
+        "C": "`SparkTrials`",
+        "D": "`tpe.suggest`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`tpe.suggest` (Tree-structured Parzen Estimator) uses completed trials to propose promising regions — Bayesian search. `rand.suggest` is random search; Hyperopt has no `grid.suggest`. `SparkTrials` controls *where* trials run, not *how* they are chosen.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q009",
+      "domain": "model-development",
+      "title": "Parallelising Single-Node Tuning *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A scikit-learn random forest trains on a single machine. The team wants Hyperopt to run eight trials at a time across an eight-worker cluster. What should they pass to `fmin`?",
+      "choices": {
+        "A": "`trials=SparkTrials(parallelism=8)`",
+        "B": "`trials=Trials()`",
+        "C": "`algo=rand.suggest` with `max_evals=8`",
+        "D": "Wrap the model in Spark ML `CrossValidator(parallelism=8)`"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "`SparkTrials` \"is designed to parallelize computations for single-machine ML models such as scikit-learn\": each trial runs on a worker, up to `parallelism` at once. `Trials()` runs sequentially on the driver, the algorithm choice does not add parallelism, and `CrossValidator` tunes Spark ML estimators, not scikit-learn models.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q010",
+      "domain": "model-development",
+      "title": "SparkTrials with Spark MLlib *(2026 guide)*",
+      "difficulty": "hard",
+      "question": "A data scientist uses Hyperopt to tune a Spark ML `GBTClassifier` on a 500 GB table. Which `trials` object is recommended?",
+      "choices": {
+        "A": "`SparkTrials`, because the data is large",
+        "B": "The default `Trials`, because MLlib already distributes model training across the cluster",
+        "C": "`SparkTrials(parallelism=1)` only",
+        "D": "Hyperopt cannot tune MLlib models"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "For distributed algorithms such as Spark MLlib, use the default `Trials` class: each trial is already a distributed Spark job. `SparkTrials` is for single-machine models. (Platform note: Hyperopt is no longer included in Databricks Runtime ML after 16.4 LTS ML; the docs recommend Optuna or Ray Tune for new work.)",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q011",
+      "domain": "model-development",
+      "title": "Cost of Grid Search *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "Which statement about grid search is true?",
+      "choices": {
+        "A": "Its cost grows with the **product** of the number of values per hyperparameter, so adding parameters quickly multiplies the number of models",
+        "B": "It learns from previous trials to choose the next combination",
+        "C": "It always finds a better optimum than random search for the same budget",
+        "D": "It samples a fixed number of random combinations"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Grid search is exhaustive: 4 values × 4 values × 5 values = 80 combinations, multiplied again by the number of CV folds. Bayesian search learns from previous trials, random search samples a fixed number of combinations, and random search often matches grid search with far fewer trials when only some parameters matter.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q012",
+      "domain": "model-development",
+      "title": "Counting Models in a Cross-Validated Grid *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A `ParamGridBuilder` has `regParam` = [0.01, 0.1, 1.0], `elasticNetParam` = [0.0, 0.5], and `maxIter` = [50, 100]. It is used with `CrossValidator(numFolds=4)`. How many models are fitted **during the search** (not counting the final refit)?",
+      "choices": {
+        "A": "12",
+        "B": "16",
+        "C": "48",
+        "D": "19"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "The grid has 3 × 2 × 2 = 12 combinations, and 4-fold CV fits 4 models per combination: 12 × 4 = 48. `CrossValidator` then refits the best combination once on the full training data (49 in total).",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q013",
+      "domain": "model-development",
+      "title": "Downside of Cross-Validation *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Compared with a single train-validation split, what is the main downside of k-fold cross-validation?",
+      "choices": {
+        "A": "It uses less of the data for validation",
+        "B": "It trains k times as many models, so it costs more time and compute",
+        "C": "It cannot be used with Spark ML pipelines",
+        "D": "It produces higher-variance estimates"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "k-fold CV trains and evaluates k models per combination, giving a lower-variance, more reliable estimate (every row is validated once) at roughly k times the cost. `TrainValidationSplit` is cheaper but noisier. CV works with Spark ML via `CrossValidator`.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q014",
+      "domain": "model-development",
+      "title": "Metric for Costly False Negatives *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "In a disease-screening model, missing a sick patient is far worse than flagging a healthy one for a follow-up test. Which metric should drive model selection?",
+      "choices": {
+        "A": "Precision",
+        "B": "Accuracy",
+        "C": "R²",
+        "D": "Recall"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Recall = TP / (TP + FN) measures how many actual positives are found, so it directly penalises missed patients. Precision matters when false positives are costly, accuracy misleads on imbalanced data, and R² is a regression metric.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q015",
+      "domain": "model-development",
+      "title": "RMSE vs MAE *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A forecasting team wants an error metric in dollars that is **not** dominated by a few very large misses. Which metric should they use?",
+      "choices": {
+        "A": "RMSE",
+        "B": "MAE",
+        "C": "MSE",
+        "D": "ROC AUC"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "MAE averages absolute errors, so every dollar of error counts equally and outliers do not dominate. RMSE and MSE square errors, which emphasises large misses (useful when big misses are especially costly). ROC AUC is a classification metric.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q016",
+      "domain": "model-development",
+      "title": "Evaluating a Log-Transformed Target *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A model was trained on `log(price)`. The team reports an RMSE of 0.21 computed on the model's raw predictions and the log labels. Management wants the error in dollars. What should be done?",
+      "choices": {
+        "A": "Report 0.21 dollars — RMSE is unit-free",
+        "B": "Multiply 0.21 by the mean price",
+        "C": "Retrain on raw price, because log targets cannot be evaluated",
+        "D": "Exponentiate the predictions (e.g. `F.exp(\"prediction\")`) and compute RMSE against the original `price` column"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Predictions from a log-target model are in log space. Convert them back with `exp` (or `expm1` after `log1p`) and compute metrics against the original labels so the numbers mean something in dollars. RMSE is in the target's units, so 0.21 is in log units. Log targets are fine to use; they just have to be undone before evaluation and interpretation.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q017",
+      "domain": "model-development",
+      "title": "Diagnosing Underfitting *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A model's error is high on **both** the training and validation sets, and the two are similar. What is happening, and what should the data scientist try?",
+      "choices": {
+        "A": "High variance — reduce model complexity",
+        "B": "High bias (underfitting) — increase model complexity or add more informative features",
+        "C": "Data leakage — remove the validation set",
+        "D": "The model is well fitted — deploy it"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "High error everywhere means the model is too simple to capture the pattern (high bias). Increase capacity (deeper trees, more features, less regularisation). High variance would show **low** training error with much higher validation error.",
+      "explanation": ""
+    },
+    {
+      "id": "07-model-development-q018",
+      "domain": "model-development",
+      "title": "Choosing Tree Depth *(2026 guide)*",
+      "difficulty": "hard",
+      "question": "As `maxDepth` increases from 2 to 20, training error falls steadily. Validation error falls until depth 8, then rises. Which conclusion is correct?",
+      "choices": {
+        "A": "Depth 20 is best because training error is lowest",
+        "B": "Depth 2 is best because the model is simplest",
+        "C": "Depth around 8 balances bias and variance; deeper trees overfit (high variance)",
+        "D": "The validation set is broken because its error should keep falling"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "More complexity lowers bias but raises variance. The best setting minimises **validation** error (here around depth 8). Beyond that, the model memorises training noise: training error keeps falling while validation error rises — classic overfitting.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q001",
+      "domain": "model-deployment",
+      "title": "Choosing Streaming Inference *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "Sensor readings arrive continuously from thousands of machines. Each reading must be scored for anomalies within seconds and the result written to a Delta table for an operations dashboard. No application waits for an individual prediction. Which serving approach fits best?",
+      "choices": {
+        "A": "Nightly batch inference",
+        "B": "A real-time Model Serving endpoint called once per reading",
+        "C": "Streaming inference on the incoming data",
+        "D": "Manual scoring in a notebook when the dashboard is opened"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Continuously arriving data that must be scored within seconds and stored is the streaming use case — apply the model as a Spark UDF to a stream (for example in a Delta Live Tables pipeline).",
+      "explanation": "Nightly batch is too slow, and a request/response endpoint adds per-call overhead when no caller is waiting."
+    },
+    {
+      "id": "08-model-deployment-q002",
+      "domain": "model-deployment",
+      "title": "Choosing Real-Time Inference *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "A mobile app shows a personalised price quote while the user waits on the checkout screen. Which serving approach is required?",
+      "choices": {
+        "A": "Real-time inference behind a Model Serving REST endpoint",
+        "B": "Weekly batch inference",
+        "C": "Streaming inference into a Delta table",
+        "D": "Exporting predictions to a CSV file each night"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "When a caller needs the prediction inside the request (milliseconds), use a real-time endpoint. Batch and file exports cannot react to a new request, and streaming writes results to tables rather than answering a caller.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q003",
+      "domain": "model-deployment",
+      "title": "Choosing Batch Inference *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Every Monday a retention team needs a churn-risk list for 2 million customers. Nobody needs individual predictions in real time. Which approach is most appropriate and cost-effective?",
+      "choices": {
+        "A": "An always-on GPU serving endpoint queried once per customer",
+        "B": "A scheduled batch inference job that scores all customers and writes a table",
+        "C": "A continuously running streaming pipeline",
+        "D": "A real-time endpoint with scale-to-zero disabled"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Scheduled scoring of a whole population with no latency requirement is batch inference — the simplest and cheapest option. Endpoints and streaming pipelines add always-on infrastructure for latency the workload does not need.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q004",
+      "domain": "model-deployment",
+      "title": "Batch Inference with pandas *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "A model registered as `ml.sales.forecaster` must score a 40,000-row table once a day; the data easily fits on the driver. What is the simplest correct approach?",
+      "choices": {
+        "A": "Create a serving endpoint and send one HTTP request per row",
+        "B": "Build a streaming pipeline over the table",
+        "C": "`model = mlflow.pyfunc.load_model(\"models:/ml.sales.forecaster@champion\")`, then `model.predict(df.toPandas()[features])`",
+        "D": "`mlflow.pyfunc.spark_udf(...)` is mandatory for any registered model"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "For small data, load the model as a generic `pyfunc` and call `predict` on a pandas DataFrame. Endpoints and streaming add unnecessary infrastructure, and `spark_udf` is the tool for data too large for one machine, not a requirement.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q005",
+      "domain": "model-deployment",
+      "title": "Why spark_udf Scales *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "Why does `mlflow.pyfunc.spark_udf` handle 300 million rows when `load_model(...).predict(df.toPandas())` fails?",
+      "choices": {
+        "A": "`spark_udf` uses a GPU automatically",
+        "B": "`spark_udf` sends rows to a serving endpoint",
+        "C": "`spark_udf` samples 1 % of the rows",
+        "D": "`spark_udf` ships the model to the workers and scores partitions in parallel as pandas batches, while `toPandas()` collects every row to the driver"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "`spark_udf` wraps the model as a Spark UDF, so each worker loads the model once and scores its partitions in pandas batches. `toPandas()` pulls the entire dataset into driver memory and can run out of memory. It neither uses GPUs automatically, calls endpoints, nor samples.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q006",
+      "domain": "model-deployment",
+      "title": "Deploying a Custom Model *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "An endpoint must return a churn probability **and** a yes/no flag based on a business threshold, using preprocessing that is not part of the scikit-learn model. How should this be deployed?",
+      "choices": {
+        "A": "Subclass `mlflow.pyfunc.PythonModel` with a `predict` method that applies the preprocessing and threshold, log it with `mlflow.pyfunc.log_model` (with an input example), register it in Unity Catalog, and serve that version from a Model Serving endpoint",
+        "B": "Deploy the raw scikit-learn model and ask every client to apply the threshold",
+        "C": "Write the logic in a SQL view and point the endpoint at the view",
+        "D": "Upload the notebook directly to Model Serving"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "A custom `pyfunc` model packages arbitrary Python logic with the model so the endpoint returns exactly what clients need. Unity Catalog requires a signature (inferred from the input example). Pushing logic to clients duplicates it, and endpoints serve registered MLflow models, not views or notebooks.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q007",
+      "domain": "model-deployment",
+      "title": "Request Format *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "Which JSON key is the recommended way to send tabular input to a custom model serving endpoint?",
+      "choices": {
+        "A": "`\"rows\"`",
+        "B": "`\"spark_dataframe\"`",
+        "C": "`\"dataframe_split\"` (with `columns` and `data`)",
+        "D": "`\"csv\"`"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Endpoints accept `dataframe_split` (recommended, pandas split orientation), `dataframe_records`, and the tensor formats `instances` / `inputs`. `rows`, `spark_dataframe`, and `csv` are not accepted keys.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q008",
+      "domain": "model-deployment",
+      "title": "Endpoint URL *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "A Model Serving endpoint is named `churn-model`. Which URL is used to query it over REST?",
+      "choices": {
+        "A": "`https://<workspace>/api/2.0/mlflow/predict/churn-model`",
+        "B": "`https://<workspace>/serving-endpoints/churn-model/invocations`",
+        "C": "`https://<workspace>/models/churn-model/score`",
+        "D": "`https://<workspace>/serving/churn-model/predict`"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The invocation URL is `https://<databricks-instance>/serving-endpoints/<endpoint-name>/invocations`, called with a POST and a JSON body. From Python, `mlflow.deployments.get_deploy_client(\"databricks\").predict(endpoint=..., inputs=...)` wraps the same call.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q009",
+      "domain": "model-deployment",
+      "title": "Splitting Traffic Between Versions *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "The team wants 80 % of real-time requests to keep going to version 7 and 20 % to go to version 8 for an A/B comparison. What is the recommended setup?",
+      "choices": {
+        "A": "Create two endpoints and have each client pick one at random",
+        "B": "Give version 8 the `challenger` alias; Model Serving then routes 20 % automatically",
+        "C": "Tag version 8 with `traffic=20`",
+        "D": "Serve both versions as served entities on one endpoint and set `traffic_config` routes of 80 and 20"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "One endpoint can host several served entities, and `traffic_config.routes` assigns each a `traffic_percentage` (summing to 100). Aliases and tags are registry metadata; they do not route traffic. Two endpoints push routing logic onto every client.",
+      "explanation": ""
+    },
+    {
+      "id": "08-model-deployment-q010",
+      "domain": "model-deployment",
+      "title": "Streaming Inference with Delta Live Tables *(2026 guide)*",
+      "difficulty": "medium",
+      "question": "How is streaming inference performed with Delta Live Tables?",
+      "choices": {
+        "A": "Delta Live Tables has a built-in `MODEL` table type that trains and scores automatically",
+        "B": "Load the registered model as a Spark UDF with `mlflow.pyfunc.spark_udf` and apply it to the streaming input inside a Delta Live Tables table definition",
+        "C": "Delta Live Tables can only run batch pipelines, so streaming inference is impossible",
+        "D": "Delta Live Tables forwards every row to the workspace's default serving endpoint"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "The model is loaded once as a Spark UDF and applied to `spark.readStream` data in a pipeline table; the pipeline manages checkpoints, retries, and autoscaling. There is no `MODEL` table type, pipelines support streaming tables, and nothing forwards rows to an endpoint automatically.",
+      "explanation": "Platform note: Delta Live Tables is now called Lakeflow Spark Declarative Pipelines (`from pyspark import pipelines as dp`; `import dlt` still works)."
+    },
+    {
+      "id": "08-model-deployment-q011",
+      "domain": "model-deployment",
+      "title": "Scale to Zero *(2026 guide)*",
+      "difficulty": "easy",
+      "question": "A development endpoint has `scale_to_zero_enabled=True`. What trade-off does this create?",
+      "choices": {
+        "A": "Lower cost when idle, but the first request after an idle period has cold-start latency",
+        "B": "Higher accuracy, but lower throughput",
+        "C": "The endpoint cannot be queried from Python",
+        "D": "Requests are dropped while the endpoint is idle"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Scaling to zero releases compute when there is no traffic, saving cost, but the next request waits while compute starts again. It has no effect on accuracy or client libraries, and requests are served once compute is back. Latency-critical production endpoints usually disable it.",
       "explanation": ""
     }
   ]

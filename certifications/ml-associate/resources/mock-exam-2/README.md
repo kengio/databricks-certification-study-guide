@@ -14,19 +14,24 @@ A second full-length practice exam with different scenarios, edge cases, and int
 
 | Detail | Value |
 | ------ | ----- |
-| Total Questions | 45 |
+| Total Questions | 48 (the real exam has 48 scored questions plus up to 10 unscored items) |
 | Time Limit | 90 minutes |
-| Passing Score | 70% (32 or more correct) |
-| Format | Multiple choice, single correct answer |
+| Target Score | 70% (34 or more correct) — a self-assessment target; Databricks does not publish a passing score |
+| Format | Single-answer multiple choice (the real exam also includes multiple-selection questions) |
 
-## Domain Distribution
+## Section Distribution
 
-| Domain | Weight | Questions |
+Questions follow the four sections and weights of the exam guide (re-issued August 2026; exam version March 1, 2025).
+
+| Section | Weight | Questions |
 | ------ | ------ | --------- |
-| Feature Engineering (Spark ML) | 33% | 15 |
-| Databricks ML | 29% | 13 |
-| ML Workflows (MLflow) | 29% | 13 |
-| MLflow Deployment | 9% | 4 |
+| Databricks Machine Learning | 38 % | 18 |
+| Data Processing | 19 % | 9 |
+| Model Development | 31 % | 15 |
+| Model Deployment | 12 % | 6 |
+
+> [!note]
+> This mock was rebuilt in October 2026 to match the exam guide's sections. Questions 17, 18, 21, 22, 23, 24, 25, 26, 27, 36, 37, 38, 39, 40, 41, 42, 45, 46, 47, 48 were written for that refresh; the rest were carried over and updated to Unity Catalog APIs. Question numbers changed, so earlier saved quiz progress for this mock does not carry over.
 
 ## How to Take This Exam
 
@@ -40,14 +45,14 @@ A second full-length practice exam with different scenarios, edge cases, and int
 
 | Score | Result | Action |
 | ----- | ------ | ------ |
-| 36–45 (80–100%) | Excellent — ready to sit the exam | Schedule your exam |
-| 32–35 (71–79%) | Passing — review weak areas | Review remaining weak topics |
-| 28–31 (62–70%) | Close — focused study needed | Study weak domains, retry in 1 week |
-| Below 28 (<62%) | Not ready — comprehensive review needed | Review all study material before retrying |
+| 39–48 (80–100%) | Excellent — ready to sit the exam | Schedule your exam |
+| 34–38 (70–79%) | Likely passing — review weak areas | Review remaining weak topics |
+| 29–33 (60–69%) | Close — focused study needed | Study weak sections, retry in 1 week |
+| Below 29 (<60%) | Not ready — comprehensive review needed | Review all study material before retrying |
 
 ## After the exam — debrief
 
-When you've finished the timed sitting, see [`debrief.md`](./debrief.md) for the per-question domain map and a study plan tailored to your miss count.
+When you've finished the timed sitting, see [`debrief.md`](./debrief.md) for the per-question section map and a study plan tailored to your miss count.
 
 ---
 

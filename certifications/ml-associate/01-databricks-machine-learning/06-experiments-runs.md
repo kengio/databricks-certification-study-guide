@@ -2,17 +2,33 @@
 title: Experiments & Runs
 type: study-material
 tags:
+  - ml-associate
   - experiments
   - runs
   - mlflow
-  - organization
+status: published
 ---
 
 # Experiments & Runs
 
 ## Overview
 
-Experiments and runs are the organizational structure for machine learning tracking. Experiments group related runs, and runs represent individual model training executions.
+Experiments and runs are the organizational structure for machine learning tracking. Experiments group related runs, and runs represent individual model training executions. This file covers two Section 1 bullets directly: finding the **best run with the MLflow Client API** and knowing **what the MLflow UI shows**.
+
+> [!abstract]
+>
+> - Experiment = container of runs; run = one execution with params, metrics, tags, artifacts, and models
+> - `MlflowClient().search_runs(experiment_ids=[...], filter_string=..., order_by=[...], max_results=...)` ranks runs server-side
+> - `mlflow.search_runs(...)` is the fluent equivalent and returns a pandas DataFrame
+> - The UI shows run details (params, metrics, tags, artifacts, source notebook version, datasets) and compares runs within or across experiments
+
+> [!tip] What the Exam Tests
+>
+> - Retrieving the single best run programmatically — `order_by=["metrics.<m> ASC|DESC"]` and take the first result
+> - Filter syntax: `metrics.`, `params.`, `tags.` prefixes; `get_run` needs a run ID and does not rank runs
+> - Which information you can read in the MLflow UI vs which needs the API
+
+---
 
 ## Concept Hierarchy
 
@@ -44,9 +60,9 @@ flowchart TD
 ```python
 import mlflow
 
-# Create experiment with automatic naming
+# Set (and create if missing) the active experiment; on Databricks use a workspace path
 
-exp = mlflow.set_experiment("churn_prediction_v1")
+exp = mlflow.set_experiment("/Users/user@company.com/churn_prediction_v1")
 
 # Create with full path (in notebooks, creates under user)
 
@@ -54,7 +70,7 @@ mlflow.set_experiment("/Users/user@company.com/projects/churn_prediction")
 
 # Get experiment info
 
-active_exp = mlflow.get_experiment_by_name("churn_prediction_v1")
+active_exp = mlflow.get_experiment_by_name("/Users/user@company.com/churn_prediction_v1")
 print(f"Experiment ID: {active_exp.experiment_id}")
 print(f"Artifact location: {active_exp.artifact_location}")
 print(f"Created: {active_exp.creation_time}")
@@ -68,7 +84,7 @@ client = MlflowClient()
 
 experiments = client.search_experiments()
 for exp in experiments:
-    print(f"{exp.name}: {len(client.search_runs(exp.experiment_id))} runs")
+    print(f"{exp.name}: {len(client.search_runs([exp.experiment_id]))} runs")
 ```
 
 ### **Experiment Organization Strategies**
@@ -217,8 +233,8 @@ client = MlflowClient()
 
 # Get multiple runs
 
-exp_id = mlflow.get_experiment_by_name("churn_model").experiment_id
-runs = client.search_runs(exp_id)
+exp_id = mlflow.get_experiment_by_name("/Users/user@company.com/churn_model").experiment_id
+runs = client.search_runs([exp_id])
 
 # Extract data for comparison
 
@@ -238,24 +254,53 @@ for run in runs:
 comparison_df = pd.DataFrame(comparison_data)
 print(comparison_df.to_string())
 
-# Find best run
+# Find best run (client-side) — works, but the server-side order_by below is the idiomatic way
 
 best_run = comparison_df.loc[comparison_df["accuracy"].idxmax()]
 print(f"Best run: {best_run['run_name']} with accuracy {best_run['accuracy']}")
 ```
 
-### **UI Comparison**
+### **Identify the Best Run with the MLflow Client API**
 
-```text
-MLflow UI workflow:
-1. Select Experiment (e.g., "churn_model")
-2. Select multiple runs to compare
-3. Visualize:
-   - Metrics comparison (line charts)
-   - Parameter values (table)
-   - Artifact differences
-   - Time series metrics
+```python
+from mlflow import MlflowClient
+
+client = MlflowClient()
+exp = client.get_experiment_by_name("/Users/user@company.com/churn_model")
+
+best = client.search_runs(
+    experiment_ids=[exp.experiment_id],
+    filter_string="attributes.status = 'FINISHED'",
+    order_by=["metrics.validation_rmse ASC"],   # lower RMSE is better
+    max_results=1,
+)[0]
+
+print(best.info.run_id, best.data.metrics["validation_rmse"])
+best_model_uri = f"runs:/{best.info.run_id}/model"
 ```
+
+| Need | Call |
+| :--- | :--- |
+| Best run by a metric | `client.search_runs([exp_id], order_by=["metrics.m DESC"], max_results=1)[0]` |
+| Same, as a DataFrame | `mlflow.search_runs(experiment_ids=[exp_id], order_by=["metrics.m DESC"]).iloc[0]` |
+| One known run | `client.get_run(run_id)` — needs the run ID, does **not** rank |
+| Full history of a metric | `client.get_metric_history(run_id, "loss")` |
+
+> [!warning] Common Mistake
+> The most *recent* run is not the *best* run, and opening the UI to sort a column is not "using the Client API". For loss-type metrics (RMSE, log loss) sort **ascending**; for score-type metrics (AUC, F1, R²) sort **descending**.
+
+### **Information Available in the MLflow UI**
+
+| UI area | What you can see / do |
+| :--- | :--- |
+| **Experiment runs table** | Every run with start time, duration, user, source, status, params, metrics; sort, filter, search; export to CSV |
+| **Run details page** | Run ID and name, parameters, metrics (with step charts), tags (editable), source notebook and its version |
+| **Artifacts tab** | Logged files and models, including generated code snippets to load the model for predictions |
+| **Datasets** | Datasets logged with the run (usable as a filter) |
+| **Compare** | Select 2+ runs → **Compare** for side-by-side params/metrics with a *show diff only* toggle; select several experiments → **Compare (n)** to compare runs **across experiments** |
+| **Charts** | Visualise metrics across runs (see *Compare MLflow runs and models using graphs and charts*) |
+
+Source: [Manage training code with MLflow runs](https://docs.databricks.com/aws/en/mlflow/runs).
 
 ### **Advanced Filtering & Search**
 
@@ -263,33 +308,33 @@ MLflow UI workflow:
 from mlflow.tracking import MlflowClient
 
 client = MlflowClient()
-exp_id = mlflow.get_experiment_by_name("churn_model").experiment_id
+exp_id = mlflow.get_experiment_by_name("/Users/user@company.com/churn_model").experiment_id
 
 # Filter by metrics
 
 high_accuracy_runs = client.search_runs(
-    experiment_ids=exp_id,
+    experiment_ids=[exp_id],
     filter_string="metrics.accuracy > 0.90 AND metrics.auc > 0.92"
 )
 
 # Filter by parameters
 
 rf_runs = client.search_runs(
-    experiment_ids=exp_id,
+    experiment_ids=[exp_id],
     filter_string="params.model_type = 'random_forest'"
 )
 
 # Filter by tags
 
 production_runs = client.search_runs(
-    experiment_ids=exp_id,
+    experiment_ids=[exp_id],
     filter_string="tags.status = 'production'"
 )
 
 # Order by metrics
 
 best_runs = client.search_runs(
-    experiment_ids=exp_id,
+    experiment_ids=[exp_id],
     order_by=["metrics.f1_score DESC"],
     max_results=5
 )
@@ -352,12 +397,12 @@ exp_names = [
 
 for exp_name in exp_names:
     exp = mlflow.get_experiment_by_name(exp_name)
-    runs = client.search_runs(exp.experiment_id)
+    runs = client.search_runs([exp.experiment_id])
     best_in_phase = max(runs, key=lambda r: r.data.metrics.get("auc", 0))
     print(f"{exp_name}: Best AUC = {best_in_phase.data.metrics['auc']}")
 ```
 
-## Best Practices
+## Naming, Tagging & Cleanup Practices
 
 ### **Naming Conventions**
 
@@ -436,18 +481,19 @@ client.delete_experiment(old_exp.experiment_id)
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### Best Run Query Returns the Worst Run
 
-**Scenario:** The default settings for Experiments & Runs do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Experiments & Runs to handle production-scale workloads.
+**Scenario:** `search_runs(..., order_by=["metrics.rmse DESC"], max_results=1)` returns the run with the highest error.
+**Fix:** Sort loss metrics (RMSE, log loss) ascending and score metrics (AUC, F1) descending.
 
-### Cannot Compare Runs Across Experiments
+### Runs Spread Across Several Experiments
 
-**Scenario:** Two runs are in different experiments and cannot be compared side-by-side.
-**Fix:** MLflow's compare feature only works within a single experiment. Log related runs to the same experiment, or use `mlflow.search_runs()` with multiple experiment IDs.
+**Scenario:** Two candidate runs were logged to different experiments and need to be compared side-by-side.
+**Fix:** On the Experiments page, select both experiments, click **Compare (n)**, select the runs, and click **Compare** — or query both with `mlflow.search_runs(experiment_ids=[id1, id2])`.
 
 ## Exam Tips
 
+- ✅ Best run via Client API: `search_runs(..., order_by=["metrics.x ASC"], max_results=1)[0]`
 - ✅ Understand hierarchy: Backend → Experiments → Runs
 - ✅ Know difference between status values (RUNNING, FINISHED, FAILED)
 - ✅ Recognize nested runs for hyperparameter sweeps
@@ -466,15 +512,16 @@ client.delete_experiment(old_exp.experiment_id)
 
 ## Related Topics
 
-- [MLflow Tracking](01-mlflow-tracking.md)
-- [ML Experimentation Workflow](03-ml-experimentation-workflow.md)
-- [Model Registry](../04-model-deployment/01-model-registry.md)
+- [MLflow Tracking](./05-mlflow-tracking.md)
+- [Model Registry in Unity Catalog](./07-model-registry.md)
+- [ML Experimentation Workflow](../03-model-development/04-ml-experimentation-workflow.md)
 
 ## Official Documentation
 
-- [Experiments](https://mlflow.org/docs/latest/experiments.html)
-- [Search API](https://mlflow.org/docs/latest/search-syntax.html)
+- [Manage training code with MLflow runs](https://docs.databricks.com/aws/en/mlflow/runs)
+- [Organize training runs with MLflow experiments](https://docs.databricks.com/aws/en/mlflow/experiments)
+- [MlflowClient.search_runs API](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.client.html)
 
 ---
 
-**[← Previous: MLflow Tracking](./01-mlflow-tracking.md) | [↑ Back to ML Workflows](./README.md) | [Next: ML Experimentation Workflow](./03-ml-experimentation-workflow.md) →**
+**[← Previous: MLflow Tracking](./05-mlflow-tracking.md) | [↑ Back to Section](./README.md) | [Next: Model Registry in Unity Catalog →](./07-model-registry.md)**
