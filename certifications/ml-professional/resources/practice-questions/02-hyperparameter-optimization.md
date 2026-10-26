@@ -12,6 +12,9 @@ status: complete
 
 # Practice Questions: Hyperparameter Optimization
 
+> [!note]
+> Questions 1–12 use Hyperopt, which Databricks Runtime ML stopped shipping after 16.4 LTS ML. The September 2025 exam guide names **Optuna** and **Ray** (questions 13–15). Questions 16–18 cover Advanced MLflow Usage.
+
 [← Back to Practice Questions](./README.md) | [Next: Model Lifecycle](./03-model-lifecycle.md)
 
 ---
@@ -206,6 +209,115 @@ D) Aggregate statistics across all 20 trials combined
 >
 > When `mlflow.sklearn.autolog()` is active, each child run created by Hyperopt captures: the hyperparameter values passed to the trial, all metrics computed during `fit()` and `score()` (e.g., AUC, accuracy, RMSE depending on estimator type), and the fitted model serialized as an MLflow artifact. This makes each child run a complete, reproducible record of that trial. Aggregate analysis across trials is visible in the parent run.
 
+---
+
+## Question 13 *(Medium)*: Distributing Optuna Trials with MLflow *(2026 guide)*
+
+**Question**: A team already uses Optuna on a single node. They want to spread trials across the executors of their multi-node Databricks cluster and have each trial recorded in an MLflow experiment, writing as little extra code as possible. What should they use?
+
+A) `optuna.create_study().optimize(objective, n_trials=200, n_jobs=32)`  
+B) `MlflowStorage(experiment_id=...)` as the study storage and `MlflowSparkStudy(study_name=..., storage=...).optimize(objective, n_trials=..., n_jobs=...)`  
+C) Hyperopt `fmin(..., trials=SparkTrials(parallelism=32))` with the Optuna objective unchanged  
+D) Python `asyncio` tasks that each call `study.optimize` with an MLflow callback
+
+> [!success]- Answer
+> **Correct Answer: B) `MlflowStorage(experiment_id=...)` as the study storage and `MlflowSparkStudy(study_name=..., storage=...).optimize(objective, n_trials=..., n_jobs=...)`**
+>
+> `MlflowStorage` keeps the study in MLflow and `MlflowSparkStudy` runs trials on PySpark executors, logging each trial.
+>
+> Plain Optuna `n_jobs` (A) uses threads on the driver only. Hyperopt (C) is a different library with a different objective contract, and it's no longer shipped in Databricks Runtime ML after 16.4 LTS ML. Async tasks (D) don't distribute work across the cluster. `MlflowStorage` lives in `mlflow.optuna.storage` and `MlflowSparkStudy` in `mlflow.pyspark.optuna.study` (MLflow 3, pre-installed on Databricks Runtime 17.0 ML+).
+
+---
+
+## Question 14 *(Easy)*: Starting Ray on a Databricks Cluster *(2026 guide)*
+
+**Question**: An engineer wants to run a Ray Tune search across the workers of a classic Databricks cluster from a notebook. What must happen before the `tune.Tuner(...).fit()` call?
+
+A) Nothing. `ray.init()` alone automatically uses all Spark workers  
+B) Start a Ray-on-Spark cluster with `ray.util.spark.setup_ray_cluster(...)`, then `ray.init()`  
+C) Convert the cluster to serverless compute, which runs Ray natively  
+D) Run `%pip install ray` after the Ray cluster starts, so workers pick up the library
+
+> [!success]- Answer
+> **Correct Answer: B) Start a Ray-on-Spark cluster with `ray.util.spark.setup_ray_cluster(...)`, then `ray.init()`**
+>
+> `setup_ray_cluster` launches Ray worker nodes on the Spark cluster's executors. Ray then sees the whole cluster.
+>
+> Without it, `ray.init()` starts a local Ray on the driver only. Ray on Spark isn't supported on serverless-based runtimes. Running `%pip` on a running Ray cluster shuts it down, so install libraries first.
+
+---
+
+## Question 15 *(Medium)*: Ray vs Spark for Distributing ML Work *(2026 guide)*
+
+**Question**: Which workload is the **best** fit for Ray rather than Apache Spark on Databricks?
+
+A) Joining three Delta tables and aggregating them into a feature table  
+B) Training a reinforcement-learning agent whose many simulation tasks have dynamic, heterogeneous resource needs  
+C) Fitting a Spark ML logistic regression on 500 million rows already in Delta  
+D) Running nightly SQL ETL to refresh gold tables
+
+> [!success]- Answer
+> **Correct Answer: B) Training a reinforcement-learning agent whose many simulation tasks have dynamic, heterogeneous resource needs**
+>
+> Ray excels at task (logical) parallelism: many independent, dynamic tasks such as RL, hyperparameter search, and deep-learning training.
+>
+> Spark excels at data parallelism, applying the same operation to every element of a large dataset: joins, aggregations, ETL, and MLlib. Databricks recommends combining them: Spark for the data-intensive stages, Ray for the compute-heavy stage.
+
+---
+
+## Question 16 *(Medium)*: Structuring Nested Runs for Cross-Validated Tuning *(2026 guide)*
+
+**Question**: A data scientist evaluates 12 hyperparameter configurations with 5-fold cross-validation, then refits the winner on the full training set. They want configurations to be comparable in the MLflow UI and the final model traceable to the search. Which run structure fits best?
+
+A) One flat run per fold per configuration (60 runs) with tags for fold and configuration  
+B) A parent run per fold, each with 12 child runs for the configurations  
+C) A parent run for the search, one child run per configuration logging mean and std CV metrics, and a final-model run under the same parent for the refit  
+D) A single run logging all 60 fold scores as separate metrics, plus the final model
+
+> [!success]- Answer
+> **Correct Answer: C) A parent run for the search, one child run per configuration logging mean and std CV metrics, and a final-model run under the same parent for the refit**
+>
+> Parent = search, children = configurations with aggregated CV metrics, plus a final-model run linked to the parent.
+>
+> This keeps the configurations side by side in the UI (one child each), stores the CV summary where it's compared, and links the final model to the search that produced it. Per-fold values can still be logged inside each child with `log_metric(..., step=fold)`. Flat runs (A) and fold-level parents (B) scatter each configuration's evidence; a single run (D) loses structure.
+
+---
+
+## Question 17 *(Easy)*: Logging a Metric Series *(2026 guide)*
+
+**Question**: During training, a team wants MLflow to chart validation loss for each of 50 epochs within one run. Which call should run inside the epoch loop?
+
+A) `mlflow.log_param("val_loss", loss)`  
+B) `mlflow.log_metric("val_loss", loss, step=epoch)`  
+C) `mlflow.set_tag("val_loss", loss)`  
+D) `mlflow.log_dict({"val_loss": loss}, "loss.json")`
+
+> [!success]- Answer
+> **Correct Answer: B) `mlflow.log_metric("val_loss", loss, step=epoch)`**
+>
+> `log_metric` with `step` records a time series that the run page charts.
+>
+> Parameters are write-once inputs, tags are metadata strings, and `log_dict` saves a file artifact (each call with the same name would overwrite it). Only metrics with steps produce a per-epoch chart.
+
+---
+
+## Question 18 *(Medium)*: Custom PyFunc with Request-Time Feature Engineering *(2026 guide)*
+
+**Question**: A custom `mlflow.pyfunc.PythonModel` must derive `hour_of_day` and a ratio against a merchant lookup file from the raw request, then score with a scikit-learn estimator stored as an artifact. Where should each step go?
+
+A) Load the estimator and lookup file inside `predict()` on every call, so they're always fresh  
+B) Load the estimator and lookup file once in `load_context()` via `context.artifacts[...]`; compute the features and score in `predict()`  
+C) Compute the features in the client application and keep the model a plain `mlflow.sklearn` flavor  
+D) Store the lookup file on the training cluster's local disk and read it by absolute path in `predict()`
+
+> [!success]- Answer
+> **Correct Answer: B) Load the estimator and lookup file once in `load_context()` via `context.artifacts[...]`; compute the features and score in `predict()`**
+>
+> `load_context()` runs once at load time for heavy artifacts; `predict()` runs per request for feature engineering and scoring.
+>
+> Packaging the transformation inside the model keeps training and serving consistent. Files passed through the `artifacts` dict are copied into the model package and resolved with `context.artifacts`. Local paths from the training cluster (D) don't exist on the serving container, and loading per request (A) adds latency.
+
+---
 [← Back to Practice Questions](./README.md) | [Next: Model Lifecycle](./03-model-lifecycle.md)
 
 ---

@@ -251,4 +251,148 @@ D) SHAP values from the model
 
 ---
 
-**[← Previous: "Practice Questions - Model Production Lifecycle"](./03-model-lifecycle.md) | [↑ Back to ML Professional Practice Questions](./README.md)**
+## Question 16 *(Medium)*: Reading Categorical Drift from the Drift Metrics Table *(2026 guide)*
+
+**Question**: A Lakehouse Monitoring profile tracks `merchant_category`, a string column. Which drift-metrics-table columns hold meaningful values for this column?
+
+A) `ks_test` and `wasserstein_distance`  
+B) `population_stability_index` only  
+C) `chi_squared_test`, `tv_distance`, `l_infinity_distance`, and `js_distance`  
+D) None. Categorical columns aren't profiled
+
+> [!success]- Answer
+> **Correct Answer: C) `chi_squared_test`, `tv_distance`, `l_infinity_distance`, and `js_distance`**
+>
+> Categorical columns get chi-square, total variation, L-infinity, and Jensen–Shannon statistics.
+>
+> `ks_test`, `wasserstein_distance`, and `population_stability_index` apply to numeric columns only and are NULL for categorical columns. Pair the chi-square p-value (significance) with a distance such as JS or TV (magnitude) before deciding to act.
+
+---
+
+## Question 17 *(Medium)*: Baseline vs Consecutive Drift *(2026 guide)*
+
+**Question**: A team wants to know (1) whether this week's feature distributions differ from the training data, and (2) whether they changed suddenly compared with last week. How do they get both from Lakehouse Monitoring?
+
+A) Only (2) is possible. Monitors can't compare against training data  
+B) Set `baseline_table_name` to the training data; read `drift_type = 'BASELINE'` rows for (1) and `drift_type = 'CONSECUTIVE'` rows for (2)  
+C) Create two monitors on the same table, one per comparison  
+D) Use `slicing_exprs` with the value `baseline`
+
+> [!success]- Answer
+> **Correct Answer: B) Set `baseline_table_name` to the training data; read `drift_type = 'BASELINE'` rows for (1) and `drift_type = 'CONSECUTIVE'` rows for (2)**
+>
+> `BASELINE` drift compares to the baseline table; `CONSECUTIVE` drift compares each window to the previous one.
+>
+> Without a baseline table, only consecutive drift is computed. Only one profile can exist per table, and slicing expressions split the data by segment; they don't define comparisons.
+
+---
+
+## Question 18 *(Easy)*: Choosing a Profile Type *(2026 guide)*
+
+**Question**: A `dim_customer` table has no event timestamp and is fully rewritten each night. The team wants to track null rates and distributions of the whole table over time. Which profile type fits?
+
+A) InferenceLog  
+B) TimeSeries  
+C) Snapshot  
+D) No profile is possible without a timestamp column
+
+> [!success]- Answer
+> **Correct Answer: C) Snapshot**
+>
+> Snapshot profiles the full table contents at each refresh.
+>
+> TimeSeries and InferenceLog need a timestamp column for windows. InferenceLog adds model-quality metrics for prediction tables. Snapshot profiles are limited to 4 TB; use TimeSeries for larger tables.
+
+---
+
+## Question 19 *(Medium)*: Custom Metric Types *(2026 guide)*
+
+**Question**: A fraud team wants (1) the total dollar amount of missed fraud per window, computed from table columns, and (2) how much that amount changed versus the baseline. Which custom metric types do they need?
+
+A) (1) derived, (2) aggregate  
+B) (1) aggregate, (2) drift  
+C) (1) drift, (2) derived  
+D) Both aggregate
+
+> [!success]- Answer
+> **Correct Answer: B) (1) aggregate, (2) drift**
+>
+> Aggregate metrics compute from table columns into the profile metrics table; drift metrics compare them across windows or against the baseline into the drift metrics table.
+>
+> Derived metrics combine previously computed aggregate metrics without scanning the table. Drift definitions use templates such as `{{current_df}}.metric - {{base_df}}.metric`. Custom metrics are defined with `MonitorMetric` / `MonitorMetricType` and passed as `custom_metrics`.
+
+---
+
+## Question 20 *(Easy)*: Per-Segment Monitoring *(2026 guide)*
+
+**Question**: A model's overall accuracy is stable, but the team suspects it degrades for transactions above $1,000 and for some merchant categories. How should the monitor be configured to show this?
+
+A) Add `slicing_exprs=["amount > 1000", "merchant_category"]`  
+B) Add `granularities=["1 hour"]`  
+C) Create a separate table per merchant category  
+D) Lower the alert threshold on overall accuracy
+
+> [!success]- Answer
+> **Correct Answer: A) Add `slicing_exprs=["amount > 1000", "merchant_category"]`**
+>
+> Slicing expressions compute every metric per slice: true / false for a predicate, and one slice per value for a column.
+>
+> Rows with `slice_key IS NULL` cover the whole table. High-cardinality columns slice on their top 100 values. Granularities change window sizes, not segments.
+
+---
+
+## Question 21 *(Medium)*: Monitoring Endpoint Health *(2026 guide)*
+
+**Question**: An SRE team needs alerts when a custom model endpoint's p95 latency, 5xx error rate, CPU usage, or memory usage spikes, in their existing Prometheus / Datadog stack. Where do these signals come from?
+
+A) The Lakehouse Monitoring drift metrics table  
+B) Model Serving endpoint metrics: shown in the Serving UI and exported through `/api/2.0/serving-endpoints/{name}/metrics` for Prometheus or Datadog scraping  
+C) The MLflow experiment of the training run  
+D) `system.access.audit`
+
+> [!success]- Answer
+> **Correct Answer: B) Model Serving endpoint metrics: shown in the Serving UI and exported through `/api/2.0/serving-endpoints/{name}/metrics` for Prometheus or Datadog scraping**
+>
+> Model Serving exposes infrastructure metrics (latency, request rate, error rate, CPU, memory) and a metrics export API.
+>
+> The Serving UI shows them for the last 14 days by default. Exported metrics include `request_latency_ms`, `request_5xx_count_total`, `cpu_usage_percentage`, and `mem_usage_percentage`. Profile and drift tables describe data and model quality, not infrastructure health. Inference tables can supplement latency and status codes for long-term history.
+
+---
+
+## Question 22 *(Hard)*: Selection Metric for Threshold-Driven Decisions *(2026 guide)*
+
+**Question**: An insurer auto-approves claims when the model's predicted probability of legitimacy is at least 0.9, auto-rejects at 0.1 or below, and sends the rest to manual review. Which metric should automated retraining use to select the best candidate model?
+
+A) Accuracy  
+B) AUROC  
+C) Log loss  
+D) Recall of the positive class
+
+> [!success]- Answer
+> **Correct Answer: C) Log loss**
+>
+> Actions depend on calibrated probabilities, and log loss directly penalizes poorly calibrated probabilities.
+>
+> AUROC measures ranking, and accuracy and recall evaluate hard labels at one threshold. A model can rank well yet be over-confident near 0.9, which is exactly where decisions happen. Compare challenger and champion on the same hold-out set, and require a minimum improvement plus guardrails before promotion.
+
+---
+
+## Question 23 *(Medium)*: Automating Retraining from Monitoring *(2026 guide)*
+
+**Question**: A team wants retraining to start automatically when a monitored model's `log_loss` in the profile metrics table exceeds a threshold. Which design implements this on Databricks?
+
+A) Wait for a data scientist to notice the dashboard and run the training notebook  
+B) Schedule the monitor refresh, then run a job whose first task queries the metric table and fails or exits when the threshold isn't breached, gating a downstream retraining task (or use a SQL alert that triggers the job)  
+C) Set the endpoint's workload size to Large so it retrains itself  
+D) Enable inference tables, which retrain the model when drift is detected
+
+> [!success]- Answer
+> **Correct Answer: B) Schedule the monitor refresh, then run a job whose first task queries the metric table and fails or exits when the threshold isn't breached, gating a downstream retraining task (or use a SQL alert that triggers the job)**
+>
+> A metric-check task (or alert) on the monitor's tables gates or triggers the retraining job.
+>
+> The Declarative Automation Bundles docs show this pattern: a `quality_monitors` resource plus a retraining job whose first task checks a monitored metric for violations. The retrained model then passes an evaluation gate before alias promotion. Inference tables only log requests; they don't retrain anything.
+
+---
+
+**[← Previous: "Practice Questions - Model Production Lifecycle"](./03-model-lifecycle.md) | [↑ Back to ML Professional Practice Questions](./README.md) | [Next: Spark ML & Scaling →](./05-spark-ml-and-scaling.md)**

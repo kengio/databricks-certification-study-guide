@@ -101,14 +101,14 @@ D) There is no meaningful difference — both use all available cluster resource
 **Question**: A Databricks Model Serving endpoint is configured with scale-to-zero enabled. A user sends the first request after the endpoint has been idle for two hours. What should they expect?
 
 A) The request fails with a 503 error and must be retried manually
-B) The request is queued and fulfilled after a 60–120 second cold start while new compute spins up
+B) The request is fulfilled after a cold start while compute is provisioned and the model loads
 C) The request is served instantly from a cached model artifact on disk
 D) Scale-to-zero is not available on Databricks Model Serving
 
 > [!success]- Answer
-> **Correct Answer: B) The request is queued and fulfilled after a 60–120 second cold start while new compute spins up**
+> **Correct Answer: B) The request is fulfilled after a cold start while compute is provisioned and the model loads**
 >
-> When scale-to-zero is enabled, the serving endpoint shuts down its compute when idle to reduce cost. The first request after an idle period triggers provisioning of new compute, loading the model into memory, and then serving the request — a process that typically takes 60–120 seconds. Applications that cannot tolerate this latency should keep a minimum of one replica active or use a warm-up strategy.
+> When scale-to-zero is enabled, the serving endpoint shuts down its compute when idle to reduce cost. The first request after an idle period triggers provisioning of new compute, loading the model into memory, and then serving the request — which adds noticeable cold-start latency. Databricks does not recommend scale to zero for production endpoints because capacity is not guaranteed while scaled to zero; latency-sensitive applications should disable it or keep minimum provisioned concurrency.
 
 ---
 
@@ -254,6 +254,169 @@ D) Event-triggered retraining — new data arriving in cloud storage automatical
 >
 > Drift-triggered (or performance-triggered) retraining responds to observed degradation rather than a fixed schedule, making it both timely and resource-efficient. Databricks Lakehouse Monitoring supports alert conditions on monitored metrics; when a threshold is breached, a notification can call a webhook that in turn invokes the Databricks Jobs REST API to start a retraining pipeline. This creates a closed-loop MLOps system where production monitoring directly drives model refresh.
 
+---
+
+## Question 16 *(Medium)*: ML Assets as Code with Bundles *(2026 guide)*
+
+**Question**: A platform team wants the MLflow experiment, the Unity Catalog registered model, and the Model Serving endpoint for a churn model to be version-controlled and deployed identically to dev, staging, and prod with one command per environment. What should they use?
+
+A) Create the resources in the UI in each workspace and document the steps in a README  
+B) Declare `experiments`, `registered_models`, and `model_serving_endpoints` resources in a bundle (`databricks.yml`) with one target per environment, and run `databricks bundle deploy -t <target>`  
+C) Package the training code as an MLflow Project and run it in each workspace  
+D) Submit one-off job runs with the Databricks CLI that create the resources if they don't exist
+
+> [!success]- Answer
+> **Correct Answer: B) Declare `experiments`, `registered_models`, and `model_serving_endpoints` resources in a bundle (`databricks.yml`) with one target per environment, and run `databricks bundle deploy -t <target>`**
+>
+> A bundle declares ML resources as configuration and deploys the same definitions to each target.
+>
+> Bundles (DABs in the exam guide; renamed Declarative Automation Bundles on March 16, 2026) support experiment, registered model (Unity Catalog), serving endpoint, job, pipeline, and quality monitor resources. Targets parameterize catalog names and workspaces. MLflow Projects package code, not workspace resources, and ad-hoc CLI runs aren't declarative.
+
+---
+
+## Question 17 *(Medium)*: Deploy Code vs Deploy Models *(2026 guide)*
+
+**Question**: In a regulated bank, data scientists can't access production customer data. Models must be retrained automatically each month on production data. Which deployment pattern fits?
+
+A) Deploy models: train in dev on a data sample and promote the artifact to prod  
+B) Deploy code: promote reviewed and tested training code to prod, where the production pipeline trains on production data  
+C) Train manually in prod notebooks each month  
+D) Export production data to dev so the model can be trained there
+
+> [!success]- Answer
+> **Correct Answer: B) Deploy code: promote reviewed and tested training code to prod, where the production pipeline trains on production data**
+>
+> Deploy code moves the code through environments and trains the final model in production.
+>
+> Databricks recommends deploy code in most situations. It suits restricted production data, and automated retraining is safer because the training code was reviewed and tested. Staging runs the same code on a limited subset as integration tests. Deploy models suits cases where training is very expensive or hard to reproduce.
+
+---
+
+## Question 18 *(Medium)*: Organizing Functions and Unit Tests *(2026 guide)*
+
+**Question**: Feature-transformation functions are used by several notebooks and must also be unit-tested automatically in CI on every pull request. Which organization does Databricks recommend for Python?
+
+A) Functions and their tests in the same notebook  
+B) Functions in one notebook and tests in another notebook linked with `%run`  
+C) Functions and tests in Python files in a Git folder or workspace files, imported by notebooks and run with `pytest`  
+D) Functions copied into every notebook that needs them
+
+> [!success]- Answer
+> **Correct Answer: C) Functions and tests in Python files in a Git folder or workspace files, imported by notebooks and run with `pytest`**
+>
+> Keep Python functions and their unit tests outside notebooks, in files.
+>
+> Files can be imported by notebooks and run by test frameworks in CI, and Databricks workspace tools can discover and run Python unit tests. The `%run` and same-notebook layouts are simpler, but those functions are hard to reuse and test outside notebooks. From a notebook, run `pytest.main([...])` and assert that the return code is 0 so failures fail the cell.
+
+---
+
+## Question 19 *(Hard)*: Which Integration Tests to Re-Run *(2026 guide)*
+
+**Question**: The ML pipeline has integration tests for feature engineering, training, evaluation, deployment, and inference. An engineer changes the **feature transformation** that computes `days_since_last_purchase`. Which integration tests must re-run at minimum?
+
+A) Feature engineering only  
+B) Training and evaluation only  
+C) Feature engineering, training, evaluation, deployment, and inference  
+D) Deployment and inference only
+
+> [!success]- Answer
+> **Correct Answer: C) Feature engineering, training, evaluation, deployment, and inference**
+>
+> A change re-tests its own stage and every stage downstream of it, and feature engineering is the first stage.
+>
+> New feature values change the training data, so the model must be retrained, re-evaluated, redeployed, and the inference path re-verified (including request-time feature logic). By contrast, a hyperparameter-only change starts at training and doesn't need the feature-engineering test re-run.
+
+---
+
+## Question 20 *(Medium)*: Querying a Custom Model with an SDK *(2026 guide)*
+
+**Question**: A Python service must send records to a Model Serving endpoint named `churn-prod` and receive predictions. The team wants an SDK that handles authentication and payload formatting. Which call should they use?
+
+A) `mlflow.deployments.get_deploy_client("databricks").predict(endpoint="churn-prod", inputs={"dataframe_split": ...})`  
+B) `mlflow.tracking.MlflowClient().get_run(...)` to read predictions from the latest run  
+C) `requests.get(url + "?token=...&inputs=...")`  
+D) `spark.sql("SELECT ai_query(...)")` from the Python service without a Spark session
+
+> [!success]- Answer
+> **Correct Answer: A) `mlflow.deployments.get_deploy_client("databricks").predict(endpoint="churn-prod", inputs={"dataframe_split": ...})`**
+>
+> The MLflow Deployments client's `predict()` takes the endpoint name and inputs, and handles auth and JSON formatting.
+>
+> Over raw REST, POST to `/serving-endpoints/<name>/invocations` with an `Authorization: Bearer` header and a JSON body such as `dataframe_split`. Never put tokens in the query string. The Tracking client doesn't call endpoints, and `ai_query` is a SQL function.
+
+---
+
+## Question 21 *(Medium)*: Route Optimization on an Existing Endpoint *(2026 guide)*
+
+**Question**: A high-QPS fraud endpoint was created without route optimization. The team now wants its higher throughput and lower overhead latency. What must they do?
+
+A) Call `update_config` with `route_optimized=True` on the existing endpoint  
+B) Create a new endpoint with `route_optimized=True`, move clients to its dedicated URL with OAuth tokens, then retire the old endpoint  
+C) Enable route optimization in the AI Gateway settings of the existing endpoint  
+D) Increase the workload size to Large, which turns on route optimization automatically
+
+> [!success]- Answer
+> **Correct Answer: B) Create a new endpoint with `route_optimized=True`, move clients to its dedicated URL with OAuth tokens, then retire the old endpoint**
+>
+> Route optimization can only be set when an endpoint is created.
+>
+> Route-optimized endpoints use a dedicated URL and accept only Databricks OAuth tokens, not personal access tokens. They're available for custom model and feature serving endpoints. Workload size controls concurrency, not routing.
+
+---
+
+## Question 22 *(Hard)*: Safe Rollout on a High-Traffic Endpoint *(2026 guide)*
+
+**Question**: A payments-risk endpoint serves version 7 at high traffic. Version 8 is ready, and a bad model would be costly. Which rollout meets the requirement to minimize risk while keeping capacity?
+
+A) Replace version 7 with version 8 in a single config update at 100 % traffic  
+B) Add version 8 as a second served entity at 5 % traffic, monitor errors, latency, and predictions, then raise its share step by step; set its share back to 0 % if checks fail  
+C) Create a second endpoint for version 8 and ask half of the client teams to switch to it  
+D) Enable scale to zero on version 7 so version 8 receives all new traffic automatically
+
+> [!success]- Answer
+> **Correct Answer: B) Add version 8 as a second served entity at 5 % traffic, monitor errors, latency, and predictions, then raise its share step by step; set its share back to 0 % if checks fail**
+>
+> A canary rollout through `traffic_config` limits the blast radius and allows instant rollback.
+>
+> During each config update, the existing configuration keeps serving traffic until the new one is ready, and a failed update leaves the active config in place. Size the served entities (workload size / concurrency) for peak traffic, and consider route optimization for throughput. After version 8 reaches 100 %, move the `@champion` alias in Unity Catalog.
+
+---
+
+## Question 23 *(Medium)*: Blue-Green vs Canary *(2026 guide)*
+
+**Question**: What distinguishes a blue-green deployment from a canary deployment for a model endpoint?
+
+A) Blue-green sends a small, growing share of traffic to the new version; canary switches all traffic at once  
+B) Blue-green keeps two complete versions and switches all traffic at once, with fast switch-back; canary exposes the new version to a small share first and ramps up gradually  
+C) Blue-green never exposes users to the new model; canary always uses 50 / 50 splits  
+D) They're identical except for naming
+
+> [!success]- Answer
+> **Correct Answer: B) Blue-green keeps two complete versions and switches all traffic at once, with fast switch-back; canary exposes the new version to a small share first and ramps up gradually**
+>
+> Blue-green is an atomic switch with instant rollback; canary is gradual exposure.
+>
+> Blue-green needs capacity for both versions during cutover, and every user hits the new model at the switch. Canary limits impact to the canary share while you monitor, so it's the usual choice for business-critical, high-traffic endpoints. Shadow deployment, not blue-green, is the zero-exposure strategy.
+
+---
+
+## Question 24 *(Medium)*: Registering a Custom PyFunc in Unity Catalog *(2026 guide)*
+
+**Question**: An engineer logs a custom `PythonModel` that needs a tokenizer file at inference time and registers it as `main.nlp.intent_model`. Registration fails. What is the most likely fix?
+
+A) Register to the workspace registry instead; Unity Catalog doesn't accept PyFunc models  
+B) Provide a model `signature` (or an `input_example` to infer it), set `mlflow.set_registry_uri("databricks-uc")`, and pass the tokenizer through `artifacts={...}`  
+C) Store the tokenizer in `/tmp` on the driver and read it from `predict()`  
+D) Use a two-level name such as `nlp.intent_model`
+
+> [!success]- Answer
+> **Correct Answer: B) Provide a model `signature` (or an `input_example` to infer it), set `mlflow.set_registry_uri("databricks-uc")`, and pass the tokenizer through `artifacts={...}`**
+>
+> Unity Catalog requires a signature, the UC registry URI, and a three-level name. Custom files go in `artifacts`.
+>
+> Files passed in `artifacts` are packaged with the model and resolved through `context.artifacts[...]` in `load_context()`, so they exist on the serving container. Once registered, the version can be deployed through the Serving UI, the REST API, or the Databricks / MLflow Deployments SDK.
+
+---
 [← Back to Practice Questions](./README.md) | [Next: Model Governance](./04-model-governance.md)
 
 ---
