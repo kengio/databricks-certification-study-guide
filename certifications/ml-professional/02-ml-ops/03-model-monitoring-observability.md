@@ -22,6 +22,22 @@ Effective production monitoring covers three distinct layers:
 - **Model performance (outputs vs. ground truth)**: Is the model still making accurate predictions? This requires joining predictions with delayed ground truth labels.
 - **System / operational health**: Is the endpoint up, fast, and handling load? Latency spikes and elevated error rates hurt user experience even when the model itself is correct.
 
+> [!abstract]
+>
+> - **Inference tables** log every served request and response to Delta. They're the raw material for every other monitoring layer.
+> - **Lakehouse Monitoring** (now called **data profiling**) builds InferenceLog, TimeSeries, or Snapshot profiles. Each writes profile and drift metric tables, with granularities, slices, baselines, and custom metrics.
+> - **Endpoint health** (latency, request rate, error rate, CPU, memory) comes from Model Serving metrics and can be exported to Prometheus or Datadog.
+> - **SQL alerts** on the metric tables notify stakeholders and can kick off retraining.
+
+> [!tip] What the Exam Tests
+>
+> - Picking the table type and profile type that solve a monitoring need, and explaining why
+> - Building a monitor on a snapshot, time series, or inference table
+> - Evaluating model performance over time, per slice, and per granularity from the metric tables
+> - Naming the components of a monitoring pipeline and the infrastructure metrics used for endpoint health
+
+---
+
 ## Monitoring Architecture
 
 ```mermaid
@@ -52,37 +68,33 @@ Enabling inference table logging when creating or updating an endpoint:
 
 ```python
 from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.serving import (
-    AutoCaptureConfigInput,
-    EndpointCoreConfigInput,
-    ServedModelInput,
-    ServedModelInputWorkloadSize
-)
+from databricks.sdk.service.serving import AutoCaptureConfigInput, ServedEntityInput
 
 client = WorkspaceClient()
 
-# Enable inference table logging on endpoint creation or update
+# Enable (legacy) inference table logging on an existing endpoint
 
 client.serving_endpoints.update_config(
     name="fraud-classifier-endpoint",
-    config=EndpointCoreConfigInput(
-        served_models=[
-            ServedModelInput(
-                model_name="ml_catalog.models.fraud_classifier",
-                model_version="12",
-                workload_size=ServedModelInputWorkloadSize.SMALL,
-                scale_to_zero_enabled=True
-            )
-        ],
-        auto_capture_config=AutoCaptureConfigInput(
-            catalog_name="ml_catalog",
-            schema_name="inference_logs",
-            table_name_prefix="fraud_classifier",
-            enabled=True
+    served_entities=[
+        ServedEntityInput(
+            entity_name="ml_catalog.models.fraud_classifier",
+            entity_version="12",
+            workload_size="Small",
+            scale_to_zero_enabled=False,
         )
-    )
+    ],
+    auto_capture_config=AutoCaptureConfigInput(
+        catalog_name="ml_catalog",
+        schema_name="inference_logs",
+        table_name_prefix="fraud_classifier",
+        enabled=True,
+    ),
 )
 ```
+
+> [!note] Platform update (Oct 2026)
+> `auto_capture_config` creates the original (legacy) inference table, and its documentation page is retired. For custom model, foundation model, and agent serving endpoints, Databricks recommends **AI Gateway-enabled inference tables**. Once an endpoint migrates to an AI Gateway inference table, it can't switch back ([Inference tables (retired docs)](https://docs.databricks.com/aws/en/machine-learning/model-serving/inference-tables)). AI Gateway-enabled tables use a different schema, for example `request_time` (TIMESTAMP), `served_entity_id`, and `execution_duration_ms` instead of `timestamp_ms` and `execution_time_ms`. For route-optimized custom model endpoints, `requester` is `NULL` ([Inference tables for serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/inference-tables-serving-endpoints)). The monitoring workflow is unchanged: log every request, join late labels on the request ID, and profile the result.
 
 ### Inference Table Schema
 
@@ -130,93 +142,157 @@ Write the result of this join to a scored table (e.g., `ml_catalog.inference_log
 
 ## Databricks Lakehouse Monitoring
 
-Lakehouse Monitoring (LHM) is a native Databricks feature that continuously profiles a Delta table and computes statistical metrics, detecting drift relative to a baseline table. It generates two output Delta tables automatically.
+Lakehouse Monitoring (LHM) is a native Databricks feature that profiles a Unity Catalog Delta table on a schedule and computes statistical, drift, and model-quality metrics. It writes two metric tables and an auto-generated dashboard.
 
-### Monitor Types
+> [!note] Platform update (Oct 2026)
+> Current docs call this feature **data profiling** ("Data profiling was formerly known as Lakehouse Monitoring"). It sits under **data quality monitoring**, next to table-level **anomaly detection** ([Data quality monitoring](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-quality-monitoring/)). The `w.quality_monitors` SDK API used below is **deprecated**. New code uses `w.data_quality.create_monitor(...)` with a `DataProfilingConfig` (see [Current API](#current-api-data-profiling-with-wdata_quality) below). The exam guide uses the Lakehouse Monitoring name, and the concepts are unchanged: profile types, metric tables, baselines, slices, granularities, and custom metrics.
 
-- **TimeSeries**: For tables that have a timestamp column. Metrics are computed per time window (e.g., daily, weekly). Best for most inference log scenarios.
-- **Snapshot**: For tables without a meaningful timestamp. Computes a point-in-time profile of the table's current state. Useful for batch scoring outputs.
-- **InferenceLog**: A specialized variant that understands the ML context — it expects `prediction_col` and `label_col` and computes model performance metrics (accuracy, AUC, RMSE) in addition to data quality statistics.
+### Choosing the Profile Type for a Table
+
+| Table / use case | Profile type | Why |
+| :--- | :--- | :--- |
+| Model requests and predictions with timestamps (inference table or scored table), optionally with labels | **InferenceLog** | Adds **model-quality** metrics (accuracy, log loss, F1, RMSE, R²…), slices automatically by `model_id_col`, and computes fairness metrics for Boolean slices |
+| Any table with a timestamp column (feature table, event log) where you track distributions per time window | **TimeSeries** | Metrics per window at each **granularity**; drift between consecutive windows |
+| Table without a meaningful timestamp, rewritten or updated in place (dimension table, nightly batch scoring snapshot) | **Snapshot** | Profiles the **whole table** at each refresh; maximum 4 TB (use TimeSeries above that) |
 
 ### Creating an InferenceLog Monitor
 
 ```python
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.catalog import (
+    MonitorCronSchedule,
     MonitorInferenceLog,
-    MonitorInferenceLogProblemType
+    MonitorInferenceLogProblemType,
 )
 
 client = WorkspaceClient()
 
-# Create an InferenceLog monitor on the scored table
-
+# Scored table: inference log + delayed labels; request_time cast from timestamp_ms to TIMESTAMP
 monitor = client.quality_monitors.create(
     table_name="ml_catalog.inference_logs.fraud_classifier_scored",
-    assets_dir="/Shared/ml-monitoring/fraud-classifier",
+    assets_dir="/Workspace/Shared/ml-monitoring/fraud-classifier",
     output_schema_name="ml_catalog.monitoring_outputs",
     inference_log=MonitorInferenceLog(
         problem_type=MonitorInferenceLogProblemType.PROBLEM_TYPE_CLASSIFICATION,
-        prediction_col="predicted_fraud_score",
+        prediction_col="predicted_label",
+        prediction_proba_col="predicted_fraud_score",   # needed for log_loss and roc_auc_score
         label_col="actual_fraud_label",
-        timestamp_col="timestamp_ms",
+        timestamp_col="request_time",
         model_id_col="served_model_name",
-        granularities=["1 day", "1 week"]
+        granularities=["1 day", "1 week"],
     ),
-    baseline_table_name="ml_catalog.ml_baselines.fraud_classifier_baseline"
+    baseline_table_name="ml_catalog.ml_baselines.fraud_classifier_baseline",
+    slicing_exprs=["merchant_category", "amount > 1000"],
+    schedule=MonitorCronSchedule(
+        quartz_cron_expression="0 0 6 * * ?",   # refresh daily at 06:00
+        timezone_id="UTC",
+    ),
 )
 
-print(f"Monitor created: {monitor.monitor_version}")
+client.quality_monitors.run_refresh(table_name="ml_catalog.inference_logs.fraud_classifier_scored")
 ```
+
+Key configuration concepts:
+
+- **Granularities** set the time-window sizes for TimeSeries and InferenceLog profiles, from 5 minutes up to 1 year (for example `"1 hour"`, `"1 day"`, `"1 week"`, `"1 month"`). Each window size produces its own rows.
+- **Slicing expressions** (`slicing_exprs`) each slice the data independently. A column name creates one slice per distinct value (the top 100 values for high-cardinality columns). A predicate such as `amount > 1000` creates two slices, true and false. The whole table is the row where `slice_key` and `slice_value` are `NULL`.
+- **Baseline table** (optional): the reference distribution for `BASELINE` drift, such as the training or validation set for an inference profile. It should match the monitored table's schema, except for the timestamp column.
+- When a time series or inference profile is first created, it analyzes only the **30 days** before creation. After that, all new data is processed.
 
 ### LHM Output Tables
 
 | Table | Contents |
 | :--- | :--- |
-| `<prefix>_profile_metrics` | Statistical profiles per column per time window (mean, stddev, null %, quantiles, model performance metrics) |
-| `<prefix>_drift_metrics` | Drift statistics vs. the baseline table (KS statistic, PSI, chi-square p-value per column per window) |
+| `{output_schema}.{table_name}_profile_metrics` | Summary statistics per column, window, granularity, slice, and model ID (`count`, `num_nulls`, `percent_null`, `avg`, `median`, `distinct_count`, `frequent_items`…), plus **model-quality** columns for InferenceLog profiles |
+| `{output_schema}.{table_name}_drift_metrics` | Drift statistics per column, window, and slice, with `drift_type` = `CONSECUTIVE` (vs previous window) or `BASELINE` (vs baseline table). See [Drift Detection](./04-drift-detection-remediation.md#lakehouse-monitoring-drift-metrics-table) |
+
+Both are ordinary Delta tables in the output schema. Query them with SQL, build dashboards on them, and attach SQL alerts to them. Metrics that span several columns, such as model accuracy, are stored with `column_name = ':table'` ([Data profiling metric tables](https://docs.databricks.com/aws/en/lakehouse-monitoring/monitor-output)).
 
 ## Performance Metrics by Model Type
 
 ### Classification Models
 
-LHM computes these per granularity window when `problem_type = CLASSIFICATION`:
+InferenceLog profiles with `problem_type = PROBLEM_TYPE_CLASSIFICATION` and both `label_col` and `prediction_col` compute these per window and slice:
 
-- **Accuracy** — fraction of correct predictions over the window
-- **Precision / Recall / F1** — especially important when class imbalance exists
-- **AUC-ROC** — requires prediction probabilities, not just hard labels
-- **Log Loss** — measures calibration quality
-
-You can also query raw confusion matrix components from the profile metrics table and reconstruct these manually for custom threshold analysis:
-
-```sql
--- Compute daily AUC from the profile metrics table
-SELECT
-    window_start_time,
-    AVG(CASE WHEN metric_name = 'auc' THEN metric_value END) AS avg_auc,
-    AVG(CASE WHEN metric_name = 'precision' THEN metric_value END) AS avg_precision,
-    AVG(CASE WHEN metric_name = 'recall' THEN metric_value END) AS avg_recall,
-    AVG(CASE WHEN metric_name = 'f1_score' THEN metric_value END) AS avg_f1
-FROM ml_catalog.monitoring_outputs.fraud_classifier_scored_profile_metrics
-WHERE window_start_time >= current_date() - 30
-GROUP BY window_start_time
-ORDER BY window_start_time DESC
-```
+- **`accuracy_score`**: fraction of correct predictions
+- **`precision`, `recall`, `f1_score`, `confusion_matrix`**: structs with averaged scores; essential under class imbalance
+- **`roc_auc_score`** and **`log_loss`**: require `prediction_proba_col`. Log loss measures **probability calibration**
+- **Fairness and bias** (`predictive_parity`, `predictive_equality`, `equal_opportunity`, `statistical_parity`) for Boolean-valued slices
 
 ### Regression Models
 
-LHM computes for `problem_type = REGRESSION`:
+With `problem_type = PROBLEM_TYPE_REGRESSION`: `mean_squared_error`, `root_mean_squared_error`, `mean_average_error`, `mean_absolute_percentage_error`, and `r2_score`. For a metric that isn't built in, such as mean residual or a business cost, define a **custom metric** (below).
 
-- **RMSE** and **MAE** — absolute error magnitudes tracked over time
-- **R²** — proportion of variance explained; should remain stable
-- **Mean residual** — should stay close to zero; systematic bias appears as a non-zero drift in residuals
-
-## Operational Metrics
-
-Operational metrics are available immediately from the inference table — no ground truth required. They are the first line of defense for detecting endpoint problems.
+### Evaluating Model Performance Trends Over Time
 
 ```sql
--- Operational metrics dashboard query (last 30 days)
+-- Daily accuracy and log loss for each model version, whole table (no slice)
+SELECT
+    window.start            AS window_start,
+    model_id_col            AS model_version,
+    accuracy_score,
+    log_loss
+FROM ml_catalog.monitoring_outputs.fraud_classifier_scored_profile_metrics
+WHERE column_name = ':table'
+  AND granularity = '1 day'
+  AND log_type = 'INPUT'
+  AND slice_key IS NULL
+ORDER BY window_start DESC, model_version
+```
+
+Change the filter to `slice_key = 'merchant_category'` to compare the same metrics **per segment**. Use `granularity = '1 week'` for a smoother trend. This is the "evaluate metrics at different granularities and with feature slicing" skill from the exam guide.
+
+## Custom Metrics
+
+When built-in statistics aren't enough, add **custom metrics**, defined as SQL expressions in Jinja templates ([Custom metrics](https://docs.databricks.com/aws/en/lakehouse-monitoring/custom-metrics)):
+
+| Type | Computed from | Stored in |
+| :--- | :--- | :--- |
+| **Aggregate** | Columns of the primary table, such as a weighted error | Profile metrics table |
+| **Derived** | Previously computed aggregate metrics (no table scan) | Profile metrics table |
+| **Drift** | Aggregate or derived metrics compared across two windows, or primary vs baseline (`{{current_df}}` vs `{{base_df}}`) | Drift metrics table |
+
+```python
+from pyspark.sql import types as T
+from databricks.sdk.service.catalog import MonitorMetric, MonitorMetricType
+
+custom_metrics = [
+    MonitorMetric(
+        type=MonitorMetricType.CUSTOM_METRIC_TYPE_AGGREGATE,
+        name="false_negative_cost",
+        input_columns=[":table"],
+        definition="sum(CASE WHEN actual_fraud_label = 1 AND predicted_label = 0 THEN amount ELSE 0 END)",
+        output_data_type=T.StructField("output", T.DoubleType()).json(),
+    ),
+    MonitorMetric(
+        type=MonitorMetricType.CUSTOM_METRIC_TYPE_DRIFT,
+        name="false_negative_cost_delta",
+        input_columns=[":table"],
+        definition="{{current_df}}.false_negative_cost - {{base_df}}.false_negative_cost",
+        output_data_type=T.StructField("output", T.DoubleType()).json(),
+    ),
+]
+# Pass custom_metrics=custom_metrics to quality_monitors.create(...) or update(...)
+```
+
+## Endpoint Health Metrics
+
+Operational health doesn't need ground truth. Model Serving exposes **infrastructure metrics**: **latency, request rate, error rate, CPU usage, and memory usage**. They're available by default in the Serving UI for the last 14 days and can be streamed to observability tools ([Monitor model quality and endpoint health](https://docs.databricks.com/aws/en/machine-learning/model-serving/monitor-diagnose-endpoints)).
+
+For alerting outside Databricks, scrape the endpoint's metrics export API, `GET /api/2.0/serving-endpoints/{name}/metrics` (OpenMetrics format), with **Prometheus** or **Datadog**. Exported metrics include `request_count_total`, `request_4xx_count_total`, `request_5xx_count_total`, `request_latency_ms`, `model_prediction_latency_ms`, `cpu_usage_percentage`, `mem_usage_percentage`, and `provisioned_concurrent_requests_total` ([Export endpoint health metrics](https://docs.databricks.com/aws/en/machine-learning/model-serving/metrics-export-serving-endpoint)).
+
+| Signal | Source | Typical alert |
+| :--- | :--- | :--- |
+| Latency (p50 / p95 / p99) | Serving UI metrics, `request_latency_ms`, or `execution_time_ms` in the inference table | p95 above the SLA |
+| Request rate | `request_count_total`, request counts per window | Sudden drop to near zero (routing failure) or a spike beyond capacity |
+| Error rate | `request_4xx_count_total` / `request_5xx_count_total`, `status_code` in the inference table | 5xx > 1 % |
+| CPU / memory | `cpu_usage_percentage`, `mem_usage_percentage` | Sustained > 80 % means scale out (larger workload size) |
+| Provisioned concurrency | `provisioned_concurrent_requests_total` | Saturation relative to configured concurrency |
+
+You can also derive the same signals from the **inference table** for long-term history:
+
+```sql
+-- Operational metrics from the inference table (last 30 days)
 SELECT
     DATE(FROM_UNIXTIME(timestamp_ms / 1000))  AS date,
     COUNT(*)                                   AS total_requests,
@@ -233,39 +309,87 @@ GROUP BY DATE(FROM_UNIXTIME(timestamp_ms / 1000))
 ORDER BY date DESC
 ```
 
-Key thresholds to alert on:
+## Components of a Monitoring Pipeline
 
-- `p95_latency_ms > 500` for synchronous real-time APIs
-- `error_rate_pct > 1.0` for any production endpoint
-- `total_requests` drops to near zero (endpoint unhealthy or traffic routing failure)
+| Component | Implementation on Databricks |
+| :--- | :--- |
+| **Logging** | Inference tables on the serving endpoint; batch scoring writes predictions to Delta |
+| **Ground-truth join** | Scheduled job joins late labels on `databricks_request_id` (or a business key) into a scored table |
+| **Drift detection** | LHM drift metrics table (`BASELINE` and `CONSECUTIVE`) |
+| **Model performance** | LHM InferenceLog model-quality columns, per window, slice, and model version |
+| **Model / endpoint health** | Serving UI metrics, metrics export API, inference-table latency and status codes |
+| **Alerting and action** | Databricks SQL alerts on the metric tables → notification destinations → retraining job |
 
 ## Setting Up Alerts
 
-Databricks SQL Alerts let you query any Delta table on a schedule and fire a notification when results cross a threshold. Pair them with the LHM output tables for automated monitoring.
+Write a Databricks SQL query against the profile or drift metrics table, create a **SQL alert** on it, and choose how often it evaluates. Email notification is the default. Add webhook, Slack, or PagerDuty destinations to reach other stakeholders ([Profile alerts](https://docs.databricks.com/aws/en/lakehouse-monitoring/monitor-alerts)).
 
-### Sample Alert Query: AUC Degradation
+### Sample Alert Query: Calibration Degradation
 
 ```sql
--- Alert query: AUC dropped more than 5% from baseline
+-- Returns a row (and fires the alert) when yesterday's log loss breaches the agreed threshold.
+-- Set the threshold from the validation / baseline log loss plus an agreed tolerance.
 SELECT
-    window_start_time,
-    metric_value                             AS current_auc,
-    baseline_metric_value                    AS baseline_auc,
-    ROUND(baseline_metric_value - metric_value, 4) AS auc_drop
+    window.start   AS window_start,
+    model_id_col   AS model_version,
+    log_loss
 FROM ml_catalog.monitoring_outputs.fraud_classifier_scored_profile_metrics
-WHERE
-    window_start_time = current_date() - INTERVAL 1 DAY
-    AND metric_name = 'auc'
-    AND (baseline_metric_value - metric_value) > 0.05
+WHERE column_name = ':table'
+  AND log_type = 'INPUT'
+  AND slice_key IS NULL
+  AND granularity = '1 day'
+  AND window.start = date_sub(current_date(), 1)
+  AND log_loss > 0.35
 ```
 
 Alert configuration steps:
 
-1. Create a SQL Alert in Databricks SQL pointing to the query above.
-2. Set **trigger condition** to "Query returns any rows."
-3. Set **schedule** to daily at 09:00 (runs after LHM refresh).
-4. Set **notification destination** to a Slack webhook or PagerDuty integration.
-5. Set **rearm** period to 24 hours to avoid repeated paging on the same incident.
+1. Create a SQL alert in Databricks SQL on the query above.
+2. Set the **trigger condition** to "query returns any rows" (or a threshold on a result column).
+3. Set the **schedule** to run after the monitor refresh, for example daily at 07:00.
+4. Set **notification destinations**: email for the model owners, plus Slack or PagerDuty for on-call.
+5. Set a **rearm** period so the same incident doesn't page repeatedly.
+
+For automated action, add a job task that checks the metric and triggers the retraining job. See [Model Lifecycle Orchestration](./02-model-lifecycle-orchestration.md#drift-triggered-retraining).
+
+### Current API: Data Profiling with `w.data_quality`
+
+```python
+from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.dataquality import (
+    AggregationGranularity,
+    DataProfilingConfig,
+    InferenceLogConfig,
+    InferenceProblemType,
+    Monitor,
+)
+
+w = WorkspaceClient()
+schema = w.schemas.get(full_name="ml_catalog.monitoring_outputs")
+table = w.tables.get(full_name="ml_catalog.inference_logs.fraud_classifier_scored")
+
+w.data_quality.create_monitor(
+    monitor=Monitor(
+        object_type="table",               # always "table" for data profiling
+        object_id=table.table_id,
+        data_profiling_config=DataProfilingConfig(
+            output_schema_id=schema.schema_id,
+            assets_dir="/Workspace/Shared/ml-monitoring/fraud-classifier",
+            inference_log=InferenceLogConfig(
+                problem_type=InferenceProblemType.INFERENCE_PROBLEM_TYPE_CLASSIFICATION,
+                prediction_column="predicted_label",
+                label_column="actual_fraud_label",
+                timestamp_column="request_time",
+                model_id_column="served_model_name",
+                granularities=[AggregationGranularity.AGGREGATION_GRANULARITY_1_DAY],
+            ),
+            slicing_exprs=["merchant_category"],
+        ),
+    ),
+)
+```
+
+Source: [Create a data profile using the API](https://docs.databricks.com/aws/en/lakehouse-monitoring/create-monitor-api). Refreshes run through `w.data_quality.create_refresh(...)`, and only one profile can exist per table in a metastore.
 
 ## Common Pitfalls
 
@@ -273,7 +397,7 @@ Alert configuration steps:
 - **Label delay creates a monitoring blind spot**: Ground truth may arrive 7–30 days late. You cannot compute AUC or accuracy in real time. Use prediction drift monitoring (output distribution) as a leading indicator while waiting for labels.
 - **Monitoring only aggregate metrics**: A model that is accurate on average may be systematically wrong for a specific demographic or business segment. Add per-segment monitoring (e.g., group by merchant category or geographic region) to catch fairness issues.
 - **Alert fatigue from overly sensitive thresholds**: Start with conservative thresholds (e.g., AUC drop > 10%), observe baseline variance over 2–4 weeks, then tighten to a meaningful threshold (e.g., > 5%). Firing too often causes teams to ignore alerts.
-- **Not setting a baseline table**: LHM drift metrics require a baseline for comparison. Without it, drift metrics cannot be computed. Set the baseline to your training data distribution or a known-good production window.
+- **Not setting a baseline table**: Without a baseline, LHM computes only `CONSECUTIVE` drift (window vs previous window). `BASELINE` drift, comparing against training data or a known-good period, needs `baseline_table_name`. Set the baseline to your training or validation data distribution, or to a known-good production window.
 - **Forgetting to refresh the monitor**: LHM runs on a schedule. If the schedule is misconfigured or the refresh fails silently, the monitoring output tables become stale without any visible error.
 
 ## Practice Questions
@@ -339,14 +463,25 @@ Alert configuration steps:
 **Scenario:** The Lakehouse Monitoring dashboard shows stale data because the inference table has not been refreshed or the monitoring profile has not been re-computed.
 **Fix:** Ensure the inference table is enabled on the serving endpoint BEFORE production traffic begins (it cannot backfill). Schedule the monitoring `refresh()` job to run at least as frequently as the reporting cadence. Verify the inference table Delta path has not been moved or compacted in a way that breaks the monitor's table reference.
 
+## Exam Tips
+
+> [!tip]
+>
+> - Match the **profile type to the table**: inference or scored tables → **InferenceLog**; timestamped feature or event tables → **TimeSeries**; tables without a usable timestamp that are rewritten in place → **Snapshot**.
+> - Model-quality metrics (accuracy, log loss, F1, RMSE, R²) appear only for **InferenceLog** profiles with `label_col` and `prediction_col`. `log_loss` and `roc_auc_score` also need `prediction_proba_col`.
+> - "Per segment" means **`slicing_exprs`**. "Per day vs per week" means **granularities**. A business-specific measure means a **custom metric** (aggregate, derived, or drift).
+> - Endpoint **health** (latency, request rate, error rate, CPU, memory) comes from Model Serving metrics and the metrics export API, not from the profile tables.
+> - Exam wording "Lakehouse Monitoring" = current docs "data profiling".
+
 ## Key Takeaways
 
 - **Three monitoring layers**: Data quality (inputs), model performance (predictions vs ground truth), system/operational health (latency, error rate)
 - **Inference tables**: Enable BEFORE production traffic starts — requests already served cannot be backfilled retroactively
-- **Lakehouse Monitoring**: Automatically generates a profile metrics table and a drift metrics table from a scored Delta table
-- **Ground truth join**: Required for accuracy metrics; often delayed hours-to-days — join inference logs with late-arriving labels in a background job
-- **Prediction drift as leading indicator**: Detectable immediately without labels; use to trigger investigation while waiting for ground truth labels to confirm concept drift
-- **SQL alerts on drift metrics**: Set thresholds on the drift metrics table to send Slack/PagerDuty notifications automatically when drift exceeds acceptable bounds
+- **Lakehouse Monitoring (now "data profiling")**: InferenceLog / TimeSeries / Snapshot profiles write `{table}_profile_metrics` and `{table}_drift_metrics` Delta tables plus a dashboard
+- **Granularities and slices**: Metrics per time window size and per `slicing_exprs` slice; whole-table rows have `slice_key IS NULL`; multi-column metrics use `column_name = ':table'`
+- **Custom metrics**: Aggregate and derived (profile table) and drift (drift table), defined as SQL templates
+- **Endpoint health**: Latency, request rate, error rate, CPU, memory in the Serving UI (14 days) or exported to Prometheus / Datadog
+- **SQL alerts on metric tables**: Notify email / Slack / PagerDuty / webhooks when thresholds are breached; chain to retraining
 - **Remediation actions**: Retrain on recent data, roll back to `previous_champion` alias, investigate upstream pipeline schema changes
 
 ## Related Topics
@@ -354,7 +489,18 @@ Alert configuration steps:
 - [Drift Detection & Remediation](./04-drift-detection-remediation.md)
 - [Model Versioning & Registry](../02-ml-ops/01-model-versioning-registry.md)
 - [MLflow Basics](../../../shared/fundamentals/mlflow-basics.md)
+- [Model Lifecycle Orchestration](./02-model-lifecycle-orchestration.md) — drift-triggered retraining
+
+## Official Documentation
+
+- [Data quality monitoring (data profiling, formerly Lakehouse Monitoring)](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-quality-monitoring/)
+- [Data profiling metric tables](https://docs.databricks.com/aws/en/lakehouse-monitoring/monitor-output)
+- [Custom metrics](https://docs.databricks.com/aws/en/lakehouse-monitoring/custom-metrics)
+- [Profile alerts](https://docs.databricks.com/aws/en/lakehouse-monitoring/monitor-alerts)
+- [Create a data profile using the API](https://docs.databricks.com/aws/en/lakehouse-monitoring/create-monitor-api)
+- [Monitor model quality and endpoint health](https://docs.databricks.com/aws/en/machine-learning/model-serving/monitor-diagnose-endpoints)
+- [Export serving endpoint health metrics](https://docs.databricks.com/aws/en/machine-learning/model-serving/metrics-export-serving-endpoint)
 
 ---
 
-**[↑ Back to Model Governance & MLOps](./README.md) | [Next: Drift Detection and Remediation](./04-drift-detection-remediation.md) →**
+**[← Previous: Model Lifecycle Orchestration](./02-model-lifecycle-orchestration.md) | [↑ Back to ML Ops](./README.md) | [Next: Drift Detection and Remediation →](./04-drift-detection-remediation.md)**

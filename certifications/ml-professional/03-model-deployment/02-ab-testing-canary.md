@@ -28,6 +28,20 @@ risk spectrum:
 - **Canary deployment**: small percentage of traffic routed to challenger, real users affected
 - **Full A/B test**: 50/50 traffic split after initial canary validation, statistical comparison
 
+> [!abstract]
+>
+> - **Shadow, canary, A/B, and blue-green** trade user exposure against speed and rollback ease
+> - On Model Serving, a rollout = a second served entity + `traffic_config` percentages, ramped while monitoring
+> - **Route optimization** (set at creation) raises QPS and lowers overhead latency for high-traffic endpoints
+
+> [!tip] What the Exam Tests
+>
+> - Comparing blue-green and canary for high-traffic, business-critical applications
+> - Implementing a rollout strategy with served entities and traffic splits, including rollback
+> - Promoting the winner in Unity Catalog with aliases
+
+---
+
 ## Deployment Strategy Comparison
 
 ```mermaid
@@ -113,42 +127,36 @@ the champion continues serving the majority.
 
 ```python
 from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.serving import (
-    EndpointCoreConfigInput,
-    ServedModelInput,
-    ServedModelInputWorkloadSize,
-    TrafficConfig,
-    Route,
-)
+from databricks.sdk.service.serving import Route, ServedEntityInput, TrafficConfig
 
 client = WorkspaceClient()
+
+served_entities = [
+    ServedEntityInput(
+        name="champion",
+        entity_name="ml_catalog.fraud_models.fraud_classifier",
+        entity_version="3",
+        workload_size="Medium",            # sized for production concurrency
+        scale_to_zero_enabled=False,       # keep warm for fair latency comparison
+    ),
+    ServedEntityInput(
+        name="challenger",
+        entity_name="ml_catalog.fraud_models.fraud_classifier",
+        entity_version="4",
+        workload_size="Medium",
+        scale_to_zero_enabled=False,
+    ),
+]
 
 # Phase 1: start with 10% canary traffic
 
 client.serving_endpoints.update_config(
     name="fraud-classifier-endpoint",
-    config=EndpointCoreConfigInput(
-        served_models=[
-            ServedModelInput(
-                name="champion",
-                model_name="ml_catalog.fraud_models.fraud_classifier",
-                model_version="3",
-                workload_size=ServedModelInputWorkloadSize.SMALL,
-                scale_to_zero_enabled=False,  # Keep warm for fair latency comparison
-            ),
-            ServedModelInput(
-                name="challenger",
-                model_name="ml_catalog.fraud_models.fraud_classifier",
-                model_version="4",
-                workload_size=ServedModelInputWorkloadSize.SMALL,
-                scale_to_zero_enabled=False,
-            ),
-        ],
-        traffic_config=TrafficConfig(routes=[
-            Route(served_model_name="champion", traffic_percentage=90),
-            Route(served_model_name="challenger", traffic_percentage=10),
-        ]),
-    ),
+    served_entities=served_entities,
+    traffic_config=TrafficConfig(routes=[
+        Route(served_model_name="champion", traffic_percentage=90),
+        Route(served_model_name="challenger", traffic_percentage=10),
+    ]),
 )
 ```
 
@@ -161,13 +169,11 @@ thousands of requests per variant) and metrics remain stable.
 
 client.serving_endpoints.update_config(
     name="fraud-classifier-endpoint",
-    config=EndpointCoreConfigInput(
-        served_models=[...],  # same served_models list as above
-        traffic_config=TrafficConfig(routes=[
-            Route(served_model_name="champion", traffic_percentage=75),
-            Route(served_model_name="challenger", traffic_percentage=25),
-        ]),
-    ),
+    served_entities=served_entities,  # same served entities as above
+    traffic_config=TrafficConfig(routes=[
+        Route(served_model_name="champion", traffic_percentage=75),
+        Route(served_model_name="challenger", traffic_percentage=25),
+    ]),
 )
 ```
 
@@ -182,19 +188,17 @@ from databricks.sdk.service.serving import AutoCaptureConfigInput
 
 client.serving_endpoints.update_config(
     name="fraud-classifier-endpoint",
-    config=EndpointCoreConfigInput(
-        served_models=[...],
-        auto_capture_config=AutoCaptureConfigInput(
-            catalog_name="ml_catalog",
-            schema_name="inference_logs",
-            table_name_prefix="fraud_classifier",
-            enabled=True,
-        ),
+    served_entities=served_entities,
+    auto_capture_config=AutoCaptureConfigInput(
+        catalog_name="ml_catalog",
+        schema_name="inference_logs",
+        table_name_prefix="fraud_classifier",
+        enabled=True,
     ),
 )
 ```
 
-The inference table schema includes these columns:
+The legacy inference table schema includes these columns. AI Gateway-enabled inference tables use a different schema; see the platform note in [Model Monitoring](../02-ml-ops/03-model-monitoring-observability.md#inference-tables).
 
 | Column | Description |
 | :--- | :--- |
@@ -206,19 +210,97 @@ The inference table schema includes these columns:
 | `execution_time_ms` | Model inference latency |
 | `sampling_fraction` | Fraction of requests captured |
 | `client_request_id` | Optional caller-provided ID |
+| `request_metadata` | Map with the endpoint name, model name, and model version that served the request |
 
 Use the inference table to compare champion vs. challenger performance directly in SQL:
 
 ```sql
 SELECT
-    JSON_EXTRACT_SCALAR(request, '$.served_model_name') AS model_name,
+    request_metadata['model_version']                    AS model_version,
     COUNT(*)                                             AS request_count,
     AVG(execution_time_ms)                               AS avg_latency_ms,
     SUM(CASE WHEN status_code != 200 THEN 1 ELSE 0 END) AS error_count
 FROM ml_catalog.inference_logs.fraud_classifier_payload
 WHERE date(from_unixtime(timestamp_ms / 1000)) >= current_date() - 7
-GROUP BY JSON_EXTRACT_SCALAR(request, '$.served_model_name')
+GROUP BY request_metadata['model_version']
 ```
+
+## Comparing Deployment Strategies for High-Traffic Applications
+
+| Strategy | How it works on Databricks | Rollback | Cost / risk profile | Fits high traffic when… |
+| :--- | :--- | :--- | :--- | :--- |
+| **Blue-green** | Two complete environments: "blue" (current) and "green" (new). Traffic switches **all at once**, for example a second endpoint behind the client, or a second served entity flipped 0 % → 100 % | Instant: switch back to blue | Needs full capacity for both versions during cutover. **All users hit the new model at the switch**, so a bad model affects 100 % of traffic until you switch back | The new version is already validated (shadow / staging) and you need a clean, atomic switch |
+| **Canary** | Second served entity on the **same endpoint**; `traffic_config` sends 1–10 % to it, then ramps | Set the canary's traffic back to 0 % | Limits the blast radius to the canary share; needs live monitoring during each step | **Default for business-critical, high-traffic endpoints**: real traffic, small exposure, gradual confidence |
+| **Shadow** | Champion answers every request; the challenger scores a copy offline or asynchronously | Nothing to roll back; users never see the challenger | Extra compute; no business-outcome measurement | Validating a risky change before any user exposure |
+| **A/B test** | Fixed split (for example 50/50) held long enough for statistics | Re-route traffic | Half the users get the challenger | Measuring a business-metric difference, not just safety |
+
+For a **high-traffic, business-critical** model where a failure costs money, the safe combination is:
+
+1. **Scale out** the endpoint for the traffic: choose a workload size (concurrency) that covers peak QPS × model latency.
+2. **Enable route optimization** on the endpoint for higher QPS and lower, more stable overhead latency.
+3. **Roll out with a canary**: add the new version as a second served entity and **increase its traffic in steps** while monitoring. Don't jump straight to 100 %.
+
+## Implementing a Rollout Strategy with Model Serving
+
+```mermaid
+flowchart LR
+    A["v3 = 100 %"] --> B["Add v4 as 2nd served entity<br/>v3 95 % / v4 5 %"]
+    B --> C{"Healthy?<br/>errors, latency,<br/>prediction drift"}
+    C -- yes --> D["v3 75 % / v4 25 %"] --> E["v3 50 % / v4 50 %"] --> F["v4 100 %<br/>remove v3 entity<br/>move @champion alias"]
+    C -- no --> R["Rollback: v3 100 % / v4 0 %"]
+```
+
+```python
+from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.serving import Route, TrafficConfig
+
+client = WorkspaceClient()
+
+def set_split(champion_pct: int) -> None:
+    """Re-apply the same served entities with a new traffic split."""
+    client.serving_endpoints.update_config_and_wait(
+        name="fraud-classifier-endpoint",
+        served_entities=served_entities,                 # champion (v3) + challenger (v4)
+        traffic_config=TrafficConfig(routes=[
+            Route(served_model_name="champion", traffic_percentage=champion_pct),
+            Route(served_model_name="challenger", traffic_percentage=100 - champion_pct),
+        ]),
+    )
+
+for champion_pct in (95, 75, 50, 0):
+    set_split(champion_pct)
+    if not canary_is_healthy("challenger"):              # your check: inference table + endpoint metrics
+        set_split(100)                                    # rollback: all traffic back to v3
+        break
+```
+
+How endpoint updates behave, from the Databricks docs:
+
+- **The old configuration keeps serving until the new one is ready.** A config update doesn't drop traffic, and a **failed update leaves the active config in place** ("Ready (Update failed)") ([Create custom model serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints), [Manage serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/manage-serving-endpoints)).
+- **One update at a time.** An in-progress update can be cancelled from the Serving UI. Updates can take several minutes, so ramp in deliberate steps rather than seconds apart.
+- **Traffic routes reference served entities by name** (`served_model_name`), and each step's percentages must cover all traffic (100 % total).
+- **Promote in the registry too.** After the challenger reaches 100 %, move the `@champion` alias to v4 and keep `previous_champion` on v3 (see below).
+
+## Route Optimization for High-Traffic Endpoints
+
+Route optimization improves the network path between the client and the model. It unlocks **higher QPS** than non-optimized endpoints and gives **lower, more stable overhead latency** ([Route optimization](https://docs.databricks.com/aws/en/machine-learning/model-serving/route-optimization)).
+
+```python
+from databricks.sdk.service.serving import EndpointCoreConfigInput, ServedEntityInput
+
+client.serving_endpoints.create(
+    name="fraud-classifier-ro",
+    route_optimized=True,                 # set at creation time only
+    config=EndpointCoreConfigInput(served_entities=served_entities),
+)
+```
+
+| Fact | Exam implication |
+| :--- | :--- |
+| Set `route_optimized=True` **when the endpoint is created**. Existing endpoints can't be updated to become route optimized | Plan it up front. For an existing endpoint, create a new route-optimized endpoint and cut clients over |
+| Available for **custom model** and **feature serving** endpoints; not for Foundation Model APIs or external models | It applies to classic ML serving, which is what this exam covers |
+| Queries use a **dedicated URL** and require **OAuth** tokens (no personal access tokens) | Client code and secrets change when you switch |
+| Recommended for endpoints with high QPS and throughput requirements | Pairs with horizontal scale-out for high-traffic rollouts |
 
 ## Statistical Significance
 
@@ -393,9 +475,20 @@ champion version and remove the old served model from the endpoint configuration
 **Scenario:** After running a 50/50 A/B test for several days, the p-value remains above 0.05 despite a visible difference in mean metrics.
 **Fix:** Verify sample size is sufficient (hundreds to thousands per variant). Short tests or low-traffic endpoints need longer run times. If the true effect size is small (e.g., 0.002 AUC improvement), you may need tens of thousands of samples. Consider whether the improvement justifies the operational cost of the rollout even if statistically significant.
 
+## Exam Tips
+
+> [!tip]
+>
+> - "High-traffic, business-critical, roll out safely" means **scale out + route optimization + canary** (second served entity, traffic increased incrementally while monitoring). Jumping to 100 % at once is the unsafe distractor.
+> - Blue-green is an **all-at-once switch with fast rollback**. Canary is **gradual exposure**. Shadow is **zero exposure**.
+> - Route optimization can only be enabled **at endpoint creation**, and it needs OAuth tokens and the dedicated URL.
+> - During an endpoint config update, the **previous configuration keeps serving** until the new one is ready.
+
 ## Key Takeaways
 
-- **Three strategies**: Shadow (0% traffic, offline comparison only), Canary (5–25%, gradual live rollout), A/B test (50/50 split, statistical comparison)
+- **Strategies**: Shadow (0% traffic, offline comparison only), Canary (5–25%, gradual live rollout), A/B test (50/50 split, statistical comparison), Blue-green (all-at-once switch, instant rollback)
+- **Rollout on Model Serving**: second served entity + `traffic_config` steps; old config keeps serving during updates; rollback = route 100 % back
+- **Route optimization**: higher QPS / lower overhead latency; creation-time only; OAuth + dedicated URL
 - **Inference tables**: Must enable BEFORE the test starts — historical requests cannot be backfilled after the fact
 - **`scale_to_zero=False` during tests**: Cold-start latency unfairly inflates challenger latency measurements and biases comparisons
 - **Statistical significance**: Two-sample t-test; need hundreds-to-thousands of samples per variant — never declare a winner from fewer than ~100 samples
@@ -409,6 +502,13 @@ champion version and remove the old served model from the endpoint configuration
 - [Model Lifecycle Orchestration](../02-ml-ops/02-model-lifecycle-orchestration.md)
 - [Model Monitoring & Observability](../02-ml-ops/03-model-monitoring-observability.md)
 
+## Official Documentation
+
+- [Serve multiple models to a model serving endpoint](https://docs.databricks.com/aws/en/machine-learning/model-serving/serve-multiple-models-to-serving-endpoint)
+- [Create custom model serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints)
+- [Route optimization on serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/route-optimization)
+- [Monitor model quality and endpoint health](https://docs.databricks.com/aws/en/machine-learning/model-serving/monitor-diagnose-endpoints)
+
 ---
 
-**[← Previous: Model Serving and Deployment](./01-model-serving-deployment.md) | [↑ Back to Model Production Lifecycle](./README.md) | [Next: Model Lifecycle Orchestration](../02-ml-ops/02-model-lifecycle-orchestration.md) →**
+**[← Previous: Model Serving and Deployment](./01-model-serving-deployment.md) | [↑ Back to Model Deployment](./README.md)**

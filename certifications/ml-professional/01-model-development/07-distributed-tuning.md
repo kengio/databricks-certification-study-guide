@@ -12,7 +12,25 @@ tags:
 
 ## Overview
 
-Scaling hyperparameter optimization to large distributed systems using Spark, XGBoost, and specialized frameworks for enterprise ML.
+Scaling hyperparameter optimization to large distributed systems using Spark, XGBoost, and specialized frameworks for enterprise ML. The September 2025 exam guide names two tools explicitly: **distributed tuning with Optuna integrated with MLflow**, and **distributed tuning with Ray**.
+
+> [!abstract]
+>
+> - Trials are independent, so tuning **scales out** well: the driver proposes configurations and workers evaluate them in parallel.
+> - **Optuna + MLflow**: `MlflowStorage` stores the study in an MLflow experiment, and `MlflowSparkStudy` runs trials in parallel on Spark executors. Each trial is logged to MLflow.
+> - **Ray Tune** runs on a Ray-on-Spark cluster (`setup_ray_cluster`) and adds schedulers such as ASHA and PBT for early stopping and adaptive search.
+> - **Hyperopt + `SparkTrials`** is the older Databricks pattern. The September 2025 exam guide names Optuna and Ray, not Hyperopt, and Databricks Runtime ML no longer ships Hyperopt (see the platform update below).
+
+> [!tip] What the Exam Tests
+>
+> - The minimal-setup way to distribute Optuna trials and log each one to MLflow (`MlflowStorage` + `MlflowSparkStudy`)
+> - Starting Ray on Databricks and running a Ray Tune search
+> - How `parallelism` / `n_jobs` trades speed against the adaptivity of Bayesian search
+
+> [!note] Platform update (Oct 2026)
+> Open-source Hyperopt is no longer maintained. Databricks Runtime ML stops including it after **16.4 LTS ML**. For a similar distributed experience, Databricks recommends **Optuna** (single-node or with `MlflowSparkStudy`) or **Ray Tune**. MLflow 3.0, which provides the Optuna integration, is pre-installed in Databricks Runtime 17.0 ML and above ([Hyperparameter tuning](https://docs.databricks.com/aws/en/machine-learning/automl-hyperparam-tuning/), [Optuna](https://docs.databricks.com/aws/en/machine-learning/automl-hyperparam-tuning/optuna)). The `SparkTrials` material below stays as background: older practice questions still use it, and the trial-parallelism concepts carry over to Optuna and Ray Tune.
+
+---
 
 ## Distributed Tuning Architecture
 
@@ -54,31 +72,27 @@ flowchart TB
 
 ```python
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
-from sparkxgb import XGBoostClassifier
+from xgboost.spark import SparkXGBClassifier
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 import mlflow
 
-# XGBoost on Spark (distributed training)
+# Distributed XGBoost on Spark (xgboost>=1.7, Databricks Runtime 12.0 ML+).
+# Disable cluster autoscaling: distributed XGBoost does not support it.
 
-xgb_classifier = XGBoostClassifier(
-    featuresCol="features",
-    labelCol="label",
-    predictionCol="prediction",
-    # XGBoost specific parameters
-    num_workers=8,
-    use_gpu=True,  # GPU acceleration
-    gpu_id=0
+xgb_classifier = SparkXGBClassifier(
+    features_col="features",
+    label_col="label",
+    num_workers=8,     # number of concurrent Spark tasks used for training
+    use_gpu=True,      # one GPU per Spark task
 )
 
 # Define distributed parameter grid
 
 param_grid = (
     ParamGridBuilder()
-    .addGrid(xgb_classifier.max_depth, [3, 5, 7, 9])
-    .addGrid(xgb_classifier.learning_rate, [0.01, 0.05, 0.1, 0.2])
-    .addGrid(xgb_classifier.reg_lambda, [0, 0.5, 1.0])
-    .addGrid(xgb_classifier.subsample, [0.6, 0.8, 1.0])
-    .addGrid(xgb_classifier.num_round, [50, 100, 200])
+    .addGrid(xgb_classifier.max_depth, [3, 5, 7])
+    .addGrid(xgb_classifier.learning_rate, [0.05, 0.1])
+    .addGrid(xgb_classifier.n_estimators, [100, 200])
     .build()
 )
 
@@ -92,8 +106,8 @@ cv = CrossValidator(
     estimator=xgb_classifier,
     estimatorParamMaps=param_grid,
     evaluator=evaluator,
-    numFolds=5,
-    parallelism=8,  # Run 8 models in parallel
+    numFolds=3,
+    parallelism=1,  # each fit already uses num_workers tasks; don't oversubscribe slots
     seed=42
 )
 
@@ -109,8 +123,7 @@ cv_model = cv.fit(train_df)
 
 mlflow.log_param("total_combinations", len(param_grid))
 mlflow.log_metric("best_cv_score", max(cv_model.avgMetrics))
-mlflow.log_param("num_folds", 5)
-mlflow.log_param("parallelism", 8)
+mlflow.log_param("num_folds", 3)
 
 mlflow.end_run()
 
@@ -123,8 +136,7 @@ print(f"Best ROC-AUC: {max(cv_model.avgMetrics):.4f}")
 ## Spark Trials with Hyperopt
 
 ```python
-from hyperopt import hp, fmin, tpe, SparkTrials, space_eval, Trials
-from pyspark.ml import PipelineModel
+from hyperopt import hp, fmin, tpe, SparkTrials, space_eval
 import mlflow
 
 # Define search space for distributed optimization
@@ -138,6 +150,10 @@ space = {
     'reg_alpha': hp.loguniform('reg_alpha', -2, 1),
     'reg_lambda': hp.loguniform('reg_lambda', -2, 1)
 }
+
+# Prepare pandas data on the driver; SparkTrials ships it to each trial
+X_train_pd, y_train_pd = train_pdf[feature_cols], train_pdf["label"]
+X_val_pd, y_val_pd = val_pdf[feature_cols], val_pdf["label"]
 
 def objective_spark(params):
     """Objective function for Spark distributed optimization"""
@@ -161,16 +177,11 @@ def objective_spark(params):
             random_state=42
         )
         
-        # Convert Spark DataFrame to Pandas for sklearn model
-        X_train_pd = train_df.select("features").toPandas()
-        y_train_pd = train_df.select("label").toPandas()
-        
+        # X_train_pd / X_val_pd are pandas objects prepared on the driver
+        # (never reference a Spark DataFrame inside a SparkTrials objective)
         model.fit(X_train_pd, y_train_pd)
         
         # Evaluate
-        X_val_pd = val_df.select("features").toPandas()
-        y_val_pd = val_df.select("label").toPandas()
-        
         y_pred_proba = model.predict_proba(X_val_pd)[:, 1]
         auc = roc_auc_score(y_val_pd, y_pred_proba)
         
@@ -181,8 +192,8 @@ def objective_spark(params):
 # Distributed trials
 
 spark_trials = SparkTrials(
-    parallelism=16,  # Number of parallel workers
-    timeout=3600  # Timeout per trial in seconds
+    parallelism=16,  # Number of trials evaluated concurrently
+    timeout=3600  # Maximum seconds for the whole fmin() call
 )
 
 # Run distributed optimization
@@ -300,124 +311,129 @@ class PopulationBasedTraining:
         return max(self.population, key=lambda x: x["score"])
 ```
 
+## Optuna with MLflow (Distributed)
+
+Optuna defines the search space *inside* the objective with `trial.suggest_*` calls. Its default sampler is TPE (Bayesian-style), and pruners stop unpromising trials early. MLflow 3 adds two classes that make Optuna distributed with almost no setup ([Optuna on Databricks](https://docs.databricks.com/aws/en/machine-learning/automl-hyperparam-tuning/optuna)):
+
+| Class | Import | Role |
+| :--- | :--- | :--- |
+| `MlflowStorage` | `from mlflow.optuna.storage import MlflowStorage` | Optuna storage backend on the MLflow Tracking Server. It takes the shared `experiment_id` and batches writes to avoid REST API throttling |
+| `MlflowSparkStudy` | `from mlflow.pyspark.optuna.study import MlflowSparkStudy` | Launches Optuna trials in parallel on **PySpark executors**. Defaults to `TPESampler` and `MedianPruner` |
+
+```python
+import mlflow
+import sklearn.datasets
+import sklearn.ensemble
+import sklearn.metrics
+import sklearn.model_selection
+import sklearn.svm
+from mlflow.optuna.storage import MlflowStorage
+from mlflow.pyspark.optuna.study import MlflowSparkStudy
+
+
+def objective(trial):
+    # Search space is defined inside the objective
+    regressor_name = trial.suggest_categorical("regressor", ["SVR", "RandomForest"])
+    if regressor_name == "SVR":
+        model = sklearn.svm.SVR(C=trial.suggest_float("svr_c", 1e-3, 1e3, log=True))
+    else:
+        model = sklearn.ensemble.RandomForestRegressor(
+            max_depth=trial.suggest_int("rf_max_depth", 2, 32)
+        )
+    X, y = sklearn.datasets.fetch_california_housing(return_X_y=True)
+    X_tr, X_va, y_tr, y_va = sklearn.model_selection.train_test_split(X, y, random_state=0)
+    model.fit(X_tr, y_tr)
+    return sklearn.metrics.mean_squared_error(y_va, model.predict(X_va))  # value to minimize
+
+
+experiment_id = mlflow.get_experiment_by_name("/Users/someone@example.com/optuna-tuning").experiment_id
+storage = MlflowStorage(experiment_id=experiment_id)       # shared study state lives in MLflow
+
+study = MlflowSparkStudy(study_name="housing-tuning", storage=storage)
+study.optimize(objective, n_trials=64, n_jobs=8)            # 8 trials at a time on executors
+
+print(study.best_params, study.best_value)
+```
+
+| Approach | Distributed? | MLflow logging | Setup |
+| :--- | :--- | :--- | :--- |
+| `optuna.create_study().optimize(..., n_jobs=k)` | No. Threads on the driver | Manual, or Optuna's `MLflowCallback` | Minimal, single node |
+| `MlflowStorage` + **`MlflowSparkStudy`** | **Yes**, across Spark executors | Built in: every trial goes to the experiment | **Minimal** (the exam's "minimal setup" answer) |
+| Optuna inside Ray Tune (`OptunaSearch`) | Yes, across a Ray cluster | Through Ray's MLflow integration | Requires a Ray-on-Spark cluster |
+| Hand-rolled async / multiprocessing | Partly | Manual | High, fragile |
+
+> [!warning] Common Mistake
+> `study.optimize(objective, n_jobs=16)` on a plain Optuna study uses **threads on the driver**. It isn't distributed across the cluster. Distribution on Databricks comes from `MlflowSparkStudy` (Spark executors) or Ray.
+
 ## Ray Tune for Distributed Hyperparameter Optimization
 
-```python
-from ray import tune
-from ray.tune import CLIReporter
-from ray.tune.schedulers import PopulationBasedTraining
-import time
-
-def training_function(config):
-    """Objective function for Ray Tune"""
-    
-    # Train model with config
-    model = train_model(config)
-    
-    # Evaluate multiple times for tracking
-    for epoch in range(config.get("epochs", 10)):
-        score = evaluate_model(model)
-        
-        # Report intermediate result
-        tune.report(score=score, epoch=epoch)
-
-# Define search space
-
-config = {
-    "learning_rate": tune.loguniform(1e-4, 1e-1),
-    "batch_size": tune.choice([32, 64, 128, 256]),
-    "epochs": 10
-}
-
-# Ray Tune with PBT scheduler
-
-pbt_scheduler = PopulationBasedTraining(
-    time_attr="epoch",
-    perturbation_interval=2,
-    hyperparam_mutations={
-        "learning_rate": [1e-4, 1e-3, 1e-2, 1e-1],
-        "batch_size": [32, 64, 128, 256]
-    }
-)
-
-tuner = tune.Tuner(
-    tune.with_distributed(training_function),
-    param_space=config,
-    tune_config=tune.TuneConfig(
-        num_samples=16,  # 16 parallel trials
-        scheduler=pbt_scheduler,
-        max_concurrent_trials=16
-    )
-)
-
-results = tuner.fit()
-best_result = results.get_best_result(metric="score", mode="max")
-print(f"Best config: {best_result.config}")
-```
-
-## Optuna for Distributed Tuning
+Ray Tune runs trials as Ray tasks and adds trial schedulers: ASHA for early stopping, PBT for population-based training. On Databricks, start a Ray-on-Spark cluster first, then run a `Tuner` ([Ray on Databricks](https://docs.databricks.com/aws/en/machine-learning/ray/), [Ray and MLflow](https://docs.databricks.com/aws/en/machine-learning/ray/ray-mlflow)).
 
 ```python
-import optuna
-from optuna.integration import PyTorchLightningPruningCallback
+import os
+
 import mlflow
+import ray
+from mlflow.utils.databricks_utils import get_databricks_env_vars
+from ray import tune
+from ray.tune.schedulers import ASHAScheduler
+from ray.util.spark import setup_ray_cluster, shutdown_ray_cluster
 
-def create_optuna_study():
-    """Create Optuna study for distributed optimization"""
-    
-    def objective(trial):
-        # Suggest hyperparameters
-        learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
-        max_depth = trial.suggest_int("max_depth", 3, 15)
-        l2_regularization = trial.suggest_float("l2_reg", 0, 1)
-        
-        with mlflow.start_run(nested=True) as run:
-            mlflow.log_params({
-                "learning_rate": learning_rate,
-                "max_depth": max_depth,
-                "l2_regularization": l2_regularization
-            })
-            
-            # Train model
-            model = train_model(
-                learning_rate=learning_rate,
-                max_depth=max_depth,
-                l2_regularization=l2_regularization
-            )
-            
-            # Evaluate with pruning
-            score = evaluate_model(model)
-            
-            mlflow.log_metric("auc", score)
-            
-            return score
-    
-    # Create study with pruning
-    sampler = optuna.samplers.TPESampler(seed=42)
-    pruner = optuna.pruners.MedianPruner()
-    
-    study = optuna.create_study(
-        direction="maximize",
-        sampler=sampler,
-        pruner=pruner
+setup_ray_cluster(min_worker_nodes=2, max_worker_nodes=4, num_cpus_per_node=8)
+ray.init(ignore_reinit_error=True)
+
+mlflow_db_creds = get_databricks_env_vars("databricks")   # credentials for Ray workers
+EXPERIMENT = "/Users/someone@example.com/ray-tune-xgb"
+mlflow.set_experiment(EXPERIMENT)
+
+
+def train_xgb(config, parent_run_id):
+    import xgboost as xgb
+    from sklearn.metrics import roc_auc_score
+
+    os.environ.update(mlflow_db_creds)                     # workers authenticate to MLflow
+    mlflow.set_experiment(EXPERIMENT)
+    with mlflow.start_run(tags={"mlflow.parentRunId": parent_run_id}):
+        mlflow.log_params(config)
+        model = xgb.XGBClassifier(n_estimators=200, **config).fit(X_train, y_train)
+        auc = roc_auc_score(y_val, model.predict_proba(X_val)[:, 1])
+        mlflow.log_metric("val_auc", auc)
+        tune.report({"val_auc": auc})                      # feed the score back to Tune
+
+
+with mlflow.start_run(run_name="ray_tune_xgb") as parent:
+    tuner = tune.Tuner(
+        tune.with_parameters(train_xgb, parent_run_id=parent.info.run_id),
+        param_space={
+            "max_depth": tune.randint(3, 10),
+            "learning_rate": tune.loguniform(1e-3, 0.3),
+            "subsample": tune.uniform(0.6, 1.0),
+        },
+        tune_config=tune.TuneConfig(
+            metric="val_auc", mode="max", num_samples=32, scheduler=ASHAScheduler(),
+        ),
     )
-    
-    return study, objective
+    best = tuner.fit().get_best_result()
+    mlflow.log_params({f"best_{k}": v for k, v in best.config.items()})
+    mlflow.log_metric("best_val_auc", best.metrics["val_auc"])
 
-# Run distributed optimization
-
-study, objective = create_optuna_study()
-
-study.optimize(
-    objective,
-    n_trials=100,
-    n_jobs=16,  # Parallel jobs
-    show_progress_bar=True
-)
-
-print(f"Best trial: {study.best_value}")
-print(f"Best params: {study.best_params}")
+shutdown_ray_cluster()
 ```
+
+Key points:
+
+- The driver opens the **parent** run. Each trial (a Ray task on a worker) opens its own run, linked through the `mlflow.parentRunId` tag. The Databricks docs pass the parent `run_id` into each task for the same reason: the worker processes don't share the driver's active run.
+- Workers need MLflow credentials. `get_databricks_env_vars("databricks")` captures them on the driver, and each task applies them with `os.environ.update(...)`.
+- With a single-node model per trial (XGBoost here), the training data travels with the trial. For large data, load it from Delta or a Volume inside the trial, or use Ray Data.
+- `tune.report({...})` returns metrics to Tune. Schedulers like ASHA use those intermediate reports to stop bad trials early.
+
+### Optuna vs Ray Tune vs Hyperopt on Databricks
+
+| Library | Distribution mechanism on Databricks | Status (Oct 2026) |
+| :--- | :--- | :--- |
+| **Optuna** | `MlflowSparkStudy` on Spark executors, or inside Ray Tune | Recommended. MLflow 3 integration built in |
+| **Ray Tune** | Ray-on-Spark cluster (`setup_ray_cluster`) | Recommended for distributed search, especially deep learning and large searches |
+| **Hyperopt** | `SparkTrials` on Spark executors | Not maintained. Removed from Databricks Runtime ML after 16.4 LTS ML |
 
 ## Scaling Considerations
 
@@ -467,15 +483,6 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
     return time_overhead
 ```
 
-## Key Takeaways
-
-- Distributed tuning via Spark parallelism and SparkTrials
-- XGBoost native distributed training with GPU support
-- Population-based training with evolutionary algorithms
-- Ray Tune for multi-framework distributed optimization
-- Communication overhead critical in large-scale tuning
-- Trade-off between parallelism and synchronization
-
 ## Practice Questions
 
 > [!success]- Question 1: Parallelism in Tuning
@@ -517,11 +524,49 @@ def estimate_communication_overhead(num_trials, num_workers, data_size_gb):
 **Scenario:** `SparkTrials` jobs fail with serialisation errors or missing library exceptions on worker nodes, even though the objective function runs locally on the driver.
 **Fix:** Ensure all Python packages used inside the objective function are installed on every worker (use cluster-scoped init scripts or `%pip install`). Avoid referencing Spark DataFrames inside the objective when using `SparkTrials` -- convert to Pandas on the driver first, since each trial runs in its own process on a worker.
 
+### Optuna "parallel" study runs no faster on a large cluster
+
+**Scenario:** `optuna.create_study().optimize(objective, n_jobs=32)` on a 16-worker cluster still runs every trial on the driver.
+**Fix:** Plain Optuna `n_jobs` uses driver threads. Use `MlflowSparkStudy` with `MlflowStorage` to run trials on Spark executors, or run Optuna through Ray Tune on a Ray-on-Spark cluster.
+
+### Ray trials can't log to MLflow
+
+**Scenario:** Trials fail with authentication errors when calling `mlflow.log_metric` inside a Ray task.
+**Fix:** Capture credentials on the driver with `get_databricks_env_vars("databricks")`, apply them in each task with `os.environ.update(...)`, and call `mlflow.set_experiment(...)` inside the task.
+
+## Exam Tips
+
+> [!tip]
+>
+> - "Distribute Optuna trials across the cluster **and** log each trial to MLflow with minimal setup" means `MlflowStorage(experiment_id=...)` + `MlflowSparkStudy(...).optimize(...)`.
+> - Ray Tune needs a Ray cluster first: `ray.util.spark.setup_ray_cluster(...)` on a Databricks cluster.
+> - Higher trial parallelism finishes sooner but gives Bayesian samplers (TPE) fewer completed results to learn from per round. Balance speed against search efficiency.
+> - Hyperopt and `SparkTrials` show up in older material. The current exam guide names Optuna and Ray.
+
+## Key Takeaways
+
+- **Trials are independent**, so tuning scales out: driver proposes, workers evaluate, results flow back
+- **Optuna + MLflow**: `MlflowStorage` (study state in an MLflow experiment) + `MlflowSparkStudy` (trials on Spark executors), with every trial logged
+- **Ray Tune**: `setup_ray_cluster` → `tune.Tuner(...)` with schedulers such as ASHA / PBT; pass MLflow credentials and the parent run ID into trials
+- **Hyperopt `SparkTrials`**: legacy pattern; Hyperopt is not in Databricks Runtime ML after 16.4 LTS ML
+- **Distributed XGBoost** (`xgboost.spark.SparkXGBClassifier`) parallelises *each fit*; trial-level parallelism parallelises *across fits*. Don't oversubscribe task slots with both
+- **Parallelism trade-off**: more concurrent trials means faster wall-clock time but less adaptive Bayesian search
+
 ## Related Topics
 
 - [Tuning Fundamentals](./05-tuning-fundamentals.md)
 - [Bayesian Optimization](./06-bayesian-optimization.md)
+- [Scaling ML Workloads](./09-scaling-ml-workloads.md) — Ray vs Spark, vertical vs horizontal scaling
+- [Advanced MLflow Tracking](./10-advanced-mlflow-tracking.md) — parent / child run structure
+
+## Official Documentation
+
+- [Hyperparameter tuning on Databricks](https://docs.databricks.com/aws/en/machine-learning/automl-hyperparam-tuning/)
+- [Hyperparameter tuning with Optuna](https://docs.databricks.com/aws/en/machine-learning/automl-hyperparam-tuning/optuna)
+- [Ray on Databricks](https://docs.databricks.com/aws/en/machine-learning/ray/)
+- [Integrate Ray and MLflow](https://docs.databricks.com/aws/en/machine-learning/ray/ray-mlflow)
+- [Distributed XGBoost with `xgboost.spark`](https://docs.databricks.com/aws/en/machine-learning/train-model/xgboost-spark)
 
 ---
 
-**[← Previous: Bayesian Optimization](./06-bayesian-optimization.md) | [↑ Back to Hyperparameter Optimization](./README.md)**
+**[← Previous: Bayesian Optimization](./06-bayesian-optimization.md) | [↑ Back to Model Development](./README.md) | [Next: Spark ML Pipelines →](./08-spark-ml-pipelines.md)**

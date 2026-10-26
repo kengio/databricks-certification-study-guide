@@ -14,17 +14,17 @@ tags: [ml-professional, practice-questions, feature-engineering, feature-store]
 
 **Question**: A recommendation model needs to return personalized results within 50ms of a user clicking a product page. Pre-computed user embeddings are updated nightly. Which feature store configuration is most appropriate?
 
-A) Offline feature store only — read feature values from Delta Lake at request time
-B) Online feature store — publish features to low-latency key-value store; model reads at serving time
+A) Online feature store — publish features to low-latency key-value store; model reads at serving time
+B) Offline feature store only — read feature values from Delta Lake at request time
 C) Recompute features from raw events inside the model serving endpoint
 D) Cache features in the driver node's memory between requests
 
 > [!success]- Answer
-> **Correct Answer: B) Online feature store — publish features to low-latency key-value store; model reads at serving time**
+> **Correct Answer: A) Online feature store — publish features to low-latency key-value store; model reads at serving time**
 >
 > The online feature store is designed for sub-100ms serving latency. It holds a copy of features in a
-> low-latency key-value store (e.g., DynamoDB or Cosmos DB) so the serving endpoint can retrieve them
-> in single-digit milliseconds. Reading from Delta Lake (option A) incurs seconds of latency due to file
+> low-latency store (a Databricks Online Feature Store on Lakebase, or a third-party store) so the serving endpoint can retrieve them
+> in single-digit milliseconds. Reading from Delta Lake (option B) incurs seconds of latency due to file
 > I/O and query planning, making it unsuitable for real-time serving requirements.
 
 ---
@@ -35,11 +35,11 @@ D) Cache features in the driver node's memory between requests
 
 A) The DataFrame contains null values in non-key columns
 B) The target feature table does not yet exist in Unity Catalog
-C) The DataFrame is missing the primary key column defined on the feature table
-D) The Spark session is not connected to a GPU-enabled cluster
+C) The Spark session is not connected to a GPU-enabled cluster
+D) The DataFrame is missing the primary key column defined on the feature table
 
 > [!success]- Answer
-> **Correct Answer: C) The DataFrame is missing the primary key column defined on the feature table**
+> **Correct Answer: D) The DataFrame is missing the primary key column defined on the feature table**
 >
 > Every feature table in Databricks Feature Store requires a primary key. When `write_table()` is
 > called, the client validates that the DataFrame contains the primary key column(s) matching the
@@ -73,12 +73,12 @@ D) `entity_key`
 **Question**: A fraud detection model is trained on historical transactions. Each transaction has an `event_timestamp`. The data scientist wants to ensure that feature values joined to each transaction reflect only information available at the moment the transaction occurred, avoiding future leakage. Which parameter enables this in `FeatureLookup`?
 
 A) `feature_names` — list only features recorded before the event
-B) `timestamp_lookup_key` — specifies the column used for point-in-time correct joins
+B) `max_lookback_days` — limits how far back in time features are retrieved
 C) `as_of_delta_version` — reads the Delta table version at the transaction time
-D) `max_lookback_days` — limits how far back in time features are retrieved
+D) `timestamp_lookup_key` — specifies the column used for point-in-time correct joins
 
 > [!success]- Answer
-> **Correct Answer: B) `timestamp_lookup_key` — specifies the column used for point-in-time correct joins**
+> **Correct Answer: D) `timestamp_lookup_key` — specifies the column used for point-in-time correct joins**
 >
 > Setting `timestamp_lookup_key` on a `FeatureLookup` instructs `create_training_set()` to perform a
 > point-in-time correct join: for each row in the label DataFrame, it retrieves the feature values
@@ -149,20 +149,20 @@ D) The serving endpoint uses a different Python version than the training cluste
 
 ---
 
-## Question 8 *(Easy)*: publish_online_features()
+## Question 8 *(Easy)*: publish_table() to an Online Store
 
 **Question**: A team has a feature table stored in Delta Lake (offline store). They want to make those features available for sub-10ms lookups from a model serving endpoint. What is the correct next step?
 
-A) Copy the Delta table to a Parquet file on object storage accessible to the endpoint
-B) Call `FeatureEngineeringClient.publish_online_features()` to sync features to the online store
+A) Call `FeatureEngineeringClient.publish_table()` to sync features to the online store
+B) Copy the Delta table to a Parquet file on object storage accessible to the endpoint
 C) Register the Delta table as an external table in Unity Catalog
 D) Mount the Delta table path as a DBFS mount accessible from the serving cluster
 
 > [!success]- Answer
-> **Correct Answer: B) Call `FeatureEngineeringClient.publish_online_features()` to sync features to the online store**
+> **Correct Answer: A) Call `FeatureEngineeringClient.publish_table()` to sync features to the online store**
 >
-> `publish_online_features()` pushes feature data from the offline Delta-backed store into the
-> configured online store (e.g., DynamoDB or Cosmos DB), which supports single-digit millisecond
+> `fe.publish_table(online_store=..., source_table_name=..., online_table_name=...)` pushes feature data from the offline Delta-backed store into the
+> online store (a Lakebase-backed Databricks Online Feature Store, or a third-party store), which supports single-digit millisecond
 > read latency required for real-time serving. The offline Delta table serves as the source of truth
 > for batch training, while the online store serves real-time inference. The other options do not
 > provide the low-latency key-value access pattern that serving requires.
@@ -174,12 +174,12 @@ D) Mount the Delta table path as a DBFS mount accessible from the serving cluste
 **Question**: A data scientist attempts to create a feature table using `FeatureEngineeringClient.create_table()`. Which combination of requirements must be satisfied for the call to succeed?
 
 A) The table must have at least one primary key column and a numeric data type for all feature columns
-B) The table must have at least one primary key column; feature columns can be any supported Spark data type
+B) The table must include a timestamp column alongside the primary key
 C) The table must have a composite primary key of exactly two columns
-D) The table must include a timestamp column alongside the primary key
+D) The table must have at least one primary key column; feature columns can be any supported Spark data type
 
 > [!success]- Answer
-> **Correct Answer: B) The table must have at least one primary key column; feature columns can be any supported Spark data type**
+> **Correct Answer: D) The table must have at least one primary key column; feature columns can be any supported Spark data type**
 >
 > Databricks Feature Store requires at least one primary key column to enable feature lookups. Feature
 > columns themselves support any Spark SQL data type including strings, arrays, maps, and structs —
@@ -194,11 +194,11 @@ D) The table must include a timestamp column alongside the primary key
 
 A) `get_training_set()`
 B) `join_features()`
-C) `create_training_set()`
-D) `build_dataset()`
+C) `build_dataset()`
+D) `create_training_set()`
 
 > [!success]- Answer
-> **Correct Answer: C) `create_training_set()`**
+> **Correct Answer: D) `create_training_set()`**
 >
 > `create_training_set()` is the designated API for building a training dataset. It accepts a label
 > DataFrame, a list of `FeatureLookup` objects (specifying which feature tables and columns to join),
@@ -233,13 +233,13 @@ D) The Feature Engineering Client snapshots feature values to DBFS on each write
 
 **Question**: A batch scoring pipeline scores 10 million customer records nightly. Features are already computed and stored in a Delta table. A teammate suggests configuring the online store to serve these features. When is this suggestion necessary?
 
-A) Always — the online store is required for all model serving regardless of latency requirements
-B) Only when the serving endpoint must retrieve individual feature records in real time with low latency
+A) Only when the serving endpoint must retrieve individual feature records in real time with low latency
+B) Always — the online store is required for all model serving regardless of latency requirements
 C) Only when the feature table exceeds 1 TB
 D) Only when Unity Catalog is not enabled
 
 > [!success]- Answer
-> **Correct Answer: B) Only when the serving endpoint must retrieve individual feature records in real time with low latency**
+> **Correct Answer: A) Only when the serving endpoint must retrieve individual feature records in real time with low latency**
 >
 > The online store is designed for real-time, low-latency point lookups (single-digit milliseconds)
 > by entity key. For a nightly batch pipeline, the model can read features directly from the offline
@@ -294,12 +294,12 @@ D) The model will train correctly but fail to deploy due to a schema mismatch
 **Question**: A data scientist needs to reproduce the exact training dataset used to train model version 12, which was trained six months ago. The feature table has had many updates since then. How does Databricks enable this?
 
 A) The Feature Engineering Client stores a snapshot of every training dataset as a compressed artifact in MLflow
-B) Because feature tables are backed by Delta Lake, the model run's metadata records the Delta table version at training time, enabling `VERSION AS OF` queries
+B) You must manually checkpoint the Delta table before each training run to enable later reproduction
 C) Databricks automatically creates a read-only clone of the feature table for every `create_training_set()` call
-D) You must manually checkpoint the Delta table before each training run to enable later reproduction
+D) Because feature tables are backed by Delta Lake, the model run's metadata records the Delta table version at training time, enabling `VERSION AS OF` queries
 
 > [!success]- Answer
-> **Correct Answer: B) Because feature tables are backed by Delta Lake, the model run's metadata records the Delta table version at training time, enabling `VERSION AS OF` queries**
+> **Correct Answer: D) Because feature tables are backed by Delta Lake, the model run's metadata records the Delta table version at training time, enabling `VERSION AS OF` queries**
 >
 > When `FeatureEngineeringClient.log_model()` is called with a `training_set`, Databricks records
 > the Delta table version(s) used for each feature table in the MLflow run's metadata. Because Delta
@@ -307,6 +307,98 @@ D) You must manually checkpoint the Delta table before each training run to enab
 > scientist can reconstruct the exact feature DataFrame from six months ago by querying the feature
 > table `VERSION AS OF <recorded_version>`. This makes reproducibility a first-class concern in
 > the feature store design.
+
+---
+
+## Question 16 *(Medium)*: Configuring an Online Table with the Databricks SDK *(2026 guide)*
+
+**Question**: A feature table `main.cx.customer_daily` holds one row per `(customer_id, snapshot_ts)` for the last two years. A Model Serving endpoint must look up the **latest** feature values per customer in milliseconds. Using the Databricks SDK, which online table specification meets the requirement?
+
+A) `OnlineTableSpec(source_table_full_name="main.cx.customer_daily", primary_key_columns=["customer_id"], timeseries_key="snapshot_ts", run_triggered=...)` created with `w.online_tables.create_and_wait(...)`  
+B) `OnlineTableSpec(primary_key_columns=["customer_id", "snapshot_ts"])` with no time series key, so every historical row is served  
+C) A SQL view that filters the Delta table to the latest snapshot, queried by the endpoint at request time  
+D) `spark.read.table("main.cx.customer_daily").cache()` on the serving cluster
+
+> [!success]- Answer
+> **Correct Answer: A) `OnlineTableSpec(source_table_full_name="main.cx.customer_daily", primary_key_columns=["customer_id"], timeseries_key="snapshot_ts", run_triggered=...)` created with `w.online_tables.create_and_wait(...)`**
+>
+> Primary key `customer_id` plus `timeseries_key="snapshot_ts"` keeps only the latest row per customer in the low-latency online copy.
+>
+> Online tables are read-only, row-oriented copies of a Delta table that endpoints query by primary key. When the source holds history, the time series key tells the sync to keep the newest row per key. Option B would require callers to know the exact snapshot timestamp. A view or a cached DataFrame (C, D) isn't a low-latency serving store.
+>
+> Platform note: legacy online tables became inaccessible after January 15, 2026. The current equivalent is `fe.create_online_store(...)` + `fe.publish_table(...)` (Databricks Online Feature Stores on Lakebase). Answer exam questions with the exam's online-table vocabulary.
+
+---
+
+## Question 17 *(Hard)*: Triggered vs Continuous Online Sync *(2026 guide)*
+
+**Question**: A card-fraud model reads `txn_count_5m` from an online copy of a feature table. A Structured Streaming job updates the offline table every minute, and the business requires the endpoint to see new values within seconds. Cost is a secondary concern. How should the online sync be configured?
+
+A) Continuous sync (`run_continuously` for an online table, or `publish_mode="CONTINUOUS"` for an online feature store)  
+B) Triggered sync scheduled hourly by a Lakeflow Job  
+C) A one-time snapshot sync after each daily retrain  
+D) No online copy. Recompute the 5-minute count inside the model's `predict()` from the raw event table
+
+> [!success]- Answer
+> **Correct Answer: A) Continuous sync (`run_continuously` for an online table, or `publish_mode="CONTINUOUS"` for an online feature store)**
+>
+> Continuous sync streams changes from the offline table to the online store with seconds of latency.
+>
+> Triggered sync is cheaper but only as fresh as the last trigger. Snapshot copies everything once. Recomputing aggregates from raw events in `predict()` adds latency and duplicates feature logic. When freshness in seconds is the requirement, continuous sync is the right trade-off. Triggered and continuous modes need Change Data Feed on the source table.
+
+---
+
+## Question 18 *(Medium)*: On-Demand Features with FeatureFunction *(2026 guide)*
+
+**Question**: A model uses `amount_vs_7d_avg = amount / spend_7d`, where `amount` arrives with each request and `spend_7d` is a stored feature. The team wants identical computation in training, batch scoring, and Model Serving without duplicating code. What should they do?
+
+A) Compute the ratio in pandas in the training notebook, and have the calling application compute it before sending requests  
+B) Register a Unity Catalog Python UDF, reference it with `FeatureFunction(udf_name=..., input_bindings=...)` next to a `FeatureLookup` in `fe.create_training_set`, and log the model with `fe.log_model(training_set=...)`  
+C) Materialize the ratio nightly into the feature table so it can be looked up  
+D) Add the ratio as a column in the inference table after scoring
+
+> [!success]- Answer
+> **Correct Answer: B) Register a Unity Catalog Python UDF, reference it with `FeatureFunction(udf_name=..., input_bindings=...)` next to a `FeatureLookup` in `fe.create_training_set`, and log the model with `fe.log_model(training_set=...)`**
+>
+> `FeatureFunction` runs the same UC Python UDF at training time, in `score_batch`, and on the serving endpoint.
+>
+> Because the logged model carries the lookup and function metadata, Model Serving looks up `spend_7d` and runs the UDF per request. Callers send only keys and request-time columns. Option A duplicates logic (skew risk). Option C can't use a request-time value. Option D happens after prediction, so the model never sees the feature.
+
+---
+
+## Question 19 *(Medium)*: Streaming Feature Computation with the FeatureEngineering Client *(2026 guide)*
+
+**Question**: A team computes 5-minute sliding-window aggregates with Structured Streaming and wants them written continuously to a Unity Catalog feature table through the FeatureEngineering Client. Which call is correct?
+
+A) `fe.write_table(name=..., df=streaming_df, mode="overwrite")` with no checkpoint  
+B) Streaming DataFrames aren't supported; collect each micro-batch with `toPandas()` and call `write_table` in a loop  
+C) `fe.create_training_set(df=streaming_df, ...)` on every micro-batch  
+D) `fe.write_table(name=..., df=streaming_df, checkpoint_location="/Volumes/.../ckpt", trigger={"processingTime": "1 minute"})`, which returns a `StreamingQuery`
+
+> [!success]- Answer
+> **Correct Answer: D) `fe.write_table(name=..., df=streaming_df, checkpoint_location="/Volumes/.../ckpt", trigger={"processingTime": "1 minute"})`, which returns a `StreamingQuery`**
+>
+> `write_table` accepts a streaming DataFrame, merges it into the feature table, and returns a `StreamingQuery`.
+>
+> `merge` is the only supported write mode, so `overwrite` (A) isn't valid. A checkpoint location makes the stream restartable, and the trigger defaults to a 5-second processing time. A watermark on the windowed aggregation bounds state. Options B and C misuse the API.
+
+---
+
+## Question 20 *(Easy)*: Scheduled Feature Refresh with merge *(2026 guide)*
+
+**Question**: A nightly Lakeflow Job calls `fe.write_table(name="main.cx.customer_features", df=updates_df, mode="merge")`, where `updates_df` contains only customers who transacted yesterday. What happens to customers **not** present in `updates_df`?
+
+A) Their rows are deleted from the feature table  
+B) Their feature values are set to NULL  
+C) Their rows remain unchanged  
+D) The call fails because `df` must contain every primary key
+
+> [!success]- Answer
+> **Correct Answer: C) Their rows remain unchanged**
+>
+> With `merge`, rows whose primary key isn't in the DataFrame stay unchanged.
+>
+> This makes incremental, automated feature pipelines cheap: each run upserts only the changed keys. Databricks recommends scheduling the feature notebook as a job for regular updates.
 
 ---
 
