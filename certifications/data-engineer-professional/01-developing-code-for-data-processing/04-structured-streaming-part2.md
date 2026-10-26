@@ -10,9 +10,24 @@ status: published
 
 # Structured Streaming — Part 2
 
+## Overview
+
 This part covers stream-static joins, stateful operations, state store management, query management, checkpoints, use cases, and exam tips for Structured Streaming.
 
 > For streaming fundamentals, sources, sinks, triggers, output modes, watermarking, and windowed aggregations, see [Part 1](./04-structured-streaming-part1.md).
+
+> [!abstract]
+>
+> - **Stream-static joins**, stateful operations, and state timeouts (`ProcessingTimeTimeout`, `EventTimeTimeout`, `NoTimeout`)
+> - **State stores**: the HDFS-backed default suits small state; RocksDB suits state larger than executor memory
+> - **`foreachBatch`** runs batch operations such as MERGE inside a stream and, with checkpoints, gives exactly-once semantics
+> - **Checkpoint compatibility**: changing groupBy keys, watermark delay, output mode, or stateful operators needs a new checkpoint location
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Choose a state store and timeout for a given state size and expiry rule
+> - Know which query changes break an existing checkpoint, and detect unbounded state with `query.lastProgress`
 
 ## Stream-Static Joins
 
@@ -36,7 +51,7 @@ enriched = events_stream.join(
 )
 ```
 
-**Important**: The static DataFrame is read once at query start. Changes to the static table won't be reflected until the streaming query is restarted.
+**Important**: When the static side is a Delta table, each micro-batch joins against the **latest valid version** of that table, so updates to the static table are picked up by later micro-batches without a restart. Because the static side can change between batches, the output is not deterministic if you reprocess the same stream ([stream-static joins](https://docs.databricks.com/aws/en/transform/join#stream-static-joins)).
 
 ## Stateful Operations
 
@@ -390,7 +405,7 @@ query = (df.writeStream
 
 - **Output modes**: `append` for inserts only, `complete` for full aggregation results, `update` for rows changed in the current batch — not every mode is compatible with every operation or sink
 - **Watermarks** are required for streaming aggregations to enable state cleanup; without them, state grows unboundedly and causes OOM
-- **Stream-static joins** read the static side once at query start; changes to the static table are only reflected after the streaming query is restarted
+- **Stream-static joins** (Delta static side) join each micro-batch against the latest version of the static table; no restart is needed to pick up changes
 - **RocksDB state store** is recommended when state exceeds available executor heap memory (GB+ scale or high-cardinality keys); HDFS-backed store is the default and suits smaller state
 - **State timeouts**: `ProcessingTimeTimeout` expires based on wall clock; `EventTimeTimeout` expires when the watermark advances past the set timestamp; `NoTimeout` causes unbounded state growth
 - **`foreachBatch`** enables batch operations (such as MERGE) within a streaming context, providing exactly-once semantics when combined with checkpoints
@@ -411,4 +426,4 @@ query = (df.writeStream
 
 ---
 
-**[← Previous: Structured Streaming — Part 1](./04-structured-streaming-part1.md) | [↑ Back to Section](./README.md) | [Next: Streaming Joins & Stateful Operations →](./05-streaming-joins-stateful.md)**
+**[← Previous: Structured Streaming — Part 1](./04-structured-streaming-part1.md) | [↑ Back to Section](./README.md) | [Next: Streaming Joins & Stateful Operations — Part 1 →](./05-streaming-joins-stateful-part1.md)**

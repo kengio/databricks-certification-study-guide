@@ -31,6 +31,19 @@ flowchart TD
     end
 ```
 
+> [!abstract]
+>
+> - **Batch deduplication** with `dropDuplicates` or `row_number()`, which keeps exactly one row per key (`rank()` can keep ties)
+> - **MERGE is idempotent**; deduplicate the source first, because duplicate source keys make MERGE fail
+> - **Streaming deduplication** needs a watermark; `dropDuplicatesWithinWatermark` bounds the state
+> - **Medallion placement**: Silver is the main deduplication layer
+
+> [!tip] What the Exam Tests
+>
+> - Apply advanced data transformations, including window functions, joins, and aggregations, using Spark SQL and PySpark to process large datasets.
+> - Pick a deduplication method for batch vs streaming data
+> - Make streaming writes idempotent with `foreachBatch` and MERGE
+
 ## Why Duplicates Occur
 
 | Source | Cause | Example |
@@ -530,53 +543,6 @@ duplicate_rate = duplicate_records / total_records * 100
 print(f"Duplicate rate: {duplicate_rate:.2f}%")
 ```
 
-## Use Cases
-
-| Scenario | Recommended Strategy | Why? |
-|----------|----------------------|------|
-| **Ingestion from Queue** | `dropDuplicates` (Stream) | Removes duplicates caused by at-least-once delivery guarantees. |
-| **Re-running Failed Job** | `MERGE` (Idempotent) | Ensures reprocessed data doesn't create duplicates in target. |
-| **Silver Layer Cleanup** | `row_number()` Window | Deterministically picks the "best" record (e.g., latest timestamp). |
-| **High Volume Stream** | `dropDuplicatesWithinWatermark` | Efficiently dedups recent data without unlimited state growth. |
-
-## Common Issues & Errors
-
-### State Store OOM (Streaming)
-
-**Scenario:** Using `dropDuplicates` on a stream without a watermark.
-
-**Fix:** Add `.withWatermark()` before deduplication or use `dropDuplicatesWithinWatermark` if acceptable.
-
-### Random Record Retention
-
-**Scenario:** Using `dropDuplicates()` without specifying order.
-
-**Fix:** Use `row_number().over(Window.orderBy(...))` to explicitly select which record to keep.
-
-### MERGE Failure on Source Duplicates
-
-**Scenario:** Running MERGE when source dataset contains duplicate keys.
-
-**Fix:** Add a deduplication step to the source DataFrame *before* the MERGE operation.
-
-### Dedup Not Working Across Partitions
-
-**Scenario:** Using `dropDuplicates` after specific shuffle operations that might not preserve global uniqueness context (rare, but conceptual).
-
-**Fix:** Ensure proper shuffling or standard `dropDuplicates` (which triggers a shuffle) is used globally.
-
-## Exam Tips
-
-1. **Streaming dedup requires watermarks** for state cleanup
-2. **`dropDuplicatesWithinWatermark`** is more efficient than `dropDuplicates` in streaming
-3. **MERGE is naturally idempotent** - same input = same output
-4. **Deduplicate source before MERGE** to avoid multiple match errors
-5. **`row_number()`** guarantees exactly one record per key (use for dedup)
-6. **Bronze accepts duplicates**, Silver deduplicates
-7. **foreachBatch + MERGE** is the idempotent streaming pattern
-8. **Identity Columns** (Delta 3.3) auto-generate unique IDs, useful as natural dedup keys
-9. **Row Tracking** enables validation of dedup by tracking row lineage across operations
-
 ## Identity Columns for Deduplication
 
 Delta 3.3 introduces Identity Columns that auto-generate unique IDs:
@@ -621,6 +587,41 @@ Use Row Tracking to:
 - Audit which rows survived deduplication
 - Track row history across MERGE operations
 
+## Use Cases
+
+| Scenario | Recommended Strategy | Why? |
+|----------|----------------------|------|
+| **Ingestion from Queue** | `dropDuplicates` (Stream) | Removes duplicates caused by at-least-once delivery guarantees. |
+| **Re-running Failed Job** | `MERGE` (Idempotent) | Ensures reprocessed data doesn't create duplicates in target. |
+| **Silver Layer Cleanup** | `row_number()` Window | Deterministically picks the "best" record (e.g., latest timestamp). |
+| **High Volume Stream** | `dropDuplicatesWithinWatermark` | Efficiently dedups recent data without unlimited state growth. |
+
+## Common Issues & Errors
+
+### State Store OOM (Streaming)
+
+**Scenario:** Using `dropDuplicates` on a stream without a watermark.
+
+**Fix:** Add `.withWatermark()` before deduplication or use `dropDuplicatesWithinWatermark` if acceptable.
+
+### Random Record Retention
+
+**Scenario:** Using `dropDuplicates()` without specifying order.
+
+**Fix:** Use `row_number().over(Window.orderBy(...))` to explicitly select which record to keep.
+
+### MERGE Failure on Source Duplicates
+
+**Scenario:** Running MERGE when source dataset contains duplicate keys.
+
+**Fix:** Add a deduplication step to the source DataFrame *before* the MERGE operation.
+
+### Dedup Not Working Across Partitions
+
+**Scenario:** Using `dropDuplicates` after specific shuffle operations that might not preserve global uniqueness context (rare, but conceptual).
+
+**Fix:** Ensure proper shuffling or standard `dropDuplicates` (which triggers a shuffle) is used globally.
+
 ## Best Practices
 
 - Use `row_number()` with window functions for deterministic dedup
@@ -632,6 +633,18 @@ Use Row Tracking to:
 - Consider `dropDuplicatesWithinWatermark` for large-scale streaming
 - Use Identity Columns for auto-generated surrogate keys
 - Enable Row Tracking to audit deduplication results
+
+## Exam Tips
+
+1. **Streaming dedup requires watermarks** for state cleanup
+2. **`dropDuplicatesWithinWatermark`** is more efficient than `dropDuplicates` in streaming
+3. **MERGE is naturally idempotent** - same input = same output
+4. **Deduplicate source before MERGE** to avoid multiple match errors
+5. **`row_number()`** guarantees exactly one record per key (use for dedup)
+6. **Bronze accepts duplicates**, Silver deduplicates
+7. **foreachBatch + MERGE** is the idempotent streaming pattern
+8. **Identity Columns** (Delta 3.3) auto-generate unique IDs, useful as natural dedup keys
+9. **Row Tracking** enables validation of dedup by tracking row lineage across operations
 
 ## Key Takeaways
 

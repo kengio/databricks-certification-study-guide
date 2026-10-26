@@ -11,9 +11,24 @@ status: published
 
 # CI/CD Integration — Part 2: Testing, Secrets & Monitoring
 
+## Overview
+
 > For CI/CD platform configuration (GitHub Actions, Azure DevOps, GitLab, Jenkins), see [Part 1](./05-cicd-integration-part1.md).
 
 This part covers testing strategies within CI/CD pipelines, secret management, deployment strategies, monitoring, and common issues.
+
+> [!abstract]
+>
+> - **Testing in CI**: unit tests first, then integration tests, then data quality tests
+> - **Deployment strategies**: blue-green targets and canary rollouts with bundles
+> - **CI secrets** live in GitHub Secrets, Azure DevOps variable groups, or HashiCorp Vault, never in workflow YAML
+> - **Guardrails**: `concurrency:` groups serialize deployments; environment gates add manual approval
+
+> [!tip] What the Exam Tests
+>
+> - Configure Git-based CI/CD workflows using Databricks Git folders (formerly Repos) to deploy notebooks and code.
+> - Deploy Databricks resources using Declarative Automation Bundles (formerly Databricks Asset Bundles).
+> - Order tests and approvals before a production deployment
 
 ## Testing Strategies
 

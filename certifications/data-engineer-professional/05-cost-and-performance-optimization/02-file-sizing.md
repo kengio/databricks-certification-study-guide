@@ -41,6 +41,19 @@ flowchart TB
     Solution --> Optimal[Optimal 1GB Files]
 ```
 
+> [!abstract]
+>
+> - **Small files slow reads**; `OPTIMIZE` compacts them and accepts `ZORDER BY` and a `WHERE` predicate
+> - **`optimizeWrite`** bin-packs files during a write; **`autoCompact`** compacts after the write
+> - **`VACUUM`** deletes files the Delta log no longer references (default retention 7 days)
+> - **Diagnosis**: `DESCRIBE DETAIL` returns `numFiles` and `sizeInBytes`; over-partitioning is a common cause of small files
+
+> [!tip] What the Exam Tests
+>
+> - Design scalable Delta/Iceberg table layouts for large data assets by mapping partitioning to data grain, aligning clustering to relationship access patterns, and maintaining balanced file sizes through compaction.
+> - Pick a compaction strategy for batch and for streaming writes
+> - Diagnose a small-file problem from table metadata
+
 ## Why File Size Matters
 
 ### Small Files Impact

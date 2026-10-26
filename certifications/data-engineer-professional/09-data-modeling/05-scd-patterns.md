@@ -27,6 +27,19 @@ flowchart TB
     Type3 --> T3D["Limited history"]
 ```
 
+> [!abstract]
+>
+> - **SCD Type 1** overwrites; **Type 2** adds a history row per change with a surrogate key, `is_current`, and effective and end dates
+> - **Types 3, 4, and 6**: previous-value columns, mini-dimensions, and the hybrid of Types 1, 2, and 3
+> - **AUTO CDC** with `stored_as_scd_type=2` builds Type 2 history automatically, adding `__START_AT` and `__END_AT`
+> - **MERGE** implements SCD in Delta Lake; Type 2 often uses a two-step MERGE
+
+> [!tip] What the Exam Tests
+>
+> - Implement CDC pipelines using AUTO CDC APIs (formerly APPLY CHANGES) in Lakeflow Pipelines, including SCD Type 1 and Type 2 via stored_as_scd_type.
+> - Design dimensional models for analytical workloads, leveraging Materialized Views for pre-computed aggregation and Unity Catalog Metric Views for governed, reusable metric definitions, to ensure efficient querying and aggregation.
+> - Write a point-in-time query against a Type 2 dimension
+
 ## SCD Type Comparison
 
 | Type | History Preserved | Storage | Complexity | Use Case |

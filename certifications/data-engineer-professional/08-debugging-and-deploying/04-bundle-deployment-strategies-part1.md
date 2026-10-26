@@ -42,6 +42,19 @@ flowchart TB
     AdvancedCD --> GitOps
 ```
 
+> [!abstract]
+>
+> - **Bundle patterns**: multi-project organization, `include` for shared configuration, custom variables, and resource permissions in `databricks.yml`
+> - **Artifacts and targets**: artifact management and per-target overrides
+> - **CI/CD pipelines**: a full pipeline DAG and multi-environment promotion
+> - **Release strategies**: blue/green and canary deployments for data pipelines
+
+> [!tip] What the Exam Tests
+>
+> - Deploy Databricks resources using Declarative Automation Bundles (formerly Databricks Asset Bundles).
+> - Structure one bundle for several environments with target overrides
+> - Choose a promotion and release strategy for a pipeline change
+
 ## Advanced Declarative Automation Bundle Patterns
 
 ### Multi-Project Bundle Organization

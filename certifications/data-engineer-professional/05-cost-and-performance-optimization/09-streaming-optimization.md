@@ -33,6 +33,19 @@ flowchart TB
     Tuning --> Goals
 ```
 
+> [!abstract]
+>
+> - **Trigger choice** trades latency for cost: `processingTime` for near real time, `availableNow` to clear a backlog and stop
+> - **State**: watermarks bound state; RocksDB handles large state; deleting a checkpoint forces reprocessing
+> - **Rate limits**: `maxOffsetsPerTrigger` (Kafka) and `cloudFiles.maxBytesPerTrigger` (Auto Loader); notification mode for large directories
+> - **Streaming file sizes**: `optimizeWrite` and `autoCompact` prevent tiny micro-batch files
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Choose a trigger for a latency and cost target
+> - Detect back-pressure and pick the fix (rate limits or more compute)
+
 ## Trigger Interval Optimization
 
 ### Trigger Types
@@ -388,7 +401,7 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 - **Catch-up Processing Post-Outage**: Utilizing the `availableNow()` trigger in a Structured Streaming query to swiftly power through a backlog of millions of queued Kafka events left after a maintenance window, cleanly spinning down the cluster when complete.
 - **Handling Out-of-Order Sensor Data**: Configuring a generous 24-hour watermark on an IoT sensor stateful aggregation stream using RocksDB, allowing delayed telemetry records to be gracefully incorporated into yesterday's daily averages without running out of JVM heap space.
 
-## Common Issues and Solutions
+## Common Issues & Errors
 
 | Issue | Symptom | Solution |
 | :--- | :--- | :--- |
@@ -408,7 +421,7 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 6. **State stores**: RocksDB for large state, default for small state
 7. **File sizing**: 128 MB target for streaming, enable auto-compact
 
-## Key Numbers to Remember
+### Key Numbers to Remember
 
 | Metric | Recommended Value |
 | :--- | :--- |
@@ -428,6 +441,22 @@ print(f"Batch duration: {progress['batchDuration']} ms")
 - **maxOffsetsPerTrigger for Kafka**: Control micro-batch size and prevent consumer lag from overloading executors by setting `maxOffsetsPerTrigger`; similarly use `cloudFiles.maxBytesPerTrigger` for Auto Loader.
 - **128 MB streaming file target**: Enable `delta.autoOptimize.optimizeWrite = true` and `delta.autoOptimize.autoCompact = true` on streaming output Delta tables to prevent accumulation of tiny micro-batch files.
 - **Backpressure detection**: If `batchDuration` consistently exceeds the trigger interval or `processedRowsPerSecond` falls below `inputRowsPerSecond`, the stream has a backpressure problem requiring source rate limiting or cluster scaling.
+
+## Related Topics
+
+- [Structured Streaming — Part 1](../01-developing-code-for-data-processing/04-structured-streaming-part1.md) - Triggers, output modes, and watermarks
+- [Streaming Monitoring & Optimization](../04-monitoring-and-alerting/06-streaming-monitoring-optimization.md) - Back-pressure, progress metrics, and the state store deep dive
+- [Auto Loader](../02-data-ingestion-and-acquisition/01-auto-loader.md) - File notification mode and rate limits
+- [File Sizing and Compaction](./02-file-sizing.md) - `optimizeWrite`, `autoCompact`, and `OPTIMIZE`
+
+## Official Documentation
+
+- [Configure Structured Streaming trigger intervals](https://docs.databricks.com/aws/en/structured-streaming/triggers)
+- [Apply watermarks to control data processing thresholds](https://docs.databricks.com/aws/en/structured-streaming/watermarks)
+- [RocksDB State Store](https://docs.databricks.com/structured-streaming/rocksdb-state-store.html)
+- [Production considerations for Structured Streaming](https://docs.databricks.com/aws/en/structured-streaming/production)
+- [Connect to Apache Kafka](https://docs.databricks.com/aws/en/connect/streaming/kafka)
+- [Auto Loader options](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/options)
 
 ---
 

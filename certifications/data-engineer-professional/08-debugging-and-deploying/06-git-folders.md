@@ -692,7 +692,7 @@ flowchart TB
 
 - [Declarative Automation Bundles — Part 1](./03-declarative-automation-bundles-part1.md) - Deployment automation
 - [CI/CD Integration — Part 1](./05-cicd-integration-part1.md) - Pipeline workflows
-- [Workspace and Notebooks](../01-developing-code-for-data-processing/10-workspace-and-notebooks.md) - Notebook features
+- [Workspace and Notebooks](../01-developing-code-for-data-processing/10-workspace-and-notebooks-part1.md) - Notebook features
 
 ## Official Documentation
 

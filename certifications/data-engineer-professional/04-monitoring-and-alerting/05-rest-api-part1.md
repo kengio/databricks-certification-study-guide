@@ -31,6 +31,18 @@ flowchart TB
     Jobs --> Monitor[Monitor Runs]
 ```
 
+> [!abstract]
+>
+> - **API basics**: versioned REST endpoints, authenticated with personal access tokens, OAuth service principals, or the Python SDK
+> - **Jobs API 2.1**: create jobs, `run-now` vs `runs/submit`, run states, and cancelling runs
+> - **Other APIs**: Clusters, DBFS, Workspace, and Secrets
+
+> [!tip] What the Exam Tests
+>
+> - Use Lakeflow Jobs UI and Jobs API to monitor job status and performance metrics.
+> - Create and automate ETL workloads using Lakeflow Jobs via the UI, API, and CLI.
+> - Read run states to tell a failed run from a cancelled or still-running one
+
 ## API Basics
 
 ### Base URL

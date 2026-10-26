@@ -34,6 +34,19 @@ flowchart TB
     Strategies --> Savings[Cost Savings]
 ```
 
+> [!abstract]
+>
+> - **Job clusters** have a lower DBU rate than all-purpose clusters and terminate after each run
+> - **Spot and pools**: spot workers with an on-demand driver (`SPOT_WITH_FALLBACK`); instance pools cut startup time
+> - **Serverless** has a higher per-DBU rate but bills only for execution, with no cluster management
+> - **Cost attribution**: `system.billing.usage` joined with `system.billing.list_prices`, grouped by `custom_tags`
+
+> [!tip] What the Exam Tests
+>
+> - Use Databricks system tables (billing, compute, access, lakeflow) for cost analysis, auditing, and workload monitoring.
+> - Choose appropriate compute and configuration for environments and dependencies — including serverless compute (serverless environments, dependency management, performance mode), high-memory notebook tasks, and auto-optimization settings (e.g., disallowing retries).
+> - Pick the cheapest compute option that still meets a workload's needs
+
 ## Cost Components
 
 ### Understanding DBUs

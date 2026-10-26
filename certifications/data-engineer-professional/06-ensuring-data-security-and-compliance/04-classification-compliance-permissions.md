@@ -12,9 +12,24 @@ status: published
 
 # Data Classification, Compliance & Permissions
 
+## Overview
+
 This guide covers advanced data protection patterns: data classification & tagging, GDPR/CCPA compliance implementation, and advanced Unity Catalog permission models.
 
 > For audit logging, lineage tracking, and network security, see [Audit Logging, Data Lineage & Network Security](./06-audit-lineage-network-security.md).
+
+> [!abstract]
+>
+> - **Tags** on tables and columns (`SET TAGS`), queried through `information_schema.table_tags` and `column_tags`
+> - **GDPR and CCPA**: erasure is `DELETE` followed by `VACUUM`; subject access requests export a subject's records across tables
+> - **Permissions**: ownership vs privileges; `MANAGE` lets a principal grant without owning; grants inherit to future objects
+> - **Group-based access**: grant to groups synced from an identity provider through SCIM
+
+> [!tip] What the Exam Tests
+>
+> - Implement a compliant data pipeline that enforces PII detection and masking controls across batch and streaming workloads using Unity Catalog features.
+> - Implement a data purging strategy that satisfies data retention and deletion policies (e.g., GDPR right-to-erasure, GDPR right-to-be-forgotten deletion) using Delta Lake and Unity Catalog features.
+> - Explain why `DELETE` alone does not physically erase data
 
 ## Data Classification and Tagging
 
@@ -524,6 +539,70 @@ GRANT USE SCHEMA ON SCHEMA prod.gold TO `sales-engineers`;
 GRANT SELECT ON SCHEMA prod.gold TO `sales-engineers`;
 ```
 
+## Practice Questions
+
+**Question 1:** A data engineer needs to determine which downstream tables and dashboards will be affected by renaming a column in `prod.silver.orders`. Which Unity Catalog feature should they use?
+
+A) Information Schema
+B) Data Lineage and Impact Analysis
+C) Audit Logging
+D) OpenSharing
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Data Lineage in Unity Catalog tracks column-level dependencies. By querying the lineage API or using Catalog Explorer, the engineer can see all downstream tables and notebooks that reference the column, enabling proper impact analysis before making the change.
+
+**Question 2:** An organization must retain audit logs for 3 years for SOC 2 compliance. The default retention for `system.access.audit` is 365 days. What is the recommended approach?
+
+A) Change the system table retention setting to 3 years
+B) Create a scheduled job to archive audit logs to a separate Delta table
+C) Export audit logs to CSV files monthly
+D) Enable extended retention via the account console
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The `system.access.audit` table retention cannot be changed directly. The recommended approach is to create a scheduled job that copies audit records to your own Delta table (e.g., `prod.compliance.audit_archive`) where you control the retention policy.
+
+**Question 3:** Which SQL command correctly applies a tag to indicate a column contains personally identifiable information?
+
+A) `ALTER TABLE prod.gold.customers SET TAGS ('pii' = 'true')`
+B) `ALTER TABLE prod.gold.customers ALTER COLUMN email SET TAGS ('pii_type' = 'email')`
+C) `TAG COLUMN prod.gold.customers.email AS 'pii'`
+D) `UPDATE METADATA SET tag = 'pii' WHERE column = 'email'`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Column-level tags use `ALTER TABLE ... ALTER COLUMN ... SET TAGS (...)` syntax. Option A tags the table, not the column. Options C and D use invalid syntax.
+
+**Question 4:** A company needs to comply with GDPR right-to-be-forgotten. After running `DELETE FROM prod.gold.customers WHERE customer_id = 'X'`, what additional step is required to permanently remove the data from storage?
+
+A) Run `OPTIMIZE` on the table
+B) Run `VACUUM` on the table
+C) Run `PURGE` on the table
+D) The DELETE command permanently removes the data
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Delta Lake DELETE creates new data files without the deleted rows but retains old files for time travel. VACUUM permanently removes old files from storage. Without VACUUM, the data subject's records still exist in older file versions and can be recovered via time travel.
+
+**Question 5:** Which permission allows a principal to manage grants on a Unity Catalog object without being the owner?
+
+A) ALL PRIVILEGES
+B) MANAGE
+C) ADMIN
+D) GRANT OPTION
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The `MANAGE` privilege allows a principal to grant and revoke permissions on an object without being the owner. `ALL PRIVILEGES` grants all data access but not necessarily grant management. `GRANT OPTION` allows passing along one's own privileges but is not a standalone permission for managing all grants.
+
+---
+
 ## Use Cases
 
 - **GDPR 'Right to be Forgotten' Fulfillment**: Automating the deletion of specific customer IDs across all Gold tables and immediately running `VACUUM` with 0 retention to permanently purge the files.
@@ -626,70 +705,6 @@ SHOW GRANTS ON EXTERNAL LOCATION my_landing;
 -- Grant access
 GRANT CREATE EXTERNAL TABLE ON EXTERNAL LOCATION my_landing TO `data-engineers`;
 ```
-
----
-
-## Practice Questions
-
-**Question 1:** A data engineer needs to determine which downstream tables and dashboards will be affected by renaming a column in `prod.silver.orders`. Which Unity Catalog feature should they use?
-
-A) Information Schema
-B) Data Lineage and Impact Analysis
-C) Audit Logging
-D) OpenSharing
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Data Lineage in Unity Catalog tracks column-level dependencies. By querying the lineage API or using Catalog Explorer, the engineer can see all downstream tables and notebooks that reference the column, enabling proper impact analysis before making the change.
-
-**Question 2:** An organization must retain audit logs for 3 years for SOC 2 compliance. The default retention for `system.access.audit` is 365 days. What is the recommended approach?
-
-A) Change the system table retention setting to 3 years
-B) Create a scheduled job to archive audit logs to a separate Delta table
-C) Export audit logs to CSV files monthly
-D) Enable extended retention via the account console
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> The `system.access.audit` table retention cannot be changed directly. The recommended approach is to create a scheduled job that copies audit records to your own Delta table (e.g., `prod.compliance.audit_archive`) where you control the retention policy.
-
-**Question 3:** Which SQL command correctly applies a tag to indicate a column contains personally identifiable information?
-
-A) `ALTER TABLE prod.gold.customers SET TAGS ('pii' = 'true')`
-B) `ALTER TABLE prod.gold.customers ALTER COLUMN email SET TAGS ('pii_type' = 'email')`
-C) `TAG COLUMN prod.gold.customers.email AS 'pii'`
-D) `UPDATE METADATA SET tag = 'pii' WHERE column = 'email'`
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Column-level tags use `ALTER TABLE ... ALTER COLUMN ... SET TAGS (...)` syntax. Option A tags the table, not the column. Options C and D use invalid syntax.
-
-**Question 4:** A company needs to comply with GDPR right-to-be-forgotten. After running `DELETE FROM prod.gold.customers WHERE customer_id = 'X'`, what additional step is required to permanently remove the data from storage?
-
-A) Run `OPTIMIZE` on the table
-B) Run `VACUUM` on the table
-C) Run `PURGE` on the table
-D) The DELETE command permanently removes the data
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Delta Lake DELETE creates new data files without the deleted rows but retains old files for time travel. VACUUM permanently removes old files from storage. Without VACUUM, the data subject's records still exist in older file versions and can be recovered via time travel.
-
-**Question 5:** Which permission allows a principal to manage grants on a Unity Catalog object without being the owner?
-
-A) ALL PRIVILEGES
-B) MANAGE
-C) ADMIN
-D) GRANT OPTION
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> The `MANAGE` privilege allows a principal to grant and revoke permissions on an object without being the owner. `ALL PRIVILEGES` grants all data access but not necessarily grant management. `GRANT OPTION` allows passing along one's own privileges but is not a standalone permission for managing all grants.
 
 ---
 

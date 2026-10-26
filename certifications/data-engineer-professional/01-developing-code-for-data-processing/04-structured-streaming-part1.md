@@ -37,6 +37,19 @@ flowchart LR
     end
 ```
 
+> [!abstract]
+>
+> - **Sources and sinks**: Delta, Kafka, Auto Loader, and rate sources; Delta, Kafka, console, and `foreachBatch` sinks
+> - **Triggers** (including `once` vs `availableNow`) and **output modes** (`append`, `complete`, `update`), with the operations each mode supports
+> - **Watermarks** bound state for late data in tumbling, sliding, and session windows
+> - **Stream-stream joins** need watermarks and a time range condition
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Pick the trigger and output mode that a scenario's latency and operation require
+> - Predict which late events a watermark drops and when window state is cleaned up
+
 ## Streaming Fundamentals
 
 ### Micro-Batch vs Continuous

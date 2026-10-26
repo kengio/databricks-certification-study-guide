@@ -34,6 +34,19 @@ flowchart LR
     end
 ```
 
+> [!abstract]
+>
+> - **Reading data** with explicit schemas and corrupt-record handling
+> - **Transformations**: column operations, join types, join strategies and hints, aggregations, and pivots
+> - **Window functions**: ranking, `lead` / `lag`, running totals, and deduplication with `row_number()`
+> - **Writing data**: write modes, partitioned writes, dynamic partition overwrite, CTAS, and `INSERT`
+
+> [!tip] What the Exam Tests
+>
+> - Apply advanced data transformations, including window functions, joins, and aggregations, using Spark SQL and PySpark to process large datasets.
+> - Write the same transformation in Spark SQL and in PySpark
+> - Choose a join strategy or hint based on the size of each side
+
 ## ETL vs ELT
 
 | Aspect | ETL | ELT |

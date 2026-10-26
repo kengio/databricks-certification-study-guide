@@ -33,6 +33,19 @@ flowchart TB
     DeltaLake --> Features
 ```
 
+> [!abstract]
+>
+> - **Transaction log**: JSON commits in `_delta_log/` plus Parquet checkpoints every 10 versions; optimistic concurrency control for writers
+> - **Time travel** with `VERSION AS OF` / `TIMESTAMP AS OF`; `VACUUM` default retention is 7 days
+> - **Clones**: shallow clones share the source files, deep clones copy them
+> - **Table features**: enforced `NOT NULL` / `CHECK` constraints vs informational keys, column mapping, and identity and generated columns
+
+> [!tip] What the Exam Tests
+>
+> - Design scalable Delta/Iceberg table layouts for large data assets by mapping partitioning to data grain, aligning clustering to relationship access patterns, and maintaining balanced file sizes through compaction.
+> - Predict the effect of concurrent writes, `VACUUM`, and clones on a table
+> - Know which constraints Delta enforces and which are informational
+
 ## Delta Lake Architecture
 
 ### Table Structure

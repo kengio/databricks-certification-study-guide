@@ -39,6 +39,19 @@ flowchart TB
     Acceleration --> Outcome
 ```
 
+> [!abstract]
+>
+> - **Reading plans**: physical plans run bottom-up from `FileScan`; `PartitionFilters` skip directories, `PushedFilters` skip data inside files
+> - **`EXPLAIN EXTENDED`** shows the parsed, analyzed, optimized logical, and physical plans
+> - **AQE** re-optimizes at shuffle boundaries, for example switching `SortMergeJoin` to `BroadcastHashJoin`; `AQEShuffleRead` / `CustomShuffleReaderExec` confirms it acted
+> - **Python UDFs block pushdown**; `ANALYZE TABLE` statistics feed the cost-based optimizer
+
+> [!tip] What the Exam Tests
+>
+> - Use the query profile to identify performance bottlenecks, such as data-skipping inefficiencies, join strategies, and shuffle operations.
+> - Tell from a plan whether partition pruning or predicate pushdown happened
+> - Confirm from a plan that AQE changed a join or split a skewed partition
+
 ## Reading EXPLAIN Plans
 
 ### EXPLAIN Variants
@@ -450,6 +463,17 @@ SET spark.sql.adaptive.enabled;
 **Scenario:** Optimizer chooses slow operations (e.g., SortMergeJoin over BroadcastHashJoin) for small tables.
 **Fix:** Run `ANALYZE TABLE <name> COMPUTE STATISTICS` so Catalyst has accurate file and row counts to inform Cost-Based Optimization.
 
+## Exam Tips
+
+1. **Read physical plans bottom-up** - start at `FileScan` and trace up to the output operator
+2. **`PartitionFilters` vs `PushedFilters`** - partition filters skip whole directories; pushed filters skip row groups inside files
+3. **`EXPLAIN EXTENDED`** - shows the parsed, analyzed, optimized logical, and physical plans; use `EXPLAIN FORMATTED` for a readable layout
+4. **AQE re-optimizes at shuffle boundaries** - it can switch `SortMergeJoin` to `BroadcastHashJoin` at runtime
+5. **`AQEShuffleRead` / `CustomShuffleReaderExec`** - confirms AQE coalesced or split shuffle partitions
+6. **Skew** - `SortMergeJoin-SkewedPartition` in the plan shows AQE split a skewed partition
+7. **Python UDFs block predicate pushdown** - their filters never appear in `PushedFilters`
+8. **`ANALYZE TABLE ... COMPUTE STATISTICS`** - gives the cost-based optimizer accurate statistics for join decisions
+
 ## Key Takeaways
 
 - **Read plans bottom-up**: Physical plans execute from bottom to top — start reading at `FileScan` (the data source) and trace upward to the final output operator.
@@ -461,9 +485,18 @@ SET spark.sql.adaptive.enabled;
 - **ANALYZE TABLE enables CBO**: Running `ANALYZE TABLE ... COMPUTE STATISTICS FOR COLUMNS` provides the Cost-Based Optimizer accurate column histograms and row counts for better join order and strategy decisions.
 - **Skew indicator in plan**: The presence of `SortMergeJoin-SkewedPartition` in the physical plan confirms AQE's skew join optimization has detected and split a heavily skewed partition.
 
-## Next
+## Related Topics
 
-Continue with [Photon, Diagnostics & Query Optimization](./08-photon-diagnostics-optimization-part1.md) for Photon acceleration, memory and spill diagnostics, Spark UI deep dive, query optimization strategies, practice questions, and exam tips.
+- [Spark Tuning](./06-spark-tuning.md) - AQE configuration, shuffle, and join tuning
+- [Query Profile](./05-query-profiler.md) - Find bottlenecks in the Databricks SQL query profile
+- [Photon, Diagnostics & Query Optimization — Part 1](./08-photon-diagnostics-optimization-part1.md) - Photon acceleration, memory and spill diagnostics, Spark UI deep dive
+- [Photon, Diagnostics & Query Optimization — Part 2](./08-photon-diagnostics-optimization-part2.md) - Query optimization strategies
+
+## Official Documentation
+
+- [EXPLAIN Statement](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-explain.html)
+- [Adaptive query execution](https://docs.databricks.com/aws/en/optimizations/aqe)
+- [Cost-Based Optimizer](https://docs.databricks.com/optimizations/cbo.html)
 
 ---
 

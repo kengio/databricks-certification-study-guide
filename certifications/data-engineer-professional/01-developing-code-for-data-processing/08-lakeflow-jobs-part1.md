@@ -39,6 +39,19 @@ flowchart TB
     Job --> Execution
 ```
 
+> [!abstract]
+>
+> - **Jobs are task graphs**: notebook, pipeline, and other task types, defined in `databricks.yml` or with the Python SDK
+> - **`depends_on`** orders tasks; tasks with no dependencies run in parallel
+> - **Task values** pass small results between tasks with `dbutils.jobs.taskValues.set` / `get`
+> - **Control flow**: If/else condition tasks and Run if dependencies branch a run; For each tasks loop a nested task over a list of inputs
+
+> [!tip] What the Exam Tests
+>
+> - Create Lakeflow Jobs that use control-flow operators such as If/Else conditions and For Each loops.
+> - Create and automate ETL workloads using Lakeflow Jobs via the UI, API, and CLI.
+> - Read a task graph and predict which tasks run, and in what order, for a given outcome
+
 ## Job Components
 
 ### Job Structure

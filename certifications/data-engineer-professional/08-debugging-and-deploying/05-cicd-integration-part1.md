@@ -47,6 +47,18 @@ flowchart TB
     DeployStaging --> DeployProd
 ```
 
+> [!abstract]
+>
+> - **Authentication**: service principals for CI/CD on Azure and AWS
+> - **GitHub Actions**: a complete workflow and reusable workflows
+> - **Other platforms**: Azure DevOps pipelines and variable groups, GitLab CI/CD, and Jenkins
+
+> [!tip] What the Exam Tests
+>
+> - Configure Git-based CI/CD workflows using Databricks Git folders (formerly Repos) to deploy notebooks and code.
+> - Deploy Databricks resources using Declarative Automation Bundles (formerly Databricks Asset Bundles).
+> - Authenticate pipelines as service principals rather than as individual users
+
 ## Authentication Methods
 
 ### Service Principal Authentication

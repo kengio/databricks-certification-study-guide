@@ -30,6 +30,19 @@ flowchart LR
     Consumers --> Apps[Applications]
 ```
 
+> [!abstract]
+>
+> - **Bronze**: append-only raw data with metadata columns; **Silver**: enforced schema, deduplication, and MERGE; **Gold**: business aggregates and star schemas
+> - **Quarantine pattern**: route invalid rows to a separate table with an `_error_reason` column
+> - **Lakeflow Pipelines** maps cleanly to the three layers
+> - **Unity Catalog organization**: catalogs per environment with schemas per layer, or domain-based schemas
+
+> [!tip] What the Exam Tests
+>
+> - Design dimensional models for analytical workloads, leveraging Materialized Views for pre-computed aggregation and Unity Catalog Metric Views for governed, reusable metric definitions, to ensure efficient querying and aggregation.
+> - Place each transformation, check, and deduplication step in the right layer
+> - Organize medallion layers in Unity Catalog
+
 ## Layer Characteristics
 
 ### Comparison Table

@@ -36,6 +36,19 @@ flowchart TD
     Schema --> Alter[ALTER TABLE]
 ```
 
+> [!abstract]
+>
+> - **`MERGE`** for upserts, upserts with deletes, insert-only deduplication, and SCD Type 1
+> - **File layout**: `OPTIMIZE` with `ZORDER BY`, and liquid clustering
+> - **`VACUUM`** retention and its effect on time travel; `DESCRIBE HISTORY` and `RESTORE`
+> - **Shallow vs deep clones**, and `ANALYZE TABLE` statistics
+
+> [!tip] What the Exam Tests
+>
+> - Apply advanced data transformations, including window functions, joins, and aggregations, using Spark SQL and PySpark to process large datasets.
+> - Write a `MERGE` for a given upsert, delete, or deduplication requirement
+> - Predict how `VACUUM` affects time travel
+
 ## MERGE Operation
 
 MERGE is the most important Delta Lake operation for the exam. It enables upserts (update + insert) in a single atomic transaction.

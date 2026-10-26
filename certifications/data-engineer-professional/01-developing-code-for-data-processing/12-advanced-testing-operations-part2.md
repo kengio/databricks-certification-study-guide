@@ -12,9 +12,24 @@ status: published
 
 # Advanced Testing & Operations — Part 2
 
+## Overview
+
 This file covers deployment validation, automated rollback, GitOps patterns, and common troubleshooting scenarios.
 
 > For property-based testing, Lakeflow Pipelines testing, streaming tests, and integration patterns, see [Part 1](./12-advanced-testing-operations-part1.md).
+
+> [!abstract]
+>
+> - **Deployment validation**: run a smoke test job right after deployment and roll back automatically (redeploy the previous commit) if it fails
+> - **GitOps**: mono-repo vs multi-repo, `paths:` filters that deploy only the changed bundle, and trunk-based development with feature flags
+> - **OIDC federation** (`permissions: id-token: write`) replaces stored CI secrets
+> - **CI guardrails**: coverage gating with `--cov-fail-under` and per-run test schemas dropped with `CASCADE`
+
+> [!tip] What the Exam Tests
+>
+> - Implement scalable Python project structures for Declarative Automation Bundles (formerly Databricks Asset Bundles / DABs) to support modular development and CI/CD integration.
+> - Design a validate-then-rollback step after a bundle deployment
+> - Choose a repository and branching strategy for a data engineering team
 
 ## Deployment Validation
 
@@ -499,7 +514,14 @@ D) Skip unit tests and use Great Expectations for all validation
 >
 > Property-based testing (using Hypothesis) excels at discovering unexpected edge cases by generating random inputs and checking invariants (e.g., "deduplication never increases row count"). It complements example-based testing with chispa, which verifies exact expected outputs for specific known inputs. Together they provide thorough coverage: chispa for correctness of known cases, Hypothesis for robustness against unexpected inputs.
 
-## Common Issues / Errors
+## Use Cases
+
+- **Post-deployment validation**: run a smoke test job right after each deployment and roll back automatically (check out the previous commit and redeploy) if it fails
+- **Mono-repo with several bundles**: use `paths:` filters in GitHub Actions so only the bundle whose files changed is deployed
+- **Reviewing data pipeline changes**: use a pull request template that records the type of change, impact assessment, testing, deployment notes, and rollback plan
+- **Parallel CI runs**: give each integration test run its own `test_catalog.ci_<uuid>` schema and drop it with `CASCADE` in teardown
+
+## Common Issues & Errors
 
 ### OIDC Token Exchange Fails
 

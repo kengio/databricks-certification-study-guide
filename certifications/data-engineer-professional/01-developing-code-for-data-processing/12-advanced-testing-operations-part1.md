@@ -11,9 +11,23 @@ status: published
 
 # Advanced Testing & Operations — Part 1
 
+## Overview
+
 This guide covers advanced testing strategies for Databricks — property-based testing, Lakeflow Pipelines testing, streaming pipeline testing, integration testing, and test isolation patterns.
 
 > For deployment validation, GitOps patterns, and rollback strategies, see [Part 2: Advanced Operations & Deployment](./12-advanced-testing-operations-part2.md).
+
+> [!abstract]
+>
+> - **Test pyramid** for data engineering, property-based testing with Hypothesis, and data quality tests with Great Expectations
+> - **Pipeline tests**: Lakeflow Pipelines and streaming pipelines, mocking Databricks-specific APIs, and code coverage for PySpark
+> - **Integration testing**: Databricks Connect for remote tests, test isolation strategies, and cost control for test clusters
+
+> [!tip] What the Exam Tests
+>
+> - Develop unit and integration tests using assertDataFrameEqual, assertSchemaEqual, DataFrame.transform, and testing frameworks to ensure code correctness.
+> - Pick a test isolation strategy that lets parallel CI runs share one workspace
+> - Decide which tests run locally and which run remotely on Databricks compute
 
 ## Advanced Testing Strategies
 

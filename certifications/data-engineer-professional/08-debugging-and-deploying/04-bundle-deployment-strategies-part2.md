@@ -11,9 +11,23 @@ status: published
 
 # Bundle Deployment Strategies — Part 2: Rollback, Feature Flags & OIDC
 
+## Overview
+
 > For advanced bundle patterns, CI/CD pipeline DAGs, blue/green, and canary deployments, see [Part 1](./04-bundle-deployment-strategies-part1.md).
 
 This part covers rollback strategies, feature flags in data pipelines, schema migration patterns, and OIDC federation for secure CI/CD authentication.
+
+> [!abstract]
+>
+> - **Rollback**: redeploy the previous commit with `databricks bundle deploy`; undo bad data with `RESTORE TABLE`
+> - **Feature flags** in a Unity Catalog Delta table, and tracked, idempotent schema migrations
+> - **OIDC federation** with GitHub Actions replaces stored PATs and client secrets
+> - **Credential hygiene**: separate service principals per environment, and protection rules on production
+
+> [!tip] What the Exam Tests
+>
+> - Deploy Databricks resources using Declarative Automation Bundles (formerly Databricks Asset Bundles).
+> - Plan a rollback that covers both the deployed code and the data it wrote
 
 ## Rollback Strategies
 
@@ -311,6 +325,35 @@ az ad app federated-credential create \
 # - No force pushes
 
 ```
+
+## Use Cases
+
+- **Failed production release**: redeploy the previous known-good commit with `databricks bundle deploy -t prod`, then `RESTORE TABLE` any data the bad release wrote
+- **Gradual feature rollout**: read a feature flag from a Unity Catalog Delta table at pipeline runtime to turn new logic on per environment without redeploying
+- **Repeatable schema changes**: track applied migration versions in a Delta table so each numbered migration script runs once in every environment
+- **Secretless deployments**: authenticate GitHub Actions to Databricks with workload identity federation (OIDC) instead of a stored PAT or client secret
+
+## Common Issues & Errors
+
+### Bundle Rollback Leaves Bad Data Behind
+
+**Scenario:** Redeploying the previous commit restored the job definitions, but tables still hold rows written by the failed release.
+**Fix:** A bundle rollback only covers resources. Roll back data separately with Delta time travel: check `DESCRIBE HISTORY`, then `RESTORE TABLE ... TO VERSION AS OF N` (or `TO TIMESTAMP AS OF`).
+
+### Schema Migration Applied Twice
+
+**Scenario:** A migration script runs again in an environment where it was already applied.
+**Fix:** Record each applied migration version in a dedicated Delta table and skip versions already recorded, so every script runs exactly once.
+
+### CI Depends on a Long-Lived Secret
+
+**Scenario:** The deployment workflow stores a PAT or client secret that can leak or expire.
+**Fix:** Use workload identity federation: grant `id-token: write` in the GitHub Actions workflow, set `DATABRICKS_AUTH_TYPE: github-oidc`, and create a federation policy for the service principal.
+
+### One Service Principal Can Deploy to Every Environment
+
+**Scenario:** A single service principal has access to dev, staging, and prod, so a mistake in a lower environment can change production.
+**Fix:** Use a separate service principal per environment with minimum permissions, and add environment protection rules (required reviewers) for production.
 
 ## Exam Tips
 

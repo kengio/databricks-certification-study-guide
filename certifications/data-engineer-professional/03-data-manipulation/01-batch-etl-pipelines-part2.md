@@ -10,9 +10,24 @@ status: published
 
 # Batch ETL Pipelines — Part 2
 
+## Overview
+
 This part covers performance optimization techniques (Photon, DPP, AQE, partition pruning), error handling patterns, use cases, and exam tips for batch ETL pipelines.
 
 > For DataFrame transformations, joins, aggregations, window functions, and write operations, see [Part 1](./01-batch-etl-pipelines-part1.md).
+
+> [!abstract]
+>
+> - **Photon** accelerates SQL joins, aggregations, filters, and scans, but not Python or Scala UDFs
+> - **AQE** (on by default) handles skew, coalesces small partitions, and switches join strategies at runtime; **DPP** pushes dimension filters into partitioned fact tables
+> - **Partition pruning** needs a direct filter on the partition column; the broadcast join threshold defaults to 10 MB
+> - **Corrupt-record modes**: `PERMISSIVE` (default), `DROPMALFORMED`, and `FAILFAST`
+
+> [!tip] What the Exam Tests
+>
+> - Apply advanced data transformations, including window functions, joins, and aggregations, using Spark SQL and PySpark to process large datasets.
+> - Spot why a batch query does not prune partitions or broadcast a small table
+> - Choose an error-handling mode for malformed input
 
 ## Performance Optimization
 

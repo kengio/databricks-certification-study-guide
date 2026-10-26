@@ -29,6 +29,19 @@ flowchart TD
     end
 ```
 
+> [!abstract]
+>
+> - **High-water mark pattern**: track progress on a reliable timestamp or sequence column in a control table; it misses updates and deletes without CDC handling
+> - **`availableNow=True`** replaces the deprecated `once=True` trigger: it processes all available data in multiple batches, respecting rate limits, then stops
+> - **Checkpoints** give streaming queries exactly-once progress; `startingVersion` / `startingTimestamp` and `ignoreDeletes` / `ignoreChanges` control a Delta streaming source
+> - **MERGE is idempotent**, which makes it the safe write for reprocessed or `foreachBatch` batches
+
+> [!tip] What the Exam Tests
+>
+> - Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery.
+> - Choose between a full load and an incremental load, and pick an incremental strategy (high-water mark, checkpointed stream, Delta source options) for a source
+> - Recognise which write patterns stay correct when a batch is rerun
+
 ## Full Load vs Incremental Load
 
 | Aspect | Full Load | Incremental Load |
@@ -561,7 +574,7 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 **Scenario:** Joining a stream with a static table, but updates to the static table aren't reflected.
 
-**Fix:** Restart the streaming query to reload the static table cache.
+**Fix:** With a Delta static table, each micro-batch already reads the latest valid version, so check that the static side is actually a Delta table and that the update was committed before the micro-batch ran. The documented latest-version behavior assumes the static data is stored in Delta Lake ([stream-static joins](https://docs.databricks.com/aws/en/transform/join#stream-static-joins)).
 
 ### Delta Source: "Detected deleted data"
 
@@ -575,6 +588,16 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 **Fix:** Scale up cluster (add cores), optimize code, or check backpressure configurations.
 
+## Best Practices
+
+- Use `availableNow` for scheduled batch-style streaming jobs
+- Store watermarks in a control table with audit columns
+- Always use checkpoints for streaming queries
+- Deduplicate before MERGE to handle source duplicates
+- Monitor lag between watermark and current time
+- Use `ignoreChanges` when updates don't need downstream propagation
+- Test incremental logic with edge cases (empty batches, duplicates)
+
 ## Exam Tips
 
 1. **High-water mark** requires a reliable timestamp/sequence column in source
@@ -586,16 +609,6 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 7. **Rate limiting** (maxFilesPerTrigger) prevents OOM on large backlogs
 8. **Predictive Optimization** can auto-schedule OPTIMIZE/VACUUM, reducing manual maintenance
 9. **Deletion Vectors** improve incremental read performance by marking deletes without rewriting files
-
-## Best Practices
-
-- Use `availableNow` for scheduled batch-style streaming jobs
-- Store watermarks in a control table with audit columns
-- Always use checkpoints for streaming queries
-- Deduplicate before MERGE to handle source duplicates
-- Monitor lag between watermark and current time
-- Use `ignoreChanges` when updates don't need downstream propagation
-- Test incremental logic with edge cases (empty batches, duplicates)
 
 ## Key Takeaways
 

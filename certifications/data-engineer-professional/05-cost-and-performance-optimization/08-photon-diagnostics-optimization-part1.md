@@ -12,9 +12,23 @@ status: published
 
 # Photon, Diagnostics & Query Optimization — Part 1
 
+## Overview
+
 This part covers Photon engine acceleration, memory and spill diagnostics, and Spark UI analysis for Databricks workloads.
 
 > For EXPLAIN plans and AQE internals, see [EXPLAIN Plans & Adaptive Query Execution](./07-explain-plans-aqe.md).
+
+> [!abstract]
+>
+> - **Photon**: which operations it accelerates, which fall back to Spark, how to verify it ran, and what it costs
+> - **Memory and spill**: executor memory areas, finding spill in the Spark UI, and fixing it
+> - **Spark UI deep dive**: jobs, stages, and tasks; the SQL tab plan; DAG visualization; task metrics; straggler tasks from skew
+
+> [!tip] What the Exam Tests
+>
+> - Identify pertinent diagnostic information using Spark UI, cluster logs, system tables, and query profiles to troubleshoot errors.
+> - Use the query profile to identify performance bottlenecks, such as data-skipping inefficiencies, join strategies, and shuffle operations.
+> - Decide when Photon helps a workload and spot when it falls back
 
 ## Photon Acceleration
 
