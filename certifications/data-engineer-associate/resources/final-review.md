@@ -15,59 +15,67 @@ status: published
 
 ## 2-minute facts that show up *most often*
 
-- **Lakeflow Jobs** is the current name; Workflows is the legacy term — both may appear in stems
-- **Lakeflow Declarative Pipelines** is the current name; "Delta Live Tables / DLT" is legacy
-- **`COPY INTO` is idempotent** — re-running skips already-loaded files automatically
-- **Auto Loader (`cloudFiles`)** = incremental file ingestion; default `schemaEvolutionMode = addNewColumns`
-- **Delta `MERGE INTO`** = single atomic upsert (insert + update + delete via `WHEN MATCHED` / `NOT MATCHED`)
-- **Liquid Clustering** (`CLUSTER BY` + `OPTIMIZE table FULL`) is the modern alternative to Z-ORDER for new tables
-- **Unity Catalog three-level namespace**: `catalog.schema.object`
-- **GRANT cascades** from catalog → schema → table; **DENY overrides GRANT**; **REVOKE only removes a prior GRANT**
-- **UC volumes** (`/Volumes/...`) are the modern path for non-tabular file storage; DBFS mounts are deprecated for new work
-- **Databricks Asset Bundles** = YAML-driven deployment unit; `mode: development` prefixes resource names + pauses schedules; `mode: production` runs as the configured service principal
-- **System tables**: `system.lakeflow.*` (jobs), `system.access.*` (audit, lineage), `system.billing.*` (DBU usage)
+- **Lakeflow Jobs** is the current name for what was called Workflows. Expect "Workflows" only in older material
+- **Lakeflow Declarative Pipelines** (the exam's name) = the former "Delta Live Tables / DLT". Since Nov 12, 2025 the docs call it **Lakeflow Spark Declarative Pipelines**
+- **Declarative Automation Bundles** = the former **Databricks Asset Bundles** (DABs). Same `databricks bundle` CLI. **Git folders** = the former Repos
+- **`COPY INTO` is idempotent**: a re-run skips files already loaded. `'force' = 'true'` reloads them
+- **Auto Loader (`cloudFiles`)**: `addNewColumns` (default) *stops* the stream, then evolves on restart. `rescue` never fails and sends extras to `_rescued_data`
+- **Managed connectors** (SaaS, databases) → serverless ingestion pipelines writing streaming tables. The **ingestion gateway** exists for databases only
+- **Triggers**: scheduled (time-based) vs **file arrival** and **table update** (data-driven)
+- **AQE skew handling = joins only**. A skewed `groupBy` needs **salting**
+- **Liquid Clustering** (`CLUSTER BY`, up to 4 keys, can't be combined with partitioning or Z-order). **Predictive optimization** = automatic `OPTIMIZE` / `VACUUM` / `ANALYZE` on **UC managed tables**
+- **UC access** = `USE CATALOG` + `USE SCHEMA` + object privilege. Grants are inherited by current and future children
+- **DENY**: the classic statement is **Hive metastore only**. UC uses REVOKE or withholding grants, filters, masks, and ABAC (an ABAC DENY policy, in Beta, denies only `MANAGE ACCESS CONTROL`)
+- **External → managed**: `ALTER TABLE ... SET MANAGED`. Undo with `UNSET MANAGED` within 14 days
 
 ## 5-minute per-domain quick-fire
 
-### 01 — Lakehouse Platform
+### 01 — Databricks Intelligence Platform (6 %)
 
-- **Databricks Runtime** versions: standard, ML, Photon-enabled
-- **SQL Warehouses**: Pro (modern, Photon, Predictive I/O), Serverless (fastest provisioning), Classic (legacy)
-- **All-purpose** clusters = shared interactive (more expensive per DBU); **Job clusters** = ephemeral, cheaper
+- Lakehouse = one governed copy (Delta Lake + Unity Catalog) for BI and AI. Time travel gives rollback and an audit trail
+- Many concurrent ad hoc SQL users → **serverless SQL warehouse** (starts in about 2–6 s, autoscaling, auto stop)
+- Scheduled ETL → serverless jobs or jobs compute. Interactive work → all-purpose compute or a serverless notebook
 
-### 02 — ETL with Spark SQL and Python
+### 02 — Data Ingestion and Loading (21 %)
 
-- **DataFrame**: lazy until an action (`show`, `count`, `write`)
-- **Joins**: inner / outer / cross / semi / anti; broadcast small tables with `broadcast()`
-- **Aggregations**: `GROUP BY` / `GROUPING SETS` / `ROLLUP` / `CUBE`
-- **Window functions**: `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `LAG`, `LEAD`; frame clauses control range
+- Start with the **most managed** layer: managed connector → Lakeflow pipelines → Structured Streaming / Spark APIs
+- File detection: directory listing (default) vs **file notification with file events** (recommended)
+- JDBC: secrets via `dbutils.secrets.get`. Parallelize with `partitionColumn` / bounds / `numPartitions`
+- REST → land JSON in a **UC volume** → Auto Loader → schedule both in one Lakeflow Job
 
-### 03 — Delta Lake
+### 03 — Data Transformation and Modeling (22 %)
 
-- **ACID** transactions on object storage
-- **Time travel**: `VERSION AS OF n` or `TIMESTAMP AS OF '2026-01-01'`
-- **OPTIMIZE** compacts small files; **VACUUM** drops tombstoned files (default 7-day retention)
-- **Change Data Feed** (CDF) tracks per-row insert/update/delete via `TBLPROPERTIES(delta.enableChangeDataFeed=true)`
+- `union` keeps duplicates and matches by position. `unionByName` matches by name. SQL `UNION` deduplicates
+- "Latest row per key" → `ROW_NUMBER()` / `QUALIFY`, not `dropDuplicates`
+- View (recomputed per query) vs **materialized view** (stored, refreshed) vs **streaming table** (incremental append) vs table
+- Expectations: warn (default) / `DROP ROW` / `FAIL UPDATE`
+- `spark.sql.shuffle.partitions` (200, or `auto`) for DataFrame shuffles. `spark.default.parallelism` for RDDs. Broadcast threshold 10 MB
 
-### 04 — Workflows & Orchestration (Lakeflow Jobs)
+### 04 — Working with Lakeflow Jobs (16 %)
 
-- **Lakeflow Jobs** = DAGs of tasks (notebook / Python wheel / Lakeflow pipeline / SQL / dbt)
-- **Repair run** = re-run only the failed tasks (+ descendants), cheaper than full re-run
-- **Notifications**: email + webhook on success / failure / duration
+- Task types: notebook, SQL, dashboard, pipeline. **Depends on** builds the DAG
+- **If/else** (branching), **For each** (looping, concurrency default 1), **retries**, Run if **All done** for cleanup
+- Quartz cron: `0 0 9 ? * MON-FRI` = weekdays at 09:00
 
-### 05 — Data Governance
+### 05 — Implementing CI/CD (10 %)
 
-- **Unity Catalog** is the single governance plane
-- **Managed vs External** tables: managed = UC owns storage; external = UC owns metadata only
-- **Delta Sharing** = open cross-org sharing of Delta tables (D2D uses sharing identifier; open Delta Sharing uses bearer tokens)
-- **Row filters** + **column masks** = SQL UDFs attached to columns/tables, enforced at query time
+- Git folder: Create Branch → edit → **Commit & Push** → **PR in the Git provider**
+- Variable precedence: `--var` > `BUNDLE_VAR_` > `variable-overrides.json` > target `variables` > `default`
+- `mode: development` = prefixed names and paused schedules. `mode: production` = branch, `run_as`, and path validations
+- `databricks bundle validate` → `deploy -t prod` → `run`
 
-### 06 — CI/CD and Monitoring *(new in May 2026)*
+### 06 — Troubleshooting, Monitoring, and Optimization (10 %)
 
-- **Databricks Asset Bundles** = `databricks.yml` + `resources/*.yml` + source code; deploy with `databricks bundle deploy --target <name>`
-- **Git folders** are the workspace's view of a Git repo (formerly Repos)
-- **Spark UI**: Stages tab first — sort by Duration to find the slowest stage; check Shuffle Read/Write for skew
-- **System tables** refresh on a delay (minutes to ~1 hour) — don't expect real-time
+- Duration trends → the job's **matrix view**. Blockers → the **Graph** view (`Upstream failed` points upstream)
+- **Timed Out** → raise the task timeout. **Succeeded with failures** → leaf tasks succeeded
+- Skew: max ≫ 75th percentile. Spill: Spill (Disk) > 0 → `auto` / more partitions or more memory
+- Startup failure → event log termination code. Library conflict → notebook-scoped `%pip`, pinned versions. Driver OOM → stop collecting data to the driver
+
+### 07 — Governance and Security (15 %)
+
+- Managed: `DROP` deletes after the `UNDROP` window (7 days). External: `DROP` removes metadata only
+- Column mask with `is_account_group_member('finance_team')`. Row filter = a `BOOLEAN` UDF with `SET ROW FILTER ... ON (cols)`
+- **ABAC** = `CREATE POLICY ... FOR TABLES` with governed tags, at catalog or schema level
 
 ## Common-trap reminders
 
@@ -75,11 +83,13 @@ status: published
 | :--- | :--- |
 | Question says "Workflows" | Read it as Lakeflow Jobs |
 | Question says "DLT" or "Delta Live Tables" | Read it as Lakeflow Declarative Pipelines |
-| Question asks about cross-org Delta data sharing | Delta Sharing (NOT Lakehouse Federation) |
-| Question asks about querying external (non-Delta) databases | Lakehouse Federation (NOT Delta Sharing) |
-| Question asks "what blocks access even if granted?" | DENY (not REVOKE) |
-| Question asks the cheaper compute for a scheduled job | Job cluster (not all-purpose) |
-| Question asks how to dedupe an incremental load | Use `MERGE INTO` with `WHEN MATCHED` semantics or row-number → filter pattern |
+| "AQE is on, so skew is handled" on a `groupBy` | No. Salt the key |
+| "Lower shuffle partitions to fix skew" | No. It makes partitions bigger |
+| "Put the password in `databricks.yml`" | No. Use `BUNDLE_VAR_<name>` from CI secrets |
+| "DENY blocks access in Unity Catalog" | The classic `DENY` statement is Hive-metastore only. Revoke, filter, mask, or use ABAC |
+| Undo `SET MANAGED` | `UNSET MANAGED` within 14 days, not `RESTORE` |
+| Files land at unpredictable times | File arrival trigger, not a polling schedule |
+| Cheaper compute for a scheduled job | Jobs compute or serverless jobs, not all-purpose |
 
 ## Today's exam — 90-minute time budget
 

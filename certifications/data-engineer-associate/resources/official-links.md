@@ -13,97 +13,121 @@ Curated list of official Databricks documentation relevant to the Data Engineer 
 
 | Resource | URL |
 |---|---|
-| Databricks DE Associate Certification Page | <https://www.databricks.com/learn/certification/data-engineer-associate> |
-| Exam Guide (PDF) | <https://www.databricks.com/sites/default/files/2024-01/Databricks-Certified-Data-Engineer-Associate-Exam-Guide.pdf> |
-| Certification FAQ | <https://www.databricks.com/learn/certification> |
+| Databricks DE Associate certification page | <https://www.databricks.com/learn/certification/data-engineer-associate> |
+| Exam guide (August 2026, PDF) | <https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Associate-Exam-Guide-August-2026.pdf> |
+| Certification overview | <https://www.databricks.com/learn/certification> |
 | Databricks Academy | <https://www.databricks.com/learn/training> |
+| Databricks Free Edition (hands-on practice) | <https://docs.databricks.com/aws/en/getting-started/free-edition> |
+| Free Edition limitations | <https://docs.databricks.com/aws/en/getting-started/free-edition-limitations> |
 
-## Delta Lake
-
-| Resource | URL |
-|---|---|
-| Delta Lake Documentation | <https://docs.databricks.com/en/delta/index.html> |
-| Delta Lake Table Properties | <https://docs.databricks.com/en/delta/table-properties.html> |
-| MERGE INTO | <https://docs.databricks.com/en/delta/merge.html> |
-| OPTIMIZE | <https://docs.databricks.com/en/delta/optimize.html> |
-| VACUUM | <https://docs.databricks.com/en/delta/vacuum.html> |
-| Time Travel | <https://docs.databricks.com/en/delta/history.html> |
-| Change Data Feed | <https://docs.databricks.com/en/delta/delta-change-data-feed.html> |
-| Schema Evolution | <https://docs.databricks.com/en/delta/update-schema.html> |
-| Table Cloning | <https://docs.databricks.com/en/delta/clone.html> |
-| Constraints | <https://docs.databricks.com/en/delta/constraints.html> |
-
-## Spark SQL and DataFrames
+## Domain 1 — Databricks Intelligence Platform
 
 | Resource | URL |
 |---|---|
-| Spark SQL Language Reference | <https://docs.databricks.com/en/sql/language-manual/index.html> |
-| SQL Functions Reference | <https://docs.databricks.com/en/sql/language-manual/sql-ref-functions.html> |
-| Data Types | <https://docs.databricks.com/en/sql/language-manual/sql-ref-datatypes.html> |
+| What is a data lakehouse? | <https://docs.databricks.com/aws/en/lakehouse/> |
+| What is Delta Lake? | <https://docs.databricks.com/aws/en/delta/> |
+| What is Unity Catalog? | <https://docs.databricks.com/aws/en/data-governance/unity-catalog/> |
+| Compute configuration reference | <https://docs.databricks.com/aws/en/compute/configure> |
+| Serverless compute | <https://docs.databricks.com/aws/en/compute/serverless/> |
+| SQL warehouse types | <https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-types> |
+| Delta Lake time travel (table history) | <https://docs.databricks.com/aws/en/delta/history> |
+
+## Domain 2 — Data Ingestion and Loading
+
+| Resource | URL |
+|---|---|
+| What is Lakeflow Connect? | <https://docs.databricks.com/aws/en/ingestion/overview> |
+| Managed connector concepts | <https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/> |
+| Ingest with SQL and Spark APIs (standard connectors) | <https://docs.databricks.com/aws/en/ingestion/> |
+| Get started with COPY INTO | <https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/copy-into/> |
+| COPY INTO reference | <https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into> |
+| What is Auto Loader? | <https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/> |
+| Auto Loader schema inference and evolution | <https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema> |
+| Auto Loader file detection modes | <https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/file-detection-modes> |
+| Query databases using JDBC | <https://docs.databricks.com/aws/en/connect/external-systems/jdbc> |
+| Query variant data | <https://docs.databricks.com/aws/en/semi-structured/variant> |
+| Structured Streaming trigger intervals | <https://docs.databricks.com/aws/en/structured-streaming/triggers> |
+
+## Domain 3 — Data Transformation and Modeling
+
+| Resource | URL |
+|---|---|
+| SQL language reference | <https://docs.databricks.com/aws/en/sql/language-manual/> |
 | PySpark DataFrame API | <https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html> |
-| Spark SQL Guide | <https://spark.apache.org/docs/latest/sql-programming-guide.html> |
+| Standalone materialized views | <https://docs.databricks.com/aws/en/views/materialized> |
+| Standalone streaming tables | <https://docs.databricks.com/aws/en/tables/streaming> |
+| Pipeline expectations (data quality) | <https://docs.databricks.com/aws/en/ldp/expectations> |
+| Lakeflow pipelines Python reference | <https://docs.databricks.com/aws/en/ldp/developer/python-ref> |
+| Constraints on Databricks | <https://docs.databricks.com/aws/en/tables/constraints> |
+| Adaptive query execution | <https://docs.databricks.com/aws/en/optimizations/aqe> |
+| Set Spark configuration properties | <https://docs.databricks.com/aws/en/spark/conf> |
 
-## Structured Streaming
-
-| Resource | URL |
-|---|---|
-| Structured Streaming Overview | <https://docs.databricks.com/en/structured-streaming/index.html> |
-| Triggers | <https://docs.databricks.com/en/structured-streaming/triggers.html> |
-| Output Modes | <https://docs.databricks.com/en/structured-streaming/output-modes.html> |
-| Checkpointing | <https://docs.databricks.com/en/structured-streaming/production.html> |
-
-## Auto Loader
+## Domain 4 — Working with Lakeflow Jobs
 
 | Resource | URL |
 |---|---|
-| Auto Loader Overview | <https://docs.databricks.com/en/ingestion/auto-loader/index.html> |
-| Schema Inference and Evolution | <https://docs.databricks.com/en/ingestion/auto-loader/schema.html> |
-| COPY INTO | <https://docs.databricks.com/en/ingestion/copy-into/index.html> |
+| Lakeflow Jobs | <https://docs.databricks.com/aws/en/jobs/> |
+| Configure and edit tasks | <https://docs.databricks.com/aws/en/jobs/configure-task> |
+| Configure task dependencies (Run if) | <https://docs.databricks.com/aws/en/jobs/conditional-tasks> |
+| If/else task | <https://docs.databricks.com/aws/en/jobs/if-else> |
+| For each task | <https://docs.databricks.com/aws/en/jobs/for-each> |
+| Schedules and triggers | <https://docs.databricks.com/aws/en/jobs/triggers> |
+| File arrival triggers | <https://docs.databricks.com/aws/en/jobs/file-arrival-triggers> |
+| Table update triggers | <https://docs.databricks.com/aws/en/jobs/trigger-table-update> |
 
-## Lakeflow / Delta Live Tables
-
-| Resource | URL |
-|---|---|
-| Lakeflow Pipelines Overview | <https://docs.databricks.com/en/delta-live-tables/index.html> |
-| Python API | <https://docs.databricks.com/en/delta-live-tables/python-api.html> |
-| SQL API | <https://docs.databricks.com/en/delta-live-tables/sql-api.html> |
-| Expectations (Data Quality) | <https://docs.databricks.com/en/delta-live-tables/expectations.html> |
-
-## Unity Catalog
+## Domain 5 — Implementing CI/CD
 
 | Resource | URL |
 |---|---|
-| Unity Catalog Overview | <https://docs.databricks.com/en/data-governance/unity-catalog/index.html> |
-| Manage Privileges | <https://docs.databricks.com/en/data-governance/unity-catalog/manage-privileges/index.html> |
-| Best Practices | <https://docs.databricks.com/en/data-governance/unity-catalog/best-practices.html> |
-| External Locations | <https://docs.databricks.com/en/data-governance/unity-catalog/manage-external-locations-and-credentials.html> |
-| Data Sharing | <https://docs.databricks.com/en/data-sharing/index.html> |
+| Databricks Git folders | <https://docs.databricks.com/aws/en/repos/> |
+| Git operations in Git folders | <https://docs.databricks.com/aws/en/repos/git-operations-with-repos> |
+| Declarative Automation Bundles | <https://docs.databricks.com/aws/en/dev-tools/bundles/> |
+| Bundle variables | <https://docs.databricks.com/aws/en/dev-tools/bundles/variables> |
+| Bundle deployment modes | <https://docs.databricks.com/aws/en/dev-tools/bundles/deployment-modes> |
+| `databricks bundle` commands | <https://docs.databricks.com/aws/en/dev-tools/cli/bundle-commands> |
+| Bundles release notes (rename, Mar 16, 2026) | <https://docs.databricks.com/aws/en/release-notes/dev-tools/bundles> |
 
-## Databricks Workspace and Compute
-
-| Resource | URL |
-|---|---|
-| Workspace Overview | <https://docs.databricks.com/en/workspace/index.html> |
-| Notebooks | <https://docs.databricks.com/en/notebooks/index.html> |
-| Clusters | <https://docs.databricks.com/en/clusters/index.html> |
-| SQL Warehouses | <https://docs.databricks.com/en/sql/admin/sql-endpoints.html> |
-| Databricks Repos | <https://docs.databricks.com/en/repos/index.html> |
-
-## Jobs and Workflows
+## Domain 6 — Troubleshooting, Monitoring, and Optimization
 
 | Resource | URL |
 |---|---|
-| Databricks Jobs Overview | <https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html> |
-| Job Scheduling | <https://docs.databricks.com/en/workflows/jobs/schedule-jobs.html> |
-| Task Dependencies | <https://docs.databricks.com/en/workflows/jobs/use-tasks.html> |
+| Monitor Lakeflow Jobs | <https://docs.databricks.com/aws/en/jobs/monitor> |
+| Skew and spill (Spark UI guide) | <https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/long-spark-stage-page> |
+| Liquid clustering | <https://docs.databricks.com/aws/en/delta/clustering> |
+| Predictive optimization | <https://docs.databricks.com/aws/en/optimizations/predictive-optimization> |
+| Compute termination error codes | <https://docs.databricks.com/aws/en/compute/troubleshooting/cluster-error-codes> |
+| Install libraries | <https://docs.databricks.com/aws/en/libraries/> |
+| System tables | <https://docs.databricks.com/aws/en/admin/system-tables/> |
+
+## Domain 7 — Governance and Security
+
+| Resource | URL |
+|---|---|
+| Unity Catalog managed tables | <https://docs.databricks.com/aws/en/tables/managed> |
+| External tables | <https://docs.databricks.com/aws/en/tables/external> |
+| Convert external tables to managed | <https://docs.databricks.com/aws/en/tables/convert-external-managed> |
+| Manage privileges | <https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/> |
+| Privileges reference | <https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/privileges> |
+| Row filters and column masks | <https://docs.databricks.com/aws/en/tables/row-and-column-filters> |
+| ABAC | <https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/> |
+| ABAC DENY policies (Beta) | <https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/deny-policies> |
+| DENY (legacy Hive metastore) | <https://docs.databricks.com/aws/en/sql/language-manual/security-deny> |
+
+## Platform Release Notes Referenced in This Guide
+
+| Change | URL |
+|---|---|
+| Lakeflow Declarative Pipelines → Lakeflow Spark Declarative Pipelines (Nov 12, 2025) | <https://docs.databricks.com/aws/en/release-notes/product/2025/november> |
+| Delta Sharing → OpenSharing (Jun 10, 2026) | <https://docs.databricks.com/aws/en/release-notes/product/2026/june> |
+| Community Edition retirement | <https://community.databricks.com/t5/announcements/psa-community-edition-retires-on-january-1-2026-move-to-the-free/m-p/141888> |
 
 ## Practice Resources
 
 | Resource | URL |
 |---|---|
 | Databricks Academy | <https://www.databricks.com/learn/training> |
-| Databricks Community Edition | <https://community.cloud.databricks.com> |
-| Databricks Community Forums | <https://community.databricks.com/> |
+| Databricks Free Edition | <https://docs.databricks.com/aws/en/getting-started/free-edition> |
+| Databricks Community forums | <https://community.databricks.com/> |
 | Delta Lake GitHub | <https://github.com/delta-io/delta> |
 
 ---

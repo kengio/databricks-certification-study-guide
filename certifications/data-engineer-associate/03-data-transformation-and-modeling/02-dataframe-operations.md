@@ -414,7 +414,7 @@ sample_df = df.sampleBy("category", fractions={
 ## Official Documentation
 
 - [PySpark DataFrame API](https://docs.databricks.com/en/pyspark/index.html)
-- [Introduction to DataFrames](https://docs.databricks.com/en/dataframes/index.html)
+- [Tutorial: Load and transform data using DataFrames](https://docs.databricks.com/aws/en/getting-started/dataframes)
 
 ---
 

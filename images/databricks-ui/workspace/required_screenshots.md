@@ -8,7 +8,7 @@ Screenshots for the Databricks workspace UI — navigation sidebar, folder organ
 | :--- | :--- | :--- |
 | `navigation-sidebar.png` | Workspace navigation sidebar showing the main entry points | `shared/fundamentals/databricks-workspace.md` |
 | `folder-structure.png` | Workspace folder organization — Users, Shared, Repos | `shared/fundamentals/databricks-workspace.md` |
-| `job-task-dag.png` | Databricks Job task DAG view showing dependencies | `shared/fundamentals/databricks-workspace.md`, `certifications/data-engineer-associate/04-workflows-orchestration/01-databricks-jobs.md` |
+| `job-task-dag.png` | Databricks Job task DAG view showing dependencies | `shared/fundamentals/databricks-workspace.md`, `certifications/data-engineer-associate/04-working-with-lakeflow-jobs/01-lakeflow-jobs-and-tasks.md` |
 
 ## Contributing new screenshots
 
