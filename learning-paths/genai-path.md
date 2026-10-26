@@ -279,6 +279,8 @@ with mlflow.start_run():
 
 ### Evaluation with MLflow
 
+The snippet below is the MLflow 2.x `mlflow.evaluate()` API; on Databricks, MLflow 3 uses `mlflow.genai.evaluate()` with scorers for GenAI apps — see the [RAG fundamentals](../shared/fundamentals/rag-vector-search-basics.md) for an example.
+
 ```python
 import mlflow
 
