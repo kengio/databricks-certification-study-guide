@@ -31,12 +31,12 @@ D) `trigger(continuous='1 hour')`
 **Question** *(Medium)*: A streaming aggregation job groups events by a 10-minute window. Events can arrive up to 30 minutes late. Which watermark configuration is correct?
 
 A) `withWatermark("event_time", "10 minutes")`  
-B) `withWatermark("event_time", "30 minutes")`  
+B) `withWatermark("processing_time", "30 minutes")`  
 C) `withWatermark("event_time", "40 minutes")`  
-D) `withWatermark("processing_time", "30 minutes")`  
+D) `withWatermark("event_time", "30 minutes")`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The watermark should match the maximum expected lateness (30 minutes). This tells Spark to wait 30 minutes before finalizing windows. Using event_time (not processing_time) is required for event-time processing.
 
@@ -111,12 +111,12 @@ D) `flatMapGroupsWithState()` with GroupStateTimeout
 **Question** *(Medium)*: A streaming aggregation uses a 10-minute watermark. An event arrives with a timestamp 15 minutes behind the current watermark. How does Spark handle this late event?
 
 A) The event is added to the appropriate window and triggers a recomputation  
-B) The event is silently dropped and not included in any aggregation  
-C) The event is placed in a special "late data" output stream  
+B) The event is placed in a special "late data" output stream  
+C) The event is silently dropped and not included in any aggregation  
 D) The query throws a StreamingQueryException for the late data  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Events arriving after the watermark threshold has passed are silently dropped. Spark does not re-open completed windows. There is no "late data" output stream or exception. The watermark defines the boundary for acceptable lateness.
 
@@ -143,12 +143,12 @@ D) `groupBy("device_id", "reading_id").count().filter("count = 1")`
 **Question** *(Hard)*: A stateful streaming query tracking millions of user sessions is running out of executor memory due to the state store size. Which state store backend should be used for large state volumes?
 
 A) HDFS state store with increased `spark.executor.memory`  
-B) RocksDB state store backend with `spark.sql.streaming.stateStore.providerClass`  
+B) Redis-backed state store for distributed state management  
 C) Delta Lake state store for ACID guarantees on state  
-D) Redis-backed state store for distributed state management  
+D) RocksDB state store backend with `spark.sql.streaming.stateStore.providerClass`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > RocksDB state store uses local disk (SSD) instead of JVM heap memory, allowing much larger state without OOM errors. Configure via `spark.sql.streaming.stateStore.providerClass=com.databricks.sql.streaming.state.RocksDBStateStoreProvider`. The default HDFS backend stores state in JVM memory. Delta Lake and Redis state stores are not available in Spark.
 
@@ -206,13 +206,13 @@ D) `PUT /api/2.1/jobs/execute`
 
 **Question** *(Medium)*: A production ETL job runs daily for 2 hours. Cost optimization is a priority. Which cluster configuration is most cost-effective?
 
-A) All-purpose cluster running 24/7  
-B) Job cluster created for each run  
+A) Job cluster created for each run  
+B) All-purpose cluster running 24/7  
 C) All-purpose cluster with auto-termination  
 D) Serverless cluster  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Job clusters are created for the job run and terminated after completion. They have lower DBU rates (~60% less than all-purpose) and only incur costs during execution. All-purpose clusters cost more and may have idle time even with auto-termination.
 
@@ -223,12 +223,12 @@ D) Serverless cluster
 **Question** *(Medium)*: A team needs to run tests inside Databricks notebooks as part of CI/CD. Which Nutter pattern is correct?
 
 A) `def test_my_function():` followed by assertions  
-B) `before_`, `run_`, and `assertion_` method prefixes for each test  
+B) `TestCase` class inheritance  
 C) `@test` decorator on test methods  
-D) `TestCase` class inheritance  
+D) `before_`, `run_`, and `assertion_` method prefixes for each test  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Nutter uses a specific naming convention: `before_<test>` for setup, `run_<test>` for execution, and `assertion_<test>` for verification. This pattern allows tests to run inside Databricks notebooks.
 
@@ -271,12 +271,12 @@ D) Extract the function to a separate module, unit test it with a local SparkSes
 **Question** *(Medium)*: A Lakeflow pipeline needs a table that aggregates daily sales totals from a streaming source. Which table type is most appropriate?
 
 A) Streaming table  
-B) Materialized view  
+B) Temporary view  
 C) Live table  
-D) Temporary view  
+D) Materialized view  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Materialized views are appropriate for aggregations as they fully recompute results. Streaming tables are for append-only incremental processing and don't support aggregations well. "Live table" is deprecated terminology.
 
@@ -303,12 +303,12 @@ D) `STORED AS CURRENT`
 **Question** *(Easy)*: A Lakeflow Pipelines SQL query needs to read from another table defined in the same pipeline. How should the source table be referenced?
 
 A) `SELECT * FROM source_table`  
-B) `SELECT * FROM LIVE.source_table`  
-C) `SELECT * FROM delta.source_table`  
+B) `SELECT * FROM delta.source_table`  
+C) `SELECT * FROM LIVE.source_table`  
 D) `SELECT * FROM dlt.source_table`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > In Lakeflow Pipelines SQL, tables within the pipeline are referenced using the `LIVE.` prefix. This tells Lakeflow Pipelines that the table is defined within the same pipeline and creates the proper dependency.
 
@@ -319,12 +319,12 @@ D) `SELECT * FROM dlt.source_table`
 **Question** *(Easy)*: A Lakeflow pipeline processes data continuously as it arrives with minimal latency. Which pipeline configuration enables this?
 
 A) `triggered: true`  
-B) `continuous: true`  
+B) `streaming: true`  
 C) `development: false`  
-D) `streaming: true`  
+D) `continuous: true`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > `continuous: true` keeps the pipeline running continuously, processing data as it arrives. Triggered mode (default) processes data in batches when manually started or scheduled. `development` affects cluster size, not processing mode.
 
@@ -334,13 +334,13 @@ D) `streaming: true`
 
 **Question** *(Easy)*: A schema change requires reprocessing all historical data in a Lakeflow pipeline. How should the pipeline be refreshed?
 
-A) Delete the target tables and restart  
-B) Use `databricks pipelines start --full-refresh`  
+A) Use `databricks pipelines start --full-refresh`  
+B) Delete the target tables and restart  
 C) Set `reset: true` in pipeline configuration  
 D) Drop and recreate the pipeline  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `--full-refresh` flag clears checkpoints and reprocesses all data from the beginning. This preserves pipeline configuration while resetting state. Manually deleting tables or recreating pipelines is error-prone.
 
@@ -351,16 +351,16 @@ D) Drop and recreate the pipeline
 **Question** *(Easy)*: A team keeps its Declarative Automation Bundle modular: `databricks.yml` at the root, one YAML file per job under `resources/`, and shared code in `src/my_project/`. A developer adds `resources/ingest.job.yml`, runs `databricks bundle deploy -t dev`, and the deployment succeeds, but the new job does not appear in the workspace. What is the most likely fix?
 
 A) Rename the file to `databricks.yml` so the CLI reads it  
-B) Add the file, or a glob such as `resources/*.yml`, to the top-level `include` mapping in `databricks.yml`  
+B) Run `databricks bundle init default-python` again to regenerate the project  
 C) Move the job definition into `src/my_project/__init__.py`  
-D) Run `databricks bundle init default-python` again to regenerate the project  
+D) Add the file, or a glob such as `resources/*.yml`, to the top-level `include` mapping in `databricks.yml`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The resource file must be listed in the top-level `include` mapping.
 >
-> A bundle has exactly one `databricks.yml`, and every other configuration file must be listed in `include` (globs relative to the declaring file). A is wrong because a bundle can have only one `databricks.yml`. C is wrong because `src/` holds Python source, not bundle configuration. D regenerates a template and doesn't fix the missing include.
+> A bundle has exactly one `databricks.yml`, and every other configuration file must be listed in `include` (globs relative to the declaring file). A is wrong because a bundle can have only one `databricks.yml`. C is wrong because `src/` holds Python source, not bundle configuration. B regenerates a template and doesn't fix the missing include.
 
 ---
 
@@ -405,16 +405,16 @@ D) Install the package from the DBFS root instead of a Unity Catalog volume
 **Question** *(Hard)*: A package hosted in an internal Artifactory repository installs correctly on classic clusters, where an init script sets proxy environment variables. When the same notebook runs on serverless compute, installing the package from the Environment side pane fails. Which fix follows Databricks guidance?
 
 A) Set `HTTP_PROXY` with `os.environ` in the first notebook cell before the dependency installs  
-B) Specify `--index-url` or `--extra-index-url` in the dependency specification, or have an admin configure the repository as a default package repository  
+B) Install the package as a Maven coordinate  
 C) Attach the init script to the serverless compute through a compute policy  
-D) Install the package as a Maven coordinate  
+D) Specify `--index-url` or `--extra-index-url` in the dependency specification, or have an admin configure the repository as a default package repository  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Point the dependency at the private index, or configure a workspace default package repository.
 >
-> On serverless, dependencies are resolved before any code runs and compute-scoped environment variables aren't supported, so runtime proxy settings have no effect. A fails for that reason. C fails because serverless doesn't support init scripts or compute policies. D is wrong because the package is a Python package and Maven coordinates aren't supported on serverless.
+> On serverless, dependencies are resolved before any code runs and compute-scoped environment variables aren't supported, so runtime proxy settings have no effect. A fails for that reason. C fails because serverless doesn't support init scripts or compute policies. B is wrong because the package is a Python package and Maven coordinates aren't supported on serverless.
 
 ---
 
@@ -441,16 +441,16 @@ D) Package it in a wheel and install it as a compute-scoped library on the SQL w
 **Question** *(Hard)*: A governed Unity Catalog Python UDF computes a score row by row and is too slow on large tables. The function must stay in Unity Catalog and return exactly one value per input row, and an expensive lookup table should be loaded only once. Which definition fits?
 
 A) `CREATE FUNCTION ... RETURNS TABLE (...) LANGUAGE PYTHON HANDLER 'Scorer'` with an `eval` method  
-B) `CREATE FUNCTION ... RETURNS DOUBLE LANGUAGE PYTHON PARAMETER STYLE PANDAS HANDLER 'handler'`, with the lookup loaded outside the handler that iterates over `pandas.Series` batches  
-C) A session-scoped `groupBy().applyInPandas()` call in each notebook  
+B) A session-scoped `groupBy().applyInPandas()` call in each notebook  
+C) `CREATE FUNCTION ... RETURNS DOUBLE LANGUAGE PYTHON PARAMETER STYLE PANDAS HANDLER 'handler'`, with the lookup loaded outside the handler that iterates over `pandas.Series` batches  
 D) `CREATE TEMPORARY FUNCTION ... LANGUAGE SQL` that calls the Python UDF  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Use a Batch Unity Catalog Python UDF with `PARAMETER STYLE PANDAS` and a `HANDLER`.
 >
-> Batch Unity Catalog Python UDFs process iterators of `pandas.Series`, must yield the same number of rows as the input, and code outside the handler runs once. A defines a UDTF, which returns tables rather than one value per row. C is session-scoped, not governed, and loads whole groups into memory. D creates a temporary, ungoverned wrapper that still calls the slow row-at-a-time UDF.
+> Batch Unity Catalog Python UDFs process iterators of `pandas.Series`, must yield the same number of rows as the input, and code outside the handler runs once. A defines a UDTF, which returns tables rather than one value per row. B is session-scoped, not governed, and loads whole groups into memory. D creates a temporary, ungoverned wrapper that still calls the slow row-at-a-time UDF.
 
 ---
 
@@ -459,16 +459,16 @@ D) `CREATE TEMPORARY FUNCTION ... LANGUAGE SQL` that calls the Python UDF
 **Question** *(Easy)*: A nightly serverless job has a six-hour SLA and the team wants to minimize DBU consumption. Startup delays of several minutes are acceptable. Which setting should they change?
 
 A) Enable high memory on the job's notebook task  
-B) Turn off **Performance optimized** so the job uses standard performance mode (`performance_target: STANDARD`)  
+B) Attach an instance pool to the serverless job  
 C) Uncheck **Enable serverless auto-optimization** on every task  
-D) Attach an instance pool to the serverless job  
+D) Turn off **Performance optimized** so the job uses standard performance mode (`performance_target: STANDARD`)  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Use standard performance mode.
 >
-> Standard mode uses less compute and consumes fewer DBUs on the same SKU, with a typical startup of 4 to 6 minutes, which suits batch jobs that tolerate latency. A increases the DBU emission rate. C changes retry behaviour, not cost profile. D is wrong because serverless doesn't support instance pools.
+> Standard mode uses less compute and consumes fewer DBUs on the same SKU, with a typical startup of 4 to 6 minutes, which suits batch jobs that tolerate latency. A increases the DBU emission rate. C changes retry behaviour, not cost profile. B is wrong because serverless doesn't support instance pools.
 
 ---
 
@@ -531,16 +531,16 @@ D) `assertDataFrameEqual(build_gold(df), [], checkRowOrder=True)`
 **Question** *(Medium)*: JSON files land continuously in a Unity Catalog volume. A data engineer must ingest them into a bronze table in a Lakeflow pipeline so that each file is processed exactly once, new files are picked up incrementally, and schema inference is handled automatically. Which SQL definition meets the requirement?
 
 A) `CREATE OR REFRESH MATERIALIZED VIEW bronze AS SELECT * FROM read_files('/Volumes/main/landing/orders/', format => 'json')`  
-B) `CREATE OR REFRESH STREAMING TABLE bronze AS SELECT * FROM STREAM read_files('/Volumes/main/landing/orders/', format => 'json')`  
+B) `CREATE OR REFRESH STREAMING TABLE bronze AS SELECT * FROM read_files('/Volumes/main/landing/orders/', format => 'json')` with `cloudFiles.schemaLocation` set in the pipeline configuration  
 C) A scheduled `COPY INTO bronze` job with `COPY_OPTIONS ('force' = 'true')`  
-D) `CREATE OR REFRESH STREAMING TABLE bronze AS SELECT * FROM read_files('/Volumes/main/landing/orders/', format => 'json')` with `cloudFiles.schemaLocation` set in the pipeline configuration  
+D) `CREATE OR REFRESH STREAMING TABLE bronze AS SELECT * FROM STREAM read_files('/Volumes/main/landing/orders/', format => 'json')`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > A streaming table that reads with `STREAM read_files(...)` uses Auto Loader for incremental, exactly-once file ingestion.
 >
-> Databricks recommends streaming tables with Auto Loader for file ingestion, and `read_files` invokes Auto Loader only with the `STREAM` keyword. A is wrong because materialized views should not be defined over Auto Loader ingest; they are recomputed rather than processing each file once. C is wrong because `force = true` reloads every file and creates duplicates. D is wrong because a streaming table's query must be a streaming query, so `STREAM` is required, and pipelines manage the schema location automatically.
+> Databricks recommends streaming tables with Auto Loader for file ingestion, and `read_files` invokes Auto Loader only with the `STREAM` keyword. A is wrong because materialized views should not be defined over Auto Loader ingest; they are recomputed rather than processing each file once. C is wrong because `force = true` reloads every file and creates duplicates. B is wrong because a streaming table's query must be a streaming query, so `STREAM` is required, and pipelines manage the schema location automatically.
 
 ---
 
@@ -603,16 +603,16 @@ D) A streaming table that reads the topic with `STREAM read_kafka(...)` in a con
 **Question** *(Medium)*: An AUTO CDC flow maintains an employee dimension. Auditors need a new history row only when `salary` or `department` changes. Frequent changes to `last_login` must update the current row without creating history. Which `dp.create_auto_cdc_flow` arguments meet the requirement?
 
 A) `stored_as_scd_type=1, except_column_list=["last_login"]`  
-B) `stored_as_scd_type=2, track_history_column_list=["salary", "department"]`  
+B) `stored_as_scd_type=2, apply_as_truncates=expr("operation = 'T'")`  
 C) `stored_as_scd_type=2, except_column_list=["last_login"]`  
-D) `stored_as_scd_type=2, apply_as_truncates=expr("operation = 'T'")`  
+D) `stored_as_scd_type=2, track_history_column_list=["salary", "department"]`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > SCD Type 2 with `track_history_column_list` creates versions only for the listed columns; changes to other columns update the current version in place.
 >
-> A is wrong because SCD Type 1 keeps no history at all. C is wrong because `except_column_list` removes `last_login` from the target entirely and every remaining column still creates history. D is wrong because `apply_as_truncates` is supported only for SCD Type 1 and has nothing to do with history tracking.
+> A is wrong because SCD Type 1 keeps no history at all. C is wrong because `except_column_list` removes `last_login` from the target entirely and every remaining column still creates history. B is wrong because `apply_as_truncates` is supported only for SCD Type 1 and has nothing to do with history tracking.
 
 ---
 

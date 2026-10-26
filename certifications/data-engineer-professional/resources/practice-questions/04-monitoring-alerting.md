@@ -14,13 +14,13 @@ Practice questions for Section 4 of the Oct 9, 2026 exam guide. Questions marked
 
 **Question** *(Easy)*: A data engineer needs to track compute costs by team over the past month. Which system table provides this information?
 
-A) `system.access.audit`  
-B) `system.billing.usage`  
+A) `system.billing.usage`  
+B) `system.access.audit`  
 C) `system.compute.clusters`  
 D) `system.query.history`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `system.billing.usage` contains cost and usage data including DBUs consumed. `audit` tracks access events. `clusters` contains cluster metadata. `query.history` tracks SQL queries, not costs.
 

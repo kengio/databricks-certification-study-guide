@@ -14,13 +14,13 @@ Practice questions for Section 5 of the Oct 9, 2026 exam guide. Questions marked
 
 **Question** *(Easy)*: A data engineer needs to track all changes (inserts, updates, deletes) to a Delta table for downstream CDC processing. Which statement correctly enables this capability?
 
-A) `ALTER TABLE orders SET TBLPROPERTIES ('delta.enableChangeDataCapture' = true)`  
-B) `ALTER TABLE orders SET TBLPROPERTIES ('delta.enableChangeDataFeed' = true)`  
+A) `ALTER TABLE orders SET TBLPROPERTIES ('delta.enableChangeDataFeed' = true)`  
+B) `ALTER TABLE orders SET TBLPROPERTIES ('delta.enableChangeDataCapture' = true)`  
 C) `ALTER TABLE orders ENABLE CHANGE TRACKING`  
 D) `CREATE TABLE orders WITH (CDC = ENABLED)`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `delta.enableChangeDataFeed = true` enables Change Data Feed (CDF) on a Delta table. This allows reading changes using `table_changes()` function or `readChangeData` option. The other options use incorrect syntax.
 
@@ -46,13 +46,13 @@ D) `maxOffsetsPerTrigger` to limit records consumed from Kafka per batch
 
 **Question** *(Medium)*: A table is frequently filtered by `customer_id` and `order_date`. The team wants automatic optimization. Which approach provides automatic maintenance?
 
-A) `OPTIMIZE table ZORDER BY (customer_id, order_date)` scheduled daily  
-B) `ALTER TABLE table CLUSTER BY (customer_id, order_date)`  
+A) `ALTER TABLE table CLUSTER BY (customer_id, order_date)`  
+B) `OPTIMIZE table ZORDER BY (customer_id, order_date)` scheduled daily  
 C) `CREATE TABLE table PARTITIONED BY (customer_id, order_date)`  
 D) Both A and B provide automatic maintenance  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Liquid Clustering (`CLUSTER BY`) provides automatic, incremental clustering without manual OPTIMIZE commands. Z-ORDER requires scheduled OPTIMIZE runs. Partitioning is for low-cardinality columns and doesn't cluster data within partitions.
 

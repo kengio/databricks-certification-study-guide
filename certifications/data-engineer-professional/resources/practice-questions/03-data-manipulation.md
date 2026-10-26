@@ -15,14 +15,14 @@ Practice questions for Section 3 of the Oct 9, 2026 exam guide. Questions marked
 **Question** *(Easy)*: A data engineer needs to update existing records and insert new ones from a source table into a target Delta table. Which MERGE clause handles records that exist in the source but not in the target?
 
 A) `WHEN MATCHED THEN UPDATE`  
-B) `WHEN NOT MATCHED THEN INSERT`  
+B) `WHEN NOT MATCHED BY SOURCE THEN DELETE`  
 C) `WHEN MATCHED THEN INSERT`  
-D) `WHEN NOT MATCHED BY SOURCE THEN DELETE`  
+D) `WHEN NOT MATCHED THEN INSERT`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> `WHEN NOT MATCHED THEN INSERT` handles source records that don't have a matching key in the target. `WHEN MATCHED` handles existing records. Option C is invalid syntax. Option D handles records in target not in source.
+> `WHEN NOT MATCHED THEN INSERT` handles source records that don't have a matching key in the target. `WHEN MATCHED` handles existing records. Option C is invalid syntax. Option B handles records in target not in source.
 
 ---
 
@@ -47,14 +47,14 @@ D) Both A and B can be used to access historical data
 **Question** *(Easy)*: A Lakeflow pipeline requires that all records have a non-null customer_id. Invalid records should be removed but not fail the pipeline. Which expectation syntax achieves this?
 
 A) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL)`  
-B) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW`  
+B) `@dlt.expect_all("valid_id", "customer_id IS NOT NULL")`  
 C) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE`  
-D) `@dlt.expect_all("valid_id", "customer_id IS NOT NULL")`  
+D) `CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
-> `ON VIOLATION DROP ROW` removes invalid records without failing the pipeline. Option A only logs warnings but keeps invalid rows. Option C fails the entire pipeline. Option D has incorrect syntax.
+> `ON VIOLATION DROP ROW` removes invalid records without failing the pipeline. Option A only logs warnings but keeps invalid rows. Option C fails the entire pipeline. Option B has incorrect syntax.
 
 ---
 
@@ -63,16 +63,16 @@ D) `@dlt.expect_all("valid_id", "customer_id IS NOT NULL")`
 **Question** *(Medium)*: Records that fail two validation rules must not reach the silver path but must be kept for review. The team wants per-rule pass/fail metrics, and the pipeline must keep running. Which implementation fits?
 
 A) `@dp.expect_all_or_drop(rules)` on the silver table only  
-B) A private table with `@dp.expect_all(rules)` that adds `is_quarantined = NOT(<all rules>)`, plus valid and invalid views that filter on that flag  
-C) `@dp.expect_all_or_fail(rules)` on the silver table  
+B) `@dp.expect_all_or_fail(rules)` on the silver table  
+C) A private table with `@dp.expect_all(rules)` that adds `is_quarantined = NOT(<all rules>)`, plus valid and invalid views that filter on that flag  
 D) `CONSTRAINT valid EXPECT (...) ON VIOLATION QUARANTINE ROW`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > The documented quarantine pattern uses warn-level expectations for metrics and a computed flag to split valid and invalid rows without losing any.
 >
-> A is wrong because dropped rows are only counted, not kept for review. C is wrong because a fail expectation stops the flow's update instead of routing the rows. D is wrong because the only `ON VIOLATION` actions are `DROP ROW` and `FAIL UPDATE`.
+> A is wrong because dropped rows are only counted, not kept for review. B is wrong because a fail expectation stops the flow's update instead of routing the rows. D is wrong because the only `ON VIOLATION` actions are `DROP ROW` and `FAIL UPDATE`.
 
 ---
 

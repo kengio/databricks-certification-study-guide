@@ -31,12 +31,12 @@ D) `cloudFiles.mergeSchema = "true"`
 **Question** *(Easy)*: A company needs to share data with an external partner who uses Snowflake. Which statement about OpenSharing is correct?
 
 A) The recipient must have a Databricks workspace  
-B) The recipient can read shared data using any OpenSharing client  
+B) OpenSharing only works within the same cloud provider  
 C) Data is physically copied to the recipient's storage  
-D) OpenSharing only works within the same cloud provider  
+D) The recipient can read shared data using any OpenSharing client  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > OpenSharing is an open protocol. Recipients can use any compatible client (Spark, pandas, Power BI, Snowflake, etc.) without needing Databricks. Data is read in place, not copied. It works across cloud providers.
 
@@ -83,16 +83,16 @@ D) Legacy change data feed on the silver table so Iceberg readers can consume it
 **Question** *(Medium)*: A new Structured Streaming query reads an existing Kafka topic with `spark.readStream.format("kafka")` and writes to a Delta table, but the first run ingests none of the messages already in the topic. The engineer then sets `startingOffsets` to `earliest` and restarts the query with the same checkpoint, yet historical messages are still missing. What explains both behaviors?
 
 A) Kafka streaming reads default to `earliest`, so the topic must have been compacted  
-B) Streaming reads default to `latest`, and `startingOffsets` only applies when a query starts with a new checkpoint  
-C) `startingOffsets` is ignored unless `maxOffsetsPerTrigger` is also set  
+B) `startingOffsets` is ignored unless `maxOffsetsPerTrigger` is also set  
+C) Streaming reads default to `latest`, and `startingOffsets` only applies when a query starts with a new checkpoint  
 D) Delta sinks discard records older than the table's creation time  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Kafka streaming reads default to `startingOffsets = latest`, and the option is honored only for a new query, not one resuming from a checkpoint.
 >
-> The Spark options reference states the default is `latest` for streaming (`earliest` for batch) and that resumed queries always use the checkpoint, so a fresh checkpoint location is needed. A is wrong because the streaming default is `latest`. C is wrong because `maxOffsetsPerTrigger` only caps batch size. D is wrong because Delta sinks have no such filter.
+> The Spark options reference states the default is `latest` for streaming (`earliest` for batch) and that resumed queries always use the checkpoint, so a fresh checkpoint location is needed. A is wrong because the streaming default is `latest`. B is wrong because `maxOffsetsPerTrigger` only caps batch size. D is wrong because Delta sinks have no such filter.
 
 ---
 
@@ -137,16 +137,16 @@ D) A Lakeflow Connect SQL Server connector using change tracking with `scd_type`
 **Question** *(Hard)*: A team uses a gateway-based Lakeflow Connect PostgreSQL pipeline. To save money, an engineer stops the ingestion gateway each night and restarts it in the morning, while the ingestion pipeline runs hourly on serverless. What is the main risk?
 
 A) The serverless ingestion pipeline cannot start while the gateway is stopped  
-B) Changes can be lost to source log retention, forcing a full refresh of affected tables  
+B) The destination streaming tables lose their change data feed  
 C) The staging volume is deleted whenever the gateway stops  
-D) The destination streaming tables lose their change data feed  
+D) Changes can be lost to source log retention, forcing a full refresh of affected tables  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The gateway must run continuously to capture changes before the source truncates its change logs; stopping it can drop changes and require full refreshes.
 >
-> The docs warn not to stop the gateway, which runs on classic compute as a continuous pipeline. A is wrong because the ingestion pipeline can run on its own schedule from staging data. C is wrong because staged data is purged after 30 days, not on stop. D is wrong because CDF is enabled on all target tables regardless.
+> The docs warn not to stop the gateway, which runs on classic compute as a continuous pipeline. A is wrong because the ingestion pipeline can run on its own schedule from staging data. C is wrong because staged data is purged after 30 days, not on stop. B is wrong because CDF is enabled on all target tables regardless.
 
 ---
 
@@ -173,16 +173,16 @@ D) Create an OIDC federation recipient and share the volume through an Iceberg R
 **Question** *(Medium)*: A provider has one share for many regional partners and wants each recipient to see only rows for its own country from a partitioned table, without creating a separate share per partner. Which approach works?
 
 A) `ALTER SHARE s ADD TABLE t WITH PARTITION (country = 'US')` for each partner  
-B) Set a `country` recipient property and add the table with `PARTITION (country = CURRENT_RECIPIENT().country)`  
+B) Share the table `WITHOUT HISTORY` so recipients only see current rows  
 C) Add row filters to the source table and share it directly  
-D) Share the table `WITHOUT HISTORY` so recipients only see current rows  
+D) Set a `country` recipient property and add the table with `PARTITION (country = CURRENT_RECIPIENT().country)`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Recipient properties referenced with `CURRENT_RECIPIENT()` in the partition spec let one share filter partitions per recipient.
 >
-> The `ALTER SHARE` reference documents `PARTITION (column = CURRENT_RECIPIENT().<property-key>)`. A uses invalid `WITH PARTITION` syntax and still needs per-partner shares. C fails because tables with row filters or column masks cannot be shared. D controls history, not row visibility.
+> The `ALTER SHARE` reference documents `PARTITION (column = CURRENT_RECIPIENT().<property-key>)`. A uses invalid `WITH PARTITION` syntax and still needs per-partner shares. C fails because tables with row filters or column masks cannot be shared. B controls history, not row visibility.
 
 ---
 
@@ -191,16 +191,16 @@ D) Share the table `WITHOUT HISTORY` so recipients only see current rows
 **Question** *(Medium)*: An advertiser and a publisher, both on Databricks with Unity Catalog, want to compute audience overlap on hashed emails. Neither may see the other's rows, and both want to review any code before it touches their data. What should they use?
 
 A) A Databricks-to-Databricks OpenSharing share in each direction  
-B) A Databricks clean room with notebooks approved by the other collaborator and run by a designated runner  
+B) A Databricks Marketplace private exchange  
 C) Lakehouse Federation from each workspace into the other  
-D) A Databricks Marketplace private exchange  
+D) A Databricks clean room with notebooks approved by the other collaborator and run by a designated runner  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Clean Rooms share data only into a central clean room, expose only metadata to collaborators, and run only notebooks approved by every other collaborator.
 >
-> The Clean Rooms docs describe this no-trust model. A gives each recipient read access to the other's rows. C also exposes the data for direct querying. D distributes data products and gives no code approval or row protection.
+> The Clean Rooms docs describe this no-trust model. A gives each recipient read access to the other's rows. C also exposes the data for direct querying. B distributes data products and gives no code approval or row protection.
 
 ---
 
@@ -227,16 +227,16 @@ D) Output tables are views; convert them to tables with `CREATE TABLE AS SELECT`
 **Question** *(Medium)*: An admin created a Unity Catalog connection to a PostgreSQL database with credentials stored through `secret()`. A data engineer must now create a foreign catalog from it, and analysts must only query one table. Which grants are needed?
 
 A) Engineer: `USE CONNECTION` on the connection; analysts: the PostgreSQL password  
-B) Engineer: `CREATE CATALOG` on the metastore and `CREATE FOREIGN CATALOG` on the connection; analysts: `USE CATALOG`, `USE SCHEMA`, and `SELECT` on the foreign objects  
+B) Engineer: `ALL PRIVILEGES` on the metastore; analysts: `BROWSE` on the connection  
 C) Engineer: `CREATE CONNECTION` on the metastore; analysts: `USE CONNECTION` on the connection  
-D) Engineer: `ALL PRIVILEGES` on the metastore; analysts: `BROWSE` on the connection  
+D) Engineer: `CREATE CATALOG` on the metastore and `CREATE FOREIGN CATALOG` on the connection; analysts: `USE CATALOG`, `USE SCHEMA`, and `SELECT` on the foreign objects  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Creating a foreign catalog requires `CREATE CATALOG` on the metastore plus `CREATE FOREIGN CATALOG` on the connection, and readers need normal UC data privileges.
 >
-> Query federation docs list these requirements, and credentials come from the connection so readers never need them. A exposes credentials and `USE CONNECTION` doesn't allow catalog creation. C's `CREATE CONNECTION` creates connections, not catalogs, and `USE CONNECTION` doesn't grant table reads. D over-grants and `BROWSE` doesn't allow querying.
+> Query federation docs list these requirements, and credentials come from the connection so readers never need them. A exposes credentials and `USE CONNECTION` doesn't allow catalog creation. C's `CREATE CONNECTION` creates connections, not catalogs, and `USE CONNECTION` doesn't grant table reads. B over-grants and `BROWSE` doesn't allow querying.
 
 ---
 
@@ -245,16 +245,16 @@ D) Engineer: `ALL PRIVILEGES` on the metastore; analysts: `BROWSE` on the connec
 **Question** *(Medium)*: A company is migrating tables registered in AWS Glue to Unity Catalog incrementally. During the migration, users must query Glue tables through Unity Catalog with UC access control, running only on Databricks compute and reading files directly from S3. Which approach fits?
 
 A) Query federation over JDBC to Glue  
-B) Catalog federation with a Glue connection, external locations, and a foreign catalog with authorized paths  
-C) A Lakeflow Connect database connector for Glue  
+B) A Lakeflow Connect database connector for Glue  
+C) Catalog federation with a Glue connection, external locations, and a foreign catalog with authorized paths  
 D) An OpenSharing share from Glue  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Catalog federation reads foreign tables directly from object storage on Databricks compute and is documented for Glue-based incremental migrations.
 >
-> Setup needs a connection, external locations for the table paths, and a foreign catalog with authorized paths. A describes query federation, which pushes SQL to a database engine and doesn't apply to Glue. C is wrong because Lakeflow Connect database connectors read relational change logs. D is wrong because Glue is not an OpenSharing provider.
+> Setup needs a connection, external locations for the table paths, and a foreign catalog with authorized paths. A describes query federation, which pushes SQL to a database engine and doesn't apply to Glue. B is wrong because Lakeflow Connect database connectors read relational change logs. D is wrong because Glue is not an OpenSharing provider.
 
 ---
 
