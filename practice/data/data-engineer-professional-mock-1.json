@@ -993,7 +993,7 @@
       "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 59",
       "difficulty": "medium",
-      "question": "How does APPLY CHANGES handle out-of-order records by default?",
+      "question": "How does AUTO CDC handle out-of-order records by default?",
       "choices": {
         "A": "Records are processed in arrival order, ignoring timestamps",
         "B": "Records are processed by sequence column; out-of-order records are dropped",
@@ -1001,7 +1001,7 @@
         "D": "The pipeline fails on out-of-order detection"
       },
       "correctAnswer": "C",
-      "shortAnswer": "APPLY CHANGES uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.",
+      "shortAnswer": "AUTO CDC uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.",
       "explanation": ""
     },
     {

@@ -121,7 +121,7 @@ Each question is mapped to its primary exam section. Questions that touch two se
 
 - **Lakeflow Pipelines event-log queries** — multiple questions test reading the pipeline event log; know the column shape
 - **Declarative Automation Bundles `mode: development` vs `mode: production`** — dev pauses schedules and prefixes resources; production uses the run-as identity
-- **APPLY CHANGES INTO** vs hand-written MERGE — APPLY CHANGES INTO is preferred for SCD inside declarative pipelines
+- **AUTO CDC (formerly `APPLY CHANGES INTO`)** vs hand-written MERGE — AUTO CDC is preferred for SCD inside declarative pipelines
 - **OpenSharing identifier vs activation URL** — D2D uses sharing identifiers; open OpenSharing uses activation URLs
 
 ---

@@ -1162,9 +1162,9 @@ D) The materialized view requires a manual REFRESH command
 
 ## Question 59 *(Medium)*
 
-**Scenario**: A Lakeflow pipeline implements CDC from a source database using APPLY CHANGES. Some records are arriving with out-of-order timestamps due to source system behavior.
+**Scenario**: A Lakeflow pipeline implements CDC from a source database using AUTO CDC (formerly APPLY CHANGES). Some records are arriving with out-of-order timestamps due to source system behavior.
 
-**Question**: How does APPLY CHANGES handle out-of-order records by default?
+**Question**: How does AUTO CDC handle out-of-order records by default?
 
 A) Records are processed in arrival order, ignoring timestamps
 B) Records are processed by sequence column; out-of-order records are dropped
@@ -1174,7 +1174,7 @@ D) The pipeline fails on out-of-order detection
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> APPLY CHANGES uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.
+> AUTO CDC uses the SEQUENCE BY column to determine record order. If a later-arriving record has a higher sequence value than the current record, it updates the target. Records with lower sequence values than existing records are ignored (as they represent older data). This handles out-of-order arrival correctly.
 
 ---
 

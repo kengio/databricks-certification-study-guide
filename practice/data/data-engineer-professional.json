@@ -335,9 +335,9 @@
     {
       "id": "01-developing-code-q018",
       "domain": "developing-code",
-      "title": "APPLY CHANGES",
+      "title": "AUTO CDC SCD Type",
       "difficulty": "medium",
-      "question": "A CDC pipeline receives insert, update, and delete events. The target table should reflect the current state only. Which APPLY CHANGES configuration is correct?",
+      "question": "A CDC pipeline receives insert, update, and delete events. The target table should reflect the current state only. Which AUTO CDC (formerly APPLY CHANGES) configuration is correct?",
       "choices": {
         "A": "`STORED AS SCD TYPE 1`",
         "B": "`STORED AS SCD TYPE 2`",
@@ -345,7 +345,7 @@
         "D": "`STORED AS CURRENT`"
       },
       "correctAnswer": "A",
-      "shortAnswer": "SCD Type 1 maintains only the current state by overwriting on updates. SCD Type 2 maintains full history with start/end dates. Options C and D are not valid APPLY CHANGES syntax.",
+      "shortAnswer": "SCD Type 1 maintains only the current state by overwriting on updates. SCD Type 2 maintains full history with start/end dates. Options C and D are not valid AUTO CDC CHANGES syntax.",
       "explanation": ""
     },
     {

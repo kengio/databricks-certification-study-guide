@@ -15,98 +15,99 @@ status: published
 
 ## 2-minute facts that show up *most often*
 
-- **`MERGE INTO` is the only atomic upsert** on Delta; combine with `WHEN MATCHED` / `NOT MATCHED [BY SOURCE/TARGET]`
-- **`APPLY CHANGES INTO`** is the declarative SCD inside Lakeflow Pipelines — pick over hand-written MERGE for SCD Type 1/2
-- **Auto Loader file-notification mode** scales to millions of files; **directory listing** is simpler but lower-scale
-- **Photon** accelerates many but **not all** operators — check the Spark UI for the Photon badge
-- **Liquid clustering** (`CLUSTER BY`) replaces Z-ORDER + partitioning for new Delta tables; `OPTIMIZE table FULL` back-fills existing data
-- **Lakeflow event log** = Delta table at `<storage>/system/events`; queryable for `expectation_metrics`, `flow_progress`, `data_quality`
-- **OpenSharing** = open cross-org; D2D Share uses UC sharing identifiers
-- **Lakehouse Federation** = read-mostly query over external DBs (Snowflake, BigQuery, Postgres, MySQL, SQL Server, …); `CREATE CONNECTION` + `CREATE FOREIGN CATALOG`
-- **Declarative Automation Bundles `mode: development`** prefixes resource names + pauses schedules; `mode: production` uses the configured service principal
-- **System tables** under `system.lakeflow.*`, `system.access.*`, `system.billing.*` refresh on a delay (minutes to ~1 hour)
+- **Streaming table vs materialized view**: an aggregate that must reflect **late updates to prior days** is a materialized view; append-only ingestion processed once is a streaming table
+- **AUTO CDC (formerly `APPLY CHANGES INTO`)** is the declarative SCD inside Lakeflow Pipelines — `keys` + `sequence_by` required, `stored_as_scd_type` 1 (default) or 2
+- **Watermark + checkpoint**: the watermark bounds state for late events; the checkpoint restores offsets and state so a restart resumes exactly once
+- **`MERGE INTO`** is the atomic upsert on Delta; **deletion vectors** cut the file rewrites of frequent small MERGE / UPDATE / DELETE
+- **Liquid clustering** (`CLUSTER BY`, or `CLUSTER BY AUTO` to let Databricks pick keys) is the recommended layout for new tables; `OPTIMIZE ... FULL` re-clusters existing data
+- **Predictive Optimization** runs OPTIMIZE, VACUUM and statistics on Unity Catalog managed tables for you
+- **Cost attribution** = `system.billing.usage` joined with `system.billing.list_prices` (and `system.lakeflow.jobs` / compute tables)
+- **ABAC policy on a governed tag** masks every tagged column in current and future tables — no per-table `SET MASK`
+- **UC grants inherit downward** to current and future objects; `USE CATALOG` + `USE SCHEMA` are still required
+- **Declarative Automation Bundles** (formerly Asset Bundles): `databricks.yml` + targets; `databricks bundle deploy -t <target>`
 
-## 5-minute per-domain quick-fire (10 domains)
+## 5-minute per-section quick-fire (9 sections)
 
-### 01 — Developing Code for Data Processing (22 %)
+### 01 — Developing Code for Data Processing using Python and SQL (23 %)
 
-- Spark Structured Streaming: triggers `processingTime`, `availableNow`, `once`; output modes `append` / `update` / `complete`
-- Watermarks bound how long state is kept for stream-stream joins / dedup
-- Lakeflow Pipelines: `@dlt.table` / `@dlt.view`; `@dlt.expect_or_drop` / `_or_fail` / `expect`
-- Lakeflow Jobs: tasks + dependencies + `for_each`; Repair Run on failure
+- Bundle project: `databricks.yml`, `resources/`, `src/<package>/`, `tests/`; build a wheel as an artifact
+- UDFs: prefer built-ins → SQL UDF → pandas UDF → Python UDF; Unity Catalog functions for governed reuse (`EXECUTE`)
+- Pipelines Python API: `from pyspark import pipelines as dp`; `@dp.table`, `@dp.materialized_view`, `@dp.expect_or_drop`
+- Lakeflow Jobs: If/else condition and For each tasks; serverless performance-optimized vs standard mode
+- Tests: `assertDataFrameEqual`, `assertSchemaEqual`, small functions composed with `DataFrame.transform`
 
-### 02 — Cost & Performance Optimization (13 %)
+### 02 — Data Ingestion & Acquisition (12 %)
 
-- Target file size 128 MB – 1 GB; small-file problem hurts; liquid clustering adapts
-- AQE (Adaptive Query Execution) dynamically coalesces shuffle partitions
-- Photon accelerates vectorisable ops; check Spark UI for badge
-- Job clusters cost ~50 % less per DBU than all-purpose
+- Auto Loader (`cloudFiles`) for continuous file ingest, incl. `binaryFile`; `COPY INTO` for idempotent batch
+- Kafka / Kinesis / Pub/Sub streaming sources; exactly-once into Delta via checkpoints
+- Lakeflow Connect managed connectors for SQL Server, MySQL, PostgreSQL CDC
+- OpenSharing (formerly Delta Sharing): D2D uses a sharing identifier; Databricks-to-Open uses bearer tokens or OIDC
+- Clean Rooms: collaborators run approved notebooks without seeing each other's raw data
+- Lakehouse Federation: `CREATE CONNECTION` + `CREATE FOREIGN CATALOG`; credentials live on the connection
 
-### 03 — Data Transformation, Cleansing, Quality (10 %)
+### 03 — Data Manipulation (12 %)
 
-- CDC patterns: Delta CDF as source; `APPLY CHANGES INTO` as target
-- Deduplication: `txnAppId` + `txnVersion` for idempotent writes
-- Expectations: `_or_drop` (silently drop), `_or_fail` (abort pipeline), bare `expect` (metric only)
+- Window functions (`row_number`, `lag`, running totals), joins, aggregations
+- VARIANT: `parse_json`, `col:path::type`, `variant_get`, `try_variant_get`
+- `ai_query(endpoint, request)` and task functions (`ai_classify`, `ai_extract`, …) for enrichment
+- Expectations: warn (`expect`), drop (`_or_drop`), fail (`_or_fail` — the flow update fails and rolls back); quarantine = flag + separate table
 
 ### 04 — Monitoring and Alerting (10 %)
 
-- System tables for usage/audit; query `system.lakeflow.job_run_timeline` for run history
-- SQL Alerts trigger on query-result thresholds (>, <, ==)
-- Lakeflow Jobs notifications: email + webhook on success / failure / duration
+- System tables: `system.billing`, `system.compute`, `system.access`, `system.lakeflow`
+- Pipeline event log: `event_log(<pipeline-id>)`, `flow_progress` events carry expectation metrics
+- Alerts: a scheduled query + condition + notification; the SQL alert task can branch a job with If/else
+- REST API / CLI / SDK: `w.jobs.list_runs`, `w.pipelines.list_pipeline_events`, `databricks jobs list-runs`
 
-### 05 — Ensuring Data Security and Compliance (10 %)
+### 05 — Cost & Performance Optimization (15 %)
 
-- GRANT cascades; DENY overrides GRANT; REVOKE only removes prior GRANT
-- Row filters + column masks = SQL UDFs attached to a column/table
-- Secret scopes: Databricks-backed or Azure-Key-Vault-backed (Azure only)
+- Managed tables + Predictive Optimization + liquid clustering = less maintenance work
+- Disk cache (Delta cache) speeds repeated reads from local SSD; Spark `cache()` is different
+- Change Data Feed: `delta.enableChangeDataFeed`, `table_changes`, `readChangeFeed`; `_change_type` values
+- Query profile: files / bytes pruned vs read, join strategy, shuffle and spill
 
-### 06 — Debugging and Deploying (10 %)
+### 06 — Ensuring Data Security and Compliance (8 %)
 
-- Declarative Automation Bundles: `databricks bundle validate` / `deploy --target` / `run`
-- Git folders for source control (formerly Repos)
-- Production = service principal, not personal token
-- Spark UI: Stages → Tasks → Shuffle → SQL plan triage flow
+- Least privilege: grant to groups, on the narrowest securable; workspace-object ACLs (CAN VIEW / CAN RUN / CAN MANAGE)
+- Pseudonymization (salted hash, tokens) is reversible with a key; anonymization (suppression, generalization) is not
+- Erasure: DELETE → `REORG TABLE ... APPLY (PURGE)` (deletion vectors) → VACUUM after retention
 
-### 07 — Data Ingestion & Acquisition (7 %)
+### 07 — Data Governance (5 %)
 
-- Auto Loader (`cloudFiles`) for continuous file ingest; `COPY INTO` for idempotent batch
-- Kafka / Kinesis / Event Hubs Structured Streaming sources; exactly-once via Delta + checkpointing
-- Checkpoint location must be unique per writeStream
+- Grants on a catalog or schema are inherited by current and future objects
+- Tags and comments on securables drive search and discovery; governed tags also drive ABAC
 
-### 08 — Data Governance (7 %)
+### 08 — Debugging and Deploying (10 %)
 
-- UC three-level namespace `catalog.schema.object`
-- Managed (UC owns storage) vs External (you own storage)
-- UC Volumes replace DBFS mounts for non-tabular files
+- Diagnose with the Spark UI, driver / compute logs, system tables and the query profile
+- **Repair run** re-runs only failed tasks (and dependents), optionally with new parameter values
+- Bundles: `validate` → `deploy -t` → `run`; `mode: development` prefixes names and pauses schedules
+- Git folders (formerly Repos): CI updates a production Git folder to a branch or tag
 
-### 09 — Data Modeling (6 %)
+### 09 — Data Modeling (5 %)
 
-- Medallion: Bronze (raw) → Silver (cleansed) → Gold (aggregated)
-- Schema evolution: `mergeSchema = true` adds columns; `overwriteSchema = true` replaces
-- SCD Type 1 = overwrite (no history); Type 2 = insert new row with effective range (full history)
-
-### 10 — Data Sharing and Federation (5 %)
-
-- OpenSharing: provider creates `SHARE` + grants to `RECIPIENT`; D2D uses sharing identifier
-- Lakehouse Federation: `CREATE CONNECTION ... TYPE <SOURCE>` + `CREATE FOREIGN CATALOG ... USING CONNECTION`
-- Federation is read-mostly; pushdown is best-effort
+- Partition only large tables, by low-cardinality grain (date); cluster on filter / join keys; compact with OPTIMIZE
+- Star schema: facts + dimensions; materialized views for pre-aggregation; **metric views** for governed, reusable metrics (`MEASURE()`)
+- SCD Type 1 = overwrite; Type 2 = new row with an effective range (full history)
 
 ## Common-trap reminders
 
 | Trap | Right answer |
 | :--- | :--- |
-| Stem says "DLT" / "Delta Live Tables" | Read as Lakeflow Pipelines |
-| "Cross-organisation Delta data sharing" | OpenSharing |
+| Stem says "DLT", "Delta Live Tables" or "APPLY CHANGES" | Read as Lakeflow Pipelines / AUTO CDC |
+| "Asset Bundles" / "DABs" | Declarative Automation Bundles — same `databricks bundle` CLI |
+| "Delta Sharing" | OpenSharing |
+| "Aggregate must include late updates to prior days" | Materialized view |
+| "Replicate PostgreSQL changes with minimal code" | Lakeflow Connect, not JDBC or OpenSharing |
 | "Query Snowflake without ETL" | Lakehouse Federation |
-| "Dropped-record metric per expectation" | Lakeflow event log → `expectation_metrics` |
-| "Cheaper compute for scheduled work" | Job cluster |
-| "Atomic upsert" | `MERGE INTO` (one statement) |
-| "Declarative SCD in a pipeline" | `APPLY CHANGES INTO` |
+| "One rule to mask every `pii` column" | ABAC policy on a governed tag |
+| "Same metric computed differently in each dashboard" | Unity Catalog metric view |
+| "Re-run only the failed task with a new date" | Repair run with a parameter override |
 | "Most-managed governance answer" | Unity Catalog |
 
 ## Today's exam — 120-minute time budget
 
-- **59 questions ÷ 120 minutes ≈ 2 min/question** — flag long scenarios on first read, return at end
+- **60 scored questions ÷ 120 minutes ≈ 2 min/question** — flag long scenarios on first read, return at end
 - Multi-paragraph scenarios: read the *question* first, then the scenario — finds the relevant facts faster
 - "Which is the LEAST" / "EXCEPT" stems: read twice; mark answer to your *original* reading then verify
 - Default to the **most-managed** option: Lakeflow Jobs > custom Airflow; Lakeflow Pipelines > hand-written Spark stream; UC > workspace ACLs

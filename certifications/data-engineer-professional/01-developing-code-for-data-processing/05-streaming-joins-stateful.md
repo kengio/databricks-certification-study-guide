@@ -694,7 +694,7 @@ query = (
 CREATE OR REFRESH STREAMING TABLE deduped_transactions AS
 SELECT *
 FROM STREAM(raw_transactions)
--- Note: In Lakeflow Pipelines, deduplication is handled via APPLY CHANGES INTO
+-- Note: In Lakeflow Pipelines, deduplication is handled via AUTO CDC (formerly APPLY CHANGES INTO)
 -- For standard SQL streaming, use Python API
 ```
 

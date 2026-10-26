@@ -4,125 +4,116 @@ tags: [reference, official-docs, data-engineer-professional, certification]
 
 # Official Documentation Links
 
+Organised by the 9 sections of the Oct 9, 2026 exam guide. Each topic file also ends with its own **Official Documentation** list.
+
 ## Certification Resources
 
-- [Databricks Certifications Overview](https://www.databricks.com/learn/certification)
-- [Data Engineer Professional Certification](https://www.databricks.com/learn/certification/data-engineer-professional)
+- [Data Engineer Professional certification page](https://www.databricks.com/learn/certification/data-engineer-professional)
+- [Oct 9, 2026 exam guide (PDF)](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf)
+- [Certification FAQ](https://www.databricks.com/learn/certification/faq)
 - [Databricks Academy](https://www.databricks.com/learn/training)
+- [Databricks Free Edition (hands-on practice)](https://docs.databricks.com/aws/en/getting-started/free-edition)
 
-## Delta Lake
+## Section 1 — Developing Code for Data Processing using Python and SQL
 
-### Core Concepts
+- [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+- [Bundle library dependencies](https://docs.databricks.com/aws/en/dev-tools/bundles/library-dependencies)
+- [Serverless dependencies and environments](https://docs.databricks.com/aws/en/compute/serverless/dependencies)
+- [User-defined functions](https://docs.databricks.com/aws/en/udf/)
+- [Unity Catalog UDFs](https://docs.databricks.com/aws/en/udf/unity-catalog)
+- [Lakeflow pipelines concepts](https://docs.databricks.com/aws/en/ldp/concepts/)
+- [Lakeflow pipelines Python reference (`pyspark.pipelines`)](https://docs.databricks.com/aws/en/ldp/developer/python-ref)
+- [AUTO CDC APIs (formerly APPLY CHANGES)](https://docs.databricks.com/aws/en/ldp/cdc)
+- [Structured Streaming watermarks](https://docs.databricks.com/aws/en/structured-streaming/watermarks)
+- [Structured Streaming in production](https://docs.databricks.com/aws/en/structured-streaming/production)
+- [If/else condition task](https://docs.databricks.com/aws/en/jobs/tasks/if-else)
+- [Run serverless jobs (performance mode, auto-optimization)](https://docs.databricks.com/aws/en/jobs/run-serverless-jobs)
+- [Unit testing notebooks](https://docs.databricks.com/aws/en/notebooks/testing)
 
-- [Delta Lake Documentation](https://docs.databricks.com/delta/index.html)
-- [Delta Lake Table Properties](https://docs.databricks.com/delta/table-properties.html)
-- [ACID Transactions](https://docs.databricks.com/delta/concurrency-control.html)
+## Section 2 — Data Ingestion & Acquisition
 
-### Operations
+- [Auto Loader](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/)
+- [Kafka](https://docs.databricks.com/aws/en/connect/streaming/kafka)
+- [Kinesis](https://docs.databricks.com/aws/en/connect/streaming/kinesis)
+- [Pub/Sub](https://docs.databricks.com/aws/en/connect/streaming/pub-sub)
+- [Change data feed](https://docs.databricks.com/aws/en/tables/features/change-data-feed)
+- [Lakeflow Connect](https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/)
+- [OpenSharing](https://docs.databricks.com/aws/en/opensharing/)
+- [Clean Rooms](https://docs.databricks.com/aws/en/clean-rooms/)
+- [Lakehouse Federation](https://docs.databricks.com/aws/en/query-federation/)
 
-- [MERGE INTO](https://docs.databricks.com/delta/merge.html)
-- [OPTIMIZE](https://docs.databricks.com/delta/optimize.html)
-- [VACUUM](https://docs.databricks.com/delta/vacuum.html)
-- [Z-Ordering](https://docs.databricks.com/delta/data-skipping.html)
-- [Liquid Clustering](https://docs.databricks.com/delta/clustering.html)
+## Section 3 — Data Manipulation
 
-### Features
+- [MERGE INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into)
+- [VARIANT](https://docs.databricks.com/aws/en/semi-structured/variant)
+- [AI functions](https://docs.databricks.com/aws/en/large-language-models/ai-functions)
+- [`ai_query`](https://docs.databricks.com/aws/en/sql/language-manual/functions/ai_query)
+- [Expectations](https://docs.databricks.com/aws/en/ldp/expectations)
 
-- [Time Travel](https://docs.databricks.com/delta/history.html)
-- [Change Data Feed](https://docs.databricks.com/delta/delta-change-data-feed.html)
-- [Table Cloning](https://docs.databricks.com/delta/clone.html)
-- [Schema Evolution](https://docs.databricks.com/delta/update-schema.html)
-- [Constraints](https://docs.databricks.com/delta/constraints.html)
+## Section 4 — Monitoring and Alerting
 
-## Structured Streaming
+- [System tables](https://docs.databricks.com/aws/en/admin/system-tables/)
+- [Jobs system tables](https://docs.databricks.com/aws/en/admin/system-tables/jobs)
+- [Pipeline event log](https://docs.databricks.com/aws/en/ldp/monitor-event-logs)
+- [Databricks SQL alerts](https://docs.databricks.com/aws/en/sql/user/alerts/)
+- [Databricks SDK for Python](https://docs.databricks.com/aws/en/dev-tools/sdk-python)
+- [Jobs CLI commands](https://docs.databricks.com/aws/en/dev-tools/cli/reference/jobs-commands)
+- [Monitor Lakeflow Jobs](https://docs.databricks.com/aws/en/jobs/monitor)
 
-- [Structured Streaming Overview](https://docs.databricks.com/structured-streaming/index.html)
-- [Triggers](https://docs.databricks.com/structured-streaming/triggers.html)
-- [Output Modes](https://docs.databricks.com/structured-streaming/output-modes.html)
-- [Watermarking](https://docs.databricks.com/structured-streaming/watermarks.html)
-- [Checkpointing](https://docs.databricks.com/structured-streaming/production.html)
-- [Stream-Stream Joins](https://docs.databricks.com/structured-streaming/stream-stream-joins.html)
+## Section 5 — Cost & Performance Optimization
 
-## Auto Loader
+- [Unity Catalog managed tables](https://docs.databricks.com/aws/en/tables/managed)
+- [Predictive optimization](https://docs.databricks.com/aws/en/optimizations/predictive-optimization)
+- [Liquid clustering](https://docs.databricks.com/aws/en/delta/clustering)
+- [Deletion vectors](https://docs.databricks.com/aws/en/delta/deletion-vectors)
+- [Disk cache](https://docs.databricks.com/aws/en/optimizations/disk-cache)
+- [Query profile](https://docs.databricks.com/aws/en/sql/user/queries/query-profile)
+- [Partitions](https://docs.databricks.com/aws/en/tables/partitions)
 
-- [Auto Loader Overview](https://docs.databricks.com/ingestion/auto-loader/index.html)
-- [Schema Inference](https://docs.databricks.com/ingestion/auto-loader/schema.html)
-- [Schema Evolution](https://docs.databricks.com/ingestion/auto-loader/schema-evolution.html)
-- [File Notification Mode](https://docs.databricks.com/ingestion/auto-loader/file-notifications.html)
-- [Options Reference](https://docs.databricks.com/ingestion/auto-loader/options.html)
+## Section 6 — Ensuring Data Security and Compliance
 
-## Lakeflow / Delta Live Tables
+- [Access control lists](https://docs.databricks.com/aws/en/security/auth/access-control/)
+- [ABAC](https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/)
+- [Governed tags](https://docs.databricks.com/aws/en/admin/governed-tags/)
+- [Row filters and column masks](https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/)
+- [Data Classification](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-classification)
+- [GDPR compliance with Delta](https://docs.databricks.com/aws/en/ldp/gdpr)
+- [VACUUM](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum)
 
-- [Lakeflow Pipelines Overview](https://docs.databricks.com/delta-live-tables/index.html)
-- [Python API](https://docs.databricks.com/delta-live-tables/python-api.html)
-- [SQL API](https://docs.databricks.com/delta-live-tables/sql-api.html)
-- [Expectations (Data Quality)](https://docs.databricks.com/delta-live-tables/expectations.html)
-- [APPLY CHANGES API](https://docs.databricks.com/delta-live-tables/cdc.html)
-- [Event Log](https://docs.databricks.com/delta-live-tables/observability.html)
+## Section 7 — Data Governance
 
-## Unity Catalog
+- [Unity Catalog privileges and inheritance](https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/permissions-concepts)
+- [Privileges reference](https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference)
+- [Tags](https://docs.databricks.com/aws/en/database-objects/tags)
+- [COMMENT ON](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment)
 
-- [Unity Catalog Overview](https://docs.databricks.com/data-governance/unity-catalog/index.html)
-- [Manage Privileges](https://docs.databricks.com/data-governance/unity-catalog/manage-privileges/index.html)
-- [Best Practices](https://docs.databricks.com/data-governance/unity-catalog/best-practices.html)
-- [External Locations](https://docs.databricks.com/data-governance/unity-catalog/manage-external-locations-and-credentials.html)
-- [OpenSharing](https://docs.databricks.com/data-sharing/index.html)
-- [Data Lineage](https://docs.databricks.com/data-governance/unity-catalog/lineage.html)
+## Section 8 — Debugging and Deploying
 
-## Databricks Tooling
+- [Debugging with the Spark UI](https://docs.databricks.com/aws/en/compute/troubleshooting/debugging-spark-ui)
+- [Repair job failures](https://docs.databricks.com/aws/en/jobs/repair-job-failures)
+- [Job parameters](https://docs.databricks.com/aws/en/jobs/job-parameters)
+- [Bundle deployment modes](https://docs.databricks.com/aws/en/dev-tools/bundles/deployment-modes)
+- [Git folders](https://docs.databricks.com/aws/en/repos/)
+- [CI/CD with Git folders](https://docs.databricks.com/aws/en/repos/ci-cd-techniques-with-repos)
 
-### Workspace
+## Section 9 — Data Modeling
 
-- [Notebooks](https://docs.databricks.com/notebooks/index.html)
-- [Widgets](https://docs.databricks.com/notebooks/widgets.html)
-- [Magic Commands](https://docs.databricks.com/notebooks/notebooks-code.html)
-
-### CLI & API
-
-- [Databricks CLI](https://docs.databricks.com/dev-tools/cli/index.html)
-- [REST API Reference](https://docs.databricks.com/api/workspace/introduction)
-- [Jobs API 2.1](https://docs.databricks.com/api/workspace/jobs)
-
-### Compute
-
-- [Clusters](https://docs.databricks.com/clusters/index.html)
-- [Instance Pools](https://docs.databricks.com/clusters/pool-index.html)
-- [Serverless Compute](https://docs.databricks.com/serverless-compute/index.html)
-- [Photon](https://docs.databricks.com/runtime/photon.html)
-
-## CI/CD & Deployment
-
-- [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/index.html)
-- [Git Integration](https://docs.databricks.com/repos/index.html)
-- [CI/CD Patterns](https://docs.databricks.com/dev-tools/ci-cd/index.html)
-
-## Monitoring & Debugging
-
-- [System Tables](https://docs.databricks.com/administration-guide/system-tables/index.html)
-- [Spark UI](https://docs.databricks.com/clusters/spark-ui.html)
-- [Query Profile](https://docs.databricks.com/sql/user/queries/query-profile.html)
-
-## SQL Reference
-
-- [SQL Language Reference](https://docs.databricks.com/sql/language-manual/index.html)
-- [Functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions.html)
-- [Data Types](https://docs.databricks.com/sql/language-manual/sql-ref-datatypes.html)
-
-## Best Practices
-
-- [Delta Lake Best Practices](https://docs.databricks.com/delta/best-practices.html)
-- [Streaming Best Practices](https://docs.databricks.com/structured-streaming/production.html)
-- [Performance Tuning](https://docs.databricks.com/optimizations/index.html)
-- [Security Best Practices](https://docs.databricks.com/security/index.html)
+- [Data modeling](https://docs.databricks.com/aws/en/transform/data-modeling)
+- [Constraints](https://docs.databricks.com/aws/en/tables/constraints)
+- [Materialized views](https://docs.databricks.com/aws/en/sql/mv-st/materialized)
+- [Unity Catalog metric views](https://docs.databricks.com/aws/en/uc-semantics/metric-views/)
 
 ## Release Notes
 
-- [Databricks Runtime Release Notes](https://docs.databricks.com/release-notes/runtime/index.html)
-- [Delta Lake Release Notes](https://github.com/delta-io/delta/releases)
-- [Platform Release Notes](https://docs.databricks.com/release-notes/product/index.html)
+- [Platform release notes](https://docs.databricks.com/aws/en/release-notes/product/)
+- [Lakeflow pipelines release notes](https://docs.databricks.com/aws/en/release-notes/dlt/)
+- [Bundles release notes](https://docs.databricks.com/aws/en/release-notes/dev-tools/bundles)
 
 ## Community Resources
 
 - [Databricks Community](https://community.databricks.com/)
-- [Stack Overflow - Databricks](https://stackoverflow.com/questions/tagged/databricks)
 - [Delta Lake GitHub](https://github.com/delta-io/delta)
+
+---
+
+**[↑ Back to Resources](./README.md)**

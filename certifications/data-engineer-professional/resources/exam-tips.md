@@ -4,13 +4,14 @@ tags: [exam-tips, data-engineer-professional, certification]
 
 # Exam Tips and Strategies
 
-## Exam Format
+## Exam Format (Oct 9, 2026 exam guide)
 
-- **Questions**: ~60 multiple-choice (some report up to 65)
-- **Duration**: 120 minutes (2 hours)
-- **Passing Score**: 70%
-- **Languages**: Python and SQL code examples
-- **Format**: Proctored online exam
+- **Questions**: 60 scored multiple-choice, plus possible unscored items (extra time is already included)
+- **Duration**: 120 minutes (about 2 minutes per question)
+- **Passing score**: not published — Databricks reports pass / fail only
+- **Language**: English (per the PDF); code in stems is Python and SQL
+- **Delivery**: online proctored or test center; no test aides
+- **Official samples**: the [exam guide PDF](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf) ends with 10 sample questions, one per new-style objective — work them first
 
 ## Time Management
 
@@ -31,40 +32,52 @@ tags: [exam-tips, data-engineer-professional, certification]
 
 ## Topic Priority by Weight
 
-| Priority | Topic | Weight | Study Time |
-|----------|-------|--------|------------|
-| 1 | Data Processing | 30% | 30% |
-| 2 | Databricks Tooling | 20% | 20% |
-| 3 | Data Modeling | 15% | 15% |
-| 4 | Security & Governance | 10% | 10% |
-| 5 | Monitoring & Logging | 10% | 10% |
-| 6 | Testing & Deployment | 10% | 10% |
+| Priority | Section | Weight | Study time |
+| :---: | :--- | :---: | :---: |
+| 1 | Developing Code for Data Processing using Python and SQL | 23 % | ~23 % |
+| 2 | Cost & Performance Optimization | 15 % | ~15 % |
+| 3 | Data Ingestion & Acquisition | 12 % | ~12 % |
+| 3 | Data Manipulation | 12 % | ~12 % |
+| 5 | Monitoring and Alerting | 10 % | ~10 % |
+| 5 | Debugging and Deploying | 10 % | ~10 % |
+| 7 | Ensuring Data Security and Compliance | 8 % | ~8 % |
+| 8 | Data Governance | 5 % | ~5 % |
+| 8 | Data Modeling | 5 % | ~5 % |
 
 ## Key Topics to Master
 
-### Must Know (High Frequency)
+### Must Know (named in the Oct 9, 2026 guide)
 
-- [ ] Delta Lake operations (MERGE, OPTIMIZE, VACUUM, ZORDER)
-- [ ] Structured Streaming concepts (triggers, watermarks, output modes)
-- [ ] Auto Loader (schema inference, evolution modes)
-- [ ] Unity Catalog hierarchy and permissions
-- [ ] Lakeflow/DLT expectations and table types
-- [ ] Medallion architecture patterns
+- [ ] Streaming table vs materialized view — which one reflects late updates to old aggregates
+- [ ] AUTO CDC (formerly APPLY CHANGES): `keys`, `sequence_by`, `stored_as_scd_type` 1 vs 2
+- [ ] Structured Streaming state: watermarks, output modes, `foreachBatch`, checkpoints
+- [ ] Lakeflow Jobs: If/else and For each tasks; repair runs with parameter overrides
+- [ ] Deletion vectors vs Liquid Clustering vs `CLUSTER BY AUTO`; Liquid Clustering vs partitioning / Z-ORDER
+- [ ] Predictive Optimization on Unity Catalog managed tables
+- [ ] System tables: `system.billing.usage` + `list_prices` for cost; `system.access.audit`; `system.lakeflow.*`
+- [ ] ABAC policies on governed tags; column masks and row filters
+- [ ] Unity Catalog permission inheritance (grants flow to future objects)
+- [ ] Declarative Automation Bundles: `databricks.yml`, targets, `databricks bundle deploy -t <target>`
 
-### Should Know (Medium Frequency)
+### Should Know (new or reworded skills)
 
-- [ ] Change Data Feed (CDF) usage
-- [ ] Jobs API 2.0 basics
-- [ ] Cluster types and when to use each
-- [ ] Schema evolution modes
-- [ ] SCD Type 1 vs Type 2 patterns
+- [ ] VARIANT: `parse_json`, `:` paths, `variant_get`
+- [ ] `ai_query` and task-specific AI functions in pipelines
+- [ ] Lakeflow Connect CDC from SQL Server, MySQL, PostgreSQL
+- [ ] OpenSharing D2D vs Databricks-to-Open; Clean Rooms
+- [ ] Lakehouse Federation: connections, foreign catalogs, `USE CONNECTION`
+- [ ] Unity Catalog metric views vs materialized views
+- [ ] Lakehouse (SQL) alerts and the SQL alert task for job branching
+- [ ] Python project layout for bundles; dependency troubleshooting on serverless
+- [ ] `assertDataFrameEqual`, `assertSchemaEqual`, `DataFrame.transform`
+- [ ] Disk cache (Delta cache) vs Spark cache
 
-### Good to Know (Lower Frequency)
+### Good to Know
 
-- [ ] Databricks CLI commands
+- [ ] Databricks CLI and SDK commands for jobs and pipelines
+- [ ] Spark UI and compute logs for diagnosis
 - [ ] Specific Spark configurations
-- [ ] Nutter testing framework
-- [ ] Advanced streaming patterns
+- [ ] Git folders (formerly Repos) CI/CD
 
 ## Common Question Patterns
 
@@ -117,11 +130,16 @@ What should the engineer check FIRST?"
 
 | Topic | Trap | Correct Answer |
 |-------|------|----------------|
-| VACUUM | Any retention works | Default minimum 168 hours |
+| VACUUM | Any retention works | Default retention 7 days (168 hours); shorter needs the safety check disabled |
 | Schema evolution | Always automatic | Must enable with option |
 | Streaming checkpoints | Optional | Required for exactly-once |
-| Unity Catalog | Workspace-level | Account-level |
+| Unity Catalog | Workspace-level | Metastore is per region, attached to many workspaces |
 | Clone | Deep always better | Shallow for testing |
+| Late updates to an aggregate | Streaming table | Materialized view |
+| Grant on a catalog | Only existing tables | Inherited by current **and future** objects |
+| PII column masking at scale | Per-table `SET MASK` | ABAC policy on a governed tag |
+| Frequent small MERGE / DELETE | Partition by key | Deletion vectors |
+| Product names | "APPLY CHANGES", "Asset Bundles", "Delta Sharing" | AUTO CDC, Declarative Automation Bundles, OpenSharing |
 
 ## Day Before Exam
 
@@ -162,7 +180,7 @@ What should the engineer check FIRST?"
 
 - Review score report by section
 - Focus on weak areas
-- Wait required period (usually 14 days)
+- Check the [Certification FAQ](https://www.databricks.com/learn/certification/faq) for the current retake policy
 - Practice more questions in weak areas
 - Re-take with confidence
 
@@ -172,8 +190,8 @@ What should the engineer check FIRST?"
 
 1. Databricks Academy - Advanced Data Engineering
 2. Official documentation for weak areas
-3. Practice exams (Udemy, SkillCertPro)
-4. Hands-on labs in Databricks workspace
+3. Practice exams — check they target the Oct 9, 2026 guide
+4. Hands-on labs in [Databricks Free Edition](https://docs.databricks.com/aws/en/getting-started/free-edition)
 
 ### Helpful (If Time Permits)
 
@@ -184,7 +202,7 @@ What should the engineer check FIRST?"
 
 ### Skip
 
-- Outdated content (pre-2023)
+- Content written before the Oct 9, 2026 guide that still uses 10 domains or 59 questions
 - Non-Databricks specific Spark content
 - Deep dives on rarely tested topics
 
@@ -193,11 +211,10 @@ What should the engineer check FIRST?"
 | Item | Value |
 |------|-------|
 | VACUUM default retention | 168 hours (7 days) |
-| Target Delta file size | 1 GB |
 | Default shuffle partitions | 200 |
 | Broadcast join threshold | 10 MB |
 | Checkpoint retention | Indefinite (manual cleanup) |
-| Transaction log retention | 30 days |
+| Transaction log retention (`delta.logRetentionDuration`) | 30 days |
 | Streaming micro-batch | Default processing mode |
 
 ## Final Checklist
@@ -209,3 +226,7 @@ Before clicking "Submit":
 - [ ] No obvious mistakes
 - [ ] Time remaining checked
 - [ ] Ready to submit
+
+---
+
+**[↑ Back to Resources](./README.md)**

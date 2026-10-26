@@ -99,7 +99,7 @@ ORDER BY timestamp DESC;
 | Metric | Description |
 | :--- | :--- |
 | `num_output_rows` | Rows written to target |
-| `num_upserted_rows` | Rows upserted (APPLY CHANGES) |
+| `num_upserted_rows` | Rows upserted (AUTO CDC flows) |
 | `num_deleted_rows` | Rows deleted |
 | `seconds_of_processing` | Processing duration |
 | `seconds_of_backlog` | Streaming backlog time |
