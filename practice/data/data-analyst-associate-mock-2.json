@@ -387,14 +387,14 @@
       "difficulty": "easy",
       "question": "An analyst tunes a query and re-runs it to measure the improvement. It returns in a few milliseconds every time, which seems too fast to be real. What should the analyst run before timing the query?",
       "choices": {
-        "A": "`OPTIMIZE` on every table in the query",
-        "B": "`REFRESH TABLE` on the source tables",
+        "A": "Run the query several times and keep the fastest time",
+        "B": "Switch to a larger warehouse size",
         "C": "`SET use_cached_result = false`",
         "D": "`EXPLAIN` on the query"
       },
       "correctAnswer": "C",
       "shortAnswer": "An unchanged query on unchanged tables is answered from a result cache, so its timing says nothing about the tuning. `SET use_cached_result = false` turns off result caching for the session. Use it for testing and benchmarking only.",
-      "explanation": "`OPTIMIZE` rewrites data files and doesn't bypass the cache. `EXPLAIN` shows the plan without running the query, so it can't measure runtime."
+      "explanation": "Keeping the fastest of several runs measures the cache, not the query. Switching to a larger warehouse changes the test conditions instead of turning the cache off. `EXPLAIN` shows the plan without running the query, so it can't measure runtime."
     },
     {
       "id": "data-analyst-associate-mock-2-q022",
@@ -698,7 +698,7 @@
       },
       "correctAnswer": "C",
       "shortAnswer": "Every object has one owner, who has all privileges on it. Ownership can be transferred by the current owner, a metastore admin, the owner of the parent container, or a user with `MANAGE`. Transferring it to a **group** means a future leaver won't strand the table again.",
-      "explanation": "`ALL PRIVILEGES` doesn't include `MANAGE` and doesn't transfer ownership. Dropping and re-creating the table risks data loss and breaks lineage and grants. Ownership never moves automatically."
+      "explanation": "`ALL PRIVILEGES` doesn't include `MANAGE` and doesn't transfer ownership. Dropping and re-creating the table risks data loss and throws away its history and grants. Ownership never moves automatically."
     },
     {
       "id": "data-analyst-associate-mock-2-q041",
@@ -730,7 +730,7 @@
       },
       "correctAnswer": "D",
       "shortAnswer": "Delta Sharing (now called OpenSharing) shares a read-only collection of tables from a provider to a recipient with no replication, so recipients see the provider's updates in near real time. In Databricks-to-Databricks sharing, a user with `CREATE CATALOG` and `USE PROVIDER` creates a catalog from the share and grants access to their users.",
-      "explanation": "Copying files or connecting over JDBC gives up the live, governed share and creates copies that have to be kept in sync."
+      "explanation": "Copying files or connecting over JDBC gives up the live, governed share and creates copies that have to be kept in sync. Managed connectors ingest from SaaS applications and databases, not from another organization's share."
     },
     {
       "id": "data-analyst-associate-mock-2-q043",

@@ -473,7 +473,7 @@ D) A pro or serverless SQL warehouse (serverless is recommended for performance)
 >
 > Genie spaces (now called Genie Agents) run their generated SQL on a **pro or serverless** SQL warehouse. Classic warehouses aren't supported, and serverless is recommended for performance.
 >
-> The author needs `CAN USE` on the warehouse, the Databricks SQL entitlement, and `SELECT` on the data, but no permission level makes a classic warehouse work. Genie doesn't run on all-purpose clusters, and it doesn't need a model serving endpoint of your own.
+> The author needs `CAN USE` on the warehouse, the Databricks SQL entitlement, and `SELECT` on the data, but no permission level makes a classic warehouse work. The documented requirement is a pro or serverless SQL warehouse, not an all-purpose cluster or a serving endpoint.
 
 ---
 

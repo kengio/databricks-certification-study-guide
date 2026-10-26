@@ -733,7 +733,7 @@
         "D": "Run `ALTER TABLE prod.gold.revenue SET DENY SELECT FOR contractors`"
       },
       "correctAnswer": "B",
-      "shortAnswer": "The classic `DENY` statement is a legacy Hive metastore feature. In Unity Catalog, users can read a table only with an explicit or inherited `SELECT` grant, so you remove access with `REVOKE`, including from the groups the contractors belong to, or by never granting it. Partial access is handled with row filters, column masks, or ABAC policies.",
+      "shortAnswer": "The classic `DENY` statement is a legacy Hive metastore feature. In Unity Catalog, read access comes from `SELECT` granted on the table or inherited from a parent catalog or schema, directly or through a group, so you remove access with `REVOKE`, including from the groups the contractors belong to, or by never granting it. Partial access is handled with row filters, column masks, or ABAC policies.",
       "explanation": "Unity Catalog's only deny mechanism is the ABAC DENY policy (Beta), which currently covers just `MANAGE ACCESS CONTROL`, not `SELECT`. `SET DENY` is not valid syntax."
     },
     {
