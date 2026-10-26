@@ -6,6 +6,8 @@ tags: [cheat-sheet, mlflow, machine-learning, ml-associate, ml-professional, gen
 
 Quick reference for MLflow tracking, Unity Catalog model registry, evaluation, tracing, and agent APIs on Databricks. Code targets **MLflow 3** (current Databricks practice as of Oct 2026); the [MLflow 2 → 3 mapping](#mlflow-2--3-mapping) at the end lists what changed.
 
+On a runtime that still ships MLflow 2.x, upgrade in the notebook with `%pip install mlflow>=3.0 --upgrade` followed by `dbutils.library.restartPython()` (per Databricks' *Get started with MLflow 3*).
+
 ## Experiment Tracking
 
 ```python
