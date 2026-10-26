@@ -5,11 +5,11 @@ tags: [ml-associate, practice-questions, mlflow, ml-workflows]
 status: published
 ---
 
-# Practice Questions — ML Workflows (Domain 2)
+# Practice Questions — MLflow Tracking & Experiments (Section 1)
 
-13 questions covering MLflow tracking, autolog, experiment organization, and run management.
+13 questions covering MLflow tracking, autolog, experiment organization, and run management. The exam guide lists these MLflow skills under **Section 1: Databricks Machine Learning (38 %)** (older versions of this guide filed them under "ML Workflows"). Study material: [MLflow Tracking](../../01-databricks-machine-learning/05-mlflow-tracking.md) and [Experiments & Runs](../../01-databricks-machine-learning/06-experiments-runs.md).
 
-[← Back to Practice Questions](./README.md) | [Next: Feature Engineering →](./03-feature-engineering.md)
+[← Back to Practice Questions](./README.md) | [Next: Spark ML, Tuning & Feature Tables →](./03-feature-engineering.md)
 
 ---
 
@@ -23,9 +23,9 @@ with mlflow.start_run():
     mlflow.log_metric("rmse", 1.23)
 ```
 
-A) The run stays open until `mlflow.end_run()` is called manually
-B) The run is automatically ended and its status is set to FINISHED
-C) The run is automatically ended and its status is set to FAILED
+A) The run stays open until `mlflow.end_run()` is called manually  
+B) The run is automatically ended and its status is set to FINISHED  
+C) The run is automatically ended and its status is set to FAILED  
 D) The run parameters and metrics are discarded
 
 > [!success]- Answer
@@ -39,9 +39,9 @@ D) The run parameters and metrics are discarded
 
 **Question** *(Easy)*: A data scientist wants to log three metrics at once — `accuracy`, `precision`, and `recall` — without writing three separate log calls. Which function signature is correct?
 
-A) `mlflow.log_metric({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`
-B) `mlflow.log_metrics({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`
-C) `mlflow.log_metrics(accuracy=0.9, precision=0.85, recall=0.88)`
+A) `mlflow.log_metric({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`  
+B) `mlflow.log_metrics({"accuracy": 0.9, "precision": 0.85, "recall": 0.88})`  
+C) `mlflow.log_metrics(accuracy=0.9, precision=0.85, recall=0.88)`  
 D) `mlflow.log_metric("accuracy", "precision", "recall", [0.9, 0.85, 0.88])`
 
 > [!success]- Answer
@@ -55,9 +55,9 @@ D) `mlflow.log_metric("accuracy", "precision", "recall", [0.9, 0.85, 0.88])`
 
 **Question** *(Medium)*: A data scientist calls `mlflow.autolog()` at the start of their notebook. Which of the following frameworks will have its parameters and metrics automatically logged?
 
-A) scikit-learn only
-B) scikit-learn and XGBoost only
-C) scikit-learn, XGBoost, LightGBM, and PyTorch Lightning
+A) scikit-learn only  
+B) scikit-learn and XGBoost only  
+C) scikit-learn, XGBoost, LightGBM, and PyTorch Lightning  
 D) All Python libraries that call `fit()` on a model object
 
 > [!success]- Answer
@@ -71,9 +71,9 @@ D) All Python libraries that call `fit()` on a model object
 
 **Question** *(Medium)*: A data scientist enables `mlflow.autolog()` and trains a scikit-learn model. They also compute a custom business metric called `revenue_impact`. Will `revenue_impact` be logged automatically?
 
-A) Yes, autolog captures all variables assigned in the training script
-B) Yes, autolog logs all numeric values computed during training
-C) No, autolog only logs metrics defined by the framework (e.g., accuracy, loss); custom metrics must be logged with `mlflow.log_metric()`
+A) Yes, autolog captures all variables assigned in the training script  
+B) Yes, autolog logs all numeric values computed during training  
+C) No, autolog only logs metrics defined by the framework (e.g., accuracy, loss); custom metrics must be logged with `mlflow.log_metric()`  
 D) No, custom metrics cannot be logged in the same run as autolog metrics
 
 > [!success]- Answer
@@ -87,9 +87,9 @@ D) No, custom metrics cannot be logged in the same run as autolog metrics
 
 **Question** *(Medium)*: A data scientist wants to find all MLflow runs where the `test_accuracy` metric is greater than 0.90. Which `mlflow.search_runs()` call is correct?
 
-A) `mlflow.search_runs(filter_string="metrics.test_accuracy > 0.90")`
-B) `mlflow.search_runs(filter_string="metric.test_accuracy > 0.90")`
-C) `mlflow.search_runs(filter="test_accuracy > 0.90")`
+A) `mlflow.search_runs(filter_string="metrics.test_accuracy > 0.90")`  
+B) `mlflow.search_runs(filter_string="metric.test_accuracy > 0.90")`  
+C) `mlflow.search_runs(filter="test_accuracy > 0.90")`  
 D) `mlflow.search_runs(metrics={"test_accuracy": ">0.90"})`
 
 > [!success]- Answer
@@ -103,9 +103,9 @@ D) `mlflow.search_runs(metrics={"test_accuracy": ">0.90"})`
 
 **Question** *(Easy)*: A data scientist wants to save a confusion matrix image file (`confusion_matrix.png`) as part of their MLflow run. Which code is correct?
 
-A) `mlflow.log_metric("confusion_matrix", "confusion_matrix.png")`
-B) `mlflow.log_artifact("confusion_matrix.png")`
-C) `mlflow.log_param("confusion_matrix", "confusion_matrix.png")`
+A) `mlflow.log_metric("confusion_matrix", "confusion_matrix.png")`  
+B) `mlflow.log_artifact("confusion_matrix.png")`  
+C) `mlflow.log_param("confusion_matrix", "confusion_matrix.png")`  
 D) `mlflow.save_artifact("confusion_matrix.png")`
 
 > [!success]- Answer
@@ -119,9 +119,9 @@ D) `mlflow.save_artifact("confusion_matrix.png")`
 
 **Question** *(Easy)*: What is the relationship between an MLflow experiment and an MLflow run?
 
-A) An experiment is a single training attempt; a run is a collection of experiments
-B) An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts
-C) An experiment and a run are the same concept with different names
+A) An experiment is a single training attempt; a run is a collection of experiments  
+B) An experiment is a logical container for runs; a run is a single training attempt with its own parameters, metrics, and artifacts  
+C) An experiment and a run are the same concept with different names  
 D) A run contains multiple experiments, each representing a different dataset
 
 > [!success]- Answer
@@ -135,9 +135,9 @@ D) A run contains multiple experiments, each representing a different dataset
 
 **Question** *(Medium)*: A data scientist is running a hyperparameter sweep and wants to create a parent run that tracks the sweep, with each individual trial as a child run. Which code correctly creates a child run inside an existing parent run?
 
-A) `mlflow.start_run(parent=True)`
-B) `mlflow.start_run(nested=True)`
-C) `mlflow.start_child_run()`
+A) `mlflow.start_run(parent=True)`  
+B) `mlflow.start_run(nested=True)`  
+C) `mlflow.start_child_run()`  
 D) `mlflow.start_run(run_type="child")`
 
 > [!success]- Answer
@@ -151,9 +151,9 @@ D) `mlflow.start_run(run_type="child")`
 
 **Question** *(Easy)*: A data scientist generates multiple output files in a local directory called `./outputs/` and wants to log all of them as artifacts. Which function should they use?
 
-A) `mlflow.log_artifact("./outputs/")`
-B) `mlflow.log_artifacts("./outputs/")`
-C) `mlflow.log_artifact("./outputs/*")`
+A) `mlflow.log_artifact("./outputs/")`  
+B) `mlflow.log_artifacts("./outputs/")`  
+C) `mlflow.log_artifact("./outputs/*")`  
 D) `mlflow.log_model("./outputs/")`
 
 > [!success]- Answer
@@ -163,19 +163,21 @@ D) `mlflow.log_model("./outputs/")`
 
 ---
 
-## Question 10: Workspace vs Model Experiments
+## Question 10: Notebook vs Workspace Experiments
 
-**Question** *(Medium)*: When a data scientist registers a model in the MLflow Model Registry, which type of experiment is automatically associated with model versions?
+**Question** *(Medium)*: A data scientist runs `mlflow.start_run()` in a Databricks notebook without ever calling `mlflow.set_experiment()`. Where is the run logged?
 
-A) Workspace experiment
-B) Model experiment
-C) Registry experiment
-D) Production experiment
+A) To a workspace experiment that an admin must create first  
+B) To the notebook's own experiment, which Databricks associates with the notebook  
+C) To a registry experiment attached to the Unity Catalog schema  
+D) Nowhere — the call fails until an experiment is set
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks MLflow supports two types of experiments: workspace experiments (created manually by users in the workspace) and model experiments (automatically created for each registered model in the Model Registry). Model experiments store runs associated with registered model versions.
+> On Databricks, a notebook has a default **notebook experiment**; runs started without `set_experiment()` are logged there. **Workspace experiments** are created explicitly (UI or `mlflow.set_experiment("/path")`) and can collect runs from many notebooks or jobs.
+>
+> There is no "registry experiment" type, and the call does not fail.
 
 ---
 
@@ -183,9 +185,9 @@ D) Production experiment
 
 **Question** *(Easy)*: A data scientist has run 10 experiments with different hyperparameters and wants to visually compare their metrics. Which MLflow UI feature enables this?
 
-A) The artifact browser in each individual run
-B) The "Compare" feature on the Experiments page, which creates parallel coordinate plots and scatter plots
-C) The model registry page, which shows metric comparisons across versions
+A) The artifact browser in each individual run  
+B) The "Compare" feature on the Experiments page, which creates parallel coordinate plots and scatter plots  
+C) The model registry page, which shows metric comparisons across versions  
 D) The run tags section, which can be filtered by metric value
 
 > [!success]- Answer
@@ -199,9 +201,9 @@ D) The run tags section, which can be filtered by metric value
 
 **Question** *(Easy)*: A data scientist wants all MLflow runs in their notebook to be logged to an experiment named `fraud-detection-v2`. Which code sets the active experiment?
 
-A) `mlflow.set_experiment("fraud-detection-v2")`
-B) `mlflow.start_run(experiment_name="fraud-detection-v2")`
-C) `mlflow.create_experiment("fraud-detection-v2")`
+A) `mlflow.set_experiment("fraud-detection-v2")`  
+B) `mlflow.start_run(experiment_name="fraud-detection-v2")`  
+C) `mlflow.create_experiment("fraud-detection-v2")`  
 D) `mlflow.use_experiment("fraud-detection-v2")`
 
 > [!success]- Answer
@@ -215,9 +217,9 @@ D) `mlflow.use_experiment("fraud-detection-v2")`
 
 **Question** *(Medium)*: A data scientist wants to retrieve the `rmse` metric from a specific MLflow run by its `run_id`. Which approach is correct?
 
-A) `mlflow.get_run(run_id).data.metrics["rmse"]`
-B) `mlflow.load_run(run_id)["rmse"]`
-C) `mlflow.search_runs(run_id=run_id)["metrics.rmse"]`
+A) `mlflow.get_run(run_id).data.metrics["rmse"]`  
+B) `mlflow.load_run(run_id)["rmse"]`  
+C) `mlflow.search_runs(run_id=run_id)["metrics.rmse"]`  
 D) `MlflowClient().get_metric(run_id, "rmse")`
 
 > [!success]- Answer
@@ -227,4 +229,4 @@ D) `MlflowClient().get_metric(run_id, "rmse")`
 
 ---
 
-**[← Previous: Practice Questions — Databricks ML](./01-databricks-ml.md) | [↑ Back to Practice Questions — ML Associate](./README.md) | [Next: Practice Questions — Feature Engineering](./03-feature-engineering.md) →**
+**[← Previous: Databricks ML: Runtimes, Compute & AutoML](./01-databricks-ml.md) | [↑ Back to Practice Questions — ML Associate](./README.md) | [Next: Spark ML, Tuning & Feature Tables →](./03-feature-engineering.md)**
