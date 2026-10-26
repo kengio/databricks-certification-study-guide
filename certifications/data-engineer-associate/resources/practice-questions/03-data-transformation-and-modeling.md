@@ -1,10 +1,12 @@
 ---
-title: "Practice Questions: ELT with Spark SQL and Python"
+title: "Practice Questions: Data Transformation and Modeling"
 type: practice-questions
-tags: [data-engineer-associate, practice-questions, elt-spark-sql]
+tags: [data-engineer-associate, practice-questions, data-transformation-and-modeling]
 ---
 
-# Domain 2: ELT with Spark SQL and Python
+# Domain 3: Data Transformation and Modeling
+
+Exam weight: **22 %** (August 2026 exam guide). Questions marked *(2026 blueprint)* target skills added or reworded in the 2026 guide. Each question cites the Databricks documentation that supports its answer, where one exists.
 
 ## Question 1: DELETE Syntax
 
@@ -108,25 +110,7 @@ D) `MERGE`
 
 ---
 
-## Question 6: JDBC Format for SQLite
-
-**Question** *(Easy)*: A data engineer needs to create a table in Databricks using data from the organization's SQLite database. They set up a JDBC connection. Which format string correctly identifies the JDBC data source?
-
-A) `"sqlite"`
-B) `"jdbc"`
-C) `"database"`
-D) `"odbc"`
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> `"jdbc"`
->
-> This is the format string used with Spark's DataFrameReader to connect to any JDBC-compatible database (including SQLite, MySQL, PostgreSQL). It is specified as `.format("jdbc")` in the DataFrameReader chain, followed by `.option()` calls for the connection URL, driver, and table name.
-
----
-
-## Question 7: UNION for Unique Records
+## Question 6: UNION for Unique Records
 
 **Question** *(Medium)*: A data engineering team maintains `march_transactions` (all March retail transactions) and `april_transactions` (all April retail transactions) with no overlapping records. What command creates a new table `all_transactions` containing all unique records from both?
 
@@ -149,7 +133,7 @@ D) `CREATE TABLE all_transactions AS SELECT * FROM march_transactions JOIN april
 
 ---
 
-## Question 8: Python Multi-Condition Control Flow
+## Question 7: Python Multi-Condition Control Flow
 
 **Question** *(Medium)*: A data engineer intends to run the last block of a Python program only if `day_of_week` is set to 1 and `review_period` is `True`. The incomplete code block is shown below:
 
@@ -177,25 +161,7 @@ D) `if day_of_week is 1 and review_period is True:`
 
 ---
 
-## Question 9: External Table Data Retention After DROP
-
-**Question** *(Medium)*: A data engineer drops `my_table` with `DROP TABLE IF EXISTS my_table`. The object no longer appears in `SHOW TABLES`, but the data files still exist on the filesystem. What explains this?
-
-A) The DROP command failed silently due to insufficient permissions
-B) The table had active streaming readers that prevented file deletion
-C) The table was an external table
-D) The VACUUM command needs to be run separately to remove data files
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> The table was an external table.
->
-> When an external table is dropped, Databricks removes only the metadata entry from the metastore. The underlying data files are stored at a user-defined location and are not managed by Databricks, so they remain intact after the table is dropped.
-
----
-
-## Question 10: Persistent Cross-Session Data Entity
+## Question 8: Persistent Cross-Session Data Entity
 
 **Question** *(Medium)*: A data engineer needs a data entity built from several tables that must be accessible to other data engineers in their sessions and stored in a physical location. Which data entity should be created?
 
@@ -213,7 +179,7 @@ D) A Common Table Expression (CTE)
 
 ---
 
-## Question 11: INSERT INTO a Delta Table
+## Question 9: INSERT INTO a Delta Table
 
 **Question** *(Easy)*: A data engineer needs to add a new record `('a1', 6, 9.4)` to the existing Delta table `my_table`. Which SQL command accomplishes this?
 
@@ -231,7 +197,7 @@ D) `MERGE INTO my_table VALUES ('a1', 6, 9.4);`
 
 ---
 
-## Question 12: CREATE OR REPLACE TABLE
+## Question 10: CREATE OR REPLACE TABLE
 
 **Question** *(Easy)*: A data architect needs to create an empty Delta table in a specified format, regardless of whether a table with that name already exists. Which SQL DDL approach accomplishes this?
 
@@ -249,7 +215,7 @@ D) `CREATE OR REPLACE TABLE table_name (...column definitions...)`
 
 ---
 
-## Question 13: PIVOT for Wide Format
+## Question 11: PIVOT for Wide Format
 
 **Question** *(Easy)*: Which SQL keyword can transform a table from long format to wide format?
 
@@ -267,25 +233,7 @@ D) `PIVOT`
 
 ---
 
-## Question 14: Parquet Advantage Over CSV
-
-**Question** *(Medium)*: What advantage does creating an external table using Parquet have over CSV in a `CREATE TABLE AS SELECT` statement?
-
-A) Parquet files are human-readable and can be edited with a text editor
-B) Parquet files have a well-defined schema
-C) Parquet files support row-level locking for concurrent writes
-D) Parquet files are smaller because they use row-based compression
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Parquet files have a well-defined schema.
->
-> Unlike CSV (a schema-less text format requiring manual type inference), Parquet embeds column names and data types directly in the file metadata. This enables schema enforcement, efficient columnar reads, and predicate pushdown without a separate schema definition.
-
----
-
-## Question 15: Temporary View for Single-Session Use
+## Question 12: Temporary View for Single-Session Use
 
 **Question** *(Medium)*: A data engineer needs a relational object from two tables that will not be used by other engineers in different sessions. To minimize storage expenses, physical data should not be duplicated. Which relational object should be created?
 
@@ -303,7 +251,7 @@ D) A temporary view
 
 ---
 
-## Question 16: PySpark SQL Query Execution
+## Question 13: PySpark SQL Query Execution
 
 **Question** *(Easy)*: A data analyst has created a query that operates on a Delta table. They seek assistance from the data engineering team to perform a set of tests to verify that the data returned by the query is accurate and clean. However, the data engineering team utilizes Python for their tests instead of SQL. Which operations can the data engineering team use in PySpark to execute the query and process the results?
 
@@ -321,7 +269,7 @@ D) `spark.run("SELECT ...")`
 
 ---
 
-## Question 17: count_if for NULL Values
+## Question 14: count_if for NULL Values
 
 **Question** *(Medium)*: Which command shows the count of null values in the `member_id` column?
 
@@ -339,7 +287,7 @@ D) `SELECT count(NULL) FROM my_table;`
 
 ---
 
-## Question 18: FILTER Higher-Order Function
+## Question 15: FILTER Higher-Order Function
 
 **Question** *(Medium)*: A data engineer needs to implement custom logic for the `employees` array column in the `stores` table to find employees with more than 5 years of experience. The result should be a new column `exp_employees` containing only matching employees for each row. The incomplete SQL query is shown below:
 
@@ -365,7 +313,7 @@ D) `TRANSFORM(employees, i -> i.years_exp > 5)`
 
 ---
 
-## Question 19: Python Variable in SQL Query
+## Question 16: Python Variable in SQL Query
 
 **Question** *(Easy)*: A data engineer has a Python variable `table_name` and wants to execute a SQL query using it in PySpark. The incomplete code block is shown below:
 
@@ -390,67 +338,7 @@ D) `spark.execute`
 
 ---
 
-## Question 20: Default Database Storage Location
-
-**Question** *(Easy)*: A data engineer has established a new database with this command:
-
-```sql
-CREATE DATABASE IF NOT EXISTS customer360;
-```
-
-Where will the `customer360` database be situated?
-
-A) `dbfs:/user/hive/warehouse/customer360.db`
-B) `dbfs:/user/hive/warehouse/`
-C) `dbfs:/databricks/databases/customer360/`
-D) `dbfs:/mnt/default/customer360.db`
-
-> [!success]- Answer
-> **Correct Answer: A**
->
-> `dbfs:/user/hive/warehouse/customer360.db`
->
-> When a database is created without specifying a `LOCATION`, Databricks stores it in the default Hive warehouse directory at `dbfs:/user/hive/warehouse/`. A subdirectory named `<database_name>.db` is automatically created for it. Specifying only `dbfs:/user/hive/warehouse` (without the `.db` suffix) is incorrect — that is the parent warehouse directory, not the database's own location.
-
----
-
-## Question 21: DESCRIBE DATABASE Location
-
-**Question** *(Easy)*: Which command retrieves the location of the `customer360` database?
-
-A) `SHOW DATABASE LOCATION customer360;`
-B) `SELECT location FROM information_schema.databases WHERE name = 'customer360';`
-C) `DESCRIBE DATABASE customer360;`
-D) `LIST DATABASE customer360;`
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> `DESCRIBE DATABASE customer360;`
->
-> This command returns database metadata including the storage location path, owner, comment, and custom properties. It is the standard way to inspect database-level information in Spark SQL and Databricks.
-
----
-
-## Question 22: Managed Table File Deletion After DROP
-
-**Question** *(Medium)*: A data engineer drops `my_table` and observes that both data files and metadata files are deleted from the filesystem. What explains the complete deletion?
-
-A) The VACUUM command was automatically triggered after the DROP
-B) The table was stored in a temporary storage location
-C) The table was a managed table
-D) The table had a retention policy set to zero days
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> The table was a managed table.
->
-> When a managed (internal) table is dropped, Databricks deletes both the metastore entry and the underlying data files, because Databricks controls the full lifecycle of managed table data. This is the opposite behavior from external tables.
-
----
-
-## Question 23: Python Function Definition
+## Question 17: Python Function Definition
 
 **Question** *(Easy)*: A data engineer new to Python needs a function that adds two integers and returns their sum. Which code block is correct?
 
@@ -471,7 +359,7 @@ D) `def add_integers(x, y): return x + y`
 
 ---
 
-## Question 24: MERGE INTO vs INSERT INTO
+## Question 18: MERGE INTO vs INSERT INTO
 
 **Question** *(Medium)*: When should a data engineer prefer the `MERGE INTO` command over the `INSERT INTO` command?
 
@@ -489,7 +377,7 @@ D) When the source and target tables have different schemas
 
 ---
 
-## Question 25: GROUP BY Numeric Position in Spark SQL
+## Question 19: GROUP BY Ordinal Referencing an Aggregate
 
 **Question** *(Medium)*: What is wrong with the following SQL query?
 
@@ -498,35 +386,307 @@ SELECT name, count(*) FROM people GROUP BY 2
 ```
 
 A) The `count(*)` function requires an alias to be used with `GROUP BY`
-B) The `SELECT` clause must include all non-aggregated columns after the aggregate function
-C) `GROUP BY` using a numeric ordinal position is not valid in Spark SQL
+B) `GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key
+C) `GROUP BY` using a numeric ordinal position is never valid in Spark SQL
 D) The query is missing a `HAVING` clause to filter the aggregated results
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> `GROUP BY` using a numeric ordinal position is not valid in Spark SQL.
->
-> Unlike some other SQL dialects (e.g., standard PostgreSQL), Spark SQL requires explicit column names in `GROUP BY` clauses. The correct query is `SELECT name, count(*) FROM people GROUP BY name`. Using column position `2` will raise an `AnalysisException`.
-
----
-
-## Question 26: OPTIMIZE for File Compaction
-
-**Question** *(Easy)*: A data engineer has discovered that the data files related to a Delta table are quite small. They aim to merge these small files into larger ones to enhance performance. Which keywords can be utilized to compact the small files?
-
-A) VACUUM
-B) OPTIMIZE
-C) COMPACT
-D) DEFRAGMENT
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> `OPTIMIZE`.
+> `GROUP BY 2` refers to `count(*)`, an aggregate expression, which can't be a grouping key.
 >
-> The `OPTIMIZE` command compacts small files in a Delta table into larger ones, improving read performance by reducing the number of files that need to be scanned. This is different from `VACUUM`, which removes old data files no longer referenced by the transaction log.
+> Databricks SQL does allow grouping by column position (for example `GROUP BY 1` here would group by `name`). But "if a positional reference resolves to an aggregate expression, Databricks raises GROUP_BY_POS_AGGREGATE". Use `GROUP BY 1` or `GROUP BY name` ([GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby)).
 
 ---
 
-**[← Previous: Domain 1: Databricks Lakehouse Platform](./01-lakehouse-platform.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 3: Incremental Data Processing](./03-incremental-processing.md) →**
+## Question 20: Tool for Automated Data Quality Monitoring
+
+**Question** *(Easy)*: During data ingestion, a data engineer observes that source data quality is declining. They want to automate the process of monitoring the quality level. Which tool addresses this?
+
+A) Apache Airflow with custom validation DAGs
+B) Databricks SQL Alerts with scheduled queries
+C) Lakeflow Declarative Pipelines (formerly DLT)
+D) Great Expectations library integrated with Spark
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> Lakeflow Declarative Pipelines (formerly DLT).
+>
+> Lakeflow Declarative Pipelines provides built-in data quality monitoring through expectations — declarative constraints that automatically track pass/fail metrics, record violations in the event log, and optionally drop or quarantine bad records. Quality statistics are visible per-table in the pipeline UI.
+
+---
+
+## Question 21: Lakeflow Declarative Pipelines Continuous Pipeline Behavior
+
+**Question** *(Hard)*: A Lakeflow Declarative Pipelines pipeline has two streaming tables and three materialized views. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?
+
+A) Only the two streaming datasets are updated continuously; the three materialized views are updated once and then stop
+B) All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources
+C) All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped
+D) The pipeline fails because streaming and materialized view datasets cannot coexist in Continuous mode
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped.
+>
+> In Continuous mode, the pipeline runs indefinitely — processing streaming tables as new data arrives and periodically refreshing materialized views. It does not shut down automatically; resources are released only when the pipeline is manually stopped.
+
+---
+
+## Question 22: Lakeflow Declarative Pipelines DROP Expectation Behavior
+
+**Question** *(Medium)*: A dataset established through Lakeflow Declarative Pipelines has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?
+
+A) Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log
+B) The entire batch is rejected and the pipeline enters a failed state
+C) Violating records are written to a separate quarantine table for manual review
+D) The pipeline pauses and waits for manual approval before continuing
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.
+>
+> The pipeline continues running. Dropped record counts and violation metrics are tracked in the Lakeflow Declarative Pipelines event log and displayed per-table in the pipeline UI under data quality statistics. The `FAIL UPDATE` variant would stop the pipeline instead.
+
+---
+
+## Question 23: CREATE STREAMING TABLE vs CREATE MATERIALIZED VIEW
+
+**Question** *(Medium)*: In a Lakeflow Declarative Pipelines SQL definition, when should `CREATE OR REFRESH STREAMING TABLE` be used instead of `CREATE OR REFRESH MATERIALIZED VIEW`?
+
+A) When the table needs to support both read and write operations simultaneously
+B) When the table must be accessible from multiple workspaces
+C) When the table requires ACID transaction support
+D) When data needs to be processed incrementally
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> When data needs to be processed incrementally.
+>
+> A streaming table reads append-oriented sources (Auto Loader, Kafka, `STREAM(...)` of another table) and processes only records that arrived since the last update. A materialized view stores a query result and refreshes it, incrementally when possible, otherwise by recomputing. Legacy syntax used `CREATE STREAMING LIVE TABLE` (now a streaming table) and `CREATE LIVE TABLE` (now a materialized view).
+
+---
+
+## Question 24: Silver to Gold Streaming Query
+
+**Question** *(Medium)*: Which type of Structured Streaming query represents the transition from a Silver table to a Gold table?
+
+A) A query that reads raw data from cloud storage and applies schema enforcement before writing to a Silver table
+B) A query that deduplicates and cleanses Bronze data before writing to a Silver table
+C) A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table
+D) A query that replicates Silver data to an external data warehouse for reporting
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table.
+>
+> Gold tables typically contain business-level aggregates. Transforming cleaned Silver data into aggregated Gold data is the defining characteristic of the Silver-to-Gold transition in medallion architecture.
+>
+> > ⚠️ *This answer was generated by AI — verify against official Databricks documentation.*
+
+---
+
+## Question 25: Identifying Which Lakeflow Declarative Pipelines Table Drops Records
+
+**Question** *(Medium)*: A data engineer manages three tables in a Lakeflow Declarative Pipelines pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?
+
+A) Query the Delta transaction log of each table to find DELETE operations
+B) Add explicit logging statements to each table's transformation code
+C) Run DESCRIBE HISTORY on each table to check for dropped record counts
+D) Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics.
+>
+> The Lakeflow Declarative Pipelines pipeline UI shows per-table expectation metrics, including the number of records that passed, failed, or were dropped for each defined constraint. This makes it straightforward to pinpoint which table's expectation is causing record drops.
+
+---
+
+## Question 26: Lakeflow Declarative Pipelines Pipeline Minimum Requirement
+
+**Question** *(Easy)*: What needs to be specified when creating a new Lakeflow Declarative Pipelines pipeline?
+
+A) A target database and storage location
+B) At least one source code file or notebook that defines the datasets
+C) A cluster policy and node type configuration
+D) An explicit schedule or cron expression
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> At least one source code file or notebook that defines the datasets.
+>
+> A pipeline must reference source code (notebooks or files) containing the dataset definitions, such as `CREATE OR REFRESH STREAMING TABLE` / `CREATE OR REFRESH MATERIALIZED VIEW` statements or `@dp.table` / `@dp.materialized_view` functions. Other settings — storage location, target database, cluster configuration — are optional and can use defaults.
+
+---
+
+## Question 27: STREAM() Function in Lakeflow Declarative Pipelines
+
+**Question** *(Medium)*: A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a Lakeflow Declarative Pipelines SQL query. What explains its inclusion?
+
+A) The referenced dataset is read as a streaming source (for example, a streaming table)
+B) The `STREAM()` function enables parallel reads from the table across multiple clusters
+C) It converts a batch table into a temporary streaming source for the current query only
+D) The `STREAM()` function applies watermarking to handle late-arriving data
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> The referenced dataset is read as a streaming source (for example, a streaming table).
+>
+> In Lakeflow Declarative Pipelines, `STREAM(table_name)` indicates that the table should be read as a streaming source — consuming only new records incrementally rather than reprocessing the full table. It is required when the source is a streaming table and the consuming dataset needs to process it incrementally.
+
+---
+
+## Question 28: Lakeflow Declarative Pipelines Migration Changes
+
+**Question** *(Medium)*: A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Lakeflow Declarative Pipelines. What changes are necessary?
+
+A) The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions
+B) The SQL code must be rewritten in Python because Lakeflow Declarative Pipelines only supports Python definitions
+C) The streaming source must be converted to a batch source before migrating to Lakeflow Declarative Pipelines
+D) No changes are required
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> No changes are required.
+>
+> Lakeflow Declarative Pipelines natively supports both Python and SQL within the same pipeline. It supports the medallion architecture (Bronze/Silver/Gold layers) and handles streaming sources directly. The existing language mix and multi-hop architecture can migrate to Lakeflow Declarative Pipelines without modification to the underlying logic.
+
+---
+
+## Question 29: Persist to Memory and Disk
+
+**Question** *(Medium)*: Which Spark method persists data to both memory and disk when memory is insufficient?
+
+A) `cache()` with `StorageLevel.MEMORY_ONLY`
+B) `checkpoint()` with eager evaluation
+C) `persist()` with `StorageLevel.MEMORY_AND_DISK`
+D) `broadcast()` with local storage fallback
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> `persist()` with `StorageLevel.MEMORY_AND_DISK`.
+>
+> `persist()` allows specifying a `StorageLevel` such as `MEMORY_AND_DISK`, which stores partitions in memory and spills excess to disk when memory is exhausted. `cache()` is a shortcut for `persist(StorageLevel.MEMORY_ONLY)` and does not spill to disk automatically.
+
+---
+
+## Question 30: Broadcast Join for a Small Dimension *(2026 blueprint)*
+
+**Question** *(Medium)*: A 2 TB `sales` DataFrame is joined to a 15 MB `stores` DataFrame on `store_id`. The Spark UI shows a `SortMergeJoin` with a large shuffle of `sales`. Which change avoids shuffling the large side?
+
+A) `sales.join(broadcast(stores), "store_id")`
+B) `sales.crossJoin(stores).filter("sales.store_id = stores.store_id")`
+C) `sales.repartition(1).join(stores, "store_id")`
+D) Lower `spark.sql.shuffle.partitions` to 10
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> `sales.join(broadcast(stores), "store_id")`.
+>
+> `broadcast()` marks the small DataFrame for a broadcast join, which copies it to every executor so `sales` isn't shuffled. Its size (15 MB) is above the default `spark.sql.autoBroadcastJoinThreshold` of 10 MB, which is why Spark didn't broadcast it automatically. A cross join multiplies rows. One partition removes parallelism. Fewer shuffle partitions don't remove the shuffle ([SQL performance tuning](https://spark.apache.org/docs/latest/sql-performance-tuning.html)).
+
+---
+
+## Question 31: union vs unionByName *(2026 blueprint)*
+
+**Question** *(Medium)*: Two DataFrames hold the same columns in a different order: `df_a(id, name, city)` and `df_b(city, id, name)`. Which call combines them, keeping duplicate rows and matching columns correctly?
+
+A) `df_a.union(df_b)`
+B) `df_a.unionByName(df_b)`
+C) `df_a.union(df_b).distinct()`
+D) `df_a.join(df_b, "id", "outer")`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `df_a.unionByName(df_b)`.
+>
+> `union` resolves columns **by position**, so it would put `city` values into `id`. `unionByName` resolves them **by name**. Both keep duplicates, which is SQL `UNION ALL` semantics. Add `.distinct()` for SQL `UNION` behaviour. `allowMissingColumns=True` fills columns missing from one side with nulls ([PySpark unionByName](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.unionByName.html)).
+
+---
+
+## Question 32: Splitting and Exploding Columns *(2026 blueprint)*
+
+**Question** *(Medium)*: A Silver table has a `tags` string column such as `"red,large,sale"`. Analysts need one row per tag. Which PySpark expression produces it?
+
+A) `df.withColumn("tag", F.split("tags", ","))`
+B) `df.withColumn("tag", F.explode(F.split("tags", ",")))`
+C) `df.withColumn("tag", F.flatten("tags"))`
+D) `df.groupBy("tags").agg(F.collect_list("tags"))`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `df.withColumn("tag", F.explode(F.split("tags", ",")))`.
+>
+> `split` turns the string into an array using a (regular expression) pattern. `explode` then emits one row per array element. `split` alone leaves one row with an array. `flatten` works on arrays of arrays, and `collect_list` does the opposite of what's needed ([PySpark split](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.split.html)).
+
+---
+
+## Question 33: Fast Distinct Counts on Huge Tables *(2026 blueprint)*
+
+**Question** *(Easy)*: A dashboard shows the number of distinct visitors per day over billions of events. An exact `COUNT(DISTINCT visitor_id)` is too slow, and a small error is acceptable. Which function fits?
+
+A) `count_if(visitor_id IS NOT NULL)`
+B) `approx_count_distinct(visitor_id)`
+C) `sum(DISTINCT visitor_id)`
+D) `collect_set(visitor_id)`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `approx_count_distinct(visitor_id)`.
+>
+> `approx_count_distinct` estimates the number of distinct values with HyperLogLog++. Its default maximum relative standard deviation is 5 %, and the `relativeSD` argument can tighten it. `collect_set` would build huge arrays, and the other options compute something else ([approx_count_distinct](https://docs.databricks.com/aws/en/sql/language-manual/functions/approx_count_distinct)).
+
+---
+
+## Question 34: Shuffle Partitions vs Default Parallelism *(2026 blueprint)*
+
+**Question** *(Medium)*: A DataFrame `groupBy` on 40 MB of data runs 200 tiny tasks after the shuffle on classic compute. An engineer wants to tune the post-shuffle partition count and then re-measure. Which setting controls it?
+
+A) `spark.default.parallelism`
+B) `spark.sql.shuffle.partitions`
+C) `spark.executor.memory`
+D) `spark.sql.autoBroadcastJoinThreshold`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `spark.sql.shuffle.partitions`.
+>
+> It sets the number of partitions used when shuffling data for joins or aggregations in the DataFrame and SQL engine (default 200). On Databricks, setting it to `auto` lets Spark size it from the plan and the data. `spark.default.parallelism` applies to RDD operations, memory settings size the JVMs, and the broadcast threshold controls join strategy ([AQE](https://docs.databricks.com/aws/en/optimizations/aqe), [Spark SQL tuning](https://spark.apache.org/docs/latest/sql-performance-tuning.html)).
+
+---
+
+## Question 35: Choosing a Gold Object for a Busy Dashboard *(2026 blueprint)*
+
+**Question** *(Medium)*: Two hundred users open a dashboard each morning that aggregates revenue by region from a large Silver table. Hourly freshness is acceptable. The team wants fast reads and doesn't want to maintain refresh code. Which Unity Catalog object should back the dashboard?
+
+A) A standard view over the Silver table
+B) A materialized view refreshed on a schedule
+C) A temporary view created by the dashboard query
+D) A streaming table that appends Silver rows
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> A materialized view refreshed on a schedule.
+>
+> A materialized view stores precomputed results and refreshes them (incrementally when possible) on a schedule or when upstream data changes, so reads are cheap. A view recomputes the aggregation on every query. Temporary views are session-scoped. Streaming tables append new rows and don't recompute an aggregate ([standalone materialized views](https://docs.databricks.com/aws/en/views/materialized)).
+
+---
+
+**[← Previous: Domain 2: Data Ingestion and Loading](./02-data-ingestion-and-loading.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 4: Working with Lakeflow Jobs →](./04-working-with-lakeflow-jobs.md)**

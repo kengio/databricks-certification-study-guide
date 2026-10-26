@@ -1,10 +1,12 @@
 ---
-title: "Practice Questions: Lakehouse Platform"
+title: "Practice Questions: Databricks Intelligence Platform"
 type: practice-questions
-tags: [data-engineer-associate, practice-questions, lakehouse-platform]
+tags: [data-engineer-associate, practice-questions, databricks-intelligence-platform]
 ---
 
-# Domain 1: Databricks Lakehouse Platform
+# Domain 1: Databricks Intelligence Platform
+
+Exam weight: **6 %** (August 2026 exam guide). Questions marked *(2026 blueprint)* target skills added or reworded in the 2026 guide. Each question cites the Databricks documentation that supports its answer, where one exists.
 
 ## Question 1: Lakehouse as a Unified Source of Truth
 
@@ -222,4 +224,166 @@ D) Building custom ETL pipelines between each pair of data systems
 
 ---
 
-**[↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 2: ELT with Spark SQL and Python](./02-elt-spark-sql-python.md) →**
+## Question 13: When to Use Cluster Pools
+
+**Question** *(Medium)*: When would a data team use cluster pools?
+
+A) When clusters need to share data between concurrent jobs
+B) When an automated report needs to be refreshed as quickly as possible
+C) When reducing cloud storage costs for intermediate data is the priority
+D) When enforcing uniform cluster configurations across all team members
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> When an automated report needs to be refreshed as quickly as possible.
+>
+> Cluster pools maintain a set of pre-warmed, idle VM instances that can be assigned to clusters immediately on startup. This eliminates the VM provisioning delay (which can take several minutes), reducing cluster startup time to seconds for time-sensitive jobs.
+
+---
+
+## Question 14: SQL Warehouse Scaling for Concurrent Queries
+
+**Question** *(Medium)*: A data analysis team's Databricks SQL queries perform poorly when multiple members execute small queries simultaneously on an always-on SQL warehouse. All queries use the same endpoint. What strategy improves performance?
+
+A) Increase the maximum bound of the SQL warehouse's scaling range
+B) Switch from a Pro to a Classic SQL warehouse type
+C) Increase the size (T-shirt size) of each individual cluster in the endpoint
+D) Enable query result caching on the SQL warehouse
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Increase the maximum bound of the SQL warehouse's scaling range.
+>
+> A SQL warehouse (warehouse) can auto-scale by adding more clusters when concurrent query load increases. Raising the maximum cluster count allows the endpoint to serve more parallel queries simultaneously, reducing wait times during peak concurrent usage.
+
+---
+
+## Question 15: Reducing SQL Warehouse Cost on a Daily Dashboard
+
+**Question** *(Medium)*: A data engineer sets a Databricks SQL dashboard to refresh daily and wants the related SQL warehouse to run only when needed. What strategy reduces the overall running time of the SQL warehouse?
+
+A) Downgrade the SQL warehouse to a smaller cluster size
+B) Configure the SQL warehouse to start only during business hours
+C) Switch the dashboard to use a shared all-purpose cluster instead
+D) Turn on the Auto Stop feature for the SQL warehouse
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> Turn on the Auto Stop feature for the SQL warehouse.
+>
+> Auto Stop automatically terminates the SQL warehouse after a configurable idle period. After the dashboard refresh completes, the endpoint shuts down automatically — avoiding continuous compute charges during the long idle period between daily refreshes.
+
+---
+
+## Question 16: Faster Cluster Startup for Nightly Jobs
+
+**Question** *(Easy)*: A data engineer manages a nightly job with several tasks that run slowly due to long cluster startup times. What action improves cluster startup time?
+
+A) Increase the driver node memory allocation
+B) Switch to a single-node cluster to avoid worker provisioning
+C) Use clusters from a cluster pool
+D) Enable autoscaling with a higher maximum worker count
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> Use clusters from a cluster pool.
+>
+> Cluster pools pre-provision and maintain idle instances that are immediately available for cluster creation. Tasks using pool-backed clusters skip the VM provisioning step, reducing startup from several minutes to a few seconds.
+
+---
+
+## Question 17: Minimizing SQL Warehouse Runtime on an Hourly Dashboard
+
+**Question** *(Medium)*: A data engineer has an hourly Databricks SQL dashboard whose underlying data is managed by an automated Databricks Job. How can they minimize the total running time of the SQL warehouse during the dashboard's hourly refresh?
+
+A) Reduce the SQL warehouse cluster size to the smallest available
+B) Use a shared all-purpose cluster instead of a SQL warehouse
+C) Pre-compute dashboard results in the Databricks Job and cache them
+D) Turn on the Auto Stop feature for the SQL warehouse
+
+> [!success]- Answer
+> **Correct Answer: D**
+>
+> Turn on the Auto Stop feature for the SQL warehouse.
+>
+> Auto Stop shuts down the SQL warehouse after a defined idle period following the last query. Since the dashboard only needs the endpoint during the brief refresh window each hour, Auto Stop ensures the endpoint is off for the remaining idle time between refreshes.
+
+---
+
+## Question 18: When to Use a Single-Node Cluster
+
+**Question** *(Medium)*: What scenario would prompt a data engineer to use a single-node cluster?
+
+A) When running a distributed join across tables with billions of rows
+B) When deploying a production Lakeflow Declarative Pipelines pipeline with multiple streaming sources
+C) When working interactively with a small amount of data
+D) When maximizing parallelism for a large-scale ETL workload
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> When working interactively with a small amount of data.
+>
+> Single-node clusters run both the driver and executor on the same machine, making them suitable for development, exploratory data analysis on small datasets, and libraries that do not support distributed execution (e.g., some scikit-learn workflows). They are not appropriate for large-scale production jobs.
+
+---
+
+## Question 19: Using SQL in a Python Notebook Cell
+
+**Question** *(Easy)*: A data engineer is working in a Python notebook on Databricks but needs to use SQL for one specific cell. They prefer that all other cells remain Python. How can they incorporate SQL into only that cell?
+
+A) Add `%sql` to the first line of the cell
+B) Wrap the SQL query in `spark.sql()` and assign it to a variable
+C) Change the notebook's default language to SQL and then switch back
+D) Import the `sql` module and call `sql.execute()`
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Add `%sql` to the first line of the cell.
+>
+> Databricks magic commands (`%sql`, `%python`, `%scala`, `%r`) override the cell language for that individual cell only. All other cells continue using the notebook's default language. This allows mixing languages within a single notebook without changing the global setting.
+
+---
+
+## Question 20: Compute for Concurrent Ad Hoc SQL *(2026 blueprint)*
+
+**Question** *(Medium)*: Throughout the day, dozens of business analysts run short, ad hoc SQL queries against curated Gold tables. The team wants fast startup, good performance as concurrency rises, and no paying for a large cluster that sits idle overnight. Which compute should they use?
+
+A) An all-purpose cluster with a fixed 20 workers, shared by all analysts
+B) A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop
+C) A jobs compute cluster created for each query
+D) A single-node cluster per analyst
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> A serverless SQL warehouse with autoscaling (maximum clusters raised) and auto stop.
+>
+> Serverless SQL warehouses start in about 2–6 seconds, scale out by adding clusters as queries queue, and auto stop after idle time (10 minutes by default). A fixed all-purpose cluster pays for peak capacity all day. Jobs compute exists only for scheduled job runs. Single-node clusters don't share capacity or scale for concurrency ([SQL warehouse types](https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-types)).
+
+---
+
+## Question 21: Characteristics of Serverless Compute *(2026 blueprint)*
+
+**Question** *(Easy)*: Which statement about serverless compute for notebooks and jobs is correct?
+
+A) You choose the Databricks Runtime version and instance types for each serverless job
+B) Serverless compute supports setting any Spark configuration and custom init scripts
+C) Serverless workloads always run on the latest runtime version, and compute is managed by Databricks
+D) Serverless compute is available only in workspaces that use the legacy Hive metastore
+
+> [!success]- Answer
+> **Correct Answer: C**
+>
+> Serverless workloads always run on the latest runtime version, and compute is managed by Databricks.
+>
+> Serverless is versionless and Databricks-managed, so you don't pick runtimes or instance types. Only a short list of Spark properties can be set (for example `spark.sql.shuffle.partitions`), and dependencies are managed with environments. Workspaces without Unity Catalog must upgrade before they can use serverless ([Connect to serverless compute](https://docs.databricks.com/aws/en/compute/serverless/), [Spark configuration](https://docs.databricks.com/aws/en/spark/conf)).
+
+---
+
+**[↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 2: Data Ingestion and Loading →](./02-data-ingestion-and-loading.md)**

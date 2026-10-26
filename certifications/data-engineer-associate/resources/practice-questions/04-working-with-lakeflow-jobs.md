@@ -1,30 +1,14 @@
 ---
-title: "Practice Questions: Production Pipelines"
+title: "Practice Questions: Working with Lakeflow Jobs"
 type: practice-questions
-tags: [data-engineer-associate, practice-questions, production-pipelines]
+tags: [data-engineer-associate, practice-questions, working-with-lakeflow-jobs]
 ---
 
-# Domain 4: Production Pipelines
+# Domain 4: Working with Lakeflow Jobs
 
-## Question 1: When to Use Cluster Pools
+Exam weight: **16 %** (August 2026 exam guide). Questions marked *(2026 blueprint)* target skills added or reworded in the 2026 guide. Each question cites the Databricks documentation that supports its answer, where one exists.
 
-**Question** *(Medium)*: When would a data team use cluster pools?
-
-A) When clusters need to share data between concurrent jobs
-B) When an automated report needs to be refreshed as quickly as possible
-C) When reducing cloud storage costs for intermediate data is the priority
-D) When enforcing uniform cluster configurations across all team members
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> When an automated report needs to be refreshed as quickly as possible.
->
-> Cluster pools maintain a set of pre-warmed, idle VM instances that can be assigned to clusters immediately on startup. This eliminates the VM provisioning delay (which can take several minutes), reducing cluster startup time to seconds for time-sensitive jobs.
-
----
-
-## Question 2: Adding an Upstream Task to an Existing Job
+## Question 1: Adding an Upstream Task to an Existing Job
 
 **Question** *(Medium)*: A data engineer executes a single-task job each morning. Upon discovering an upstream data issue, they must add a new notebook to run before the original task. What is the correct approach to set up this new upstream task?
 
@@ -42,11 +26,11 @@ D) Replace the original task's notebook with a wrapper notebook that runs both n
 
 ---
 
-## Question 3: Limiting Query Refresh Schedule Duration
+## Question 2: Limiting Query Refresh Schedule Duration
 
 **Question** *(Medium)*: An engineering manager wants a query to refresh every minute for the first week after a project launch, with no compute costs after that week. What strategy ensures the query stops refreshing and generating costs beyond week one?
 
-A) Set the SQL endpoint to auto-stop after one week of total runtime
+A) Set the SQL warehouse to auto-stop after one week of total runtime
 B) Create a Databricks Job to disable the query refresh after seven days
 C) Manually cancel the refresh schedule at the end of the week
 D) Set the query's refresh schedule to end on a specific date in the query scheduler
@@ -60,97 +44,7 @@ D) Set the query's refresh schedule to end on a specific date in the query sched
 
 ---
 
-## Question 4: SQL Endpoint Performance for Concurrent Queries
-
-**Question** *(Medium)*: A data analysis team's Databricks SQL queries perform poorly when multiple members execute small queries simultaneously on an always-on SQL endpoint. All queries use the same endpoint. What strategy improves performance?
-
-A) Increase the maximum bound of the SQL endpoint's scaling range
-B) Switch from a Pro to a Classic SQL endpoint type
-C) Increase the size (T-shirt size) of each individual cluster in the endpoint
-D) Enable query result caching on the SQL endpoint
-
-> [!success]- Answer
-> **Correct Answer: A**
->
-> Increase the maximum bound of the SQL endpoint's scaling range.
->
-> A SQL endpoint (warehouse) can auto-scale by adding more clusters when concurrent query load increases. Raising the maximum cluster count allows the endpoint to serve more parallel queries simultaneously, reducing wait times during peak concurrent usage.
-
----
-
-## Question 5: Reducing SQL Endpoint Cost on Daily Dashboard
-
-**Question** *(Medium)*: A data engineer sets a Databricks SQL dashboard to refresh daily and wants the related SQL endpoint to run only when needed. What strategy reduces the overall running time of the SQL endpoint?
-
-A) Downgrade the SQL endpoint to a smaller cluster size
-B) Configure the SQL endpoint to start only during business hours
-C) Switch the dashboard to use a shared all-purpose cluster instead
-D) Turn on the Auto Stop feature for the SQL endpoint
-
-> [!success]- Answer
-> **Correct Answer: D**
->
-> Turn on the Auto Stop feature for the SQL endpoint.
->
-> Auto Stop automatically terminates the SQL endpoint after a configurable idle period. After the dashboard refresh completes, the endpoint shuts down automatically — avoiding continuous compute charges during the long idle period between daily refreshes.
-
----
-
-## Question 6: Webhook Alert for NULL Count
-
-**Question** *(Medium)*: A data engineer uses a Databricks SQL dashboard to monitor data quality. When the count of NULL values in a query result reaches 100, the entire team should be alerted via a messaging webhook. What method accomplishes this?
-
-A) Set up an Alert with a new webhook alert destination
-B) Add a conditional formatting rule to the dashboard visualization that sends a webhook
-C) Create a Databricks Job that polls the query results and calls the webhook via Python
-D) Configure a SQL endpoint event hook that triggers on query result thresholds
-
-> [!success]- Answer
-> **Correct Answer: A**
->
-> Set up an Alert with a new webhook alert destination.
->
-> Databricks SQL Alerts monitor query results against a threshold condition and trigger notifications when the condition is met. Webhook destinations allow alerts to be sent to external messaging services (Slack, Microsoft Teams, PagerDuty) in real-time.
-
----
-
-## Question 7: Diagnosing a Slow Job Task
-
-**Question** *(Medium)*: A single Job executes two notebooks as distinct tasks. One notebook is performing slowly during the current Job run. What method can a tech lead use to diagnose the cause?
-
-A) Check the Databricks SQL query history for slow-running queries
-B) Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook
-C) Review the cluster event log for resource allocation errors
-D) Open the Lakeflow Declarative Pipelines pipeline UI to inspect per-table processing metrics
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> Navigate to the Runs tab in the Jobs UI and click on the active run to review the processing notebook.
->
-> Clicking into the active run opens a live view of the notebook execution, including links to the Spark UI for the current task. This allows inspection of active stages, task metrics, shuffle data, and memory usage to identify performance bottlenecks.
-
----
-
-## Question 8: Faster Cluster Startup for Nightly Jobs
-
-**Question** *(Easy)*: A data engineer manages a nightly job with several tasks that run slowly due to long cluster startup times. What action improves cluster startup time?
-
-A) Increase the driver node memory allocation
-B) Switch to a single-node cluster to avoid worker provisioning
-C) Use clusters from a cluster pool
-D) Enable autoscaling with a higher maximum worker count
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> Use clusters from a cluster pool.
->
-> Cluster pools pre-provision and maintain idle instances that are immediately available for cluster creation. Tasks using pool-backed clusters skip the VM provisioning step, reducing startup from several minutes to a few seconds.
-
----
-
-## Question 9: Programmatic Job Schedule Representation
+## Question 3: Programmatic Job Schedule Representation
 
 **Question** *(Medium)*: A data engineer manages a complex job schedule and wants to represent and submit it to other jobs programmatically rather than manually selecting values in the Databricks scheduling form. Which tool enables this?
 
@@ -168,25 +62,7 @@ D) JSON job templates via the Databricks CLI
 
 ---
 
-## Question 10: Job Failure Email Notification
-
-**Question** *(Easy)*: What approach should be taken to email the owner of a Databricks Job if it fails?
-
-A) Write a try/except block in the notebook that sends an email on failure
-B) Configure an external monitoring tool to watch the Jobs API for failure status
-C) Set up an Alert in the Job's notification settings (Job page)
-D) Create a downstream task that runs only on failure and sends the email
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> Set up an Alert in the Job's notification settings (Job page).
->
-> Databricks Jobs support email notifications for job events (failure, success, or start). The job owner's email address is added directly from the Job's "Notifications" section, requiring no custom code or external alerting systems.
-
----
-
-## Question 11: Scheduling a Daily SQL Query Refresh
+## Question 4: Scheduling a Daily SQL Query Refresh
 
 **Question** *(Easy)*: An engineering manager reviews a query daily but currently reruns it manually and waits for results. What strategy guarantees the query results are refreshed daily automatically?
 
@@ -204,7 +80,7 @@ D) Use a Lakeflow Declarative Pipelines pipeline with a daily trigger to refresh
 
 ---
 
-## Question 12: When to Use "Depends On" for a Job Task
+## Question 5: When to Use "Depends On" for a Job Task
 
 **Question** *(Easy)*: In what situations should a data engineer choose a task in the "Depends On" field when creating a new Databricks Job task?
 
@@ -218,62 +94,188 @@ D) When another task needs to successfully complete before the new task begins
 >
 > When another task needs to successfully complete before the new task begins.
 >
-> The "Depends On" field establishes execution order in a Databricks Job DAG. The new task will only start after all specified upstream tasks have completed successfully. If any dependency fails, the downstream task is skipped.
+> The "Depends On" field establishes execution order in a Databricks Job DAG. The new task will only start after all specified upstream tasks have completed successfully. With the default Run if condition (*All succeeded*), if a dependency fails the downstream task doesn't run and is marked `Upstream failed`.
 
 ---
 
-## Question 13: Webhook Alert for Zero-Sales Stores
+## Question 6: Branching on New Data *(2026 blueprint)*
 
-**Question** *(Medium)*: A data engineer tracks store-level records where sales equal zero. When this count exceeds zero, the entire team should be notified via a messaging webhook. What approach accomplishes this?
+**Question** *(Medium)*: An ingestion task publishes the number of rows it loaded as a task value. The transformation tasks should run only when that number is greater than zero. Which Lakeflow Jobs feature implements this?
 
-A) Configure a Lakeflow Declarative Pipelines expectation that triggers a webhook when zero-sales records appear
-B) Set up an Alert with a new webhook alert destination
-C) Build a custom Python script that polls the query results and posts to the webhook
-D) Add a dashboard filter that highlights zero-sales stores and emails the team
+A) A For each task over the task value
+B) An If/else condition task comparing `{{tasks.ingest.values.rows_loaded}} > 0`, with transformations depending on its `true` outcome
+C) A retry policy on the transformation task
+D) Setting max concurrent runs to 0 when no data arrives
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Set up an Alert with a new webhook alert destination.
+> An If/else condition task comparing `{{tasks.ingest.values.rows_loaded}} > 0`, with transformations depending on its `true` outcome.
 >
-> Configure the alert condition on the query result (value > 0) and point the destination to the team's webhook URL. Databricks SQL Alerts evaluate the query result on each refresh and trigger the webhook notification when the threshold condition is met.
+> The If/else task evaluates a boolean expression on two operands (task values, job parameters, literals). Downstream tasks depend on its `(true)` or `(false)` outcome. `>` performs a numeric comparison ([If/else task](https://docs.databricks.com/aws/en/jobs/if-else)).
 
 ---
 
-## Question 14: Minimizing SQL Endpoint Runtime on Hourly Dashboard
+## Question 7: Looping Over Tables *(2026 blueprint)*
 
-**Question** *(Medium)*: A data engineer has an hourly Databricks SQL dashboard whose underlying data is managed by an automated Databricks Job. How can they minimize the total running time of the SQL endpoint during the dashboard's hourly refresh?
+**Question** *(Medium)*: The same load notebook must run for 30 source tables, at most five at a time, without defining 30 tasks. Which configuration meets this?
 
-A) Reduce the SQL endpoint cluster size to the smallest available
-B) Use a shared all-purpose cluster instead of a SQL endpoint
-C) Pre-compute dashboard results in the Databricks Job and cache them
-D) Turn on the Auto Stop feature for the SQL endpoint
+A) A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5
+B) Thirty notebook tasks with no dependencies
+C) A single notebook task with `max_retries` set to 30
+D) A Run Job task pointing at itself
 
 > [!success]- Answer
-> **Correct Answer: D**
+> **Correct Answer: A**
 >
-> Turn on the Auto Stop feature for the SQL endpoint.
+> A For each task with the table list as input, the notebook as the nested task, and concurrency set to 5.
 >
-> Auto Stop shuts down the SQL endpoint after a defined idle period following the last query. Since the dashboard only needs the endpoint during the brief refresh window each hour, Auto Stop ensures the endpoint is off for the remaining idle time between refreshes.
+> For each runs one nested task once per input element, passing `{{input}}` (or `{{input.<key>}}`). Concurrency defaults to 1, and the nested task can't itself be a For each ([For each task](https://docs.databricks.com/aws/en/jobs/for-each)).
 
 ---
 
-## Question 15: Persist to Memory and Disk
+## Question 8: Retrying Transient Failures *(2026 blueprint)*
 
-**Question** *(Medium)*: Which Spark method persists data to both memory and disk when memory is insufficient?
+**Question** *(Easy)*: A task that calls an external API fails a few times a week with transient network errors, and succeeds when re-run minutes later. What is the built-in way to handle this?
 
-A) `cache()` with `StorageLevel.MEMORY_ONLY`
-B) `checkpoint()` with eager evaluation
-C) `persist()` with `StorageLevel.MEMORY_AND_DISK`
-D) `broadcast()` with local storage fallback
+A) Increase the task timeout
+B) Configure a retry policy on the task, with a retry interval
+C) Set the job's max concurrent runs to 2
+D) Add an If/else task after it
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Configure a retry policy on the task, with a retry interval.
+>
+> Task-level retries automatically re-run a failed task after the configured interval. A timeout limits how long one attempt may run, and when both are set the timeout applies to each retry. Concurrency and branching don't retry anything ([Configure and edit tasks](https://docs.databricks.com/aws/en/jobs/configure-task)).
+
+---
+
+## Question 9: Cleanup That Always Runs *(2026 blueprint)*
+
+**Question** *(Medium)*: A job's final task drops temporary staging tables. It must run whether the upstream transform succeeds or fails. Which Run if condition should it use?
+
+A) All succeeded
+B) At least one succeeded
+C) All done
+D) All failed
 
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> `persist()` with `StorageLevel.MEMORY_AND_DISK`.
+> All done.
 >
-> `persist()` allows specifying a `StorageLevel` such as `MEMORY_AND_DISK`, which stores partitions in memory and spills excess to disk when memory is exhausted. `cache()` is a shortcut for `persist(StorageLevel.MEMORY_ONLY)` and does not spill to disk automatically.
+> *All done* runs the task after all dependencies finish, whatever their status. The default, *All succeeded*, would mark the task `Upstream failed` and skip it when the transform fails. *All failed* runs it only after failures ([Configure task dependencies](https://docs.databricks.com/aws/en/jobs/conditional-tasks)).
 
 ---
 
-**[← Previous: Domain 3: Incremental Data Processing](./03-incremental-processing.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 5: Data Governance](./05-data-governance.md) →**
+## Question 10: Processing Files Soon After Unpredictable Drops *(2026 blueprint)*
+
+**Question** *(Medium)*: A partner uploads JSON files to a Unity Catalog external location at unpredictable times: sometimes several an hour, sometimes nothing for a day. Each drop should be processed shortly after it lands, without empty runs or idle compute. Which trigger should the Lakeflow Job use?
+
+A) Scheduled trigger every 5 minutes
+B) File arrival trigger on the external location
+C) Continuous trigger
+D) Manual trigger by an operator
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> File arrival trigger on the external location.
+>
+> A file arrival trigger monitors a UC external location or volume and starts a run only when new files appear. *Wait after last change* can batch bursts into one run. Polling schedules start runs that find nothing, and continuous triggers keep compute running ([file arrival triggers](https://docs.databricks.com/aws/en/jobs/file-arrival-triggers)).
+
+---
+
+## Question 11: Running When Upstream Tables Change *(2026 blueprint)*
+
+**Question** *(Medium)*: A Gold build job must run after **both** `main.silver.orders` and `main.silver.customers` are updated. Those tables are maintained by two other teams' jobs, which run at varying times. Which trigger configuration fits?
+
+A) A table update trigger on both tables with "All tables are updated"
+B) A table update trigger on both tables with "Any table is updated"
+C) A scheduled trigger at 06:00
+D) A file arrival trigger on the tables' storage paths
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> A table update trigger on both tables with "All tables are updated".
+>
+> Table update triggers start a run when monitored UC tables change. With multiple tables, *Trigger when* can be set to **All tables are updated** or **Any table is updated**. The job's Run as principal needs `SELECT` on the tables. File arrival triggers can't target managed table locations ([table update triggers](https://docs.databricks.com/aws/en/jobs/trigger-table-update)).
+
+---
+
+## Question 12: Time-Based vs Data-Driven Triggers *(2026 blueprint)*
+
+**Question** *(Easy)*: A regulatory report must be published at exactly 07:00 every weekday, using whatever data has arrived by then. Which trigger fits best?
+
+A) Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`
+B) File arrival trigger
+C) Table update trigger
+D) Continuous trigger
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Scheduled trigger with Quartz cron `0 0 7 ? * MON-FRI`.
+>
+> When the deadline, not data availability, decides when work runs, a time-based schedule is right. Quartz cron puts seconds first, and `?` goes in day-of-month when day-of-week is constrained. Data-driven triggers fit when work should follow data arrival ([schedules and triggers](https://docs.databricks.com/aws/en/jobs/triggers)).
+
+---
+
+## Question 13: Configuring a Dashboard Task *(2026 blueprint)*
+
+**Question** *(Easy)*: After a pipeline task refreshes Gold tables, an AI/BI dashboard must be refreshed in the same job. Which task configuration achieves this?
+
+A) A Dashboards task that depends on the pipeline task and uses a SQL warehouse
+B) A notebook task that calls `display()` on the Gold tables
+C) A For each task over the dashboard's widgets
+D) A second job with a scheduled trigger 30 minutes later
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> A Dashboards task that depends on the pipeline task and uses a SQL warehouse.
+>
+> Lakeflow Jobs has native task types for notebooks, SQL, dashboards, and pipelines. Making the Dashboards task depend on the pipeline task guarantees the order inside one DAG. A separate job on a fixed delay can run before the data is ready ([Configure and edit tasks](https://docs.databricks.com/aws/en/jobs/configure-task)).
+
+---
+
+## Question 14: Passing a Value Between Tasks *(2026 blueprint)*
+
+**Question** *(Medium)*: Task `ingest` computes the latest order date. Task `report` needs that value. Which code sets it in `ingest`?
+
+A) `dbutils.widgets.text("max_date", value)`
+B) `dbutils.jobs.taskValues.set(key="max_date", value=value)`
+C) `spark.conf.set("max_date", value)`
+D) `dbutils.notebook.exit(value)` in every task
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `dbutils.jobs.taskValues.set(key="max_date", value=value)`.
+>
+> Task values pass small, JSON-serializable results (up to 48 KiB) between tasks. Downstream tasks read them with `dbutils.jobs.taskValues.get(taskKey="ingest", key="max_date")` or, preferably, the reference `{{tasks.ingest.values.max_date}}` in parameters ([task values](https://docs.databricks.com/aws/en/jobs/task-values)).
+
+---
+
+## Question 15: Reading Quartz Cron *(2026 blueprint)*
+
+**Question** *(Easy)*: A Lakeflow Job schedule uses the Quartz expression `0 30 2 * * ?`. When does it run?
+
+A) Every 30 minutes past 2 o'clock, every hour
+B) At 02:30:00 every day
+C) At 00:30 on the 2nd of every month
+D) Every 2 minutes at second 30
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> At 02:30:00 every day.
+>
+> Quartz fields are seconds, minutes, hours, day-of-month, month, day-of-week, and an optional year. So `0 30 2 * * ?` means second 0, minute 30, hour 2, every day of every month, with no specific day-of-week ([Quartz CronTrigger tutorial](https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html)).
+
+---
+
+**[← Previous: Domain 3: Data Transformation and Modeling](./03-data-transformation-and-modeling.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 5: Implementing CI/CD →](./05-implementing-cicd.md)**

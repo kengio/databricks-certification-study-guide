@@ -1,12 +1,50 @@
 ---
-title: "Practice Questions: Incremental Data Processing"
+title: "Practice Questions: Data Ingestion and Loading"
 type: practice-questions
-tags: [data-engineer-associate, practice-questions, incremental-processing]
+tags: [data-engineer-associate, practice-questions, data-ingestion-and-loading]
 ---
 
-# Domain 3: Incremental Data Processing
+# Domain 2: Data Ingestion and Loading
 
-## Question 1: COPY INTO Idempotency
+Exam weight: **21 %** (August 2026 exam guide). Questions marked *(2026 blueprint)* target skills added or reworded in the 2026 guide. Each question cites the Databricks documentation that supports its answer, where one exists.
+
+## Question 1: JDBC Format for SQLite
+
+**Question** *(Easy)*: A data engineer needs to create a table in Databricks using data from the organization's SQLite database. They set up a JDBC connection. Which format string correctly identifies the JDBC data source?
+
+A) `"sqlite"`
+B) `"jdbc"`
+C) `"database"`
+D) `"odbc"`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `"jdbc"`
+>
+> This is the format string used with Spark's DataFrameReader to connect to any JDBC-compatible database (including SQLite, MySQL, PostgreSQL). It is specified as `.format("jdbc")` in the DataFrameReader chain, followed by `.option()` calls for the connection URL, driver, and table name.
+
+---
+
+## Question 2: Parquet Advantage Over CSV
+
+**Question** *(Medium)*: What advantage does creating an external table using Parquet have over CSV in a `CREATE TABLE AS SELECT` statement?
+
+A) Parquet files are human-readable and can be edited with a text editor
+B) Parquet files have a well-defined schema
+C) Parquet files support row-level locking for concurrent writes
+D) Parquet files are smaller because they use row-based compression
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Parquet files have a well-defined schema.
+>
+> Unlike CSV (a schema-less text format requiring manual type inference), Parquet embeds column names and data types directly in the file metadata. This enables schema enforcement, efficient columnar reads, and predicate pushdown without a separate schema definition.
+
+---
+
+## Question 3: COPY INTO Idempotency
 
 **Question** *(Medium)*: Every day, a data engineer runs a command to transfer the previous day's sales data into a `transactions` table. Today, after running the command, the record count remains unchanged. Why were no new records copied?
 
@@ -21,42 +59,6 @@ D) The transaction log was full and could not accept new entries
 > The previous day's file has already been copied into the table.
 >
 > `COPY INTO` is idempotent — it maintains an internal record of which files have already been loaded. On subsequent runs, it automatically skips previously processed files, preventing duplicate ingestion. This makes it safe to rerun without creating duplicates.
-
----
-
-## Question 2: Tool for Automated Data Quality Monitoring
-
-**Question** *(Easy)*: During data ingestion, a data engineer observes that source data quality is declining. They want to automate the process of monitoring the quality level. Which tool addresses this?
-
-A) Apache Airflow with custom validation DAGs
-B) Databricks SQL Alerts with scheduled queries
-C) Lakeflow Declarative Pipelines (formerly DLT)
-D) Great Expectations library integrated with Spark
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> Lakeflow Declarative Pipelines (formerly DLT).
->
-> Lakeflow Declarative Pipelines provides built-in data quality monitoring through expectations — declarative constraints that automatically track pass/fail metrics, record violations in the event log, and optionally drop or quarantine bad records. Quality statistics are visible per-table in the pipeline UI.
-
----
-
-## Question 3: Lakeflow Declarative Pipelines Continuous Pipeline Behavior
-
-**Question** *(Hard)*: A Lakeflow Declarative Pipelines pipeline has two datasets defined with `STREAMING LIVE TABLE` and three datasets using `LIVE TABLE`. It runs in Production mode with Continuous Pipeline Mode. What outcome should be expected after clicking Start if there is unprocessed data and all definitions are correct?
-
-A) Only the two streaming datasets are updated continuously; the three materialized views are updated once and then stop
-B) All five datasets are updated once, and then the pipeline shuts down automatically to conserve resources
-C) All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped
-D) The pipeline fails because streaming and materialized view datasets cannot coexist in Continuous mode
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> All datasets are updated at set intervals until the pipeline is shut down. Compute resources are deployed for the update and terminated when the pipeline is stopped.
->
-> In Continuous mode, the pipeline runs indefinitely — processing streaming tables as new data arrives and periodically refreshing materialized views. It does not shut down automatically; resources are released only when the pipeline is manually stopped.
 
 ---
 
@@ -105,7 +107,7 @@ D) Spark Structured Streaming
   .withColumn("avg_price", col("sales") / col("units"))
   .writeStream
   .option("checkpointLocation", checkpointPath)
-  .outputMode("complete")
+  .outputMode("append")
   ._____
   .table("new_sales"))
 ```
@@ -126,43 +128,7 @@ D) `.trigger(microBatch="5 seconds")`
 
 ---
 
-## Question 7: Lakeflow Declarative Pipelines DROP Expectation Behavior
-
-**Question** *(Medium)*: A dataset established through Lakeflow Declarative Pipelines has an expectations clause with `ON VIOLATION DROP ROW`. What should occur when processing a batch of data that includes entries violating these constraints?
-
-A) Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log
-B) The entire batch is rejected and the pipeline enters a failed state
-C) Violating records are written to a separate quarantine table for manual review
-D) The pipeline pauses and waits for manual approval before continuing
-
-> [!success]- Answer
-> **Correct Answer: A**
->
-> Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.
->
-> The pipeline continues running. Dropped record counts and violation metrics are tracked in the Lakeflow Declarative Pipelines event log and displayed per-table in the pipeline UI under data quality statistics. The `FAIL UPDATE` variant would stop the pipeline instead.
-
----
-
-## Question 8: CREATE STREAMING LIVE TABLE vs CREATE LIVE TABLE
-
-**Question** *(Medium)*: When should `CREATE STREAMING LIVE TABLE` be used instead of `CREATE LIVE TABLE` for creating Lakeflow Declarative Pipelines in SQL?
-
-A) When the table needs to support both read and write operations simultaneously
-B) When the table must be accessible from multiple workspaces
-C) When the table requires ACID transaction support
-D) When data needs to be processed incrementally
-
-> [!success]- Answer
-> **Correct Answer: D**
->
-> `CREATE STREAMING LIVE TABLE` should be used when data needs to be processed incrementally.
->
-> It reads from append-only streaming sources (Auto Loader, Kafka, Delta change data feed) and processes only new records since the last run. `CREATE LIVE TABLE` (materialized view) re-processes the full dataset on each update and is suited for static or aggregated data.
-
----
-
-## Question 9: Auto Loader for New File Detection
+## Question 7: Auto Loader for New File Detection
 
 **Question** *(Medium)*: A data engineer's source system produces files in a shared directory that accumulate over time. The engineer must recognize which files are new since the last pipeline execution and ingest only those during each run. Which tool addresses this?
 
@@ -180,45 +146,7 @@ D) Spark batch read with timestamp filtering
 
 ---
 
-## Question 10: Silver to Gold Streaming Query
-
-**Question** *(Medium)*: Which type of Structured Streaming query represents the transition from a Silver table to a Gold table?
-
-A) A query that reads raw data from cloud storage and applies schema enforcement before writing to a Silver table
-B) A query that deduplicates and cleanses Bronze data before writing to a Silver table
-C) A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table
-D) A query that replicates Silver data to an external data warehouse for reporting
-
-> [!success]- Answer
-> **Correct Answer: C**
->
-> A query that reads from a Silver streaming table and applies aggregations — such as `groupBy()` with `sum()`, `count()`, or `avg()` — to produce summary metrics written to a Gold table.
->
-> Gold tables typically contain business-level aggregates. Transforming cleaned Silver data into aggregated Gold data is the defining characteristic of the Silver-to-Gold transition in medallion architecture.
->
-> > ⚠️ *This answer was generated by AI — verify against official Databricks documentation.*
-
----
-
-## Question 11: Identifying Which Lakeflow Declarative Pipelines Table Drops Records
-
-**Question** *(Medium)*: A data engineer manages three tables in a Lakeflow Declarative Pipelines pipeline with expectations set to eliminate invalid records. They observe that data is being discarded at some stage. How can they identify which specific table is dropping the records?
-
-A) Query the Delta transaction log of each table to find DELETE operations
-B) Add explicit logging statements to each table's transformation code
-C) Run DESCRIBE HISTORY on each table to check for dropped record counts
-D) Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics
-
-> [!success]- Answer
-> **Correct Answer: D**
->
-> Navigate to the Lakeflow Declarative Pipelines pipeline page, click on each table, and view the data quality statistics.
->
-> The Lakeflow Declarative Pipelines pipeline UI shows per-table expectation metrics, including the number of records that passed, failed, or were dropped for each defined constraint. This makes it straightforward to pinpoint which table's expectation is causing record drops.
-
----
-
-## Question 12: Streaming Write Issues
+## Question 8: Writing to a Path vs a Table
 
 **Question** *(Medium)*: What is wrong with the following code?
 
@@ -241,7 +169,7 @@ D) The code is missing a schema definition, which is required for JSON reads
 
 ---
 
-## Question 13: CREATE TABLE from CSV Keyword
+## Question 9: CREATE TABLE from CSV Keyword
 
 **Question** *(Easy)*: A data engineer needs to create a table in Databricks using data from a CSV file. They run a `CREATE TABLE` command that already specifies the CSV path and format in the statement body. Which additional line of code completes the blank?
 
@@ -261,7 +189,7 @@ D) `STORED AS TEXTFILE`
 
 ---
 
-## Question 14: Process All Available Data Trigger
+## Question 10: Process All Available Data Trigger
 
 **Question** *(Medium)*: A data engineer sets up a Structured Streaming job to read from a table and write results to a new table. The code block is shown below:
 
@@ -291,7 +219,7 @@ D) `.trigger(availableNow=True)`
 
 ---
 
-## Question 15: Auto Loader JSON String Inference
+## Question 11: Auto Loader JSON String Inference
 
 **Question** *(Medium)*: A data engineer creates a pipeline to ingest JSON data via Auto Loader with no type inference or schema hints specified. After examining the data, all columns in the target table are of string type, even for fields containing only float or boolean values. Why does Auto Loader infer all columns as string type?
 
@@ -309,43 +237,7 @@ D) The Delta table's schema enforcement converts all incoming types to strings
 
 ---
 
-## Question 16: Lakeflow Declarative Pipelines Pipeline Minimum Requirement
-
-**Question** *(Easy)*: What needs to be specified when creating a new Lakeflow Declarative Pipelines pipeline?
-
-A) A target database and storage location
-B) At least one notebook library to be executed
-C) A cluster policy and node type configuration
-D) An explicit schedule or cron expression
-
-> [!success]- Answer
-> **Correct Answer: B**
->
-> At least one notebook library to be executed.
->
-> A Lakeflow Declarative Pipelines pipeline must reference one or more notebooks containing the dataset definitions (`CREATE LIVE TABLE` or `CREATE STREAMING LIVE TABLE` statements). Other settings — storage location, target database, cluster configuration — are optional and can use defaults.
-
----
-
-## Question 17: STREAM() Function in Lakeflow Declarative Pipelines
-
-**Question** *(Medium)*: A data engineer joins an ongoing project and notices a `STREAM()` function wrapping a table reference in a Lakeflow Declarative Pipelines SQL query. What explains its inclusion?
-
-A) The referenced table is a streaming live table
-B) The `STREAM()` function enables parallel reads from the table across multiple clusters
-C) It converts a batch table into a temporary streaming source for the current query only
-D) The `STREAM()` function applies watermarking to handle late-arriving data
-
-> [!success]- Answer
-> **Correct Answer: A**
->
-> The referenced table is a streaming live table.
->
-> In Lakeflow Declarative Pipelines, `STREAM(table_name)` indicates that the table should be read as a streaming source — consuming only new records incrementally rather than reprocessing the full table. It is required when the source is a `STREAMING LIVE TABLE` and the consuming dataset needs to process it incrementally.
-
----
-
-## Question 18: Auto Loader Compatible Workloads
+## Question 12: Auto Loader Compatible Workloads
 
 **Question** *(Easy)*: What type of workloads are consistently compatible with Auto Loader?
 
@@ -363,25 +255,7 @@ D) Only interactive notebook workloads
 
 ---
 
-## Question 19: Lakeflow Declarative Pipelines Migration Changes
-
-**Question** *(Medium)*: A data engineer (Python, bronze/silver) and a data analyst (SQL, gold) collaborate on a medallion pipeline with a streaming source. They plan to migrate to Lakeflow Declarative Pipelines. What changes are necessary?
-
-A) The Python code must be rewritten in SQL because Lakeflow Declarative Pipelines only supports SQL definitions
-B) The SQL code must be rewritten in Python because Lakeflow Declarative Pipelines only supports Python definitions
-C) The streaming source must be converted to a batch source before migrating to Lakeflow Declarative Pipelines
-D) No changes are required
-
-> [!success]- Answer
-> **Correct Answer: D**
->
-> No changes are required.
->
-> Lakeflow Declarative Pipelines natively supports both Python and SQL within the same pipeline. It supports the medallion architecture (Bronze/Silver/Gold layers) and handles streaming sources directly. The existing language mix and multi-hop architecture can migrate to Lakeflow Declarative Pipelines without modification to the underlying logic.
-
----
-
-## Question 20: spark.read to spark.readStream
+## Question 13: spark.read to spark.readStream
 
 **Question** *(Easy)*: A data engineer utilizes this code block within a batch ingestion pipeline to read from a Delta table:
 
@@ -408,7 +282,7 @@ D) Replace `.load("/delta/transactions")` with `.stream("/delta/transactions")`
 
 ---
 
-## Question 21: Streaming DataFrame Write API Error
+## Question 14: Streaming DataFrame Write API Error
 
 **Question** *(Medium)*: Why will the following code fail?
 
@@ -431,7 +305,7 @@ D) The `readStream` API cannot read from Delta format tables
 
 ---
 
-## Question 22: Missing Checkpoint in Streaming Write
+## Question 15: Missing Checkpoint in Streaming Write
 
 **Question** *(Medium)*: What is missing from this streaming write?
 
@@ -453,4 +327,166 @@ D) A checkpoint location is missing
 
 ---
 
-**[← Previous: Domain 2: ELT with Spark SQL and Python](./02-elt-spark-sql-python.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 4: Production Pipelines](./04-production-pipelines.md) →**
+## Question 16: Ingesting a SaaS Source With Least Overhead *(2026 blueprint)*
+
+**Question** *(Easy)*: Sales leadership wants Salesforce accounts and opportunities in Unity Catalog, refreshed hourly. The data team has no capacity to write or maintain custom API code. Which approach fits best?
+
+A) A notebook that calls the Salesforce REST API, scheduled hourly with Lakeflow Jobs
+B) The Lakeflow Connect managed Salesforce connector with an hourly schedule
+C) Auto Loader reading Salesforce export files from a volume
+D) A JDBC read of the Salesforce database every hour
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The Lakeflow Connect managed Salesforce connector with an hourly schedule.
+>
+> Managed connectors are fully managed ingestion pipelines for popular SaaS apps and databases. They run on serverless compute, write to UC streaming tables, ingest incrementally, and Lakeflow Connect creates a job for each schedule. Databricks recommends starting with the most managed layer. Custom REST code adds maintenance, and Auto Loader needs files that someone else would have to export ([Lakeflow Connect](https://docs.databricks.com/aws/en/ingestion/overview)).
+
+---
+
+## Question 17: Components of a Managed Database Connector *(2026 blueprint)*
+
+**Question** *(Medium)*: A team configures a Lakeflow Connect managed connector to replicate a SQL Server database with change data capture. Which component exists only for database connectors, and runs continuously to stage changes?
+
+A) The Unity Catalog connection
+B) The ingestion gateway
+C) The destination streaming tables
+D) The Lakeflow Jobs schedule
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> The ingestion gateway.
+>
+> Database connectors include "an ingestion gateway and staging storage to support continuous change capture". The gateway runs as a continuous task in its own job. Every managed connector uses a UC **connection** (credentials), an **ingestion pipeline**, and **streaming tables** as destinations ([connector concepts](https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/)).
+
+---
+
+## Question 18: Standard vs Managed Connectors *(2026 blueprint)*
+
+**Question** *(Medium)*: Which source is a typical case for a Lakeflow Connect **standard** (customizable) connector rather than a managed connector?
+
+A) Workday reports for an HR dashboard
+B) Events from an Apache Kafka topic that need custom parsing in Structured Streaming
+C) HubSpot CRM objects
+D) A MySQL database replicated with CDC
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Events from an Apache Kafka topic that need custom parsing in Structured Streaming.
+>
+> Standard connectors are the customizable SQL and Spark ingestion paths for cloud object storage (Auto Loader, `read_files`), message buses (Kafka, Kinesis, Pub/Sub), and SFTP. Managed connectors cover SaaS apps (Workday, HubSpot, Salesforce) and databases (MySQL, PostgreSQL, SQL Server) with no ingestion code ([Ingest with SQL and Spark APIs](https://docs.databricks.com/aws/en/ingestion/)).
+
+---
+
+## Question 19: Auto Loader Schema Evolution Without Failures *(2026 blueprint)*
+
+**Question** *(Hard)*: An Auto Loader stream lands vendor JSON in a Bronze table whose schema downstream teams depend on. New fields occasionally appear. The stream must never stop because of them, the table schema must not change, and the unexpected values must be kept for review. Which setting meets this?
+
+A) `cloudFiles.schemaEvolutionMode = "addNewColumns"`
+B) `cloudFiles.schemaEvolutionMode = "rescue"`
+C) `cloudFiles.schemaEvolutionMode = "failOnNewColumns"`
+D) `cloudFiles.inferColumnTypes = "true"`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `cloudFiles.schemaEvolutionMode = "rescue"`.
+>
+> In `rescue` mode the schema never evolves and the stream doesn't fail. New columns are written to the `_rescued_data` column. `addNewColumns` evolves the schema and stops the stream with `UnknownFieldException` until it's restarted. `failOnNewColumns` stops until someone fixes the schema. `inferColumnTypes` only affects type inference ([schema inference and evolution](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema)).
+
+---
+
+## Question 20: Auto Loader File Discovery Mode *(2026 blueprint)*
+
+**Question** *(Medium)*: An Auto Loader stream reads a Unity Catalog external location that receives hundreds of thousands of files per day. Directory listing has become slow. What does Databricks recommend?
+
+A) Enable `cloudFiles.useIncrementalListing`
+B) Switch to file notification mode with file events enabled on the external location
+C) Reduce `cloudFiles.maxFilesPerTrigger` to 10
+D) Replace Auto Loader with a scheduled `spark.read` of the whole directory
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Switch to file notification mode with file events enabled on the external location.
+>
+> Directory listing is the default mode. Databricks recommends file notification mode with **file events** for most workloads, as it's more performant and scalable, and needs no extra permissions once file events are enabled on the external location (DBR 14.3 LTS+). `cloudFiles.useIncrementalListing` is deprecated. You can switch modes across restarts and keep exactly-once processing ([file detection modes](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/file-detection-modes)).
+
+---
+
+## Question 21: Forcing a COPY INTO Reload *(2026 blueprint)*
+
+**Question** *(Medium)*: After fixing a parsing bug, a data engineer truncates a Bronze table and re-runs the same `COPY INTO` statement. Zero rows are loaded. What explains this, and how should they reload the files?
+
+A) `COPY INTO` caches query results. Run `REFRESH TABLE` first
+B) `COPY INTO` is idempotent and skips files it already loaded. Add `COPY_OPTIONS ('force' = 'true')`
+C) The files were deleted by `COPY INTO` after the first load. Re-upload them
+D) `COPY INTO` only loads files newer than the table's last `OPTIMIZE`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `COPY INTO` is idempotent and skips files it already loaded. Add `COPY_OPTIONS ('force' = 'true')`.
+>
+> "Files in the source location that have already been loaded are skipped", and truncating the target doesn't reset that tracking. `'force' = 'true'` disables idempotency, so the files load again ([COPY INTO reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into)).
+
+---
+
+## Question 22: Parallelizing a JDBC Read *(2026 blueprint)*
+
+**Question** *(Medium)*: A notebook reads a 300-million-row PostgreSQL table with `spark.read.format("jdbc")`, and the read runs for hours while most cluster cores sit idle. What change parallelizes the read?
+
+A) Set `fetchSize` to 1
+B) Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column
+C) Call `.repartition(64)` after `.load()`
+D) Increase `spark.sql.shuffle.partitions`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Add `partitionColumn`, `lowerBound`, `upperBound`, and `numPartitions` on an indexed numeric column.
+>
+> A JDBC read uses one thread by default. The partitioning options split the read into parallel range queries. Repartitioning after `load()` only redistributes data that was already read serially. Shuffle partitions don't affect the read ([Query databases using JDBC](https://docs.databricks.com/aws/en/connect/external-systems/jdbc)).
+
+---
+
+## Question 23: Landing REST API Data *(2026 blueprint)*
+
+**Question** *(Medium)*: A vendor exposes order data only through a REST API. The team wants an immutable raw copy for replay, schema-drift handling, and a nightly schedule. Which design fits?
+
+A) Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job
+B) Call the API from a notebook and `collect()` the results into a pandas DataFrame on the driver
+C) Create a Lakehouse Federation connection that queries the REST API in place
+D) Store the API token in the notebook and write directly to DBFS root
+
+> [!success]- Answer
+> **Correct Answer: A**
+>
+> Call the API from a notebook, write the raw JSON responses to a Unity Catalog volume, ingest them with Auto Loader, and schedule both tasks in one Lakeflow Job.
+>
+> Landing raw files in a governed volume keeps a replayable copy, and Auto Loader handles incremental loading and schema evolution. Lakeflow Jobs schedules and retries the tasks. The token belongs in Databricks secrets (`dbutils.secrets.get`). DBFS root is deprecated for data ([What is DBFS?](https://docs.databricks.com/aws/en/dbfs/)).
+
+---
+
+## Question 24: Querying Nested JSON Strings *(2026 blueprint)*
+
+**Question** *(Easy)*: A Bronze column `raw` holds JSON strings such as `{"customer": {"id": 42}, "total": "19.99"}`. Which Databricks SQL expression returns the customer ID?
+
+A) `raw.customer.id`
+B) `raw:customer.id`
+C) `get_json(raw, 'customer', 'id')`
+D) `raw['customer']['id']::json`
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> `raw:customer.id`.
+>
+> For JSON **strings**, Databricks SQL uses `<column>:<path>`, with dot notation or brackets for nested fields and `::` for casting (for example `raw:total::double`). Dot notation without the colon works on **struct** columns, not on strings ([Query JSON strings](https://docs.databricks.com/aws/en/semi-structured/json)). For new semi-structured data, Databricks recommends the `VARIANT` type over JSON strings.
+
+---
+
+**[← Previous: Domain 1: Databricks Intelligence Platform](./01-databricks-intelligence-platform.md) | [↑ Back to DE Associate Practice Questions](./README.md) | [Next: Domain 3: Data Transformation and Modeling →](./03-data-transformation-and-modeling.md)**
