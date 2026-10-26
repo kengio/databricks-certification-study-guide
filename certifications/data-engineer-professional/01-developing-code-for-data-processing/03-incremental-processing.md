@@ -574,7 +574,7 @@ Understanding when to apply specific incremental patterns is crucial for the exa
 
 **Scenario:** Joining a stream with a static table, but updates to the static table aren't reflected.
 
-**Fix:** Restart the streaming query to reload the static table cache.
+**Fix:** With a Delta static table, each micro-batch already reads the latest valid version, so check that the static side is actually a Delta table and that the update was committed before the micro-batch ran. The documented latest-version behavior assumes the static data is stored in Delta Lake ([stream-static joins](https://docs.databricks.com/aws/en/transform/join#stream-static-joins)).
 
 ### Delta Source: "Detected deleted data"
 

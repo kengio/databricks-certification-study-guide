@@ -51,7 +51,7 @@ enriched = events_stream.join(
 )
 ```
 
-**Important**: The static DataFrame is read once at query start. Changes to the static table won't be reflected until the streaming query is restarted.
+**Important**: When the static side is a Delta table, each micro-batch joins against the **latest valid version** of that table, so updates to the static table are picked up by later micro-batches without a restart. Because the static side can change between batches, the output is not deterministic if you reprocess the same stream ([stream-static joins](https://docs.databricks.com/aws/en/transform/join#stream-static-joins)).
 
 ## Stateful Operations
 
@@ -405,7 +405,7 @@ query = (df.writeStream
 
 - **Output modes**: `append` for inserts only, `complete` for full aggregation results, `update` for rows changed in the current batch — not every mode is compatible with every operation or sink
 - **Watermarks** are required for streaming aggregations to enable state cleanup; without them, state grows unboundedly and causes OOM
-- **Stream-static joins** read the static side once at query start; changes to the static table are only reflected after the streaming query is restarted
+- **Stream-static joins** (Delta static side) join each micro-batch against the latest version of the static table; no restart is needed to pick up changes
 - **RocksDB state store** is recommended when state exceeds available executor heap memory (GB+ scale or high-cardinality keys); HDFS-backed store is the default and suits smaller state
 - **State timeouts**: `ProcessingTimeTimeout` expires based on wall clock; `EventTimeTimeout` expires when the watermark advances past the set timestamp; `NoTimeout` causes unbounded state growth
 - **`foreachBatch`** enables batch operations (such as MERGE) within a streaming context, providing exactly-once semantics when combined with checkpoints
