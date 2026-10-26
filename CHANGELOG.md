@@ -4,6 +4,56 @@ Notable changes to the Databricks Certification Study Guide.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/). Dates use ISO 8601. Each section is grouped under the date the change shipped, with the Databricks exam-guide version each affected certification tracks.
 
+## [2026.10.26] — Oct 2026 refresh: every cert re-checked against current exam guides and platform docs
+
+A series of seven PRs (#32–#37 plus this one) re-checked all six certifications against the exam guides published on databricks.com and the Databricks docs as of **October 26, 2026**. This entry records the top-level sync and the shared content.
+
+### Exam-guide versions tracked
+
+| Certification | Exam guide | Change |
+| :--- | :--- | :--- |
+| Data Engineer Associate | Aug 6, 2026 (exam May 4, 2026) | 7 officially weighted domains; folders now 1:1 ([PDF](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Associate-Exam-Guide-August-2026.pdf)) |
+| Data Engineer Professional | **Oct 9, 2026 — new exam** | 10 → 9 domains, 59 → 60 questions ([PDF](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf)) |
+| Data Analyst Associate | Oct 30, 2025 | unchanged; Genie domain rewritten, practice bank remapped to 9 domains |
+| ML Associate | Mar 1, 2025 (PDF re-issued Aug 2026) | Section 2 = Data Processing; multiple-selection questions |
+| ML Professional | Sep 30, 2025 (PDF re-issued Aug 2026) | unchanged domains; Optuna, Ray, bundles, rollout coverage |
+| GenAI Engineer Associate | Mar 18, 2026 (PDF re-issued Aug 2026) | Agent Bricks, MCP, Genie multi-agent, MLflow 3 judges coverage |
+
+### Changed — per-cert PRs
+
+- **#32 GenAI Engineer:** 9 new topic files, AI Gateway moved to Evaluation & Monitoring, practice bank 46 → 85
+- **#33 ML Professional:** 6 new topic files, code fixes (Optuna, Ray, serving, Lakehouse Monitoring), practice bank 57 → 97
+- **#34 ML Associate:** folders realigned to the PDF sections, current UC APIs, practice bank 46 → 107, mocks rebuilt to 48 questions
+- **#35 DE Professional:** restructured to 9 domains, 14 new topic files, practice bank 73 → 155
+- **#36 Data Analyst:** Genie Agents rewrite (4 files, 15 questions), practice bank 57 → 159 across 9 domains, `{{ }}` → `:param`, topic files realigned
+- **#37 DE Associate:** restructured to 7 domains, 15 new topic files, practice bank 85 → 145
+- **Every practice bank:** answer keys rebalanced to roughly 25 % per letter (several banks had more than half their answers on B)
+
+### Changed — shared content and top-level
+
+- **Platform renames** applied across `shared/`, `labs/`, `learning-paths/` with "(formerly …)" notes:
+  - Lakeflow Spark Declarative Pipelines (Nov 12, 2025), with pipeline code moved to `from pyspark import pipelines as dp` and AUTO CDC
+  - Declarative Automation Bundles (Mar 16, 2026)
+  - OpenSharing (Jun 10, 2026)
+  - Genie Agents (Jul 8, 2026)
+  - AI Search (Jun 1, 2026)
+  - Genie Code (Mar 11, 2026)
+  - Lakeflow Jobs
+  - Community Edition retired (Jan 1, 2026) → Free Edition
+  - agents on Model Serving and Knowledge Assistant / Supervisor Agent marked legacy (Oct 2026)
+- **`shared/appendix/version-history.md`:** new 2025–2026 rename and exam-guide timeline. Glossary (+18 terms), renewal guide, comparison tables, error messages, and the Thai glossary (+14 terms) updated.
+- **Learning paths:** domain tables taken from the current PDFs; the obsolete "Pass 70 %" column removed.
+- **Top-level `README.md`:** exam-at-a-glance table, per-cert details, "What changed" section, and a platform-renames note.
+- **`CLAUDE.md` / `CONTRIBUTING.md`:**
+  - topic-folder lists and Shared Content inventory updated
+  - Currency Policy now distinguishes `*(YYYY blueprint)*` (new exam version) from `*(YYYY guide)*` (re-issued guide)
+  - Currency Policy adds the "Platform update" callout rule
+- **`practice/README.md`:** bank counts updated. **`i18n/th/STATUS.md`:** file counts updated (nothing was translated yet, so no 🔄 marks).
+
+### Note for learners
+
+Practice-quiz progress saved in your browser resets for the restructured banks (DE Associate, DE Professional, Data Analyst, ML Associate) because question IDs changed.
+
 ## [2026.05.21-25] — Practice quiz: completion summary, attempt history, export, pause/resume, WCAG AAA
 
 This entry covers everything that landed alongside the mock-exam launch in the same `feat/mock-exams-in-practice` branch but is its own user-visible feature surface — separated here for clarity.

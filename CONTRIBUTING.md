@@ -69,7 +69,7 @@ When Databricks updates the exam guide for any certification:
 - Update the "What changed in the latest blueprint" callout at the top of that cert's `README.md`
 - Update the matching cert row in the top-level `README.md` certifications table
 - Add an entry to [`CHANGELOG.md`](./CHANGELOG.md) describing the refresh
-- Mark new practice questions targeting the updated skills with a `*(YYYY blueprint)*` suffix in the question heading
+- Mark new practice questions targeting the updated skills with `*(YYYY blueprint)*` when the exam version changed, or `*(YYYY guide)*` when Databricks re-issued the guide for an unchanged exam
 
 Always cite the new exam-guide PDF URL in the PR description so reviewers can verify.
 
@@ -112,7 +112,7 @@ And ends with these terminal sections in this exact order:
 - A/B/C/D on separate lines (no bullets), two trailing spaces for line breaks
 - Answer in an Obsidian foldable `> [!success]- Answer` callout
 - Explanation teaches the **why**, not just confirms the letter
-- Mark questions targeting the latest blueprint refresh with `*(YYYY blueprint)*` in the heading
+- Mark questions targeting the latest refresh with `*(YYYY blueprint)*` (new exam version) or `*(YYYY guide)*` (re-issued guide) in the heading
 - Per-domain target: 15–20 questions; difficulty mix: ~30 % Easy, ~50 % Medium, ~20 % Hard
 
 ### Callouts
