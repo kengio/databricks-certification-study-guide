@@ -16,12 +16,12 @@ status: published
 **Question**: An HR team wants a chatbot that answers employee questions about 300 policy PDFs stored in a Unity Catalog volume, with citations, built with minimal code and tuned by HR experts. Which Agent Bricks option fits best?
 
 A) Information Extraction  
-B) Knowledge Assistant  
+B) A custom LangGraph agent deployed with `agents.deploy()`  
 C) Multi-Agent Supervisor with a single Genie Space  
-D) A custom LangGraph agent deployed with `agents.deploy()`  
+D) Knowledge Assistant  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Knowledge Assistant.
 >
@@ -52,12 +52,12 @@ D) A second Genie Space that includes the contract PDFs
 **Question**: A legal team must turn 40,000 contracts into a Delta table with the parties, effective date, and renewal term of each contract. Which Agent Bricks option matches the requirement?
 
 A) Knowledge Assistant  
-B) Multi-Agent Supervisor  
-C) Information Extraction  
+B) Information Extraction  
+C) Multi-Agent Supervisor  
 D) Genie Space  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > Information Extraction.
 >
@@ -70,12 +70,12 @@ D) Genie Space
 **Question**: A product team wants each customer review classified as one of five fixed categories (shipping, quality, price, support, other) so the result can be counted in a dashboard. Which task category should candidate models be evaluated under?
 
 A) Summarization  
-B) Text classification  
-C) Text-to-text generation  
+B) Text-to-text generation  
+C) Text classification  
 D) Translation  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Text classification.
 >
@@ -89,11 +89,11 @@ D) Translation
 
 A) Add the order system's export as PDFs to the vector index  
 B) Fine-tune the LLM on last month's delivery dates  
-C) Give the agent a lookup tool or table keyed by order ID that returns the delivery date  
-D) Instruct the model to add seven days to the order date  
+C) Instruct the model to add seven days to the order date  
+D) Give the agent a lookup tool or table keyed by order ID that returns the delivery date  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > A keyed lookup tool or table for per-order facts.
 >
@@ -105,13 +105,13 @@ D) Instruct the model to add seven days to the order date
 
 **Question**: An IT agent has three tools: `lookup_employee` (returns the laptop asset tag), `search_runbooks`, and `open_ticket` (requires an asset tag). Which ordering best supports reliable multi-stage reasoning?
 
-A) `open_ticket` first so the user gets a ticket number quickly, then the other tools  
+A) `lookup_employee`, then `search_runbooks`, then `open_ticket` only after the user confirms  
 B) `search_runbooks`, then `open_ticket`, then `lookup_employee` to confirm the asset tag  
-C) `lookup_employee`, then `search_runbooks`, then `open_ticket` only after the user confirms  
+C) `open_ticket` first so the user gets a ticket number quickly, then the other tools  
 D) Call all three in parallel and let the model reconcile the results  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > Identify, retrieve, then act with confirmation.
 >
@@ -124,12 +124,12 @@ D) Call all three in parallel and let the model reconcile the results
 **Question**: Source documents for a RAG application are scanned forms saved as `.png` files. Which Python package extracts their text with the least code?
 
 A) beautifulsoup4  
-B) scrapy  
-C) pytesseract  
+B) pytesseract  
+C) scrapy  
 D) pyquery  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > pytesseract.
 >
@@ -142,12 +142,12 @@ D) pyquery
 **Question**: Retrieval for an intranet assistant keeps returning chunks dominated by navigation menus and copyright footers. What is the most effective fix?
 
 A) Increase `num_results` so that useful chunks are also returned  
-B) Strip navigation, header, and footer elements before chunking and re-embed the corpus  
-C) Switch to a larger embedding model  
+B) Switch to a larger embedding model  
+C) Strip navigation, header, and footer elements before chunking and re-embed the corpus  
 D) Add a re-ranker after retrieval  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Remove boilerplate before chunking and re-embed.
 >
@@ -160,12 +160,12 @@ D) Add a re-ranker after retrieval
 **Question**: An engineer will build a Delta Sync index on a standard Vector Search endpoint from chunked text. Which sequence is correct?
 
 A) Create the index, then create the Delta table, then enable Change Data Feed  
-B) Parse and chunk, write chunks with a primary key to a Unity Catalog Delta table with Change Data Feed enabled, then create or sync the index  
+B) Embed the chunks, then write them only to the index with the Direct Vector Access API  
 C) Write chunks to a JSON file in a volume and point the index at the volume  
-D) Embed the chunks, then write them only to the index with the Direct Vector Access API  
+D) Parse and chunk, write chunks with a primary key to a Unity Catalog Delta table with Change Data Feed enabled, then create or sync the index  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Chunk, write to a CDF-enabled Delta table with a primary key, then create or sync the index.
 >
@@ -177,13 +177,13 @@ D) Embed the chunks, then write them only to the index with the Direct Vector Ac
 
 **Question**: Evaluation shows the relevant chunk appears in the top 20 results for 95 % of questions but is usually ranked 8th or lower. Which metric captures this problem and which technique addresses it?
 
-A) Recall@20; increase chunk overlap  
-B) Mean reciprocal rank (MRR); add a re-ranking stage  
+A) Mean reciprocal rank (MRR); add a re-ranking stage  
+B) Recall@20; increase chunk overlap  
 C) Faithfulness; strengthen the system prompt  
 D) Precision@20; reduce the number of documents in the index  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > MRR, fixed with re-ranking.
 >
@@ -196,12 +196,12 @@ D) Precision@20; reduce the number of documents in the index
 **Question**: Which MLflow built-in judge requires expectations (ground truth) to evaluate retrieval?
 
 A) RetrievalRelevance  
-B) RetrievalGroundedness  
-C) RetrievalSufficiency  
+B) RetrievalSufficiency  
+C) RetrievalGroundedness  
 D) RelevanceToQuery  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > RetrievalSufficiency.
 >

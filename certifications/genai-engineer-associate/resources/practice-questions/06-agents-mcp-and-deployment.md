@@ -17,11 +17,11 @@ status: published
 
 A) `mlflow.pyfunc.ChatModel`  
 B) `mlflow.pyfunc.ChatAgent`  
-C) `mlflow.pyfunc.ResponsesAgent`  
-D) `mlflow.pyfunc.PythonModel` with a custom JSON schema  
+C) `mlflow.pyfunc.PythonModel` with a custom JSON schema  
+D) `mlflow.pyfunc.ResponsesAgent`  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > `ResponsesAgent`.
 >
@@ -33,13 +33,13 @@ D) `mlflow.pyfunc.PythonModel` with a custom JSON schema
 
 **Question**: A LangGraph supervisor must answer revenue questions from curated sales tables without the LLM writing raw SQL against unfamiliar tables. What should the engineer add?
 
-A) A Vector Search index over the sales tables' rows  
-B) A `GenieAgent` worker pointing at a Genie Space built on the sales tables, declared as a `DatabricksGenieSpace` resource  
+A) A `GenieAgent` worker pointing at a Genie Space built on the sales tables, declared as a `DatabricksGenieSpace` resource  
+B) A Vector Search index over the sales tables' rows  
 C) A UC function that returns `SELECT *` from every sales table  
 D) A larger LLM with the table schemas pasted into the system prompt  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > A Genie worker over a curated Genie Space.
 >
@@ -70,12 +70,12 @@ D) Retry failed requests immediately in a tight loop
 **Question**: Which statement correctly contrasts the evaluation and monitoring phases of a GenAI application?
 
 A) Evaluation uses live traffic; monitoring uses a curated dataset  
-B) Evaluation runs on a curated dataset that can include ground truth before release; monitoring scores a sample of live traces after release, mostly without ground truth  
-C) Evaluation and monitoring must use different scorers  
+B) Evaluation and monitoring must use different scorers  
+C) Evaluation runs on a curated dataset that can include ground truth before release; monitoring scores a sample of live traces after release, mostly without ground truth  
 D) Monitoring replaces the need for evaluation once an app is deployed  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Curated dataset before release vs sampled live traces after.
 >
@@ -87,13 +87,13 @@ D) Monitoring replaces the need for evaluation once an app is deployed
 
 **Question**: Documents are chunked to at most 512 tokens, and cost and latency matter more than quality. Which embedding model choice fits best?
 
-A) Context 512, 0.13 GB model, 384 dimensions  
+A) Context 32768, 14 GB model, 4096 dimensions  
 B) Context 514, 0.44 GB model, 768 dimensions  
 C) Context 2048, 11 GB model, 2560 dimensions  
-D) Context 32768, 14 GB model, 4096 dimensions  
+D) Context 512, 0.13 GB model, 384 dimensions  
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > The 512-token, smallest, lowest-dimension model.
 >
@@ -105,13 +105,13 @@ D) Context 32768, 14 GB model, 4096 dimensions
 
 **Question**: An agent must run natural-language analytics over governed workspace data. Databricks already provides a managed MCP server for this. What should the engineer do?
 
-A) Build a custom MCP server on Databricks Apps that calls the SQL API  
-B) Use the Databricks-provided (managed) Genie MCP server  
+A) Use the Databricks-provided (managed) Genie MCP server  
+B) Build a custom MCP server on Databricks Apps that calls the SQL API  
 C) Register the Databricks SQL REST API as an external MCP server  
 D) Give the agent a personal access token and let it call REST endpoints directly  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Use the managed MCP server.
 >
@@ -124,12 +124,12 @@ D) Give the agent a personal access token and let it call REST endpoints directl
 **Question**: A third-party search service ships its own MCP server that requires an API key. Which integration minimises maintenance and protects the key?
 
 A) Hard-code the key in the agent's Python file  
-B) Put the key in the system prompt so the model can pass it to the tool  
-C) Register the server as an external MCP and keep the key in a governed secret store or Unity Catalog connection referenced by the configuration  
+B) Register the server as an external MCP and keep the key in a governed secret store or Unity Catalog connection referenced by the configuration  
+C) Put the key in the system prompt so the model can pass it to the tool  
 D) Rebuild the vendor's tools inside a custom MCP server on Databricks Apps  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > Register it as an external MCP with the key in a governed store.
 >
@@ -142,12 +142,12 @@ D) Rebuild the vendor's tools inside a custom MCP server on Databricks Apps
 **Question**: A deployed agent queries tables protected by row filters, and each employee must see only their own region's rows. Which authentication method should the agent use for those queries?
 
 A) Automatic authentication passthrough  
-B) On-behalf-of-user authentication with declared API scopes  
-C) A service principal token stored as a secret  
+B) A service principal token stored as a secret  
+C) On-behalf-of-user authentication with declared API scopes  
 D) The workspace admin's personal access token  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > On-behalf-of-user authentication.
 >
@@ -159,13 +159,13 @@ D) The workspace admin's personal access token
 
 **Question**: An agent works in a notebook but returns permission errors on Vector Search after deployment with automatic authentication passthrough. What is the most likely cause?
 
-A) The index was not declared in `resources` when the model was logged  
+A) MLflow autologging was enabled  
 B) The endpoint uses pay-per-token pricing  
 C) The model was registered in Unity Catalog  
-D) MLflow autologging was enabled  
+D) The index was not declared in `resources` when the model was logged  
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: D**
 >
 > The index was missing from `resources`.
 >
@@ -177,13 +177,13 @@ D) MLflow autologging was enabled
 
 **Question**: A team must summarise 2 million support tickets every night and write the results to a Delta table; nobody waits for individual answers. What is the most appropriate approach?
 
-A) Call a real-time agent endpoint once per ticket from a Python loop  
-B) Run `ai_query()` (or `ai_summarize`) over the ticket table in a scheduled job  
+A) Run `ai_query()` (or `ai_summarize`) over the ticket table in a scheduled job  
+B) Call a real-time agent endpoint once per ticket from a Python loop  
 C) Deploy a new provisioned-throughput endpoint per ticket batch  
 D) Use the Review App to process tickets  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > `ai_query()` or a task-specific AI Function in a scheduled job.
 >
@@ -214,12 +214,12 @@ D) Cache conversations in a Python global variable
 **Question**: Prompts must be updated in development, validated in staging, promoted to production after approval, keep full history, and support rollback. Which approach fits?
 
 A) Merge the staging branch into production after tests pass  
-B) Register prompts as MLflow prompt versions and promote them with aliases  
-C) Overwrite a JSON file on the CI runner on each run  
+B) Overwrite a JSON file on the CI runner on each run  
+C) Register prompts as MLflow prompt versions and promote them with aliases  
 D) Overwrite a Delta table of prompts on every deployment  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > MLflow prompt versions plus aliases.
 >
@@ -232,12 +232,12 @@ D) Overwrite a Delta table of prompts on every deployment
 **Question**: Support staff must ask questions grounded in internal PDFs through a web app that uses corporate sign-in, never exposes long-lived tokens in the browser, and respects each user's permissions. Which design meets all requirements?
 
 A) Embed a personal access token in the app's JavaScript and call the agent from the browser  
-B) Use a Databricks App whose backend calls the agent endpoint with the app's or the signed-in user's credentials  
+B) Copy the PDFs to a public bucket so the agent can read them without identity checks  
 C) Make the agent endpoint public and protect it with an API key in the front end  
-D) Copy the PDFs to a public bucket so the agent can read them without identity checks  
+D) Use a Databricks App whose backend calls the agent endpoint with the app's or the signed-in user's credentials  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > A Databricks App backend calls the agent.
 >
