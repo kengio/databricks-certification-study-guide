@@ -336,7 +336,7 @@ D) `foreachBatch` with MERGE on sensor_id
 - [Stream-Stream Joins](https://docs.databricks.com/structured-streaming/stream-stream-joins.html)
 - [Stateful Streaming](https://docs.databricks.com/structured-streaming/stateful-streaming.html)
 - [Watermarks](https://docs.databricks.com/structured-streaming/watermarks.html)
-- [Streaming Deduplication](https://docs.databricks.com/structured-streaming/dedup.html)
+- [Streaming Deduplication](https://docs.databricks.com/aws/en/structured-streaming/watermarks)
 
 ---
 
