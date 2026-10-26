@@ -65,7 +65,7 @@ The October 2025 exam guide lists four skills for this domain (Section 7 in the 
 - [Genie Agents documentation (official)](https://docs.databricks.com/aws/en/genie-agents/)
 - [Unity Catalog Basics (shared)](../../../shared/fundamentals/unity-catalog-basics.md)
 - [Unity Catalog cheat sheet (shared)](../../../shared/cheat-sheets/unity-catalog-quick-ref.md)
-- [Practice questions — Genie](../resources/practice-questions/06-genie-agents.md)
+- [Practice questions — Genie](../resources/practice-questions/04-genie-agents.md)
 
 > [!note]
 > Facts in this section were checked against the Databricks Genie Agents documentation on **October 26, 2026**. Genie changes quickly — check the [release notes](https://docs.databricks.com/aws/en/release-notes/product/) before relying on a limit or a UI label.
