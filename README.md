@@ -26,14 +26,14 @@ tags:
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="https://www.databricks.com/learn/certification"><img src="https://img.shields.io/badge/Databricks-Certifications-FF3621?logo=databricks&logoColor=white" alt="Databricks Certifications"></a>
-  <a href="./CHANGELOG.md"><img src="https://img.shields.io/badge/Refreshed-May%202026-success" alt="Refreshed: May 2026"></a>
-  <a href="https://delta.io/"><img src="https://img.shields.io/badge/Delta%20Lake-3.x-00ADD8" alt="Delta Lake"></a>
+  <a href="./CHANGELOG.md"><img src="https://img.shields.io/badge/Refreshed-Oct%202026-success" alt="Refreshed: Oct 2026"></a>
+  <a href="https://delta.io/"><img src="https://img.shields.io/badge/Delta%20Lake-4.x-00ADD8" alt="Delta Lake"></a>
   <a href="https://spark.apache.org/"><img src="https://img.shields.io/badge/Apache%20Spark-Powered-E25A1C?logo=apachespark&logoColor=white" alt="Apache Spark"></a>
   <a href="https://mlflow.org/"><img src="https://img.shields.io/badge/MLflow-Tracked-0194E2?logo=mlflow&logoColor=white" alt="MLflow"></a>
   <br>
   <a href="#"><img src="https://img.shields.io/badge/Unity%20Catalog-Governance-1B9CFC" alt="Unity Catalog"></a>
   <a href="#"><img src="https://img.shields.io/badge/Lakeflow-Jobs%20%26%20Pipelines-FF6F00" alt="Lakeflow"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Mosaic%20AI-Vector%20Search-4B0082" alt="Mosaic AI"></a>
+  <a href="#"><img src="https://img.shields.io/badge/AI%20Search-Genie%20Agents-4B0082" alt="AI Search and Genie Agents"></a>
   <a href="#"><img src="https://img.shields.io/badge/PySpark-Python-3776AB?logo=python&logoColor=white" alt="PySpark"></a>
   <a href="#"><img src="https://img.shields.io/badge/Obsidian-compatible-7C3AED?logo=obsidian&logoColor=white" alt="Obsidian compatible"></a>
   <a href="#"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome"></a>
