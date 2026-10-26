@@ -14,19 +14,23 @@ Simulate the real exam under timed conditions before your test date.
 
 | Detail | Value |
 | ------ | ----- |
-| Total Questions | 45 |
-| Time Limit | 90 minutes |
-| Passing Score | 70% (32 or more correct) |
+| Total Questions | 45 (the real exam has 59 scored questions) |
+| Time Limit | 90 minutes (the same ≈ 2 min/question pace as the real 120-minute exam) |
+| Self-scoring target | 70 % (32 or more correct). The real exam is pass / fail with no published passing score |
 | Format | Multiple choice, single correct answer |
 
 ## Domain Distribution
 
-| Domain | Weight | Questions |
+Questions are mapped to the September 2025 exam guide's three domains (per-question map in the [debrief](./debrief.md)):
+
+| Domain | Official weight | Questions in this mock |
 | ------ | ------ | --------- |
-| Advanced Feature Engineering | 20% | 9 |
-| Hyperparameter Optimization | 20% | 9 |
-| Model Production Lifecycle | 30% | 14 |
-| Model Governance & MLOps | 30% | 13 |
+| Model Development | 44 % | 23 |
+| ML Ops | 44 % | 15 |
+| Model Deployment | 12 % | 7 |
+
+> [!note]
+> This mock predates the October 2026 refresh, so it under-samples some 2025-guide skills: Spark ML pipelines, Optuna / Ray, the pandas Function API, testing, bundles, online tables, and rollout strategies. Pair it with the `*(2026 guide)*` questions in the [practice question banks](../practice-questions/README.md).
 
 ## How to Take This Exam
 

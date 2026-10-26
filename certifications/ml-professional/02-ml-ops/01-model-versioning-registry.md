@@ -451,4 +451,4 @@ service principals.
 
 ---
 
-**[↑ Back to Model Production Lifecycle](./README.md) | [Next: Model Serving and Deployment](../03-model-deployment/01-model-serving-deployment.md) →**
+**[↑ Back to ML Ops](./README.md) | [Next: Model Lifecycle Orchestration →](./02-model-lifecycle-orchestration.md)**

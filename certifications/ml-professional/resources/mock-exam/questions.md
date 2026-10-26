@@ -113,14 +113,14 @@ D) `event_time_col`
 **A feature requires < 10ms retrieval latency for real-time serving. Where should the feature values be published?**
 
 A) Delta Lake offline store only
-B) Online store (Redis-backed)
+B) Online store (online table / Online Feature Store)
 C) Parquet files in ADLS
 D) MLflow artifact store
 
 > [!success]- Answer
-> **Correct Answer: B) Online store (Redis-backed)**
+> **Correct Answer: B) Online store (online table / Online Feature Store)**
 >
-> The online store provides millisecond-latency access required for real-time inference. The Delta offline store is suitable for batch and training, not real-time serving.
+> The online store provides millisecond-latency access required for real-time inference. The Delta offline store is suitable for batch and training, not real-time serving. The exam guide calls this an **online table**. On the current platform it is a Lakebase-backed Databricks Online Feature Store, populated with `fe.publish_table(...)`.
 
 ---
 
@@ -325,14 +325,14 @@ D) `mlflow://ml_catalog.fraud_models.fraud_classifier:champion`
 **A serving endpoint with `scale_to_zero_enabled=True` hasn't received traffic for 45 minutes. What happens to the next request?**
 
 A) The request fails with a 503 error
-B) The request succeeds after a 60-120 second cold start delay
+B) The request succeeds after a cold-start delay while capacity is restored
 C) The request returns from cache immediately
 D) Auto-scaling resumes within 1 second
 
 > [!success]- Answer
-> **Correct Answer: B) The request succeeds after a 60-120 second cold start delay**
+> **Correct Answer: B) The request succeeds after a cold-start delay while capacity is restored**
 >
-> Scale-to-zero deprovisions compute when idle. The first request after idle must wait for cluster startup, typically 60-120 seconds.
+> Scale-to-zero deprovisions compute when idle. The first request after idle pays a cold start (additional latency) while capacity is provisioned, and capacity is not guaranteed while scaled to zero — which is why Databricks does not recommend scale to zero for production endpoints.
 
 ---
 

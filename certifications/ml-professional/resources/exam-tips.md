@@ -6,11 +6,12 @@ tags: [exam-tips, ml-professional, certification]
 
 ## Exam Format
 
-- **Questions**: 60 multiple-choice
-- **Duration**: 120 minutes (2 hours)
-- **Passing Score**: 70%
-- **Languages**: Python and Scala code examples
-- **Format**: Proctored online exam
+- **Questions**: 59 scored multiple-choice, plus up to 10 unscored items you can't identify
+- **Duration**: 120 minutes (time for the unscored items is already included)
+- **Passing Score**: Not published; the result is pass / fail
+- **Language**: English; code in stems is Python
+- **Format**: Online proctored or at a test center; no test aides
+- **Exam guide**: [September 30, 2025 outline (PDF re-issued Oct 2026)](https://www.databricks.com/sites/default/files/2026-10/databricks-certified-machine-learning-professional-exam-guide-august.pdf)
 
 ## Time Management
 
@@ -31,17 +32,26 @@ tags: [exam-tips, ml-professional, certification]
 
 ## Topic Priority by Weight
 
-| Priority | Topic | Weight | Study Time |
-|----------|-------|--------|------------|
-| 1 | Model Lifecycle Management | 30% | 30% |
-| 2 | Model Governance & MLOps | 30% | 30% |
-| 3 | Hyperparameter Optimization | 20% | 20% |
-| 4 | Advanced Feature Engineering | 20% | 20% |
+| Priority | Domain | Weight | Exam-guide sections |
+|----------|--------|--------|---------------------|
+| 1 | Model Development | 44 % | Using Spark ML · Scaling and Tuning · Advanced MLflow Usage · Advanced Feature Store Concepts |
+| 1 | ML Ops | 44 % | Model Lifecycle Management · Validation Testing · Environment Architectures · Automated Retraining · Drift Detection and Lakehouse Monitoring |
+| 3 | Model Deployment | 12 % | Deployment Strategies · Custom Model Serving |
+
+Model Development and ML Ops each carry about 26 of the 59 questions, and Model Deployment about 7. Split your study time roughly 45 / 45 / 10.
 
 ## Key Topics to Master
 
 ### Must Know (High Frequency)
 
+- [ ] Spark ML pipeline: `StringIndexer` → `OneHotEncoder` → `VectorAssembler` → estimator; estimators `fit()`, transformers `transform()`
+- [ ] Optuna distributed with MLflow: `MlflowStorage(experiment_id=...)` + `MlflowSparkStudy(...).optimize(objective, n_trials, n_jobs)`
+- [ ] Ray on Databricks: `setup_ray_cluster(...)` then Ray Tune; Spark = data parallelism, Ray = task parallelism
+- [ ] `groupBy().applyInPandas(func, schema)` for one model per group (each group must fit in memory)
+- [ ] Nested runs: parent experiment → child per hyperparameter set (aggregated CV metrics) → final-model run
+- [ ] Point-in-time lookups: time series feature table + `FeatureLookup(timestamp_lookup_key=...)`
+- [ ] Unit tests (`pytest`, functions in Python files) vs integration tests (staging, all pipelines)
+- [ ] Bundles (DABs) define `experiments`, `registered_models`, `model_serving_endpoints` per target
 - [ ] `mlflow.set_registry_uri("databricks-uc")` — required before UC registry operations
 - [ ] Model aliases vs stages — UC uses `champion`/`challenger` aliases; stages are workspace-registry only
 - [ ] `pyfunc.spark_udf()` for batch inference — runs on executors, not just the driver
@@ -54,7 +64,14 @@ tags: [exam-tips, ml-professional, certification]
 
 ### Should Know (Medium Frequency)
 
-- [ ] `traffic_config` for canary deployments — percentage-based traffic splitting
+- [ ] `traffic_config` for canary deployments — percentage-based traffic splitting, ramped while monitoring
+- [ ] Blue-green (atomic switch) vs canary (gradual) for high-traffic endpoints; route optimization set at creation
+- [ ] MLflow Deployments SDK: `get_deploy_client("databricks").predict(endpoint=..., inputs=...)`
+- [ ] Online tables via Databricks SDK (`w.online_tables.create_and_wait(...)`) — and their Lakebase replacement
+- [ ] On-demand features: `FeatureFunction` over a UC Python UDF; Feature Serving with `create_feature_spec`
+- [ ] Drift metrics table: numeric (`ks_test`, `wasserstein_distance`, `population_stability_index`) vs categorical (`chi_squared_test`, `tv_distance`, `l_infinity_distance`, `js_distance`); `BASELINE` vs `CONSECUTIVE`
+- [ ] Custom metrics (aggregate / derived / drift), `slicing_exprs`, granularities
+- [ ] Endpoint health: latency, request rate, error rate, CPU, memory
 - [ ] Shadow vs canary vs A/B testing — know the distinction for each deployment pattern
 - [ ] `system.access.audit` — Unity Catalog audit log table for governance queries
 - [ ] SHAP values for regulatory explainability — model-agnostic feature attribution
@@ -63,9 +80,13 @@ tags: [exam-tips, ml-professional, certification]
 
 ### Good to Know (Lower Frequency)
 
-- [ ] `ChatModel` interface for custom LLM wrappers in MLflow
-- [ ] `agents.deploy()` for deploying compound AI systems
+- [ ] Vertical vs horizontal scaling; data vs model parallelism (DDP vs FSDP / DeepSpeed ZeRO)
+- [ ] Deploy code vs deploy models; dev / staging / prod catalogs
+- [ ] Selection metric for retraining: log loss when actions depend on probability thresholds
 - [ ] Fairness metrics: equalized odds, demographic parity, calibration
+
+> [!note]
+> GenAI agent topics (`ChatModel`, `agents.deploy()`) aren't in the ML Professional exam guide; they belong to the GenAI Engineer Associate track. Agents deployed to Model Serving moved to a Legacy docs section on Oct 5, 2026 ([October 2026 release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/october)).
 
 ## Common Question Patterns
 
@@ -117,6 +138,12 @@ to store the model in Unity Catalog?"
 | PSI interpretation | PSI 0.15 = must retrain | PSI 0.10–0.20 = investigate, not necessarily retrain |
 | Inference tables | Enabling after deployment | Must be configured before production traffic starts |
 | LHM monitor type | TimeSeries for inference endpoint | Use InferenceLog for endpoints (has prediction/label columns) |
+| Optuna distribution | `study.optimize(n_jobs=16)` "distributes" trials | Plain `n_jobs` = driver threads; use `MlflowSparkStudy` (Spark executors) |
+| Rollout | Send 100 % to the new served entity at once | Canary: second served entity, increase traffic incrementally while monitoring |
+| Route optimization | Turn it on for an existing endpoint | Only at endpoint creation; needs OAuth + dedicated URL |
+| Querying endpoints | Token / inputs as query-string parameters | Bearer header + JSON body, or MLflow Deployments `predict()` |
+| Retraining metric | Accuracy / AUROC for threshold-driven actions | Log loss measures probability calibration |
+| Integration tests | Re-run everything after a hyperparameter change | Training, evaluation, deployment; feature engineering unchanged |
 
 ## Quick Reference Numbers
 
@@ -128,7 +155,8 @@ to store the model in Unity Catalog?"
 | Disparate impact minimum (four-fifths rule) | 0.80 |
 | KS test significance level | p < 0.05 |
 | VACUUM default retention | 168 hours |
-| Scale-to-zero cold start | 60–120 seconds |
+| Workload size concurrency | Small 0–4, Medium 8–16, Large 16–64 |
+| Scored questions / time | 59 / 120 min (≈ 2 min each) |
 
 ## Day Before Exam
 
@@ -177,10 +205,11 @@ to store the model in Unity Catalog?"
 
 ### Essential (Do These)
 
-1. Databricks Academy — Machine Learning Professional pathway
-2. Official documentation for Feature Engineering, MLflow, and Lakehouse Monitoring
-3. Practice exams and scenario-based questions
-4. Hands-on labs in Databricks workspace (model registry, feature store, LHM)
+1. The [exam guide PDF](https://www.databricks.com/sites/default/files/2026-10/databricks-certified-machine-learning-professional-exam-guide-august.pdf) and its [AI Prep Guide](https://www.databricks.com/sites/default/files/2026-06/ai-prep-guide-any-databricks-certification.pdf)
+2. Databricks Academy: *Machine Learning at Scale* and *Advanced Machine Learning Operations*
+3. Official documentation for Spark ML, Optuna / Ray, Feature Engineering, MLflow, Model Serving, and data profiling (Lakehouse Monitoring)
+4. Practice exams and scenario-based questions
+5. Hands-on work in [Databricks Free Edition](https://docs.databricks.com/aws/en/getting-started/free-edition) (Community Edition retired Jan 1, 2026) or a company workspace. Free Edition has no GPU serving, provisioned throughput, or online tables
 
 ### Helpful (If Time Permits)
 
@@ -191,8 +220,8 @@ to store the model in Unity Catalog?"
 
 ### Skip
 
-- Outdated content (pre-2024 MLflow API)
-- Non-Databricks Spark ML content unrelated to exam domains
+- Outdated content (pre-2024 MLflow API, workspace Model Registry stages, `FeatureStoreClient`-only examples)
+- Spark ML algorithms in depth beyond pipelines, estimators / transformers, tuning, and evaluation
 - Deep dives on rarely tested topics
 
 ## Final Checklist

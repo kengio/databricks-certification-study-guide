@@ -439,4 +439,4 @@ Review the complete pre-exam checklist in the certification resources folder bef
 
 ---
 
-**[← Previous: Governance Frameworks](./05-governance-frameworks.md) | [↑ Back to Model Governance & MLOps](./README.md)**
+**[← Previous: Governance Frameworks](./05-governance-frameworks.md) | [↑ Back to ML Ops](./README.md) | [Next: Validation Testing →](./07-validation-testing.md)**

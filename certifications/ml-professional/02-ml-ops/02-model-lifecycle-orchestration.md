@@ -52,12 +52,12 @@ guarantees that model training never starts if data validation fails.
 
 ```python
 from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.compute import ClusterSpec
 from databricks.sdk.service.jobs import (
     Task,
     NotebookTask,
     PythonWheelTask,
     JobCluster,
-    ClusterSpec,
     TaskDependency,
 )
 
@@ -202,6 +202,25 @@ def run_evaluation_gate(
 Raising an exception at the end of the gate notebook when it returns `False` causes the Databricks
 Job task to fail, which blocks all downstream tasks from running via the `ALL_SUCCESS` default.
 
+## Selecting the Top-Performing Model
+
+An automated retraining pipeline needs a **pre-agreed selection rule**. Otherwise "best" silently means "highest accuracy". The selection metric must reflect **how the model's output is used**:
+
+| How predictions drive decisions | Selection metric | Why |
+| :--- | :--- | :--- |
+| Actions fire at **probability thresholds** (for example "freeze the card at ≥ 95 % fraud confidence") | **Log loss** (or Brier score) | Penalises poorly **calibrated** probabilities. A model can rank well (high AUROC) yet be over-confident at 95 % |
+| Only the **ranking** matters (top-k review queue, prioritisation) | **AUROC / AUPRC** | Threshold-independent ranking quality; AUPRC under heavy imbalance |
+| A single hard **label** with imbalanced classes and balanced error costs | **F1** (or recall at fixed precision) | Accuracy is misleading when 99 % of rows are negative |
+| Asymmetric **business costs** of false positives vs false negatives | Expected cost / custom metric | Encodes the business trade-off directly |
+| Continuous target | **RMSE / MAE** (R² for explained variance) | RMSE penalises large errors more heavily; MAE is robust to outliers |
+
+Strategy for choosing among retrained candidates:
+
+1. **Same data, same metric.** Evaluate the challenger and the current champion (loaded by alias, for example `models:/prod.fraud.model@champion`) on the **same recent hold-out set**.
+2. **Primary metric + guardrails.** Promote only when the primary metric improves by a minimum margin **and** guardrail metrics (latency, model size, fairness slices, calibration) don't regress.
+3. **Log the decision.** Record champion and challenger metrics and the decision in MLflow. Assign `Challenger` before deployment and `Champion` only after deployment checks pass.
+4. **Avoid hold-out overfitting.** Refresh the evaluation window regularly, and don't tune hyperparameters against the promotion hold-out set.
+
 ## Retraining Triggers
 
 Three trigger patterns cover the majority of production ML use cases:
@@ -246,10 +265,45 @@ def trigger_retraining_job(
 The `token` here must be a **service principal** token, not a personal access token, so the job
 runs under a non-human identity with only the permissions it needs.
 
+A fully declarative alternative keeps the monitor and the retraining job in the same bundle. A monitoring-check task reads the monitor's metric table and fails or exits, which gates the retraining tasks downstream. The Declarative Automation Bundles resource docs show this pattern: a `quality_monitors` resource with an `inference_log` profile and a daily schedule, plus a `retraining_job` whose first task checks a monitored metric (`r2_score`) for violations ([bundle resources](https://docs.databricks.com/aws/en/dev-tools/bundles/resources)).
+
+```yaml
+resources:
+  quality_monitors:
+    predictions_monitor:
+      table_name: ${bundle.target}.fraud.predictions
+      output_schema_name: ${bundle.target}.fraud
+      assets_dir: /Workspace/Shared/fraud_monitoring
+      inference_log:
+        granularities: [1 day]
+        model_id_col: model_version
+        prediction_col: prediction
+        label_col: is_fraud
+        problem_type: PROBLEM_TYPE_CLASSIFICATION
+        timestamp_col: inference_timestamp
+      schedule:
+        quartz_cron_expression: 0 0 6 * * ?   # refresh metrics daily
+        timezone_id: UTC
+  jobs:
+    retraining_job:
+      name: ${bundle.target}-fraud-monitoring-retraining
+      tasks:
+        - task_key: metric_violation_check      # fails/exits if log_loss or drift breaches the threshold
+          notebook_task:
+            notebook_path: ../monitoring/check_metric_violation.py
+        - task_key: retrain
+          depends_on:
+            - task_key: metric_violation_check
+          notebook_task:
+            notebook_path: ../training/train.py
+```
+
+Performance-degradation triggers work the same way. The check task queries model-quality columns in the profile metrics table, such as `log_loss` or `accuracy_score` per window, instead of drift statistics. See [Model Monitoring](./03-model-monitoring-observability.md#setting-up-alerts).
+
 ### Data-Volume Triggered Retraining
 
-When new labeled data accumulates past a threshold (e.g., 50,000 new labeled rows), a Delta Live
-Tables pipeline or a lightweight monitoring job counts new records and triggers training. This is
+When new labeled data accumulates past a threshold (e.g., 50,000 new labeled rows), a Lakeflow
+Spark Declarative Pipelines pipeline (formerly Delta Live Tables) or a lightweight monitoring job counts new records and triggers training. This is
 useful for models where additional labeled data produces meaningful accuracy gains, such as fraud
 detection where new fraud labels arrive continuously.
 
@@ -263,8 +317,10 @@ Production ML pipelines should use separate workspaces for each environment:
 dev workspace → staging workspace → prod workspace
 ```
 
-Model registry scopes are separate per workspace. A model trained in dev is tested in staging, then
-the production pipeline is triggered to train the final version in prod from the same code commit.
+With Unity Catalog, each environment registers models in its own catalog (`dev.*`, `staging.*`,
+`prod.*`) rather than in a per-workspace registry. The code is tested in staging, then the production
+pipeline trains the final version in prod from the same code commit (the **deploy code** pattern; see
+[Environments and Bundles](./08-environments-and-bundles.md)).
 
 ### GitHub Actions Integration
 
@@ -327,7 +383,7 @@ A mature ML pipeline has multiple testing layers, each catching a different clas
 | Regression tests | New model performs at least as well as previous | Before promotion |
 
 Unit tests and data validation failures should abort the pipeline immediately and cheaply, before
-expensive GPU training runs. Model validation failures should block promotion without rolling back
+expensive GPU training runs. [Validation Testing](./07-validation-testing.md) covers writing the unit tests, placing each test type in the right environment, and designing the end-to-end integration test. Model validation failures should block promotion without rolling back
 the serving endpoint. Integration test failures should trigger an automatic rollback.
 
 ## Workflow Best Practices
@@ -455,6 +511,14 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 **Scenario:** A scheduled retraining job trains on stale or corrupted upstream data and registers a model version that performs worse than the current champion, but the pipeline promotes it anyway.
 **Fix:** Always include an evaluation gate task that loads the current `@champion` and compares it against the challenger on a held-out test set. Raise an exception (halting the DAG) if the challenger does not exceed the champion by a configurable improvement threshold (e.g., 0.5% AUC). Log comparison metrics to MLflow for audit.
 
+## Exam Tips
+
+> [!tip]
+>
+> - Retraining "triggered by drift detection or performance degradation" means a monitor (Lakehouse Monitoring / data profiling) metric check gates or triggers the retraining job, through a SQL alert, a check task, or the Jobs `run-now` API.
+> - Selection metric follows the decision: threshold-on-probability actions → **log loss**; ranking → AUROC; imbalanced hard labels → F1; never plain accuracy under heavy imbalance.
+> - Compare challenger vs champion on the **same** hold-out set, and reference the champion through its **alias**.
+
 ## Key Takeaways
 
 - **Multi-task Job = DAG**: Tasks declare `depends_on`; default `run_if: ALL_SUCCESS` means the pipeline halts automatically when any gate fails
@@ -471,7 +535,16 @@ the serving endpoint. Integration test failures should trigger an automatic roll
 - [A/B Testing & Canary Deployments](../03-model-deployment/02-ab-testing-canary.md)
 - [Model Monitoring & Observability](../02-ml-ops/03-model-monitoring-observability.md)
 - [Hyperparameter Optimization](../01-model-development/README.md)
+- [Validation Testing](./07-validation-testing.md)
+- [Environments and Bundles](./08-environments-and-bundles.md)
+
+## Official Documentation
+
+- [MLOps workflows on Databricks](https://docs.databricks.com/aws/en/machine-learning/mlops/mlops-workflow)
+- [Model deployment patterns](https://docs.databricks.com/aws/en/machine-learning/mlops/deployment-patterns)
+- [Declarative Automation Bundles resources (quality monitor + retraining job example)](https://docs.databricks.com/aws/en/dev-tools/bundles/resources)
+- [Profile alerts](https://docs.databricks.com/aws/en/lakehouse-monitoring/monitor-alerts)
 
 ---
 
-**[← Previous: A/B Testing and Canary Deployments](../03-model-deployment/02-ab-testing-canary.md) | [↑ Back to Model Production Lifecycle](./README.md)**
+**[← Previous: Model Versioning and Registry](./01-model-versioning-registry.md) | [↑ Back to ML Ops](./README.md) | [Next: Model Monitoring and Observability →](./03-model-monitoring-observability.md)**

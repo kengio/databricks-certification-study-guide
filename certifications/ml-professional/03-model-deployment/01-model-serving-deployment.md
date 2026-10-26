@@ -52,45 +52,58 @@ Databricks Model Serving manages the compute, autoscaling, and health-check infr
 you focus on the model. Under the hood, each endpoint runs the model inside a containerized
 environment derived from the model's `MLmodel` metadata and `pip_requirements`.
 
-Create an endpoint with the Python SDK (the UI also works but is not scriptable):
+You can deploy a custom model in three ways: the **Serving UI** (Serving → Create serving endpoint), the **REST API** (`POST /api/2.0/serving-endpoints`), or an SDK. Two SDKs work: the **Databricks SDK** (`WorkspaceClient().serving_endpoints`) and the **MLflow Deployments SDK** ([Create custom model serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints)).
 
 ```python
+# Databricks SDK
 from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.serving import (
-    EndpointCoreConfigInput,
-    ServedModelInput,
-    ServedModelInputWorkloadSize,
-)
+from databricks.sdk.service.serving import EndpointCoreConfigInput, ServedEntityInput
 
 client = WorkspaceClient()
 
 endpoint = client.serving_endpoints.create(
     name="fraud-classifier-endpoint",
     config=EndpointCoreConfigInput(
-        served_models=[
-            ServedModelInput(
-                model_name="ml_catalog.fraud_models.fraud_classifier",
-                model_version="3",
-                workload_size=ServedModelInputWorkloadSize.SMALL,
-                scale_to_zero_enabled=True,
-                environment_vars={"ENABLE_MLFLOW_TRACING": "true"},
+        served_entities=[
+            ServedEntityInput(
+                entity_name="ml_catalog.fraud_models.fraud_classifier",   # UC model
+                entity_version="3",
+                workload_size="Small",
+                scale_to_zero_enabled=False,
             )
         ]
     ),
 )
 ```
 
-**Workload sizes** map to underlying compute:
+```python
+# MLflow Deployments SDK: same endpoint, MLflow-native client
+import mlflow
+from mlflow.deployments import get_deploy_client
 
-| Size | vCPUs | Memory | Suitable for |
-| :--- | :--- | :--- | :--- |
-| `SMALL` | 4 | 16 GB | Lightweight sklearn / XGBoost models |
-| `MEDIUM` | 8 | 32 GB | Mid-sized neural networks, feature-heavy models |
-| `LARGE` | 16 | 64 GB | Large PyTorch / TF models, embedding generation |
+mlflow.set_registry_uri("databricks-uc")
+deploy_client = get_deploy_client("databricks")
 
-**`scale_to_zero_enabled=True`** shuts down compute after a configurable idle period. This
-reduces cost for low-traffic endpoints but introduces a **cold-start latency of 60-120 seconds**
-on the first request after the endpoint has scaled to zero — a common exam question.
+deploy_client.create_endpoint(
+    name="fraud-classifier-endpoint",
+    config={
+        "served_entities": [{
+            "entity_name": "ml_catalog.fraud_models.fraud_classifier",
+            "entity_version": "3",
+            "workload_size": "Small",
+            "scale_to_zero_enabled": False,
+        }]
+    },
+)
+# Later changes: deploy_client.update_endpoint_config(endpoint="fraud-classifier-endpoint", config={...})
+```
+
+> [!note]
+> Older examples (including some later in this guide) use `served_models` / `ServedModelInput` with `model_name` / `model_version`. Current Databricks docs use **`served_entities`** / `ServedEntityInput` with `entity_name` / `entity_version`. Traffic routes still reference the served model **name** through `served_model_name`.
+
+**Workload size** ("Compute scale-out" in the UI) sets how many requests a served model can process **at the same time**: **Small** handles 0–4 concurrent requests, **Medium** 8–16, and **Large** 16–64. Estimate the requirement as concurrent requests ≈ QPS × model execution time. Concurrency can also be set explicitly with `min_provisioned_concurrency` / `max_provisioned_concurrency` (multiples of 4) ([Create custom model serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints)).
+
+**`scale_to_zero_enabled=True`** shuts down compute when the endpoint is idle. It reduces cost for low-traffic endpoints, but the first request afterwards pays a **cold start** (additional latency while capacity is restored). Databricks says scale to zero "is not recommended for production endpoints, as capacity is not guaranteed when scaled to zero."
 
 **Endpoint states** you need to recognize:
 
@@ -101,9 +114,23 @@ on the first request after the endpoint has scaled to zero — a common exam que
 
 ## Querying a REST Endpoint
 
-The endpoint exposes a single `/invocations` path that accepts JSON with one of two payload
-schemas. The `dataframe_records` format is the most common and is what the MLflow pyfunc flavor
-expects by default.
+The simplest SDK-based client is the **MLflow Deployments SDK** (MLflow 2.9+). `predict()` takes the endpoint name and the inputs, and handles authentication and JSON payload formatting for you ([Query serving endpoints for custom models](https://docs.databricks.com/aws/en/machine-learning/model-serving/score-custom-model-endpoints)):
+
+```python
+import mlflow.deployments
+
+client = mlflow.deployments.get_deploy_client("databricks")
+response = client.predict(
+    endpoint="fraud-classifier-endpoint",
+    inputs={"dataframe_split": {
+        "columns": ["amount", "merchant_category", "hour_of_day"],
+        "data": [[250.0, "online", 2], [15.0, "grocery", 14]],
+    }},
+)
+print(response["predictions"])
+```
+
+Over plain REST, the endpoint exposes `POST https://<workspace>/serving-endpoints/<endpoint-name>/invocations`. Send the token in the `Authorization: Bearer` **header**, never in the query string, and put the inputs in the JSON **body**. Accepted body keys are `dataframe_split` (recommended), `dataframe_records`, and, for tensor inputs, `instances` (row format) or `inputs` (columnar). SQL users can call the endpoint with `ai_query`. That's a SQL function, not a Python SDK method.
 
 ```python
 import json
@@ -157,9 +184,10 @@ payload_split = {
 response = requests.post(url, headers=headers, data=json.dumps(payload_split))
 ```
 
-Use `dataframe_records` when building payloads dynamically from dicts. Use `dataframe_split`
-when minimizing payload size for wide feature vectors matters — the column names are sent once
-rather than repeated for every row.
+Use `dataframe_records` when building payloads dynamically from dicts (note that it doesn't guarantee column order). Use `dataframe_split`, the documented recommendation, when payload size and column order matter: the column names are sent once rather than repeated for every row.
+
+> [!note]
+> Endpoints created with **route optimization** use a dedicated URL and accept only Databricks **OAuth** tokens, not personal access tokens. See [A/B Testing and Canary Deployments](./02-ab-testing-canary.md#route-optimization-for-high-traffic-endpoints).
 
 ## Batch Scoring with spark_udf
 
@@ -271,6 +299,7 @@ class FraudClassifierWithPreprocessing(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         """Called once when the model is loaded — good place for expensive initialization."""
         import joblib
+        # Trusted artifacts packaged into this model by our own training run
         self.model = joblib.load(context.artifacts["model_path"])
         self.scaler = joblib.load(context.artifacts["scaler_path"])
 
@@ -287,24 +316,36 @@ class FraudClassifierWithPreprocessing(mlflow.pyfunc.PythonModel):
 # Paths to pre-saved artifacts that will be bundled with the model
 
 artifacts = {
-    "model_path": "/local/model.pkl",
-    "scaler_path": "/local/scaler.pkl",
+    "model_path": "/Volumes/ml_catalog/fraud_models/artifacts/model.pkl",
+    "scaler_path": "/Volumes/ml_catalog/fraud_models/artifacts/scaler.pkl",
 }
+
+from mlflow.models import infer_signature
+
+input_example = X_sample.head(5)                      # raw input columns callers will send
+signature = infer_signature(
+    input_example,
+    pd.DataFrame({"fraud_score": [0.1] * 5, "is_fraud": [0] * 5}),
+)
+
+mlflow.set_registry_uri("databricks-uc")              # register in Unity Catalog
 
 with mlflow.start_run():
     mlflow.pyfunc.log_model(
-        artifact_path="fraud_model",
+        name="fraud_model",                           # MLflow 3 (replaces artifact_path)
         python_model=FraudClassifierWithPreprocessing(),
-        artifacts=artifacts,
+        artifacts=artifacts,                          # custom artifacts packaged with the model
+        signature=signature,                          # required for Unity Catalog registration
+        input_example=input_example,
         pip_requirements=["scikit-learn==1.3.0", "joblib==1.3.0"],
         registered_model_name="ml_catalog.fraud_models.fraud_pyfunc",
     )
 ```
 
 `load_context()` is called once at model load time — put expensive initialization there, not in
-`predict()`. The `artifacts` dict maps logical names to local file paths; MLflow copies these
+`predict()`. The `artifacts` dict maps logical names to file URIs; MLflow copies these
 files into the model artifact directory so they are available at serving time via
-`context.artifacts["model_path"]`.
+`context.artifacts["model_path"]`. Unity Catalog requires a **signature** to register a model ([Custom models](https://docs.databricks.com/aws/en/machine-learning/model-serving/custom-models)). Once registered, the version can be served with any of the three deployment methods above.
 
 ## Traffic Splitting for Canary Deployments
 
@@ -315,40 +356,36 @@ creation.
 
 ```python
 from databricks.sdk.service.serving import (
-    EndpointCoreConfigInput,
-    ServedModelInput,
-    ServedModelInputWorkloadSize,
-    TrafficConfig,
     Route,
+    ServedEntityInput,
+    TrafficConfig,
 )
 
 # Update an existing endpoint to split traffic 90/10
 
 client.serving_endpoints.update_config(
     name="fraud-classifier-endpoint",
-    config=EndpointCoreConfigInput(
-        served_models=[
-            ServedModelInput(
-                name="champion",
-                model_name="ml_catalog.fraud_models.fraud_classifier",
-                model_version="3",
-                workload_size=ServedModelInputWorkloadSize.SMALL,
-                scale_to_zero_enabled=False,
-            ),
-            ServedModelInput(
-                name="challenger",
-                model_name="ml_catalog.fraud_models.fraud_classifier",
-                model_version="4",
-                workload_size=ServedModelInputWorkloadSize.SMALL,
-                scale_to_zero_enabled=False,
-            ),
-        ],
-        traffic_config=TrafficConfig(
-            routes=[
-                Route(served_model_name="champion", traffic_percentage=90),
-                Route(served_model_name="challenger", traffic_percentage=10),
-            ]
+    served_entities=[
+        ServedEntityInput(
+            name="champion",
+            entity_name="ml_catalog.fraud_models.fraud_classifier",
+            entity_version="3",
+            workload_size="Small",
+            scale_to_zero_enabled=False,
         ),
+        ServedEntityInput(
+            name="challenger",
+            entity_name="ml_catalog.fraud_models.fraud_classifier",
+            entity_version="4",
+            workload_size="Small",
+            scale_to_zero_enabled=False,
+        ),
+    ],
+    traffic_config=TrafficConfig(
+        routes=[
+            Route(served_model_name="champion", traffic_percentage=90),
+            Route(served_model_name="challenger", traffic_percentage=10),
+        ]
     ),
 )
 ```
@@ -369,7 +406,7 @@ unfairly skew latency comparisons.
 
 | Pitfall | Consequence | Fix |
 | :--- | :--- | :--- |
-| `scale_to_zero_enabled=True` for latency-sensitive endpoints | 60-120 s cold start on first request | Disable scale-to-zero or pre-warm endpoint |
+| `scale_to_zero_enabled=True` for latency-sensitive endpoints | Cold start on the first request after idle; capacity not guaranteed | Disable scale-to-zero for production endpoints |
 | Using `load_model().predict()` on a Spark DataFrame | Runs on driver only — OOM for large DataFrames | Use `spark_udf()` for distributed scoring |
 | Missing `pip_requirements` in custom pyfunc | Serving container missing dependencies; `FAILED` state | Declare all non-standard packages explicitly |
 | Wrong `result_type` in `spark_udf()` | Type mismatch error in Spark executor | Match `result_type` to model output dtype |
@@ -406,15 +443,15 @@ unfairly skew latency comparisons.
 > is the most likely explanation?
 >
 > A) The model version was deleted from the registry overnight
-> B) The endpoint scaled to zero during the overnight idle period and requires 60-120 seconds to restart
+> B) The endpoint scaled to zero during the overnight idle period and the first request pays a cold start
 > C) MLflow tracing is enabled, which adds latency to every first request
 > D) The workload size `SMALL` is too small for the model and needs to be upgraded to `MEDIUM`
 >
 > **Correct Answer: B**
 >
 > With `scale_to_zero_enabled=True`, Databricks Model Serving terminates endpoint compute after
-> a configurable idle period. The next request triggers a cold start, which typically takes
-> 60-120 seconds as the container is provisioned and the model is loaded. The fix is to disable
+> an idle period. The next request triggers a cold start while capacity is provisioned and the
+> model is loaded; capacity is not guaranteed while scaled to zero. The fix is to disable
 > scale-to-zero (`scale_to_zero_enabled=False`) for latency-sensitive endpoints, accepting
 > higher idle cost in exchange for consistent response times.
 
@@ -438,11 +475,11 @@ unfairly skew latency comparisons.
 >
 > **Correct Answer: B**
 >
-> Databricks Model Serving pyfunc endpoints accept `dataframe_records` (list of row dicts) or
-> `dataframe_split` (column names + row arrays) as the top-level JSON key. The key `"inputs"`
-> is used by TensorFlow Serving and some custom flavors but is not the standard pyfunc format.
-> Options C and D use keys (`"records"`, `"data"`) that are not recognized by the pyfunc serving
-> handler and will return a 400 error.
+> For a model whose signature is a set of **named columns**, send a DataFrame payload:
+> `dataframe_records` (list of row dicts) or `dataframe_split` (column names + row arrays, the
+> documented recommendation). The `"inputs"` and `"instances"` keys are accepted for **tensor**
+> inputs, so a bare positional list under `"inputs"` doesn't match this column-based signature.
+> Options C and D use keys (`"records"`, `"data"`) that are not recognized at all and return a 400 error.
 
 ## Use Cases
 
@@ -458,17 +495,28 @@ unfairly skew latency comparisons.
 
 ### Model Serving Cold Start Latency
 
-**Scenario:** An endpoint with `scale_to_zero_enabled=True` takes 60-120 seconds to respond after an idle period, causing timeouts in the calling application.
-**Fix:** Disable scale-to-zero for latency-sensitive endpoints (`scale_to_zero_enabled=False`). If cost is a concern, set the minimum provisioned concurrency to 1 so at least one instance stays warm. For batch workloads that can tolerate startup delays, scale-to-zero is fine.
+**Scenario:** An endpoint with `scale_to_zero_enabled=True` responds slowly (cold start) after an idle period, causing timeouts in the calling application.
+**Fix:** Disable scale-to-zero for latency-sensitive and production endpoints (`scale_to_zero_enabled=False`). If cost is a concern, keep a small minimum provisioned concurrency (concurrency values are multiples of 4) so capacity stays warm. For dev/test endpoints that can tolerate startup delays, scale-to-zero is fine.
+
+## Exam Tips
+
+> [!tip]
+>
+> - "SDK-based approach that simplifies authentication and payload handling" means the MLflow Deployments `predict(endpoint=..., inputs=...)`. `ai_query` is SQL, and the MLflow Tracking client doesn't query endpoints.
+> - REST calls put the token in the `Authorization` header and the inputs in the JSON body, never in query-string parameters.
+> - Registering a custom PyFunc in Unity Catalog needs `mlflow.set_registry_uri("databricks-uc")`, a three-level name, and a **signature**. Custom files travel through the `artifacts` dict.
+> - "Compute scale-out" / workload size = concurrency (Small 0–4, Medium 8–16, Large 16–64).
 
 ## Key Takeaways
 
 - **Three deployment modes**: REST endpoint (<500 ms, real-time), batch `spark_udf` (distributed, minutes, high throughput), streaming UDF (seconds, continuous)
-- **Scale-to-zero cold start**: `scale_to_zero_enabled=True` saves idle cost but introduces 60–120 s latency on first post-idle request — disable for latency-sensitive endpoints
+- **Scale-to-zero cold start**: `scale_to_zero_enabled=True` saves idle cost but adds cold-start latency after idle and does not guarantee capacity — not recommended for production endpoints
 - **`spark_udf` vs `load_model().predict()`**: `spark_udf()` runs on executors (distributed); `.predict()` runs on the driver — use `.predict()` only on small DataFrames
-- **Payload formats**: `dataframe_records` (list of row dicts) or `dataframe_split` (column names + rows array) — not `"inputs"` or `"records"`
+- **Payload formats**: `dataframe_split` (recommended) or `dataframe_records` for tabular models; `instances` / `inputs` for tensor models; `"records"` / `"data"` are invalid
+- **Query clients**: MLflow Deployments SDK `get_deploy_client("databricks").predict(endpoint=..., inputs=...)` or REST `POST /serving-endpoints/<name>/invocations` with a Bearer header
 - **Custom pyfunc**: `load_context()` called once at load time for initialization; `predict()` receives and returns a pandas DataFrame or Series
-- **Workload sizes**: SMALL (4 vCPUs / 16 GB), MEDIUM (8/32), LARGE (16/64)
+- **Workload sizes** (concurrency): Small 0–4, Medium 8–16, Large 16–64 concurrent requests
+- **Deploy custom models** via the Serving UI, REST API, or SDK (Databricks SDK `serving_endpoints.create` / MLflow Deployments `create_endpoint`)
 - **Endpoint states to recognize**: READY, UPDATING (old config still serves), FAILED (model load error), NOT_READY (first provision)
 
 ## Related Topics
@@ -476,7 +524,15 @@ unfairly skew latency comparisons.
 - [Model Versioning & Registry](../02-ml-ops/01-model-versioning-registry.md)
 - [A/B Testing & Canary Deployments](./02-ab-testing-canary.md)
 - [Model Lifecycle Orchestration](../02-ml-ops/02-model-lifecycle-orchestration.md)
+- [Advanced MLflow Tracking](../01-model-development/10-advanced-mlflow-tracking.md) — custom pyfunc with request-time features
+
+## Official Documentation
+
+- [Deploy custom models with Model Serving](https://docs.databricks.com/aws/en/machine-learning/model-serving/custom-models)
+- [Create custom model serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints)
+- [Query serving endpoints for custom models](https://docs.databricks.com/aws/en/machine-learning/model-serving/score-custom-model-endpoints)
+- [Route optimization on serving endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/route-optimization)
 
 ---
 
-**[← Previous: Model Versioning and Registry](../02-ml-ops/01-model-versioning-registry.md) | [↑ Back to Model Production Lifecycle](./README.md) | [Next: A/B Testing and Canary Deployments](./02-ab-testing-canary.md) →**
+**[↑ Back to Model Deployment](./README.md) | [Next: A/B Testing and Canary Deployments →](./02-ab-testing-canary.md)**

@@ -49,14 +49,14 @@ D) `feature_names=["user_id", "event_time"]`
 **What is the relationship between the offline and online feature stores?**
 
 A) They are identical — same storage, different access patterns
-B) Offline (Delta) stores historical feature values; online (Redis-backed) stores the latest values for real-time serving
+B) Offline (Delta) stores historical feature values; online (low-latency store, such as a Lakebase-backed Online Feature Store) stores the latest values for real-time serving
 C) Online store is a cache of the offline store with 24-hour TTL
 D) They are separate systems with no automatic synchronization
 
 > [!success]- Answer
-> **Correct Answer: B) Offline (Delta) stores historical feature values; online (Redis-backed) stores the latest values for real-time serving**
+> **Correct Answer: B) Offline (Delta) stores historical feature values; online (low-latency store, such as a Lakebase-backed Online Feature Store) stores the latest values for real-time serving**
 >
-> The offline store (Delta Lake) holds all historical feature values for training and batch scoring. The online store holds the latest values for real-time inference. `publish_online_features()` syncs from offline to online.
+> The offline store (Delta Lake) holds all historical feature values for training and batch scoring. The online store holds the latest values for real-time inference. `fe.publish_table(...)` syncs from offline to online.
 
 ---
 
@@ -78,7 +78,7 @@ D) Point-in-time features will not work at serving time
 
 ## Question 5 *(Easy)*
 
-**`publish_online_features()` is called on a feature table. What does this do?**
+**`FeatureEngineeringClient.publish_table()` is called on a feature table. What does this do?**
 
 A) Creates a new version of the offline feature table
 B) Synchronizes the latest feature values from Delta (offline) to the online store
@@ -88,7 +88,7 @@ D) Registers the feature table in the UC registry
 > [!success]- Answer
 > **Correct Answer: B) Synchronizes the latest feature values from Delta (offline) to the online store**
 >
-> `publish_online_features()` pushes the latest feature values to the online (Redis-backed) store, making them available for real-time serving.
+> `fe.publish_table(online_store=..., source_table_name=..., online_table_name=...)` syncs feature values from the offline Delta table to the online store, making them available for low-latency serving. The default `publish_mode` is `TRIGGERED` (incremental, requires Change Data Feed); `CONTINUOUS` streams updates and `SNAPSHOT` does a full copy. Current Databricks Online Feature Stores run on Lakebase.
 
 ---
 

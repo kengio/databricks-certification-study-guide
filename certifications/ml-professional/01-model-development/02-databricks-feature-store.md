@@ -14,6 +14,9 @@ tags:
 
 Databricks Feature Store is an integrated feature management system built on Delta Lake. It provides APIs to define, discover, manage, and serve features with unified online/offline access patterns.
 
+> [!warning] Legacy API in this file
+> The code below uses the legacy workspace **`FeatureStoreClient`** (`databricks.feature_store`). The exam guide tests the **FeatureEngineering Client** (`databricks.feature_engineering.FeatureEngineeringClient`, Feature Engineering in Unity Catalog), which has `timestamp_lookup_key` point-in-time lookups, `FeatureFunction` on-demand features, and online serving. Study [Feature Engineering Client and Online Serving](./11-feature-engineering-client-online-serving.md) for exam-accurate API usage, and treat this file as conceptual background.
+
 ## Databricks Feature Store Architecture
 
 ```mermaid
