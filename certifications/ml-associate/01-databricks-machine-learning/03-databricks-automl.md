@@ -2,482 +2,252 @@
 title: Databricks AutoML
 type: study-material
 tags:
+  - ml-associate
   - automl
-  - automated-machine-learning
   - classification
   - regression
+  - forecasting
+status: published
 ---
 
 # Databricks AutoML
 
 ## Overview
 
-Databricks AutoML automates the end-to-end machine learning pipeline, from data preparation to model selection and hyperparameter tuning. It enables rapid experimentation and baseline model creation.
+Databricks AutoML takes a dataset and a target column, then prepares the data, trains and tunes a set of candidate models, and logs every trial to MLflow. Its output is a **glass-box** baseline: real, editable notebooks that you can read, reproduce, and modify — not a black-box endpoint.
+
+> [!abstract]
+>
+> - Supports **classification**, **regression**, and **forecasting**, from a low-code UI or the Python API (`databricks.automl`)
+> - Each trial is an MLflow run; the **best-trial notebook** and a **data exploration notebook** are imported into the workspace
+> - Classification / regression try decision trees, random forests, linear/logistic regression, XGBoost, and LightGBM; forecasting uses Prophet and Auto-ARIMA
+> - Handles train/validation/test splitting, imputation, and class-imbalance balancing for you
+
+> [!tip] What the Exam Tests
+>
+> - *How AutoML facilitates model / feature selection* — many algorithms + hyperparameters compared on one primary metric; SHAP feature importance in generated notebooks
+> - *The advantages AutoML brings to model development* — fast, reproducible baseline; editable code; everything tracked in MLflow
+> - What AutoML produces and where it lives (MLflow experiment, trial runs, notebooks)
+
+---
 
 ## AutoML Workflow
 
 ```mermaid
 flowchart TB
-    Start["Start AutoML Experiment"] --> Upload["1. Data Selection<br/>Table or File"]
-    Upload --> Target["2. Target Column<br/>Classification/Regression"]
-    Target --> Config["3. Configure Settings<br/>Time budget, metric"]
-    Config --> Auto["4. Automated ML Pipeline"]
+    Start["Start AutoML Experiment"] --> Upload["1. Select a Unity Catalog table<br/>(or a DataFrame via the API)"]
+    Upload --> Target["2. Pick the problem type + target<br/>Classification / Regression / Forecasting"]
+    Target --> Config["3. Configure: primary metric,<br/>timeout, excluded columns / frameworks"]
+    Config --> Auto["4. AutoML run"]
 
-    Auto --> EDA["Data Exploration"]
-    Auto --> FE["Feature Engineering"]
-    Auto --> Models["Algorithm Selection"]
-    Auto --> Tuning["Hyperparameter Tuning"]
-    Auto --> Ensemble["Ensemble Creation"]
+    Auto --> Prep["Data prep<br/>split, imputation, balancing"]
+    Auto --> Trials["Trials<br/>algorithms x hyperparameters"]
 
-    EDA --> Results["Results & Models"]
-    FE --> Results
-    Models --> Results
-    Tuning --> Results
-    Ensemble --> Results
+    Prep --> Results["MLflow experiment<br/>one run per trial"]
+    Trials --> Results
 
-    Results --> Export["Export Best Model"]
-    Export --> Deploy["Deploy or Iterate"]
+    Results --> NB["Best-trial notebook +<br/>data exploration notebook"]
+    NB --> Next["Register, deploy, or iterate"]
 
     style Auto fill:#e3f2fd
     style Results fill:#c8e6c9
 ```
 
-## Core Features
+## What AutoML Automates
 
-### **Data Exploration & Preprocessing**
+### **Data preparation**
 
-```python
+| Step | Default behaviour (classification / regression) |
+| :--- | :--- |
+| **Split** | Random 60 % train / 20 % validation / 20 % test (stratified for classification) |
+| **Missing values** | Imputation method chosen per column based on type and content; overridable per column |
+| **Imbalanced classes** | Balances **only the training split** — downsamples the majority class and applies class weights; validation/test keep the original distribution |
+| **Large datasets** | Estimates memory and samples the dataset if needed (each trial trains on a single worker node) |
+| **Semantic types** | Best-effort detection (e.g. numeric strings, dates); override with column annotations |
+| **Columns** | All columns included by default; exclude with `exclude_cols` (not the target or time column) |
 
-# AutoML automatically performs:
-# - Data type detection
-# - Missing value handling
-# - Outlier detection
-# - Categorical encoding
-# - Feature scaling/normalization
+Source: [Data preparation for classification](https://docs.databricks.com/aws/en/machine-learning/automl/classification-data-prep).
 
-# Sample workflow
+### **Algorithms tried**
 
-from databricks.sdk.service import ml
+| Problem type | Algorithms |
+| :--- | :--- |
+| **Classification** | Decision trees, random forests, logistic regression, XGBoost, LightGBM (scikit-learn / XGBoost / LightGBM implementations) |
+| **Regression** | Decision trees, random forests, linear regression with SGD, XGBoost, LightGBM |
+| **Forecasting** | Prophet, Auto-ARIMA (serverless forecasting also lists DeepAR) |
 
-automl_config = {
-    "data_source": "table_or_file",
-    "target_col": "price",
-    "problem_type": "regression",
-    "timeout": 60,  # minutes
-    "metric": "rmse",  # root mean squared error
-}
+Source: [What is AutoML?](https://docs.databricks.com/aws/en/machine-learning/automl/).
 
-# AutoML Preview (shows what will happen)
-# - Splits data: 80% train, 10% validation, 10% test
-# - Detects data types
-# - Identifies issues (skew, missing, outliers)
+### **Default primary metrics**
 
-```
+| API | Default `primary_metric` |
+| :--- | :--- |
+| `automl.classify` | `f1` |
+| `automl.regress` | `r2` |
+| `automl.forecast` | `smape` |
 
-### **Feature Engineering Pipeline**
+Source: [AutoML Python API reference](https://docs.databricks.com/aws/en/machine-learning/automl/automl-api-reference).
 
-```python
+## How AutoML Facilitates Model and Feature Selection
 
-# AutoML generates multiple feature sets
-# Common transformations:
+- **Model selection** — every algorithm/hyperparameter combination is a trial scored on the *same* primary metric and validation split, so the leaderboard (the MLflow experiment, sorted by metric) shows directly which model family wins
+- **Feature selection** — the trial notebooks include a **Feature importance** section that computes **Shapley (SHAP) values**; it is off by default because it is memory-intensive — set `shap_enabled = True` and re-run the notebook
+- **Feature reuse** — `feature_store_lookups` lets AutoML join Unity Catalog feature tables into the training data, so the baseline uses governed features
 
-# Categorical features
-# - One-hot encoding
-# - Target encoding
-# - Frequency encoding
+Source: [How Databricks AutoML works](https://docs.databricks.com/aws/en/machine-learning/automl/how-automl-works).
 
-# Numerical features
-# - Polynomial features
-# - Interactions
-# - Logarithmic scaling
+## Advantages AutoML Brings to Model Development
 
-# Time-based features
-# - Day of week
-# - Month
-# - Seasonality indicators
+| Advantage | Why it matters |
+| :--- | :--- |
+| **Fast baseline** | Minutes to a tuned benchmark instead of days of manual sweeps |
+| **Glass-box code** | Generated notebooks are ordinary Python you can edit, rerun, and productionise |
+| **Reproducible + tracked** | Every trial is an MLflow run with params, metrics, and a logged model |
+| **Sensible defaults** | Splitting, imputation, balancing, and sampling handled consistently |
+| **Low-code access** | Domain experts can produce a baseline from the UI; data scientists refine it |
 
-# Example: Feature engineering in generated notebook
+## Using AutoML via the UI
 
-from pyspark.ml.feature import OneHotEncoder, VectorAssembler
-
-pipeline_stages = [
-    OneHotEncoder(inputCols=["category"], outputCols=["category_encoded"]),
-    VectorAssembler(inputCols=["category_encoded", "numeric_feature"],
-                   outputCol="features")
-]
-```
-
-### **Algorithm Selection**
-
-AutoML tries multiple algorithms and selects the best:
-
-```python
-
-# Classification Algorithms
-# - Logistic Regression
-# - Random Forest Classifier
-# - Gradient Boosted Trees
-# - Linear SVM
-
-# Regression Algorithms
-# - Linear Regression
-# - Random Forest Regressor
-# - Gradient Boosted Trees
-# - ElasticNet
-
-# Example model comparison
-
-models_tested = {
-    "Logistic Regression": {"accuracy": 0.82, "auc": 0.88},
-    "Random Forest": {"accuracy": 0.85, "auc": 0.91},
-    "Gradient Boosting": {"accuracy": 0.87, "auc": 0.93},  # Best
-    "Linear SVM": {"accuracy": 0.84, "auc": 0.90}
-}
-```
-
-### **Hyperparameter Tuning**
-
-```python
-
-# AutoML uses Hyperopt for tuning
-# Common hyperparameters optimized:
-
-# Random Forest
-
-rf_params = {
-    "num_trees": [10, 50, 100, 200],
-    "max_depth": [5, 10, 15, 20],
-    "min_samples_leaf": [1, 2, 4, 8]
-}
-
-# Gradient Boosting
-
-gb_params = {
-    "n_estimators": [50, 100, 200, 300],
-    "learning_rate": [0.001, 0.01, 0.1],
-    "max_depth": [3, 5, 7, 9],
-    "subsample": [0.7, 0.8, 0.9, 1.0]
-}
-
-# Optimization method: Bayesian Optimization
-# Search space: thousands of combinations
-# Best parameters: based on metric (AUC, RMSE, etc.)
-
-```
-
-## Using AutoML via UI
-
-### **Step-by-Step Process**
-
-1. **Create Experiment**
-
-    ```text
-    Databricks Home → Create → AutoML Experiment
-    ```
-
-2. **Select Data**
-   - Choose table from catalog
-   - Or upload CSV file
-   - Preview first 100 rows
-
-3. **Configure Settings**
-
-    ```text
-    Target column: select prediction target
-    Problem type: Classification or Regression
-    Metric: AUC (classification), RMSE (regression)
-    Time budget: 30-120 minutes
-    ```
-
-4. **Run AutoML**
-   - Automatically trains multiple models
-   - Shows progress in real-time
-   - Generates notebooks for each run
-
-5. **Review Results**
-   - Best model metrics
-   - Feature importance
-   - Learning curves
-   - Comparison with baseline
+1. **Create experiment** — from **Experiments** in the sidebar, start a new AutoML experiment and choose the problem type
+2. **Configure** — compute (ML runtime), problem type, input table, prediction target; optionally evaluation metric, excluded frameworks/columns, imputation per column, timeout
+3. **Start** — AutoML runs the trials and shows them in the MLflow experiment
+4. **Review** — sort runs by the primary metric, open the **best-trial notebook** or the **data exploration notebook**, register the best model
 
 ## Programmatic AutoML
 
-### **Using AutoML API**
-
 ```python
 from databricks import automl
 
-# Create AutoML experiment
+df = spark.read.table("ml_dev.churn.customer_features")
 
 summary = automl.classify(
     dataset=df,
-    target_col="churn",
-    timeout_minutes=30,
-    experiment_dir="/Workspace/Users/user@company.com/experiments",
-)
-
-print(f"Best trial: {summary.best_trial.hyperparameters}")
-print(f"Best model: {summary.best_model}")
-
-# Access results
-
-best_model_uri = summary.best_model.source
-metric_value = summary.best_trial.metrics['log_loss']
-```
-
-### **Classification Example**
-
-```python
-import mlflow
-from databricks import automl
-
-# Load data
-
-df = spark.read.table("ml_catalog.data.customer_churn")
-
-# Run AutoML for classification
-
-churn_summary = automl.classify(
-    dataset=df,
     target_col="churned",
-    timeout_minutes=45,
-    experiment_dir="/Repos/user/ml-projects/churn"
+    primary_metric="f1",          # default for classify
+    timeout_minutes=30,           # default 120, minimum 5
+    exclude_cols=["customer_id"],
 )
 
-# Get best model info
+best = summary.best_trial
+print(best.metrics)               # validation/test metrics of the best trial
+print(best.mlflow_run_id)         # MLflow run that holds the model
+print(best.notebook_url)          # generated notebook for the best trial
 
-print(f"Best model accuracy: {churn_summary.best_trial.metrics['accuracy']}")
-print(f"Best model parameters: {churn_summary.best_trial.hyperparameters}")
-
-# Model URI for deployment
-
-model_uri = churn_summary.best_model.source
-mlflow.register_model(model_uri, "customer_churn_model")
+model = best.load_model()         # load the trial's logged MLflow model
 ```
-
-### **Regression Example**
 
 ```python
-from databricks import automl
+# Regression and forecasting follow the same pattern
+reg_summary = automl.regress(dataset=housing_df, target_col="price", timeout_minutes=60)
 
-# Load housing data
-
-df = spark.read.table("ml_catalog.data.housing")
-
-# Run AutoML for regression
-
-price_summary = automl.regress(
-    dataset=df,
-    target_col="price",
-    timeout_minutes=60,
-    experiment_dir="/Repos/user/ml-projects/housing"
+fc_summary = automl.forecast(
+    dataset=sales_df,
+    target_col="units",
+    time_col="date",              # required for forecasting
+    horizon=30,
+    frequency="D",
 )
-
-# Evaluate results
-
-print(f"Best model RMSE: {price_summary.best_trial.metrics['rmse']}")
-print(f"R² score: {price_summary.best_trial.metrics['r2_score']}")
 ```
+
+### **AutoMLSummary and TrialInfo**
+
+| Object | Useful attributes |
+| :--- | :--- |
+| `AutoMLSummary` | `experiment`, `trials`, `best_trial` |
+| `TrialInfo` | `mlflow_run_id`, `metrics`, `params`, `model_path`, `notebook_path` / `notebook_url` (best trial only for classification/regression), `load_model()` |
 
 ## AutoML Output & Artifacts
 
-### **Generated Notebooks**
-
 ```text
-/Workspace/Users/user@company.com/experiments/churn_analysis/
-├── 00-AutoML/
-│   ├── data_analysis.ipynb       # EDA notebook
-│   ├── train.ipynb               # Training notebook
-│   └── validation_drift.ipynb    # Drift monitoring
-├── model1_lr.ipynb               # Logistic Regression trial
-├── model2_rf.ipynb               # Random Forest trial
-└── model3_gb.ipynb               # Gradient Boosting trial
+MLflow experiment (default dir /Users/<you>/databricks_automl/)
+├── Run: trial 1 (e.g. LightGBM)  → params, metrics, model, trial notebook as artifact
+├── Run: trial 2 (e.g. XGBoost)
+├── ...
+├── Best-trial notebook           → imported into the workspace
+└── Data exploration notebook     → imported into the workspace
 ```
 
-### **Model Registry Integration**
+Registering the best model is a separate, explicit step:
 
 ```python
-
-# AutoML automatically logs to MLflow
-# Best model available in Model Registry
-
-# Access registered model
-
-from mlflow.tracking import MlflowClient
-
-client = MlflowClient()
-models = client.search_registered_models(
-    filter_string="name='churn_prediction'"
-)
-
-# Load for predictions
-
 import mlflow
-model = mlflow.sklearn.load_model(
-    "models:/churn_prediction/Production"
+
+mlflow.set_registry_uri("databricks-uc")
+mlflow.register_model(
+    f"runs:/{summary.best_trial.mlflow_run_id}/model",
+    "ml_dev.churn.churn_classifier",
 )
-predictions = model.predict(new_data)
 ```
+
+> [!note] Platform update (Oct 2026)
+> The AutoML docs now state: "In Databricks Runtime 18.0 ML or above, AutoML is not included as a built-in library," and AutoML depends on the `databricks-automl-runtime` package. The exam guide (Mar 1, 2025 exam version) still tests AutoML — learn the concepts above; when practising, use an ML runtime where AutoML is available ([What is AutoML?](https://docs.databricks.com/aws/en/machine-learning/automl/)).
 
 ## Best Practices for AutoML
 
-### **Data Preparation**
-
-✓ **Do:**
-
-- Clean data before AutoML
-- Remove duplicates
-- Handle missing values explicitly
-- Ensure balanced classes (for classification)
-
-✗ **Don't:**
-
-- Use data with data leakage
-- Include row IDs or timestamps
-- Mix training and test data
-
-### **Configuration**
-
-```python
-# Good time budget for different scenarios
-
-scenarios = {
-    "Quick baseline": 15,        # minutes
-    "Standard experimentation": 30,
-    "Thorough tuning": 60,
-    "Competition": 120
-}
-
-# Choose appropriate metric
-
-metrics = {
-    "Binary Classification": ["auc", "accuracy", "f1"],
-    "Multiclass": ["auc", "accuracy"],
-    "Regression": ["rmse", "r2", "mae"]
-}
-```
-
-### **Post-AutoML Steps**
-
-```python
-
-# After AutoML:
-# Review best model notebook
-# Understand feature importance
-# Validate on hold-out test set
-# Check for data drift
-# Deploy if performance acceptable
-# Monitor in production
-
-# Example validation
-
-best_model = mlflow.sklearn.load_model(
-    "runs:/<run_id>/model"
-)
-
-y_pred = best_model.predict(X_test)
-from sklearn.metrics import classification_report
-print(classification_report(y_test, y_pred))
-```
+- Start from a clean Unity Catalog table; drop leakage columns (IDs, post-outcome fields) with `exclude_cols`
+- Pick the **primary metric that matches the business goal** (e.g. `f1` or `log_loss` for imbalanced classes, not accuracy)
+- Treat the output as a **baseline** — validate the best model on held-out data and review the generated notebook before production
+- Enable SHAP in the best-trial notebook to check that the most important features make domain sense
+- Use `feature_store_lookups` instead of ad-hoc joins so training and serving share feature definitions
 
 ## Comparison: AutoML vs Manual ML
 
 | Aspect | AutoML | Manual |
-|--------|--------|--------|
-| **Time to Baseline** | Hours | Days/Weeks |
-| **Feature Engineering** | Automated | Manual |
-| **Hyperparameter Tuning** | Automated | Manual |
-| **Model Selection** | Automated | Manual |
-| **Customization** | Limited | Full control |
-| **Best For** | Quick iteration | Complex domains |
-| **Learning** | Less exposure | Deep learning |
-
-## Real-World Scenario
-
-**Churn Prediction Workflow:**
-
-```python
-%python
-from databricks import automl
-import mlflow
-
-# Load customer data
-
-df = spark.read.table("production.customer_360.data")
-
-# Configure AutoML
-
-churn_experiment = automl.classify(
-    dataset=df,
-    target_col="churned_flag",
-    timeout_minutes=45,
-    experiment_dir="/Workspace/Shared/ml-projects/churn"
-)
-
-# Review results
-
-best_metrics = churn_experiment.best_trial.metrics
-print(f"Best AUC: {best_metrics['auc']}")
-print(f"Best Accuracy: {best_metrics['accuracy']}")
-
-# Register model
-
-mlflow.register_model(
-    churn_experiment.best_model.source,
-    "customer_churn_predictor"
-)
-
-# Deploy to production
-
-model_uri = f"models:/customer_churn_predictor/Production"
-```
+| :--- | :--- | :--- |
+| **Time to baseline** | Minutes–hours | Days–weeks |
+| **Algorithm + hyperparameter search** | Automated, logged to MLflow | Hand-written sweeps |
+| **Code visibility** | Generated, editable notebooks | Your own code |
+| **Customisation** | Limited to API/UI options, then edit notebooks | Full control |
+| **Best for** | Baselines, benchmarking, citizen data science | Complex, domain-specific pipelines |
 
 ## Use Cases
 
-- **Databricks AutoML Implementation**: Incorporating Databricks AutoML principles to build scalable and maintainable solutions in Databricks environments.
-- **Rapid Baseline Model Generation**: Running AutoML on a new dataset to quickly establish a performance baseline before investing time in custom feature engineering and model tuning.
+- **Rapid Baseline Model Generation**: Running AutoML on a new churn table to establish an F1 benchmark before investing in custom feature engineering.
+- **Feature Triage**: Using SHAP values in the best-trial notebook to decide which engineered features are worth keeping.
 
 ## Common Issues & Errors
 
-### Configuration Oversights
+### AutoML Not Available on the Cluster
 
-**Scenario:** The default settings for Databricks AutoML do not scale well with sudden spikes in data volume.
-**Fix:** Explicitly define and tune the configuration parameters for Databricks AutoML to handle production-scale workloads.
+**Scenario:** `from databricks import automl` fails or the AutoML UI is unavailable.
+**Fix:** Use an ML runtime cluster with a supported access mode (Dedicated supports AutoML + Unity Catalog; Standard does not support AutoML). On Databricks Runtime 18.0 ML and above, AutoML is no longer built in.
 
 ### AutoML Run Produces Poor Results
 
-**Scenario:** AutoML's best model has low accuracy compared to manual tuning.
-**Fix:** Check data quality -- AutoML performance depends on clean features. Also increase the timeout to allow more trials, or provide a larger training dataset.
+**Scenario:** The best model's metric is low compared with expectations.
+**Fix:** Check data quality and leakage, choose a metric suited to the class balance, increase `timeout_minutes` so more trials run, or add better features via `feature_store_lookups`.
 
 ## Exam Tips
 
-- ✅ Understand AutoML value: quick baselines for rapid iteration
-- ✅ Know what AutoML automates: feature engineering, algorithm selection, tuning
-- ✅ Recognize generated notebook structure
-- ✅ Understand time budget and metric selection
-- ✅ Know integration with MLflow and Model Registry
-- ✅ Remember AutoML is for baseline, not final production models
+- ✅ Three problem types only: classification, regression, forecasting (no clustering)
+- ✅ Every trial = an MLflow run; best-trial + data exploration notebooks are imported into the workspace
+- ✅ SHAP feature importance is in the generated notebook but **off by default**
+- ✅ AutoML balances only the **training** split; validation/test keep the real distribution
+- ✅ AutoML does **not** auto-register or auto-deploy the model
+- ✅ Forecasting needs a `time_col`
 
 ## Key Takeaways
 
-- AutoML accelerates model development from hours to minutes
-- Automatically handles EDA, feature engineering, algorithm selection, and tuning
-- Generates reproducible notebooks for each experiment
-- Integrates with MLflow for tracking and model management
-- Best used for rapid prototyping and baseline creation
-- Manual ML skills still critical for complex domains
+- AutoML is a glass-box accelerator: it produces editable code, not a sealed model
+- It automates splitting, imputation, balancing, algorithm choice, and hyperparameter search
+- Model selection happens by comparing trials on one primary metric in MLflow
+- Feature selection is supported through SHAP importance in the generated notebooks
+- Registration and deployment remain explicit, governed steps
 
 ## Related Topics
 
-- [MLflow Tracking](../03-ml-workflows/01-mlflow-tracking.md)
-- [Spark ML Pipelines](../02-model-development/01-spark-ml-pipelines.md)
-- [Model Registry](../04-model-deployment/01-model-registry.md)
+- [Compute Clusters for ML](./02-compute-clusters-ml.md)
+- [MLflow Tracking](./05-mlflow-tracking.md)
+- [Model Registry in Unity Catalog](./07-model-registry.md)
+- [Hyperparameter Tuning](../03-model-development/02-hyperparameter-tuning.md)
 
 ## Official Documentation
 
-- [Databricks AutoML](https://docs.databricks.com/machine-learning/automl/index.html)
-- [AutoML Best Practices](https://docs.databricks.com/machine-learning/automl/best-practices.html)
+- [What is AutoML?](https://docs.databricks.com/aws/en/machine-learning/automl/)
+- [How Databricks AutoML works](https://docs.databricks.com/aws/en/machine-learning/automl/how-automl-works)
+- [Data preparation for classification](https://docs.databricks.com/aws/en/machine-learning/automl/classification-data-prep)
+- [AutoML Python API reference](https://docs.databricks.com/aws/en/machine-learning/automl/automl-api-reference)
 
 ---
 
-**[← Previous: Compute Clusters for ML](./02-compute-clusters-ml.md) | [↑ Back to Databricks ML](./README.md)**
+**[← Previous: Compute Clusters for ML](./02-compute-clusters-ml.md) | [↑ Back to Section](./README.md) | [Next: Feature Store in Unity Catalog →](./04-feature-store.md)**

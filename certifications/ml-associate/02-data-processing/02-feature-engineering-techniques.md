@@ -2,17 +2,34 @@
 title: Feature Engineering Techniques
 type: study-material
 tags:
+  - ml-associate
+  - data-processing
   - feature-engineering
-  - transformations
+  - imputation
   - encoding
-  - scaling
+status: published
 ---
 
 # Feature Engineering Techniques
 
 ## Overview
 
-Feature engineering transforms raw data into meaningful features that improve model performance. It's often the most impactful component of machine learning.
+Feature engineering transforms raw data into meaningful features that improve model performance. It's often the most impactful component of machine learning. This file covers the Section 2 (Data Processing) bullets on **imputation**, **one-hot encoding**, and **log-scale transformation**.
+
+> [!abstract]
+>
+> - Impute with the **mean** (symmetric data), **median** (skewed data / outliers), or **mode** (categorical or discrete data) — after looking at the distribution
+> - Spark ML `Imputer` supports `strategy="mean"` (default), `"median"`, and `"mode"` on numeric columns
+> - One-hot encoding (`StringIndexer` → `OneHotEncoder`) suits nominal features for linear / distance-based models; avoid it for high-cardinality or ordinal features and usually for tree-based models
+> - Log transforms compress right-skewed, positive features or targets that span orders of magnitude
+
+> [!tip] What the Exam Tests
+>
+> - *Compare and contrast imputing with the mean, median, or mode* — and *impute* with each
+> - *Use one-hot encoding* and *identify the model types or data sets for which it is or is not appropriate*
+> - *Identify scenarios where log-scale transformation is appropriate*
+
+---
 
 ## Feature Engineering Pipeline
 
@@ -48,14 +65,15 @@ df_clean = df.dropna()
 df_clean = df.select([c for c in df.columns if df.filter(F.col(c).isNull()).count() / df.count() < 0.5])
 
 # Option 3: IMPUTATION - Replace missing values
-# Mean imputation
+# Spark ML Imputer: strategy = "mean" (default) | "median" | "mode"; numeric columns only
 
 imputer = Imputer(
     inputCols=["age", "income", "tenure"],
-    outputCols=["age", "income", "tenure"],
-    strategy="mean"  # or "median"
+    outputCols=["age_imp", "income_imp", "tenure_imp"],
+    strategy="median"
 )
-df_imputed = imputer.fit(df).transform(df)
+imputer_model = imputer.fit(train_df)          # learn medians on TRAINING data only
+df_imputed = imputer_model.transform(df)
 
 # Forward/backward fill (for time series)
 
@@ -74,6 +92,31 @@ df_imputed = df.withColumn("category",
 )
 ```
 
+### **Mean vs Median vs Mode**
+
+| Strategy | Best for | Weakness | Spark / pandas |
+| :--- | :--- | :--- | :--- |
+| **Mean** | Continuous, roughly **symmetric** features with no strong outliers | Pulled toward outliers; distorts skewed distributions | `Imputer(strategy="mean")` / `pdf[c].fillna(pdf[c].mean())` |
+| **Median** | Continuous features that are **skewed** or contain **outliers** (income, price) | Ignores the shape of the tails | `Imputer(strategy="median")` / `pdf[c].fillna(pdf[c].median())` |
+| **Mode** | **Categorical** or discrete features (most frequent value) | Over-represents the dominant level | `Imputer(strategy="mode")` for numeric codes; `fillna({c: most_frequent})` for strings |
+
+```python
+from pyspark.sql import functions as F
+
+# Mode for a STRING categorical column (Imputer only accepts numeric columns)
+most_frequent = (train_df.groupBy("region").count()
+    .orderBy(F.desc("count")).first()["region"])
+df = df.fillna({"region": most_frequent})
+
+# Keep a missingness indicator — "was missing" can itself be predictive
+df = df.withColumn("income_was_null", F.col("income").isNull().cast("int"))
+```
+
+> [!warning] Common Mistake
+> There is no "always correct" imputation. A tool such as scikit-learn's `SimpleImputer` does **not** pick a strategy from the distribution — it uses whatever `strategy` you set (default mean). Examine the distribution (histogram, `summary()`), then choose: skew/outliers → median, symmetric → mean, categorical → mode. Fit the imputer on training data only.
+
+Sources: [PySpark `Imputer`](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.ml.feature.Imputer.html), [scikit-learn `SimpleImputer`](https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html).
+
 ## Categorical Encoding
 
 ### **String Indexer**
@@ -86,18 +129,18 @@ from pyspark.ml.feature import StringIndexer
 indexer = StringIndexer(
     inputCol="region",
     outputCol="region_idx",
-    handleInvalid="keep",  # Map unknown to separate index
-    stringOrderType="frequencyAsc"  # Frequent categories get lower indices
+    handleInvalid="keep",            # unseen labels get an extra index instead of an error
+    stringOrderType="frequencyDesc"  # default: MOST frequent category gets index 0
 )
 
-# Frequency-based ordering: most frequent gets index 0
-# Alphabetical ordering: alphabetically first gets index 0
+# Other orders: frequencyAsc (least frequent = 0), alphabetDesc, alphabetAsc
+# Ties under frequencyDesc/Asc are broken alphabetically
 
 indexed_df = indexer.fit(df).transform(df)
 
-# Example output:
-# region = ["North", "South", "North", "East", "South"]
-# region_idx = [1, 2, 1, 0, 2]  # East is most frequent (index 0)
+# Example output (frequencyDesc):
+# region     = ["North", "South", "North", "East", "South", "North"]
+# region_idx = [0.0,     1.0,     0.0,     2.0,    1.0,     0.0]   # North (3) → 0, South (2) → 1, East (1) → 2
 
 ```
 
@@ -122,6 +165,19 @@ encoded_df = encoder.fit(df).transform(df)
 # region_idx = 2 → region_vec = [0, 0]
 
 ```
+
+### **When One-Hot Encoding Is (and Is Not) Appropriate**
+
+| Situation | One-hot? | Why / alternative |
+| :--- | :--- | :--- |
+| Nominal feature, few levels, **linear / logistic regression, SVM, k-NN, neural nets** | ✅ Yes | These models treat numeric inputs as ordered magnitudes; an index like 0/1/2 would imply a false order |
+| **High-cardinality** feature (zip code, user ID, thousands of levels) | ❌ Usually no | Explodes dimensionality into very sparse vectors — use target/frequency encoding, hashing, or embeddings |
+| **Ordinal** feature (small < medium < large) | ❌ No | One-hot throws the order away — use an ordinal mapping |
+| **Tree-based models** (decision trees, random forest, gradient-boosted trees) | ⚠️ Often not needed | Trees split on indexed categories directly; one-hot splits a categorical feature across many sparse columns and can weaken splits |
+| Unseen categories at inference | Plan for it | `StringIndexer(handleInvalid="keep")` and `OneHotEncoder(handleInvalid="keep")` |
+
+> [!note]
+> `dropLast=True` (the default) drops one level so the columns are not perfectly collinear — this matters for linear models, not for trees.
 
 ### **Target Encoding**
 
@@ -169,13 +225,8 @@ df_encoded = df.withColumn("size_encoded",
     .otherwise(0)
 )
 
-# Or use StringIndexer with custom order
-
-indexer = StringIndexer(
-    inputCol="size",
-    outputCol="size_idx",
-    stringOrderType="frequencyAsc"  # Control ordering
-).fit(df.select("size").distinct())
+# StringIndexer cannot follow a business order (small < medium < large):
+# frequency/alphabet ordering would scramble it, so prefer the explicit mapping above.
 ```
 
 ## Numerical Feature Scaling
@@ -252,6 +303,27 @@ iqr = q3 - q1
 
 df_scaled = df.withColumn("age_scaled", (col("age") - q1) / iqr)
 ```
+
+## Log-Scale Transformation
+
+Apply a log transform when a feature or target is **positive and strongly right-skewed**, spanning several orders of magnitude (prices, incomes, counts, durations), or when effects are multiplicative. The log compresses large values and makes the distribution more symmetric, which helps linear models and distance-based methods.
+
+```python
+from pyspark.sql import functions as F
+
+df_log = (df
+    .withColumn("log_price", F.log("price"))        # natural log; price must be > 0
+    .withColumn("log1p_reviews", F.log1p("num_reviews")))   # log(1 + x) handles zeros
+```
+
+| Appropriate | Not appropriate |
+| :--- | :--- |
+| Right-skewed, positive values spanning orders of magnitude | A feature that is already ~normal / centred near zero |
+| Variance that grows with the level (heteroscedastic) | Zero values (use `log1p`) or negative values (log is undefined) |
+| Multiplicative relationships you want to make additive | High-cardinality categoricals (not a cardinality-reduction tool) |
+
+> [!warning] Common Mistake
+> If you log-transform the **target**, the model predicts in log space. **Exponentiate predictions** (`exp`, or `expm1` after `log1p`) before computing RMSE/MAE in the original units or explaining predictions to the business — see [Model Evaluation & Metrics](../03-model-development/03-model-evaluation.md).
 
 ## Feature Interactions
 
@@ -491,10 +563,12 @@ df_raw = spark.read.table("raw.customers")
 
 # STEP 1: Impute missing values
 
-df_imputed = (df_raw
-    .withColumn("income", F.when(F.col("income").isNull(), F.mean("income").over()).otherwise(F.col("income")))
-    .withColumn("region", F.when(F.col("region").isNull(), "Unknown").otherwise(F.col("region")))
-)
+from pyspark.ml.feature import Imputer
+
+df_imputed = (Imputer(inputCols=["income"], outputCols=["income"], strategy="median")
+    .fit(df_raw)
+    .transform(df_raw)
+    .fillna({"region": "Unknown"}))
 
 # STEP 2: Create features
 
@@ -545,7 +619,10 @@ df_engineered = pipeline.fit(df_featured).transform(df_featured)
 
 ## Exam Tips
 
-- Impute when missing data is moderate (<50%); drop columns when >50% missing; drop rows when <5% missing
+- Rule of thumb (not a Databricks rule): drop rows when very few are missing, drop a column when most of it is missing, impute in between
+- Mean for symmetric, **median for skewed/outliers**, **mode for categorical**; `Imputer` supports all three on numeric columns
+- Log-transform right-skewed positive features/targets; exponentiate log-space predictions before reporting metrics
+- One-hot encode nominal features for linear models; avoid it for high-cardinality or ordinal features
 - The required sequence is `StringIndexer` (string to numeric index) then `OneHotEncoder` (index to binary vector) -- OHE cannot accept raw strings
 - `StandardScaler` is essential for distance-based models (logistic regression, SVM, KMeans) but unnecessary for tree-based models (Random Forest, XGBoost)
 - Target encoding risks data leakage -- always fit encoding on training data only, never on the full dataset including test
@@ -564,15 +641,17 @@ df_engineered = pipeline.fit(df_featured).transform(df_featured)
 
 ## Related Topics
 
-- [Spark ML Pipelines](01-spark-ml-pipelines.md)
-- [Feature Store](03-feature-store.md)
-- [Feature Engineering Basics](../../../shared/fundamentals/feature-engineering-basics.md)
+- [Exploratory Data Analysis for ML](./01-exploratory-data-analysis.md)
+- [Spark ML Pipelines](../03-model-development/01-spark-ml-pipelines.md)
+- [Feature Store in Unity Catalog](../01-databricks-machine-learning/04-feature-store.md)
+- [Feature Engineering Basics (shared)](../../../shared/fundamentals/feature-engineering-basics.md)
 
 ## Official Documentation
 
 - [Spark ML Features](https://spark.apache.org/docs/latest/ml-features.html)
-- [Feature Engineering Guide](https://docs.databricks.com/machine-learning/feature-engineering/index.html)
+- [PySpark `Imputer`](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.ml.feature.Imputer.html)
+- [PySpark `StringIndexer`](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.ml.feature.StringIndexer.html)
 
 ---
 
-**[← Previous: Spark ML Pipelines](./01-spark-ml-pipelines.md) | [↑ Back to Feature Engineering](./README.md) | [Next: Databricks Feature Store](./03-feature-store.md) →**
+**[← Previous: Exploratory Data Analysis for ML](./01-exploratory-data-analysis.md) | [↑ Back to Section](./README.md)**

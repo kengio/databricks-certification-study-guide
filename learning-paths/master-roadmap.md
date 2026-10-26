@@ -202,10 +202,10 @@ After completing an entry certification, choose your specialization.
 
 | Order | Domain (Weight) | Study Materials |
 |:---:|:---|:---|
-| 1 | Feature Engineering / Spark ML (33%) | [03-feature-engineering](../certifications/ml-associate/02-model-development/README.md) |
-| 2 | Databricks ML (29%) | [01-databricks-ml](../certifications/ml-associate/01-databricks-machine-learning/README.md) |
-| 3 | ML Workflows (29%) | [02-ml-workflows](../certifications/ml-associate/03-ml-workflows/README.md) |
-| 4 | MLflow Deployment (9%) | [04-mlflow-deployment](../certifications/ml-associate/04-model-deployment/README.md) |
+| 1 | Databricks Machine Learning (38%) | [01-databricks-machine-learning](../certifications/ml-associate/01-databricks-machine-learning/README.md) |
+| 2 | Model Development (31%) | [03-model-development](../certifications/ml-associate/03-model-development/README.md) |
+| 3 | Data Processing (19%) | [02-data-processing](../certifications/ml-associate/02-data-processing/README.md) |
+| 4 | Model Deployment (12%) | [04-model-deployment](../certifications/ml-associate/04-model-deployment/README.md) |
 
 **Practice & Review:**
 

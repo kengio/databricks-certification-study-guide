@@ -2,17 +2,34 @@
 title: Spark ML Pipelines
 type: study-material
 tags:
+  - ml-associate
+  - model-development
   - spark-ml
   - pipelines
-  - transformers
-  - estimators
+  - estimators-transformers
+status: published
 ---
 
 # Spark ML Pipelines
 
 ## Overview
 
-Spark ML Pipelines provide a high-level API for building reproducible machine learning workflows. They standardize the process of feature engineering, training, and prediction.
+Spark ML Pipelines provide a high-level API for building reproducible machine learning workflows. They standardize the process of feature engineering, training, and prediction. Section 3 (Model Development) asks you to **compare estimators and transformers** and **develop a training pipeline**.
+
+> [!abstract]
+>
+> - A **Transformer** has `transform(df)` and returns a new DataFrame (`VectorAssembler`, `Bucketizer`, `SQLTransformer`, a fitted model)
+> - An **Estimator** has `fit(df)` and returns a fitted **Model** — which is itself a Transformer (`StringIndexer`, `OneHotEncoder`, `StandardScaler`, `Imputer`, `LogisticRegression`)
+> - A `Pipeline` is an Estimator; `pipeline.fit(train)` returns a `PipelineModel` (a Transformer) that replays every fitted stage
+> - Wrapping the whole pipeline in `CrossValidator` keeps preprocessing inside each fold, avoiding leakage
+
+> [!tip] What the Exam Tests
+>
+> - Classifying a class as Estimator vs Transformer (anything that must *learn* from data is an Estimator)
+> - What `fit()` vs `transform()` return, and stage ordering (`StringIndexer` → `OneHotEncoder` → `VectorAssembler` → model)
+> - Building a training pipeline that can be saved/logged once and reused for inference
+
+---
 
 ## Pipeline Architecture
 
@@ -54,50 +71,47 @@ flowchart LR
 
 ### **Transformers**
 
-Transformers convert input DataFrames to output DataFrames. They have a `transform()` method.
+Transformers convert input DataFrames to output DataFrames. They have a `transform()` method and **learn nothing** from the data.
 
 ```python
-from pyspark.ml.feature import StandardScaler, OneHotEncoder, VectorAssembler
-from pyspark.ml import Transformer
+from pyspark.ml.feature import VectorAssembler
 
-# Create a transformer
+# Create a transformer — no fit() needed
 
-scaler = StandardScaler(
-    inputCol="features",
-    outputCol="scaledFeatures"
+assembler = VectorAssembler(
+    inputCols=["age", "income"],
+    outputCol="features"
 )
 
 # Transform data
 
-scaled_df = scaler.transform(df)
+assembled_df = assembler.transform(df)
 
-# Common Transformers:
+# Common Transformers (no fitting):
 
 transformers = {
-    "StringIndexer": "Convert categories to indices",
-    "OneHotEncoder": "One-hot encode categorical features",
-    "VectorAssembler": "Combine features into single vector",
-    "StandardScaler": "Scale numeric features to mean=0, std=1",
-    "MinMaxScaler": "Scale features to [0, 1] range",
-    "Bucketizer": "Discretize continuous columns into buckets",
-    "PolynomialExpansion": "Generate polynomial features"
+    "VectorAssembler": "Combine feature columns into a single vector",
+    "Bucketizer": "Discretize a continuous column with fixed split points",
+    "SQLTransformer": "Apply a SQL statement to the DataFrame",
+    "Tokenizer": "Split text into words",
+    "PolynomialExpansion": "Generate polynomial features",
+    "<any fitted Model>": "e.g. StringIndexerModel, LogisticRegressionModel, PipelineModel"
 }
 ```
 
 ### **Estimators**
 
-Estimators learn from data using `fit()` method, then produce transformers.
+Estimators learn from data using the `fit()` method, then produce a fitted Model (which is a Transformer).
 
 ```python
 from pyspark.ml.classification import LogisticRegression, RandomForestClassifier
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.feature import StringIndexer
-from pyspark.ml import Estimator
 
 # Create an estimator
 
 lr = LogisticRegression(
-    features="features",
+    featuresCol="features",
     labelCol="label",
     maxIter=10
 )
@@ -117,10 +131,22 @@ estimators = {
     "RandomForestClassifier": "Tree-based classification",
     "LinearRegression": "Regression with linear modeling",
     "GBTClassifier": "Gradient boosted trees for classification",
-    "StringIndexer": "Learn category mappings",
-    "CountVectorizer": "Learn word counts from text"
+    "StringIndexer": "Learn the category -> index mapping",
+    "OneHotEncoder": "Learn the number of categories per column",
+    "StandardScaler / MinMaxScaler": "Learn mean/std or min/max",
+    "Imputer": "Learn the mean/median/mode to fill",
+    "CountVectorizer": "Learn the vocabulary from text",
+    "Pipeline": "Fits every stage in order -> PipelineModel"
 }
 ```
+
+| | Transformer | Estimator |
+| :--- | :--- | :--- |
+| **Key method** | `transform(df)` → DataFrame | `fit(df)` → Model (a Transformer) |
+| **Learns from data?** | No | Yes |
+| **Examples** | `VectorAssembler`, `Bucketizer`, `SQLTransformer`, `Tokenizer`, any fitted `...Model` | `StringIndexer`, `OneHotEncoder`, `StandardScaler`, `MinMaxScaler`, `Imputer`, `LogisticRegression`, `Pipeline` |
+
+Source: [Spark ML Pipelines](https://spark.apache.org/docs/latest/ml-pipeline.html), [PySpark `pyspark.ml.feature` API](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ml.html).
 
 ### **Pipelines**
 
@@ -272,7 +298,7 @@ from pyspark.ml.feature import Imputer
 imputer = Imputer(
     inputCols=["age", "income", "tenure"],
     outputCols=["age", "income", "tenure"],
-    strategy="median"  # or "mean"
+    strategy="median"  # or "mean" (default) / "mode"
 )
 
 stages = [imputer, ...other_stages...]
@@ -311,7 +337,7 @@ standard_scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures"
 
 minmax_scaler = MinMaxScaler(inputCol="features", outputCol="scaledFeatures")
 
-# Robust Scaler: (x - median) / IQR
+# RobustScaler: (x - median) / IQR  (pyspark.ml.feature.RobustScaler, an Estimator)
 # Best for: Data with outliers
 
 ```
@@ -348,7 +374,7 @@ fitted_pipeline = pipeline.fit(train_df)
 
 # Save trained pipeline
 
-fitted_pipeline.save("/mnt/models/trained_pipeline")
+fitted_pipeline.save("/Volumes/ml_dev/churn/models/trained_pipeline")
 
 # PREDICTION PHASE
 
@@ -427,12 +453,12 @@ best_predictions = cv_model.transform(test_df)
 ```python
 # Save fitted pipeline
 
-fitted_pipeline.save("/dbfs/models/production_pipeline")
+fitted_pipeline.save("/Volumes/ml_dev/churn/models/production_pipeline")
 
 # Load and use
 
 from pyspark.ml import PipelineModel
-loaded_pipeline = PipelineModel.load("/dbfs/models/production_pipeline")
+loaded_pipeline = PipelineModel.load("/Volumes/ml_dev/churn/models/production_pipeline")
 predictions = loaded_pipeline.transform(new_data)
 ```
 
@@ -497,7 +523,7 @@ print(f"AUC: {auc:.3f}")
 # Save
 
 mlflow.spark.log_model(fitted_pipeline, "pipeline")
-fitted_pipeline.save("/mnt/production/churn_pipeline")
+fitted_pipeline.save("/Volumes/ml_prod/churn/models/churn_pipeline")
 ```
 
 ## Use Cases
@@ -519,7 +545,7 @@ fitted_pipeline.save("/mnt/production/churn_pipeline")
 
 ## Exam Tips
 
-- ✅ Understand Transformer vs Estimator distinction
+- ✅ Transformer = `transform()` only (VectorAssembler, Bucketizer, SQLTransformer); Estimator = `fit()` → Model (StringIndexer, OneHotEncoder, StandardScaler, Imputer, any algorithm, Pipeline)
 - ✅ Know pipeline stages are fit in sequence
 - ✅ Recognize StringIndexer must come before OneHotEncoder
 - ✅ Understand VectorAssembler combines features
@@ -537,15 +563,17 @@ fitted_pipeline.save("/mnt/production/churn_pipeline")
 
 ## Related Topics
 
-- [Feature Engineering Techniques](02-feature-engineering-techniques.md)
-- [Feature Store](03-feature-store.md)
-- [MLflow Tracking](../03-ml-workflows/01-mlflow-tracking.md)
+- [Hyperparameter Tuning](./02-hyperparameter-tuning.md)
+- [Feature Engineering Techniques](../02-data-processing/02-feature-engineering-techniques.md)
+- [Feature Store in Unity Catalog](../01-databricks-machine-learning/04-feature-store.md)
+- [MLflow Tracking](../01-databricks-machine-learning/05-mlflow-tracking.md)
 
 ## Official Documentation
 
 - [Spark ML Pipelines](https://spark.apache.org/docs/latest/ml-pipeline.html)
-- [Databricks ML Guide](https://docs.databricks.com/machine-learning/index.html)
+- [Spark ML Tuning](https://spark.apache.org/docs/latest/ml-tuning.html)
+- [Databricks machine learning documentation](https://docs.databricks.com/aws/en/machine-learning/)
 
 ---
 
-**[↑ Back to Feature Engineering](./README.md) | [Next: Feature Engineering Techniques](./02-feature-engineering-techniques.md) →**
+**[↑ Back to Section](./README.md) | [Next: Hyperparameter Tuning →](./02-hyperparameter-tuning.md)**

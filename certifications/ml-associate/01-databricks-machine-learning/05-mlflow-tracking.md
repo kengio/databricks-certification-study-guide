@@ -2,17 +2,33 @@
 title: MLflow Tracking
 type: study-material
 tags:
+  - ml-associate
   - mlflow
   - tracking
   - logging
-  - experimentation
+status: published
 ---
 
 # MLflow Tracking
 
 ## Overview
 
-MLflow Tracking is the core component for logging, storing, and querying machine learning experiments. It captures parameters, metrics, artifacts, and models to enable reproducibility and comparison.
+MLflow Tracking is the core component for logging, storing, and querying machine learning experiments. It captures parameters, metrics, artifacts, and models to enable reproducibility and comparison. The exam guide lists the MLflow skills under **Section 1: Databricks Machine Learning**.
+
+> [!abstract]
+>
+> - A **run** records params (`log_param`), metrics (`log_metric`, optional `step`), artifacts (`log_artifact` / `log_artifacts`), tags, and models (`<flavor>.log_model`)
+> - `mlflow.autolog()` captures framework params/metrics/models automatically; manual logging adds anything custom
+> - Runs from a Databricks notebook land in the notebook's experiment unless `mlflow.set_experiment()` points elsewhere
+> - `MlflowClient` is the lower-level Client API for runs, experiments, and registered models
+
+> [!tip] What the Exam Tests
+>
+> - *Manually log metrics, artifacts, and models in an MLflow run* — know the exact function names and argument shapes
+> - The difference between params (config), metrics (numbers over steps), tags (metadata), and artifacts (files)
+> - What autolog does and does not capture (custom business metrics need `log_metric`)
+
+---
 
 ## MLflow Architecture
 
@@ -56,7 +72,7 @@ flowchart TB
 import mlflow
 import mlflow.sklearn
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, auc_score
+from sklearn.metrics import accuracy_score, roc_auc_score
 
 # Start a run
 
@@ -160,9 +176,13 @@ with open("artifacts.pkl", "wb") as f:
     pickle.dump(model_dict, f)
 mlflow.log_artifact("artifacts.pkl")
 
-# Log entire directory
+# Log entire directory (plural function)
 
-mlflow.log_artifact("config/")
+mlflow.log_artifacts("config/")
+
+# Log in-memory objects without writing a file first
+mlflow.log_dict({"threshold": 0.42}, "config/threshold.json")
+mlflow.log_figure(fig, "plots/learning_curve.png")
 ```
 
 ## MLflow Tracking UI
@@ -199,45 +219,44 @@ for run in runs:
 
 ```python
 
-# Databricks automatically creates:/Experiments/Users/{user_email}/notebook_name
-# Each notebook cell execution creates a run
+# In a Databricks notebook with no set_experiment() call, runs are logged to the
+# *notebook experiment* (same path as the notebook). Calling a fluent logging
+# function with no active run starts a run automatically.
 
 %python
 import mlflow
 
-# Automatically associated with notebook experiment
-
-mlflow.log_param("model_type", "gradient_boosting")
+mlflow.log_param("model_type", "gradient_boosting")   # auto-starts a run in the notebook experiment
 mlflow.log_metric("accuracy", 0.95)
+mlflow.end_run()
 
-# Check active experiment
-
-active_exp = mlflow.get_experiment_by_name(
-    f"/Users/{<user_email>}/notebook_name"
-)
-print(f"Active experiment: {active_exp.name}")
+# Check which experiment the run went to
+run = mlflow.last_active_run()
+exp = mlflow.get_experiment(run.info.experiment_id)
+print(f"Experiment: {exp.name}")
 ```
 
 ### **Unity Catalog Integration**
 
 ```python
-# Store models in Unity Catalog
+# Store models in Unity Catalog (default registry URI in MLflow 3)
 
 mlflow.set_registry_uri("databricks-uc")
 
-# Log model to UC
+# Log model and register it in UC in one call (UC requires a signature —
+# passing input_example lets MLflow infer it)
 
 mlflow.sklearn.log_model(
     model,
     artifact_path="model",
+    input_example=X_train.head(5),
     registered_model_name="catalog.schema.model_name"
 )
 
-# Load from UC
+# Load from UC by alias or by version number (UC has no stages)
 
-model = mlflow.sklearn.load_model(
-    "models:/catalog.schema.model_name/stageName"
-)
+model = mlflow.sklearn.load_model("models:/catalog.schema.model_name@champion")
+model_v1 = mlflow.sklearn.load_model("models:/catalog.schema.model_name/1")
 ```
 
 ## Advanced Tracking Features
@@ -342,10 +361,17 @@ import lightgbm as lgb
 lgb_model = lgb.LGBMClassifier()
 mlflow.lightgbm.log_model(lgb_model, "lgb_model")
 
-# Generic log_model for custom frameworks
+# Custom Python logic: subclass mlflow.pyfunc.PythonModel
 
-mlflow.log_model(custom_model, "custom_model")
+class Doubler(mlflow.pyfunc.PythonModel):
+    def predict(self, context, model_input):
+        return model_input * 2
+
+mlflow.pyfunc.log_model(artifact_path="custom_model", python_model=Doubler())
 ```
+
+> [!note] Platform update (Oct 2026)
+> With MLflow 3 on Databricks, `log_model(..., artifact_path=...)` "is still supported but has been deprecated" in favour of `name=`, and `log_model` returns a `models:/<model_id>` URI (rather than `runs:/<run_id>/<artifact_path>` as in MLflow 2.x). The default registry URI is now `databricks-uc`. Exam questions are written with MLflow 2-style `artifact_path` / `runs:/` URIs, so recognise both ([Get started with MLflow 3](https://docs.databricks.com/aws/en/mlflow/mlflow-3-install)).
 
 ## Real-World Example
 
@@ -472,7 +498,8 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 
 - `log_param()` stores a single string value (hyperparameter); `log_metric()` stores a numeric value (performance measure) and supports a `step` argument for epoch tracking
 - `log_params()` and `log_metrics()` accept dictionaries for batch logging -- know the plural forms
-- Databricks automatically creates an experiment at `/Users/{email}/notebook_name` when you log from a notebook -- no explicit `set_experiment()` is needed
+- Logging from a notebook without `set_experiment()` uses the **notebook experiment** automatically
+- Custom business metrics are never captured by `autolog()` -- log them with `mlflow.log_metric()`
 - `mlflow.sklearn.log_model()` vs `mlflow.spark.log_model()` -- know which flavor matches which framework (sklearn, xgboost, lightgbm, spark)
 - `client.search_runs(filter_string="metrics.accuracy > 0.9")` uses a SQL-like filter syntax with `metrics.` and `params.` prefixes
 - Artifacts (plots, JSON files, pickled objects) are stored in the artifact store (object storage), not the backend metadata store
@@ -488,15 +515,17 @@ print(f"Best run: {best_run_id} with F1: {best_f1}")
 
 ## Related Topics
 
-- [Experiments & Runs](02-experiments-runs.md)
-- [ML Experimentation Workflow](03-ml-experimentation-workflow.md)
-- [Model Registry](../04-model-deployment/01-model-registry.md)
+- [Experiments & Runs](./06-experiments-runs.md)
+- [Model Registry in Unity Catalog](./07-model-registry.md)
+- [ML Experimentation Workflow](../03-model-development/04-ml-experimentation-workflow.md)
+- [MLflow cheat sheet (shared)](../../../shared/cheat-sheets/mlflow-quick-ref.md)
 
 ## Official Documentation
 
-- [MLflow Tracking](https://mlflow.org/docs/latest/tracking.html)
-- [MLflow on Databricks](https://docs.databricks.com/mlflow/index.html)
+- [MLflow Tracking](https://mlflow.org/docs/latest/ml/tracking/)
+- [MLflow on Databricks](https://docs.databricks.com/aws/en/mlflow/)
+- [Databricks Autologging](https://docs.databricks.com/aws/en/mlflow/databricks-autologging)
 
 ---
 
-**[↑ Back to ML Workflows](./README.md) | [Next: Experiments & Runs](./02-experiments-runs.md) →**
+**[← Previous: Feature Store in Unity Catalog](./04-feature-store.md) | [↑ Back to Section](./README.md) | [Next: Experiments & Runs →](./06-experiments-runs.md)**

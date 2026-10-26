@@ -2,10 +2,12 @@
 title: Databricks ML Workspace & Notebooks
 type: study-material
 tags:
+  - ml-associate
   - databricks
   - workspace
   - notebooks
   - collaboration
+status: published
 ---
 
 # Databricks ML Workspace & Notebooks
@@ -13,6 +15,21 @@ tags:
 ## Overview
 
 The Databricks workspace is a collaborative environment where data scientists and ML engineers develop, test, and collaborate on machine learning models. It provides unified access to notebooks, compute, and data.
+
+> [!abstract]
+>
+> - Notebooks are multi-language (Python, SQL, Scala, R) with magic commands and `display()` for rich output
+> - Widgets parameterise notebooks so the same code runs in dev, staging, and prod
+> - **Git folders** (formerly Databricks Repos) bring Git-based version control into the workspace
+> - Unity Catalog governs the data and ML assets (tables, volumes, feature tables, registered models) that notebooks use
+
+> [!tip] What the Exam Tests
+>
+> - The workspace is the *surface*; the exam's Section 1 bullets focus on what you do from it — ML runtimes, AutoML, feature tables, MLflow, and the UC registry
+> - Recognise Git folders as the version-control mechanism behind "promote code" MLOps workflows
+> - Know that DBFS mounts are a legacy pattern — Unity Catalog governs data access
+
+---
 
 ## Workspace Architecture
 
@@ -26,7 +43,7 @@ flowchart TB
 
     subgraph Workspace["Databricks Workspace"]
         NB["Notebooks"]
-        Repos["Repos/Git"]
+        Repos["Git folders"]
         Secrets["Secrets"]
         Jobs["Jobs"]
     end
@@ -62,7 +79,7 @@ Interactive development environment supporting multiple languages:
 This is a Markdown cell for documentation
 
 %python
-import spark.mllib as mllib
+from pyspark.ml import Pipeline
 import pandas as pd
 
 # Load data from Unity Catalog
@@ -113,63 +130,49 @@ dbutils.widgets.removeAll()
 ### **File System Access**
 
 ```python
-# Databricks File System (DBFS) operations
-
-import os
-
-# Mount object storage
-
-dbutils.fs.mount(
-    source = "wasbs://container@storage.blob.core.windows.net",
-    mount_point = "/mnt/data",
-    extra_configs = {
-        "fs.azure.account.key.storage.blob.core.windows.net": "access-key"
-    }
-)
+# Files governed by Unity Catalog live in volumes:
+# /Volumes/<catalog>/<schema>/<volume>/<path>
 
 # List files
 
-dbutils.fs.ls("/mnt/data")
+dbutils.fs.ls("/Volumes/ml_dev/churn/raw_files")
 
 # Create directory
 
-dbutils.fs.mkdirs("/mnt/data/models")
+dbutils.fs.mkdirs("/Volumes/ml_dev/churn/raw_files/models")
 
 # Remove files
 
-dbutils.fs.rm("/mnt/data/old_data", recurse=True)
+dbutils.fs.rm("/Volumes/ml_dev/churn/raw_files/old_data", recurse=True)
 ```
+
+> [!note] Platform update (Oct 2026)
+> Older study material shows `dbutils.fs.mount(...)` with storage keys. Databricks now documents **DBFS mounts as a deprecated pattern** that is not compatible with serverless compute, and recommends Unity Catalog external locations instead ([Mounting cloud object storage](https://docs.databricks.com/aws/en/dbfs/mounts)).
 
 ## Collaboration Features
 
-### **Repos for Version Control**
+### **Git Folders for Version Control**
 
 ```mermaid
 flowchart LR
     GitHub["GitHub/GitLab"]
-    Repos["Databricks Repos"]
+    Repos["Databricks Git folder"]
     Notebooks["Notebooks"]
 
     GitHub <-->|Clone/Push/Pull| Repos
     Repos --> Notebooks
 ```
 
-**Git Operations:**
+**Git Operations (UI):**
 
-```python
-# Clone repository
-
-databricks repos create-repo \
-    --url "https://github.com/user/ml-project.git" \
-    --provider github \
-    --path "/Repos/ml-project"
-
-# Sync changes
-
-databricks repos update \
-    --repo-id <repo-id> \
-    --branch "main"
+```text
+Workspace → Create → Git folder → paste repository URL
+Git folder menu → branch selector → create / switch branch
+Git dialog → review diff → commit & push → open a pull request in your Git provider
 ```
+
+> [!note] Platform update (Oct 2026)
+> Databricks **Repos** is now called **Git folders** in the docs ([Git folders](https://docs.databricks.com/aws/en/repos/)). Questions or older notes that say "Repos" mean the same feature.
 
 ### **Shared Notebooks & Folders**
 
@@ -261,19 +264,14 @@ display(display_df)
 
 ### **Managing Permissions**
 
-```python
-# Check current permissions
+Notebook permissions are set from the notebook's **Share** dialog (or the Permissions API). The levels are cumulative ([Access control lists](https://docs.databricks.com/aws/en/security/auth/access-control/)):
 
-databricks workspace export-fmt \
-    --fmt dbc \
-    --path /Users/user@company.com/my_notebook
-
-# Share notebook with specific permission
-
-databricks workspace update \
-    --path /Users/user@company.com/model_development \
-    --show-hidden-files
-```
+| Level | Adds |
+| :--- | :--- |
+| **CAN VIEW** (API: `CAN_READ`) | View cells, comment, run via `%run` |
+| **CAN RUN** | Attach/detach compute and run commands |
+| **CAN EDIT** | Edit cells |
+| **CAN MANAGE** | Change permissions |
 
 ## Comparison: Databricks Notebooks vs Jupyter
 
@@ -281,7 +279,7 @@ databricks workspace update \
 |--------|---|---|
 | **Collaboration** | Real-time, built-in | Limited (requires third-party) |
 | **Compute** | Integrated clusters | Manual kernel management |
-| **Version Control** | Native Git integration | External git only |
+| **Version Control** | Git folders (native Git integration) | External git only |
 | **UI/UX** | Cloud-native interface | Browser-based |
 | **Secrets Management** | Built-in secrets store | Manual/external |
 | **Multi-language** | Python, SQL, Scala, R | Kernels only |
@@ -330,7 +328,7 @@ df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 ## Use Cases
 
 - **Databricks ML Workspace & Notebooks Implementation**: Incorporating Databricks ML Workspace & Notebooks principles to build scalable and maintainable solutions in Databricks environments.
-- **Shared Notebook Environment for Team Collaboration**: Multiple data scientists working in the same workspace, using shared folders and repos to collaboratively develop and review ML experiments.
+- **Shared Notebook Environment for Team Collaboration**: Multiple data scientists working in the same workspace, using shared folders and Git folders to collaboratively develop and review ML experiments.
 
 ## Common Issues & Errors
 
@@ -348,31 +346,33 @@ df.write.mode("overwrite").saveAsTable("ml_staging.churn_model_data")
 
 - ✅ Understand workspace hierarchy: workspace → folders → notebooks
 - ✅ Know magic commands and their uses (`%python`, `%sql`, `%md`, `%sh`)
-- ✅ Recognize the difference between Databricks File System (DBFS) and workspace folders
+- ✅ Recognize the difference between Unity Catalog volumes, legacy DBFS paths, and workspace folders
 - ✅ Understand access controls and sharing notebooks
 - ✅ Remember widgets for parameterizing notebooks
-- ✅ Understand the purpose of repos for version control
+- ✅ Understand the purpose of Git folders (formerly Repos) for version control
 
 ## Key Takeaways
 
 - Databricks notebooks provide interactive, multi-language development environment
 - Collaboration is built-in with real-time editing and comment support
-- Git integration via Repos enables version control
+- Git integration via Git folders (formerly Repos) enables version control
 - Fine-grained access control supports team workflows
-- DBFS and workspace provide flexible file management
+- Unity Catalog volumes (not legacy DBFS mounts) are the governed place for files
 - Widgets enable notebook parameterization for reusability
 
 ## Related Topics
 
-- [Compute Clusters for ML](02-compute-clusters-ml.md)
-- [Databricks AutoML](03-databricks-automl.md)
-- [MLflow Tracking](../03-ml-workflows/01-mlflow-tracking.md)
+- [Compute Clusters for ML](./02-compute-clusters-ml.md)
+- [Databricks AutoML](./03-databricks-automl.md)
+- [MLflow Tracking](./05-mlflow-tracking.md)
+- [MLOps Strategy](./08-mlops-strategy.md)
 
 ## Official Documentation
 
-- [Databricks Workspace](https://docs.databricks.com/workspace/index.html)
-- [Notebooks Guide](https://docs.databricks.com/notebooks/index.html)
+- [Databricks Workspace](https://docs.databricks.com/aws/en/workspace/)
+- [Notebooks Guide](https://docs.databricks.com/aws/en/notebooks/)
+- [Git folders](https://docs.databricks.com/aws/en/repos/)
 
 ---
 
-**[↑ Back to Databricks ML](./README.md) | [Next: Compute Clusters for ML](./02-compute-clusters-ml.md) →**
+**[↑ Back to Section](./README.md) | [Next: Compute Clusters for ML →](./02-compute-clusters-ml.md)**

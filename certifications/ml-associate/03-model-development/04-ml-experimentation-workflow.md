@@ -2,17 +2,33 @@
 title: ML Experimentation Workflow
 type: study-material
 tags:
+  - ml-associate
+  - model-development
   - experimentation
-  - workflow
-  - iteration
-  - best-practices
+  - training-pipeline
+status: published
 ---
 
 # ML Experimentation Workflow
 
 ## Overview
 
-An effective machine learning workflow systematically explores the problem space through structured experimentation, enabling data-driven decisions for model improvement.
+An effective machine learning workflow systematically explores the problem space through structured experimentation, enabling data-driven decisions for model improvement. This file ties the Section 3 skills together end-to-end: baseline, feature iterations, tuning, cross-validation, final test evaluation, and hand-off to the Unity Catalog registry.
+
+> [!abstract]
+>
+> - Define the objective and the metric first (recall vs precision vs RMSE), then build a quick baseline
+> - Iterate on features, algorithms, and hyperparameters — every iteration is an MLflow run
+> - Cross-validate the leading candidate; touch the **test set once**, at the end
+> - Register the winner in Unity Catalog and give it the `challenger` alias for promotion
+
+> [!tip] What the Exam Tests
+>
+> - *Develop a training pipeline* — the order of split → fit preprocessing on train → train → evaluate
+> - Reading train vs validation vs test results to spot over/underfitting
+> - Where tuning, cross-validation, and the final test evaluation each belong in the workflow
+
+---
 
 ## Complete ML Workflow
 
@@ -133,7 +149,7 @@ test.write.mode("overwrite").saveAsTable("ml_catalog.ml_ready.test_data")
 import mlflow
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import auc, roc, f1_score
+from sklearn.metrics import auc, roc_curve, roc_auc_score, f1_score
 import pandas as pd
 
 # Load data
@@ -166,8 +182,8 @@ with mlflow.start_run(run_name="baseline_rf_default"):
     y_pred = baseline.predict(X_val_scaled)
     y_pred_proba = baseline.predict_proba(X_val_scaled)[:, 1]
 
-    fpr, tpr, _ = roc(y_val, y_pred_proba)
-    auc_score = auc(fpr, tpr)
+    fpr, tpr, _ = roc_curve(y_val, y_pred_proba)
+    auc_score = auc(fpr, tpr)                 # same value as roc_auc_score(y_val, y_pred_proba)
     f1 = f1_score(y_val, y_pred)
 
     # Log to MLflow
@@ -342,7 +358,7 @@ y_test = test_df["churned"]
 
 X_test_scaled = scaler.transform(X_test)
 
-# Final model on combined train+val
+# Final model with the selected hyperparameters (optionally refit on train + val)
 
 final_model = RandomForestClassifier(**best_params, random_state=42)
 final_model.fit(X_train_scaled, y_train)
@@ -378,8 +394,12 @@ if train_auc - test_auc > 0.05:
 ```python
 %python
 import mlflow
+from mlflow import MlflowClient
 
-# Register final model
+mlflow.set_registry_uri("databricks-uc")
+model_name = "ml_dev.churn.customer_churn_predictor"
+
+# Log the final model (input_example -> signature, required by Unity Catalog)
 
 with mlflow.start_run(run_name="production_candidate") as run:
     mlflow.log_params(best_params)
@@ -388,33 +408,19 @@ with mlflow.start_run(run_name="production_candidate") as run:
         "test_f1": test_f1,
         "cv_mean_auc": cv_mean_auc
     })
-    mlflow.sklearn.log_model(final_model, "model")
-    mlflow.set_tag("phase", "production")
-    mlflow.set_tag("status", "ready_for_deployment")
+    mlflow.sklearn.log_model(final_model, "model", input_example=X_test.head(5))
+    mlflow.set_tag("phase", "production_candidate")
 
     run_id = run.info.run_id
 
-# Register model in registry
+# Register in Unity Catalog and mark it as the challenger
+
+mv = mlflow.register_model(f"runs:/{run_id}/model", model_name)
 
 client = MlflowClient()
-model_uri = f"runs:/{run_id}/model"
-registered_model = client.create_registered_model("customer_churn_predictor")
+client.set_registered_model_alias(model_name, "challenger", mv.version)
 
-mv = client.create_model_version(
-    name="customer_churn_predictor",
-    source=model_uri,
-    run_id=run_id
-)
-
-# Transition to staging for testing
-
-client.transition_model_version_stage(
-    name="customer_churn_predictor",
-    version=mv.version,
-    stage="Staging"
-)
-
-print(f"Model {mv.name} v{mv.version} registered and staged")
+print(f"Model {mv.name} v{mv.version} registered with alias @challenger")
 ```
 
 ## Phase 8: Monitoring & Iteration
@@ -573,16 +579,16 @@ Deploy & Monitor
 
 ## Related Topics
 
-- [MLflow Tracking](01-mlflow-tracking.md)
-- [Experiments & Runs](02-experiments-runs.md)
-- [Spark ML Pipelines](../02-model-development/01-spark-ml-pipelines.md)
-- [Model Registry](../04-model-deployment/01-model-registry.md)
+- [Model Evaluation & Metrics](./03-model-evaluation.md)
+- [Hyperparameter Tuning & Cross-Validation](./02-hyperparameter-tuning.md)
+- [MLflow Tracking](../01-databricks-machine-learning/05-mlflow-tracking.md)
+- [Model Registry in Unity Catalog](../01-databricks-machine-learning/07-model-registry.md)
 
 ## Official Documentation
 
-- [MLflow Best Practices](https://mlflow.org/docs/latest/tracking.html#best-practices)
-- [Experiment Design](https://docs.databricks.com/machine-learning/experiments/index.html)
+- [Organize training runs with MLflow experiments](https://docs.databricks.com/aws/en/mlflow/experiments)
+- [MLOps workflows on Databricks](https://docs.databricks.com/aws/en/machine-learning/mlops/mlops-workflow)
 
 ---
 
-**[← Previous: Experiments & Runs](./02-experiments-runs.md) | [↑ Back to ML Workflows](./README.md)**
+**[← Previous: Model Evaluation & Metrics](./03-model-evaluation.md) | [↑ Back to Section](./README.md)**

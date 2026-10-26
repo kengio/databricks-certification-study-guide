@@ -6,10 +6,10 @@ Screenshots for MLflow tracking (experiments, runs), the Unity Catalog Model Reg
 
 | File | Purpose | Referenced from |
 | :--- | :--- | :--- |
-| `mlflow_experiment_runs.png` | MLflow Experiment UI — list of runs with metrics columns | `certifications/ml-associate/03-ml-workflows/02-experiments-runs.md` |
-| `mlflow_run_details.png` | Single MLflow run — params, metrics, tags, artifacts | `certifications/ml-associate/03-ml-workflows/02-experiments-runs.md` |
-| `model_registry_versions.png` | UC Model Registry — multiple versions with aliases (Champion/Challenger/Production) | `certifications/ml-associate/04-model-deployment/01-model-registry.md` |
-| `model_serving_endpoint.png` | Mosaic AI Model Serving endpoint config + status | `certifications/ml-associate/04-model-deployment/02-model-deployment-serving.md` |
+| `mlflow_experiment_runs.png` | MLflow Experiment UI — list of runs with metrics columns | `certifications/ml-associate/01-databricks-machine-learning/06-experiments-runs.md` |
+| `mlflow_run_details.png` | Single MLflow run — params, metrics, tags, artifacts | `certifications/ml-associate/01-databricks-machine-learning/06-experiments-runs.md` |
+| `model_registry_versions.png` | UC Model Registry — multiple versions with aliases (Champion/Challenger/Production) | `certifications/ml-associate/01-databricks-machine-learning/07-model-registry.md` |
+| `model_serving_endpoint.png` | Mosaic AI Model Serving endpoint config + status | `certifications/ml-associate/04-model-deployment/01-model-deployment-serving.md` |
 
 > [!note]
 > The legacy MLflow stage system (Staging / Production / Archived) is deprecated. Current Databricks uses **aliases** (e.g., `Champion`, `Challenger`, `Production`) on the UC Model Registry. New screenshots should reflect the alias-based UI.
