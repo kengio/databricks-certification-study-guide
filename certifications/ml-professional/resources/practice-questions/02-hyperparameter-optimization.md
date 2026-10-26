@@ -39,13 +39,13 @@ D) `ParallelTrials(n_jobs=-1)` — uses all available cores
 
 **Question**: A data scientist passes `roc_auc_score` directly as the objective function to `fmin()`. The search completes but the "best" model has the lowest AUC in the search. What is the problem?
 
-A) `fmin()` randomly selects the best trial rather than choosing by metric
-B) `fmin()` always minimizes the objective; returning raw AUC causes it to minimize AUC instead of maximizing it
+A) `fmin()` always minimizes the objective; returning raw AUC causes it to minimize AUC instead of maximizing it
+B) `fmin()` randomly selects the best trial rather than choosing by metric
 C) `roc_auc_score` is not a supported metric for Hyperopt
 D) The model was not serialized correctly during the trial
 
 > [!success]- Answer
-> **Correct Answer: B) `fmin()` always minimizes the objective; returning raw AUC causes it to minimize AUC instead of maximizing it**
+> **Correct Answer: A) `fmin()` always minimizes the objective; returning raw AUC causes it to minimize AUC instead of maximizing it**
 >
 > Hyperopt's `fmin()` treats the return value of the objective function as a loss to be minimized. To maximize AUC, the objective must return `1 - auc` or `-auc`. Returning the raw AUC score causes Hyperopt to search for hyperparameters that produce the lowest AUC, which is the opposite of the desired behavior.
 
@@ -56,12 +56,12 @@ D) The model was not serialized correctly during the trial
 **Question**: A data scientist enables `mlflow.sklearn.autolog()` and runs Hyperopt with `fmin()` for 20 trials. How are the MLflow runs organized?
 
 A) 20 independent top-level runs, one per trial
-B) 1 parent run containing 20 child runs, one per trial
+B) 20 experiments, each containing one run
 C) 1 run that logs all 20 trials' metrics in a single record
-D) 20 experiments, each containing one run
+D) 1 parent run containing 20 child runs, one per trial
 
 > [!success]- Answer
-> **Correct Answer: B) 1 parent run containing 20 child runs, one per trial**
+> **Correct Answer: D) 1 parent run containing 20 child runs, one per trial**
 >
 > When `mlflow.autolog()` is active and an active MLflow run exists before `fmin()` is called, Hyperopt creates that run as the parent and nests one child run per trial beneath it. Each child run captures that trial's hyperparameters, metrics, and optionally the fitted model artifact. This hierarchy makes it straightforward to compare all trials under a single experiment entry.
 
@@ -87,13 +87,13 @@ D) `hp.normal('lr', 1e-3, 1e-4)`
 
 **Question**: A data scientist sets `parallelism=8` in `SparkTrials(parallelism=8)`. What does this control?
 
-A) The number of Spark executor cores allocated to each trial
-B) The number of trials that run simultaneously across the cluster
+A) The number of trials that run simultaneously across the cluster
+B) The number of Spark executor cores allocated to each trial
 C) The total number of trials that will be evaluated
 D) The number of cross-validation folds run per trial
 
 > [!success]- Answer
-> **Correct Answer: B) The number of trials that run simultaneously across the cluster**
+> **Correct Answer: A) The number of trials that run simultaneously across the cluster**
 >
 > The `parallelism` argument in `SparkTrials` sets how many trials are dispatched to Spark executors at the same time. With `parallelism=8`, up to 8 trials are in flight concurrently. Higher parallelism increases throughput but can reduce the benefit of Bayesian search because fewer completed results are available to guide the selection of the next batch of trials.
 
@@ -137,11 +137,11 @@ D) Manual search — a domain expert selects the 50 most promising configuration
 
 A) `hp.uniform('kernel', 0, 3)`
 B) `hp.randint('kernel', 3)`
-C) `hp.choice('kernel', ["linear", "rbf", "poly"])`
-D) `hp.categorical('kernel', ["linear", "rbf", "poly"])`
+C) `hp.categorical('kernel', ["linear", "rbf", "poly"])`
+D) `hp.choice('kernel', ["linear", "rbf", "poly"])`
 
 > [!success]- Answer
-> **Correct Answer: C) `hp.choice('kernel', ["linear", "rbf", "poly"])`**
+> **Correct Answer: D) `hp.choice('kernel', ["linear", "rbf", "poly"])`**
 >
 > `hp.choice` is the correct function for selecting one item from a discrete list of categorical values. It returns the selected element (e.g., `"rbf"`) rather than an index, so it plugs directly into model constructors. `hp.uniform` and `hp.randint` produce numeric values, not strings. `hp.categorical` does not exist in Hyperopt.
 
@@ -152,12 +152,12 @@ D) `hp.categorical('kernel', ["linear", "rbf", "poly"])`
 **Question**: A data scientist uses Spark ML's `CrossValidator` to perform 5-fold cross-validation over a parameter grid with 10 configurations, training 50 models total. What parameter controls how many models train simultaneously?
 
 A) `numFolds` — number of cross-validation folds
-B) `parallelism` — number of models to train in parallel
+B) `sparkContext.setParallelism(10)` — global Spark parallelism setting
 C) `n_jobs` — standard scikit-learn parallel jobs argument
-D) `sparkContext.setParallelism(10)` — global Spark parallelism setting
+D) `parallelism` — number of models to train in parallel
 
 > [!success]- Answer
-> **Correct Answer: B) `parallelism` — number of models to train in parallel**
+> **Correct Answer: D) `parallelism` — number of models to train in parallel**
 >
 > Spark ML's `CrossValidator` and `TrainValidationSplit` both expose a `parallelism` parameter (default `1`) that specifies how many (model, fold) combinations are trained concurrently. Setting it to match the number of available executor cores significantly reduces wall-clock time for large grids. `n_jobs` is a scikit-learn concept not present in Spark ML. `numFolds` controls evaluation strategy, not concurrency.
 
@@ -183,13 +183,13 @@ D) Train an ensemble of 10 default models and average their predictions
 
 **Question**: A data scientist tunes hyperparameters by running 200 Hyperopt trials evaluated against the test set, selects the best configuration, and reports that test set AUC as the final model performance. What is the primary risk?
 
-A) Hyperopt cannot evaluate against a test set directly
-B) The reported AUC is optimistically biased because the test set influenced hyperparameter selection
+A) The reported AUC is optimistically biased because the test set influenced hyperparameter selection
+B) Hyperopt cannot evaluate against a test set directly
 C) 200 trials is too few for reliable Bayesian optimization
 D) The model will underfit because hyperparameters were selected to minimize loss
 
 > [!success]- Answer
-> **Correct Answer: B) The reported AUC is optimistically biased because the test set influenced hyperparameter selection**
+> **Correct Answer: A) The reported AUC is optimistically biased because the test set influenced hyperparameter selection**
 >
 > When the test set is used to guide any model selection decision — including hyperparameter tuning — it is no longer a held-out, unbiased estimate of generalization performance. The correct practice is to tune on a separate validation set (or use cross-validation), and reserve the test set for a single final evaluation. Using the test set for HPO leads to overfitting to the test distribution and inflated performance estimates.
 
@@ -234,12 +234,12 @@ D) Python `asyncio` tasks that each call `study.optimize` with an MLflow callbac
 **Question**: An engineer wants to run a Ray Tune search across the workers of a classic Databricks cluster from a notebook. What must happen before the `tune.Tuner(...).fit()` call?
 
 A) Nothing. `ray.init()` alone automatically uses all Spark workers  
-B) Start a Ray-on-Spark cluster with `ray.util.spark.setup_ray_cluster(...)`, then `ray.init()`  
+B) Run `%pip install ray` after the Ray cluster starts, so workers pick up the library  
 C) Convert the cluster to serverless compute, which runs Ray natively  
-D) Run `%pip install ray` after the Ray cluster starts, so workers pick up the library
+D) Start a Ray-on-Spark cluster with `ray.util.spark.setup_ray_cluster(...)`, then `ray.init()`
 
 > [!success]- Answer
-> **Correct Answer: B) Start a Ray-on-Spark cluster with `ray.util.spark.setup_ray_cluster(...)`, then `ray.init()`**
+> **Correct Answer: D) Start a Ray-on-Spark cluster with `ray.util.spark.setup_ray_cluster(...)`, then `ray.init()`**
 >
 > `setup_ray_cluster` launches Ray worker nodes on the Spark cluster's executors. Ray then sees the whole cluster.
 >
@@ -287,13 +287,13 @@ D) A single run logging all 60 fold scores as separate metrics, plus the final m
 
 **Question**: During training, a team wants MLflow to chart validation loss for each of 50 epochs within one run. Which call should run inside the epoch loop?
 
-A) `mlflow.log_param("val_loss", loss)`  
-B) `mlflow.log_metric("val_loss", loss, step=epoch)`  
+A) `mlflow.log_metric("val_loss", loss, step=epoch)`  
+B) `mlflow.log_param("val_loss", loss)`  
 C) `mlflow.set_tag("val_loss", loss)`  
 D) `mlflow.log_dict({"val_loss": loss}, "loss.json")`
 
 > [!success]- Answer
-> **Correct Answer: B) `mlflow.log_metric("val_loss", loss, step=epoch)`**
+> **Correct Answer: A) `mlflow.log_metric("val_loss", loss, step=epoch)`**
 >
 > `log_metric` with `step` records a time series that the run page charts.
 >
@@ -306,16 +306,16 @@ D) `mlflow.log_dict({"val_loss": loss}, "loss.json")`
 **Question**: A custom `mlflow.pyfunc.PythonModel` must derive `hour_of_day` and a ratio against a merchant lookup file from the raw request, then score with a scikit-learn estimator stored as an artifact. Where should each step go?
 
 A) Load the estimator and lookup file inside `predict()` on every call, so they're always fresh  
-B) Load the estimator and lookup file once in `load_context()` via `context.artifacts[...]`; compute the features and score in `predict()`  
+B) Store the lookup file on the training cluster's local disk and read it by absolute path in `predict()`  
 C) Compute the features in the client application and keep the model a plain `mlflow.sklearn` flavor  
-D) Store the lookup file on the training cluster's local disk and read it by absolute path in `predict()`
+D) Load the estimator and lookup file once in `load_context()` via `context.artifacts[...]`; compute the features and score in `predict()`
 
 > [!success]- Answer
-> **Correct Answer: B) Load the estimator and lookup file once in `load_context()` via `context.artifacts[...]`; compute the features and score in `predict()`**
+> **Correct Answer: D) Load the estimator and lookup file once in `load_context()` via `context.artifacts[...]`; compute the features and score in `predict()`**
 >
 > `load_context()` runs once at load time for heavy artifacts; `predict()` runs per request for feature engineering and scoring.
 >
-> Packaging the transformation inside the model keeps training and serving consistent. Files passed through the `artifacts` dict are copied into the model package and resolved with `context.artifacts`. Local paths from the training cluster (D) don't exist on the serving container, and loading per request (A) adds latency.
+> Packaging the transformation inside the model keeps training and serving consistent. Files passed through the `artifacts` dict are copied into the model package and resolved with `context.artifacts`. Local paths from the training cluster (B) don't exist on the serving container, and loading per request (A) adds latency.
 
 ---
 [← Back to Practice Questions](./README.md) | [Next: Model Lifecycle](./03-model-lifecycle.md)

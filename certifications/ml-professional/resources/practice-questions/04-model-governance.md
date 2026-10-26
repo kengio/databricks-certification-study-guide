@@ -48,12 +48,12 @@ D) Roll back to previous model
 **A feature's PSI score is 0.14 this week. What does this indicate?**
 
 A) No significant change — continue monitoring
-B) Slight population shift — investigate but retraining not yet mandatory
+B) Model is performing well
 C) Significant drift — retrain immediately
-D) Model is performing well
+D) Slight population shift — investigate but retraining not yet mandatory
 
 > [!success]- Answer
-> **Correct Answer: B) Slight population shift — investigate but retraining not yet mandatory**
+> **Correct Answer: D) Slight population shift — investigate but retraining not yet mandatory**
 >
 > PSI between 0.10 and 0.20 indicates a slight but notable shift. Investigate the source of change; retraining may not be needed if model performance is unaffected.
 
@@ -63,13 +63,13 @@ D) Model is performing well
 
 **A team monitors the `payment_method` feature (values: card, cash, wallet). Which statistical test detects distribution drift in this feature?**
 
-A) Kolmogorov-Smirnov test
-B) Chi-square test
+A) Chi-square test
+B) Kolmogorov-Smirnov test
 C) t-test
 D) PSI with continuous binning
 
 > [!success]- Answer
-> **Correct Answer: B) Chi-square test**
+> **Correct Answer: A) Chi-square test**
 >
 > Chi-square test compares observed categorical frequencies to expected (baseline) frequencies. KS test requires continuous distributions.
 
@@ -97,11 +97,11 @@ D) Shapiro-Wilk test
 
 A) TimeSeries
 B) Snapshot
-C) InferenceLog
-D) DriftProfile
+C) DriftProfile
+D) InferenceLog
 
 > [!success]- Answer
-> **Correct Answer: C) InferenceLog**
+> **Correct Answer: D) InferenceLog**
 >
 > InferenceLog is the specialized monitor type for ML inference tables. It computes model performance metrics (accuracy, AUC, RMSE) in addition to drift metrics.
 
@@ -128,12 +128,12 @@ D) Databricks uses the baseline to retrain models automatically
 **A model goes to production on Monday without inference tables configured. On Thursday the team enables inference tables. Which requests are captured?**
 
 A) All requests from Monday onward
-B) Only requests from Thursday onward
+B) Requests from the past 24 hours are backfilled
 C) Requests from the past 7 days are backfilled
-D) Requests from the past 24 hours are backfilled
+D) Only requests from Thursday onward
 
 > [!success]- Answer
-> **Correct Answer: B) Only requests from Thursday onward**
+> **Correct Answer: D) Only requests from Thursday onward**
 >
 > Inference tables are prospective only. They capture requests after configuration; retroactive logging of past traffic is not possible.
 
@@ -207,13 +207,13 @@ D) `USE CATALOG`
 
 **Ground truth labels are available only after 14 days. What monitoring approach detects potential model degradation before labels arrive?**
 
-A) Wait 14 days and compute AUC retroactively
-B) Monitor prediction score distributions for drift using PSI
+A) Monitor prediction score distributions for drift using PSI
+B) Wait 14 days and compute AUC retroactively
 C) Disable monitoring until labels arrive
 D) Use the model's training metrics as the current performance estimate
 
 > [!success]- Answer
-> **Correct Answer: B) Monitor prediction score distributions for drift using PSI**
+> **Correct Answer: A) Monitor prediction score distributions for drift using PSI**
 >
 > Prediction drift (monitoring output distribution changes) serves as a leading indicator. Significant PSI on prediction scores often precedes measurable AUC degradation once labels arrive.
 
@@ -224,12 +224,12 @@ D) Use the model's training metrics as the current performance estimate
 **A team suspects that some features have become less informative in production compared to training. How should they investigate?**
 
 A) Compare training AUC vs production AUC
-B) Compare mean absolute SHAP values from training vs production data
+B) Check the feature table's Delta version
 C) Re-run hyperparameter optimization
-D) Check the feature table's Delta version
+D) Compare mean absolute SHAP values from training vs production data
 
 > [!success]- Answer
-> **Correct Answer: B) Compare mean absolute SHAP values from training vs production data**
+> **Correct Answer: D) Compare mean absolute SHAP values from training vs production data**
 >
 > Comparing SHAP value distributions between training and production data reveals which features have changed importance. A feature that was highly important during training but has low SHAP values in production indicates distribution shift in that feature.
 
@@ -257,11 +257,11 @@ D) SHAP values from the model
 
 A) `ks_test` and `wasserstein_distance`  
 B) `population_stability_index` only  
-C) `chi_squared_test`, `tv_distance`, `l_infinity_distance`, and `js_distance`  
-D) None. Categorical columns aren't profiled
+C) None. Categorical columns aren't profiled  
+D) `chi_squared_test`, `tv_distance`, `l_infinity_distance`, and `js_distance`
 
 > [!success]- Answer
-> **Correct Answer: C) `chi_squared_test`, `tv_distance`, `l_infinity_distance`, and `js_distance`**
+> **Correct Answer: D) `chi_squared_test`, `tv_distance`, `l_infinity_distance`, and `js_distance`**
 >
 > Categorical columns get chi-square, total variation, L-infinity, and Jensen–Shannon statistics.
 >
@@ -309,13 +309,13 @@ D) No profile is possible without a timestamp column
 
 **Question**: A fraud team wants (1) the total dollar amount of missed fraud per window, computed from table columns, and (2) how much that amount changed versus the baseline. Which custom metric types do they need?
 
-A) (1) derived, (2) aggregate  
-B) (1) aggregate, (2) drift  
+A) (1) aggregate, (2) drift  
+B) (1) derived, (2) aggregate  
 C) (1) drift, (2) derived  
 D) Both aggregate
 
 > [!success]- Answer
-> **Correct Answer: B) (1) aggregate, (2) drift**
+> **Correct Answer: A) (1) aggregate, (2) drift**
 >
 > Aggregate metrics compute from table columns into the profile metrics table; drift metrics compare them across windows or against the baseline into the drift metrics table.
 >
@@ -382,12 +382,12 @@ D) Recall of the positive class
 **Question**: A team wants retraining to start automatically when a monitored model's `log_loss` in the profile metrics table exceeds a threshold. Which design implements this on Databricks?
 
 A) Wait for a data scientist to notice the dashboard and run the training notebook  
-B) Schedule the monitor refresh, then run a job whose first task queries the metric table and fails or exits when the threshold isn't breached, gating a downstream retraining task (or use a SQL alert that triggers the job)  
+B) Enable inference tables, which retrain the model when drift is detected  
 C) Set the endpoint's workload size to Large so it retrains itself  
-D) Enable inference tables, which retrain the model when drift is detected
+D) Schedule the monitor refresh, then run a job whose first task queries the metric table and fails or exits when the threshold isn't breached, gating a downstream retraining task (or use a SQL alert that triggers the job)
 
 > [!success]- Answer
-> **Correct Answer: B) Schedule the monitor refresh, then run a job whose first task queries the metric table and fails or exits when the threshold isn't breached, gating a downstream retraining task (or use a SQL alert that triggers the job)**
+> **Correct Answer: D) Schedule the monitor refresh, then run a job whose first task queries the metric table and fails or exits when the threshold isn't breached, gating a downstream retraining task (or use a SQL alert that triggers the job)**
 >
 > A metric-check task (or alert) on the monitor's tables gates or triggers the retraining job.
 >

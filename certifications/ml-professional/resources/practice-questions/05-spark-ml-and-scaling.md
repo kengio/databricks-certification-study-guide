@@ -23,13 +23,13 @@ All questions in this file target the September 2025 exam guide sections **Using
 
 **Question**: Which scenario most clearly calls for Spark ML rather than scikit-learn on the driver?
 
-A) A 40 MB CSV with 20,000 rows for a quick prototype  
-B) A 900-million-row Delta table of telemetry, where the training pipeline must keep working as volume grows  
+A) A 900-million-row Delta table of telemetry, where the training pipeline must keep working as volume grows  
+B) A 40 MB CSV with 20,000 rows for a quick prototype  
 C) A model that needs a transformer-based deep-learning architecture  
 D) A single-record, sub-20 ms real-time scoring API
 
 > [!success]- Answer
-> **Correct Answer: B) A 900-million-row Delta table of telemetry, where the training pipeline must keep working as volume grows**
+> **Correct Answer: A) A 900-million-row Delta table of telemetry, where the training pipeline must keep working as volume grows**
 >
 > Data far larger than one machine's memory, already in Delta and still growing, is the Spark ML signal.
 >
@@ -114,12 +114,12 @@ D) Remove the evaluator and pick the last parameter map
 **Question**: A registered Spark ML `PipelineModel` must score records continuously as they land in a Delta table. What is the simplest correct approach?
 
 A) Retrain a separate streaming model, because batch models can't score streams  
-B) Load it with `mlflow.spark.load_model(...)` and call `.transform()` on `spark.readStream.table(...)`, writing with `writeStream` and a checkpoint location  
+B) Deploy the model to a REST endpoint and call it once per row from a Python loop  
 C) Collect each micro-batch to the driver and call `predict` row by row  
-D) Deploy the model to a REST endpoint and call it once per row from a Python loop
+D) Load it with `mlflow.spark.load_model(...)` and call `.transform()` on `spark.readStream.table(...)`, writing with `writeStream` and a checkpoint location
 
 > [!success]- Answer
-> **Correct Answer: B) Load it with `mlflow.spark.load_model(...)` and call `.transform()` on `spark.readStream.table(...)`, writing with `writeStream` and a checkpoint location**
+> **Correct Answer: D) Load it with `mlflow.spark.load_model(...)` and call `.transform()` on `spark.readStream.table(...)`, writing with `writeStream` and a checkpoint location**
 >
 > A fitted `PipelineModel` transforms streaming DataFrames with the same `transform()` call it uses for batch.
 >
@@ -149,13 +149,13 @@ D) Run Structured Streaming with a 1-second trigger and have the service poll th
 
 **Question**: A retailer needs a separate demand model for each of 3,000 stores, trained in parallel on the cluster. Which approach is correct?
 
-A) Loop over the stores on the driver, calling `toPandas()` and training each model in turn  
-B) `df.groupBy("store_id").applyInPandas(train_fn, schema="store_id string, rmse double, run_id string")`, where `train_fn` takes and returns a pandas DataFrame  
+A) `df.groupBy("store_id").applyInPandas(train_fn, schema="store_id string, rmse double, run_id string")`, where `train_fn` takes and returns a pandas DataFrame  
+B) Loop over the stores on the driver, calling `toPandas()` and training each model in turn  
 C) `df.mapInPandas(train_fn, schema)` with no grouping  
 D) One Spark ML model with `store_id` one-hot encoded
 
 > [!success]- Answer
-> **Correct Answer: B) `df.groupBy("store_id").applyInPandas(train_fn, schema="store_id string, rmse double, run_id string")`, where `train_fn` takes and returns a pandas DataFrame**
+> **Correct Answer: A) `df.groupBy("store_id").applyInPandas(train_fn, schema="store_id string, rmse double, run_id string")`, where `train_fn` takes and returns a pandas DataFrame**
 >
 > Grouped map (`applyInPandas`) hands each store's rows to `train_fn` as a pandas DataFrame and runs the groups in parallel.
 >
@@ -168,12 +168,12 @@ D) One Spark ML model with `store_id` one-hot encoded
 **Question**: An `applyInPandas` training job succeeds for 2,999 stores but fails with out-of-memory errors on the flagship store, which has 60× more rows than average. What is the cause, and what fixes it?
 
 A) `spark.sql.execution.arrow.maxRecordsPerBatch` is too high; lowering it splits the group  
-B) All of a group's data is loaded into memory at once; split or salt the oversized key, pre-aggregate, or give executors more memory  
+B) The output schema is wrong  
 C) `applyInPandas` can't process more than 1 GB in total; switch to a pandas UDF  
-D) The output schema is wrong
+D) All of a group's data is loaded into memory at once; split or salt the oversized key, pre-aggregate, or give executors more memory
 
 > [!success]- Answer
-> **Correct Answer: B) All of a group's data is loaded into memory at once; split or salt the oversized key, pre-aggregate, or give executors more memory**
+> **Correct Answer: D) All of a group's data is loaded into memory at once; split or salt the oversized key, pre-aggregate, or give executors more memory**
 >
 > Each group must fit in executor memory, because all of its rows are loaded before the function runs.
 >
@@ -203,13 +203,13 @@ D) Split the data into shards and average models trained separately
 
 **Question**: A team fine-tunes a deep-learning model whose parameters, gradients, and optimizer state don't fit in one GPU's memory, on a multi-GPU node. Which strategy fits?
 
-A) Plain DDP (Distributed Data Parallel), which keeps a full model replica on every GPU  
-B) Sharded data parallelism or model parallelism, for example FSDP or DeepSpeed ZeRO, which shard model state across GPUs  
+A) Sharded data parallelism or model parallelism, for example FSDP or DeepSpeed ZeRO, which shard model state across GPUs  
+B) Plain DDP (Distributed Data Parallel), which keeps a full model replica on every GPU  
 C) Hyperparameter tuning with more trials  
 D) `applyInPandas` grouped by GPU ID
 
 > [!success]- Answer
-> **Correct Answer: B) Sharded data parallelism or model parallelism, for example FSDP or DeepSpeed ZeRO, which shard model state across GPUs**
+> **Correct Answer: A) Sharded data parallelism or model parallelism, for example FSDP or DeepSpeed ZeRO, which shard model state across GPUs**
 >
 > When the model doesn't fit on one device, shard the model state (FSDP / ZeRO) or split the model (pipeline / tensor parallelism).
 >
