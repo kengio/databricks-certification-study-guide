@@ -54,13 +54,17 @@ models. No cluster provisioning is needed; the model runs on shared Databricks i
 
 | Endpoint Name | Type | Use Case |
 | ------------- | ---- | -------- |
-| `databricks-meta-llama-3-1-70b-instruct` | Chat LLM | General instruction following, RAG generation |
+| `databricks-meta-llama-3-3-70b-instruct` | Chat LLM | General instruction following, RAG generation |
 | `databricks-meta-llama-3-1-8b-instruct` | Chat LLM (smaller) | Lower latency, cost-sensitive tasks |
+| `databricks-claude-sonnet-4-5`, `databricks-gpt-5-mini`, … | Chat LLM (partner-hosted) | Frontier quality through the same API |
 | `databricks-gte-large-en` | Embedding | Text embedding for vector search |
 | `databricks-bge-large-en` | Embedding | Alternative embedding model |
 
 **Embedding consistency rule**: Always use the **same embedding model** at index creation time and
 query time. Mixing models corrupts similarity search results.
+
+> [!note] Platform update (Oct 2026)
+> The hosted model list changes often and models are retired on a schedule — for example, `databricks-meta-llama-3-1-70b-instruct`, used in older code samples in this guide, is no longer in the supported list. Check [Supported foundation models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) before you pick an endpoint name. Databricks-hosted models are also exposed as Unity Catalog **model services** in the `system.ai` schema and governed through **Unity Gateway** ([AI governance with Unity Gateway](https://docs.databricks.com/aws/en/ai-gateway/)).
 
 ### Querying Foundation Models
 
@@ -103,8 +107,8 @@ infrastructure. The Databricks endpoint acts as a proxy, providing:
 - **Unified authentication**: Credentials for OpenAI, Anthropic, Cohere stored securely in
   Databricks secrets; client code never handles API keys directly
 - **Rate limiting**: Per-user or per-endpoint token limits prevent runaway costs
-- **Cost tracking**: Token usage logged to Unity Catalog audit logs
-- **Audit logging**: Every call is logged with user identity and token counts
+- **Usage tracking**: Token counts and requester per call in the `system.serving.endpoint_usage` system table
+- **Payload logging**: Requests and responses captured in an inference table (see [AI Gateway: Usage Tracking and Cost Control](../05-evaluation-and-monitoring/04-ai-gateway-usage-and-cost-control.md))
 
 ### Querying an External Model
 
@@ -134,12 +138,13 @@ AI Gateway abstraction.
 
 ### Rate Limiting
 
-Rate limits are configured at the endpoint level and enforce a maximum token rate:
+Rate limits are configured at the endpoint level as queries per minute (QPM) and / or tokens per minute (TPM):
 
 | Scope | Configuration | Effect |
 | ----- | ------------- | ------ |
-| Per-endpoint | Tokens per minute for all callers combined | Caps total spend on a single endpoint |
-| Per-user | Tokens per minute per Databricks user | Prevents individual over-use |
+| Per-endpoint | QPM / TPM for all callers combined | Caps total spend on a single endpoint |
+| Per-user (default) | QPM / TPM per Databricks user | Prevents individual over-use |
+| Custom | Specific users, service principals, or groups | User-specific limits beat group limits |
 
 When a rate limit is exceeded, the API returns HTTP `429 Too Many Requests`.
 
@@ -285,4 +290,4 @@ Fine-tuning workflow:
 
 ---
 
-**[↑ Back to Databricks GenAI Tools](./README.md) | [Next: MLflow for GenAI](./02-mlflow-for-genai.md) →**
+**[↑ Back to Assembling and Deploying Applications](./README.md) | [Next: MLflow for GenAI](./02-mlflow-for-genai.md) →**

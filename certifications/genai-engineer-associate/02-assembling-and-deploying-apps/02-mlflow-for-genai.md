@@ -14,8 +14,8 @@ Review App.
 
 ## Overview Diagram
 
-> [!note]
-> **MLflow `ChatModel` is deprecated in MLflow 3.0+.** The current Mosaic AI Agent Framework path is to subclass `mlflow.pyfunc.ResponsesAgent` (or `ChatAgent`) and deploy via `databricks.agents.deploy(...)`. References to `ChatModel` below are retained because they are still seen in the documentation and may appear in exam stems; treat them as legacy.
+> [!note] Platform update (Oct 2026)
+> **`ChatModel` and `ChatAgent` are legacy authoring interfaces.** MLflow recommends `ResponsesAgent` instead of `ChatModel` starting in MLflow 3.0, and Databricks recommends migrating agents to the `ResponsesAgent` schema ([MLflow ChatModel guide](https://mlflow.org/docs/latest/genai/flavors/chat-model-intro/), [legacy agent schema](https://learn.microsoft.com/en-us/azure/databricks/generative-ai/agent-framework/agent-legacy-schema)). Agents deployed to Model Serving with `agents.deploy()` are documented as legacy since 2026-10-05; new agents use the Agent Bricks CLI and Agent Runtime. The `ChatModel` example below is kept because it shows the exam's *"pyfunc model with pre- and post-processing"* pattern clearly; see [Agentic Systems with MLflow, Agent Framework, and Genie](../01-application-development/05-agentic-systems-mlflow-and-genie.md) for the `ResponsesAgent` equivalent.
 
 ```mermaid
 flowchart TB
@@ -138,8 +138,9 @@ rag-pipeline  (200ms)
 
 ## `mlflow.pyfunc.ChatModel` Interface
 
-`ChatModel` is the recommended base class for custom GenAI agents. It enforces the OpenAI-
-compatible chat completions interface, making the agent deployable to any Model Serving endpoint.
+`ChatModel` is a (now legacy) base class for custom GenAI chains. It enforces the OpenAI-compatible
+chat completions interface and is a clear example of a pyfunc model with pre- and post-processing
+around the LLM call. For new agents, subclass `ResponsesAgent` instead.
 
 ```python
 import mlflow
@@ -299,16 +300,20 @@ print(deployment.review_app_url)   # URL for human reviewers
 1. agents.deploy() → creates serving endpoint + review app
 2. Share review_app_url with domain experts / QA team
 3. Reviewers submit queries, rate answers (thumbs up/down, comments)
-4. Feedback stored in Delta table: catalog.schema.my_rag_agent_payload
-5. Load feedback for analysis or fine-tuning:
+4. MLflow 3: feedback is attached to each request's trace as an assessment
+5. Pull labelled traces for analysis or to build an evaluation dataset
 ```
 
 ```python
-import spark
+import mlflow
 
-feedback_df = spark.table("catalog.schema.my_rag_agent_payload")
-feedback_df.select("request", "response", "feedback").show()
+# Traces (with reviewer feedback) from the agent's MLflow experiment
+traces_df = mlflow.search_traces(experiment_ids=["<experiment-id>"])
+traces_df[["trace_id", "request", "response", "assessments"]].head()
 ```
+
+> [!note]
+> With MLflow 2.x deployments, Review App feedback landed in the `<model>_payload_assessment_logs` inference table. Databricks has deprecated those request and assessment logs and the feedback model in favour of MLflow 3 tracing and `mlflow.log_feedback()` ([Deploy an agent, Model Serving](https://docs.databricks.com/aws/en/agents/custom-agents/model-serving/deploy-agent)). See [MLflow Scorers, Judges, SME Feedback, and Agent Monitoring](../05-evaluation-and-monitoring/03-mlflow-scorers-judges-and-feedback.md).
 
 **Exam tip**: `agents.deploy()` is distinct from `mlflow.models.deploy()`. The `agents` module
 is specific to the Mosaic AI Agent Framework and includes the Review App integration.
@@ -414,11 +419,11 @@ with mlflow.start_run(run_name="rag-v3-llama-70b"):
 - **MLflow Tracing**: captures inputs, outputs, and latency of every LLM call and retrieval step as a hierarchical span tree — displayed in the MLflow Trace UI
 - **`mlflow.langchain.autolog()`**: enables automatic traces for all LangChain chains with a single line — no manual instrumentation needed
 - **`mlflow.start_span(name, span_type)`**: manual span creation for custom components not covered by autolog
-- **`mlflow.pyfunc.ChatModel`**: standard interface for custom agents — implement `predict()` to accept OpenAI-format chat messages; enables consistent deployment
+- **`mlflow.pyfunc.ChatModel`** (legacy): pyfunc interface that accepts OpenAI-format chat messages in `predict()` — superseded by `ResponsesAgent` for new agents
 - **`agents.deploy()`**: deploys a registered model to Model Serving AND automatically enables the Review App for human feedback collection
 - **Review App**: collaborative human annotation interface — captures thumbs up/down and free-text feedback per prediction
 - **Tracing for debugging**: use span tree to identify which step (retrieval, LLM call, tool execution) is causing latency or incorrect output
 
 ---
 
-**[← Previous: Mosaic AI & Foundation Models](./01-mosaic-ai-and-foundation-models.md) | [↑ Back to Databricks GenAI Tools](./README.md)**
+**[← Previous: Mosaic AI & Foundation Models](./01-mosaic-ai-and-foundation-models.md) | [↑ Back to Assembling and Deploying Applications](./README.md) | [Next: Compound AI Apps](./03-compound-ai-apps.md) →**

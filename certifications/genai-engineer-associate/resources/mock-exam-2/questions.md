@@ -249,40 +249,10 @@ D) These metrics cannot be optimized independently — only full system retraini
 
 **Question**: A developer creates a Vector Search index named `product_search_idx` on the endpoint `my_vs_endpoint`. They want to query it with the text "wireless noise-canceling headphones". Which SDK call is CORRECT?
 
-A)
-
-```python
-index = vsc.get_index("my_vs_endpoint", "product_search_idx")
-results = index.similarity_search(
-    query_text="wireless noise-canceling headphones",
-    columns=["product_id", "title", "description"],
-    num_results=10
-)
-```
-
-B)
-
-```python
-results = vsc.search(
-    endpoint="my_vs_endpoint",
-    index="product_search_idx",
-    query="wireless noise-canceling headphones",
-    top_k=10
-)
-```
-
-C)
-
-```python
-index = vsc.get_index("product_search_idx")
-results = index.query(query_text="wireless noise-canceling headphones", limit=10)
-```
-
-D)
-
-```python
-results = vsc.similarity_search("product_search_idx", "wireless noise-canceling headphones", k=10)
-```
+A) `index = vsc.get_index("my_vs_endpoint", "product_search_idx")` then `index.similarity_search(query_text="wireless noise-canceling headphones", columns=["product_id", "title", "description"], num_results=10)`  
+B) `vsc.search(endpoint="my_vs_endpoint", index="product_search_idx", query="wireless noise-canceling headphones", top_k=10)`  
+C) `index = vsc.get_index("product_search_idx")` then `index.query(query_text="wireless noise-canceling headphones", limit=10)`  
+D) `vsc.similarity_search("product_search_idx", "wireless noise-canceling headphones", k=10)`  
 
 > [!success]- Answer
 > **Correct Answer: A**
@@ -635,27 +605,9 @@ D) Use `mlflow.set_tag("step1_output", ...)` to store intermediate results
 
 **Question**: A developer wants to load a LangChain chain that was logged with `mlflow.langchain.log_model()` and make predictions programmatically. The model URI is `runs:/abc123/rag-chain`. Which code produces a callable `.predict()` interface?
 
-A)
-
-```python
-chain = mlflow.langchain.load_model("runs:/abc123/rag-chain")
-result = chain.invoke({"query": "What is RAG?"})
-```
-
-B)
-
-```python
-model = mlflow.pyfunc.load_model("runs:/abc123/rag-chain")
-result = model.predict({"query": "What is RAG?"})
-```
-
-C)
-
-```python
-model = mlflow.models.load_model("runs:/abc123/rag-chain")
-result = model({"query": "What is RAG?"})
-```
-
+A) `chain = mlflow.langchain.load_model("runs:/abc123/rag-chain")` then `chain.invoke({"query": "What is RAG?"})`  
+B) `model = mlflow.pyfunc.load_model("runs:/abc123/rag-chain")` then `model.predict({"query": "What is RAG?"})`  
+C) `model = mlflow.models.load_model("runs:/abc123/rag-chain")` then `model({"query": "What is RAG?"})`  
 D) Both A and B are valid  
 
 > [!success]- Answer
@@ -754,17 +706,7 @@ D) Databricks Secrets — store per-team API keys with different expiration time
 **Question**: A team logs their RAG chain and evaluation results to MLflow. They want to register the chain as a model version and add a description explaining the chunking strategy used. Which MLflow API accomplishes this?
 
 A) `mlflow.log_param("chunking_strategy", "recursive-512-overlap-50")`  
-B)
-
-```python
-client = MlflowClient()
-client.update_model_version(
-    name="rag-chain",
-    version=1,
-    description="Recursive chunking, 512 tokens, 50-token overlap"
-)
-```
-
+B) `MlflowClient().update_model_version(name="rag-chain", version=1, description="Recursive chunking, 512 tokens, 50-token overlap")`  
 C) `mlflow.set_tag("chunking_strategy", "recursive-512-overlap-50")`  
 D) `mlflow.register_model(model_uri, "rag-chain", description="...")`  
 

@@ -51,44 +51,62 @@ Everything inside `EP_internal` runs in one Model Serving replica per request. A
 ## Logging a compound app with MLflow + the Agent Framework
 
 ```python
+# agent.py — models-from-code file
 import mlflow
 from mlflow.pyfunc import ResponsesAgent
-from databricks import agents
+from mlflow.types.responses import ResponsesAgentRequest, ResponsesAgentResponse
 
-# Subclass ResponsesAgent — the current MLflow Agent Framework path
+
 class CustomerSupportRAG(ResponsesAgent):
-    def predict(self, request):
-        # request.messages is a list of chat-style turns
-        retrieved = vector_search_index.similarity_search(request.messages[-1].content, k=5)
-        context = "\n".join(d.page_content for d in retrieved)
-        return llm.invoke(f"Context: {context}\n\nQuestion: {request.messages[-1].content}")
+    def predict(self, request: ResponsesAgentRequest) -> ResponsesAgentResponse:
+        question = request.input[-1].content          # latest user turn
+        docs = retriever.invoke(question)             # Vector Search retriever (pre-processing)
+        context = "\n".join(d.page_content for d in docs)
+        answer = llm.invoke(f"Context: {context}\n\nQuestion: {question}").content
+        return ResponsesAgentResponse(                # post-processing into the Responses schema
+            output=[self.create_text_output_item(text=answer, id="msg_1")]
+        )
 
-# Log with mlflow.pyfunc (NOT mlflow.langchain for agents) + register in UC
+
+mlflow.models.set_model(CustomerSupportRAG())
+```
+
+```python
+# driver notebook — log, register in UC, deploy
+import mlflow
+from databricks import agents
+from mlflow.models.resources import DatabricksServingEndpoint, DatabricksVectorSearchIndex
+
+mlflow.set_registry_uri("databricks-uc")
 with mlflow.start_run():
     info = mlflow.pyfunc.log_model(
-        python_model=CustomerSupportRAG(),
-        artifact_path="agent",
+        name="agent",
+        python_model="agent.py",
+        resources=[
+            DatabricksServingEndpoint(endpoint_name="databricks-claude-sonnet-4-5"),
+            DatabricksVectorSearchIndex(index_name="main.genai.docs_index"),
+        ],
         registered_model_name="main.genai.customer_support_rag",
     )
 
-# Deploy creates a Model Serving endpoint with Inference Tables enabled
-agents.deploy(
-    model_name="main.genai.customer_support_rag",
-    model_version=info.registered_model_version,
-)
+# Creates (or updates) a Model Serving endpoint with inference tables, tracing, and the Review App
+agents.deploy("main.genai.customer_support_rag", info.registered_model_version)
 ```
 
 > [!note]
-> `databricks.agents.deploy()` is the documented one-step path: it provisions a Model Serving endpoint, enables Inference Tables, and wires MLflow tracing. The exact API surface evolves — consult the [Agent Framework docs](https://docs.databricks.com/en/generative-ai/agent-framework/) for the latest signatures.
+> `databricks.agents.deploy()` is the one-step Model Serving path the exam tests: it creates a serving endpoint, provisions credentials for declared resources, enables inference tables, turns on real-time MLflow tracing, and sets up the Review App ([Deploy an agent, Model Serving](https://docs.databricks.com/aws/en/agents/custom-agents/model-serving/deploy-agent)).
+
+> [!note] Platform update (Oct 2026)
+> Since **2026-10-05** the docs list agents deployed to **Model Serving** as *legacy*. New code-first agents are scaffolded and deployed with the **Agent Bricks CLI** (Beta) — `agentbricks init`, `agentbricks dev`, `agentbricks deploy` — which serves them with `DurableAgentServer` on **Agent Runtime** (Databricks Apps) ([Agent Bricks CLI](https://docs.databricks.com/aws/en/agents/custom-agents/agent-bricks-cli), [October 2026 release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/october)). The "one governed endpoint, many steps" pattern is unchanged; only the hosting layer differs.
 
 ## Calling the served compound app
 
-Once `agents.deploy(...)` finishes provisioning, the endpoint is callable like any single LLM endpoint:
+Once `agents.deploy(...)` finishes provisioning, the endpoint is callable like any single LLM endpoint (a `ResponsesAgent` takes an `input` list of messages):
 
 ```bash
 curl https://<workspace>/serving-endpoints/customer-support-rag/invocations \
   -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-  -d '{"messages":[{"role":"user","content":"How do I reset my password?"}]}'
+  -d '{"input":[{"role":"user","content":"How do I reset my password?"}]}'
 ```
 
 ## Use Cases
@@ -103,21 +121,21 @@ curl https://<workspace>/serving-endpoints/customer-support-rag/invocations \
 - **Cold start latency** — `scale_to_zero_enabled = true` saves cost but the first request can take 30s+. For latency-sensitive serving, keep one replica warm
 - **Streaming not enabled** — without the Agent Framework wrapper, custom PyFunc compounds don't stream by default; client times out on long generations
 - **Tool calls missing tracing** — make sure the Agent Framework wraps tool dispatch so calls appear in Inference Tables and MLflow traces
-- **Tight coupling to a specific LLM provider** — keep the LLM call abstracted (route through Foundation Model APIs or Unity AI Gateway) so you can swap models without re-logging the agent
+- **Tight coupling to a specific LLM provider** — keep the LLM call abstracted (route through Foundation Model APIs or the AI Gateway / Unity Gateway) so you can swap models without re-logging the agent
 
 ## Exam Tips
 
 > [!tip]
 >
 > - "One endpoint, many steps" is the canonical pattern. If a question proposes 3 separate endpoints chained over the network, it's almost always wrong.
-> - **`ResponsesAgent` (subclass) + `databricks.agents.deploy()`** is the current recommended path for compound + tool-using apps. `ChatAgent` is still supported but the newer `ResponsesAgent` is now lead-recommended. `ChatModel` is **deprecated** in MLflow 3.0+.
+> - **`ResponsesAgent` (subclass) + `databricks.agents.deploy()`** is the exam's path for compound + tool-using apps. Databricks treats `ChatAgent` and `ChatModel` as *legacy* authoring interfaces and recommends migrating to `ResponsesAgent`; MLflow has recommended `ResponsesAgent` over `ChatModel` since MLflow 3.0.
 > - Inference Tables + MLflow tracing are the audit-of-record. They cover the *whole* compound, not just the LLM call.
 > - Unity Catalog registration is required for prod — Model Serving needs a UC-registered model.
 
 ## Key Takeaways
 
 - Compound AI apps = retriever + re-ranker + LLM + tools + post-processing, served as one endpoint
-- Log via the Mosaic AI Agent Framework (or `mlflow.pyfunc.ChatAgent` / `ResponsesAgent`); register in UC; serve via Model Serving
+- Log via the Mosaic AI Agent Framework with `mlflow.pyfunc.ResponsesAgent` (legacy: `ChatAgent`); register in UC; serve via Model Serving (new agents: Agent Bricks CLI → Agent Runtime)
 - Streaming, tracing, and Inference Tables come from the framework
 - Auto-scaling and traffic splitting apply to the whole compound
 
@@ -125,17 +143,19 @@ curl https://<workspace>/serving-endpoints/customer-support-rag/invocations \
 
 - [Mosaic AI and Foundation Models](./01-mosaic-ai-and-foundation-models.md)
 - [MLflow for GenAI](./02-mlflow-for-genai.md)
-- [Unity AI Gateway Endpoint Setup](./04-ai-gateway-endpoint-setup.md)
+- [MCP Servers](./04-mcp-servers.md)
+- [Agentic Systems with MLflow, Agent Framework, and Genie](../01-application-development/05-agentic-systems-mlflow-and-genie.md)
 - [Online Monitoring (eval & monitoring domain)](../05-evaluation-and-monitoring/02-online-monitoring.md)
-- [Governance — Inference Tables](../06-governance/01-governance-overview.md#layer-5--inference-tables)
+- [AI Gateway: Usage Tracking and Cost Control](../05-evaluation-and-monitoring/04-ai-gateway-usage-and-cost-control.md)
 
 ## Official Documentation
 
-- [Mosaic AI Agent Framework](https://docs.databricks.com/en/generative-ai/agent-framework/index.html)
+- [Deploy an agent (Model Serving, legacy)](https://docs.databricks.com/aws/en/agents/custom-agents/model-serving/deploy-agent)
+- [Deploy agents on Databricks (Agent Bricks CLI → Agent Runtime)](https://docs.databricks.com/aws/en/agents/deploy/)
 - [MLflow `ChatAgent` / `ResponsesAgent`](https://mlflow.org/docs/latest/python_api/mlflow.pyfunc.html)
 - [Mosaic AI Model Serving](https://docs.databricks.com/en/machine-learning/model-serving/index.html)
 - [Inference Tables](https://docs.databricks.com/en/machine-learning/model-serving/inference-tables.html)
 
 ---
 
-**[← Previous: MLflow for GenAI](./02-mlflow-for-genai.md) | [↑ Back to Assembling and Deploying Apps](./README.md) | [Next: Unity AI Gateway Endpoint Setup →](./04-ai-gateway-endpoint-setup.md)**
+**[← Previous: MLflow for GenAI](./02-mlflow-for-genai.md) | [↑ Back to Assembling and Deploying Applications](./README.md) | [Next: MCP Servers — Managed, External, and Custom](./04-mcp-servers.md) →**

@@ -5,7 +5,7 @@ tags: [genai-engineer-associate, practice-questions, vector-search, embeddings]
 status: published
 ---
 
-# Practice Questions — Vector Search & Embeddings (Domain 2)
+# Practice Questions — Vector Search & Embeddings
 
 12 questions covering embedding models, Databricks Vector Search index types, similarity metrics, and querying APIs.
 
@@ -18,12 +18,12 @@ status: published
 **Question**: A team creates a Databricks Vector Search index using `databricks-bge-large-en` embeddings. Six months later, they want to query the index using `databricks-gte-large-en`. What will happen?
 
 A) The query will succeed because both models produce 1024-dimensional vectors  
-B) The query will return meaningless results because the models produce vectors in different semantic spaces  
+B) The query will fail with a dimension mismatch error  
 C) Databricks Vector Search automatically converts embeddings between models  
-D) The query will fail with a dimension mismatch error  
+D) The query will return meaningless results because the models produce vectors in different semantic spaces  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Embedding models must be consistent between indexing and querying. Even if two models produce vectors of the same dimensionality, they are trained differently and represent semantics in different vector spaces. Querying with a different model returns cosine similarities that are meaningless because the spaces are incompatible. Databricks Vector Search does not perform automatic embedding conversion.
 
@@ -33,13 +33,13 @@ D) The query will fail with a dimension mismatch error
 
 **Question**: A data engineering team already has a managed Delta table of product descriptions that is updated nightly via a Lakeflow Declarative Pipelines pipeline. They want to build a Vector Search index on this table with minimal operational overhead. Which index type should they use?
 
-A) Direct Access Index — gives full programmatic control over upsert operations  
-B) Delta Sync Index — automatically syncs from the source Delta table  
+A) Delta Sync Index — automatically syncs from the source Delta table  
+B) Direct Access Index — gives full programmatic control over upsert operations  
 C) Managed Index — Databricks automatically selects the index type based on data volume  
 D) Delta Merge Index — merges vector updates with Delta table changes in real time  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > A Delta Sync Index automatically detects changes in the source Delta table and syncs them to the vector index. This is ideal when data already lives in a managed Delta table, as it eliminates the need to write custom sync pipelines. A Direct Access Index requires the application to explicitly call upsert APIs to add or update vectors. "Managed Index" and "Delta Merge Index" are not valid Databricks Vector Search index types.
 
@@ -82,12 +82,12 @@ D) Dot product — it is always preferred over both cosine and L2
 **Question**: A developer wants to retrieve the top 5 most similar product descriptions to a user query using the Databricks Vector Search Python SDK. Which method call is correct?
 
 A) `index.search(query_text="user query", top_k=5)`  
-B) `index.similarity_search(query_text="user query", columns=["id", "text"], num_results=5)`  
+B) `index.find_similar(input="user query", limit=5)`  
 C) `index.query(text="user query", k=5, return_fields=["id"])`  
-D) `index.find_similar(input="user query", limit=5)`  
+D) `index.similarity_search(query_text="user query", columns=["id", "text"], num_results=5)`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > The Databricks Vector Search Python SDK uses `index.similarity_search(query_text=..., columns=[...], num_results=...)`. The `columns` parameter specifies which metadata columns to return alongside similarity scores. The other method signatures (`search`, `query`, `find_similar`) are not valid Vector Search SDK methods.
 
@@ -97,13 +97,13 @@ D) `index.find_similar(input="user query", limit=5)`
 
 **Question**: A team compares two embedding models: Model A produces 768-dimensional vectors and Model B produces 1536-dimensional vectors. Which statement is MOST accurate?
 
-A) Model B always produces better retrieval quality because higher dimensions capture more information  
-B) Higher dimensionality increases storage and compute costs; quality depends on the model's training, not just dimension count  
+A) Higher dimensionality increases storage and compute costs; quality depends on the model's training, not just dimension count  
+B) Model B always produces better retrieval quality because higher dimensions capture more information  
 C) Model A is always faster at search regardless of hardware or index type  
 D) Dimensionality must match the LLM's hidden size for compatibility  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Higher dimensionality does not automatically imply better quality. Some well-trained 768-dimensional models outperform poorly-trained 1536-dimensional models. Higher dimensions do increase storage (index size) and query latency costs. Embedding dimensionality has no requirement to match the LLM's hidden size; they are independent components of a RAG architecture.
 
@@ -130,12 +130,12 @@ D) `index.similarity_search(query_text="...", num_results=5, metadata_filter=["c
 **Question**: A developer is evaluating BM25 (sparse) vs. text embedding models (dense) for a technical documentation search system. For which query type does BM25 have a distinct advantage over dense embeddings?
 
 A) Queries about conceptual relationships (e.g., "how does gradient descent work?")  
-B) Queries containing rare technical identifiers (e.g., "error code ERR_SOCKET_TIMEOUT_4092")  
-C) Queries requiring cross-language understanding  
+B) Queries requiring cross-language understanding  
+C) Queries containing rare technical identifiers (e.g., "error code ERR_SOCKET_TIMEOUT_4092")  
 D) Queries that require reasoning across multiple document sections  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > BM25 excels at exact term matching, making it ideal for rare tokens, product codes, error codes, and proper nouns that are unlikely to have been seen during embedding model training. Dense embeddings excel at semantic and conceptual queries. For queries requiring reasoning across sections or cross-language understanding, dense embeddings are generally preferred.
 
@@ -146,12 +146,12 @@ D) Queries that require reasoning across multiple document sections
 **Question**: A Delta Sync Index is configured with `pipeline_type="TRIGGERED"`. What does this mean for the index synchronization behavior?
 
 A) The index is updated in real time as rows are inserted into the Delta table  
-B) The index sync must be manually triggered via the API or UI; it does not update automatically  
+B) The index updates only when Databricks detects a data quality issue in the source table  
 C) The index is rebuilt from scratch every 24 hours on a fixed schedule  
-D) The index updates only when Databricks detects a data quality issue in the source table  
+D) The index sync must be manually triggered via the API or UI; it does not update automatically  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > A `TRIGGERED` pipeline requires the user to explicitly start a sync (via the Databricks UI, REST API, or SDK) each time they want the index updated. In contrast, `CONTINUOUS` pipeline type keeps the index synchronized automatically whenever the Delta table changes. Triggered mode is appropriate when freshness requirements are relaxed and cost control is important.
 
@@ -161,13 +161,13 @@ D) The index updates only when Databricks detects a data quality issue in the so
 
 **Question**: A RAG pipeline returns irrelevant documents when users ask questions that use technical abbreviations unfamiliar to the embedding model (e.g., "What is the SLA for P1 incidents?"). What is the MOST effective mitigation?
 
-A) Increase the top-k from 3 to 20 to improve recall  
-B) Expand abbreviations in the query before embedding (query preprocessing / expansion)  
+A) Expand abbreviations in the query before embedding (query preprocessing / expansion)  
+B) Increase the top-k from 3 to 20 to improve recall  
 C) Switch from cosine similarity to dot product similarity  
 D) Reduce chunk size to 64 tokens for more granular matching  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Query expansion or preprocessing — replacing abbreviations with their full forms or adding synonyms — improves embedding quality for out-of-vocabulary terms. Embedding models struggle with rare abbreviations because they may not have seen them during training. Increasing k helps recall but not precision for semantically mismatched queries. Similarity metric and chunk size changes do not address OOV (out-of-vocabulary) problems.
 

@@ -5,7 +5,7 @@ tags: [genai-engineer-associate, practice-questions, rag-architecture]
 status: published
 ---
 
-# Practice Questions — RAG Architecture (Domain 1)
+# Practice Questions — RAG Architecture
 
 15 questions covering RAG design patterns, chunking strategies, retrieval methods, and RAG evaluation.
 
@@ -17,13 +17,13 @@ status: published
 
 **Question**: A company has a large proprietary document repository that is updated weekly with new reports. They want an LLM that can answer questions using the latest documents. Which approach is BEST?
 
-A) Fine-tune an LLM monthly on the entire document corpus  
-B) Implement a RAG pipeline that retrieves relevant documents at query time  
+A) Implement a RAG pipeline that retrieves relevant documents at query time  
+B) Fine-tune an LLM monthly on the entire document corpus  
 C) Embed all documents into the LLM's context window at inference time  
 D) Train a custom embedding model on the proprietary corpus  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > RAG is the correct choice when knowledge changes frequently. Fine-tuning requires retraining whenever data changes, which is expensive and slow. Embedding all documents into the context window is not feasible because modern documents far exceed context window limits. Training a custom embedding model is optional hardening, not a replacement for a retrieval pipeline.
 
@@ -34,12 +34,12 @@ D) Train a custom embedding model on the proprietary corpus
 **Question**: A data engineer is chunking 100-page PDF financial reports for a RAG pipeline. The reports contain dense paragraphs with no consistent headers. Which chunking strategy is MOST appropriate?
 
 A) Fixed-size chunking with no overlap  
-B) Chunking by page (one chunk per PDF page)  
-C) Recursive character text splitting with overlap  
+B) Recursive character text splitting with overlap  
+C) Chunking by page (one chunk per PDF page)  
 D) Sentence-level chunking using punctuation delimiters only  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > Recursive character text splitting respects natural text boundaries (paragraphs, sentences, words in priority order) and uses overlap to avoid losing context at boundaries. Fixed-size chunking with no overlap risks splitting mid-sentence. Page-level chunking produces chunks too large for most embedding models and context windows. Sentence-level chunking alone may produce chunks too short to contain useful context.
 
@@ -66,12 +66,12 @@ D) Chunk size only affects indexing speed and has no impact on retrieval quality
 **Question**: A team configures their chunking pipeline with a chunk size of 512 tokens and an overlap of 50 tokens. What is the PRIMARY purpose of the 50-token overlap?
 
 A) To improve indexing throughput by reducing the total number of chunks  
-B) To ensure context at chunk boundaries is available in adjacent chunks  
+B) To increase embedding vector dimensionality for better retrieval  
 C) To store metadata about the source document for filtering  
-D) To increase embedding vector dimensionality for better retrieval  
+D) To ensure context at chunk boundaries is available in adjacent chunks  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Overlap ensures that content near the boundary of one chunk also appears at the beginning of the next chunk. This prevents important information that spans a boundary from being lost or split across chunks without context. Overlap does not affect indexing speed, dimensionality, or metadata.
 
@@ -81,13 +81,13 @@ D) To increase embedding vector dimensionality for better retrieval
 
 **Question**: A RAG system for a medical knowledge base must retrieve documents that contain both a specific drug name (exact term match) and semantically related conditions. Which retrieval approach is BEST?
 
-A) Dense retrieval only — embedding similarity captures all relationships  
+A) Hybrid retrieval combining dense and sparse methods  
 B) Sparse retrieval only — BM25 keyword matching handles exact terms  
-C) Hybrid retrieval combining dense and sparse methods  
+C) Dense retrieval only — embedding similarity captures all relationships  
 D) Keyword filtering on the metadata field before dense retrieval  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: A**
 >
 > Hybrid retrieval combines dense (embedding-based) retrieval for semantic similarity with sparse (BM25/keyword) retrieval for exact term matching. This is ideal when exact terms (drug names, IDs) must be matched precisely alongside semantic understanding. Dense-only retrieval can miss exact term emphasis; sparse-only misses semantic relationships.
 
@@ -114,12 +114,12 @@ D) Reduce the chunk size to 64 tokens
 **Question**: A RAG pipeline retrieves the top 20 documents using vector similarity, then applies a cross-encoder reranker before passing the top 5 to the LLM. What is the PRIMARY benefit of reranking?
 
 A) Reranking converts vector embeddings into token sequences for the LLM  
-B) Reranking improves retrieval precision by using a more accurate relevance model on the candidate set  
-C) Reranking filters out documents with low embedding dimensionality  
+B) Reranking filters out documents with low embedding dimensionality  
+C) Reranking improves retrieval precision by using a more accurate relevance model on the candidate set  
 D) Reranking reduces indexing time by pre-sorting the vector database  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > Cross-encoder rerankers are more accurate than bi-encoder similarity (used in vector search) because they jointly encode the query and each document. The two-stage approach (broad retrieval → precise reranking) balances recall and precision. Reranking has no effect on indexing, dimensionality, or token conversion.
 
@@ -131,11 +131,11 @@ D) Reranking reduces indexing time by pre-sorting the vector database
 
 A) Answer relevance — measures whether the answer addresses the question  
 B) Retrieval recall — measures whether the correct documents are retrieved  
-C) Faithfulness — measures whether the answer is grounded in the retrieved context  
-D) Perplexity — measures the fluency of generated text  
+C) Perplexity — measures the fluency of generated text  
+D) Faithfulness — measures whether the answer is grounded in the retrieved context  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: D**
 >
 > Faithfulness (also called groundedness) measures whether every claim in the generated answer can be attributed to the retrieved context. When the LLM hallucinates facts not in the retrieved documents, faithfulness is low. Answer relevance measures question alignment, not factual grounding. Retrieval recall measures retrieval quality, not generation quality. Perplexity measures fluency, not factual accuracy.
 
@@ -145,13 +145,13 @@ D) Perplexity — measures the fluency of generated text
 
 **Question**: A company wants an LLM to respond exclusively in formal legal prose and adopt their firm's preferred citation format. The knowledge content itself is unchanged. Which approach is MOST appropriate?
 
-A) Implement RAG with a collection of formal legal document examples  
-B) Fine-tune the LLM on examples of responses in the desired style  
+A) Fine-tune the LLM on examples of responses in the desired style  
+B) Implement RAG with a collection of formal legal document examples  
 C) Increase the system prompt length with detailed style instructions  
 D) Use a larger embedding model with higher dimensionality  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Fine-tuning is best for changing the model's **style, tone, and format** when the underlying knowledge is already present in the model. RAG adds external knowledge but does not reliably change response format. System prompts can influence style but are less robust than fine-tuning for strict format requirements. Embedding model size is irrelevant to generation style.
 
@@ -178,12 +178,12 @@ D) Storing chunk metadata in the vector index alongside embeddings
 **Question**: A RAG system uses Hypothetical Document Embeddings (HyDE). What does this technique involve?
 
 A) Generating multiple hypothetical questions from each document chunk during indexing  
-B) Using the LLM to generate a hypothetical answer, then embedding that answer to retrieve similar real documents  
-C) Creating synthetic training data by hypothetically augmenting sparse documents  
+B) Creating synthetic training data by hypothetically augmenting sparse documents  
+C) Using the LLM to generate a hypothetical answer, then embedding that answer to retrieve similar real documents  
 D) Replacing missing metadata with hypothetical values inferred from document content  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: C**
 >
 > HyDE transforms the user's query by asking the LLM to generate a hypothetical answer document. That hypothetical answer is then embedded and used as the retrieval query. Because the hypothetical answer is in "answer space" rather than "question space," it may be closer to real answer documents in the vector space, improving retrieval quality for complex queries.
 
@@ -194,12 +194,12 @@ D) Replacing missing metadata with hypothetical values inferred from document co
 **Question**: A team implements multi-query retrieval in their RAG pipeline. What does this technique do?
 
 A) Sends the same query to multiple vector databases and merges results  
-B) Uses the LLM to generate multiple paraphrases of the original query, retrieves for each, and unions the results  
+B) Indexes each document multiple times with different embedding models  
 C) Splits the user query into multiple sub-queries using punctuation delimiters  
-D) Indexes each document multiple times with different embedding models  
+D) Uses the LLM to generate multiple paraphrases of the original query, retrieves for each, and unions the results  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: D**
 >
 > Multi-query retrieval uses the LLM to rewrite the original query from multiple perspectives (e.g., different phrasings or sub-questions). Each variant is used for retrieval separately, and the union of retrieved documents provides broader coverage. This improves recall for complex questions that may be expressed in different ways.
 
@@ -209,13 +209,13 @@ D) Indexes each document multiple times with different embedding models
 
 **Question**: A team implements parent-child chunking. Small child chunks are used for retrieval; larger parent chunks are returned to the LLM. What is the PRIMARY advantage over standard-sized chunking?
 
-A) It reduces the size of the vector index by storing smaller vectors  
-B) It improves retrieval precision with small chunks while providing richer context with large parent chunks  
+A) It improves retrieval precision with small chunks while providing richer context with large parent chunks  
+B) It reduces the size of the vector index by storing smaller vectors  
 C) It eliminates the need for an embedding model by relying on exact keyword matching  
 D) It allows multiple users to share the same parent chunk simultaneously  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
 > Small child chunks are easier to match precisely to specific questions (high precision retrieval). Once the relevant child chunk is found, its larger parent chunk is fetched and sent to the LLM, providing richer context than the small chunk alone. This combines the precision of small-chunk retrieval with the contextual richness of larger chunks.
 
@@ -226,12 +226,12 @@ D) It allows multiple users to share the same parent chunk simultaneously
 **Question**: A team wants to evaluate their RAG pipeline comprehensively. Which combination of metrics covers BOTH retrieval quality AND generation quality?
 
 A) BLEU score and ROUGE score  
-B) Perplexity and token count  
-C) Precision@k and faithfulness  
+B) Precision@k and faithfulness  
+C) Perplexity and token count  
 D) Embedding similarity and chunk count  
 
 > [!success]- Answer
-> **Correct Answer: C**
+> **Correct Answer: B**
 >
 > Precision@k measures retrieval quality — what fraction of the top-k retrieved documents are actually relevant. Faithfulness measures generation quality — whether the answer is grounded in the retrieved context. Together they cover the two main failure modes of RAG: retrieving wrong documents and hallucinating content not in the retrieved documents. BLEU/ROUGE measure surface-form text similarity. Perplexity measures fluency, not factual accuracy.
 

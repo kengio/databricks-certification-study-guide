@@ -13,8 +13,8 @@ and the major architectural patterns that improve RAG system quality.
 
 ## Overview
 
-> [!note]
-> **MLflow `ChatModel` is deprecated in MLflow 3.0+.** The current Mosaic AI Agent Framework path is to subclass `mlflow.pyfunc.ResponsesAgent` (or `ChatAgent`) and deploy via `databricks.agents.deploy(...)`. References to `ChatModel` below are retained because they are still seen in the documentation and may appear in exam stems; treat them as legacy.
+> [!note] Platform update (Oct 2026)
+> The agentic RAG example below subclasses `mlflow.pyfunc.ChatModel`, which Databricks now treats as a *legacy* authoring interface; MLflow has recommended `ResponsesAgent` instead since MLflow 3.0 ([MLflow ChatModel guide](https://mlflow.org/docs/latest/genai/flavors/chat-model-intro/)). The retrieval patterns themselves are unchanged. For the current interface and for managed alternatives, see [Agentic Systems with MLflow, Agent Framework, and Genie](../01-application-development/05-agentic-systems-mlflow-and-genie.md) and [Agent Bricks](./03-agent-bricks.md).
 
 ```mermaid
 flowchart LR
@@ -491,4 +491,4 @@ D) Parent-child chunking for retrieval + fine-tuning the LLM on retrieved docume
 
 ---
 
-**[↑ Back to RAG Architecture](./README.md) | [Next: Document Processing & Chunking](../04-data-preparation/01-document-processing-chunking.md) →**
+**[↑ Back to Design Applications](./README.md) | [Next: Solution Design and Tool Planning](./02-solution-design-and-tool-planning.md) →**

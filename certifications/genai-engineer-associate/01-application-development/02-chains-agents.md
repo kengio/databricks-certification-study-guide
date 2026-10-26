@@ -11,6 +11,9 @@ Chains compose LLM components into pipelines with a fixed execution path. Agents
 by letting the LLM dynamically choose which tools to invoke and when. Both patterns integrate
 with Databricks via LangChain's `ChatDatabricks` connector and the Mosaic AI Agent Framework.
 
+> [!note] Platform update (Oct 2026)
+> Current Databricks docs import the LangChain chat model as `from databricks_langchain import ChatDatabricks` (package `databricks-langchain`); the `langchain_community.chat_models` import below is the older path. The endpoint `databricks-meta-llama-3-1-70b-instruct` used in these samples is no longer in the [supported models list](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) — substitute a current endpoint such as `databricks-meta-llama-3-3-70b-instruct`. Agents built on these chains are now authored with `ResponsesAgent`; see [Agentic Systems with MLflow, Agent Framework, and Genie](./05-agentic-systems-mlflow-and-genie.md). Source: [Use MCP tools in a Python agent](https://docs.databricks.com/aws/en/agents/custom-agents/use-mcp-tools).
+
 ## Overview Diagram
 
 ```mermaid
@@ -373,4 +376,4 @@ Model Serving using `agents.deploy()`.
 
 ---
 
-**[← Previous: Prompt Engineering](./01-prompt-engineering.md) | [↑ Back to LLM Application Development](./README.md) | [Next: Evaluating LLM Applications](../05-evaluation-and-monitoring/01-evaluation-llm-apps.md) →**
+**[← Previous: Prompt Engineering](./01-prompt-engineering.md) | [↑ Back to Application Development](./README.md) | [Next: Retrieval & Augmentation Strategies](./03-retrieval-augmentation-strategies.md) →**

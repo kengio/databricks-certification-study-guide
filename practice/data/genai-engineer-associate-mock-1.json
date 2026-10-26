@@ -1,8 +1,8 @@
 {
   "cert": "genai-engineer-associate-mock-1",
   "certTitle": "GenAI Engineer Associate — Mock Exam 1",
-  "blueprintVersion": "Mar 2026",
-  "generated": "2026-05-22",
+  "blueprintVersion": "Mar 18, 2026",
+  "generated": "2026-10-26",
   "domains": [
     {
       "id": "design-rag-solutions",
