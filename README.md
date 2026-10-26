@@ -275,8 +275,22 @@ The current exam guide consolidates the previous four domains into three; "Solut
 - **ML Professional (Sep 30, 2025; PDF re-issued Aug 2026)** — three domains (44 / 44 / 12); the re-issued guide names Optuna, Ray, bundles for ML assets, online tables, and rollout strategies.
 - **ML Associate (Mar 1, 2025; PDF re-issued Aug 2026)** — same weights; Section 2 is **Data Processing** (19 %) in the PDF; questions are multiple-choice and multiple-selection.
 
-> [!note] Platform renames since the exams were written (checked October 26, 2026)
-> Exam guides keep the original names; this guide teaches the exam term and adds a "Platform update" note. Key renames: Lakeflow Declarative Pipelines → **Lakeflow Spark Declarative Pipelines** (Nov 12, 2025) · Community Edition **retired** (Jan 1, 2026; use Free Edition) · Databricks Assistant → **Genie Code** (Mar 11, 2026) · Databricks Asset Bundles → **Declarative Automation Bundles** (Mar 16, 2026) · Vector Search → **AI Search** (Jun 1, 2026) · Delta Sharing → **OpenSharing** (Jun 10, 2026) · Genie Spaces → **Genie Agents** (Jul 8, 2026) · agents on Model Serving → legacy (Oct 5, 2026) · Knowledge Assistant and Supervisor Agent → legacy (Oct 12, 2026). Full timeline: [version history](shared/appendix/version-history.md).
+> [!note]
+> **Platform renames since the exams were written** (checked October 26, 2026)
+>
+> Exam guides keep the original names. This guide teaches the exam term and adds a "Platform update" note wherever the product has moved on.
+>
+> - Lakeflow Declarative Pipelines → **Lakeflow Spark Declarative Pipelines** (Nov 12, 2025)
+> - Community Edition **retired** (Jan 1, 2026) — use [Free Edition](https://docs.databricks.com/aws/en/getting-started/free-edition)
+> - Databricks Assistant → **Genie Code** (Mar 11, 2026)
+> - Databricks Asset Bundles → **Declarative Automation Bundles** (Mar 16, 2026)
+> - Vector Search → **AI Search** (Jun 1, 2026)
+> - Delta Sharing → **OpenSharing** (Jun 10, 2026)
+> - Genie Spaces → **Genie Agents** (Jul 8, 2026)
+> - Agents deployed on Model Serving → **legacy** (Oct 5, 2026)
+> - Knowledge Assistant and Supervisor Agent → **legacy** (Oct 12, 2026)
+>
+> Full timeline: [version history](shared/appendix/version-history.md).
 
 All passing-score references in older study materials should be ignored: **Databricks no longer publishes a numeric passing threshold** for any of these certifications. Treat the exam as pass/fail and aim to be comfortable across every domain, not just the high-weight ones.
 
