@@ -48,6 +48,7 @@ from sklearn.linear_model import Ridge
 from sklearn.model_selection import train_test_split
 
 # Register in UC, not the workspace model registry
+# (databricks-uc is the default in MLflow 3; explicit for MLflow 2.x clients)
 mlflow.set_registry_uri("databricks-uc")
 mlflow.autolog()  # autologs params, metrics, model artifact, signature
 
@@ -86,6 +87,8 @@ print(f"Best run: {best_run.info.run_id}, r2 = {best_run.data.metrics['r2_test']
 ## Step 3 — Register the best run in UC
 
 ```python
+# register_model() still accepts runs:/ URIs in MLflow 3. When you call log_model()
+# yourself, prefer the returned model_info.model_uri (models:/<model_id>).
 model_uri = f"runs:/{best_run.info.run_id}/model"  # autologged artifact path
 registered_model = "main.ml_lab.ridge_regression"
 

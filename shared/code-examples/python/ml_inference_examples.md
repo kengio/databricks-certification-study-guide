@@ -10,7 +10,7 @@ tags:
 
 # ML Inference Examples
 
-Code examples for batch and real-time model inference on Databricks.
+Code examples for batch and real-time model inference on Databricks. MLflow code targets **MLflow 3** (current Databricks practice as of Oct 2026); see the [MLflow 2 → 3 mapping](../../cheat-sheets/mlflow-quick-ref.md#mlflow-2--3-mapping).
 
 ## Batch Inference with spark_udf
 
@@ -105,14 +105,17 @@ print(response.predictions)
 ```python
 import mlflow
 
-mlflow.set_registry_uri("databricks-uc")
+mlflow.set_registry_uri("databricks-uc")  # default in MLflow 3; required on MLflow 2.x
 
 with mlflow.start_run():
-    mlflow.sklearn.log_model(
+    model_info = mlflow.sklearn.log_model(
         sk_model=model,
-        artifact_path="model",
+        name="model",  # MLflow 3: name= replaces artifact_path=
         registered_model_name="ml.prod.churn_model"
     )
+
+print(model_info.model_uri)                    # models:/<model_id>
+print(model_info.registered_model_version)     # new UC version number
 ```
 
 ### Promote a Model Version with Aliases
@@ -196,7 +199,8 @@ w.serving_endpoints.update_config(
 ```python
 import mlflow
 
-results = mlflow.evaluate(
+# mlflow.evaluate() is deprecated as of MLflow 3.0; classic ML uses mlflow.models.evaluate()
+results = mlflow.models.evaluate(
     model="models:/ml.prod.churn_model@champion",
     data=eval_df,
     targets="label",
@@ -213,22 +217,38 @@ results.tables["eval_results_table"].display()
 
 ### Evaluate a RAG / LLM Application
 
+MLflow 3 evaluates GenAI apps with `mlflow.genai.evaluate()` and scorers from `mlflow.genai.scorers` (the MLflow 2.x `mlflow.evaluate(model_type="question-answering")` + `mlflow.metrics.genai` path is legacy).
+
 ```python
 import mlflow
+from mlflow.genai.scorers import Correctness, RelevanceToQuery, RetrievalGroundedness
 
-results = mlflow.evaluate(
-    model=rag_chain,
-    data=eval_dataset,  # DataFrame with "question" and "ground_truth" columns
-    model_type="question-answering",
-    extra_metrics=[
-        mlflow.metrics.faithfulness(),
-        mlflow.metrics.relevance(),
-        mlflow.metrics.answer_correctness(),
-    ]
+eval_dataset = [
+    {
+        "inputs": {"question": "How do I cancel my subscription?"},
+        "expectations": {"expected_response": "Go to Settings > Billing and choose Cancel."},
+    },
+]
+
+results = mlflow.genai.evaluate(
+    data=eval_dataset,
+    predict_fn=rag_app,  # traced app; called as rag_app(question=...)
+    scorers=[
+        Correctness(),            # compares to expectations
+        RelevanceToQuery(),
+        RetrievalGroundedness(),  # needs a RETRIEVER span (@mlflow.trace(span_type=SpanType.RETRIEVER))
+    ],
 )
 
-print(f"Faithfulness: {results.metrics['faithfulness/v1/mean']}")
-print(f"Relevance: {results.metrics['relevance/v1/mean']}")
+print(results.metrics)
+results.result_df.head()
+```
+
+```python
+# Same evaluation against a deployed chat endpoint
+predict_fn = mlflow.genai.to_predict_fn("endpoints:/rag-chatbot")
+chat_eval = [{"inputs": {"messages": [{"role": "user", "content": "How do I cancel my subscription?"}]}}]
+results = mlflow.genai.evaluate(data=chat_eval, predict_fn=predict_fn, scorers=[RelevanceToQuery()])
 ```
 
 ## Custom PyFunc Model
@@ -251,7 +271,7 @@ class ChurnModelWithPreprocessing(mlflow.pyfunc.PythonModel):
 # Log and register
 with mlflow.start_run():
     mlflow.pyfunc.log_model(
-        artifact_path="model",
+        name="model",
         python_model=ChurnModelWithPreprocessing(),
         artifacts={
             "model_path": "/tmp/model.joblib",
@@ -260,6 +280,15 @@ with mlflow.start_run():
         registered_model_name="ml.prod.churn_model_custom"
     )
 ```
+
+## Official Documentation
+
+- [Get started with MLflow 3 — Databricks](https://docs.databricks.com/aws/en/mlflow/mlflow-3-install)
+- [Manage model lifecycle in Unity Catalog (aliases)](https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/)
+- [Legacy LLM evaluation (`mlflow.evaluate` deprecation, `mlflow.models.evaluate`) — mlflow.org](https://mlflow.org/docs/latest/genai/eval-monitor/legacy-llm-evaluation/)
+- [MLflow evaluation examples for GenAI (`to_predict_fn`)](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/eval-examples)
+- [Create and manage serving endpoints (`served_entities`)](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints)
+- [Serve multiple models to an endpoint (traffic split)](https://docs.databricks.com/aws/en/machine-learning/model-serving/serve-multiple-models-to-serving-endpoint)
 
 ---
 

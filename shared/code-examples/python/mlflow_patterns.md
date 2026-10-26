@@ -5,12 +5,16 @@ tags:
   - mlflow
   - python
   - model-registry
+  - genai
 ---
 
 # MLflow Patterns — Python
 
 Practical MLflow examples for experiment tracking, model logging, and Unity Catalog
 integration. Run in a Databricks notebook with MLflow pre-installed.
+
+> [!note] MLflow 3
+> These examples target **MLflow 3** (current Databricks practice as of Oct 2026): `log_model(..., name=...)` instead of `artifact_path=`, the logged-model URI from `model_info.model_uri`, Unity Catalog as the default registry, `mlflow.models.evaluate()` for classic ML, and `mlflow.genai.evaluate()` with scorers for GenAI. See the [MLflow 2 → 3 mapping](../../cheat-sheets/mlflow-quick-ref.md#mlflow-2--3-mapping).
 
 ## Experiment Tracking — Basic Run
 
@@ -35,8 +39,9 @@ with mlflow.start_run(run_name="baseline-rf"):
     mlflow.log_metric("accuracy", accuracy)
     mlflow.log_metric("n_features", X_train.shape[1])
 
-    # Log model
-    mlflow.sklearn.log_model(model, "model")
+    # Log model (MLflow 3: name= replaces artifact_path=)
+    model_info = mlflow.sklearn.log_model(model, name="model")
+    print(model_info.model_uri)  # models:/<model_id>
 ```
 
 ## Autologging — Zero-Code Tracking
@@ -104,15 +109,17 @@ print(f"Best run: {best_run.run_id} with accuracy {best_run['metrics.accuracy']:
 ```python
 import mlflow
 
-# IMPORTANT: Set registry URI to Unity Catalog before registration
+# Default registry URI in MLflow 3; required explicitly on MLflow 2.x clients
 mlflow.set_registry_uri("databricks-uc")
 
-model_name = "ml_catalog.models.fraud_detector"
+model_name = "ml_catalog.models.fraud_detector"  # three-level UC name
 
 with mlflow.start_run():
-    mlflow.sklearn.log_model(model, "model")
-    # Register directly from the run
-    mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/model", model_name)
+    model_info = mlflow.sklearn.log_model(model, name="model")
+
+# Register the logged model by its URI (models:/<model_id>)
+model_version = mlflow.register_model(model_info.model_uri, model_name)
+print(f"Registered version {model_version.version}")
 ```
 
 ## Manage Model Aliases (UC)
@@ -126,6 +133,10 @@ model_name = "ml_catalog.models.fraud_detector"
 # Set alias on a specific version
 client.set_registered_model_alias(model_name, "champion", version=3)
 client.set_registered_model_alias(model_name, "challenger", version=4)
+
+# Look up which version an alias points to
+champion = client.get_model_version_by_alias(model_name, "champion")
+print(champion.version, champion.run_id)
 
 # Load model by alias (production code uses this)
 champion_model = mlflow.pyfunc.load_model(f"models:/{model_name}@champion")
@@ -175,7 +186,7 @@ class PreprocessAndPredict(mlflow.pyfunc.PythonModel):
 # Log the custom model with artifacts
 with mlflow.start_run():
     mlflow.pyfunc.log_model(
-        artifact_path="model",
+        name="model",
         python_model=PreprocessAndPredict(),
         artifacts={
             "preprocessor": "preprocessor.joblib",
@@ -185,7 +196,9 @@ with mlflow.start_run():
     )
 ```
 
-## Model Evaluation
+## Model Evaluation (Classic ML)
+
+`mlflow.evaluate()` is deprecated as of MLflow 3.0. For classic ML models, `mlflow.models.evaluate()` takes the same arguments.
 
 ```python
 import mlflow
@@ -195,8 +208,8 @@ import pandas as pd
 eval_data = pd.DataFrame({"feature_a": [...], "feature_b": [...], "label": [...]})
 
 with mlflow.start_run():
-    results = mlflow.evaluate(
-        model="runs:/abc123/model",
+    results = mlflow.models.evaluate(
+        model=model_info.model_uri,  # or "models:/ml_catalog.models.fraud_detector@champion"
         data=eval_data,
         targets="label",
         model_type="classifier",
@@ -209,42 +222,88 @@ with mlflow.start_run():
     # Results are automatically logged to the run
 ```
 
-## MLflow for GenAI — Evaluate LLM Outputs
+## MLflow for GenAI — Trace an App
 
 ```python
 import mlflow
-import pandas as pd
+from mlflow.entities import SpanType
 
-eval_data = pd.DataFrame({
-    "inputs": [
-        "What is Delta Lake?",
-        "Explain Unity Catalog."
-    ],
-    "ground_truth": [
-        "Delta Lake is an open-source storage layer that adds ACID transactions to data lakes.",
-        "Unity Catalog is a unified governance solution for data and AI assets on Databricks."
-    ]
-})
+mlflow.openai.autolog()  # automatic spans for OpenAI client calls
 
-with mlflow.start_run():
-    results = mlflow.evaluate(
-        model="endpoints:/my-llm-endpoint",
-        data=eval_data,
-        targets="ground_truth",
-        model_type="question-answering",
-        evaluators=["default"]
-    )
+@mlflow.trace(span_type=SpanType.RETRIEVER)
+def retrieve(question: str) -> list[str]:
+    # Vector Search lookup goes here
+    return ["Delta Lake adds ACID transactions to data lakes."]
 
-    # Metrics: toxicity, relevance, similarity scores
-    print(results.metrics)
-    # Per-row results table
-    display(results.tables["eval_results_table"])
+@mlflow.trace
+def rag_app(question: str) -> str:
+    context = "\n".join(retrieve(question))
+    # call an LLM with context + question here
+    return f"Answer based on: {context}"
 ```
+
+## MLflow for GenAI — Evaluate with Scorers
+
+MLflow 3 replaces `mlflow.evaluate(model_type="question-answering")` with `mlflow.genai.evaluate()`. Each record's `inputs` are passed to `predict_fn` as keyword arguments; `expectations` hold ground truth.
+
+```python
+import mlflow
+from mlflow.genai.scorers import (
+    Correctness,
+    Guidelines,
+    RelevanceToQuery,
+    RetrievalGroundedness,
+    Safety,
+)
+
+eval_data = [
+    {
+        "inputs": {"question": "What is Delta Lake?"},
+        "expectations": {
+            "expected_response": "Delta Lake is an open-source storage layer that adds ACID transactions to data lakes."
+        },
+    },
+    {
+        "inputs": {"question": "Explain Unity Catalog."},
+        "expectations": {
+            "expected_facts": ["unified governance", "data and AI assets"]
+        },
+    },
+]
+
+results = mlflow.genai.evaluate(
+    data=eval_data,
+    predict_fn=rag_app,  # called as rag_app(question=...)
+    scorers=[
+        Correctness(),
+        RelevanceToQuery(),
+        RetrievalGroundedness(),  # uses the RETRIEVER span
+        Safety(),
+        Guidelines(name="no_speculation", guidelines="The answer must not speculate beyond the context."),
+    ],
+)
+
+print(results.metrics)    # aggregate scores, e.g. "<scorer>/mean"
+display(results.result_df)  # per-row assessments
+```
+
+To evaluate an app that is already deployed to Model Serving, wrap the endpoint: `predict_fn=mlflow.genai.to_predict_fn("endpoints:/my-llm-endpoint")` (chat endpoints expect `{"inputs": {"messages": [...]}}` records).
 
 ## Notes
 
-- Always call `mlflow.set_registry_uri("databricks-uc")` before any model registration or loading when targeting Unity Catalog
+- MLflow 3 defaults the registry URI to `databricks-uc`; call `mlflow.set_registry_uri("databricks-uc")` explicitly when the code may run on MLflow 2.x
+- MLflow 3 `log_model` takes `name=` (`artifact_path=` is deprecated) and returns `model_info.model_uri` (`models:/<model_id>`) — prefer it over `runs:/<run_id>/model`
 - UC model registry uses **aliases** (`champion`, `challenger`) — not legacy lifecycle stages (`Staging`, `Production`)
 - `mlflow.autolog()` supports: sklearn, xgboost, lightgbm, spark, pytorch, tensorflow, keras, fastai
 - Load models by alias in production code (`@champion`), by version only for testing (`/3`)
-- `mlflow.evaluate()` with `model_type="question-answering"` enables LLM-specific metrics
+- Classic ML evaluation: `mlflow.models.evaluate()`; GenAI evaluation: `mlflow.genai.evaluate(data=..., predict_fn=..., scorers=[...])` — `mlflow.evaluate()` is deprecated as of MLflow 3.0
+
+## Official Documentation
+
+- [Get started with MLflow 3 — Databricks](https://docs.databricks.com/aws/en/mlflow/mlflow-3-install)
+- [MLflow 3 migration (`name=`, `models:/<model_id>`) — mlflow.org](https://www.mlflow.org/docs/latest/ml/mlflow-3/)
+- [Manage model lifecycle in Unity Catalog](https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/)
+- [Legacy LLM evaluation (`mlflow.evaluate` deprecation) — mlflow.org](https://mlflow.org/docs/latest/genai/eval-monitor/legacy-llm-evaluation/)
+- [MLflow evaluation examples for GenAI](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/eval-examples)
+- [Evaluate and improve a GenAI app — Databricks](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/evaluate-app)
+- [Manual and custom tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/manual-tracing)

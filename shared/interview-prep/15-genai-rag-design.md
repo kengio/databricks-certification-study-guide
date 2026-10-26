@@ -113,43 +113,55 @@ Your RAG chatbot is live but users are complaining about irrelevant or incorrect
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: Decompose evaluation into retrieval quality (are we finding the right chunks?) and generation quality (is the LLM producing a good answer from those chunks?). Use MLflow evaluate with LLM-as-judge for scalable assessment, build a golden evaluation dataset, and monitor retrieval metrics (precision@k, recall) separately from generation metrics (faithfulness, relevance, harmfulness).
+> **Short Answer**: Decompose evaluation into retrieval quality (are we finding the right chunks?) and generation quality (is the LLM producing a good answer from those chunks?). Use MLflow 3 `mlflow.genai.evaluate()` with LLM-judge scorers for scalable assessment, build a golden evaluation dataset, and monitor retrieval metrics (precision@k, recall) separately from generation metrics (faithfulness, relevance, harmfulness).
 >
 > ### Key Points to Cover
 >
 > - Separate retrieval evaluation from generation evaluation
-> - MLflow `evaluate()` with LLM-as-judge metrics
+> - MLflow 3 `mlflow.genai.evaluate()` with built-in LLM-judge scorers (`mlflow.genai.scorers`)
 > - Retrieval metrics: precision@k, recall@k, MRR (Mean Reciprocal Rank)
 > - Generation metrics: faithfulness (no hallucination), relevance, answer correctness
 > - Golden evaluation dataset with human-annotated Q&A pairs
-> - Logging inference tables for offline analysis
+> - MLflow Tracing (`@mlflow.trace`, autolog) plus inference tables for offline analysis
 >
 > ### Example Answer
 >
 > The first step is **diagnosis** — is the problem retrieval (wrong chunks) or generation (bad answer from good chunks)?
 >
-> I'd log every request to an inference table: `question`, `retrieved_chunks`, `generated_answer`, `latency`, `user_feedback`. Then I manually review 50 complaints to classify them:
+> I'd make sure every request is traced with MLflow Tracing (autolog for the LLM library, `@mlflow.trace(span_type=SpanType.RETRIEVER)` on the retriever) and logged to an inference table: `question`, `retrieved_chunks`, `generated_answer`, `latency`, `user_feedback`. Then I manually review 50 complaints to classify them:
 >
 > - **Retrieval failure** (~60% of issues typically): The correct chunk wasn't in the top-k results. Fix: improve chunking, tune embedding model, add metadata filters, increase k.
 > - **Generation failure** (~30%): Correct chunks were retrieved but the model hallucinated or misinterpreted. Fix: improve prompt template, add explicit grounding instructions, use a stronger model.
 > - **Knowledge gap** (~10%): The answer isn't in any document. Fix: expand the document corpus.
 >
-> For **scalable evaluation**, I'd use MLflow evaluate with LLM-as-judge:
+> For **scalable evaluation**, I'd use MLflow 3 `mlflow.genai.evaluate()` with built-in LLM-judge scorers, which split cleanly into retrieval and generation checks:
 >
 > ```python
 > import mlflow
->
-> results = mlflow.evaluate(
->     model=rag_chain,
->     data=eval_dataset,  # golden Q&A pairs
->     model_type="question-answering",
->     extra_metrics=[
->         mlflow.metrics.faithfulness(),
->         mlflow.metrics.relevance(),
->         mlflow.metrics.answer_correctness(),
->     ]
+> from mlflow.genai.scorers import (
+>     Correctness,
+>     RelevanceToQuery,
+>     RetrievalGroundedness,
+>     RetrievalRelevance,
+>     Safety,
 > )
+>
+> # golden Q&A pairs: {"inputs": {"question": ...}, "expectations": {"expected_response": ...}}
+> results = mlflow.genai.evaluate(
+>     data=eval_dataset,
+>     predict_fn=rag_app,  # traced app, called as rag_app(question=...)
+>     scorers=[
+>         RetrievalRelevance(),     # retrieval: are the retrieved chunks relevant?
+>         RetrievalGroundedness(),  # generation: is the answer supported by the chunks?
+>         RelevanceToQuery(),       # generation: does it answer the question?
+>         Correctness(),            # generation: matches the expected answer
+>         Safety(),
+>     ],
+> )
+> print(results.metrics)
 > ```
+>
+> The older MLflow 2.x pattern — `mlflow.evaluate(model_type="question-answering")` with `mlflow.metrics.genai` metrics — is deprecated in MLflow 3.
 >
 > I'd build a golden evaluation dataset of 100+ Q&A pairs with human-verified correct answers and expected source documents. This becomes the regression test — every change to chunking, embedding model, or prompt must not degrade these metrics.
 >
@@ -270,7 +282,7 @@ Your RAG chatbot sometimes generates answers that aren't grounded in the retriev
 >
 > **Layer 3: Citation enforcement** — Require the model to cite which document each claim comes from. If a claim has no citation, flag it for review. This also helps users verify answers.
 >
-> **Layer 4: Faithfulness checking** — For high-stakes use cases, add a second LLM call that takes the retrieved context and the generated answer, then checks: "Is every claim in the answer supported by the context?" This is the LLM-as-judge pattern. MLflow's `faithfulness()` metric automates this.
+> **Layer 4: Faithfulness checking** — For high-stakes use cases, add a second LLM call that takes the retrieved context and the generated answer, then checks: "Is every claim in the answer supported by the context?" This is the LLM-as-judge pattern. In MLflow 3 the `RetrievalGroundedness` scorer (run through `mlflow.genai.evaluate()`) automates this offline.
 >
 > **Layer 5: Output validation** — Post-process the answer: if it contains phrases like "based on my training data" or "generally speaking" (indicators of parametric knowledge), flag or filter the response.
 >
@@ -279,6 +291,15 @@ Your RAG chatbot sometimes generates answers that aren't grounded in the retriev
 > - What's the trade-off between strict grounding and answer helpfulness?
 > - How would you handle multi-hop questions that require combining information from multiple chunks?
 > - When is hallucination actually acceptable vs dangerous?
+
+---
+
+## Official Documentation
+
+- [Evaluate and improve a GenAI app (`mlflow.genai.evaluate`)](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/evaluate-app)
+- [Built-in LLM judges (`Correctness`, `RetrievalGroundedness`, `RetrievalRelevance`, ...)](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/concepts/judges/)
+- [Manual and custom tracing (`@mlflow.trace`, `SpanType`)](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/manual-tracing)
+- [Legacy LLM evaluation (`mlflow.evaluate` deprecation) — mlflow.org](https://mlflow.org/docs/latest/genai/eval-monitor/legacy-llm-evaluation/)
 
 ---
 
