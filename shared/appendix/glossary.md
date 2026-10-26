@@ -13,7 +13,7 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | --------------------------- | ----------------------------------------------------------------------------------------- |
 | **ACID**                    | Atomicity, Consistency, Isolation, Durability — database transaction properties           |
 | **Agent (AI)**              | Autonomous system that uses an LLM to plan and execute multi-step tasks via tool calls    |
-| **Agent Bricks**            | Databricks product family for building agents — no-code (Genie Agents) and code-first (Agent Bricks CLI); Knowledge Assistant and Supervisor Agent became legacy on Oct 12, 2026 |
+| **Agent Bricks**            | Databricks agent-building offering; new code agents use the **Agent Bricks CLI**, while the Knowledge Assistant and Supervisor Agent offerings became legacy on Oct 12, 2026 (for no-code agents Databricks points to Genie Agents) |
 | **Agent Bricks CLI**        | Beta CLI recommended (Oct 2026) for new code agents: `pip install databricks-agentbricks`, `agentbricks init --framework langgraph\|openai`, `agentbricks dev`, `agentbricks deploy`; tools declared in `agent.toml` (`genie_agent`, `uc_function`, `mcp`, `sandbox`) |
 | **Agent Runtime**           | Databricks runtime for deployed agents (runs on Databricks Apps); the Agent Bricks CLI deploys there with `DurableAgentServer`, replacing agents on Model Serving (legacy since Oct 5, 2026) |
 | **AI Gateway**              | Databricks service for routing, rate-limiting, and observability of external LLM API calls|

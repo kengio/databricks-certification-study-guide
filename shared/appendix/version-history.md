@@ -133,7 +133,7 @@ Supported LTS releases as of Oct 2026 ([release notes](https://docs.databricks.c
 
 ### 2025
 
-- Feb 5, 2025 — new pipelines default to **default publishing mode**; "All tables created before February 5, 2025, use legacy publishing mode by default" and the `LIVE.` virtual schema is deprecated ([LIVE schema](https://docs.databricks.com/aws/en/ldp/live-schema))
+- Feb 5, 2025 — publishing-mode cutover: "All tables created before February 5, 2025, use legacy publishing mode by default"; in the default publishing mode the deprecated `LIVE.` virtual schema is silently ignored ([LIVE schema](https://docs.databricks.com/aws/en/ldp/live-schema))
 - Jun 11, 2025 — DLT rebranded as Lakeflow Declarative Pipelines (and Databricks Jobs → Lakeflow Jobs)
 - Nov 12, 2025 — renamed **Lakeflow Spark Declarative Pipelines**; `APPLY CHANGES` APIs replaced by **AUTO CDC** APIs with the same syntax ([AUTO CDC](https://docs.databricks.com/aws/en/ldp/cdc))
 
