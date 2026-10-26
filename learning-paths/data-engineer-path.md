@@ -44,15 +44,17 @@ Start with the core concepts that apply across both certifications.
 
 ## Phase 2: Data Engineer Associate
 
-Focus areas based on exam weight:
+Focus areas based on exam weight (exam published May 4, 2026; guide updated Aug 6, 2026 — 7 domains, 45 questions):
 
 | Domain | Weight | Key Topics |
 | ------ | ------ | ---------- |
-| Databricks Lakehouse Platform | 24% | Architecture, Delta Lake, multi-hop |
-| ELT with Spark SQL and Python | 29% | Transformations, joins, SQL queries |
-| Incremental Data Processing | 16% | Structured Streaming, Auto Loader |
-| Production Pipelines | 11% | DLT, jobs, task orchestration |
-| Data Governance | 20% | Unity Catalog, access control |
+| Data Transformation and Modeling | 22 % | PySpark/SQL cleaning, joins, dedup, streaming tables vs materialized views, data quality checks |
+| Data Ingestion and Loading | 21 % | COPY INTO, Auto Loader, Lakeflow Connect connectors |
+| Working with Lakeflow Jobs | 16 % | Lakeflow Jobs (formerly Workflows): task types, control flow, triggers |
+| Governance and Security | 15 % | Unity Catalog, GRANT/REVOKE/DENY, row filters, column masks, ABAC |
+| Implementing CI/CD | 10 % | Git folders, Declarative Automation Bundles (formerly Databricks Asset Bundles), Databricks CLI |
+| Troubleshooting, Monitoring, and Optimization | 10 % | Job run history, Spark UI, Liquid Clustering, predictive optimization |
+| Databricks Intelligence Platform | 6 % | Architecture, compute options (including serverless) |
 
 See the full study guide: [Data Engineer Associate](../certifications/data-engineer-associate/README.md)
 
@@ -61,19 +63,23 @@ See the full study guide: [Data Engineer Associate](../certifications/data-engin
 - [Delta Lake Commands](../shared/cheat-sheets/delta-lake-commands.md)
 - [SQL Functions](../shared/cheat-sheets/sql-functions.md)
 - [Unity Catalog Quick Reference](../shared/cheat-sheets/unity-catalog-quick-ref.md)
+- [Lakeflow Spark Declarative Pipelines Quick Reference (formerly DLT)](../shared/cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md)
 
 ## Phase 3: Data Engineer Professional
 
-After passing the Associate exam, advance to Professional topics:
+After passing the Associate exam, advance to Professional topics (new exam Oct 9, 2026 — 9 domains, 60 questions):
 
 | Domain | Weight | Key Topics |
 | ------ | ------ | ---------- |
-| Data Processing | 30% | Advanced ETL, CDC, streaming, deduplication |
-| Databricks Tooling | 20% | CLI, REST API, compute management |
-| Data Modeling | 15% | SCD patterns, partitioning strategies |
-| Security & Governance | 10% | Advanced Unity Catalog, data sharing |
-| Monitoring & Logging | 10% | System tables, Spark UI debugging |
-| Testing & Deployment | 10% | Asset Bundles, CI/CD, Git integration |
+| Developing Code for Data Processing using Python and SQL | 23 % | Lakeflow Pipelines, AUTO CDC (formerly APPLY CHANGES), Lakeflow Jobs, UDFs, testing, Structured Streaming |
+| Cost & Performance Optimization | 15 % | Predictive Optimization, Liquid Clustering, deletion vectors, CDF, query profile |
+| Data Ingestion & Acquisition | 12 % | Kafka/Kinesis/cloud files, Lakeflow Connect CDC, OpenSharing (formerly Delta Sharing), Clean Rooms, Lakehouse Federation |
+| Data Manipulation | 12 % | Window functions, VARIANT, `ai_query`, pipeline expectations |
+| Monitoring and Alerting | 10 % | System tables, pipeline event logs, alerts, Jobs API |
+| Debugging and Deploying | 10 % | Spark UI, job repair, Declarative Automation Bundles, Git folders |
+| Ensuring Data Security and Compliance | 8 % | ACLs, ABAC, masking, PII, GDPR deletion |
+| Data Governance | 5 % | UC tags/comments, permission inheritance |
+| Data Modeling | 5 % | Table layout, dimensional models, materialized views, metric views |
 
 See the full study guide: [Data Engineer Professional](../certifications/data-engineer-professional/README.md)
 
@@ -86,7 +92,7 @@ See the full study guide: [Data Engineer Professional](../certifications/data-en
 
 ## Study Tips
 
-1. **Hands-on practice** - Use the Databricks Community Edition for free clusters
+1. **Hands-on practice** - Use [Databricks Free Edition](https://docs.databricks.com/aws/en/getting-started/free-edition) (Community Edition was retired on Jan 1, 2026); it is serverless-only with [usage limits](https://docs.databricks.com/aws/en/getting-started/free-edition-limitations)
 2. **Focus on Delta Lake** - It appears heavily in both exams
 3. **Understand "why"** - The Professional exam tests decision-making, not just syntax
 4. **Review error messages** - See [Common Errors](../shared/appendix/error-messages.md)

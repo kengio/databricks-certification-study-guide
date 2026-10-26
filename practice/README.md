@@ -43,12 +43,12 @@ Topic-organised question sets sourced from each cert's `practice-questions/` fol
 
 | Bank | Source | Q |
 | :--- | :--- | :---: |
-| Data Engineer Associate | `certifications/data-engineer-associate/resources/practice-questions/` | 85 |
-| Data Engineer Professional | `certifications/data-engineer-professional/resources/practice-questions/` | 73 |
-| Data Analyst Associate | `certifications/data-analyst-associate/resources/practice-questions/` | 57 |
-| ML Associate | `certifications/ml-associate/resources/practice-questions/` | 46 |
-| ML Professional | `certifications/ml-professional/resources/practice-questions/` | 57 |
-| GenAI Engineer Associate | `certifications/genai-engineer-associate/resources/practice-questions/` | 46 |
+| Data Engineer Associate | `certifications/data-engineer-associate/resources/practice-questions/` | 145 |
+| Data Engineer Professional | `certifications/data-engineer-professional/resources/practice-questions/` | 155 |
+| Data Analyst Associate | `certifications/data-analyst-associate/resources/practice-questions/` | 159 |
+| ML Associate | `certifications/ml-associate/resources/practice-questions/` | 107 |
+| ML Professional | `certifications/ml-professional/resources/practice-questions/` | 97 |
+| GenAI Engineer Associate | `certifications/genai-engineer-associate/resources/practice-questions/` | 85 |
 
 ### Mock exams (12 banks · 567 questions)
 

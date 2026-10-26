@@ -8,12 +8,16 @@ tags:
 aliases:
   - Databricks Jobs
   - Workflows
+  - Lakeflow Jobs
   - Job Orchestration
 ---
 
-# Databricks Jobs and Workflows
+# Lakeflow Jobs (formerly Databricks Jobs / Workflows)
 
-Databricks Jobs are the primary mechanism for scheduling and orchestrating production workloads. A Job is a collection of tasks with defined dependencies, triggers, and compute configurations.
+Lakeflow Jobs are the primary mechanism for scheduling and orchestrating production workloads. A Job is a collection of tasks with defined dependencies, triggers, and compute configurations.
+
+> [!note] Platform update (Oct 2026)
+> On Jun 11, 2025, "The product known as Databricks Jobs is now Lakeflow Jobs." The old **Workflows** sidebar item was replaced by **Jobs & Pipelines**, and the jobs system tables moved to the `system.lakeflow` schema ("previously known as `workflow`"). Older questions that say *Databricks Workflows* or *Databricks Jobs* mean the same product. Jobs are deployed as code with **Declarative Automation Bundles** (formerly Databricks Asset Bundles).
 
 ## What is a Job?
 
@@ -44,11 +48,11 @@ flowchart TB
 | Task Type | Use Case | Example |
 |:---|:---|:---|
 | Notebook | Most common — runs a Databricks notebook | ETL pipeline step |
-| Python script | Run a `.py` file from workspace or Repos | Data validation script |
+| Python script | Run a `.py` file from the workspace or a Git folder (formerly Repos) | Data validation script |
 | SQL | Execute a SQL statement or file | Aggregation query |
 | JAR | Run a compiled Spark JAR | Legacy Java/Scala workloads |
 | dbt | Run dbt models | dbt Cloud or dbt Core tasks |
-| Lakeflow/DLT Pipeline | Trigger a DLT pipeline update | Medallion pipeline refresh |
+| Pipeline | Trigger a Lakeflow pipeline update (Lakeflow Spark Declarative Pipelines, formerly DLT) | Medallion pipeline refresh |
 | If/Else condition | Branch based on task value | Skip steps if no new data |
 | For Each | Loop over a list | Process multiple tables |
 
@@ -204,8 +208,8 @@ Task values allow tasks to communicate without external storage.
 
 ### Key Monitoring Approaches
 
-- **Workflows UI**: visual DAG with task status, duration, and logs
-- **System tables**: `system.workflow.job_run_timeline` for historical analysis
+- **Lakeflow Jobs UI** (Jobs & Pipelines): visual DAG with task status, duration, and logs
+- **System tables**: `system.lakeflow.job_run_timeline` for historical analysis (formerly `system.workflow`)
 - **REST API**: programmatic access to run status and logs
 - **Email/webhook alerts**: real-time notifications
 

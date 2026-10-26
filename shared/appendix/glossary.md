@@ -4,17 +4,25 @@ tags: [glossary, reference, data-engineering, ml, genai]
 
 # Glossary
 
+> [!note] Platform update (Oct 2026)
+> Several Databricks products were renamed in 2025–2026 (DLT, Workflows, Asset Bundles, Delta Sharing, Genie spaces, Vector Search). Entries below give the **current name** with the former name in parentheses; old names still appear in exam guides, so both are listed. Full dated timeline: [Version History](./version-history.md) → "2025–2026 Rename and Exam-Guide Timeline".
+
 ## A
 
 | Term                        | Definition                                                                                |
 | --------------------------- | ----------------------------------------------------------------------------------------- |
 | **ACID**                    | Atomicity, Consistency, Isolation, Durability — database transaction properties           |
 | **Agent (AI)**              | Autonomous system that uses an LLM to plan and execute multi-step tasks via tool calls    |
+| **Agent Bricks**            | Databricks agent-building offering; new code agents use the **Agent Bricks CLI**, while the Knowledge Assistant and Supervisor Agent offerings became legacy on Oct 12, 2026 (for no-code agents Databricks points to Genie Agents) |
+| **Agent Bricks CLI**        | Beta CLI recommended (Oct 2026) for new code agents: `pip install databricks-agentbricks`, `agentbricks init --framework langgraph\|openai`, `agentbricks dev`, `agentbricks deploy`; tools declared in `agent.toml` (`genie_agent`, `uc_function`, `mcp`, `sandbox`) |
+| **Agent Runtime**           | Databricks runtime for deployed agents (runs on Databricks Apps); the Agent Bricks CLI deploys there with `DurableAgentServer`, replacing agents on Model Serving (legacy since Oct 5, 2026) |
 | **AI Gateway**              | Databricks service for routing, rate-limiting, and observability of external LLM API calls|
+| **AI Search**               | Current docs name for **Databricks Vector Search** ("formerly Databricks Vector Search"); SDK `databricks-ai-search` / `AISearchClient`. Exam guides still say Vector Search |
 | **Alias (Model Registry)**  | Named pointer to a specific model version (e.g., `@champion`, `@challenger`) in UC        |
 | **AQE**                     | Adaptive Query Execution — Spark's runtime query optimization                             |
 | **Auto Loader**             | Databricks feature for incrementally ingesting files from cloud storage                   |
 | **Auto Optimize**           | Automatic file compaction after writes to Delta tables                                    |
+| **AUTO CDC**                | Lakeflow pipelines CDC API (formerly `APPLY CHANGES`): SQL `AUTO CDC INTO`, Python `dp.create_auto_cdc_flow()`; same syntax as the old API |
 
 ## B
 
@@ -36,6 +44,7 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | **Chunking**            | Splitting documents into smaller segments for embedding and RAG indexing                |
 | **Clone**               | Copy of a Delta table (shallow or deep)                                                 |
 | **Cluster**             | Group of compute resources for running Spark workloads                                  |
+| **Community Edition**   | Former free Databricks tier — retired Jan 1, 2026; replaced by **Free Edition**         |
 | **CoT (Chain-of-Thought)**| Prompting technique instructing the model to reason step by step before answering     |
 | **Concept drift**       | Change in the statistical relationship between input features and the target variable   |
 | **Control Plane**       | Databricks-managed layer handling web UI, APIs, and orchestration                       |
@@ -44,14 +53,15 @@ tags: [glossary, reference, data-engineering, ml, genai]
 
 | Term                | Definition                                                                                  |
 | ------------------- | ------------------------------------------------------------------------------------------- |
-| **DAB**             | Databricks Asset Bundles — CI/CD deployment tool for Databricks resources                   |
+| **DAB**             | Databricks Asset Bundles — former name (until Mar 16, 2026) of **Declarative Automation Bundles**; the abbreviation is still common |
 | **Data drift**      | Change in the statistical distribution of input features over time                          |
 | **Data Plane**      | Compute layer where clusters run and data is processed (in customer or Databricks cloud)    |
 | **DBFS**            | Databricks File System — distributed file system abstraction                                |
+| **Declarative Automation Bundles** | CI/CD tool (formerly Databricks Asset Bundles, renamed Mar 16, 2026) that defines jobs, pipelines, and other resources as code in `databricks.yml`; deployed with the unchanged `databricks bundle` CLI commands |
 | **Deletion Vector** | Delta Lake optimization storing deleted row positions separately; avoids full file rewrite  |
 | **Delta Lake**      | Open-source storage layer providing ACID transactions over Parquet files                    |
-| **Delta Sharing**   | Open protocol for secure data sharing without data duplication                              |
-| **DLT**             | Delta Live Tables — declarative ETL framework (renamed Lakeflow Pipelines)                  |
+| **Delta Sharing**   | Open protocol for secure data sharing without data duplication — renamed **OpenSharing** on Jun 10, 2026 |
+| **DLT**             | Delta Live Tables — original name of **Lakeflow Spark Declarative Pipelines** (renamed Lakeflow Declarative Pipelines in Jun 2025, then Lakeflow Spark Declarative Pipelines on Nov 12, 2025) |
 | **Driver**          | Central coordinator in a Spark application; runs on the master node                        |
 
 ## E
@@ -60,7 +70,7 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | ----------------- | --------------------------------------------------------------------------------------- |
 | **Embeddings**    | Dense numerical vector representations of text enabling semantic similarity comparisons |
 | **Executor**      | Worker process that runs Spark tasks                                                    |
-| **Expectations**  | Data quality rules in Lakeflow/DLT pipelines                                            |
+| **Expectations**  | Data quality rules in Lakeflow Spark Declarative Pipelines (formerly DLT): `EXPECT` / `@dp.expect` keeps rows, `DROP ROW` drops them, `FAIL UPDATE` stops the update |
 | **External Table**| Table where data is stored outside Unity Catalog management (at a user-specified path)  |
 
 ## F
@@ -72,12 +82,14 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | **Few-shot prompting**    | Including example input-output pairs in a prompt to guide model behavior             |
 | **File Notification Mode**| Auto Loader mode using cloud events (SQS/Event Grid) for new file detection          |
 | **Foundation Model API**  | Databricks API for pay-per-token access to large pre-trained LLMs and embedding models|
+| **Free Edition**          | No-cost Databricks offering that replaced Community Edition; serverless-only with usage quotas and no commercial use |
 
 ## G
 
 | Term            | Definition                                                      |
 | --------------- | --------------------------------------------------------------- |
-| **Git Folders** | Databricks feature for Git repository integration in workspaces |
+| **Genie Agent** | Natural-language analytics agent over Unity Catalog data — called a **Genie space** until Jul 8, 2026 (capabilities unchanged; REST path still `/api/2.0/genie/spaces/...`) |
+| **Git Folders** | Databricks feature for Git repository integration in workspaces (formerly Repos) |
 | **Gold Layer**  | Final layer in medallion architecture; business-ready aggregates|
 
 ## H
@@ -111,7 +123,9 @@ tags: [glossary, reference, data-engineering, ml, genai]
 
 | Term                  | Definition                                                                            |
 | --------------------- | ------------------------------------------------------------------------------------- |
-| **Lakeflow**          | Databricks platform for building data pipelines (includes DLT/Lakeflow Pipelines)    |
+| **Lakeflow**          | Databricks data-engineering product family: Lakeflow Connect (ingestion), Lakeflow Spark Declarative Pipelines (formerly DLT), Lakeflow Jobs (formerly Workflows), Lakeflow Designer |
+| **Lakeflow Jobs**     | Orchestration service for multi-task jobs (formerly Databricks Jobs / Workflows, renamed Jun 11, 2025) |
+| **Lakeflow Spark Declarative Pipelines** | Declarative ETL framework (formerly DLT, then Lakeflow Declarative Pipelines; renamed Nov 12, 2025); docs also say "Lakeflow pipelines". Built on open-source Apache Spark Declarative Pipelines (SDP); Python API `from pyspark import pipelines as dp` |
 | **Lakehouse**         | Architecture combining data lake flexibility with data warehouse governance and speed |
 | **Liquid Clustering** | Delta Lake feature for automatic data organization; incrementally replaces ZORDER     |
 | **LLM**               | Large Language Model — neural network trained on large text corpora for text tasks    |
@@ -122,10 +136,12 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | Term                       | Definition                                                                     |
 | -------------------------- | ------------------------------------------------------------------------------ |
 | **Managed Table**          | Table where data lifecycle (including DROP) is managed by Unity Catalog        |
-| **Materialized View**      | Pre-computed query results stored as a table and refreshed incrementally       |
+| **MCP**                    | Model Context Protocol — open standard for exposing tools to agents; Databricks offers managed MCP servers (e.g., `/api/2.0/mcp/genie/{space_id}`, UC functions, AI Search) and built-in services at `https://<host>/ai-gateway/mcp-services/<name>` |
+| **Materialized View**      | Pre-computed query results stored as a table; refreshed incrementally on serverless when possible, otherwise fully recomputed |
 | **Medallion Architecture** | Data organization pattern with Bronze/Silver/Gold layers                       |
 | **MERGE**                  | SQL operation combining INSERT, UPDATE, DELETE in one atomic statement         |
 | **Metastore**              | Top-level container in Unity Catalog for metadata                              |
+| **Metric view**            | Unity Catalog object that defines business measures separately from dimensions (YAML); queried with the `MEASURE()` aggregate function |
 | **Micro-batch**            | Default Spark Streaming processing model                                       |
 | **MLflow**                 | Open-source platform for ML experiment tracking, model registry, and deployment|
 | **Model signature**        | Schema definition of a model's expected input and output types                 |
@@ -134,6 +150,7 @@ tags: [glossary, reference, data-engineering, ml, genai]
 
 | Term           | Definition                                           |
 | -------------- | ---------------------------------------------------- |
+| **OpenSharing** | Open standard for sharing data and AI assets across platforms (formerly Delta Sharing, renamed Jun 10, 2026); Databricks-to-Databricks and Databricks-to-Open modes |
 | **OPTIMIZE**   | Delta Lake command to compact small files            |
 | **Output Mode**| Streaming write behavior (append, complete, update)  |
 
@@ -157,6 +174,7 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | --------------- | ---------------------------------------------------------------------------------------- |
 | **RAG (Retrieval-Augmented Generation)**| Architecture grounding LLM responses in retrieved context from a knowledge base |
 | **Re-ranking**  | Post-retrieval step reordering candidate documents using a more precise relevance model  |
+| **ResponsesAgent** | MLflow agent-authoring interface (OpenAI Responses-style `input` / `output` items) that replaces the deprecated `ChatAgent` and `ChatModel` schemas |
 | **REST API**    | HTTP interface for programmatic Databricks access                                        |
 
 ## S
@@ -176,7 +194,7 @@ tags: [glossary, reference, data-engineering, ml, genai]
 | **Sparse retrieval**   | Keyword-based vector search using term frequency signals (BM25, TF-IDF)               |
 | **Spark UI**           | Web interface for monitoring Spark application execution and performance                |
 | **Spill**              | Data written to disk when executor memory is insufficient for the operation             |
-| **Streaming Table**    | DLT/Lakeflow table type for incremental processing from append-only sources            |
+| **Streaming Table**    | Lakeflow pipelines (formerly DLT) table type that processes each source row once; also the target of AUTO CDC flows |
 | **Structured Streaming**| Spark's stream processing API with exactly-once guarantees                            |
 
 ## T

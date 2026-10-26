@@ -262,7 +262,7 @@ You're building a data platform for a bank subject to BCBS 239 (data lineage req
 >
 > A BCBS 239-compliant lineage implementation uses Unity Catalog as the foundation, supplemented with operational metadata.
 >
-> **Layer 1 — Automatic UC lineage**: Unity Catalog captures column-level lineage automatically for operations executed through Databricks (notebooks, SQL warehouses, DLT pipelines). An auditor can trace `gold.regulatory_report.tier1_capital_ratio` back through Silver transformations to Bronze raw data — all in the Catalog Explorer UI or via system tables:
+> **Layer 1 — Automatic UC lineage**: Unity Catalog captures column-level lineage automatically for operations executed through Databricks (notebooks, SQL warehouses, Lakeflow pipelines — formerly DLT). An auditor can trace `gold.regulatory_report.tier1_capital_ratio` back through Silver transformations to Bronze raw data — all in the Catalog Explorer UI or via system tables:
 >
 > ```sql
 > -- Query column lineage programmatically
@@ -540,7 +540,7 @@ Your team manages raw files — CSVs, JSONs, images, and ML model artifacts — 
 
 ---
 
-## Question 8: Delta Sharing — External Partner Data Exchange
+## Question 8: Delta Sharing (now OpenSharing) — External Partner Data Exchange
 
 **Level**: Professional
 **Type**: Scenario
@@ -550,7 +550,7 @@ Your company needs to share curated revenue data with an external audit firm tha
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: Delta Sharing is an open protocol for secure data exchange without copying data. Create a share containing specific tables (optionally filtered by partition), create a recipient representing the audit firm, and provide them an activation link — they can then access the data from any client that supports the Delta Sharing protocol, including pandas, Spark, Power BI, and Tableau.
+> **Short Answer**: Delta Sharing (renamed OpenSharing in Jun 2026) is an open protocol for secure data exchange without copying data. Create a share containing specific tables (optionally filtered by partition), create a recipient representing the audit firm, and provide them an activation link — they can then access the data from any client that supports the Delta Sharing protocol, including pandas, Spark, Power BI, and Tableau.
 >
 > ### Key Points to Cover
 >

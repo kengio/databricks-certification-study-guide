@@ -216,7 +216,7 @@ Explain the four Structured Streaming trigger types — `processingTime`, `once`
 >
 > **`trigger(once=True)`**: Processes exactly one micro-batch (all available data at that moment) and stops. **Deprecated as of Spark 3.3** — use `availableNow` instead. Behavior: only processes data available at the moment of the first batch, even if more arrives mid-run.
 >
-> **`trigger(availableNow=True)`**: Processes ALL currently available data across multiple micro-batches (respecting data ordering and rate limits) and then stops the stream cleanly. This is the **preferred trigger for scheduled batch-like streaming** — run it via Databricks Workflows every hour to process the hourly backlog:
+> **`trigger(availableNow=True)`**: Processes ALL currently available data across multiple micro-batches (respecting data ordering and rate limits) and then stops the stream cleanly. This is the **preferred trigger for scheduled batch-like streaming** — run it via Lakeflow Jobs (formerly Databricks Workflows) every hour to process the hourly backlog:
 >
 > ```python
 > (spark.readStream

@@ -26,14 +26,14 @@ tags:
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="https://www.databricks.com/learn/certification"><img src="https://img.shields.io/badge/Databricks-Certifications-FF3621?logo=databricks&logoColor=white" alt="Databricks Certifications"></a>
-  <a href="./CHANGELOG.md"><img src="https://img.shields.io/badge/Refreshed-May%202026-success" alt="Refreshed: May 2026"></a>
-  <a href="https://delta.io/"><img src="https://img.shields.io/badge/Delta%20Lake-3.x-00ADD8" alt="Delta Lake"></a>
+  <a href="./CHANGELOG.md"><img src="https://img.shields.io/badge/Refreshed-Oct%202026-success" alt="Refreshed: Oct 2026"></a>
+  <a href="https://delta.io/"><img src="https://img.shields.io/badge/Delta%20Lake-4.x-00ADD8" alt="Delta Lake"></a>
   <a href="https://spark.apache.org/"><img src="https://img.shields.io/badge/Apache%20Spark-Powered-E25A1C?logo=apachespark&logoColor=white" alt="Apache Spark"></a>
   <a href="https://mlflow.org/"><img src="https://img.shields.io/badge/MLflow-Tracked-0194E2?logo=mlflow&logoColor=white" alt="MLflow"></a>
   <br>
   <a href="#"><img src="https://img.shields.io/badge/Unity%20Catalog-Governance-1B9CFC" alt="Unity Catalog"></a>
   <a href="#"><img src="https://img.shields.io/badge/Lakeflow-Jobs%20%26%20Pipelines-FF6F00" alt="Lakeflow"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Mosaic%20AI-Vector%20Search-4B0082" alt="Mosaic AI"></a>
+  <a href="#"><img src="https://img.shields.io/badge/AI%20Search-Genie%20Agents-4B0082" alt="AI Search and Genie Agents"></a>
   <a href="#"><img src="https://img.shields.io/badge/PySpark-Python-3776AB?logo=python&logoColor=white" alt="PySpark"></a>
   <a href="#"><img src="https://img.shields.io/badge/Obsidian-compatible-7C3AED?logo=obsidian&logoColor=white" alt="Obsidian compatible"></a>
   <a href="#"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome"></a>
@@ -41,7 +41,7 @@ tags:
 
 <p align="center">
   <i>A community-maintained study guide covering every active Databricks certification.<br>
-  Refreshed against the official Databricks exam guides current as of <b>May 21, 2026</b>.</i>
+  Refreshed against the official Databricks exam guides and platform docs current as of <b>October 26, 2026</b>.</i>
 </p>
 
 > [!note]
@@ -94,79 +94,90 @@ You don't need to be taking an exam to get value — the guide doubles as a refe
 
 | Certification | Tier | Fee | Duration | Scored Qs | Exam Guide |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| [**Data Engineer Associate**](certifications/data-engineer-associate/README.md) | Associate | $200 | 90 min | 45 | May 2026 |
-| [**Data Engineer Professional**](certifications/data-engineer-professional/README.md) | Professional | $200 | 120 min | 59 | Nov 30, 2025 |
-| [**Data Analyst Associate**](certifications/data-analyst-associate/README.md) | Associate | $200 | 90 min | 45 | Oct 2025 |
-| [**ML Associate**](certifications/ml-associate/README.md) | Associate | $200 | 90 min | 48 | Mar 1, 2025 |
-| [**ML Professional**](certifications/ml-professional/README.md) | Professional | $200 | 120 min | 59 | Sep 2025 |
-| [**GenAI Engineer Associate**](certifications/genai-engineer-associate/README.md) | Associate | $200 | 90 min | 45 | Mar 2026 |
+| [**Data Engineer Associate**](certifications/data-engineer-associate/README.md) | Associate | $200 | 90 min | 45 | Aug 6, 2026 |
+| [**Data Engineer Professional**](certifications/data-engineer-professional/README.md) | Professional | $200 | 120 min | 60 | Oct 9, 2026 |
+| [**Data Analyst Associate**](certifications/data-analyst-associate/README.md) | Associate | $200 | 90 min | 45 | Oct 30, 2025 |
+| [**ML Associate**](certifications/ml-associate/README.md) | Associate | $200 | 90 min | 48 | Mar 1, 2025 (guide re-issued Aug 2026) |
+| [**ML Professional**](certifications/ml-professional/README.md) | Professional | $200 | 120 min | 59 | Sep 30, 2025 (guide re-issued Aug 2026) |
+| [**GenAI Engineer Associate**](certifications/genai-engineer-associate/README.md) | Associate | $200 | 90 min | 45 | Mar 18, 2026 (guide re-issued Aug 2026) |
 
 All six certifications:
 
 - **Pass/fail.** Databricks does not publish a numeric passing threshold.
-- **Multiple choice.** Online or on-site delivery.
+- **Multiple choice** — the ML Associate and GenAI Engineer guides also include **multiple-selection** questions. Exams may add up to 10 unscored items. Online or test-center delivery.
 - **Validity: 2 years.** Renew by retaking or sitting an updated version.
-- **No formal prerequisites.** Hands-on experience and the [Databricks Academy](https://www.databricks.com/learn/training) course are strongly recommended.
-- **Languages available:** English on every exam. Japanese, Portuguese (BR), and Korean are available on every associate exam **except Data Analyst Associate** (English-only), and on the Data Engineer Professional. The ML Professional and Data Analyst Associate exams are English-only.
+- **No formal prerequisites.** Hands-on experience and the [Databricks Academy](https://www.databricks.com/learn/training) course are strongly recommended. The guides now point to [Databricks Free Edition](https://docs.databricks.com/aws/en/getting-started/free-edition) for hands-on practice (Community Edition retired on January 1, 2026).
+- **Languages:** English on every exam. Japanese, Portuguese (BR), and Korean on DE Associate, ML Associate, and GenAI Engineer Associate. Data Analyst Associate and ML Professional are English-only, and the Oct 9, 2026 DE Professional guide lists English only (its cert page still lists all four).
 
 ## Per-certification exam details
 
 <details>
-<summary><b>📊 Data Engineer Associate — May 2026 blueprint</b></summary>
+<summary><b>📊 Data Engineer Associate — August 6, 2026 exam guide</b></summary>
 
 | Detail | Value |
 | :--- | :--- |
 | **Exam ID / page** | [Databricks Certified Data Engineer Associate](https://www.databricks.com/learn/certification/data-engineer-associate) |
-| **Exam guide PDF** | [May 2026 exam guide](https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026.pdf) |
+| **Exam guide PDF** | [August 2026 exam guide](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Associate-Exam-Guide-August-2026.pdf) (exam published May 4, 2026) |
 | **Duration** | 90 minutes |
-| **Scored questions** | 45 multiple-choice |
+| **Scored questions** | 45 multiple-choice (+ up to 10 unscored) |
 | **Languages** | English, Japanese, Portuguese (BR), Korean |
 | **Recommended experience** | 6+ months hands-on with Databricks |
 
-The May 2026 refresh replaces legacy "Workflows" terminology with **Lakeflow Jobs**, and adds explicit coverage of ingestion patterns, modelling, and CI/CD. Existing topic folders in this guide preserve the prior structure; see the [DE Associate README](certifications/data-engineer-associate/README.md) for the up-to-date domain list.
+**Seven domains** with official weights:
+
+| Domain | Weight |
+| :--- | :---: |
+| Data Transformation and Modeling | 22 % |
+| Data Ingestion and Loading | 21 % |
+| Working with Lakeflow Jobs | 16 % |
+| Governance and Security | 15 % |
+| Implementing CI/CD | 10 % |
+| Troubleshooting, Monitoring, and Optimization | 10 % |
+| Databricks Intelligence Platform | 6 % |
 
 </details>
 
 <details>
-<summary><b>📊 Data Engineer Professional — November 30, 2025 blueprint</b></summary>
+<summary><b>📊 Data Engineer Professional — October 9, 2026 exam guide</b></summary>
 
 | Detail | Value |
 | :--- | :--- |
 | **Exam ID / page** | [Databricks Certified Data Engineer Professional](https://www.databricks.com/learn/certification/data-engineer-professional) |
+| **Exam guide PDF** | [October 9, 2026 exam guide](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf) |
 | **Duration** | 120 minutes |
-| **Scored questions** | 59 multiple-choice |
-| **Languages** | English, Japanese, Portuguese (BR), Korean |
+| **Scored questions** | 60 multiple-choice |
+| **Languages** | English (per the PDF; the cert page still lists Japanese, Portuguese (BR), Korean) |
 | **Recommended experience** | 1+ years building production data pipelines on Databricks |
 
-**Ten domains** in the current exam guide:
+**Nine domains** in the current exam guide:
 
 | Domain | Weight |
 | :--- | :---: |
-| Developing Code for Data Processing | 22 % |
-| Cost & Performance Optimization | 13 % |
-| Data Transformation, Cleansing, and Quality | 10 % |
+| Developing Code for Data Processing using Python and SQL | 23 % |
+| Cost & Performance Optimization | 15 % |
+| Data Ingestion & Acquisition | 12 % |
+| Data Manipulation | 12 % |
 | Monitoring and Alerting | 10 % |
-| Ensuring Data Security and Compliance | 10 % |
 | Debugging and Deploying | 10 % |
-| Data Ingestion & Acquisition | 7 % |
-| Data Governance | 7 % |
-| Data Modelling | 6 % |
-| Data Sharing and Federation | 5 % |
+| Ensuring Data Security and Compliance | 8 % |
+| Data Governance | 5 % |
+| Data Modeling | 5 % |
 
 </details>
 
 <details>
-<summary><b>📊 Data Analyst Associate — October 2025 blueprint</b></summary>
+<summary><b>📊 Data Analyst Associate — October 30, 2025 exam guide</b></summary>
 
 | Detail | Value |
 | :--- | :--- |
 | **Exam ID / page** | [Databricks Certified Data Analyst Associate](https://www.databricks.com/learn/certification/data-analyst-associate) |
+| **Exam guide PDF** | [October 2025 exam guide](https://www.databricks.com/sites/default/files/2025-10/databricks-certified-data-analyst-associate-oct-2025.pdf) |
 | **Duration** | 90 minutes |
 | **Scored questions** | 45 multiple-choice |
 | **Languages** | English |
 | **Recommended experience** | 6+ months hands-on with Databricks SQL |
 
-**Nine domains** in the current exam guide, including the new **AI/BI Genie Spaces** section:
+**Nine domains** in the current exam guide, including **AI/BI Genie Spaces** (renamed **Genie Agents** in the product on July 8, 2026):
 
 | Domain | Weight |
 | :--- | :---: |
@@ -174,7 +185,7 @@ The May 2026 refresh replaces legacy "Workflows" terminology with **Lakeflow Job
 | Creating Dashboards and Visualizations | 16 % |
 | Analyzing Queries | 15 % |
 | Developing, Sharing, and Maintaining AI/BI Genie Spaces | 12 % |
-| Understanding Databricks Data Intelligence Platform | 11 % |
+| Understanding of Databricks Data + AI Platform | 11 % |
 | Managing Data | 8 % |
 | Securing Data | 8 % |
 | Importing Data | 5 % |
@@ -183,13 +194,14 @@ The May 2026 refresh replaces legacy "Workflows" terminology with **Lakeflow Job
 </details>
 
 <details>
-<summary><b>📊 ML Associate — March 1, 2025 blueprint</b></summary>
+<summary><b>📊 ML Associate — March 1, 2025 exam (guide re-issued August 2026)</b></summary>
 
 | Detail | Value |
 | :--- | :--- |
 | **Exam ID / page** | [Databricks Certified Machine Learning Associate](https://www.databricks.com/learn/certification/machine-learning-associate) |
+| **Exam guide PDF** | [August 2026 re-issue](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Machine-Learning-Associate-Exam-Guide-August-2026.pdf) |
 | **Duration** | 90 minutes |
-| **Scored questions** | 48 multiple-choice |
+| **Scored questions** | 48 multiple-choice and multiple-selection (+ up to 10 unscored) |
 | **Languages** | English, Japanese, Portuguese (BR), Korean |
 | **Recommended experience** | 6+ months hands-on ML on Databricks |
 
@@ -197,7 +209,7 @@ The May 2026 refresh replaces legacy "Workflows" terminology with **Lakeflow Job
 | :--- | :---: |
 | Databricks Machine Learning | 38 % |
 | Model Development | 31 % |
-| ML Workflows | 19 % |
+| Data Processing (the cert page says "ML Workflows") | 19 % |
 | Model Deployment | 12 % |
 
 Code is Python; non-ML supporting tasks may include SQL.
@@ -205,11 +217,12 @@ Code is Python; non-ML supporting tasks may include SQL.
 </details>
 
 <details>
-<summary><b>📊 ML Professional — September 2025 blueprint</b></summary>
+<summary><b>📊 ML Professional — September 30, 2025 exam (guide re-issued August 2026)</b></summary>
 
 | Detail | Value |
 | :--- | :--- |
 | **Exam ID / page** | [Databricks Certified Machine Learning Professional](https://www.databricks.com/learn/certification/machine-learning-professional) |
+| **Exam guide PDF** | [August 2026 re-issue](https://www.databricks.com/sites/default/files/2026-10/databricks-certified-machine-learning-professional-exam-guide-august.pdf) |
 | **Duration** | 120 minutes |
 | **Scored questions** | 59 multiple-choice |
 | **Languages** | English |
@@ -226,13 +239,14 @@ The current exam guide consolidates the previous four domains into three; "Solut
 </details>
 
 <details>
-<summary><b>📊 GenAI Engineer Associate — March 2026 blueprint</b></summary>
+<summary><b>📊 GenAI Engineer Associate — March 18, 2026 exam (guide re-issued August 2026)</b></summary>
 
 | Detail | Value |
 | :--- | :--- |
 | **Exam ID / page** | [Databricks Certified Generative AI Engineer Associate](https://www.databricks.com/learn/certification/genai-engineer-associate) |
+| **Exam guide PDF** | [August 2026 re-issue](https://www.databricks.com/sites/default/files/2026-10/databricks-certified-gen-ai-associate-exam-guide-august-2026.pdf) |
 | **Duration** | 90 minutes |
-| **Scored questions** | 45 multiple-choice |
+| **Scored questions** | 45 multiple-choice and multiple-selection (+ up to 10 unscored) |
 | **Languages** | English, Japanese, Portuguese (BR), Korean |
 | **Recommended experience** | 6+ months hands-on building GenAI solutions on Databricks |
 
@@ -241,7 +255,7 @@ The current exam guide consolidates the previous four domains into three; "Solut
 | Domain | Weight |
 | :--- | :---: |
 | Application Development | 30 % |
-| Assembling and Deploying Apps | 22 % |
+| Assembling and Deploying Applications | 22 % |
 | Design Applications | 14 % |
 | Data Preparation | 14 % |
 | Evaluation and Monitoring | 12 % |
@@ -254,12 +268,15 @@ The current exam guide consolidates the previous four domains into three; "Solut
 > [!important]
 > Several Databricks exam guides were updated in 2025–2026. Highlights to know:
 
-- **Data Engineer Associate (May 2026)** — terminology shifted from "Workflows" to **Lakeflow Jobs**; the guide also clarifies expectations around Delta ingestion patterns and CI/CD with Databricks Asset Bundles. [exam guide PDF](https://www.databricks.com/sites/default/files/2026-05/databricks-certified-data-engineer-associate-exam-guide-may-2026.pdf)
-- **Data Engineer Professional (Nov 30, 2025)** — restructured to **10 domains** with explicit weights; **Data Sharing and Federation** (Delta Sharing, Lakehouse Federation) and **Data Modelling** are now first-class domains.
-- **Data Analyst Associate (Oct 2025)** — added the **AI/BI Genie Spaces** domain (12 %); SQL warehouses + query analysis remain the highest-weight blocks.
-- **ML Associate (Mar 1, 2025)** — current blueprint emphasises **Databricks ML** (Unity Catalog, AutoML, Mosaic AI) at 38 % and dedicates 31 % to **Model Development**.
-- **ML Professional (Sep 2025)** — collapsed to **three domains**: Model Development, ML Ops, and Model Deployment (44 / 44 / 12).
-- **GenAI Engineer Associate (Mar 2026)** — refactored into **six domains** with **Application Development** (30 %) as the largest block; **Governance** is now an explicit (8 %) domain covering Unity Catalog for AI assets, PII handling, and content safety.
+- **Data Engineer Professional (Oct 9, 2026)** — **new exam version**: 9 domains, 60 scored questions. Data Sharing and Federation folds into **Data Ingestion & Acquisition** (now 12 %); **Data Manipulation** replaces Data Transformation, Cleansing, and Quality. New skills include AUTO CDC, Lakeflow Connect database CDC, OpenSharing, Clean Rooms, VARIANT, `ai_query`, ABAC, `CLUSTER BY AUTO`, UC metric views, and Declarative Automation Bundles project structure. [exam guide PDF](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf)
+- **Data Engineer Associate (May 4, 2026 exam; guide updated Aug 6, 2026)** — **seven officially weighted domains**; Lakeflow Jobs, Lakeflow Connect, and CI/CD with Declarative Automation Bundles (formerly Databricks Asset Bundles). Topic folders now match the domains 1:1. [exam guide PDF](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Associate-Exam-Guide-August-2026.pdf)
+- **GenAI Engineer Associate (Mar 18, 2026; PDF re-issued Aug 2026)** — six weighted domains with **Application Development** (30 %) largest; covers Agent Bricks, managed/external/custom MCP servers, multi-agent systems with Genie, MLflow 3 judges, and Agent Monitoring; AI Gateway monitoring sits under Evaluation and Monitoring.
+- **Data Analyst Associate (Oct 30, 2025)** — added the **AI/BI Genie Spaces** domain (12 %); SQL warehouses + query analysis remain the highest-weight blocks.
+- **ML Professional (Sep 30, 2025; PDF re-issued Aug 2026)** — three domains (44 / 44 / 12); the re-issued guide names Optuna, Ray, bundles for ML assets, online tables, and rollout strategies.
+- **ML Associate (Mar 1, 2025; PDF re-issued Aug 2026)** — same weights; Section 2 is **Data Processing** (19 %) in the PDF; questions are multiple-choice and multiple-selection.
+
+> [!note] Platform renames since the exams were written (checked October 26, 2026)
+> Exam guides keep the original names; this guide teaches the exam term and adds a "Platform update" note. Key renames: Lakeflow Declarative Pipelines → **Lakeflow Spark Declarative Pipelines** (Nov 12, 2025) · Community Edition **retired** (Jan 1, 2026; use Free Edition) · Databricks Assistant → **Genie Code** (Mar 11, 2026) · Databricks Asset Bundles → **Declarative Automation Bundles** (Mar 16, 2026) · Vector Search → **AI Search** (Jun 1, 2026) · Delta Sharing → **OpenSharing** (Jun 10, 2026) · Genie Spaces → **Genie Agents** (Jul 8, 2026) · agents on Model Serving → legacy (Oct 5, 2026) · Knowledge Assistant and Supervisor Agent → legacy (Oct 12, 2026). Full timeline: [version history](shared/appendix/version-history.md).
 
 All passing-score references in older study materials should be ignored: **Databricks no longer publishes a numeric passing threshold** for any of these certifications. Treat the exam as pass/fail and aim to be comfortable across every domain, not just the high-weight ones.
 
@@ -392,7 +409,8 @@ This guide ships as a living resource. The roadmap below is what's planned for t
 - ✅ **MIT license + open-source release** — complete
 - ✅ **Refresh all 6 cert READMEs to current exam-guide versions** — complete
 - ✅ **2025–2026 update callouts** in the top-level README and per-cert READMEs — complete
-- ✅ **Topic-folder reorganisation for DE Professional** to match the November 2025 10-domain structure — complete
+- ✅ **Topic-folder reorganisation for DE Professional** to match the October 9, 2026 9-domain structure — complete
+- ✅ **Topic-folder reorganisation for DE Associate** to match the August 2026 7-domain structure — complete
 - ✅ **Topic-folder reorganisation for Data Analyst Associate** to surface AI/BI Genie Spaces as its own folder — complete
 - ✅ **Topic-folder reorganisation for GenAI Engineer Associate** to match the March 2026 6-domain structure — complete
 - ✅ **Refreshed mock exams** for the three certifications above — complete (terminology + new-domain questions for Data Sharing/Federation, AI/BI Genie Spaces, and GenAI Governance)
@@ -420,12 +438,12 @@ Legend: ✅ done · 🔄 in progress / next up · ⏳ planned · 🌱 ideas bein
 ```text
 databricks-certification-study-guide/
 ├── certifications/
-│   ├── data-engineer-associate/         # 6 topic folders + resources/ (May 2026 blueprint refresh)
-│   ├── data-engineer-professional/      # 10 topic folders + resources/ (Nov 2025 blueprint)
+│   ├── data-engineer-associate/         # 7 topic folders + resources/ (Aug 2026 guide)
+│   ├── data-engineer-professional/      # 9 topic folders + resources/ (Oct 2026 guide)
 │   ├── data-analyst-associate/          # 9 topic folders + resources/ (Oct 2025 blueprint)
-│   ├── ml-associate/                    # 4 topic folders + resources/ (Mar 2025 blueprint)
-│   ├── ml-professional/                 # 3 topic folders + resources/ (Sep 2025 blueprint)
-│   └── genai-engineer-associate/        # 6 topic folders + resources/ (Mar 2026 blueprint)
+│   ├── ml-associate/                    # 4 topic folders + resources/ (Mar 2025 exam, Aug 2026 guide)
+│   ├── ml-professional/                 # 3 topic folders + resources/ (Sep 2025 exam, Aug 2026 guide)
+│   └── genai-engineer-associate/        # 6 topic folders + resources/ (Mar 18, 2026 guide)
 ├── shared/
 │   ├── fundamentals/                    # cross-cert concepts (platform, Delta, Spark, UC, Medallion, MLflow, RAG)
 │   ├── cheat-sheets/                    # quick-reference sheets (Delta, DLT, MLflow, PySpark, SQL, UC, performance)

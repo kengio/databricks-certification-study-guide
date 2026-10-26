@@ -240,7 +240,7 @@ The Databricks Feature Store is a centralized repository for computed features t
 flowchart LR
     subgraph Compute["Feature Computation"]
         Notebook[Spark Notebook<br>or Job]
-        DLT[DLT Pipeline]
+        DLT[Lakeflow Pipeline<br>formerly DLT]
     end
 
     subgraph Store["Feature Store"]

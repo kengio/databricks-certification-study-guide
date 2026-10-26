@@ -226,7 +226,9 @@ GRANT READ FILES ON EXTERNAL LOCATION location_name TO `user@email.com`;
 GRANT WRITE FILES ON EXTERNAL LOCATION location_name TO `user@email.com`;
 ```
 
-## Delta Sharing
+## Delta Sharing (now OpenSharing)
+
+Delta Sharing was renamed **OpenSharing** on Jun 10, 2026 (Databricks-to-Databricks and Databricks-to-Open modes). The share / recipient SQL below is the documented setup flow; older exam guides still say Delta Sharing.
 
 ```sql
 -- Create share

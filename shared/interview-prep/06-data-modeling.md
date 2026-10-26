@@ -237,7 +237,7 @@ Walk through a concrete implementation of SCD Type 2 for a `dim_customer` table 
 > - New version row must be inserted after the MERGE
 > - Surrogate key (`customer_sk`) is auto-generated — different from natural key (`customer_id`)
 > - Delta MERGE condition: `ON source.customer_id = target.customer_id AND target.is_current = true`
-> - DLT alternative: `APPLY CHANGES INTO` with `STORED AS SCD TYPE 2`
+> - DLT alternative: AUTO CDC (formerly `APPLY CHANGES INTO`) with `STORED AS SCD TYPE 2`
 >
 > ### Example Answer
 >
@@ -298,16 +298,18 @@ Walk through a concrete implementation of SCD Type 2 for a `dim_customer` table 
 >    AND target.is_current = false;
 > ```
 >
-> **DLT alternative (recommended for production):**
+> **DLT alternative (now Lakeflow Spark Declarative Pipelines AUTO CDC, formerly APPLY CHANGES — recommended for production):**
 >
 > ```python
-> import dlt
+> from pyspark import pipelines as dp
 >
-> @dlt.table
+> @dp.temporary_view
 > def source_customers():
->     return spark.table("bronze.raw_customers")
+>     return spark.readStream.table("bronze.raw_customers")  # AUTO CDC needs a streaming source
 >
-> dlt.apply_changes(
+> dp.create_streaming_table("dim_customer")
+>
+> dp.create_auto_cdc_flow(
 >     target="dim_customer",
 >     source="source_customers",
 >     keys=["customer_id"],

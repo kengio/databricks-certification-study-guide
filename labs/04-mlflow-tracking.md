@@ -235,4 +235,4 @@ DROP SCHEMA IF EXISTS main.ml_lab CASCADE;
 
 ---
 
-**[← Previous: Lakeflow Declarative Pipelines](./03-lakeflow-declarative-pipelines.md) | [↑ Back to Labs](./README.md) | [Next: Mosaic AI Vector Search RAG demo →](./05-mosaic-ai-rag-demo.md)**
+**[← Previous: Lakeflow Spark Declarative Pipelines](./03-lakeflow-declarative-pipelines.md) | [↑ Back to Labs](./README.md) | [Next: Vector Search (AI Search) RAG demo →](./05-mosaic-ai-rag-demo.md)**

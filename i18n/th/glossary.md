@@ -26,7 +26,13 @@ status: published
 | Delta Lake | คงภาษาอังกฤษ | |
 | Unity Catalog (UC) | คงภาษาอังกฤษ | ใช้ตัวย่อ UC ได้หลังจากระบุชื่อเต็มครั้งแรก |
 | Lakeflow Declarative Pipelines | คงภาษาอังกฤษ | ชื่อใหม่ของ Delta Live Tables (DLT) |
+| Lakeflow Spark Declarative Pipelines | คงภาษาอังกฤษ | ชื่อปัจจุบัน (เปลี่ยนเมื่อ 12 พ.ย. 2025) ต่อจาก Lakeflow Declarative Pipelines; เอกสารเรียกสั้น ๆ ว่า Lakeflow pipelines |
+| Apache Spark Declarative Pipelines (SDP) | คงภาษาอังกฤษ | ส่วน open source ที่ Lakeflow Spark Declarative Pipelines ต่อยอด |
+| AUTO CDC | คงภาษาอังกฤษ | ชื่อใหม่ของ APPLY CHANGES (`dp.create_auto_cdc_flow`) |
 | Lakeflow Jobs | คงภาษาอังกฤษ | ชื่อใหม่ของ Databricks Workflows |
+| Declarative Automation Bundles | คงภาษาอังกฤษ | ชื่อใหม่ (16 มี.ค. 2026) ของ Databricks Asset Bundles (DABs); คำสั่ง `databricks bundle` ไม่เปลี่ยน |
+| OpenSharing | คงภาษาอังกฤษ | ชื่อใหม่ (10 มิ.ย. 2026) ของ Delta Sharing |
+| Free Edition | คงภาษาอังกฤษ | Databricks Free Edition — แทน Community Edition ที่ปิดไปเมื่อ 1 ม.ค. 2026 |
 | MLflow | คงภาษาอังกฤษ | |
 | Mosaic AI | คงภาษาอังกฤษ | รวม Model Serving, Agent Framework, AI Gateway, Vector Search |
 | Databricks Runtime (DBR) | คงภาษาอังกฤษ | |
@@ -34,7 +40,13 @@ status: published
 | AutoML | คงภาษาอังกฤษ | |
 | AI Gateway | คงภาษาอังกฤษ | |
 | Genie Spaces | คงภาษาอังกฤษ | |
+| Genie Agents | คงภาษาอังกฤษ | ชื่อใหม่ (8 ก.ค. 2026) ของ Genie Spaces — ความสามารถเหมือนเดิม |
+| Agent Bricks | คงภาษาอังกฤษ | |
+| Agent Bricks CLI | คงภาษาอังกฤษ | CLI (Beta) ที่แนะนำสำหรับ code agent ใหม่ (ต.ค. 2026) |
+| Agent Runtime | คงภาษาอังกฤษ | runtime สำหรับ deploy agent (รันบน Databricks Apps) |
 | Vector Search | คงภาษาอังกฤษ | |
+| AI Search | คงภาษาอังกฤษ | ชื่อปัจจุบันในเอกสารของ Vector Search (ข้อสอบยังใช้ Vector Search) |
+| Metric views | คงภาษาอังกฤษ | Unity Catalog metric views |
 | Inference Tables | คงภาษาอังกฤษ | |
 | Feature Engineering in UC | คงภาษาอังกฤษ | (ชื่อ feature ใหม่แทนที่ Feature Store) |
 | Auto Loader | คงภาษาอังกฤษ | |
@@ -100,6 +112,8 @@ status: published
 | Vector store | vector store | คงภาษาอังกฤษ |
 | RAG (Retrieval-Augmented Generation) | RAG | คงตัวย่อ |
 | Agent | agent / เอเจนต์ | คงภาษาอังกฤษในบริบทเฉพาะ Mosaic AI Agent Framework |
+| ResponsesAgent | ResponsesAgent | คงภาษาอังกฤษ (ชื่อ class ของ MLflow แทน `ChatAgent` / `ChatModel` ที่ deprecated) |
+| MCP (Model Context Protocol) | MCP | คงตัวย่อ |
 | Prompt | prompt | คงภาษาอังกฤษ |
 | Token | โทเค็น | |
 

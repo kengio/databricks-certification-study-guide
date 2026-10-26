@@ -252,7 +252,7 @@ Explain Databricks Structured Streaming in simple terms. How does it process rea
 
 ---
 
-## Question 7: What Are DLT / LakeFlow Pipelines?
+## Question 7: What Are DLT / Lakeflow Pipelines?
 
 **Level**: Associate
 **Type**: Conceptual
@@ -262,33 +262,33 @@ Your team is building a new data pipeline. A colleague suggests using Delta Live
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: DLT (now called LakeFlow Pipelines) is a declarative framework where you define *what* your tables should contain using Python or SQL, and Databricks manages the *how* — dependency resolution, execution order, infrastructure, error handling, and data quality enforcement through expectations.
+> **Short Answer**: DLT (now Lakeflow Spark Declarative Pipelines, also called Lakeflow pipelines) is a declarative framework where you define *what* your tables should contain using Python or SQL, and Databricks manages the *how* — dependency resolution, execution order, infrastructure, error handling, and data quality enforcement through expectations.
 >
 > ### Key Points to Cover
 >
-> - **Declarative vs imperative**: You define tables with `@dlt.table` decorators or `CREATE LIVE TABLE` SQL — no manual orchestration
+> - **Declarative vs imperative**: You define tables with `@dp.table` decorators (`from pyspark import pipelines as dp`) or `CREATE OR REFRESH STREAMING TABLE` / `MATERIALIZED VIEW` SQL — no manual orchestration
 > - Databricks automatically resolves dependencies between tables and executes them in the right order
-> - Built-in **data quality expectations**: `@dlt.expect`, `@dlt.expect_or_drop`, `@dlt.expect_or_fail`
+> - Built-in **data quality expectations**: `@dp.expect`, `@dp.expect_or_drop`, `@dp.expect_or_fail`
 > - Manages infrastructure: auto-scaling, retries, cluster lifecycle
 > - **APPLY CHANGES** API for CDC / SCD patterns (SCD Type 1 and Type 2)
-> - Two table types: **streaming tables** (incremental, append-only) and **materialized views** (fully recomputed)
+> - Two table types: **streaming tables** (incremental, append-only) and **materialized views** (results always match a full recompute; refreshed incrementally on serverless when possible)
 > - Event log captures data quality metrics, pipeline lineage, and runtime stats
 >
 > ### Example Answer
 >
-> DLT, now called LakeFlow Pipelines, is Databricks' declarative approach to building data pipelines. Instead of writing imperative notebook code that manually reads, transforms, and writes data in sequence, you define tables declaratively. You say "this table should contain *this* query" and DLT figures out the execution order, manages the compute, handles retries, and tracks data quality.
+> DLT — renamed Lakeflow Declarative Pipelines in Jun 2025 and Lakeflow Spark Declarative Pipelines on Nov 12, 2025 — is Databricks' declarative approach to building data pipelines. Instead of writing imperative notebook code that manually reads, transforms, and writes data in sequence, you define tables declaratively. You say "this table should contain *this* query" and DLT figures out the execution order, manages the compute, handles retries, and tracks data quality.
 >
 > For example, in a regular notebook pipeline, you'd write `spark.readStream.load(...)`, transform the data, then `writeStream.toTable(...)`, and manually handle checkpoints and error recovery. In DLT, you just write:
 >
 > ```python
-> @dlt.table
+> @dp.table
 > def silver_orders():
->     return dlt.read_stream("bronze_orders").filter("amount > 0")
+>     return spark.readStream.table("bronze_orders").filter("amount > 0")
 > ```
 >
 > DLT automatically knows that `silver_orders` depends on `bronze_orders` and runs them in the right order.
 >
-> The killer feature is **expectations** — built-in data quality checks. You can annotate tables with rules like `@dlt.expect_or_drop("valid_amount", "amount > 0")`, and DLT will either warn, drop bad rows, or fail the pipeline depending on the severity you choose. All quality metrics are logged to the event log for monitoring.
+> The killer feature is **expectations** — built-in data quality checks. You can annotate tables with rules like `@dp.expect_or_drop("valid_amount", "amount > 0")`, and DLT will either warn, drop bad rows, or fail the pipeline depending on the severity you choose. All quality metrics are logged to the event log for monitoring.
 >
 > I'd recommend DLT when you want managed infrastructure, built-in data quality, and you're building a medallion-style pipeline with clear Bronze → Silver → Gold flow. For ad-hoc exploration or very custom logic, regular notebooks may be more flexible.
 >
@@ -310,7 +310,7 @@ A partner organization needs access to some of your data, but they don't use Dat
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: Databricks supports **Delta Sharing** — an open protocol for securely sharing live data across organizations without copying it. The provider creates a share containing specific tables/partitions, generates a credential file, and the recipient reads the data using any compatible client (Spark, pandas, Power BI, Tableau) — no Databricks account required.
+> **Short Answer**: Databricks supports **Delta Sharing** (renamed **OpenSharing** on Jun 10, 2026) — an open protocol for securely sharing live data across organizations without copying it. The provider creates a share containing specific tables/partitions, generates a credential file, and the recipient reads the data using any compatible client (Spark, pandas, Power BI, Tableau) — no Databricks account required.
 >
 > ### Key Points to Cover
 >
@@ -357,7 +357,7 @@ You've built a data pipeline in notebooks and need to run it on a daily schedule
 
 > [!success]- Answer Framework
 >
-> **Short Answer**: A Databricks Job defines one or more tasks (notebooks, Python scripts, SQL queries, DLT pipelines) that run on a schedule or trigger. Tasks can have dependencies forming a DAG, run on ephemeral job clusters (cheaper than all-purpose), and include built-in retries, alerts, and monitoring.
+> **Short Answer**: A Databricks Job defines one or more tasks (notebooks, Python scripts, SQL queries, Lakeflow pipelines — formerly DLT) that run on a schedule or trigger. Tasks can have dependencies forming a DAG, run on ephemeral job clusters (cheaper than all-purpose), and include built-in retries, alerts, and monitoring.
 >
 > ### Key Points to Cover
 >
@@ -516,7 +516,7 @@ A colleague asks: "Why not just use a regular VIEW instead of creating a Gold De
 > - **Regular views**: Stored SQL definition only, re-executed on every query, zero storage cost, always fresh, expensive for complex queries over large data
 > - **Materialized views**: Pre-computed results stored as Delta tables, auto-refreshed (incrementally when possible, full recompute otherwise), fast reads, consume storage
 > - **DLT streaming tables**: Pipeline-managed, incremental processing, append-only, designed for Bronze/Silver ingestion
-> - **DLT materialized views (in DLT context)**: Fully recomputed on each pipeline update, used for Gold aggregations within DLT
+> - **DLT materialized views (in DLT context)**: Refreshed on each pipeline update (incrementally on serverless when possible, otherwise fully recomputed), used for Gold aggregations within DLT
 > - **Gold Delta tables**: Explicitly written by pipeline code (notebook or DLT), full control over write logic, most common production pattern
 > - `CREATE MATERIALIZED VIEW` syntax in Databricks SQL
 > - Refresh behavior: incremental refresh when the optimizer can determine the delta, full recompute otherwise
@@ -568,19 +568,19 @@ A colleague asks: "Why not just use a regular VIEW instead of creating a Gold De
 > - **Full recompute**: When changes are complex (e.g., updates or deletes in the source, or the query uses non-incremental operations), the entire materialized view is recomputed
 > - Refresh can be triggered manually with `REFRESH MATERIALIZED VIEW gold.daily_revenue` or happens automatically based on the warehouse's refresh schedule
 >
-> **DLT Streaming Tables and Materialized Views** are the DLT (LakeFlow) equivalents, managed within a pipeline:
+> **DLT Streaming Tables and Materialized Views** are the DLT (now Lakeflow Spark Declarative Pipelines) equivalents, managed within a pipeline:
 >
 > ```python
 > # DLT streaming table — incremental, append-only (Bronze/Silver)
-> @dlt.table
+> @dp.table
 > def silver_transactions():
->     return dlt.read_stream("bronze_transactions").filter("amount > 0")
+>     return spark.readStream.table("bronze_transactions").filter("amount > 0")
 >
-> # DLT materialized view — fully recomputed each pipeline run (Gold)
-> @dlt.table
+> # DLT materialized view — refreshed each pipeline run (Gold)
+> @dp.materialized_view
 > def gold_daily_revenue():
 >     return (
->         dlt.read("silver_transactions")
+>         spark.read.table("silver_transactions")
 >         .groupBy("date", "region")
 >         .agg(
 >             sum("amount").alias("total_revenue"),
@@ -589,7 +589,7 @@ A colleague asks: "Why not just use a regular VIEW instead of creating a Gold De
 >     )
 > ```
 >
-> In DLT, a streaming table processes only new data (incremental), while a materialized view is fully recomputed on each pipeline update. Both are managed by DLT — you define the logic, DLT handles execution, dependencies, and data quality.
+> In DLT, a streaming table processes only new data (incremental), while a materialized view is refreshed on each pipeline update — incrementally on serverless when possible, otherwise by full recompute. Both are managed by DLT — you define the logic, DLT handles execution, dependencies, and data quality.
 >
 > **Explicitly Written Gold Delta Tables** are the most common production pattern. Your pipeline code (notebook or DLT) writes the results to a Delta table using `MERGE`, `INSERT OVERWRITE`, or `APPEND`:
 >

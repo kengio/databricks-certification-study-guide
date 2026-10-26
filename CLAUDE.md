@@ -7,12 +7,12 @@ Study notes for Databricks certifications: Data Engineer (Associate & Profession
 ```text
 databricks-certification-study-guide/
 ├── certifications/
-│   ├── data-engineer-associate/    # 5 topic folders + resources/
-│   ├── data-engineer-professional/ # 8 topic folders + resources/
-│   ├── data-analyst-associate/     # 5 topic folders + resources/
+│   ├── data-engineer-associate/    # 7 topic folders + resources/
+│   ├── data-engineer-professional/ # 9 topic folders + resources/
+│   ├── data-analyst-associate/     # 9 topic folders + resources/
 │   ├── ml-associate/               # 4 topic folders + resources/
-│   ├── ml-professional/            # 4 topic folders + resources/
-│   └── genai-engineer-associate/   # 4 topic folders + resources/
+│   ├── ml-professional/            # 3 topic folders + resources/
+│   └── genai-engineer-associate/   # 6 topic folders + resources/
 ├── shared/
 │   ├── fundamentals/       # Cross-cert concept files
 │   ├── cheat-sheets/       # Quick-reference sheets
@@ -141,19 +141,19 @@ Required: YAML frontmatter (`title`, `type: category`, `tags`, `status`), topic 
 
 ## Certification Topic Folders
 
-- **DE Associate:** 01-lakehouse-platform, 02-etl-spark-sql, 03-delta-lake, 04-workflows-orchestration (Lakeflow Jobs), 05-data-governance, 06-cicd-and-monitoring *(folder added for the May 2026 blueprint refresh)*
-- **DE Professional:** 01-developing-code-for-data-processing, 02-cost-and-performance-optimization, 03-data-transformation-cleansing-quality, 04-monitoring-and-alerting, 05-ensuring-data-security-and-compliance, 06-debugging-and-deploying, 07-data-ingestion-and-acquisition, 08-data-governance, 09-data-modelling, 10-data-sharing-and-federation *(matches Nov 30, 2025 official 10-domain blueprint)*
-- **Data Analyst:** 01-executing-queries-databricks-sql-warehouses, 02-creating-dashboards-and-visualizations, 03-analyzing-queries, 04-developing-sharing-maintaining-genie-spaces, 05-understanding-databricks-platform, 06-managing-data, 07-securing-data, 08-importing-data, 09-data-modeling-with-databricks-sql *(matches Oct 2025 official 9-domain blueprint)*
-- **ML Associate:** 01-databricks-machine-learning, 02-model-development, 03-ml-workflows, 04-model-deployment *(matches Mar 1, 2025 official 4-domain blueprint)*
-- **ML Professional:** 01-model-development, 02-ml-ops, 03-model-deployment *(matches Sep 2025 official 3-domain blueprint)*
-- **GenAI Engineer:** 01-application-development, 02-assembling-and-deploying-apps, 03-design-applications, 04-data-preparation, 05-evaluation-and-monitoring, 06-governance *(matches March 2026 official 6-domain blueprint)*
+- **DE Associate:** 01-databricks-intelligence-platform, 02-data-ingestion-and-loading, 03-data-transformation-and-modeling, 04-working-with-lakeflow-jobs, 05-implementing-cicd, 06-troubleshooting-monitoring-and-optimization, 07-governance-and-security *(matches Aug 6, 2026 official 7-domain exam guide)*
+- **DE Professional:** 01-developing-code-for-data-processing, 02-data-ingestion-and-acquisition, 03-data-manipulation, 04-monitoring-and-alerting, 05-cost-and-performance-optimization, 06-ensuring-data-security-and-compliance, 07-data-governance, 08-debugging-and-deploying, 09-data-modeling *(matches Oct 9, 2026 official 9-domain exam guide)*
+- **Data Analyst:** 01-executing-queries-databricks-sql-warehouses, 02-creating-dashboards-and-visualizations, 03-analyzing-queries, 04-developing-sharing-maintaining-genie-spaces, 05-understanding-databricks-platform, 06-managing-data, 07-securing-data, 08-importing-data, 09-data-modeling-with-databricks-sql *(matches Oct 30, 2025 official 9-domain exam guide; topic files realigned to the PDF sections Oct 2026)*
+- **ML Associate:** 01-databricks-machine-learning, 02-data-processing, 03-model-development, 04-model-deployment *(matches the 4-section exam guide re-issued Aug 2026; exam version Mar 1, 2025)*
+- **ML Professional:** 01-model-development, 02-ml-ops, 03-model-deployment *(matches Sep 30, 2025 official 3-domain blueprint; PDF re-issued Aug 2026)*
+- **GenAI Engineer:** 01-application-development, 02-assembling-and-deploying-apps, 03-design-applications, 04-data-preparation, 05-evaluation-and-monitoring, 06-governance *(matches March 18, 2026 official 6-section exam guide, PDF re-issued Aug 2026; AI Gateway monitoring lives in 05-evaluation-and-monitoring)*
 
 ## Shared Content
 
 - **fundamentals/**: platform-architecture, databricks-workspace, delta-lake-basics, spark-fundamentals, sql-essentials, streaming-fundamentals, unity-catalog-basics, medallion-architecture, mlflow-basics, feature-engineering-basics, rag-vector-search-basics, open-table-formats, python-essentials (×2)
-- **cheat-sheets/**: delta-lake-commands, dlt-quick-ref, mlflow-quick-ref, pyspark-api-quick-ref, spark-configurations, sql-functions, unity-catalog-quick-ref, performance-optimization, describe-show-commands
+- **cheat-sheets/**: delta-lake-commands, lakeflow-declarative-pipelines-quick-ref (dlt-quick-ref is a redirect stub), auto-loader-quick-ref, streaming-quick-ref, mlflow-quick-ref, pyspark-api-quick-ref, spark-configurations, sql-functions, unity-catalog-quick-ref, performance-optimization, describe-show-commands
 - **appendix/**: glossary, comparison-tables, error-messages, performance-troubleshooting, version-history, renewal-guide
-- **code-examples/**: python/ (delta_lake_operations, python_patterns, streaming_examples, unity_catalog_setup), sql/ (cte_patterns, delta_lake_operations, window_functions)
+- **code-examples/**: python/ (cdc_and_deduplication, delta_lake_operations, dlt_pipelines, feature_store_and_vector_search, ml_inference_examples, mlflow_patterns, python_patterns, streaming_examples, unity_catalog_setup), sql/ (analyst_patterns, cdc_merge_patterns, cte_patterns, delta_lake_operations, window_functions)
 - **interview-prep/**: associate-fundamentals, file-formats-spark-internals, delta-lake-internals, pipeline-architecture, streaming-cdc, data-modeling, performance-optimization, pyspark-sql-patterns, python-code-quality, governance-security, production-operations, data-compliance-quality, system-design, ml-system-design, genai-rag-design
 
 ## PR Workflow
@@ -200,6 +200,7 @@ When Databricks updates the exam guide for any certification:
 3. Update / add the "What changed in the latest blueprint" callout at the top of that cert's `README.md`
 4. Update the matching cert row in the top-level `README.md` certifications table and the "What changed in the 2025–2026 exam guides" section
 5. Add an entry to [`CHANGELOG.md`](./CHANGELOG.md) describing the refresh
-6. Mark new practice questions targeting the updated skills with a `*(YYYY blueprint)*` suffix in the question heading
+6. Mark new practice questions targeting the updated skills with a suffix in the question heading: `*(YYYY blueprint)*` when the exam version itself changed, `*(YYYY guide)*` when Databricks re-issued the guide for an unchanged exam
+7. Where a product was renamed or made legacy after the exam guide was written, keep the exam guide's term and add a `> [!note] Platform update (Mon YYYY)` callout with the new name and a Databricks source
 
 Always cite the new exam-guide PDF URL in the PR description.

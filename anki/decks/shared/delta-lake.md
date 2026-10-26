@@ -190,7 +190,7 @@ What do `delta.autoOptimize.optimizeWrite` and `delta.autoOptimize.autoCompact` 
 What does the Delta Sharing protocol let you do?
 
 > [!success]- Answer
-> Share Delta tables (and Volumes) across orgs / clouds **without copying data**. Recipients query a signed URL endpoint that streams Parquet directly. Two flavours: **Open Sharing** (any client, token-auth) and **Databricks-to-Databricks** (full UC-backed sharing with views, row filters, audit).
+> (Renamed **OpenSharing** on Jun 10, 2026.) Share Delta tables (and Volumes) across orgs / clouds **without copying data**. Recipients query a signed URL endpoint that streams Parquet directly. Two flavours: **Databricks-to-Open** (formerly open sharing; any client, token-auth) and **Databricks-to-Databricks** (full UC-backed sharing with views, row filters, audit).
 
 ## UniForm — Delta as Iceberg
 

@@ -25,7 +25,7 @@ Your team needs to build a churn prediction model that retrains weekly on custom
 > - Unity Catalog Model Registry for model versioning and alias-based promotion
 > - Model Serving endpoint with traffic routing (for canary/A-B testing)
 > - Lakehouse Monitoring or custom drift detection job
-> - Orchestrated via Databricks Workflows (weekly retrain + daily inference)
+> - Orchestrated via Lakeflow Jobs, formerly Databricks Workflows (weekly retrain + daily inference)
 >
 > ### Example Answer
 >

@@ -27,12 +27,12 @@ status: published
 | :--- | :---: | :---: | :---: |
 | **Top-level** | 7 | 0 | 5 (อีก 2 ❌) |
 | **i18n/th/** (ไฟล์ scaffolding) | 3 | 3 | 0 |
-| **Data Engineer Associate** | 41 | 0 | 41 |
-| **Data Engineer Professional** | 98 | 0 | 98 |
-| **Data Analyst Associate** | 44 | 0 | 44 |
-| **ML Associate** | 31 | 0 | 31 |
-| **ML Professional** | 34 | 0 | 34 |
-| **GenAI Engineer Associate** | 37 | 0 | 37 |
+| **Data Engineer Associate** | 56 | 0 | 56 |
+| **Data Engineer Professional** | 113 | 0 | 113 |
+| **Data Analyst Associate** | 59 | 0 | 59 |
+| **ML Associate** | 40 | 0 | 40 |
+| **ML Professional** | 41 | 0 | 41 |
+| **GenAI Engineer Associate** | 49 | 0 | 49 |
 | **Shared — Fundamentals** | 16 | 0 | 16 |
 | **Shared — Cheat Sheets** | 13 | 0 | 13 |
 | **Shared — Interview Prep** | 16 | 0 | 16 |
@@ -40,7 +40,7 @@ status: published
 | **Shared — Code Examples** | 15 | 0 | 15 |
 | **Labs** | 6 | 0 | 6 |
 | **Learning Paths** | 6 | 0 | 6 |
-| **รวม (in scope)** | **374** | **3** | **369 (+ 2 ❌)** |
+| **รวม (in scope)** | **447** | **3** | **442 (+ 2 ❌)** |
 
 ความคืบหน้า: **0.8 %** (เป้าหมายระยะแรกคือ Top-level README + Data Engineer Associate cert ครบ)
 

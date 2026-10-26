@@ -163,7 +163,7 @@ Your RAG chatbot is live but users are complaining about irrelevant or incorrect
 
 ---
 
-## Question 4: Vector Search Index Design
+## Question 4: Vector Search (AI Search) Index Design
 
 **Level**: Both
 **Type**: Architecture

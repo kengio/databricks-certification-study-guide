@@ -46,12 +46,14 @@ Start with the core platform concepts relevant to ML workloads.
 
 Focus areas based on exam weight:
 
+Exam version Mar 1, 2025 (guide PDF re-issued Aug 2026) — 4 domains, 48 questions:
+
 | Domain | Weight | Key Topics |
 | ------ | ------ | ---------- |
-| Databricks ML | 29% | ML Runtime, AutoML, Feature Store |
-| ML Workflows | 29% | Data prep, feature engineering, model training |
-| MLflow | 22% | Experiment tracking, model registry, model serving |
-| Scalable ML | 20% | Distributed training, hyperparameter tuning, Spark ML |
+| Databricks Machine Learning | 38 % | ML Runtime, AutoML, feature tables in Unity Catalog, MLflow |
+| Model Development | 31 % | Spark ML, hyperparameter tuning, evaluation |
+| Data Processing ("ML Workflows" on the cert page) | 19 % | Data prep, feature engineering |
+| Model Deployment | 12 % | Batch, streaming, and real-time (Model Serving) inference |
 
 See the full study guide: [ML Associate](../certifications/ml-associate/README.md)
 
@@ -71,12 +73,13 @@ After ML Associate, you can pursue either or both certifications:
 
 For deeper MLOps and production ML expertise.
 
+Exam version Sep 30, 2025 (guide PDF re-issued Aug 2026) — 3 domains, 59 questions:
+
 | Domain | Weight | Key Topics |
 | ------ | ------ | ---------- |
-| Deployment | 35% | Model serving, A/B testing, batch inference |
-| Monitoring | 25% | Drift detection, model performance tracking |
-| Solution Design | 20% | Architecture patterns, scalability |
-| Experimentation | 20% | Advanced experiment design, feature engineering |
+| Model Development | 44 % | Advanced experimentation, Spark ML at scale, Feature Store concepts |
+| ML Ops | 44 % | Model lifecycle, testing, monitoring and drift |
+| Model Deployment | 12 % | Model Serving, batch and streaming inference |
 
 See the full study guide: [ML Professional](../certifications/ml-professional/README.md)
 
@@ -84,22 +87,25 @@ See the full study guide: [ML Professional](../certifications/ml-professional/RE
 
 For LLM application development and RAG architectures.
 
+Exam version Mar 18, 2026 — 6 domains, 45 questions:
+
 | Domain | Weight | Key Topics |
 | ------ | ------ | ---------- |
-| Design RAG Applications | 30% | Chunking, embedding, retrieval strategies |
-| Build Data Pipelines | 24% | Vector search, data preparation |
-| Build Multi-Stage Reasoning | 18% | Prompt chaining, agents, tool use |
-| Assemble and Deploy | 16% | Model serving, endpoint management |
-| Governance | 12% | Safety, responsible AI, guardrails |
+| Application Development | 30 % | Agents, tools, MCP, prompt engineering |
+| Assembling and Deploying Applications | 22 % | Agent Framework, Model Serving deployment |
+| Design Applications | 14 % | RAG and agent design |
+| Data Preparation | 14 % | Chunking, embeddings, Vector Search (now AI Search) |
+| Evaluation and Monitoring | 12 % | MLflow evaluation, inference tables |
+| Governance | 8 % | Guardrails, AI Gateway, Unity Catalog |
 
 See the full study guide: [GenAI Engineer Associate](../certifications/genai-engineer-associate/README.md)
 
 ### Key Technologies
 
-- Databricks Vector Search
+- Databricks Vector Search (now called AI Search in the docs)
 - Foundation Model APIs
 - LangChain integration
-- Model Serving endpoints
+- Model Serving endpoints (for new code agents, Databricks now recommends the Agent Bricks CLI on Agent Runtime)
 
 ## Study Tips
 

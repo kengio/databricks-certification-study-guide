@@ -59,7 +59,7 @@ Explain the medallion (Bronze/Silver/Gold) architecture. A colleague argues it a
 **Type**: Deep Dive
 
 **Scenario / Question**:
-You're starting a new data engineering project. When would you choose Delta Live Tables (LakeFlow Pipelines) over a traditional Databricks Workflow with notebooks? What are the trade-offs?
+You're starting a new data engineering project. When would you choose Delta Live Tables (now Lakeflow Spark Declarative Pipelines) over a traditional Databricks Workflow with notebooks? What are the trade-offs?
 
 > [!success]- Answer Framework
 >
@@ -84,20 +84,20 @@ You're starting a new data engineering project. When would you choose Delta Live
 > - You want pipeline-level **lineage** visualized in the UI automatically
 >
 > ```python
-> import dlt
+> from pyspark import pipelines as dp
 > from pyspark.sql.functions import col
 >
-> @dlt.table(comment="Raw orders from Kafka")
+> @dp.table(comment="Raw orders from Kafka")
 > def bronze_orders():
 >     return (spark.readStream.format("kafka")
 >         .option("kafka.bootstrap.servers", "broker:9092")
 >         .option("subscribe", "orders").load())
 >
-> @dlt.expect("valid_order_id", "order_id IS NOT NULL")
-> @dlt.expect_or_drop("positive_amount", "amount > 0")
-> @dlt.table(comment="Cleansed orders")
+> @dp.table(comment="Cleansed orders")
+> @dp.expect("valid_order_id", "order_id IS NOT NULL")
+> @dp.expect_or_drop("positive_amount", "amount > 0")
 > def silver_orders():
->     return (dlt.read_stream("bronze_orders")
+>     return (spark.readStream.table("bronze_orders")
 >         .select("order_id", "customer_id", col("amount").cast("double")))
 > ```
 >
@@ -364,20 +364,20 @@ You're building a DLT pipeline for financial transaction data. Compliance requir
 > For compliance use cases where **all records must be accounted for**, the quarantine pattern is the right approach:
 >
 > ```python
-> import dlt
-> from pyspark.sql.functions import col
+> from pyspark import pipelines as dp
+> from pyspark.sql.functions import col, when
 >
 > # Silver: valid transactions only
-> @dlt.expect_or_drop("valid_amount", "amount > 0")
-> @dlt.expect_or_drop("valid_account", "account_id IS NOT NULL")
-> @dlt.table(comment="Validated financial transactions")
+> @dp.table(comment="Validated financial transactions")
+> @dp.expect_or_drop("valid_amount", "amount > 0")
+> @dp.expect_or_drop("valid_account", "account_id IS NOT NULL")
 > def silver_transactions():
->     return dlt.read_stream("bronze_transactions")
+>     return spark.readStream.table("bronze_transactions")
 >
 > # Quarantine: rows that failed any expectation
-> @dlt.table(comment="Invalid transactions for review and remediation")
+> @dp.table(comment="Invalid transactions for review and remediation")
 > def quarantine_transactions():
->     return (dlt.read_stream("bronze_transactions")
+>     return (spark.readStream.table("bronze_transactions")
 >         .filter(
 >             (col("amount") <= 0) |
 >             col("account_id").isNull()
@@ -390,7 +390,7 @@ You're building a DLT pipeline for financial transaction data. Compliance requir
 >
 > This ensures: every Bronze record goes to exactly one of Silver (valid) or Quarantine (invalid). Compliance can audit the quarantine table, remediate records, and reprocess them back through the pipeline.
 >
-> DLT also logs all expectation results in the **event log** (`system.events`), providing a full audit trail of how many records were dropped, when, and why — without any custom logging code.
+> DLT also logs all expectation results in the pipeline **event log** (queried with the `event_log()` table-valued function), providing a full audit trail of how many records were dropped, when, and why — without any custom logging code.
 >
 > ### Follow-up Questions
 >
@@ -419,7 +419,7 @@ You need to design a Databricks Workflow with 8 tasks that have complex dependen
 > - `dbutils.jobs.taskValues.set()` / `.get()` for passing small values (file paths, row counts) between tasks
 > - Conditional branching with if/else tasks and `run_if` conditions
 > - Error handling with task-level retries and `max_retries`
-> - DAB (Databricks Asset Bundles) for defining jobs as code
+> - DAB (Declarative Automation Bundles, formerly Databricks Asset Bundles) for defining jobs as code
 >
 > ### Example Answer
 >
@@ -594,7 +594,7 @@ Your team is building a data pipeline that processes files from an upstream syst
 **Type**: Comparison
 
 **Scenario / Question**:
-Your team is debating whether to use Databricks Workflows natively or bring in Apache Airflow or Azure Data Factory for orchestration. What is your framework for deciding?
+Your team is debating whether to use Lakeflow Jobs (formerly Databricks Workflows) natively or bring in Apache Airflow or Azure Data Factory for orchestration. What is your framework for deciding?
 
 > [!success]- Answer Framework
 >

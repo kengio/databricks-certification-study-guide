@@ -44,13 +44,19 @@ Before starting, you should have:
 
 The GenAI Engineer Associate exam covers these domains:
 
+Exam version Mar 18, 2026 (guide PDF re-issued Aug 2026) — 6 domains, 45 questions:
+
 | Domain | Weight | Key Topics |
 | :--- | :--- | :--- |
-| Design Applications | ~30% | RAG architecture, chunking, prompt design |
-| Data Preparation | ~20% | Vector Search indexing, embedding models |
-| Application Development | ~30% | Databricks SDK, Model Serving, chains |
-| Responsible AI | ~10% | Bias, safety, evaluation, governance |
-| Deployment & Monitoring | ~10% | CI/CD for AI, drift, feedback loops |
+| Application Development | 30 % | Agents, tools, MCP, prompt engineering |
+| Assembling and Deploying Applications | 22 % | Agent Framework (`ResponsesAgent`), Model Serving deployment |
+| Design Applications | 14 % | RAG architecture, agent design |
+| Data Preparation | 14 % | Chunking, embeddings, Vector Search (now AI Search) indexing |
+| Evaluation and Monitoring | 12 % | MLflow evaluation, tracing, inference tables |
+| Governance | 8 % | Guardrails, AI Gateway, Unity Catalog |
+
+> [!note] Platform update (Oct 2026)
+> The product has moved past the Mar 2026 exam version: Vector Search is now **AI Search** in the docs; `ChatAgent` / `ChatModel` are deprecated in favor of `ResponsesAgent`; agents deployed to Model Serving became **legacy** on Oct 5, 2026; and on Oct 12, 2026 Databricks began recommending the **Agent Bricks CLI** (Beta) for new code agents and **Genie Agents** (formerly Genie spaces) for no-code agents. Study the exam's Model Serving path, but know the new names. Timeline: [Version History](../shared/appendix/version-history.md).
 
 ### RAG Architecture
 
@@ -76,7 +82,9 @@ Key decisions in RAG design:
 - **Embedding model** — Must be the same model for indexing AND querying
 - **Retrieval** — Top-K similarity search, optionally with metadata filters
 
-### Databricks Vector Search
+### Databricks Vector Search (now AI Search)
+
+The `VectorSearchClient` below still works; new code can use `from databricks.ai_search.client import AISearchClient` (`pip install databricks-ai-search`).
 
 ```python
 from databricks.vector_search.client import VectorSearchClient
@@ -271,6 +279,8 @@ with mlflow.start_run():
 
 ### Evaluation with MLflow
 
+The snippet below is the MLflow 2.x `mlflow.evaluate()` API; on Databricks, MLflow 3 uses `mlflow.genai.evaluate()` with scorers for GenAI apps — see the [RAG fundamentals](../shared/fundamentals/rag-vector-search-basics.md) for an example.
+
 ```python
 import mlflow
 
@@ -289,7 +299,7 @@ results = mlflow.evaluate(
 
 Deploy and maintain AI apps using standard Databricks DevOps patterns:
 
-- **Databricks Asset Bundles** — version-control serving endpoint configs; deploy with `databricks bundle deploy`
+- **Declarative Automation Bundles (formerly Databricks Asset Bundles)** — version-control serving endpoint configs; deploy with `databricks bundle deploy`
 - **Inference tables** — enable on a serving endpoint to auto-log every request and response to a Delta table
 - **Feedback loops** — collect user ratings, store in Delta, use as signal for prompt tuning or retrieval re-ranking
 - **Drift detection** — monitor output distributions (answer length, topic distribution) over time; alert when metrics degrade

@@ -25,7 +25,7 @@ A practical playbook for renewing a Databricks certification before its 2-year v
 - **All Databricks certifications expire 2 years after the pass date** — there is no automatic renewal
 - After the expiry date, the credential no longer appears as "active" on your Credly / credential portal page and **cannot be displayed as a current certification on resumes / LinkedIn / role descriptions**
 - For consultants, the active credential is often a hard requirement for partner-program tier eligibility (Databricks Partner Connect, SI tier badges) — letting it lapse can affect billing rates and project staffing
-- The Databricks platform itself evolves quickly (Lakeflow Jobs replaced Workflows in 2025; Lakeflow Declarative Pipelines replaced DLT; UC Model Registry deprecated workspace stages) — renewal is also a structured forcing function to refresh your mental model
+- The Databricks platform itself evolves quickly (Lakeflow Jobs replaced Workflows in 2025; DLT became Lakeflow Spark Declarative Pipelines; Databricks Asset Bundles became Declarative Automation Bundles; Delta Sharing became OpenSharing; Genie spaces became Genie Agents; UC Model Registry deprecated workspace stages) — renewal is also a structured forcing function to refresh your mental model
 
 ## The 2-year clock — when does it start?
 
@@ -45,7 +45,7 @@ Use this as a working calendar. Adjust day counts to fit your schedule; the disc
 | :--- | :--- |
 | **Day −365 (12 months out)** | Mark the expiry on your calendar. Subscribe to the [Databricks blog](https://www.databricks.com/blog) and the official cert page's "What's new" section so you catch blueprint changes early. |
 | **Day −180 (6 months out)** | Check whether Databricks Academy offers a dedicated recertification exam for your cert (see per-cert table below). If yes, decide: full retake vs. recert exam. |
-| **Day −90 (3 months out)** | Skim the **current** exam guide PDF for your cert. Diff it mentally against the version you originally passed — note anything new (e.g., Lakeflow rebranding, Mosaic AI features, Genie Spaces). |
+| **Day −90 (3 months out)** | Skim the **current** exam guide PDF for your cert. Diff it mentally against the version you originally passed — note anything new (e.g., Lakeflow rebranding, Agent Bricks, Genie Agents — formerly Genie spaces). |
 | **Day −60 (2 months out)** | Start active study. Focus on the *delta* since your last pass: new features, deprecated names, new domains. The repo's [`CHANGELOG.md`](../../CHANGELOG.md) and per-cert "What changed in the latest blueprint" callouts surface most of these. |
 | **Day −30 (1 month out)** | Book the exam. Avoid leaving it for the last 7 days — testing-partner slots fill up fast in the EU and APAC time zones at the start/end of each quarter. |
 | **Day −14 (2 weeks out)** | Take at least one full timed mock exam (per cert there are two in this repo under `resources/mock-exam/` and `resources/mock-exam-2/`). |
@@ -78,16 +78,16 @@ Some Databricks certifications offer a shorter, lower-cost recertification exam 
 ## Per-certification renewal snapshot
 
 > [!warning]
-> Snapshot date: **May 2026.** Verify against the official cert page before booking. Where this guide says "recertification exam available", confirm the current cost / duration / question count on the Databricks Academy page for your cert — those parameters change between program revisions.
+> Snapshot date: **Oct 26, 2026.** Verify against the official cert page before booking. Where this guide says "recertification exam available", confirm the current cost / duration / question count on the Databricks Academy page for your cert — those parameters change between program revisions.
 
 | Certification | Current blueprint | Recert exam offered? | If you're renewing, focus on… |
 | :--- | :--- | :--- | :--- |
-| **Data Engineer Associate** | May 2026 | Check Databricks Academy | The new **CI/CD and Monitoring** domain (added May 2026 refresh); **Lakeflow Jobs** terminology (formerly Databricks Workflows); **Lakeflow Declarative Pipelines** (formerly DLT) |
-| **Data Engineer Professional** | Nov 30, 2025 | Check Databricks Academy | 10-domain restructure (Nov 30, 2025): new explicit domains for **Data Sharing & Federation**, **Data Modelling**, **Data Governance**; renamed **Lakeflow** product family throughout |
-| **Data Analyst Associate** | Oct 2025 | Check Databricks Academy | **Genie Spaces** (new domain — natural-language analytics over UC); **9-domain blueprint** (up from 5); modernized **Databricks SQL** features (parameters, alerts, dashboard publishing) |
-| **ML Associate** | Mar 1, 2025 | Check Databricks Academy | **Unity Catalog Model Registry** (workspace registry deprecated); **alias-based model lifecycle** (replacing Staging/Production/Archived stages); **Feature Engineering in Unity Catalog** |
-| **ML Professional** | Sep 2025 | Check Databricks Academy | **Mosaic AI Model Serving** (route optimization, inference tables); **AI Gateway** for governed LLM access; modernized monitoring with **inference table-driven drift detection** |
-| **GenAI Engineer Associate** | Mar 2026 | Check Databricks Academy | New **Governance** domain (March 2026 refresh — 6 domains total); **Mosaic AI Agent Framework** (`ResponsesAgent` / `ChatAgent` replacing deprecated `ChatModel`); **Vector Search + AI Gateway** integration; **Inference Tables** for agent telemetry |
+| **Data Engineer Associate** | May 4, 2026 exam (guide updated Aug 6, 2026) | Check Databricks Academy | **7-domain** blueprint: **Implementing CI/CD** (Git folders + **Declarative Automation Bundles**, formerly Databricks Asset Bundles) and **Troubleshooting, Monitoring, and Optimization**; **Lakeflow Connect** ingestion; **Lakeflow Jobs** (formerly Workflows); ABAC policies |
+| **Data Engineer Professional** | **New exam Oct 9, 2026** | Check Databricks Academy | **9-domain**, 60-question exam replacing the Nov 30, 2025 10-domain version: largest weights Developing Code (23 %) and Cost & Performance Optimization (15 %); new **Data Manipulation** domain (VARIANT, `ai_query`, expectations); **AUTO CDC** (formerly APPLY CHANGES); **OpenSharing** (formerly Delta Sharing) and Clean Rooms; **metric views**; Declarative Automation Bundles |
+| **Data Analyst Associate** | Oct 30, 2025 (unchanged) | Check Databricks Academy | **Genie spaces** (renamed **Genie Agents** on Jul 8, 2026 — the guide still says spaces); **9-domain blueprint** (up from 5); modernized **Databricks SQL** features (parameters, alerts, dashboard publishing) |
+| **ML Associate** | Mar 1, 2025 (guide PDF re-issued Aug 2026, same exam) | Check Databricks Academy | **Unity Catalog Model Registry** (workspace registry deprecated); **alias-based model lifecycle** (replacing Staging/Production/Archived stages); **Feature Engineering in Unity Catalog** |
+| **ML Professional** | Sep 30, 2025 (guide PDF re-issued Aug 2026, same exam) | Check Databricks Academy | **Mosaic AI Model Serving** (route optimization, inference tables); **AI Gateway** for governed LLM access; modernized monitoring with **inference table-driven drift detection** |
+| **GenAI Engineer Associate** | Mar 18, 2026 (guide PDF re-issued Aug 2026, same exam) | Check Databricks Academy | New **Governance** domain (6 domains total); **Agent Framework** with `ResponsesAgent` (`ChatAgent` / `ChatModel` now deprecated); **Vector Search** (now AI Search in the docs) + AI Gateway; **MCP**; **Inference Tables**. Since the exam version, agents on Model Serving became legacy (Oct 5, 2026) and the **Agent Bricks CLI** is recommended for new code agents — the exam still tests the Model Serving path |
 
 > [!note]
 > The "Check Databricks Academy" cells reflect that the recertification program's availability per cert is operationally managed by Databricks Academy and varies over time. The right way to confirm: log into your Academy account → "My Certifications" → click your cert. If the renewal option exists, you'll see a "Renew" or "Recertify" button. If it doesn't, you'll see the standard "Schedule exam" link, and Path A (full retake) applies.
@@ -107,7 +107,7 @@ Whichever renewal path you take, your study time is best spent on the **delta** 
 - Identify any **renamed or removed domains**.
 - Note any **weight shifts** > 5 % — these tell you what Databricks now considers more important.
 
-The repo's per-cert README has a "What changed in the latest blueprint" callout that summarizes this diff for the May 2026 / Nov 30 2025 / Oct 2025 / Mar 2026 refreshes.
+The repo's per-cert README has a "What changed in the latest blueprint" callout that summarizes this diff for the Aug 2026 (DE Associate) / Oct 2026 (DE Professional) / Oct 2025 / Mar 2026 refreshes. A dated rename + exam-guide timeline is in [Version History](./version-history.md).
 
 ### Step 3 — Prioritize the platform's renamed / new product lines
 
@@ -115,13 +115,20 @@ Across all certs, the highest-frequency "product renamed" deltas are:
 
 | Old name | Current name | Where you'll see it |
 | :--- | :--- | :--- |
-| Delta Live Tables (DLT) | **Lakeflow Declarative Pipelines** | DE Associate, DE Professional |
-| Databricks Workflows | **Lakeflow Jobs** | DE Associate, DE Professional, ML Associate |
+| Delta Live Tables (DLT) → Lakeflow Declarative Pipelines (Jun 2025) | **Lakeflow Spark Declarative Pipelines** (Nov 12, 2025; also "Lakeflow pipelines") | DE Associate, DE Professional, ML Associate (its guide still says DLT) |
+| `APPLY CHANGES` / `dlt.apply_changes` | **AUTO CDC** / `dp.create_auto_cdc_flow` | DE Professional |
+| Databricks Workflows / Databricks Jobs | **Lakeflow Jobs** (Jun 11, 2025) | DE Associate, DE Professional, ML Associate |
+| Databricks Asset Bundles (DABs) | **Declarative Automation Bundles** (Mar 16, 2026; CLI unchanged) | DE Associate, DE Professional, ML Professional |
+| Delta Sharing | **OpenSharing** (Jun 10, 2026) | DE Professional, Data Analyst Associate |
+| Genie spaces | **Genie Agents** (Jul 8, 2026) | Data Analyst Associate, GenAI Engineer Associate |
+| Vector Search | **AI Search** (docs name in 2026) | GenAI Engineer Associate |
+| Community Edition | **Free Edition** (Community Edition retired Jan 1, 2026) | All — hands-on practice |
 | Workspace Model Registry stages (Staging / Production / Archived) | **UC Model Registry aliases** (Champion / Challenger / Production) | ML Associate, ML Professional |
-| `ChatModel` (MLflow ≤ 2.x) | **`ResponsesAgent` / `ChatAgent`** + `databricks.agents.deploy()` | GenAI Engineer Associate |
+| `ChatModel` / `ChatAgent` | **`ResponsesAgent`** (both older schemas deprecated) | GenAI Engineer Associate |
+| `databricks.agents.deploy()` to Model Serving | **Agent Bricks CLI** → Agent Runtime (Oct 2026; Model Serving path now legacy) | GenAI Engineer Associate |
 | Classic / Pro SQL Warehouses (Pro tier) | **Serverless SQL Warehouses** (recommended) | Data Analyst Associate, DE Associate |
 
-The `dlt` Python module name is preserved for back-compat; only the product brand changed. Code blocks using `@dlt.table` etc. are still current.
+The `dlt` Python module still runs, but Databricks now recommends `from pyspark import pipelines as dp` — see the legacy mapping table in the [pipelines cheat sheet](../cheat-sheets/lakeflow-declarative-pipelines-quick-ref.md).
 
 ### Step 4 — Run the mock exams in this repo
 

@@ -283,7 +283,9 @@ spark.conf.set("spark.shuffle.io.retryWait", "30s")
 spark.conf.set("spark.sql.shuffle.partitions", 1000)
 ```
 
-## DLT/Lakeflow Errors
+## Lakeflow Pipelines Errors (formerly DLT)
+
+Lakeflow Spark Declarative Pipelines was formerly Lakeflow Declarative Pipelines / Delta Live Tables (DLT).
 
 ### Expectation Failure
 
@@ -291,11 +293,11 @@ spark.conf.set("spark.sql.shuffle.partitions", 1000)
 Pipeline stopped due to expectation violation
 ```
 
-**Cause**: Data failed `EXPECT...ON VIOLATION FAIL UPDATE` constraint.
+**Cause**: Data failed an `EXPECT...ON VIOLATION FAIL UPDATE` constraint (`@dp.expect_or_fail` in Python). Only the flow that hit the violation fails; other flows in the pipeline continue.
 
 **Solution**:
 
-1. Check event logs for failed records
+1. Check the pipeline event log for failed records (`event_log(TABLE(...))` or `event_log('<pipeline-id>')`)
 2. Fix source data or adjust expectation
 3. Change to `DROP ROW` if failures are acceptable
 
@@ -431,7 +433,9 @@ ServedModelInput(
 
 **Solution**: Poll endpoint state and wait for `READY` status before applying the next update.
 
-## Vector Search and GenAI Errors
+## Vector Search (AI Search) and GenAI Errors
+
+Vector Search is now called **AI Search** in the docs; error text may use either name.
 
 ### Vector Index Not Ready
 

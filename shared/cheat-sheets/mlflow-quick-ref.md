@@ -152,6 +152,9 @@ mlflow.sklearn.log_model(
 
 ## MLflow for GenAI
 
+> [!note] Platform update (Oct 2026)
+> The `mlflow.evaluate()` examples below are the MLflow 2.x API. On Databricks, MLflow 3 replaces it for GenAI apps with `mlflow.genai.evaluate(data=..., predict_fn=..., scorers=[...])` (e.g., `RelevanceToQuery`, `Safety`, `Guidelines` from `mlflow.genai.scorers`), and author agents with `ResponsesAgent` (`ChatAgent` / `ChatModel` are deprecated). See [MLflow 3 evaluation](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/evaluate-app).
+
 MLflow 2.x adds LLM-specific tracking and evaluation:
 
 ```python

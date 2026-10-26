@@ -211,4 +211,4 @@ DROP SCHEMA IF EXISTS lab_uc.hr CASCADE;
 
 ---
 
-**[← Previous: Medallion ingestion](./01-medallion-ingestion.md) | [↑ Back to Labs](./README.md) | [Next: Lakeflow Declarative Pipelines →](./03-lakeflow-declarative-pipelines.md)**
+**[← Previous: Medallion ingestion](./01-medallion-ingestion.md) | [↑ Back to Labs](./README.md) | [Next: Lakeflow Spark Declarative Pipelines →](./03-lakeflow-declarative-pipelines.md)**

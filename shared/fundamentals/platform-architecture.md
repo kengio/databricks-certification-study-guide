@@ -118,7 +118,7 @@ flowchart TB
         SSQL[Serverless SQL Warehouses]
         SC[Serverless Compute]
         MS[Model Serving Endpoints]
-        VS[Vector Search]
+        VS[Vector Search / AI Search]
     end
 
     subgraph YourAccount["Your Cloud Account"]
