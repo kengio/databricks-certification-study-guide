@@ -8,43 +8,43 @@
       "id": "databricks-intelligence-platform",
       "name": "Databricks Intelligence Platform",
       "sourceFile": "certifications/data-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 10
+      "questionCount": 3
     },
     {
       "id": "data-ingestion-and-loading",
       "name": "Data Ingestion and Loading",
       "sourceFile": "certifications/data-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 6
+      "questionCount": 9
     },
     {
       "id": "data-transformation-and-modeling",
       "name": "Data Transformation and Modeling",
       "sourceFile": "certifications/data-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 14
+      "questionCount": 10
     },
     {
       "id": "working-with-lakeflow-jobs",
       "name": "Working with Lakeflow Jobs",
       "sourceFile": "certifications/data-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 3
+      "questionCount": 7
     },
     {
       "id": "implementing-cicd",
       "name": "Implementing CI/CD",
       "sourceFile": "certifications/data-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 1
+      "questionCount": 5
     },
     {
       "id": "troubleshooting-monitoring-and-optimization",
       "name": "Troubleshooting, Monitoring, and Optimization",
       "sourceFile": "certifications/data-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 6
+      "questionCount": 4
     },
     {
       "id": "governance-and-security",
       "name": "Governance and Security",
       "sourceFile": "certifications/data-engineer-associate/resources/mock-exam-2/questions.md",
-      "questionCount": 5
+      "questionCount": 7
     }
   ],
   "questions": [
@@ -52,134 +52,22 @@
       "id": "data-engineer-associate-mock-2-q001",
       "domain": "databricks-intelligence-platform",
       "title": "Question 1",
-      "difficulty": "easy",
-      "question": "A data engineer needs to store a small reference file that will be accessed by Spark jobs in a Databricks workspace. The file must be governed by Unity Catalog and accessible from any Unity Catalog-enabled compute without mount configuration. Which storage location is most appropriate?",
+      "difficulty": "medium",
+      "question": "An analyst notices that a Databricks SQL warehouse is taking 3 minutes to run the first query of the day but subsequent queries run in seconds. What is the most likely cause?",
       "choices": {
-        "A": "Cloud object storage (S3/ADLS) with manual mount configuration per cluster",
-        "B": "A Unity Catalog volume, referenced by a path such as `/Volumes/main/ref/files/lookup.csv`",
-        "C": "Local disk of the driver node — fastest access for small files",
-        "D": "DBFS root, which is mounted on every cluster automatically"
+        "A": "The warehouse has a cold start delay because the compute nodes were terminated during the idle period",
+        "B": "The warehouse is running out of memory after the first query",
+        "C": "The first query always runs as a dry run without caching",
+        "D": "The SQL optimizer is recomputing all table statistics for the first query"
       },
-      "correctAnswer": "B",
-      "shortAnswer": "Unity Catalog volumes govern non-tabular files with UC privileges (`READ VOLUME` / `WRITE VOLUME`) and are reachable from UC-enabled compute through `/Volumes/...` paths. DBFS root and mounts are deprecated, and Databricks recommends UC volumes, external locations, or workspace files instead ([What is DBFS?](https://docs.databricks.com/aws/en/dbfs/)). Local driver disk is ephemeral and not shared with other nodes.",
+      "correctAnswer": "A",
+      "shortAnswer": "SQL warehouses auto-stop after an idle period (defaults: 10 minutes for serverless, 45 minutes for pro and classic) to save cost. When a new query arrives, a stopped pro or classic warehouse must start again, which takes about 4 minutes. Serverless SQL warehouses start in about 2–6 seconds. Subsequent queries run fast because the cluster is already running.",
       "explanation": ""
     },
     {
       "id": "data-engineer-associate-mock-2-q002",
       "domain": "databricks-intelligence-platform",
       "title": "Question 2",
-      "difficulty": "medium",
-      "question": "A data engineer is choosing between a single-node cluster and a standard multi-node cluster for a machine learning training workload. When is a single-node cluster the appropriate choice?",
-      "choices": {
-        "A": "When training large neural networks that require GPU acceleration",
-        "B": "When running distributed Spark ML pipelines on terabyte-scale datasets",
-        "C": "When using single-machine ML libraries like scikit-learn or running small experiments",
-        "D": "When running production streaming pipelines that require high availability"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "Single-node clusters run the Spark driver and executor on the same machine with no worker nodes. They are appropriate for single-machine libraries like scikit-learn, pandas, or small exploratory ML experiments that don't benefit from Spark's distributed processing. Large-scale Spark ML, streaming pipelines, and GPU workloads requiring failover all need multi-node clusters.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q003",
-      "domain": "databricks-intelligence-platform",
-      "title": "Question 3",
-      "difficulty": "medium",
-      "question": "An analyst notices that a Databricks SQL warehouse is taking 3 minutes to run the first query of the day but subsequent queries run in seconds. What is the most likely cause?",
-      "choices": {
-        "A": "The warehouse is running out of memory after the first query",
-        "B": "The warehouse has a cold start delay because the compute nodes were terminated during the idle period",
-        "C": "The first query always runs as a dry run without caching",
-        "D": "The SQL optimizer is recomputing all table statistics for the first query"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "SQL warehouses auto-stop after an idle period (defaults: 10 minutes for serverless, 45 minutes for pro and classic) to save cost. When a new query arrives, a stopped pro or classic warehouse must start again, which takes about 4 minutes. Serverless SQL warehouses start in about 2–6 seconds. Subsequent queries run fast because the cluster is already running.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q004",
-      "domain": "databricks-intelligence-platform",
-      "title": "Question 4",
-      "difficulty": "medium",
-      "question": "A data engineer configures an all-purpose cluster with autoscaling between 2 and 8 workers. What determines when Databricks adds or removes worker nodes?",
-      "choices": {
-        "A": "A fixed schedule defined by the engineer in cluster settings",
-        "B": "Spark task queue depth — workers are added when tasks are pending and removed when idle",
-        "C": "Memory usage only — workers are added when memory exceeds 80%",
-        "D": "The engineer manually adjusts the worker count through the cluster UI"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Databricks autoscaling monitors the Spark task queue and executor utilization. Workers are added when tasks are queued and waiting for executors. Workers are removed (scale down) after a period of executor idleness. Memory usage alone does not trigger autoscaling — it is based on task scheduling pressure.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q005",
-      "domain": "databricks-intelligence-platform",
-      "title": "Question 5",
-      "difficulty": "easy",
-      "question": "A data engineer uses the `%run` magic command in a Databricks notebook. What does this command do?",
-      "choices": {
-        "A": "Runs a shell command on the driver node",
-        "B": "Executes another notebook in the current notebook's context, importing its variables and functions",
-        "C": "Runs the current notebook as a background job",
-        "D": "Executes SQL against the currently attached SQL warehouse"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "`%run ./path/to/notebook` executes another notebook inline within the current notebook's execution context. All variables, functions, and classes defined in the called notebook become available in the calling notebook. This is commonly used to load utility functions or shared configurations. `%sh` runs shell commands. `%sql` executes SQL.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q006",
-      "domain": "databricks-intelligence-platform",
-      "title": "Question 6",
-      "difficulty": "medium",
-      "question": "A Databricks SQL Pro warehouse is configured with a minimum of 1 cluster and a maximum of 5 clusters. A sudden spike brings 50 concurrent analysts running queries. What happens?",
-      "choices": {
-        "A": "The warehouse queues all queries until the single cluster finishes current work",
-        "B": "The warehouse scales up to 5 clusters to handle concurrent load, then scales down when demand drops",
-        "C": "The warehouse fails with a capacity error and all 50 sessions are disconnected",
-        "D": "Each analyst is automatically assigned a dedicated Classic warehouse"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Pro SQL warehouses support multi-cluster scaling. When one cluster reaches capacity, additional clusters spin up (up to the configured maximum of 5 clusters) to absorb concurrent load. When demand drops, excess clusters terminate automatically. Classic warehouses are single-cluster only. Serverless also supports auto-scaling.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q007",
-      "domain": "databricks-intelligence-platform",
-      "title": "Question 7",
-      "difficulty": "easy",
-      "question": "A data engineer needs to run a Python script on a Databricks cluster that monitors a directory and triggers processing when new files arrive. Which `dbutils` module is used to interact with the file system?",
-      "choices": {
-        "A": "`dbutils.secrets`",
-        "B": "`dbutils.jobs`",
-        "C": "`dbutils.fs`",
-        "D": "`dbutils.notebook`"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "`dbutils.fs` provides file system utilities for listing, moving, copying, and deleting files in DBFS and cloud storage paths. Common operations: `dbutils.fs.ls()`, `dbutils.fs.cp()`, `dbutils.fs.rm()`. `dbutils.secrets` manages credentials. `dbutils.notebook` runs and exits notebooks. `dbutils.jobs` is not a valid module.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q008",
-      "domain": "databricks-intelligence-platform",
-      "title": "Question 8",
-      "difficulty": "easy",
-      "question": "A data engineer runs `DESCRIBE HISTORY transactions` on a Delta table. What information does this return?",
-      "choices": {
-        "A": "The table schema (column names, types, and nullability)",
-        "B": "A log of all operations performed on the table including version, timestamp, operation, and user",
-        "C": "The current partition layout and file sizes",
-        "D": "The table's Z-ORDER configuration and data skipping statistics"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "`DESCRIBE HISTORY` returns the Delta transaction log as a table, showing each commit's version number, timestamp, operation type (WRITE, MERGE, DELETE, OPTIMIZE, etc.), the user who performed it, and operation parameters. `DESCRIBE TABLE` or `DESCRIBE DETAIL` shows schema and partition info. Data skipping stats are in `DESCRIBE DETAIL`.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q009",
-      "domain": "databricks-intelligence-platform",
-      "title": "Question 9",
       "difficulty": "medium",
       "question": "A data engineer accidentally ran `DELETE FROM customers WHERE 1=1` which deleted all rows. The table is named `customers` in Delta format. How can they recover the data?",
       "choices": {
@@ -193,57 +81,73 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q010",
+      "id": "data-engineer-associate-mock-2-q003",
       "domain": "databricks-intelligence-platform",
-      "title": "Question 10",
+      "title": "Question 3",
       "difficulty": "medium",
       "question": "A data engineer needs a copy of a Delta table to test schema changes without affecting production. They need the copy to be fast and space-efficient, sharing underlying files with the source. Which clone type should they use?",
       "choices": {
         "A": "Deep clone — copies all data files to a new location",
-        "B": "Shallow clone — creates a copy that references the source table's data files without copying them",
+        "B": "Databricks snapshot — an automatic backup created by the platform",
         "C": "CTAS (CREATE TABLE AS SELECT) — creates an independent copy with full data duplication",
-        "D": "Databricks snapshot — an automatic backup created by the platform"
+        "D": "Shallow clone — creates a copy that references the source table's data files without copying them"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Shallow clone creates a Delta table that references the source's data files without copying them, making it fast and storage-efficient. Schema and metadata are independent, so changes to the clone don't affect the source. Deep clone physically copies all data files to a new location — useful for true independence. CTAS also copies all data.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q011",
+      "id": "data-engineer-associate-mock-2-q004",
       "domain": "data-ingestion-and-loading",
-      "title": "Question 11",
+      "title": "Question 4",
       "difficulty": "medium",
       "question": "A data engineer must choose between COPY INTO and Auto Loader for ingesting files from cloud storage. Which statement correctly describes when to use each?",
       "choices": {
         "A": "COPY INTO is for structured files; Auto Loader is for unstructured files",
-        "B": "COPY INTO is idempotent and suits smaller, known file sets; Auto Loader suits continuous, large-scale ingestion with automatic file tracking",
-        "C": "Auto Loader is deprecated; COPY INTO is the only recommended approach",
+        "B": "Auto Loader is deprecated; COPY INTO is the only recommended approach",
+        "C": "COPY INTO is idempotent and suits smaller, known file sets; Auto Loader suits continuous, large-scale ingestion with automatic file tracking",
         "D": "Both are equivalent — the choice is purely based on personal preference"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "COPY INTO is a SQL command that idempotently loads files into a Delta table (skipping already-loaded files) — suitable for smaller or periodic batch loads from a known set of files. Auto Loader uses checkpointing and cloud notifications to efficiently handle millions of files continuously at scale, making it the recommended approach for streaming ingestion pipelines.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q012",
+      "id": "data-engineer-associate-mock-2-q005",
       "domain": "data-ingestion-and-loading",
-      "title": "Question 12",
+      "title": "Question 5",
+      "difficulty": "easy",
+      "question": "An Auto Loader stream ingests JSON files with `cloudFiles.schemaLocation` set and no other schema options. Every column in the Bronze table, including `amount` and `event_ts`, ends up as `STRING`. What explains this?",
+      "choices": {
+        "A": "For JSON, CSV, and XML, Auto Loader infers columns as strings unless `cloudFiles.inferColumnTypes` is `true` or `cloudFiles.schemaHints` sets the types",
+        "B": "Auto Loader always writes `STRING` columns to Bronze tables, and types are applied only in Silver",
+        "C": "The schema location is corrupt, so Auto Loader fell back to strings",
+        "D": "JSON files can't carry numeric or timestamp values, so strings are the only option"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "When Auto Loader infers a schema for JSON, CSV, or XML, it reads every column as a string by default. Setting `cloudFiles.inferColumnTypes` to `true` infers real types, and `cloudFiles.schemaHints` (SQL DDL such as `amount DECIMAL(10,2)`) overrides or adds specific types.",
+      "explanation": "Avro and Parquet carry their types in the files, so they don't need this option. Nothing forces Bronze columns to be strings, and the behavior here is the documented default, not a fallback after an error."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q006",
+      "domain": "data-ingestion-and-loading",
+      "title": "Question 6",
       "difficulty": "medium",
       "question": "A data engineer writes `df = spark.read.format(\"delta\").load(\"/path/to/table\")`. What is the difference if they use `spark.readStream` instead of `spark.read`?",
       "choices": {
         "A": "`readStream` reads the entire table into memory at once; `read` reads in chunks",
-        "B": "`readStream` returns a streaming DataFrame that only processes new files/rows added since the last checkpoint",
+        "B": "`readStream` automatically converts the Delta table to a Kafka stream",
         "C": "There is no difference — both return identical DataFrames",
-        "D": "`readStream` automatically converts the Delta table to a Kafka stream"
+        "D": "`readStream` returns a streaming DataFrame that only processes new files/rows added since the last checkpoint"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`spark.readStream.format(\"delta\").load(path)` creates a streaming DataFrame that treats the Delta table as a streaming source. It processes only new data (rows appended after the checkpoint) in each micro-batch. `spark.read` returns a static (batch) DataFrame representing the full table at the time of reading. The two APIs have fundamentally different execution semantics.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q013",
+      "id": "data-engineer-associate-mock-2-q007",
       "domain": "data-ingestion-and-loading",
-      "title": "Question 13",
+      "title": "Question 7",
       "difficulty": "medium",
       "question": "A data engineer configures Auto Loader with `cloudFiles.schemaEvolutionMode = \"addNewColumns\"`. A new column appears in incoming JSON files. What happens?",
       "choices": {
@@ -257,25 +161,41 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q014",
+      "id": "data-engineer-associate-mock-2-q008",
       "domain": "data-ingestion-and-loading",
-      "title": "Question 14",
+      "title": "Question 8",
       "difficulty": "hard",
       "question": "A data engineer sets a watermark on a streaming query: `withWatermark(\"event_time\", \"10 minutes\")`. What is the purpose of this watermark?",
       "choices": {
-        "A": "Ensures that data older than 10 minutes is deleted from the Delta table",
-        "B": "Defines the maximum tolerated lateness for event-time-based aggregations, allowing late data up to 10 minutes after the window closes",
+        "A": "Defines the maximum tolerated lateness for event-time-based aggregations, allowing late data up to 10 minutes after the window closes",
+        "B": "Ensures that data older than 10 minutes is deleted from the Delta table",
         "C": "Buffers all incoming data for exactly 10 minutes before writing to the sink",
         "D": "Limits the streaming query to process at most 10 minutes of historical data"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "Watermarks in Spark Structured Streaming define how late data can arrive and still be included in aggregations. A 10-minute watermark means data with an event_time up to 10 minutes behind the current watermark is included; older data is dropped. This allows Spark to bound the state size by eventually discarding old windows.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q015",
+      "id": "data-engineer-associate-mock-2-q009",
       "domain": "data-ingestion-and-loading",
-      "title": "Question 15",
+      "title": "Question 9",
+      "difficulty": "medium",
+      "question": "An Auto Loader stream reads a landing directory that holds millions of files. Each micro-batch spends most of its time listing the directory. Which change does Databricks recommend for most workloads?",
+      "choices": {
+        "A": "Set `cloudFiles.useIncrementalListing` to `true`",
+        "B": "Raise `cloudFiles.maxFilesPerTrigger` to 100,000",
+        "C": "Replace Auto Loader with a scheduled `COPY INTO`",
+        "D": "Use file notification mode with file events enabled on the Unity Catalog external location"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Directory listing, the default mode, lists the input directory on every micro-batch, which gets slow as the directory grows. Databricks recommends **file notification with file events**, enabled on the Unity Catalog external location, as more performant and scalable. You can switch modes across stream restarts and keep exactly-once processing.",
+      "explanation": "`cloudFiles.useIncrementalListing` is deprecated. `maxFilesPerTrigger` caps how many files each micro-batch takes, but discovery still has to list the directory. `COPY INTO` is meant for modest, known file sets, not millions of files."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q010",
+      "domain": "data-ingestion-and-loading",
+      "title": "Question 10",
       "difficulty": "medium",
       "question": "A data engineer compares two streaming trigger settings: `trigger(processingTime=\"1 minute\")` and `trigger(availableNow=True)`. Which scenario is best suited for each?",
       "choices": {
@@ -289,25 +209,41 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q016",
+      "id": "data-engineer-associate-mock-2-q011",
       "domain": "data-ingestion-and-loading",
-      "title": "Question 16",
+      "title": "Question 11",
       "difficulty": "medium",
       "question": "A data engineer has a CSV directory and wants to convert it to a managed Delta table in Unity Catalog. Which approach creates a properly managed Delta table?",
       "choices": {
         "A": "`CONVERT TO DELTA parquet.'/path/to/csv/'` — converts any format to Delta",
-        "B": "`CREATE TABLE catalog.schema.table USING DELTA AS SELECT * FROM csv.'/path/'`",
+        "B": "Delta tables can only be created from Parquet format; CSV must first be converted to Parquet",
         "C": "`ALTER TABLE csv_table SET TYPE DELTA`",
-        "D": "Delta tables can only be created from Parquet format; CSV must first be converted to Parquet"
+        "D": "`CREATE TABLE catalog.schema.table USING DELTA AS SELECT * FROM csv.'/path/'`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`CREATE TABLE ... USING DELTA AS SELECT * FROM csv.'/path/'` reads the CSV files and creates a new managed Delta table with the query results. `CONVERT TO DELTA` works only on Parquet-formatted directories (not CSV). `ALTER TABLE SET TYPE` is not valid Databricks SQL syntax. Delta tables can be created from any format via CTAS.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q017",
+      "id": "data-engineer-associate-mock-2-q012",
+      "domain": "data-ingestion-and-loading",
+      "title": "Question 12",
+      "difficulty": "medium",
+      "question": "A team sets up a Lakeflow Connect managed connector for continuous change data capture from SQL Server. Which component runs continuously in its own job and stages the change data before it is written to the destination?",
+      "choices": {
+        "A": "The Unity Catalog connection",
+        "B": "The destination streaming tables",
+        "C": "The ingestion gateway",
+        "D": "The ingestion pipeline"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "Database connectors add an **ingestion gateway**. It runs as a continuous task in its own job and stages change data for continuous change capture.",
+      "explanation": "The **connection** is a Unity Catalog securable that stores the source's authentication details. The **ingestion pipeline** reads the staged changes and writes them to the destination, and the destination tables are **streaming tables** in the catalog and schema you pick."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q013",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 17",
+      "title": "Question 13",
       "difficulty": "medium",
       "question": "A data engineer needs to replace all data in a partition of a Delta table with new data, without affecting other partitions. Which SQL command accomplishes this?",
       "choices": {
@@ -321,9 +257,9 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q018",
+      "id": "data-engineer-associate-mock-2-q014",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 18",
+      "title": "Question 14",
       "difficulty": "easy",
       "question": "A data engineer has a column `price` stored as `STRING` type and needs to cast it to `DOUBLE` for calculations. Which SQL expression correctly performs this conversion?",
       "choices": {
@@ -337,105 +273,57 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q019",
+      "id": "data-engineer-associate-mock-2-q015",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 19",
+      "title": "Question 15",
       "difficulty": "medium",
       "question": "A data engineer writes `SELECT * FROM orders WHERE discount IS NOT NULL AND discount != 0`. A row with `discount = NULL` — will it be returned?",
       "choices": {
         "A": "Yes — `IS NOT NULL` matches NULL values",
-        "B": "No — `IS NOT NULL` excludes NULL values; rows with NULL discount are filtered out",
-        "C": "Yes — `discount != 0` returns all non-zero values including NULL",
+        "B": "Yes — `discount != 0` returns all non-zero values including NULL",
+        "C": "No — `IS NOT NULL` excludes NULL values; rows with NULL discount are filtered out",
         "D": "A SQL error occurs because you cannot compare NULL with `!=`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "`IS NOT NULL` filters out rows where the column contains NULL. Since both conditions are joined with `AND`, a row with `NULL` discount fails the `IS NOT NULL` check and is excluded. In SQL, `NULL != 0` evaluates to NULL (not TRUE), so NULL values are also excluded by the `!=` comparison — but `IS NOT NULL` already removes them first.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q020",
+      "id": "data-engineer-associate-mock-2-q016",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 20",
+      "title": "Question 16",
       "difficulty": "medium",
       "question": "A data engineer writes Delta table data using `df.write.format(\"delta\").mode(\"append\").save(path)`. What happens if the path already contains a Delta table with a different schema?",
       "choices": {
         "A": "The write succeeds and merges the schemas automatically",
-        "B": "The write fails with a `AnalysisException` due to schema mismatch unless `mergeSchema` is enabled",
+        "B": "The new data is silently dropped and the existing table is unchanged",
         "C": "The existing table is overwritten with the new schema",
-        "D": "The new data is silently dropped and the existing table is unchanged"
+        "D": "The write fails with a `AnalysisException` due to schema mismatch unless `mergeSchema` is enabled"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Delta Lake enforces schema consistency by default. Appending data with a different schema throws an `AnalysisException`. To allow schema evolution during appends, enable `.option(\"mergeSchema\", \"true\")` which adds new columns from the source. Overwriting behavior requires `.mode(\"overwrite\")`, not `\"append\"`.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q021",
+      "id": "data-engineer-associate-mock-2-q017",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 21",
-      "difficulty": "medium",
-      "question": "A data engineer calls `df.cache()` on a large DataFrame and then performs three different filter operations on it. What is the primary benefit of caching here?",
-      "choices": {
-        "A": "Caching compresses the DataFrame to reduce memory usage",
-        "B": "The cached DataFrame is stored in memory so subsequent operations avoid re-reading from disk/cloud storage",
-        "C": "Caching enables parallel writes to multiple Delta tables simultaneously",
-        "D": "Caching forces the DataFrame to be computed immediately (eager evaluation)"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "`cache()` (or `persist()`) stores the DataFrame in memory after the first computation. Subsequent actions on the cached DataFrame skip re-reading from cloud storage and re-applying upstream transformations, significantly speeding up iterative operations like multiple filters on the same base dataset. Spark is still lazy — `cache()` itself doesn't trigger computation.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q022",
-      "domain": "data-transformation-and-modeling",
-      "title": "Question 22",
-      "difficulty": "medium",
-      "question": "A data engineer needs to share a large lookup dictionary across all tasks in a Spark job without sending it with every task. Which Spark mechanism is designed for this?",
-      "choices": {
-        "A": "Accumulators — distributed variables that collect values from executors",
-        "B": "Broadcast variables — distributes a read-only variable to all executors once",
-        "C": "Checkpointing — saves the variable to a reliable storage location",
-        "D": "DataFrames — the correct way to share data between Spark tasks"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Broadcast variables distribute a read-only value (like a lookup dictionary) to each executor once rather than sending it with every task. This is far more efficient than including it in task closures or joining DataFrames when one side is small. Accumulators collect values FROM executors to the driver (e.g., counters). Checkpointing is for fault-tolerant state storage.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q023",
-      "domain": "data-transformation-and-modeling",
-      "title": "Question 23",
-      "difficulty": "easy",
-      "question": "A data engineer defines a complex PySpark transformation pipeline with multiple `.filter()`, `.select()`, and `.groupBy()` calls. When does Spark actually execute these transformations?",
-      "choices": {
-        "A": "Each transformation executes immediately when the line of code runs",
-        "B": "Transformations execute when the Python interpreter compiles the script",
-        "C": "Transformations are lazy — they execute only when an action like `.count()`, `.show()`, or `.write()` is triggered",
-        "D": "Transformations execute in the background as soon as the cluster accepts the job"
-      },
-      "correctAnswer": "C",
-      "shortAnswer": "Spark uses lazy evaluation — transformations (filter, select, groupBy, join, etc.) build a logical plan but execute nothing. Only when an action (count, show, collect, write, save) is called does Spark optimize and execute the full plan. This enables the Catalyst optimizer to combine and reorder operations for maximum efficiency.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q024",
-      "domain": "data-transformation-and-modeling",
-      "title": "Question 24",
+      "title": "Question 17",
       "difficulty": "easy",
       "question": "A data engineer queries a table with millions of rows and needs to know the count of distinct values in a column. Which function returns this?",
       "choices": {
-        "A": "`COUNT(column)`",
-        "B": "`COUNT(DISTINCT column)`",
+        "A": "`COUNT(DISTINCT column)`",
+        "B": "`COUNT(column)`",
         "C": "`SUM(DISTINCT column)`",
         "D": "`APPROX_COUNT_DISTINCT(column)`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`COUNT(DISTINCT column)` returns the exact number of distinct non-NULL values in the column. `COUNT(column)` counts non-NULL rows including duplicates. `SUM(DISTINCT column)` sums distinct numeric values, not counts. `APPROX_COUNT_DISTINCT()` uses HyperLogLog for an approximate count — faster for very large datasets but not exact.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q025",
+      "id": "data-engineer-associate-mock-2-q018",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 25",
+      "title": "Question 18",
       "difficulty": "medium",
       "question": "A data engineer uses `collect_list()` and `collect_set()` in a GROUP BY aggregation. What is the difference between these two functions?",
       "choices": {
@@ -449,57 +337,41 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q026",
+      "id": "data-engineer-associate-mock-2-q019",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 26",
+      "title": "Question 19",
       "difficulty": "medium",
       "question": "A data engineer receives a DataFrame with a column containing nested arrays of arrays (e.g., `[[1,2],[3,4]]`). Which function flattens this into a single-level array (e.g., `[1,2,3,4]`)?",
       "choices": {
         "A": "`explode()`",
-        "B": "`flatten()`",
+        "B": "`transform()`",
         "C": "`array_join()`",
-        "D": "`transform()`"
+        "D": "`flatten()`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`flatten(array_of_arrays)` converts a nested array (array of arrays) into a single flat array by concatenating the inner arrays. `explode()` creates one row per element — it doesn't flatten, it unnests. `array_join()` converts an array to a string. `transform()` applies a lambda to each element, producing an array of the same depth.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q027",
+      "id": "data-engineer-associate-mock-2-q020",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 27",
+      "title": "Question 20",
       "difficulty": "hard",
       "question": "A data engineer needs to delete records from a Delta table where a customer opted out, and also update other customers' status in the same operation. Which SQL command handles both in a single atomic operation?",
       "choices": {
         "A": "Run `DELETE` and `UPDATE` as separate transactions in sequence",
-        "B": "`MERGE INTO customers USING opt_outs ON ... WHEN MATCHED AND condition THEN DELETE WHEN MATCHED AND other_condition THEN UPDATE SET ...`",
-        "C": "`TRUNCATE TABLE customers` then reinsert only the retained records",
+        "B": "`TRUNCATE TABLE customers` then reinsert only the retained records",
+        "C": "`MERGE INTO customers USING opt_outs ON ... WHEN MATCHED AND condition THEN DELETE WHEN MATCHED AND other_condition THEN UPDATE SET ...`",
         "D": "Use a Python loop to delete and update records one by one"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "Delta Lake's `MERGE` statement supports multiple `WHEN MATCHED` clauses with different conditions — one can trigger `DELETE` and another can trigger `UPDATE SET`. This executes atomically in a single pass over the data. Running `DELETE` and `UPDATE` as separate transactions is correct but not atomic as a combined unit. `TRUNCATE` and reinsert is expensive and error-prone.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q028",
+      "id": "data-engineer-associate-mock-2-q021",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 28",
-      "difficulty": "medium",
-      "question": "A data engineer wants to enable Change Data Feed (CDF) on an existing Delta table. Which command accomplishes this?",
-      "choices": {
-        "A": "`ALTER TABLE customers SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')`",
-        "B": "`CREATE TABLE customers USING DELTA WITH (enableCDF = true)`",
-        "C": "`SET spark.databricks.delta.changeDataFeed.enabled = true`",
-        "D": "CDF is enabled by default on all Delta tables; no action is needed"
-      },
-      "correctAnswer": "A",
-      "shortAnswer": "Change Data Feed is enabled per-table using `ALTER TABLE ... SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')`. For new tables, use `CREATE TABLE ... TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')`. The Spark config in option C sets a workspace-level default but does not retroactively enable CDF on existing tables. CDF is not on by default.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q029",
-      "domain": "data-transformation-and-modeling",
-      "title": "Question 29",
+      "title": "Question 21",
       "difficulty": "medium",
       "question": "A DLT pipeline runs a full refresh. How does a full refresh differ from a standard pipeline update?",
       "choices": {
@@ -513,9 +385,9 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q030",
+      "id": "data-engineer-associate-mock-2-q022",
       "domain": "data-transformation-and-modeling",
-      "title": "Question 30",
+      "title": "Question 22",
       "difficulty": "medium",
       "question": "A DLT pipeline has an `EXPECT` constraint with no `ON VIOLATION` modifier. A record fails the constraint. What is the default behavior?",
       "choices": {
@@ -529,41 +401,57 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q031",
+      "id": "data-engineer-associate-mock-2-q023",
       "domain": "working-with-lakeflow-jobs",
-      "title": "Question 31",
+      "title": "Question 23",
       "difficulty": "medium",
       "question": "A data engineer uses `dbutils.widgets.text(\"start_date\", \"2024-01-01\")` in a notebook. What is the purpose of this widget?",
       "choices": {
         "A": "Displays a text message at the top of the notebook output",
-        "B": "Creates a parameterized input that can be overridden when running the notebook as a job",
+        "B": "Logs the value `\"2024-01-01\"` to the Databricks audit trail",
         "C": "Creates a permanent database variable that persists across cluster restarts",
-        "D": "Logs the value `\"2024-01-01\"` to the Databricks audit trail"
+        "D": "Creates a parameterized input that can be overridden when running the notebook as a job"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "`dbutils.widgets` creates interactive input controls (text boxes, dropdowns, etc.) in the notebook UI. When the notebook is run as a Lakeflow Job, the widget value can be overridden via job parameters or the `notebookParams` API. This makes notebooks parameterizable and reusable across different date ranges or environments.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q032",
+      "id": "data-engineer-associate-mock-2-q024",
       "domain": "working-with-lakeflow-jobs",
-      "title": "Question 32",
+      "title": "Question 24",
+      "difficulty": "medium",
+      "question": "In a Lakeflow Job, the `ingest` task publishes the number of new rows with `dbutils.jobs.taskValues.set(key=\"rows_loaded\", value=rows)`. The `transform` task should run only when `rows_loaded` is greater than 0, and a `notify_no_data` task should run otherwise. How should the job be built?",
+      "choices": {
+        "A": "Add an If/else condition task after `ingest` that compares `{{tasks.ingest.values.rows_loaded}}` `>` `0`. Make `transform` depend on its `(true)` outcome and `notify_no_data` on its `(false)` outcome",
+        "B": "Make both tasks depend on `ingest`, and have `transform` exit early in code when no rows were loaded",
+        "C": "Use a For each task over `rows_loaded`",
+        "D": "Set `notify_no_data`'s **Run if** to **At least one failed**, and make `ingest` fail when no rows are loaded"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "The **If/else condition** task branches a job on a boolean expression. Operands can be literals, job parameters, or task values such as `{{tasks.ingest.values.rows_loaded}}`, and downstream tasks depend on its `(true)` or `(false)` outcome. `>` compares numbers, while `==` and `!=` compare strings.",
+      "explanation": "An early exit in code still starts `transform` and hides the branch from the job graph. For each loops over an array of inputs. It doesn't branch. Making a task fail on purpose to drive control flow turns a normal empty day into a failed run."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q025",
+      "domain": "working-with-lakeflow-jobs",
+      "title": "Question 25",
       "difficulty": "medium",
       "question": "A data engineer uses `dbutils.notebook.run(\"./child_notebook\", timeout_seconds=300, arguments={\"date\": \"2024-01-15\"})`. What does this accomplish?",
       "choices": {
-        "A": "Runs the child notebook asynchronously in a separate Databricks job",
-        "B": "Runs the child notebook synchronously in the current cluster, passing the date argument as a widget value",
+        "A": "Runs the child notebook synchronously in the current cluster, passing the date argument as a widget value",
+        "B": "Runs the child notebook asynchronously in a separate Databricks job",
         "C": "Schedules the child notebook to run at the specified timeout in 300 seconds",
         "D": "Creates a permanent link between the parent and child notebook that runs on every commit"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "`dbutils.notebook.run()` executes another notebook synchronously on the current cluster with a timeout. The `arguments` dictionary sets widget values in the child notebook. It blocks until the child completes or times out. Unlike `%run`, the child notebook runs in an isolated scope and its variables are not imported into the parent.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q033",
+      "id": "data-engineer-associate-mock-2-q026",
       "domain": "working-with-lakeflow-jobs",
-      "title": "Question 33",
+      "title": "Question 26",
       "difficulty": "medium",
       "question": "A data engineer uses task values to pass a dynamically computed date from Task A to Task B in a multi-task Lakeflow Job. Which `dbutils` functions are used to set and retrieve the value?",
       "choices": {
@@ -577,20 +465,132 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q034",
+      "id": "data-engineer-associate-mock-2-q027",
+      "domain": "working-with-lakeflow-jobs",
+      "title": "Question 27",
+      "difficulty": "medium",
+      "question": "A Gold job reads `main.silver.orders`, which Team A refreshes, and `main.silver.customers`, which Team B refreshes. Both teams finish at different, unpredictable times. The Gold job should run once both tables have been refreshed, with no polling. Which trigger fits?",
+      "choices": {
+        "A": "A scheduled trigger at 06:00 every day",
+        "B": "A table update trigger on both tables with **Any table is updated**",
+        "C": "A file arrival trigger on the Silver schema's storage location",
+        "D": "A table update trigger on both tables with **All tables are updated**"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "A **table update trigger** starts a run when monitored Unity Catalog tables change, with no compute running in between. When it monitors several tables, **All tables are updated** waits until every one of them has changed, which suits a job that needs every input fresh.",
+      "explanation": "**Any table is updated** would start after the first team finishes, with the other input still stale. A fixed 06:00 schedule can run before either team is done. File arrival triggers watch for new files in a volume or external location, not table refreshes. The job's **Run as** principal needs `SELECT` on each table, plus `USE CATALOG` and `USE SCHEMA`, or the trigger can't evaluate."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q028",
+      "domain": "working-with-lakeflow-jobs",
+      "title": "Question 28",
+      "difficulty": "medium",
+      "question": "A production Lakeflow Job runs a task that occasionally takes much longer than usual due to data volume spikes. To prevent the job from running indefinitely, which configuration should the engineer set?",
+      "choices": {
+        "A": "Retry policy with maximum retries set to 1",
+        "B": "Task timeout — the maximum time in seconds a task is allowed to run before it is cancelled",
+        "C": "Cluster autotermination minutes on the job cluster",
+        "D": "Maximum concurrent runs set to 1"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "Task timeout defines the maximum wall-clock time a task is allowed to run before Databricks automatically cancels it and marks the task as failed. This prevents runaway jobs from consuming resources indefinitely. Retry policy controls what happens after failure. Autotermination applies to idle clusters, not running tasks. Max concurrent runs controls parallel job instances.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q029",
+      "domain": "working-with-lakeflow-jobs",
+      "title": "Question 29",
+      "difficulty": "medium",
+      "question": "A Lakeflow Job multi-task job has tasks A → B → C (sequential dependency). Task B fails. What is the default behavior for Task C?",
+      "choices": {
+        "A": "Task C runs anyway, using the last successful output from Task B",
+        "B": "Task C doesn't run and is marked `Upstream failed` because its dependency failed",
+        "C": "Task C waits indefinitely for Task B to be manually retried",
+        "D": "The entire job reruns from Task A automatically"
+      },
+      "correctAnswer": "B",
+      "shortAnswer": "When an upstream task fails in a Lakeflow Job, downstream tasks with the default Run if condition (*All succeeded*) are marked `Upstream failed`. Databricks does not run dependent tasks if their dependencies failed. If the job has retry configured, the failed task is retried first. Task C is not retried or rerun automatically.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q030",
       "domain": "implementing-cicd",
-      "title": "Question 34",
+      "title": "Question 30",
       "difficulty": "easy",
       "question": "A data engineer wants to version control notebooks using Git and collaborate with teammates via pull requests. Which Databricks feature supports this workflow?",
       "choices": {
         "A": "Databricks Archives — export notebooks to ZIP format for external storage",
-        "B": "Databricks Git folders (formerly Repos) — connects workspace folders to a remote Git repository",
+        "B": "Lakeflow Jobs — tracks job run history as a proxy for code versions",
         "C": "Databricks File System — stores notebook files in DBFS with version history",
-        "D": "Lakeflow Jobs — tracks job run history as a proxy for code versions"
+        "D": "Databricks Git folders (formerly Repos) — connects workspace folders to a remote Git repository"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Databricks Git folders (formerly Repos) integrates workspace folders directly with remote Git repositories (GitHub, GitLab, Azure DevOps, etc.). Engineers can commit, push, pull, create branches, and collaborate via pull requests without leaving the Databricks interface. DBFS does not provide version control. Workflows tracks job runs, not code changes.",
       "explanation": ""
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q031",
+      "domain": "implementing-cicd",
+      "title": "Question 31",
+      "difficulty": "hard",
+      "question": "A bundle declares the variable `catalog` with `default: dev`, and the `prod` target sets `variables.catalog: prod`. The CI runner exports `BUNDLE_VAR_catalog=staging` and then runs `databricks bundle deploy -t prod` with no `--var` option. Which value does `${var.catalog}` resolve to?",
+      "choices": {
+        "A": "`staging`",
+        "B": "`prod`",
+        "C": "`dev`",
+        "D": "The deploy fails because the variable is defined in two places"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "Bundle variables are resolved at deploy time, in this order of precedence: the `--var` CLI option, then the `BUNDLE_VAR_<name>` environment variable, then `.databricks/bundle/<target>/variable-overrides.json`, then the value under the target, and last the top-level `default`.",
+      "explanation": "No `--var` was passed, so the environment variable wins over the target-level `prod` value. This is a common reason a target's value seems to be ignored. Defining a value in several places is normal, and precedence decides which one is used."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q032",
+      "domain": "implementing-cicd",
+      "title": "Question 32",
+      "difficulty": "easy",
+      "question": "A CI step runs `databricks bundle deploy` with no `-t` option. The bundle defines `dev`, `test`, and `prod` targets, and the code ends up in the dev workspace instead of prod. Why?",
+      "choices": {
+        "A": "Without `-t`, the bundle deploys to the target marked `default: true`",
+        "B": "Without `-t`, the bundle deploys to every target in alphabetical order",
+        "C": "`databricks bundle deploy` always deploys to dev, and prod requires `databricks bundle run`",
+        "D": "The CI runner's service principal can access only the dev workspace"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "When no target is given, the CLI uses the target marked `default: true`, which is usually `dev`. CI pipelines should always pass `-t <target>` explicitly.",
+      "explanation": "A deploy goes to one target, not to all of them. `deploy` works for any target, and `run` starts a deployed job, pipeline, app, or script. Nothing in the scenario points to a permission problem: the deploy succeeded, just to the wrong target."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q033",
+      "domain": "implementing-cicd",
+      "title": "Question 33",
+      "difficulty": "medium",
+      "question": "Which behavior applies to a bundle target set to `mode: production`?",
+      "choices": {
+        "A": "Resource names get a `[dev <user>]` prefix, and schedules and triggers are paused",
+        "B": "Clusters can be overridden with `--cluster-id` so production runs can reuse a developer's cluster",
+        "C": "Validations check `run_as` and permissions, reject cluster overrides, and require the Git branch to match the target's configured branch",
+        "D": "The deployment lock is disabled so several pipelines can deploy at once"
+      },
+      "correctAnswer": "C",
+      "shortAnswer": "`mode: production` adds safety checks: it validates `run_as`, `permissions`, and that paths aren't user-specific, doesn't allow a `cluster_id` override, and requires the Git branch to match the target's configured branch (`--force` overrides that check). A service principal is the recommended identity.",
+      "explanation": "The name prefix, paused schedules, and allowed cluster overrides all belong to `mode: development`. The deployment lock is enabled in production mode and disabled in development mode."
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q034",
+      "domain": "implementing-cicd",
+      "title": "Question 34",
+      "difficulty": "medium",
+      "question": "A production Lakeflow Job points at a notebook inside an engineer's personal Git folder. After the engineer switches to a branch that doesn't contain the notebook and then switches back, the job fails because the notebook now has a new ID. What is the recommended practice?",
+      "choices": {
+        "A": "Pin the job to the notebook's old URL",
+        "B": "Forbid branch switching in that Git folder",
+        "C": "Have every engineer share one Git folder for production",
+        "D": "Have CI deploy a bundle from the merged `main` branch to the production workspace, run as a service principal"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Switching branches can delete workspace assets that the new branch doesn't contain. Switching back recreates them with new IDs and URLs, so any job that points at a personal Git folder is fragile.",
+      "explanation": "Production jobs should run from a bundle that CI deploys from the merged branch, using a service principal. The old URL no longer exists. Blocking branch switches defeats the purpose of Git folders, and the docs advise against sharing one Git folder between people."
     },
     {
       "id": "data-engineer-associate-mock-2-q035",
@@ -600,11 +600,11 @@
       "question": "A data engineer examines the Spark UI after a job completes and sees one task taking 10× longer than all other tasks. What does this indicate?",
       "choices": {
         "A": "The cluster ran out of memory and had to spill to disk",
-        "B": "A data skew problem — one partition contains significantly more data than others",
-        "C": "The Photon engine failed to accelerate that specific task",
+        "B": "The Photon engine failed to accelerate that specific task",
+        "C": "A data skew problem — one partition contains significantly more data than others",
         "D": "Network latency caused a delay in fetching data from cloud storage"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "A single slow task (stragglers) in the Spark UI typically indicates data skew — one partition has significantly more rows than others, causing one executor to do disproportionately more work. Solutions include salting keys, using `skewHint`, or repartitioning. Memory spill shows in the Spark UI as shuffle spill metrics, not as a single slow task.",
       "explanation": ""
     },
@@ -632,11 +632,11 @@
       "question": "A data engineer wants to receive an email when a Lakeflow Job fails. Where is this configured?",
       "choices": {
         "A": "In the cluster configuration under \"Termination Notifications\"",
-        "B": "In the job's \"Notifications\" settings, where email addresses can be added for failure, success, or start events",
+        "B": "In the Databricks workspace admin settings under \"Global Notifications\"",
         "C": "Through a separate alerting notebook that monitors job status via the Jobs API",
-        "D": "In the Databricks workspace admin settings under \"Global Notifications\""
+        "D": "In the job's \"Notifications\" settings, where email addresses can be added for failure, success, or start events"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "D",
       "shortAnswer": "Lakeflow Jobs has a built-in \"Notifications\" section in the job configuration where you can specify email addresses to notify on job start, job success, job failure, and task failure events. This is configured per-job, not globally. A separate monitoring notebook is an alternative but unnecessary when built-in notifications are available.",
       "explanation": ""
     },
@@ -644,38 +644,6 @@
       "id": "data-engineer-associate-mock-2-q038",
       "domain": "troubleshooting-monitoring-and-optimization",
       "title": "Question 38",
-      "difficulty": "medium",
-      "question": "A production Lakeflow Job runs a task that occasionally takes much longer than usual due to data volume spikes. To prevent the job from running indefinitely, which configuration should the engineer set?",
-      "choices": {
-        "A": "Retry policy with maximum retries set to 1",
-        "B": "Task timeout — the maximum time in seconds a task is allowed to run before it is cancelled",
-        "C": "Cluster autotermination minutes on the job cluster",
-        "D": "Maximum concurrent runs set to 1"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "Task timeout defines the maximum wall-clock time a task is allowed to run before Databricks automatically cancels it and marks the task as failed. This prevents runaway jobs from consuming resources indefinitely. Retry policy controls what happens after failure. Autotermination applies to idle clusters, not running tasks. Max concurrent runs controls parallel job instances.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q039",
-      "domain": "troubleshooting-monitoring-and-optimization",
-      "title": "Question 39",
-      "difficulty": "medium",
-      "question": "A Lakeflow Job multi-task job has tasks A → B → C (sequential dependency). Task B fails. What is the default behavior for Task C?",
-      "choices": {
-        "A": "Task C runs anyway, using the last successful output from Task B",
-        "B": "Task C doesn't run and is marked `Upstream failed` because its dependency failed",
-        "C": "Task C waits indefinitely for Task B to be manually retried",
-        "D": "The entire job reruns from Task A automatically"
-      },
-      "correctAnswer": "B",
-      "shortAnswer": "When an upstream task fails in a Lakeflow Job, downstream tasks with the default Run if condition (*All succeeded*) are marked `Upstream failed`. Databricks does not run dependent tasks if their dependencies failed. If the job has retry configured, the failed task is retried first. Task C is not retried or rerun automatically.",
-      "explanation": ""
-    },
-    {
-      "id": "data-engineer-associate-mock-2-q040",
-      "domain": "troubleshooting-monitoring-and-optimization",
-      "title": "Question 40",
       "difficulty": "hard",
       "question": "A data engineer needs to query the Delta Live Tables event log to find pipeline runs where expectations failed. Which system table or approach provides this information?",
       "choices": {
@@ -689,25 +657,41 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q041",
+      "id": "data-engineer-associate-mock-2-q039",
       "domain": "governance-and-security",
-      "title": "Question 41",
+      "title": "Question 39",
+      "difficulty": "easy",
+      "question": "A data engineer needs to store a small reference file that will be accessed by Spark jobs in a Databricks workspace. The file must be governed by Unity Catalog and accessible from any Unity Catalog-enabled compute without mount configuration. Which storage location is most appropriate?",
+      "choices": {
+        "A": "Cloud object storage (S3/ADLS) with manual mount configuration per cluster",
+        "B": "DBFS root, which is mounted on every cluster automatically",
+        "C": "Local disk of the driver node — fastest access for small files",
+        "D": "A Unity Catalog volume, referenced by a path such as `/Volumes/main/ref/files/lookup.csv`"
+      },
+      "correctAnswer": "D",
+      "shortAnswer": "Unity Catalog volumes govern non-tabular files with UC privileges (`READ VOLUME` / `WRITE VOLUME`) and are reachable from UC-enabled compute through `/Volumes/...` paths. DBFS root and mounts are deprecated, and Databricks recommends UC volumes, external locations, or workspace files instead ([What is DBFS?](https://docs.databricks.com/aws/en/dbfs/)). Local driver disk is ephemeral and not shared with other nodes.",
+      "explanation": ""
+    },
+    {
+      "id": "data-engineer-associate-mock-2-q040",
+      "domain": "governance-and-security",
+      "title": "Question 40",
       "difficulty": "medium",
       "question": "A company migrates from an existing Hive metastore to Unity Catalog. What is the key advantage of Unity Catalog over the workspace-level Hive metastore?",
       "choices": {
-        "A": "Unity Catalog stores data in a different file format for better performance",
-        "B": "Unity Catalog provides centralized governance, fine-grained access control, and data lineage across multiple workspaces",
+        "A": "Unity Catalog provides centralized governance, fine-grained access control, and data lineage across multiple workspaces",
+        "B": "Unity Catalog stores data in a different file format for better performance",
         "C": "Unity Catalog eliminates the need for any access control configuration",
         "D": "Unity Catalog is faster because it uses an in-memory metadata cache"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "A",
       "shortAnswer": "Unity Catalog provides a centralized governance layer that spans multiple Databricks workspaces and accounts. It offers fine-grained table, column, and row-level security, automated data lineage tracking, and audit logs — none of which are available in the per-workspace Hive metastore. The metastore stores metadata; performance depends on the underlying data files.",
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q042",
+      "id": "data-engineer-associate-mock-2-q041",
       "domain": "governance-and-security",
-      "title": "Question 42",
+      "title": "Question 41",
       "difficulty": "easy",
       "question": "A data engineer creates a new Delta table in Unity Catalog using `CREATE TABLE catalog.schema.table`. Who automatically becomes the table owner?",
       "choices": {
@@ -721,9 +705,9 @@
       "explanation": ""
     },
     {
-      "id": "data-engineer-associate-mock-2-q043",
+      "id": "data-engineer-associate-mock-2-q042",
       "domain": "governance-and-security",
-      "title": "Question 43",
+      "title": "Question 42",
       "difficulty": "medium",
       "question": "A data engineer needs to restrict certain users from seeing the full value of a `ssn` (social security number) column, showing only the last 4 digits instead. Which Unity Catalog feature implements this?",
       "choices": {
@@ -737,6 +721,22 @@
       "explanation": ""
     },
     {
+      "id": "data-engineer-associate-mock-2-q043",
+      "domain": "governance-and-security",
+      "title": "Question 43",
+      "difficulty": "hard",
+      "question": "Hundreds of tables across the schema `main.silver` have email columns tagged with the governed tag `pii = email`, and new tables are added every week. The governance team wants every tagged email column masked for the `analysts` group, now and in future tables, using one definition that table owners can't remove. What should they create?",
+      "choices": {
+        "A": "An ABAC policy created with `CREATE POLICY ... ON SCHEMA main.silver COLUMN MASK <function> TO analysts FOR TABLES MATCH COLUMNS has_tag_value('pii', 'email')`",
+        "B": "A dynamic view over each table that hides the email column",
+        "C": "A column mask on each email column, applied with `ALTER TABLE ... ALTER COLUMN ... SET MASK`",
+        "D": "A row filter on each table that returns `FALSE` for the `analysts` group"
+      },
+      "correctAnswer": "A",
+      "shortAnswer": "**ABAC policies** evaluate governed tags. One policy attached to a catalog or schema masks every matching column in current and future tables, and because higher-level admins define it, table owners can't override or remove it. ABAC needs Databricks Runtime 16.4+ or serverless compute.",
+      "explanation": "Per-column masks and dynamic views have to be repeated for every new table, and owners can change them. A row filter removes whole rows instead of masking a column."
+    },
+    {
       "id": "data-engineer-associate-mock-2-q044",
       "domain": "governance-and-security",
       "title": "Question 44",
@@ -744,11 +744,11 @@
       "question": "A data engineer creates an external table in Unity Catalog pointing to an S3 path. What happens to the underlying data files when the table is dropped with `DROP TABLE`?",
       "choices": {
         "A": "The data files are deleted along with the table metadata",
-        "B": "The data files are retained in cloud storage; only the table metadata (catalog registration) is removed",
-        "C": "The data files are moved to a Unity Catalog-managed trash location for 30 days",
+        "B": "The data files are moved to a Unity Catalog-managed trash location for 30 days",
+        "C": "The data files are retained in cloud storage; only the table metadata (catalog registration) is removed",
         "D": "`DROP TABLE` fails on external tables — you must use `DROP EXTERNAL TABLE`"
       },
-      "correctAnswer": "B",
+      "correctAnswer": "C",
       "shortAnswer": "External tables in Unity Catalog (and Databricks in general) only store metadata — the table definition pointing to an external cloud storage location. When dropped, only the metadata registration is removed. The underlying data files in S3 or ADLS are untouched. This is the key difference from managed tables, where dropping the table also deletes the data files.",
       "explanation": ""
     },

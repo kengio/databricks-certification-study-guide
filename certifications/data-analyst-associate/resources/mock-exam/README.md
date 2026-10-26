@@ -22,22 +22,20 @@ tags:
 
 ## Domain Distribution (October 2025 blueprint)
 
-The 45 scored questions were re-classified into the nine official domains in October 2026. The five refresh questions at the end of `questions.md` (GS-1 to GS-3, DASH-1, DM-1) are extra practice and are not part of the 45.
+The 45 questions are grouped under the nine official domains. In October 2026 the mock was rebalanced so each domain gets its share of the 45 questions at the official weight, rounded to whole questions. The five former refresh questions (three on Genie spaces, one on dashboards, one on data modeling) are now part of the scored 45.
 
-| Domain | Official weight | Questions 1–45 | Refresh questions |
+| Domain | Official weight | Share of 45 at that weight | Questions in this mock |
 | ------ | :---: | :---: | :---: |
-| Executing Queries Using Databricks SQL and Warehouses | 20 % | 18 | — |
-| Creating Dashboards and Visualizations | 16 % | 9 | 1 |
-| Analyzing Queries | 15 % | 5 | — |
-| Developing, Sharing, and Maintaining AI/BI Genie Spaces | 12 % | 0 | 3 |
-| Understanding of Databricks Data + AI Platform | 11 % | 5 | — |
-| Managing Data | 8 % | 2 | — |
-| Securing Data | 8 % | 6 | — |
-| Importing Data | 5 % | 0 | — |
-| Data Modeling with Databricks SQL | 5 % | 0 | 1 |
-
-> [!warning] Coverage gap
-> This mock predates the October 2025 blueprint, so it over-samples SQL and has no scored questions on Genie, Importing Data, or Data Modeling. Cover those domains with the [practice questions](../practice-questions/README.md) before exam day.
+| Executing Queries Using Databricks SQL and Warehouses | 20 % | 9 | 9 |
+| Creating Dashboards and Visualizations | 16 % | 7.2 | 7 |
+| Analyzing Queries | 15 % | 6.75 | 7 |
+| Developing, Sharing, and Maintaining AI/BI Genie Spaces | 12 % | 5.4 | 5 |
+| Understanding of Databricks Data + AI Platform | 11 % | 4.95 | 5 |
+| Managing Data | 8 % | 3.6 | 4 |
+| Securing Data | 8 % | 3.6 | 4 |
+| Importing Data | 5 % | 2.25 | 2 |
+| Data Modeling with Databricks SQL | 5 % | 2.25 | 2 |
+| **Total** | **100 %** | **45** | **45** |
 
 ## Scoring Guide
 

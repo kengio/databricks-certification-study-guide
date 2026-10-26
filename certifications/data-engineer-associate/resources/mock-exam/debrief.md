@@ -22,13 +22,13 @@ After timing yourself through this mock, use this debrief to:
 
 | Domain (Aug 2026 weight) | Topic folder | Questions in this mock |
 | :--- | :--- | :---: |
-| Databricks Intelligence Platform (6 %) | [01-databricks-intelligence-platform](../../01-databricks-intelligence-platform/README.md) | 11 |
-| Data Ingestion and Loading (21 %) | [02-data-ingestion-and-loading](../../02-data-ingestion-and-loading/README.md) | 3 |
-| Data Transformation and Modeling (22 %) | [03-data-transformation-and-modeling](../../03-data-transformation-and-modeling/README.md) | 19 |
-| Working with Lakeflow Jobs (16 %) | [04-working-with-lakeflow-jobs](../../04-working-with-lakeflow-jobs/README.md) | 3 |
-| Implementing CI/CD (10 %) | [05-implementing-cicd](../../05-implementing-cicd/README.md) | 0 |
+| Databricks Intelligence Platform (6 %) | [01-databricks-intelligence-platform](../../01-databricks-intelligence-platform/README.md) | 3 |
+| Data Ingestion and Loading (21 %) | [02-data-ingestion-and-loading](../../02-data-ingestion-and-loading/README.md) | 9 |
+| Data Transformation and Modeling (22 %) | [03-data-transformation-and-modeling](../../03-data-transformation-and-modeling/README.md) | 10 |
+| Working with Lakeflow Jobs (16 %) | [04-working-with-lakeflow-jobs](../../04-working-with-lakeflow-jobs/README.md) | 7 |
+| Implementing CI/CD (10 %) | [05-implementing-cicd](../../05-implementing-cicd/README.md) | 5 |
 | Troubleshooting, Monitoring, and Optimization (10 %) | [06-troubleshooting-monitoring-and-optimization](../../06-troubleshooting-monitoring-and-optimization/README.md) | 4 |
-| Governance and Security (15 %) | [07-governance-and-security](../../07-governance-and-security/README.md) | 5 |
+| Governance and Security (15 %) | [07-governance-and-security](../../07-governance-and-security/README.md) | 7 |
 
 ## Per-question quick map
 
@@ -39,46 +39,46 @@ Every question in this mock mapped to its August 2026 domain, plus the topic fol
 | 1 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 2 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
 | 3 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 4 | Easy | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 5 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 6 | Easy | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 7 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 8 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 9 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 10 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
-| 11 | Medium | Databricks Intelligence Platform | [01 topic folder](../../01-databricks-intelligence-platform/README.md) | [delta-lake-commands](../../../../shared/cheat-sheets/delta-lake-commands.md) |
+| 4 | Medium | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 5 | Medium | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 6 | Easy | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 7 | Medium | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 8 | Medium | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 9 | Hard | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 10 | Medium | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 11 | Easy | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
 | 12 | Medium | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
-| 13 | Medium | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
-| 14 | Hard | Data Ingestion and Loading | [02 topic folder](../../02-data-ingestion-and-loading/README.md) | [auto-loader-quick-ref](../../../../shared/cheat-sheets/auto-loader-quick-ref.md) |
+| 13 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
+| 14 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 15 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 16 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
+| 16 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 17 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 18 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 19 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
+| 18 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
+| 19 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 20 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
 | 21 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 22 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 23 | Hard | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 24 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 25 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 26 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 27 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 28 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 29 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 30 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 31 | Easy | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 32 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 33 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
-| 34 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
-| 35 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
-| 36 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
-| 37 | Hard | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 38 | Easy | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 39 | Medium | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 40 | Medium | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
-| 41 | Medium | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 42 | Hard | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
-| 43 | Medium | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 22 | Medium | Data Transformation and Modeling | [03 topic folder](../../03-data-transformation-and-modeling/README.md) | [pyspark-api-quick-ref](../../../../shared/cheat-sheets/pyspark-api-quick-ref.md) |
+| 23 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
+| 24 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
+| 25 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
+| 26 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
+| 27 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
+| 28 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
+| 29 | Medium | Working with Lakeflow Jobs | [04 topic folder](../../04-working-with-lakeflow-jobs/README.md) | — |
+| 30 | Easy | Implementing CI/CD | [05 topic folder](../../05-implementing-cicd/README.md) | — |
+| 31 | Easy | Implementing CI/CD | [05 topic folder](../../05-implementing-cicd/README.md) | — |
+| 32 | Medium | Implementing CI/CD | [05 topic folder](../../05-implementing-cicd/README.md) | — |
+| 33 | Medium | Implementing CI/CD | [05 topic folder](../../05-implementing-cicd/README.md) | — |
+| 34 | Medium | Implementing CI/CD | [05 topic folder](../../05-implementing-cicd/README.md) | — |
+| 35 | Hard | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 36 | Easy | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 37 | Medium | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 38 | Medium | Troubleshooting, Monitoring, and Optimization | [06 topic folder](../../06-troubleshooting-monitoring-and-optimization/README.md) | [performance-optimization](../../../../shared/cheat-sheets/performance-optimization.md) |
+| 39 | Medium | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 40 | Medium | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 41 | Hard | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 42 | Medium | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
+| 43 | Hard | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 | 44 | Hard | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 | 45 | Medium | Governance and Security | [07 topic folder](../../07-governance-and-security/README.md) | [unity-catalog-quick-ref](../../../../shared/cheat-sheets/unity-catalog-quick-ref.md) |
 
