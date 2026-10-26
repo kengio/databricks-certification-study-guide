@@ -34,38 +34,37 @@ D) All warehouse types have instant startup
 
 ## Question 2 *(Medium)*
 
-A team needs 8 concurrent analyst sessions without queue buildup. Which warehouse configuration supports this best?
+A team needs 8 concurrent analyst sessions plus bursts of dashboard traffic without queue buildup. Which warehouse configuration supports this best?
 
-A) Classic — single cluster with extra memory
-B) Pro — multi-cluster auto-scaling up to 10 clusters
-C) X-Large Classic — larger size reduces queuing
-D) Assign personal clusters to each analyst
+A) Classic warehouse with Scaling set to a minimum and maximum of 1 cluster  
+B) A warehouse whose Scaling maximum allows more than one cluster, so it adds clusters under load  
+C) An X-Large warehouse with 1 cluster, because a larger size removes queuing  
+D) A personal all-purpose cluster for each analyst  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Pro SQL warehouses support multi-cluster scaling. When one cluster reaches capacity, additional
-> clusters spin up automatically (up to the configured maximum of 10). Classic warehouses are
-> single-cluster only — every session queues behind others when that cluster is at capacity.
-
+> Scaling (minimum and maximum number of clusters) controls concurrency. Pro and classic warehouses
+> add clusters when queued load grows, and serverless warehouses scale with Intelligent Workload
+> Management. Databricks recommends about one cluster per 10 concurrent queries. A larger size
+> lowers each query's latency but does not add concurrency (C).
 ---
 
 ## Question 3 *(Easy)*
 
-What does the SQL warehouse auto-stop feature do?
+What does the SQL warehouse auto stop feature do?
 
-A) Stops all running queries after the configured timeout
-B) Shuts down warehouse compute when idle for the configured duration (default 120 minutes)
-C) Stops only Serverless warehouse queries
-D) Prevents a warehouse from starting if another is already running
+A) Stops all running queries after the configured timeout  
+B) Shuts down warehouse compute after it has been idle for the configured time (default 10 minutes for serverless, 45 minutes for pro and classic)  
+C) Stops only serverless warehouse queries  
+D) Prevents a warehouse from starting if another is already running  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Auto-stop conserves cost by terminating warehouse compute when no queries have run for the
-> idle timeout period. The default is 120 minutes. Running queries are never stopped by auto-stop
-> — it only triggers when the warehouse is idle.
-
+> Auto stop saves cost by stopping compute when no queries have run for the idle period. The
+> UI defaults are 10 minutes for serverless and 45 minutes for pro and classic. Running queries
+> are never stopped by auto stop — it only triggers when the warehouse is idle.
 ---
 
 ## Question 4 *(Easy)*
@@ -87,20 +86,18 @@ D) Direct cloud storage access (S3/ADLS)
 
 ## Question 5 *(Easy)*
 
-Row-level security via Unity Catalog row access policies is available on which SQL warehouse types?
+Which SQL warehouse types can run Lakehouse Federation queries against a foreign catalog?
 
-A) Classic and Pro
-B) Pro and Serverless
-C) Classic only
-D) All warehouse types equally
+A) Classic and Pro  
+B) Pro and Serverless  
+C) Classic only  
+D) All warehouse types equally  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Row-level security (implemented through Unity Catalog row access policies) requires Pro or
-> Serverless SQL warehouses. Classic warehouses do not support Unity Catalog's fine-grained
-> access controls such as row filters and column masks.
-
+> Lakehouse Federation requires a pro or serverless SQL warehouse (version 2023.40 or above).
+> Classic warehouses cannot run federated queries.
 ---
 
 ## Question 6 *(Medium)*
@@ -151,9 +148,9 @@ D) It must be restarted manually from the SQL Warehouses UI
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Serverless warehouses auto-stop when idle (default 10 minutes for Serverless vs 120 for
-> Classic/Pro). Because compute is managed by Databricks, Serverless warehouses restart
-> near-instantly on the next query — there is no cold-start wait as with Classic/Pro.
+> Serverless warehouses auto stop when idle (default 10 minutes; pro and classic default to
+> 45 minutes). Because Databricks manages the compute, serverless warehouses start in about
+> 2–6 seconds on the next query, compared with about 4 minutes for pro and classic.
 
 ---
 
@@ -670,20 +667,19 @@ D) Dashboards cannot have refresh schedules — only individual queries can be s
 
 ## Question 36 *(Easy)*
 
-What is the `{{parameter_name}}` syntax used for in Databricks SQL queries?
+In the current SQL editor and in AI/BI dashboard datasets, what does `:region` in `WHERE region = :region` represent?
 
-A) Variable substitution in Python notebook cells
-B) Query parameters — replaced with user-selected values at query runtime
-C) Column aliasing in SELECT statements
-D) Referencing the output of a previously run query
+A) A Python variable from a notebook cell  
+B) A named parameter marker, replaced with the value a user selects when the query runs  
+C) A column alias  
+D) A reference to the output of a previously run query  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Double curly braces `{{parameter_name}}` are Databricks SQL's query parameter (mustache)
-> syntax. When a query containing this syntax is added to a dashboard, a corresponding filter
-> widget is automatically created. The selected value is injected into the SQL at runtime.
-
+> Named parameter markers (a colon plus a name) are the current parameter syntax in the SQL
+> editor, AI/BI dashboards, notebooks, and Genie. For strings, Databricks adds the quotes. The
+> legacy double-curly-brace (mustache) syntax works only in the legacy SQL editor.
 ---
 
 ## Question 37 *(Medium)*
@@ -706,38 +702,35 @@ D) The alert returns an error because the threshold was not met
 
 ## Question 38 *(Easy)*
 
-Which notification destination is NOT natively supported by Databricks SQL alerts?
+An alert author wants a SQL alert to post to a Slack channel, but no Slack option appears in the alert's notification list. What is needed?
 
-A) Email
-B) Slack via webhook
-C) PagerDuty
-D) SMS text message
-
-> [!success]- Answer
-> **Correct Answer: D**
->
-> Databricks SQL alerts natively support email, Slack (via webhook), PagerDuty, and custom
-> webhooks. SMS is not a built-in destination. SMS notifications could be achieved by routing
-> through a custom webhook to an SMS gateway service.
-
----
-
-## Question 39 *(Medium)*
-
-A Lakeview Dashboard is shared with a user with "Can View" permission. What can that user do?
-
-A) Edit the underlying query SQL
-B) View the dashboard, interact with filter widgets, and export data — but not modify queries or layout
-C) Create new visualization widgets on the dashboard
-D) Change the dashboard's refresh schedule
+A) Paste the Slack channel password into the alert query  
+B) A workspace admin must first create a Slack notification destination  
+C) Slack is never supported; use SMS  
+D) Convert the alert to a dashboard  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> "Can View" permission allows a user to view the dashboard and interact with filter parameters.
-> They can also export data from individual visualizations. They cannot edit SQL queries, change
-> the layout, add widgets, or modify the refresh schedule.
+> Workspace admins set up notification destinations (such as Slack, Microsoft Teams, and
+> webhooks). Alert authors then select users or destinations in the alert's notification
+> settings.
+---
 
+## Question 39 *(Medium)*
+
+An AI/BI dashboard is shared with a user who has CAN VIEW / CAN RUN permission. What can that user do?
+
+A) Edit the dataset SQL  
+B) View the published dashboard and interact with its filters, but not edit the draft  
+C) Add new visualization widgets  
+D) Change who else can access the dashboard  
+
+> [!success]- Answer
+> **Correct Answer: B**
+>
+> Viewers of a published AI/BI dashboard (formerly a Lakeview dashboard) can open it and use its
+> filters. Editing the draft needs CAN EDIT, and changing permissions needs CAN MANAGE.
 ---
 
 ## Question 40 *(Medium)*
@@ -764,38 +757,37 @@ D) Set the chart color scheme to map colors by `revenue` value
 
 ## Question 41 *(Easy)*
 
-A dashboard filter passes a selected date to all underlying queries. Which SQL snippet correctly uses this parameter?
+A dashboard filter passes a selected date to an AI/BI dashboard dataset. Which SQL snippet correctly uses this parameter?
 
-A) `WHERE order_date = :selected_date`
-B) `WHERE order_date = {{selected_date}}`
-C) `WHERE order_date = @selected_date`
-D) `WHERE order_date = $selected_date`
+A) `WHERE order_date = :selected_date`  
+B) `WHERE order_date = {{selected_date}}`  
+C) `WHERE order_date = @selected_date`  
+D) `WHERE order_date = $selected_date`  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
-> `{{parameter_name}}` is the Databricks SQL parameter substitution syntax. The value selected
-> in the dashboard filter widget is injected into the query at runtime. The colon (`:`) syntax
-> is used in some other SQL tools but not Databricks SQL.
-
+> AI/BI dashboards use named parameter markers (`:name`). Dashboards do not support the legacy
+> mustache syntax (`{{ }}`), which works only in the legacy SQL editor and must be converted
+> before use in a dashboard.
 ---
 
 ## Question 42 *(Medium)*
 
 An analyst needs a summary table refreshed nightly without manually running the query. What is the most appropriate approach?
 
-A) Open Databricks SQL each morning and run the query manually
-B) Schedule the query in Databricks SQL to run nightly at midnight using a SQL warehouse
-C) Write a Python script that runs on the analyst's laptop at midnight
-D) Use Lakeflow Declarative Pipelines — it is the only supported option for automated query execution
+A) Open Databricks SQL each morning and run the query manually  
+B) Create a materialized view with a nightly `SCHEDULE CRON` refresh  
+C) Write a Python script that runs on the analyst's laptop at midnight  
+D) Use Lakeflow Spark Declarative Pipelines — it is the only supported option for automated refreshes  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks SQL has built-in query scheduling. Configure a schedule (e.g., nightly at midnight),
-> select a SQL warehouse, and the platform runs the query automatically. No external scripts,
-> jobs, or Lakeflow Declarative Pipelines are required for simple scheduled query execution.
-
+> A materialized view can be created from a SQL warehouse with a `SCHEDULE` clause, and
+> Databricks runs the refresh automatically. Lakeflow Jobs can also schedule SQL, so pipelines
+> (the exam's "Delta Live Tables", now Lakeflow Spark Declarative Pipelines) are not the only
+> option (D).
 ---
 
 ## Question 43 *(Hard)*
@@ -837,21 +829,21 @@ D) Restarting the SQL warehouse
 
 ## Question 45 *(Hard)*
 
-A compliance team requires that all SQL queries run on company data be logged with user identity for 90 days. Which Databricks feature best provides this?
+A compliance team needs a SQL-queryable record of who accessed company data, and when. Which Databricks feature best provides this?
 
-A) Delta transaction log — records all writes with timestamps
-B) SQL warehouse Query History — operational log retained up to 30 days
-C) Unity Catalog audit logs in `system.access.audit`
-D) MLflow experiment tracking — stores query metadata
+A) The Delta transaction log, which records writes to one table  
+B) Opening the Query History page in the UI each day  
+C) Audit logs in the `system.access.audit` system table  
+D) MLflow experiment tracking  
 
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> Unity Catalog's `system.access.audit` table captures all data access events including SQL
-> query text, user identity, timestamp, and accessed objects. It supports configurable retention
-> suitable for compliance requirements. SQL warehouse Query History is an operational tool,
-> not a compliance-grade audit log, and is limited in retention duration.
-
+> Audit logs record account and workspace events, including data access, with the user
+> identity and time, and the `system.access.audit` system table lets admins analyse them with
+> SQL. The Delta log covers only changes to one table (A), and browsing query history in the UI
+> is not a governed audit record (B). For query-level analysis, `system.query.history` is the
+> companion system table.
 ---
 
 [← Back to Mock Exam](./README.md) | [Practice Questions](../practice-questions/README.md)

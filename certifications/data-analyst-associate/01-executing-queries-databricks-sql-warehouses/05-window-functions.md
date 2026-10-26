@@ -493,7 +493,7 @@ FROM events_with_gaps;
 ## Official Documentation
 
 - [Databricks Window Functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin.html#window-functions)
-- [Analytic Functions Guide](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-window.html)
+- [Window functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions)
 
 ---
 

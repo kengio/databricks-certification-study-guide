@@ -111,21 +111,18 @@ D) No — Serverless warehouses are always free during idle periods regardless o
 
 ## Question 6 *(Medium)*
 
-Which Databricks workspace role is required to create a new SQL warehouse?
+Who can create a new SQL warehouse?
 
-A) Any authenticated user can create a SQL warehouse
-B) Users with the "Can Use" permission on an existing warehouse
-C) Workspace Admin or users explicitly granted the "Create SQL warehouse" entitlement
-D) Only the account admin can create SQL warehouses
+A) Any authenticated user  
+B) Users with the CAN USE permission on an existing warehouse  
+C) Workspace admins, or users with unrestricted cluster creation permission  
+D) Only account admins  
 
 > [!success]- Answer
 > **Correct Answer: C**
 >
-> Creating a SQL warehouse requires either Workspace Admin privileges or the "Create SQL
-> warehouse" entitlement explicitly granted to the user by an admin. Regular workspace users
-> can use existing warehouses they have permission on, but cannot create new ones without
-> this entitlement.
-
+> Creating a SQL warehouse requires being a workspace admin or having unrestricted cluster
+> creation permission. CAN USE only lets a user run queries on an existing warehouse (B).
 ---
 
 ## Question 7 *(Medium)*
@@ -226,21 +223,19 @@ D) `SELECT * FROM information_schema.tables LIMIT 10`
 
 ## Question 12 *(Hard)*
 
-A data engineer wants to grant a user the ability to read only the `email` column in a table, not the `ssn` column. Which Unity Catalog feature enables this?
+A data engineer wants analysts to read the `email` column of a table but never see the real `ssn` values. Which Unity Catalog approach enables this?
 
-A) Row-level security policy
-B) Column-level permissions via `GRANT SELECT (column_name) ON TABLE ...`
-C) Table clone with only the allowed columns
-D) A view that selects only `email`, with SELECT granted on the view
+A) A row filter on the table  
+B) A column mask on `ssn` (or a view that excludes `ssn`, with `SELECT` granted on the view)  
+C) A table clone that copies all columns  
+D) Hiding the `ssn` column in a dashboard  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Unity Catalog supports column-level permissions: `GRANT SELECT (email) ON TABLE t TO user`.
-> This restricts the user to only the specified columns. Selecting `ssn` in a query will fail
-> with a permission denied error. Creating a view (Option D) also works but requires maintaining
-> an additional object.
-
+> Column-level protection in Unity Catalog uses column masks (a SQL UDF attached with
+> `ALTER TABLE ... ALTER COLUMN ... SET MASK`) or views that expose only allowed columns. A row
+> filter limits rows, not columns (A). Hiding a column in one tool does not protect it (D).
 ---
 
 ## Question 13 *(Easy)*
@@ -713,23 +708,21 @@ D) Email subjects can only be customized via a webhook integration
 
 ---
 
-## Question 38 *(Hard)*
+## Question 38 *(Medium)*
 
-A dashboard is scheduled to refresh daily using Warehouse A. Warehouse A is then deleted by an admin. What happens to the scheduled refresh?
+A dashboard schedule has a Microsoft Teams channel as a subscriber. What does the channel receive on each scheduled run?
 
-A) The refresh fails and the dashboard owner receives an error notification
-B) The refresh automatically switches to the default warehouse
-C) The refresh runs on any available warehouse in the workspace
-D) The refresh silently fails with no notification until manually reconfigured
+A) Nothing; Teams cannot subscribe to dashboards  
+B) A PNG snapshot in the channel, a link to the dashboard, and a PDF  
+C) Only a CSV export of every dataset  
+D) The dashboard's SQL text  
 
 > [!success]- Answer
-> **Correct Answer: A**
+> **Correct Answer: B**
 >
-> The scheduled refresh fails because the assigned warehouse no longer exists. The dashboard
-> owner receives a failure notification. The refresh does not automatically migrate to another
-> warehouse — an admin or owner must update the dashboard's refresh schedule to select a
-> new warehouse.
-
+> Slack and Microsoft Teams destinations (set up by a workspace admin) receive a PNG snapshot,
+> a link, and a PDF. Email subscribers receive a PDF snapshot, optionally with CSV, TSV, or
+> Excel attachments.
 ---
 
 ## Question 39 *(Hard)*
@@ -778,40 +771,36 @@ D) Configure warehouse auto-scaling to switch sizes based on time of day
 
 ## Question 41 *(Easy)*
 
-A dashboard filter needs to let users pick a date range (start date and end date). Does Databricks SQL support a native date range parameter type?
+A dashboard filter needs to let users pick a date range (start date and end date). How does an AI/BI dashboard dataset use a date range parameter?
 
-A) No — date range must be implemented as two separate text parameters
-B) Yes — Databricks SQL supports a Date Range parameter type that provides a calendar picker with start and end date selection
-C) Yes — but only for Serverless SQL warehouses
-D) No — date ranges require a custom dropdown with hard-coded values
+A) It cannot — a date range must be two separate text parameters  
+B) A date range parameter exposes `.min` and `.max`, for example `WHERE order_date BETWEEN :date_range.min AND :date_range.max`  
+C) Only serverless SQL warehouses support date ranges  
+D) A date range needs a custom dropdown with hard-coded values  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks SQL supports several parameter types including Text, Number, Dropdown List, Query
-> Dropdown, Date, Date and Time, and Date Range. The Date Range type renders a calendar picker
-> with start and end date selection and injects both values into the query using the
-> `{{parameter_name.start}}` and `{{parameter_name.end}}` syntax.
-
+> Date range parameters in AI/BI dashboards create `.min` and `.max` values used with named
+> parameter markers. Adding `OR :date_range IS NULL` handles the "All" selection. Dashboards do
+> not support the legacy mustache (`{{ }}`) syntax.
 ---
 
 ## Question 42 *(Medium)*
 
-A query parameter `{{min_revenue}}` is used in a dashboard filter. The analyst wants new users to see data filtered to `100000` until they change the filter. How is this configured?
+A dashboard dataset uses the parameter `:min_revenue`. The author wants viewers to see data filtered to `100000` until they change the filter. How is this configured?
 
-A) Default values cannot be set — users must always select a value before the query runs
-B) Set a default value for the parameter in the query settings — this value is used when no user selection has been made
-C) Hard-code `100000` in the SQL and add `{{min_revenue}}` as a comment
-D) Use `COALESCE({{min_revenue}}, 100000)` in the SQL
+A) Default values cannot be set — viewers must always pick a value first  
+B) In the dataset editor, type `100000` in the field under the parameter name and run the query; that value becomes the default  
+C) Hard-code `100000` in the SQL and keep `:min_revenue` in a comment  
+D) Use `COALESCE(:min_revenue, 100000)` and leave the parameter without a default  
 
 > [!success]- Answer
 > **Correct Answer: B**
 >
-> Databricks SQL query parameters support default values configured in the query or dashboard
-> parameter settings. When a user opens the dashboard without having selected a value, the
-> default is used, ensuring the query runs immediately with sensible initial data rather than
-> failing or showing no filter.
-
+> To test a dashboard parameter, you type a value under the parameter name and run the query.
+> Running the query also saves that value as the parameter's default, so the dashboard opens
+> with it.
 ---
 
 ## Question 43 *(Medium)*
@@ -832,23 +821,20 @@ D) Delete the query
 
 ---
 
-## Question 44 *(Hard)*
+## Question 44 *(Medium)*
 
-A SQL alert monitors a query that returns no rows (an empty result). The alert condition is `WHEN VALUE > 0`. Does the alert fire?
+Which states can a latest-version Databricks SQL alert evaluate to?
 
-A) Yes — an empty result is treated as 0, which is not greater than 0, so no alert fires
-B) No — when the query returns no rows, the alert condition evaluates to UNKNOWN and does not fire
-C) Yes — an empty result always triggers an alert as an error condition
-D) The alert raises an error and sends an error notification
+A) OK, TRIGGERED, ERROR  
+B) OK, TRIGGERED, UNKNOWN only  
+C) GREEN, YELLOW, RED  
+D) RUNNING and STOPPED  
 
 > [!success]- Answer
-> **Correct Answer: B**
+> **Correct Answer: A**
 >
-> When a monitored query returns no rows, the alert value is effectively undefined (NULL).
-> Databricks SQL treats a NULL result as UNKNOWN, which does not satisfy the threshold
-> condition. The alert does not fire. If detecting the absence of data (zero rows) is the
-> goal, rewrite the query to return a `COUNT(*)` which will return 0 instead of no rows.
-
+> Each evaluation resolves to OK, TRIGGERED, or ERROR. The latest alerts no longer use the
+> UNKNOWN status from legacy alerts.
 ---
 
 ## Question 45 *(Medium)*
