@@ -301,7 +301,7 @@ imputer = Imputer(
     strategy="median"  # or "mean" (default) / "mode"
 )
 
-stages = [imputer, ...other_stages...]
+stages = [imputer, *other_stages]
 ```
 
 ### **Categorical Encoding Order**
