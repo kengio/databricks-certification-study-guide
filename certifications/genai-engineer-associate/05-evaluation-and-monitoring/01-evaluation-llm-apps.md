@@ -9,8 +9,11 @@ status: published
 
 Evaluation is the systematic measurement of a GenAI application's quality. Because LLM outputs
 are free-form text, evaluation requires specialised metrics and often uses another LLM as a
-judge. The Databricks exam focuses on `mlflow.evaluate()`, RAG-specific metrics, and the
+judge. This file covers the RAG-specific metrics, the MLflow 2 `mlflow.evaluate()` API, and the
 Databricks Review App.
+
+> [!note] Platform update (Oct 2026)
+> `mlflow.evaluate()` with `mlflow.metrics.genai` (shown below) is the **MLflow 2** evaluation API. The March 2026 exam guide's bullets — *MLflow scoring and tracing*, *judges that require ground truth*, *custom Scorers*, *SME feedback* — map to the **MLflow 3** API: `mlflow.genai.evaluate(data=..., predict_fn=..., scorers=[...])` with judges such as `Correctness` and `RetrievalGroundedness` ([Scorers and LLM judges](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/concepts/scorers)). Learn the metric definitions here, then the current API in [MLflow Scorers, Judges, SME Feedback, and Agent Monitoring](./03-mlflow-scorers-judges-and-feedback.md).
 
 ## Overview Diagram
 
@@ -293,7 +296,9 @@ After deployment:
 
 **Exam tip**: The Review App is distinct from automated evaluation. It collects **human
 preference** data, which is more expensive but more reliable than LLM-as-judge for subjective
-quality assessment.
+quality assessment. In MLflow 3, Review App feedback is attached to traces as assessments, and
+Databricks recommends review queues (Beta) for new human-review workflows
+([Collect feedback and build datasets](https://docs.databricks.com/aws/en/mlflow3/genai/human-feedback/)).
 
 ## Evaluation Workflow Summary
 
@@ -387,4 +392,4 @@ quality assessment.
 
 ---
 
-**[← Previous: LLM Chains & Agents](../01-application-development/02-chains-agents.md) | [↑ Back to LLM Application Development](./README.md)**
+**[↑ Back to Evaluation and Monitoring](./README.md) | [Next: Online Monitoring](./02-online-monitoring.md) →**

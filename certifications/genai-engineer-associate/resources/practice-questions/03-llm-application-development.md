@@ -145,36 +145,10 @@ D) `perplexity` — measures the linguistic fluency of the answer
 
 **Question**: A developer uses a LangChain `PromptTemplate` with the variable `{question}`. Which code correctly creates and formats this template?
 
-A)
-
-```python
-template = PromptTemplate(input="{question}", template="Answer: {question}")
-template.fill(question="What is RAG?")
-```
-
-B)
-
-```python
-template = PromptTemplate(
-    input_variables=["question"],
-    template="Please answer the following question: {question}"
-)
-prompt = template.format(question="What is RAG?")
-```
-
-C)
-
-```python
-template = PromptTemplate(variables=["question"])
-template.render(question="What is RAG?")
-```
-
-D)
-
-```python
-template = PromptTemplate("{question}")
-template.apply("What is RAG?")
-```
+A) `template = PromptTemplate(input="{question}", template="Answer: {question}")` then `template.fill(question="What is RAG?")`  
+B) `template = PromptTemplate(input_variables=["question"], template="Please answer the following question: {question}")` then `prompt = template.format(question="What is RAG?")`  
+C) `template = PromptTemplate(variables=["question"])` then `template.render(question="What is RAG?")`  
+D) `template = PromptTemplate("{question}")` then `template.apply("What is RAG?")`  
 
 > [!success]- Answer
 > **Correct Answer: B**

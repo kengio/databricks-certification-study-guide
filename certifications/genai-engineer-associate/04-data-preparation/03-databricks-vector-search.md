@@ -58,8 +58,11 @@ print(endpoint["endpoint_status"]["state"])  # "ONLINE" when ready
 
 **Endpoint types**:
 
-- `STANDARD` — general-purpose endpoint for most workloads
-- `STORAGE_OPTIMIZED` — optimized for larger indexes (higher storage-to-compute ratio)
+- `STANDARD` — lowest query latency; ~320M vectors at 768 dimensions per endpoint; supports a High QPS target; Delta Sync sources need Change Data Feed
+- `STORAGE_OPTIMIZED` — over 1B vectors at 768 dimensions, 10–20x faster indexing, roughly 250 ms extra query latency, priced for large vector counts
+
+> [!note] Platform update (Oct 2026)
+> Databricks renamed **Vector Search** to **AI Search** on 2026-06-01; the docs now say *AI Search endpoints and indexes*, while the exam guide (March 2026) keeps the original name. The examples here use the exam-era `databricks-vectorsearch` client (`VectorSearchClient`); current docs use `%pip install databricks-ai-search` and `from databricks.ai_search.client import AISearchClient` with the same endpoint and index operations ([Create AI Search endpoints and indexes](https://docs.databricks.com/aws/en/ai-search/create-ai-search)). Free Edition allows one AI Search endpoint with one search unit and does not support Direct Vector Access indexes. Sources: [June 2026 release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/june), [Databricks AI Search](https://docs.databricks.com/aws/en/ai-search/ai-search), [Free Edition limitations](https://docs.databricks.com/aws/en/getting-started/free-edition-limitations).
 
 ## Index Types Deep Dive
 
@@ -395,4 +398,4 @@ D) Update the `embedding_model_endpoint_name` field in the index configuration
 
 ---
 
-**[← Previous: Embedding Models](./02-embeddings-models.md) | [↑ Back to Vector Search & Embeddings](./README.md) | [Next: Vector Search in Production](../01-application-development/04-vector-search-runtime.md) →**
+**[← Previous: Embedding Models](./02-embeddings-models.md) | [↑ Back to Data Preparation](./README.md) | [Next: Source Documents, Extraction, and Retrieval Evaluation](./04-source-documents-extraction-and-retrieval-eval.md) →**

@@ -346,4 +346,4 @@ D) Any model — architecture does not affect retrieval quality
 
 ---
 
-**[↑ Back to Vector Search & Embeddings](./README.md) | [Next: Databricks Vector Search](./03-databricks-vector-search.md) →**
+**[← Previous: Document Processing & Chunking](./01-document-processing-chunking.md) | [↑ Back to Data Preparation](./README.md) | [Next: Databricks Vector Search](./03-databricks-vector-search.md) →**

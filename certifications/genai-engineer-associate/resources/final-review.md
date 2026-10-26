@@ -10,82 +10,89 @@ status: published
 
 # Final Review — GenAI Engineer Associate (20-minute exam-morning scan)
 
+> [!important]
+> Exam guide: published March 18, 2026 (PDF re-issued as "August 2026"). 45 scored **multiple-choice and multiple-selection** questions + up to 10 unscored, 90 minutes. Answer with the product surface the guide tests (Agent Bricks, Agent Framework, Model Serving, Vector Search, Genie Spaces), even where the product has since been renamed or moved to legacy.
+
 ## 2-minute facts that show up *most often*
 
-- **Compound AI app = one endpoint, not N microservices** — package retriever + re-ranker + LLM + tools inside a single `ResponsesAgent` subclass
-- **MLflow `ResponsesAgent`** is the current Agent Framework path (replaces deprecated `ChatModel`); subclass + `predict()` + `databricks.agents.deploy()`
-- **`databricks.agents.deploy()`** does three things at once: provisions Model Serving + enables Inference Tables + wires MLflow tracing
-- **Mosaic AI Vector Search** index types: **Delta Sync Index** (auto-updates when source Delta table changes) vs **Direct Vector Access Index** (you push vectors via API)
-- **Foundation Model APIs (FMAPI)** billing: **Pay-per-token** (no reservation) vs **Provisioned throughput** (reserved tokens/sec)
-- **Embedding model** for new Vector Search indexes: `databricks-gte-large-en` (current default; `bge-large-en` still works)
-- **Current chat client**: `databricks_openai.DatabricksOpenAI` (OpenAI-compatible API); the legacy `databricks_genai_inference` package is no longer the recommended path
-- **Unity AI Gateway** policies (6): rate limits, traffic splitting, payload logging, usage tracking, guardrails, fallbacks
-- **Traffic splitting is a Model Serving feature**, not a Gateway policy
-- **PII must be redacted *before* embedding** — once in the vector index, it's reconstructible
-- **Inference Tables** = audit-of-record; same Delta table powers monitoring (latency / cost / quality) and governance (audit / compliance)
-- **Databricks Agent Evaluation**: `mlflow.evaluate(data=..., model_type="databricks-agent")` runs built-in RAG judges (groundedness, answer relevance, correctness, safety)
+- **Compound AI app = one endpoint, not N microservices** — retriever + re-ranker + LLM + tools inside one `ResponsesAgent`
+- **`ResponsesAgent`** is the recommended agent interface; `ChatAgent` and `ChatModel` are *legacy*
+- **`log_model(..., resources=[...])`** → `agents.deploy()` provisions the serving endpoint, short-lived credentials, inference tables, real-time tracing, and the Review App
+- **Vector Search** index types: **Delta Sync** (auto-updates from a CDF-enabled Delta table) vs **Direct Vector Access** (push vectors via API); standard endpoint = lowest latency, storage-optimized = 1B+ vectors
+- **FMAPI billing**: pay-per-token (no reservation) vs provisioned throughput (reserved capacity)
+- **Embedding window ≥ chunk size**: `bge-large-en` 512 tokens, `gte-large-en` 8192 tokens (both 1024 dims)
+- **Judges that need ground truth**: `Correctness`, `RetrievalSufficiency`, `ToolCallCorrectness`
+- **Agent Bricks**: document Q&A → Knowledge Assistant; many cooperating agents → Multi-Agent Supervisor; documents → structured rows → Information Extraction
+- **MCP**: managed first, external second (credentials in a governed store), custom (Databricks Apps) last
+- **AI Gateway** (tested under Evaluation and Monitoring): inference tables = payloads; usage tables = tokens and requesters; rate limits = QPM/TPM, HTTP 429
+- **PII is masked *before* embedding** — once indexed, it can be retrieved into any prompt
 
 ## 5-minute per-domain quick-fire (6 domains)
 
-### 01 — Application Development (30 %)
+### Section 3 — Application Development (30 %)
 
-- Prompt engineering: structured turns (system / user / assistant); few-shot examples
-- Tool calling = LLM picks which function to invoke; foundation of agents
-- Chain vs Agent: chain is a deterministic DAG; agent is an LLM-driven loop
-- Hybrid search = vector + BM25; re-ranking = cheap recall pass → small cross-encoder reorders top-k
+- Tool calling = LLM picks the function; chain = fixed path, agent = LLM-driven loop with `max_iterations`
+- Multi-agent + **Genie** for structured data: Conversation API (`start-conversation` → poll → query result), `GenieAgent`, or Genie MCP
+- Evaluation phase (curated dataset, ground truth) vs monitoring phase (sampled live traces, no ground truth)
+- Choose the **smallest model that passes evaluation** when cost or latency is the priority; read model cards for task, context length, licence
 
-### 02 — Assembling and Deploying Apps (22 %)
+### Section 4 — Assembling and Deploying Applications (22 %)
 
-- FMAPI hosted models (Llama 3.3-70B, Claude, GPT-class) — no infra to manage
-- MLflow `mlflow.pyfunc.log_model(python_model=Agent(), registered_model_name=...)` then `databricks.agents.deploy(...)`
-- Unity AI Gateway sits in front of Model Serving — configure rate limits / traffic splitting / payload logging via SDK
-- Compound app = retriever + reranker + LLM + tools, served as **one endpoint**
+- Access control: **automatic passthrough** (declared resources), **OBO** (user's permissions, declared scopes), **secrets** (`{{secrets/scope/key}}`)
+- Batch → `ai_query()` (or task-specific AI Functions); `failOnError => false` keeps one bad row from failing the job
+- **Prompt Registry**: immutable versions, mutable aliases (`@production`) for promotion and rollback
+- Memory lives in an external durable store (Lakebase-backed sessions / memory), never in process memory
+- UIs: Databricks Apps (backend holds credentials), Genie app for Teams, Slack bot backend
 
-### 03 — Design Applications (14 %)
+### Section 1 — Design Applications (14 %)
 
-- RAG = open-book exam; fine-tuning = studying. RAG wins for current/changing facts; fine-tuning wins for style/format/persona
-- Naive RAG: single pass retrieve → augment → generate. Advanced RAG: query rewriting, multi-step retrieval, re-ranking, self-reflection
-- Context window budget: system + retrieved chunks + history + answer share one budget
-- Single-step vs agent-loop: single-step deterministic + cheap; agents flexible + harder to cost/latency-budget
+- Write the I/O spec first; pick the **narrowest task** (paragraph → gist = Summarization)
+- Per-entity facts → keyed table/tool; explanatory knowledge → retriever
+- Tool order: identify → retrieve → compute → act (irreversible actions last, gated)
+- RAG for changing facts; fine-tuning for style/format/persona
 
-### 04 — Data Preparation (14 %)
+### Section 2 — Data Preparation (14 %)
 
-- Chunk size + overlap: small chunks → better recall, more chunks to manage; overlap preserves context across boundaries
-- Semantic chunking splits on paragraphs/headings (better than fixed token counts)
-- Embedding dim: match the model's recommended dimensionality; higher dim = better separation, more storage
-- Delta Sync Index vs Direct Vector Access Index: sync = auto on source change; direct = push via API
+- Scanned images → OCR (`pytesseract`); HTML → BeautifulSoup; PDFs → `pypdf` / PyMuPDF; SQL → `ai_parse_document`
+- Fewer embeddings → **larger chunks** and **less overlap**
+- Retrieval metrics: recall@k (found it?), precision@k (clean?), MRR (best one first?)
+- Re-ranking = precision at the top, at a latency cost
 
-### 05 — Evaluation and Monitoring (12 %)
+### Section 6 — Evaluation and Monitoring (12 %)
 
-- Offline: `mlflow.evaluate(data=..., model_type="databricks-agent")` with built-in RAG judges (groundedness, answer relevance, correctness, safety)
-- Online: Inference Tables + system tables → DBSQL dashboards
-- Monitor 6 categories: latency / cost / reliability / quality (LLM-as-judge) / input drift / output drift
-- LLM-as-judge backtests on captured production samples — schedule daily
+- `mlflow.genai.evaluate(data, predict_fn, scorers)`; `@scorer` for deterministic checks, `make_judge()` for custom LLM judges
+- SME disagreement → rubrics + calibration, then aligned judgments in `mlflow.genai.evaluate()`
+- Agent Monitoring: `scorer.register(...).start(sampling_config=ScorerSamplingConfig(sample_rate=...))`
+- Cost levers: rate limits, budgets, pricing mode, scale-to-zero, smaller models, batch inference
 
-### 06 — Governance (8 %)
+### Section 5 — Governance (8 %)
 
-- **Five layers**: UC AI assets, PII handling, content safety, Unity AI Gateway, Inference Tables
-- All persistent AI artifacts (embeddings, vector indexes, registered models, agents, prompt templates) are UC-securable
-- PII redaction at chunk time, NOT at retrieval
-- Mosaic AI Vector Search respects UC table permissions on the source
+- Masking: at ingestion (fastest, safest), column masks / row filters at retrieval, gateway PII `MASK` (keeps requests answerable) vs `BLOCK`
+- Malicious input: safety filter, injection-resistant prompts, least-privilege tools, rate limits, human approval
+- Licensing: data licence, terms of service, privacy basis, model licence — before ingestion; record provenance
+- Problematic text: fix the source (exclude, replace, redact) before relying on output filters
 
 ## Common-trap reminders
 
 | Trap | Right answer |
 | :--- | :--- |
 | "Compound app = 3 chained endpoints" | Wrong — one endpoint |
-| "ChatModel is the current path" | Wrong — deprecated; use `ResponsesAgent` |
-| "Traffic splitting is a Gateway policy" | Wrong — it's Model Serving (`traffic_config`) |
-| "Redact PII at retrieval" | Wrong — redact at embedding time |
-| "`evaluators=['llm_as_judge']` is the API" | Wrong — `model_type="databricks-agent"` |
-| "Faithfulness" | Databricks uses "groundedness" |
-| "Vector Search query as the analytics surface" | Wrong — vector search is similarity over unstructured content, not structured analytics |
+| "Subclass `ChatModel` for a new agent" | Legacy — use `ResponsesAgent` |
+| "Use `Correctness` to monitor live traffic" | Needs ground truth — use judges without expectations |
+| "Average SME scores to fix disagreement" | Rubrics + calibration |
+| "Store prompts in Git / JSON and overwrite on deploy" | MLflow prompt versions + aliases |
+| "PAT in the app's JavaScript" | App backend calls the endpoint |
+| "Build a custom MCP wrapper for everything" | Managed + external servers |
+| "Redact PII at retrieval" | Mask at ingestion (before embedding) |
+| "Hybrid search + re-ranking for a latency-critical search bar" | Leave both off when latency is the top metric |
+| "beautifulsoup for scanned PNGs" | `pytesseract` (OCR) |
 
 ## Today's exam — 90-minute time budget
 
-- **45 questions ÷ 90 minutes = 2 min/question**
-- Long RAG-scenario stems: identify the **failure mode** the question describes (stale data → RAG vs fine-tune; missing audit trail → Inference Tables; PII leak → redact before embed) — that's the answer
-- "Most-managed Databricks" wins: `agents.deploy()` over custom serving; Inference Tables over custom logging; Lakehouse Monitoring over custom drift
+- **45 scored questions in 90 minutes ≈ 2 min each**, minus time for any unscored items
+- **Multiple-selection**: count the required answers; judge each option on its own
+- Long scenario stems: find the **stated priority** (latency, cost, quality, maintenance, governance) — it decides between two plausible options
+- "Most-managed Databricks feature" usually wins: Agent Bricks or managed MCP over custom code; inference tables over custom logging; Prompt Registry over hand-rolled versioning
 
 ## Eat. Hydrate. Breathe.
 

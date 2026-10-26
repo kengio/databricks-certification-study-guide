@@ -83,11 +83,16 @@ memory. The endpoint scales based on index size and query load.
 
 ### Scaling Guidelines
 
-| Index Size | Recommended Endpoint Type | Notes |
+| Requirement | Recommended Endpoint Type | Notes (current AI Search docs) |
 | :--- | :--- | :--- |
-| < 10M vectors | STANDARD | Default for most workloads |
-| 10M–100M vectors | STORAGE_OPTIMIZED | Better storage-to-compute ratio |
-| > 100M vectors | Multiple indexes or partitioned approach | Contact Databricks support |
+| Lowest query latency, high sustained QPS | STANDARD | ~320M vectors at 768 dims per endpoint (~160M at 1536); optional High QPS target |
+| Very large corpus (hundreds of millions to ~1B vectors), cost per vector matters | STORAGE_OPTIMIZED | Over 1B vectors at 768 dims; 10–20x faster indexing; queries add ~250 ms latency |
+| Beyond ~1B vectors | Contact your account team | — |
+
+Capacities scale roughly linearly with dimension. The official exam sample question (100 million items, 80 queries per second, latency is the most critical metric) is answered with a **standard** endpoint, with hybrid search and re-ranking left **off** to protect latency. Source: [Databricks AI Search](https://docs.databricks.com/aws/en/ai-search/ai-search).
+
+> [!note] Platform update (Oct 2026)
+> **Mosaic AI Vector Search was renamed Databricks AI Search on 2026-06-01** ([June 2026 release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/june)). The exam guide still says *Vector Search*, and the code in this guide uses the exam-era `databricks-vectorsearch` client (`VectorSearchClient`); current docs install `databricks-ai-search` and import `AISearchClient` from `databricks.ai_search.client` ([Create AI Search endpoints and indexes](https://docs.databricks.com/aws/en/ai-search/create-ai-search)). The concepts in this file are unchanged. AI Search also added full-text (keyword-only) indexes (Beta) and, on 2026-07-15, generally available **High QPS** for standard endpoints ([July 2026 release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/july)).
 
 ## Re-indexing Strategy
 
@@ -423,4 +428,4 @@ D) The `num_results` parameter is too low to include the new documents
 
 ---
 
-**[← Previous: Databricks Vector Search](../04-data-preparation/03-databricks-vector-search.md) | [↑ Back to Vector Search & Embeddings](./README.md)**
+**[← Previous: Retrieval & Augmentation Strategies](./03-retrieval-augmentation-strategies.md) | [↑ Back to Application Development](./README.md) | [Next: Agentic Systems with MLflow, Agent Framework, and Genie](./05-agentic-systems-mlflow-and-genie.md) →**

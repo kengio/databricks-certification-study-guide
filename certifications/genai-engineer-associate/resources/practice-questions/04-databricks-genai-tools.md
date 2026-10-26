@@ -111,43 +111,11 @@ D) Lakehouse Monitoring — creates statistical profiles of Delta tables on a sc
 
 ## Question 7 *(Hard)*: Querying Foundation Model APIs
 
-**Question**: A developer queries the Databricks Foundation Model API using the Python SDK. Which code correctly sends a chat completion request to `databricks-meta-llama-3-1-70b-instruct`?
+**Question**: A developer queries the Databricks Foundation Model API from Python. Which code correctly sends a chat completion request to `databricks-meta-llama-3-3-70b-instruct`?
 
-A)
-
-```python
-import mlflow
-response = mlflow.models.predict(
-    model_name="databricks-meta-llama-3-1-70b-instruct",
-    messages=[{"role": "user", "content": "Explain RAG in one sentence."}]
-)
-```
-
-B)
-
-```python
-from databricks.sdk import WorkspaceClient
-w = WorkspaceClient()
-response = w.serving_endpoints.query(
-    name="databricks-meta-llama-3-1-70b-instruct",
-    messages=[{"role": "user", "content": "Explain RAG in one sentence."}]
-)
-```
-
-C)
-
-```python
-from openai import OpenAI
-client = OpenAI(
-    api_key=dbutils.secrets.get("my-scope", "databricks-token"),
-    base_url=f"{DATABRICKS_HOST}/serving-endpoints"
-)
-response = client.chat.completions.create(
-    model="databricks-meta-llama-3-1-70b-instruct",
-    messages=[{"role": "user", "content": "Explain RAG in one sentence."}]
-)
-```
-
+A) `mlflow.models.predict(model_name="databricks-meta-llama-3-3-70b-instruct", messages=[{"role": "user", "content": "Explain RAG in one sentence."}])`  
+B) `WorkspaceClient().serving_endpoints.query(name="databricks-meta-llama-3-3-70b-instruct", messages=[...])` using the Databricks SDK  
+C) `OpenAI(api_key=<databricks-token>, base_url=f"{DATABRICKS_HOST}/serving-endpoints").chat.completions.create(model="databricks-meta-llama-3-3-70b-instruct", messages=[...])`  
 D) Both B and C are correct  
 
 > [!success]- Answer

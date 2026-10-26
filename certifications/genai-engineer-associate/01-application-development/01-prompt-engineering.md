@@ -225,26 +225,31 @@ Always wrap JSON parsing in try/except — models occasionally produce malformed
 
 ## MLflow Prompt Versioning
 
-Track prompt templates as MLflow artifacts to enable reproducibility and A/B comparison.
+Version prompts so every deployed answer can be traced to the exact template that produced it. The current tool is the **MLflow Prompt Registry** (Beta), which stores prompts in Unity Catalog with immutable versions and movable aliases ([Prompt Registry](https://docs.databricks.com/aws/en/mlflow3/genai/prompt-version-mgmt/prompt-registry/)).
 
 ```python
 import mlflow
 
-SYSTEM_PROMPT = """You are a data engineering assistant specialising in Databricks.
-Answer concisely. Cite the relevant documentation section when possible."""
+prompt = mlflow.genai.register_prompt(
+    name="main.prompts.databricks_assistant",
+    template=(
+        "You are a data engineering assistant specialising in Databricks. "
+        "Answer concisely. Question: {{question}}"
+    ),
+    commit_message="v2: shorter answers",
+)
+mlflow.genai.set_prompt_alias(
+    name="main.prompts.databricks_assistant", alias="staging", version=prompt.version
+)
 
-with mlflow.start_run(run_name="prompt-v2"):
-    mlflow.log_param("prompt_version", "v2")
-    mlflow.log_param("model_endpoint", "databricks-meta-llama-3-1-70b-instruct")
-    mlflow.log_param("temperature", 0.1)
-
-    # Save prompt file as artifact
-    with open("/tmp/system_prompt.txt", "w") as f:
-        f.write(SYSTEM_PROMPT)
-    mlflow.log_artifact("/tmp/system_prompt.txt", artifact_path="prompts")
+# The application always loads by alias, so promotion needs no code change
+staging_prompt = mlflow.genai.load_prompt("prompts:/main.prompts.databricks_assistant@staging")
 ```
 
-This allows comparing prompt v1 vs v2 within the MLflow UI using the same eval dataset.
+Compare prompt versions by running `mlflow.genai.evaluate()` on the same dataset for each version. Promotion across environments and rollback are covered in [Memory, CI/CD, Prompts, and User Interfaces](../02-assembling-and-deploying-apps/06-memory-cicd-prompts-and-interfaces.md).
+
+> [!note]
+> Older material logs prompts as run parameters or artifacts (`mlflow.log_param`, `mlflow.log_artifact`). That records history but gives no alias-based promotion or rollback — the official sample question on gated prompt promotion is answered by **MLflow prompt versions + aliases**.
 
 ## Prompt Injection Risks
 
@@ -293,7 +298,7 @@ Answer:"""
 - State constraints explicitly: "Use ONLY the context", "Reply in one sentence"
 - Include an out-of-scope fallback: "If the answer is not in the context, say I don't know"
 - Keep variable names descriptive: `{context}`, `{question}` over `{x}`, `{y}`
-- Version prompts in MLflow — track template alongside eval metrics
+- Version prompts in the MLflow Prompt Registry — load by alias and evaluate each version
 
 ## Practice Questions
 
@@ -362,7 +367,7 @@ Answer:"""
 ### Prompt Versioning Not Tracked
 
 **Scenario:** A prompt change in production causes a quality regression, but the team cannot determine which prompt version was deployed at the time.
-**Fix:** Log every prompt template version as an MLflow parameter (`mlflow.log_param("prompt_version", "v3")`) and save the full prompt text as an artifact (`mlflow.log_artifact("system_prompt.txt")`). This enables side-by-side comparison in the MLflow UI.
+**Fix:** Register every template in the MLflow Prompt Registry (`mlflow.genai.register_prompt`) and have the application load it by alias (`prompts:/catalog.schema.name@production`). Each version is immutable, so the deployed version is always known and rollback is an alias move.
 
 ## Key Takeaways
 
@@ -376,4 +381,4 @@ Answer:"""
 
 ---
 
-**[↑ Back to LLM Application Development](./README.md) | [Next: LLM Chains & Agents](./02-chains-agents.md) →**
+**[↑ Back to Application Development](./README.md) | [Next: LLM Chains & Agents](./02-chains-agents.md) →**
