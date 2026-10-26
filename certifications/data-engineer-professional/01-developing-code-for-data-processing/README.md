@@ -40,14 +40,16 @@ flowchart LR
 | [03-incremental-processing.md](./03-incremental-processing.md) | High-water marks, checkpoints, `availableNow`, idempotent incremental loads | Medium |
 | [04-structured-streaming-part1.md](./04-structured-streaming-part1.md) | Sources, sinks, triggers, output modes, watermarks, windowed aggregations | High |
 | [04-structured-streaming-part2.md](./04-structured-streaming-part2.md) | Stateful operations, state store, `foreachBatch`, checkpoints and exactly-once recovery | High |
-| [05-streaming-joins-stateful.md](./05-streaming-joins-stateful.md) | Stream-stream and stream-static joins, advanced watermarking, streaming deduplication | High |
+| [05-streaming-joins-stateful-part1.md](./05-streaming-joins-stateful-part1.md) | Stream-stream and stream-static joins, `mapGroupsWithState` / `flatMapGroupsWithState` | High |
+| [05-streaming-joins-stateful-part2.md](./05-streaming-joins-stateful-part2.md) | Advanced watermarking, streaming deduplication | High |
 | [06-declarative-pipelines.md](./06-declarative-pipelines.md) | Lakeflow Pipelines: streaming tables vs materialized views, Structured Streaming vs Spark Declarative Pipelines | High |
 | [07-auto-cdc-api.md](./07-auto-cdc-api.md) | AUTO CDC APIs (formerly APPLY CHANGES), SCD Type 1 / 2 via `stored_as_scd_type` | High |
 | [08-lakeflow-jobs-part1.md](./08-lakeflow-jobs-part1.md) | Tasks, dependencies, task values, If/else conditions, For each loops | High |
 | [08-lakeflow-jobs-part2.md](./08-lakeflow-jobs-part2.md) | Triggers, compute, notifications, parameters, UI / API / CLI automation, monitoring | High |
 | [09-databricks-compute-part1.md](./09-databricks-compute-part1.md) | Classic compute: all-purpose vs job compute, access modes, pools, policies, autoscaling | Medium |
 | [09-databricks-compute-part2.md](./09-databricks-compute-part2.md) | Serverless environments, dependencies, performance mode, high memory, auto-optimization (disallow retries); SQL warehouses | High |
-| [10-workspace-and-notebooks.md](./10-workspace-and-notebooks.md) | Workspace layout, widgets, `dbutils`, notebook formats | Low |
+| [10-workspace-and-notebooks-part1.md](./10-workspace-and-notebooks-part1.md) | Workspace layout, magic commands, widgets | Low |
+| [10-workspace-and-notebooks-part2.md](./10-workspace-and-notebooks-part2.md) | `dbutils`, notebook permissions, notebook formats | Low |
 | [11-unit-testing-part1.md](./11-unit-testing-part1.md) | pytest, `assertDataFrameEqual`, `assertSchemaEqual`, `DataFrame.transform` | High |
 | [11-unit-testing-part2.md](./11-unit-testing-part2.md) | Testing patterns, integration tests, unit testing Lakeflow pipelines, CI integration | High |
 | [12-advanced-testing-operations-part1.md](./12-advanced-testing-operations-part1.md) | Integration testing patterns | Medium |
@@ -70,7 +72,7 @@ Every skill bullet in Section 1 of the Oct 9, 2026 exam guide, with the files th
 | Create Lakeflow Jobs that use control-flow operators such as If/Else conditions and For Each loops. | [08-lakeflow-jobs-part1.md](./08-lakeflow-jobs-part1.md) |
 | Choose appropriate compute and configuration for environments and dependencies — including serverless compute (serverless environments, dependency management, performance mode), high-memory notebook tasks, and auto-optimization settings (e.g., disallowing retries). | [09-databricks-compute-part1.md](./09-databricks-compute-part1.md), [09-databricks-compute-part2.md](./09-databricks-compute-part2.md) |
 | Develop unit and integration tests using assertDataFrameEqual, assertSchemaEqual, DataFrame.transform, and testing frameworks to ensure code correctness. | [11-unit-testing-part1.md](./11-unit-testing-part1.md), [11-unit-testing-part2.md](./11-unit-testing-part2.md), [12-advanced-testing-operations-part1.md](./12-advanced-testing-operations-part1.md) |
-| Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery. | [04-structured-streaming-part1.md](./04-structured-streaming-part1.md), [04-structured-streaming-part2.md](./04-structured-streaming-part2.md), [05-streaming-joins-stateful.md](./05-streaming-joins-stateful.md) |
+| Apply Structured Streaming stateful-processing semantics, including watermarks, output modes, foreachBatch, and checkpoints for fault-tolerant exactly-once state recovery. | [04-structured-streaming-part1.md](./04-structured-streaming-part1.md), [04-structured-streaming-part2.md](./04-structured-streaming-part2.md), [05-streaming-joins-stateful-part1.md](./05-streaming-joins-stateful-part1.md), [05-streaming-joins-stateful-part2.md](./05-streaming-joins-stateful-part2.md) |
 
 ## Key Concepts to Master
 

@@ -426,4 +426,4 @@ query = (df.writeStream
 
 ---
 
-**[← Previous: Structured Streaming — Part 1](./04-structured-streaming-part1.md) | [↑ Back to Section](./README.md) | [Next: Streaming Joins & Stateful Operations →](./05-streaming-joins-stateful.md)**
+**[← Previous: Structured Streaming — Part 1](./04-structured-streaming-part1.md) | [↑ Back to Section](./README.md) | [Next: Streaming Joins & Stateful Operations — Part 1 →](./05-streaming-joins-stateful-part1.md)**

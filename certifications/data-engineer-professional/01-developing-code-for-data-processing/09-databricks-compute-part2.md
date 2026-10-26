@@ -466,7 +466,7 @@ aws_attributes = {
 - [Python Project Structure and Dependencies](./01-python-project-structure-and-dependencies.md) - Dependency formats and troubleshooting
 - [UDFs and Unity Catalog Functions](./02-udfs-and-unity-catalog-functions.md) - Serverless UDF limits
 - [Lakeflow Jobs — Part 1](./08-lakeflow-jobs-part1.md) - Task types and retries
-- [Workspace and Notebooks](./10-workspace-and-notebooks.md) - Compute attachment
+- [Workspace and Notebooks — Part 2](./10-workspace-and-notebooks-part2.md) - Compute attachment
 - [Cost Optimization](../05-cost-and-performance-optimization/10-cost-optimization.md) - Reducing spend
 
 ## Official Documentation
@@ -492,4 +492,4 @@ aws_attributes = {
 
 ---
 
-**[← Previous: Databricks Compute — Part 1](./09-databricks-compute-part1.md) | [↑ Back to Section](./README.md) | [Next: Workspace and Notebooks →](./10-workspace-and-notebooks.md)**
+**[← Previous: Databricks Compute — Part 1](./09-databricks-compute-part1.md) | [↑ Back to Section](./README.md) | [Next: Workspace and Notebooks — Part 1 →](./10-workspace-and-notebooks-part1.md)**

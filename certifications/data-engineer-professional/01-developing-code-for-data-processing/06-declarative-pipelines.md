@@ -454,7 +454,7 @@ A full refresh of a streaming table can **lose data** when the source no longer 
 | Data missing after a full refresh | Source retention shorter than table history | Protect the table with `pipelines.reset.allowed = false` |
 | All loop-generated tables contain the same data | Late binding of the loop variable | Pass the value as a default argument or use a factory function |
 | Unqualified table not found after migrating code | Default publishing mode resolves names to the pipeline catalog/schema, not the workspace default | Fully qualify external tables |
-| Unbounded stateful stream fails with memory pressure | No watermark on an aggregation or join | Add a watermark (see [Streaming Joins and Stateful Processing](./05-streaming-joins-stateful.md)) |
+| Unbounded stateful stream fails with memory pressure | No watermark on an aggregation or join | Add a watermark (see [Streaming Joins and Stateful Processing](./05-streaming-joins-stateful-part1.md)) |
 
 ## Exam Tips
 
@@ -483,7 +483,7 @@ A full refresh of a streaming table can **lose data** when the source no longer 
 - [AUTO CDC API](./07-auto-cdc-api.md) — CDC flows into streaming tables, SCD Type 1 and 2
 - [Expectations and Data Quality](../03-data-manipulation/06-expectations-data-quality.md) — warn, drop, fail, quarantine
 - [Structured Streaming — Part 1](./04-structured-streaming-part1.md) — triggers, output modes, checkpoints
-- [Streaming Joins and Stateful Processing](./05-streaming-joins-stateful.md) — watermarks and state
+- [Streaming Joins and Stateful Processing](./05-streaming-joins-stateful-part1.md) — watermarks and state
 - [Auto Loader](../02-data-ingestion-and-acquisition/01-auto-loader.md) — file ingestion options
 - [Lakeflow Jobs — Part 1](./08-lakeflow-jobs-part1.md) — scheduling pipelines
 - [Lakeflow Event Logs](../04-monitoring-and-alerting/02-lakeflow-event-logs.md) — monitoring updates and refresh techniques
@@ -512,4 +512,4 @@ A full refresh of a streaming table can **lose data** when the source no longer 
 
 ---
 
-**[← Previous: Streaming Joins & Stateful Operations](./05-streaming-joins-stateful.md) | [↑ Back to Section](./README.md) | [Next: AUTO CDC API →](./07-auto-cdc-api.md)**
+**[← Previous: Streaming Joins & Stateful Operations — Part 2](./05-streaming-joins-stateful-part2.md) | [↑ Back to Section](./README.md) | [Next: AUTO CDC API →](./07-auto-cdc-api.md)**

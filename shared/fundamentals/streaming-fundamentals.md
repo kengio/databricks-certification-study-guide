@@ -362,6 +362,6 @@ D) The event is held in a buffer until the next trigger
 ## Related Topics
 
 - [Structured Streaming (DE Pro)](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/04-structured-streaming-part1.md)
-- [Streaming Joins & Stateful Operations (DE Pro)](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/05-streaming-joins-stateful.md)
+- [Streaming Joins & Stateful Operations (DE Pro)](../../certifications/data-engineer-professional/01-developing-code-for-data-processing/05-streaming-joins-stateful-part1.md)
 - [Interview Prep — Streaming & CDC](../interview-prep/05-streaming-cdc.md)
 - [Spark Fundamentals](spark-fundamentals.md)
