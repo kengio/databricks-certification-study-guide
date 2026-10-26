@@ -5,52 +5,64 @@
   "generated": "2026-10-26",
   "domains": [
     {
-      "id": "section-1-data-processing",
-      "name": "Section 1: Data Processing",
+      "id": "data-ingestion-acquisition",
+      "name": "Data Ingestion & Acquisition",
       "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
-      "questionCount": 18
+      "questionCount": 5
     },
     {
-      "id": "section-2-databricks-tooling",
-      "name": "Section 2: Databricks Tooling",
-      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
-      "questionCount": 12
-    },
-    {
-      "id": "section-3-data-modeling",
-      "name": "Section 3: Data Modeling",
+      "id": "data-modeling",
+      "name": "Data Modeling",
       "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
       "questionCount": 9
     },
     {
-      "id": "section-4-security-governance",
-      "name": "Section 4: Security & Governance",
+      "id": "developing-code-for-data-processing-using-python-and-sql",
+      "name": "Developing Code for Data Processing using Python and SQL",
       "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
-      "questionCount": 6
+      "questionCount": 16
     },
     {
-      "id": "section-5-monitoring-logging",
-      "name": "Section 5: Monitoring & Logging",
+      "id": "cost-performance-optimization",
+      "name": "Cost & Performance Optimization",
       "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
-      "questionCount": 6
+      "questionCount": 7
     },
     {
-      "id": "section-6-testing-deployment",
-      "name": "Section 6: Testing & Deployment",
+      "id": "data-manipulation",
+      "name": "Data Manipulation",
       "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
-      "questionCount": 6
+      "questionCount": 5
     },
     {
-      "id": "section-7-lakeflow-pipelines-performance",
-      "name": "Section 7: Lakeflow Pipelines & Performance",
+      "id": "debugging-and-deploying",
+      "name": "Debugging and Deploying",
       "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
-      "questionCount": 3
+      "questionCount": 8
+    },
+    {
+      "id": "ensuring-data-security-and-compliance",
+      "name": "Ensuring Data Security and Compliance",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
+      "questionCount": 4
+    },
+    {
+      "id": "data-governance",
+      "name": "Data Governance",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
+      "questionCount": 2
+    },
+    {
+      "id": "monitoring-and-alerting",
+      "name": "Monitoring and Alerting",
+      "sourceFile": "certifications/data-engineer-professional/resources/mock-exam-2/questions.md",
+      "questionCount": 4
     }
   ],
   "questions": [
     {
       "id": "data-engineer-professional-mock-2-q001",
-      "domain": "section-1-data-processing",
+      "domain": "data-ingestion-acquisition",
       "title": "Question 1",
       "difficulty": "medium",
       "question": "Which Auto Loader configuration change will most effectively reduce the file discovery time for this pipeline?",
@@ -66,7 +78,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q002",
-      "domain": "section-1-data-processing",
+      "domain": "data-ingestion-acquisition",
       "title": "Question 2",
       "difficulty": "hard",
       "question": "What happens when Auto Loader encounters schema changes after recovering from a checkpoint?",
@@ -82,7 +94,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q003",
-      "domain": "section-1-data-processing",
+      "domain": "data-modeling",
       "title": "Question 3",
       "difficulty": "hard",
       "question": "Which MERGE implementation correctly handles SCD Type 2 for this use case?",
@@ -98,7 +110,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q004",
-      "domain": "section-1-data-processing",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 4",
       "difficulty": "hard",
       "question": "Which join condition correctly implements this time-bounded stream-stream join?",
@@ -114,7 +126,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q005",
-      "domain": "section-1-data-processing",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 5",
       "difficulty": "hard",
       "question": "Which pattern ensures exactly-once semantics for the PostgreSQL writes within `foreachBatch()`?",
@@ -130,7 +142,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q006",
-      "domain": "section-1-data-processing",
+      "domain": "cost-performance-optimization",
       "title": "Question 6",
       "difficulty": "medium",
       "question": "Which set of values does the `_change_type` column contain in a Change Data Feed?",
@@ -146,7 +158,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q007",
-      "domain": "section-1-data-processing",
+      "domain": "cost-performance-optimization",
       "title": "Question 7",
       "difficulty": "medium",
       "question": "What does Databricks predictive optimization automate when enabled on a Unity Catalog metastore?",
@@ -162,7 +174,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q008",
-      "domain": "section-1-data-processing",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 8",
       "difficulty": "hard",
       "question": "Which approach resolves the unbounded state growth while still deduplicating records?",
@@ -178,7 +190,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q009",
-      "domain": "section-1-data-processing",
+      "domain": "data-ingestion-acquisition",
       "title": "Question 9",
       "difficulty": "medium",
       "question": "What does the `_rescued_data` column contain?",
@@ -194,7 +206,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q010",
-      "domain": "section-1-data-processing",
+      "domain": "data-manipulation",
       "title": "Question 10",
       "difficulty": "medium",
       "question": "When is it more appropriate to use `TIMESTAMP AS OF` versus `VERSION AS OF` for Delta time travel?",
@@ -210,7 +222,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q011",
-      "domain": "section-1-data-processing",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 11",
       "difficulty": "hard",
       "question": "What is the key difference between `ProcessingTimeTimeout` and `EventTimeTimeout` in stateful streaming?",
@@ -226,7 +238,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q012",
-      "domain": "section-1-data-processing",
+      "domain": "data-manipulation",
       "title": "Question 12",
       "difficulty": "medium",
       "question": "Why is running `VACUUM` with a retention period less than 7 days considered dangerous?",
@@ -242,7 +254,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q013",
-      "domain": "section-1-data-processing",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 13",
       "difficulty": "medium",
       "question": "Which output mode correctly supports streaming aggregations with `groupBy`?",
@@ -258,7 +270,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q014",
-      "domain": "section-1-data-processing",
+      "domain": "data-ingestion-acquisition",
       "title": "Question 14",
       "difficulty": "medium",
       "question": "How does the configuration hierarchy work for Auto Loader's file format setting?",
@@ -274,7 +286,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q015",
-      "domain": "section-1-data-processing",
+      "domain": "data-manipulation",
       "title": "Question 15",
       "difficulty": "medium",
       "question": "Where in the multi-hop architecture should malformed data be handled to balance data quality and completeness?",
@@ -290,7 +302,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q016",
-      "domain": "section-1-data-processing",
+      "domain": "data-modeling",
       "title": "Question 16",
       "difficulty": "hard",
       "question": "What happens when this `ALTER TABLE ADD CONSTRAINT` statement is executed?",
@@ -306,7 +318,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q017",
-      "domain": "section-1-data-processing",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 17",
       "difficulty": "medium",
       "question": "What level of delivery guarantee does Structured Streaming provide with checkpointing and a Delta Lake sink?",
@@ -322,7 +334,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q018",
-      "domain": "section-1-data-processing",
+      "domain": "data-modeling",
       "title": "Question 18",
       "difficulty": "hard",
       "question": "What is the recommended pattern for handling late-arriving dimension data in an incremental batch pipeline?",
@@ -338,7 +350,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q019",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 19",
       "difficulty": "medium",
       "question": "When the scheduled job needs to generate the report for the \"operations\" business unit, how should the job task be configured to override the widget default?",
@@ -354,7 +366,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q020",
-      "domain": "section-2-databricks-tooling",
+      "domain": "debugging-and-deploying",
       "title": "Question 20",
       "difficulty": "medium",
       "question": "Which statement correctly describes a key difference between Declarative Automation Bundles and the legacy CLI approach?",
@@ -370,7 +382,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q021",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 21",
       "difficulty": "medium",
       "question": "Which JSON structure correctly defines the task dependency graph for this job?",
@@ -386,7 +398,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q022",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 22",
       "difficulty": "hard",
       "question": "Which compute configuration best balances cost and responsiveness for these two workload types?",
@@ -402,7 +414,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q023",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 23",
       "difficulty": "medium",
       "question": "Which approach most effectively reduces cluster startup time for these jobs?",
@@ -418,7 +430,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q024",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 24",
       "difficulty": "medium",
       "question": "Which Databricks feature allows the governance team to enforce these constraints?",
@@ -434,7 +446,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q025",
-      "domain": "section-2-databricks-tooling",
+      "domain": "ensuring-data-security-and-compliance",
       "title": "Question 25",
       "difficulty": "medium",
       "question": "Which statement correctly explains the permission behavior in this scenario?",
@@ -450,7 +462,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q026",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 26",
       "difficulty": "medium",
       "question": "Which statement correctly describes a key behavioral difference between `%run` and `dbutils.notebook.run()`?",
@@ -466,7 +478,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q027",
-      "domain": "section-2-databricks-tooling",
+      "domain": "cost-performance-optimization",
       "title": "Question 27",
       "difficulty": "medium",
       "question": "Which Databricks SQL warehouse type meets all of these requirements?",
@@ -482,7 +494,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q028",
-      "domain": "section-2-databricks-tooling",
+      "domain": "data-governance",
       "title": "Question 28",
       "difficulty": "medium",
       "question": "Which Unity Catalog feature is most appropriate for this requirement?",
@@ -498,7 +510,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q029",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 29",
       "difficulty": "hard",
       "question": "Which configuration correctly implements both the schedule and retry policy?",
@@ -514,7 +526,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q030",
-      "domain": "section-2-databricks-tooling",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 30",
       "difficulty": "medium",
       "question": "Which statement correctly describes the behavior of global and cluster-scoped init scripts in Databricks?",
@@ -530,7 +542,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q031",
-      "domain": "section-3-data-modeling",
+      "domain": "data-modeling",
       "title": "Question 31",
       "difficulty": "hard",
       "question": "What is the most appropriate approach for building this pipeline in the medallion architecture?",
@@ -546,7 +558,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q032",
-      "domain": "section-3-data-modeling",
+      "domain": "data-modeling",
       "title": "Question 32",
       "difficulty": "hard",
       "question": "Which MERGE approach correctly implements SCD Type 2 with proper current/expired flag management?",
@@ -562,7 +574,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q033",
-      "domain": "section-3-data-modeling",
+      "domain": "data-modeling",
       "title": "Question 33",
       "difficulty": "hard",
       "question": "Which approach allows the team to rename and drop columns on the Delta table without rewriting data files?",
@@ -578,7 +590,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q034",
-      "domain": "section-3-data-modeling",
+      "domain": "data-modeling",
       "title": "Question 34",
       "difficulty": "medium",
       "question": "Which data modeling approach is most appropriate for the Gold layer of this lakehouse?",
@@ -594,7 +606,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q035",
-      "domain": "section-3-data-modeling",
+      "domain": "data-manipulation",
       "title": "Question 35",
       "difficulty": "medium",
       "question": "Which cloning strategy best meets these requirements?",
@@ -610,7 +622,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q036",
-      "domain": "section-3-data-modeling",
+      "domain": "data-modeling",
       "title": "Question 36",
       "difficulty": "hard",
       "question": "Which partitioning strategy is most appropriate for this table?",
@@ -626,7 +638,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q037",
-      "domain": "section-3-data-modeling",
+      "domain": "cost-performance-optimization",
       "title": "Question 37",
       "difficulty": "medium",
       "question": "What is the primary advantage of converting this table to use Liquid Clustering?",
@@ -642,7 +654,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q038",
-      "domain": "section-3-data-modeling",
+      "domain": "data-manipulation",
       "title": "Question 38",
       "difficulty": "medium",
       "question": "Which description correctly characterizes the transformations applied at each layer of the medallion architecture?",
@@ -658,7 +670,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q039",
-      "domain": "section-3-data-modeling",
+      "domain": "data-modeling",
       "title": "Question 39",
       "difficulty": "hard",
       "question": "How does Delta Lake enforce these constraints during the write operation?",
@@ -674,7 +686,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q040",
-      "domain": "section-4-security-governance",
+      "domain": "data-governance",
       "title": "Question 40",
       "difficulty": "medium",
       "question": "What happens to the existing Hive metastore tables in the subsidiary workspace once it is attached to the Unity Catalog metastore?",
@@ -690,7 +702,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q041",
-      "domain": "section-4-security-governance",
+      "domain": "ensuring-data-security-and-compliance",
       "title": "Question 41",
       "difficulty": "hard",
       "question": "Which approach correctly implements this row-level security requirement in Unity Catalog?",
@@ -706,7 +718,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q042",
-      "domain": "section-4-security-governance",
+      "domain": "data-ingestion-acquisition",
       "title": "Question 42",
       "difficulty": "hard",
       "question": "How does the third institution (the non-Databricks recipient) authenticate and access data shared via OpenSharing?",
@@ -722,7 +734,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q043",
-      "domain": "section-4-security-governance",
+      "domain": "monitoring-and-alerting",
       "title": "Question 43",
       "difficulty": "hard",
       "question": "Which query correctly retrieves the relevant audit log entries from the Unity Catalog system tables?",
@@ -738,7 +750,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q044",
-      "domain": "section-4-security-governance",
+      "domain": "ensuring-data-security-and-compliance",
       "title": "Question 44",
       "difficulty": "medium",
       "question": "What is the recommended approach to address this situation and prevent similar issues going forward?",
@@ -754,7 +766,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q045",
-      "domain": "section-4-security-governance",
+      "domain": "ensuring-data-security-and-compliance",
       "title": "Question 45",
       "difficulty": "hard",
       "question": "Which combination of controls should be implemented to prevent this type of data exfiltration while still allowing legitimate workloads?",
@@ -770,7 +782,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q046",
-      "domain": "section-5-monitoring-logging",
+      "domain": "debugging-and-deploying",
       "title": "Question 46",
       "difficulty": "hard",
       "question": "Based on the Spark UI Storage tab observations, what is the most likely root cause and the recommended corrective action?",
@@ -786,7 +798,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q047",
-      "domain": "section-5-monitoring-logging",
+      "domain": "monitoring-and-alerting",
       "title": "Question 47",
       "difficulty": "hard",
       "question": "What is the most effective method to identify backlog metrics across individual flows in the Lakeflow pipeline?",
@@ -802,7 +814,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q048",
-      "domain": "section-5-monitoring-logging",
+      "domain": "monitoring-and-alerting",
       "title": "Question 48",
       "difficulty": "medium",
       "question": "Which approach most efficiently identifies the source of the cost anomaly?",
@@ -818,7 +830,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q049",
-      "domain": "section-5-monitoring-logging",
+      "domain": "debugging-and-deploying",
       "title": "Question 49",
       "difficulty": "hard",
       "question": "Based on the Ganglia metrics pattern, what is the most likely cause of the executor failures?",
@@ -834,7 +846,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q050",
-      "domain": "section-5-monitoring-logging",
+      "domain": "monitoring-and-alerting",
       "title": "Question 50",
       "difficulty": "hard",
       "question": "What is the recommended approach to implement custom monitoring and alerting for Structured Streaming queries at this scale?",
@@ -850,7 +862,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q051",
-      "domain": "section-5-monitoring-logging",
+      "domain": "cost-performance-optimization",
       "title": "Question 51",
       "difficulty": "hard",
       "question": "How should the analyst use the Query Profile to identify the specific bottleneck operator causing the slow performance?",
@@ -866,7 +878,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q052",
-      "domain": "section-6-testing-deployment",
+      "domain": "debugging-and-deploying",
       "title": "Question 52",
       "difficulty": "medium",
       "question": "When the bundle is deployed to the production target, what is the effective configuration for `max_concurrent_runs` and `num_workers`?",
@@ -882,7 +894,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q053",
-      "domain": "section-6-testing-deployment",
+      "domain": "debugging-and-deploying",
       "title": "Question 53",
       "difficulty": "hard",
       "question": "What happens during the OIDC token exchange with Databricks?",
@@ -898,7 +910,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q054",
-      "domain": "section-6-testing-deployment",
+      "domain": "debugging-and-deploying",
       "title": "Question 54",
       "difficulty": "medium",
       "question": "Which deployment strategy best meets these requirements?",
@@ -914,7 +926,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q055",
-      "domain": "section-6-testing-deployment",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 55",
       "difficulty": "hard",
       "question": "How should the team validate the expectation results in their CI/CD pipeline?",
@@ -930,7 +942,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q056",
-      "domain": "section-6-testing-deployment",
+      "domain": "debugging-and-deploying",
       "title": "Question 56",
       "difficulty": "medium",
       "question": "Which `databricks.yml` configuration correctly implements these permission requirements?",
@@ -946,7 +958,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q057",
-      "domain": "section-6-testing-deployment",
+      "domain": "debugging-and-deploying",
       "title": "Question 57",
       "difficulty": "medium",
       "question": "What is the fastest way to roll back the deployment using Declarative Automation Bundles?",
@@ -962,7 +974,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q058",
-      "domain": "section-7-lakeflow-pipelines-performance",
+      "domain": "developing-code-for-data-processing-using-python-and-sql",
       "title": "Question 58",
       "difficulty": "medium",
       "question": "How should the team define the session metrics dataset in the Lakeflow pipeline to best serve both downstream consumers?",
@@ -978,7 +990,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q059",
-      "domain": "section-7-lakeflow-pipelines-performance",
+      "domain": "cost-performance-optimization",
       "title": "Question 59",
       "difficulty": "medium",
       "question": "Which workload pattern benefits most from enabling Photon on this warehouse?",
@@ -994,7 +1006,7 @@
     },
     {
       "id": "data-engineer-professional-mock-2-q060",
-      "domain": "section-7-lakeflow-pipelines-performance",
+      "domain": "cost-performance-optimization",
       "title": "Question 60",
       "difficulty": "medium",
       "question": "How does `OPTIMIZE` behave differently after the table has been converted to liquid clustering?",

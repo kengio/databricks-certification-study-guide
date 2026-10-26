@@ -11,7 +11,7 @@ tags:
 Simulate the real exam under timed conditions before your test date.
 
 > [!important]
-> **Refreshed for the November 30, 2025 blueprint.** Terminology updated to current product names (Lakeflow Jobs, Lakeflow Pipelines). Domain weighting and section labels now match the 10-domain official structure.
+> **Relabelled for the Oct 9, 2026 exam guide.** Every question now carries its section from the 9-section guide, and product names follow the guide (Lakeflow Pipelines, AUTO CDC, Declarative Automation Bundles, OpenSharing). The questions themselves were written for earlier guides, so the section mix below is not the official weighting — the real exam has 60 scored questions. Skills new in 2026 are drilled in the [practice questions](../practice-questions/README.md).
 
 ## Exam Instructions
 
@@ -19,23 +19,22 @@ Simulate the real exam under timed conditions before your test date.
 | ------ | ----- |
 | Total Questions | 63 |
 | Time Limit | 120 minutes |
-| Result | Pass / fail (no numeric threshold in the Nov 30, 2025 exam guide) |
+| Result | Pass / fail (the Oct 9, 2026 exam guide publishes no numeric passing score) |
 | Format | Scenario-based, single correct answer |
 
-## Domain Distribution (refreshed to Nov 30, 2025 blueprint)
+## Domain Distribution (labelled to the Oct 9, 2026 exam guide)
 
-| Domain | Official weight | Questions in this mock |
+| Exam section | Official weight | Questions in this mock |
 | ------ | :---: | :---: |
-| Developing Code for Data Processing | 22 % | 14 |
-| Cost & Performance Optimization | 13 % | 8 |
-| Data Transformation, Cleansing, Quality | 10 % | 6 |
+| Developing Code for Data Processing using Python and SQL | 23 % | 14 |
+| Data Ingestion & Acquisition | 12 % | 5 |
+| Data Manipulation | 12 % | 5 |
 | Monitoring and Alerting | 10 % | 6 |
-| Ensuring Data Security and Compliance | 10 % | 6 |
-| Debugging and Deploying | 10 % | 6 |
-| Data Ingestion & Acquisition | 7 % | 5 |
-| Data Governance | 7 % | 4 |
-| Data Modeling | 6 % | 4 |
-| Data Sharing and Federation | 5 % | 4 |
+| Cost & Performance Optimization | 15 % | 10 |
+| Ensuring Data Security and Compliance | 8 % | 5 |
+| Data Governance | 5 % | 4 |
+| Debugging and Deploying | 10 % | 7 |
+| Data Modeling | 5 % | 7 |
 
 ## Scoring Guide
 
